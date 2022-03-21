@@ -14,6 +14,7 @@ import {
   OffLayoutArea,
 } from "components/layout";
 import { useTranslation } from "react-i18next";
+import { DashboardPage } from "pages/dashboard";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -30,6 +31,7 @@ function App() {
       notificationProvider={notificationProvider}
       dataProvider={dataProvider}
       authProvider={authProvider}
+      DashboardPage={DashboardPage}
       LoginPage={LoginPage}
       resources={[
         {
