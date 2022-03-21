@@ -10,7 +10,7 @@ import { IPost, ICategory } from "interfaces";
 
 const { Title, Text } = Typography;
 
-export const PostShow: React.FC<IResourceComponentsProps> = () => {
+export const HardwareShow: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
 
   const { queryResult } = useShow<IPost>();

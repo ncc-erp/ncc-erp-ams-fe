@@ -1,14 +1,27 @@
 import { AuthProvider } from "@pankod/refine-core";
+import dataProvider from "providers/dataProvider";
 
-export const TOKEN_KEY = "refine-auth";
+export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
 export const authProvider: AuthProvider = {
+  getToken: () => {
+    return localStorage.getItem(TOKEN_KEY);;
+  },
   login: async ({ username, password }) => {
-    if (username === "admin" && password === "admin") {
-      localStorage.setItem(TOKEN_KEY, username);
-      return Promise.resolve();
-    }
-    return Promise.reject(new Error("username: admin, password: admin"));
+    const {post} = dataProvider;
+    return post({
+      url: 'oauth/token',
+      payload: {
+        "grant_type": "password",
+        "client_id": process.env.REACT_APP_AUTH_CLIENT_ID,
+        "client_secret": process.env.REACT_APP_AUTH_SECRET_KEY,
+        "username": username,
+        "password": password
+      }
+    }).then((data: any) => {
+      localStorage.setItem(TOKEN_KEY, data.data.access_token);
+      return;
+    })// todo others
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);

@@ -2,9 +2,9 @@ import { Refine } from "@pankod/refine-core";
 import { notificationProvider, LoginPage } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
-import dataProvider from "@pankod/refine-simple-rest";
-import { authProvider } from "./authProvider";
-import { PostList, PostCreate, PostEdit, PostShow } from "pages/posts";
+import dataProvider from "./providers/dataProvider";
+import { authProvider } from "./providers/authProvider";
+import { HardwareList, HardwareCreate, HardwareEdit, HardwareShow } from "pages/hardware";
 import {
   Title,
   Header,
@@ -28,16 +28,16 @@ function App() {
     <Refine
       routerProvider={routerProvider}
       notificationProvider={notificationProvider}
-      dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+      dataProvider={dataProvider}
       authProvider={authProvider}
       LoginPage={LoginPage}
       resources={[
         {
-          name: "posts",
-          list: PostList,
-          create: PostCreate,
-          edit: PostEdit,
-          show: PostShow,
+          name: "hardware",
+          list: HardwareList,
+          create: HardwareCreate,
+          edit: HardwareEdit,
+          show: HardwareShow,
         },
       ]}
       Title={Title}

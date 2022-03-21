@@ -14,25 +14,29 @@ import ReactMde from "react-mde";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IPost, ICategory } from "interfaces";
+import { IHardwareRequest } from "interfaces/hardware";
+import { IModel } from "interfaces/model";
 
-export const PostCreate: React.FC<IResourceComponentsProps> = () => {
+export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
 
   const t = useTranslate();
 
-  const { formProps, saveButtonProps } = useForm<IPost>();
+  const { formProps, saveButtonProps } = useForm<IHardwareRequest>();
 
-  const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "categories",
+  const { selectProps: modelSelectProps } = useSelect<IModel>({
+    resource: "api/v1/models",
+    optionLabel: "name"
   });
 
+  console.log('formProps', modelSelectProps);
+  
   return (
     <Create saveButtonProps={saveButtonProps}>
       <Form {...formProps} layout="vertical">
         <Form.Item
-          label={t("posts.fields.title")}
-          name="title"
+          label="Name"
+          name="name"
           rules={[
             {
               required: true,
@@ -42,8 +46,43 @@ export const PostCreate: React.FC<IResourceComponentsProps> = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label={t("posts.fields.status.title")}
-          name="status"
+          label="Asset Tag"
+          name="asset_tag"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Serial"
+          name="serial"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Model"
+          name={["model", "id"]}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select {...modelSelectProps} />
+        </Form.Item>
+        
+        <Form.Item
+          label="Status"
+          name="status_id"
           rules={[
             {
               required: true,
@@ -66,18 +105,6 @@ export const PostCreate: React.FC<IResourceComponentsProps> = () => {
               },
             ]}
           />
-        </Form.Item>
-
-        <Form.Item
-          label={t("posts.fields.category.title")}
-          name={["category", "id"]}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select {...categorySelectProps} />
         </Form.Item>
         <Form.Item
           label={t("posts.fields.content")}
