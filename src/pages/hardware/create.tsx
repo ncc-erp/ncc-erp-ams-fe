@@ -28,8 +28,6 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
     resource: "api/v1/models",
     optionLabel: "name"
   });
-
-  console.log('formProps', modelSelectProps);
   
   return (
     <Create saveButtonProps={saveButtonProps}>
