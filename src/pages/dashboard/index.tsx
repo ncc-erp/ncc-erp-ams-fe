@@ -8,7 +8,7 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="dashboardContainer">
-      <Show isLoading={isLoading} canDelete={false}>
+      <Show isLoading={isLoading}>
         <Row gutter={[12, 12]}>
           {( data?.data.payload || []).map((item: any) => (
             <Col sm={24} md={24}>
