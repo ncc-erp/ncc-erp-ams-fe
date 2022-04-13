@@ -9,7 +9,7 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => (
     {collapsed ? (
       <img
         src={"/refine-collapsed.svg"}
-        alt="Refine"
+        alt="NCC IT TOOL"
         style={{
           display: "flex",
           alignItems: "center",
@@ -19,8 +19,8 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => (
       />
     ) : (
       <img
-        src={"/refine.svg"}
-        alt="Refine"
+        src={"/images/global/nccsoft-logo.png"}
+        alt="NCC IT TOOL"
         style={{
           width: "200px",
           padding: "12px 24px",

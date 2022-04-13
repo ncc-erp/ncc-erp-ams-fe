@@ -52,7 +52,16 @@
     "clone": "Clone"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "assetFilter": {
+      "filters" : {
+        "label": {
+          "from": "Từ ngày",
+          "to": "Đến ngày",
+          "filters": "Bộ lọc"
+        }
+      }
+    }
   },
   "posts": {
     "posts": "Posts",
@@ -87,13 +96,63 @@
   "hardware": {
     "label": {
         "field": {
-          "nameCompany": "Name company",
-          "propertyCard": "Property Card",
-          "serial": "Serial",
-          "propertyType": "Property type",
+          "nameCompany": "Công ty",
+          "propertyCard": "Thẻ tài sản",
+          "serial": "Số Sê-ri",
+          "propertyType": "Kiểu tài sản",
           "status": "Status",
-          "checkoutTo": "Checkout to"
+          "checkoutTo": "Checkout đến",
+          "user": "Người dùng",
+          "asset": "Tài sản",
+          "location": "Địa phương",
+          "assetName": "Tên tài sản",
+          "dateBuy": "Ngày mua",
+          "supplier": "Nhà cung cấp",
+          "orderNumber": "Số đơn đặt hàng",
+          "cost": "Chi phí mua hàng",
+          "insurance": "Bảo hành",
+          "usd": "VND",
+          "month": "Tháng",
+          "notes": "Mô tả",
+          "locationFix": "Vị trí mặc định",
+          "checkbox": "Cho phép đề xuất"
+        },
+        "placeholder": {
+          "nameCompany": "Chọn công ty",
+          "serial": "Serial",
+          "propertyType": "Lựa chọn một kiểu tài sản",
+          "status": "Chọn tình trạng",
+          "checkoutTo": "Checkout to",
+          "user": "Lựa chọn một người dùng",
+          "asset": "Chọn tài sản",
+          "location": "Lựa chọn một địa phương",
+          "supplier": "Lựa chọn nhà cung cấp"
         }
+    }
+  },
+  "request": {
+    "label": {
+      "field": {
+        "name": "Tên yêu cầu",
+        "branch": "Chọn nhánh",
+        "supplier": "Nhà cung cấp",
+        "entry": "Loại tài sản",
+        "note": "Mô tả",
+        "nameAsset": "Tên thiết bị",
+        "category": "Loại",
+        "location": "Vị trí"
+      },
+      "placeholder": {
+        "name": "Nhập tên",
+        "branch": "Chọn nhánh",
+        "supplier": "Lựa chọn nhà cung cấp"
+      },
+      "button": {
+        "create":"Tạo mới"
+      },
+      "message": {
+        "required": "bắt buộc"
+      }
     }
   }
 }
