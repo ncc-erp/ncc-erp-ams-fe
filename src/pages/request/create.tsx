@@ -21,8 +21,8 @@ import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
-import { ICompany } from "interfaces/Company";
-import { IBranch } from "interfaces/Branch";
+import { ICompany } from "interfaces/company";
+import { IBranch } from "interfaces/branch";
 import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 import { HardwareCreate } from "pages/hardware";
@@ -35,11 +35,9 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
 
   const t = useTranslate();
 
-  const { formProps } = useForm<IHardwareRequest>(
-    {
-      action: "create",
-    }
-  );
+  const { formProps } = useForm<IHardwareRequest>({
+    action: "create",
+  });
 
   const { selectProps: branchSelectProps } = useSelect<IBranch>({
     resource: "api/v1/finfast/branch",
@@ -60,9 +58,8 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
     queryOptions: { enabled: false },
   });
 
-  const onFinish =  (event: any) => {
-   
-     setPayload({
+  const onFinish = (event: any) => {
+    setPayload({
       name: event.name,
       branch_id: event.branch_id,
       supplier_id: event.supplier_id,
@@ -70,7 +67,7 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
       note: event.note,
       asset_ids: JSON.stringify(assetIds),
     });
-   
+
     refetch();
   };
 
@@ -90,7 +87,10 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             rules={[
               {
                 required: true,
-                message: t("request.label.field.name") + " " + t("request.label.message.required") 
+                message:
+                  t("request.label.field.name") +
+                  " " +
+                  t("request.label.message.required"),
               },
             ]}
           >
@@ -103,11 +103,17 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             rules={[
               {
                 required: true,
-                message: t("request.label.field.branch") + " " + t("request.label.message.required")
+                message:
+                  t("request.label.field.branch") +
+                  " " +
+                  t("request.label.message.required"),
               },
             ]}
           >
-            <Select placeholder={t("request.label.placeholder.name")} {...branchSelectProps} />
+            <Select
+              placeholder={t("request.label.placeholder.name")}
+              {...branchSelectProps}
+            />
           </Form.Item>
 
           <Form.Item
@@ -116,7 +122,10 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             rules={[
               {
                 required: true,
-                message: t("request.label.field.supplier") + " " + t("request.label.message.required")
+                message:
+                  t("request.label.field.supplier") +
+                  " " +
+                  t("request.label.message.required"),
               },
             ]}
           >
@@ -132,7 +141,10 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             rules={[
               {
                 required: true,
-                message: t("request.label.field.entry") + " " + t("request.label.message.required")
+                message:
+                  t("request.label.field.entry") +
+                  " " +
+                  t("request.label.message.required"),
               },
             ]}
           >
@@ -145,7 +157,10 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             rules={[
               {
                 required: true,
-                message: t("request.label.field.note") + " " + t("request.label.message.required")
+                message:
+                  t("request.label.field.note") +
+                  " " +
+                  t("request.label.message.required"),
               },
             ]}
           >

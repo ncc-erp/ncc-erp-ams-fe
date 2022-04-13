@@ -27,7 +27,7 @@ import { IHardwareRequest } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
-import { ICompany } from "interfaces/Company";
+import { ICompany } from "interfaces/company";
 
 export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
