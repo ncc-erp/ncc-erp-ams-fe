@@ -1,4 +1,5 @@
 export interface IHardwareRequest {
+    id: number;
     asset_tag: string;
     status_id: number;
     model_id: number;

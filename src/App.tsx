@@ -15,6 +15,7 @@ import {
 } from "components/layout";
 import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
+import { RequestCreate, RequestList } from "pages/request";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -35,9 +36,9 @@ function App() {
       LoginPage={LoginPage}
       resources={[
         {
-          name: "hardware",
-          list: HardwareList,
-          create: HardwareCreate,
+          name: "Request",
+          list: RequestList,
+          create: RequestCreate,
           edit: HardwareEdit,
           show: HardwareShow,
         },
