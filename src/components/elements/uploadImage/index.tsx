@@ -1,19 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Image,
-  Input,
-  Space,
-  Typography,
-  Upload,
-  UploadedFile,
-} from "@pankod/refine-antd";
+import React from "react";
+import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 
-export const UploadImage = () => {
-  const [file, setFile] = React.useState(null);
+type UploadImageProps = {
+  file: any;
+  setFile: (data: any) => void;
+};
+
+export const UploadImage = (props: UploadImageProps) => {
+  const { file, setFile } = props;
 
   const fileHandler = (e: any) => {
     setFile(e?.target?.files[0]);
@@ -41,14 +37,15 @@ export const UploadImage = () => {
       )}
 
       <Input className="file" id="file" type="file" onChange={fileHandler} />
-      {!file && <label htmlFor="file">
-        <Image
-          preview={false}
-          src={"/images/global/upload.png"}
-          width={200}
-        />
-      </label>}
-      
+      {!file && (
+        <label htmlFor="file">
+          <Image
+            preview={false}
+            src={"/images/global/upload.png"}
+            width={200}
+          />
+        </label>
+      )}
     </div>
   );
 };

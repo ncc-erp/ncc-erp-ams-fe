@@ -127,6 +127,12 @@
           "asset": "Chọn tài sản",
           "location": "Lựa chọn một địa phương",
           "supplier": "Lựa chọn nhà cung cấp"
+        },
+        "message": {
+          "required":"bắt buộc"
+        },
+        "button": {
+          "create": "Thêm mới"
         }
     }
   },
@@ -140,18 +146,27 @@
         "note": "Mô tả",
         "nameAsset": "Tên thiết bị",
         "category": "Loại",
-        "location": "Vị trí"
+        "location": "Vị trí",
+        "nameRequest": "Tên yêu cầu",
+        "branchRequest": "Nhánh",
+        "entryRequest": "Loại",
+        "countAsset": "Số lượng thiết bị",
+        "status": "Trạng thái",
+        "asset_ids": "Thiết bị"
       },
       "placeholder": {
         "name": "Nhập tên",
         "branch": "Chọn nhánh",
-        "supplier": "Lựa chọn nhà cung cấp"
+        "supplier": "Lựa chọn nhà cung cấp",
+        "asset_ids": "Lựa chọn thiết bị"
       },
       "button": {
-        "create":"Tạo mới"
+        "create":"Tạo mới",
+        "send": "Gửi"
       },
       "message": {
-        "required": "bắt buộc"
+        "required": "bắt buộc",
+        "assetsRequired": "* Bạn chưa chọn thiết bị"
       }
     }
   }

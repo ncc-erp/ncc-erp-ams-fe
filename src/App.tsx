@@ -42,6 +42,13 @@ function App() {
           edit: HardwareEdit,
           show: HardwareShow,
         },
+        {
+          name: "Hardware",
+          list: HardwareList,
+          create: HardwareCreate,
+          edit: HardwareEdit,
+          show: HardwareShow,
+        },
       ]}
       Title={Title}
       Header={Header}
