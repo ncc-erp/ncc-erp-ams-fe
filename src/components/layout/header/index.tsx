@@ -19,7 +19,6 @@ const { DownOutlined } = Icons;
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const { i18n } = useTranslation();
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
@@ -28,19 +27,17 @@ export const Header: React.FC = () => {
 
   const menu = (
     <Menu selectedKeys={[currentLocale]}>
-      {[...(i18n.languages || [])].sort().map((lang: string) => (
-        <Menu.Item
-          key={lang}
-          onClick={() => changeLanguage(lang)}
-          icon={
-            <span style={{ marginRight: 8 }}>
-              <Avatar size={16} src={`/images/flags/${lang}.svg`} />
-            </span>
-          }
-        >
-          {lang === "en" ? "English" : lang === "de" ? "German" : "Vietnamese"}
-        </Menu.Item>
-      ))}
+      <Menu.Item
+        key="vi"
+        onClick={() => changeLanguage("vi")}
+        icon={
+          <span style={{ marginRight: 8 }}>
+            <Avatar size={16} src={`/images/flags/${"vi"}.svg`} />
+          </span>
+        }
+      >
+        Vietnamese
+      </Menu.Item>
     </Menu>
   );
 
@@ -59,7 +56,11 @@ export const Header: React.FC = () => {
         <Button type="link">
           <Space>
             <Avatar size={16} src={`/images/flags/${currentLocale}.svg`} />
-            {currentLocale === "en" ? "English" : currentLocale === "de" ? "German" : "Vietnamese"}
+            {currentLocale === "en"
+              ? "English"
+              : currentLocale === "de"
+              ? "German"
+              : "Vietnamese"}
             <DownOutlined />
           </Space>
         </Button>

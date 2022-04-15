@@ -25,7 +25,7 @@ export const CreateAssetModal = (props: CreateAssetModalProps) => {
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
-      className="model"
+      footer={null}
     >
       <HardwareCreate/>
     </Modal>

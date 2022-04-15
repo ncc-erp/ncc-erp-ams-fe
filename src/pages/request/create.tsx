@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useTranslate,
   IResourceComponentsProps,
   useCustom,
+  useList,
+  useCreate,
 } from "@pankod/refine-core";
 import {
   Form,
   Input,
   Select,
-  useSelect,
   useForm,
   Row,
   Col,
@@ -21,59 +22,61 @@ import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
-import { ICompany } from "interfaces/company";
-import { IBranch } from "interfaces/branch";
 import { TreeSelectComponent } from "components/request/treeSelect";
-import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
-import { HardwareCreate } from "pages/hardware";
 
 export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
   const [entryId, setEntryId] = useState<number>();
-  const [assetIds, setAssetIds] = useState<number[]>([]);
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [payload, setPayload] = useState<object>({});
+  const [selectedItems, setSelectedItem] = useState();
 
   const t = useTranslate();
 
-  const { formProps } = useForm<IHardwareRequest>({
+  const { formProps, form } = useForm<IHardwareRequest>({
     action: "create",
   });
 
-  const { selectProps: branchSelectProps } = useSelect<IBranch>({
+  const { data: branchSelectProps } = useList<any>({
     resource: "api/v1/finfast/branch",
-    optionLabel: "name",
   });
 
-  const { selectProps: supplierSelectProps } = useSelect<ICompany>({
+  const { data: supplierSelectProps } = useList<any>({
     resource: "api/v1/finfast/supplier",
-    optionLabel: "name",
   });
 
-  const { data: createData, refetch } = useCustom({
-    url: "api/v1/finfast-request",
-    method: "post",
-    config: {
-      payload: payload,
-    },
-    queryOptions: { enabled: false },
+  const { data: assetSelecProps } = useCustom<any>({
+    url: "api/v1/hardware",
+    method: "get",
   });
+
+  const { mutate } = useCreate();
 
   const onFinish = (event: any) => {
-    setPayload({
-      name: event.name,
-      branch_id: event.branch_id,
-      supplier_id: event.supplier_id,
-      entry_id: entryId,
-      note: event.note,
-      asset_ids: JSON.stringify(assetIds),
-    });
-
-    refetch();
+    console.log("helo", event);
+      mutate({
+        resource: "api/v1/finfast-request",
+        values: {
+          name: event.name,
+          branch_id: event.branch_id,
+          supplier_id: event.supplier_id,
+          entry_id: entryId,
+          note: event.note,
+          asset_ids: JSON.stringify(event.asset_ids),
+        },
+      });
+      form.resetFields();
   };
+
+  const handleChange = (selectedItems: any) => {
+    setSelectedItem(selectedItems);
+  };
+
+  useEffect(() => {
+    form.setFieldsValue({ entry_id: entryId });
+  }, [entryId, form]);
 
   return (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col span={24}>
         <Form
           {...formProps}
           layout="vertical"
@@ -111,9 +114,22 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             ]}
           >
             <Select
+              showSearch
               placeholder={t("request.label.placeholder.name")}
-              {...branchSelectProps}
-            />
+              optionFilterProp="children"
+              filterOption={(input, option: any) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {branchSelectProps?.data.map((item) => (
+                <Select.Option value={item.id}>{item.name}</Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -130,9 +146,59 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             ]}
           >
             <Select
+              showSearch
               placeholder={t("request.label.placeholder.supplier")}
-              {...supplierSelectProps}
-            />
+              optionFilterProp="children"
+              filterOption={(input, option: any) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {supplierSelectProps?.data.map((item) => (
+                <Select.Option value={item.id}>{item.name}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={t("request.label.field.asset_ids")}
+            name="asset_ids"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("request.label.field.asset_ids") +
+                  " " +
+                  t("request.label.message.required"),
+              },
+            ]}
+          >
+
+            <Select
+              mode="multiple"
+              placeholder={t("request.label.placeholder.asset_ids")}
+              value={selectedItems}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              optionFilterProp="children"
+              filterOption={(input, option: any) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              {assetSelecProps?.data?.rows?.map((item: any) => (
+                <Select.Option value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -172,13 +238,11 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
               }
             />
           </Form.Item>
+
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Form>
-      </Col>
-      <Col span={12}>
-        <ListAssetNotRequest setAssetIds={setAssetIds} />
       </Col>
     </Row>
   );

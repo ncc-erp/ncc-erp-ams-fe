@@ -47,10 +47,11 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
     onChange: onChange,
     treeCheckable: false,
     showCheckedStrategy: TreeSelect.SHOW_CHILD,
-    placeholder: "Please select",
+    placeholder: "Lựa chọn tài sản",
     style: {
       width: "100%",
     },
+    treeDefaultExpandAll: true
   };
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   return (
     <TreeSelect
       allowClear
+      showSearch
       fieldNames={{ label: "name", value: "id", children: "children" }}
       {...tProps}
     />

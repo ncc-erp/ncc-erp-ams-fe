@@ -24,7 +24,6 @@ export const FilterModal = (props: FilterModalProps) => {
     },
   });
 
-  console.log("value", value);
   const handleOk = () => {
     setIsModalVisible(false);
   };
