@@ -2,6 +2,7 @@ import {
   useGetLocale,
   useSetLocale,
   useGetIdentity,
+  useLogout,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -9,20 +10,18 @@ import {
   Menu,
   Button,
   Icons,
-  Dropdown,
   Avatar,
   Typography,
 } from "@pankod/refine-antd";
-import { useTranslation } from "react-i18next";
+const { LogoutOutlined } = Icons;
 
-const { DownOutlined } = Icons;
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
-
+  const { mutate: logout } = useLogout();
   const currentLocale = locale();
 
   const menu = (
@@ -52,7 +51,8 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Dropdown overlay={menu}>
+      <Button type="link" onClick={() => logout() }><LogoutOutlined /></Button>
+      {/* <Dropdown overlay={menu}>
         <Button type="link">
           <Space>
             <Avatar size={16} src={`/images/flags/${currentLocale}.svg`} />
@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
             <DownOutlined />
           </Space>
         </Button>
-      </Dropdown>
+      </Dropdown> */}
       <Space style={{ marginLeft: "8px" }}>
         {user?.name && (
           <Text ellipsis strong>

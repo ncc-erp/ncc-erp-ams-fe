@@ -9,6 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: ["en", "de", "vi"],
+    lng: "vn",
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
     },

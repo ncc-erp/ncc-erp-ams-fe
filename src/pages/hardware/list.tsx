@@ -1,7 +1,7 @@
 import {
   useTranslate,
   IResourceComponentsProps,
-  useMany,
+  CrudFilters,
 } from "@pankod/refine-core";
 import {
   List,
@@ -13,18 +13,17 @@ import {
   Space,
   EditButton,
   DeleteButton,
-  useSelect,
   TagField,
-  FilterDropdown,
-  Select,
   ShowButton,
 } from "@pankod/refine-antd";
-import { IHardware, ICategory } from "interfaces";
+import { IHardware } from "interfaces";
+import { TableAction } from "components/elements/tables/TableAction";
+import { useMemo } from "react";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
 
-  const { tableProps, sorter } = useTable<IHardware>({
+  const { tableProps, sorter, searchFormProps } = useTable<IHardware>({
     initialSorter: [
       {
         field: "id",
@@ -32,66 +31,86 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     ],
     resource: 'api/v1/hardware',
-  });
+    onSearch: (params: any) => {
+      const filters: CrudFilters = [];
+      const { search } = params;
+      console.log(params,'params');
+      
+      filters.push(
+          {
+              field: "search",
+              operator: "eq",
+              value: search,
+          }
+      );
 
-  
-  // const categoryIds = tableProps?.dataSource?.map((item) => item.category.id) ?? [];
-  const categoryIds: string[] = [];
-  const { data: categoriesData, isLoading } = useMany<ICategory>({
-    resource: "api/v1/models",
-    ids: categoryIds,
-    queryOptions: {
-      enabled: categoryIds.length > 0,
+      return filters;
     },
   });
 
-  const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "api/v1/models",
-  });
-  
+  // rowSelection object indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    getCheckboxProps: (record: any) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
+  const collumns = useMemo(() => ([
+    {
+      key: "id",
+      title: "ID",
+      render: (value: any) => <TextField value={value} />,
+      defaultSortOrder: getDefaultSortOrder("id", sorter)
+    },
+    {
+      key: "name",
+      title: "Asset Name",
+      render: (value: any) => <TextField value={value} />,
+      defaultSortOrder: getDefaultSortOrder("name", sorter)
+    },
+    {
+      key: "model",
+      title: "Model",
+      render: (value: any) => <TagField value={value.name} />,
+      defaultSortOrder: getDefaultSortOrder("model.name", sorter)
+    },
+    {
+      key: "category",
+      title: "Category",
+      render: (value: any) => <TagField value={value.name} />,
+      defaultSortOrder: getDefaultSortOrder("category.name", sorter)
+    },
+    {
+      key: "createdAt",
+      title: "CreatedAt",
+      render: (value: any) => <DateField value={value} format="LLL" />,
+      defaultSortOrder: getDefaultSortOrder("createdAt", sorter)
+    }
+  ]), [])
+
   return (
     <List>
-      <Table {...tableProps} rowKey="id">
-        <Table.Column
-          dataIndex="id"
-          key="id"
-          title="ID"
-          render={(value) => <TextField value={value} />}
-          defaultSortOrder={getDefaultSortOrder("id", sorter)}
+      <TableAction // todo table action
+        // collumns={collumns.map((item) => item.title)}
+        // defaultCollumns={['aaaaa']}
+        searchFormProps={searchFormProps}
+        // actions={[
+        //   {
+        //     title: "Xoa",
+        //     handle: (menu) => {}
+        //   }
+        // ]}
+      />
+      <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
+        { collumns.map((col) => <Table.Column
+          dataIndex={col.key}
+          {...col}
           sorter
-        />
-        <Table.Column
-          dataIndex="name"
-          key="name"
-          title="Asset Name"
-          render={(value) => <TextField value={value} />}
-          defaultSortOrder={getDefaultSortOrder("name", sorter)}
-          sorter
-        />
-        <Table.Column
-          dataIndex="model"
-          key="model"
-          title="Model"
-          render={(value) => <TagField value={value.name} />}
-          defaultSortOrder={getDefaultSortOrder("model.name", sorter)}
-          sorter
-        />
-        <Table.Column
-          dataIndex="category"
-          key="category"
-          title="Category"
-          render={(value) => <TagField value={value.name} />}
-          defaultSortOrder={getDefaultSortOrder("category.name", sorter)}
-          sorter
-        />
-        <Table.Column
-          dataIndex="createdAt"
-          key="createdAt"
-          title={t("posts.fields.createdAt")}
-          render={(value) => <DateField value={value} format="LLL" />}
-          defaultSortOrder={getDefaultSortOrder("createdAt", sorter)}
-          sorter
-        />
+        />)}
         <Table.Column<IHardware>
           title={t("table.actions")}
           dataIndex="actions"

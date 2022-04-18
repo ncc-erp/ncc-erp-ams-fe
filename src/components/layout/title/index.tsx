@@ -1,8 +1,16 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import routerProvider from "@pankod/refine-react-router-v6";
 import { TitleProps } from "@pankod/refine-core";
 
 const { Link } = routerProvider;
+const logo: CSSProperties = {
+  height: "50px",
+  left: "50%",
+  position: "relative",
+  transform: "translateX(-50%)",
+  marginTop: "10px",
+  marginBottom: "10px"
+};
 
 export const Title: React.FC<TitleProps> = ({ collapsed }) => (
   <Link to="/">
@@ -10,23 +18,13 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => (
       <img
         src={"/images/global/nccsoft-logo-small.png"}
         alt="NCC IT TOOL"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "10px 29px 10px 10px",
-          width: "100px",
-        }}
+        style={logo}
       />
     ) : (
       <img
-        src={"/images/global/nccsoft-logo.png"}
+        src={"/images/global/nccsoft-logo-small.png"}
         alt="NCC IT TOOL"
-        style={{
-          width: "200px",
-          padding: "12px 24px",
-          background: "white",
-        }}
+        style={logo}
       />
     )}
   </Link>
