@@ -15,7 +15,7 @@ import {
 } from "components/layout";
 import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
-import { RequestCreate, RequestList } from "pages/request";
+import {  RequestList, RequestShow } from "pages/request";
 import { LoginPage } from "pages/login/login";
 
 function App() {
@@ -39,16 +39,11 @@ function App() {
         {
           name: "Hardware",
           list: HardwareList,
-          create: HardwareCreate,
-          edit: HardwareEdit,
           show: HardwareShow,
         },
         {
           name: "Tạo request",
           list: RequestList,
-          create: RequestCreate,
-          // edit: HardwareEdit,
-          // show: HardwareShow,
         },
       ]}
       Title={Title}

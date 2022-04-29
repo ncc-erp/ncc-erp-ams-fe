@@ -6,10 +6,11 @@ import "./type.less";
 type UploadImageProps = {
   file: any;
   setFile: (data: any) => void;
+  url?: string;
 };
 
 export const UploadImage = (props: UploadImageProps) => {
-  const { file, setFile } = props;
+  const { file, setFile, url } = props;
 
   const fileHandler = (e: any) => {
     setFile(e?.target?.files[0]);
@@ -37,11 +38,11 @@ export const UploadImage = (props: UploadImageProps) => {
       )}
 
       <Input className="file" id="file" type="file" onChange={fileHandler} />
-      {!file && (
+      {!file && ( 
         <label htmlFor="file">
           <Image
             preview={false}
-            src={"/images/global/upload.png"}
+            src={url ? url : "/images/global/upload.png"}
             width={200}
           />
         </label>

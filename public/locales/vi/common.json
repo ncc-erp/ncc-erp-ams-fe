@@ -3,6 +3,7 @@
     "login": {
       "signin": "Sign in",
       "signup": "Sign up",
+      "signinGoogle": "Sign in with google",
       "username": "Username",
       "password": "Password",
       "remember": "Remember me",
@@ -108,7 +109,7 @@
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
           "supplier": "Nhà cung cấp",
-          "orderNumber": "Số đơn đặt hàng",
+          "orderNumber": "Mã order",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "usd": "VND",
@@ -132,7 +133,13 @@
           "required":"bắt buộc"
         },
         "button": {
-          "create": "Thêm mới"
+          "create": "Thêm mới",
+          "update": "Chỉnh sửa",
+          "clone": "Clone"
+        },
+        "title": {
+          "create":"Tạo mới",
+          "edit": "Chỉnh sửa"
         }
     }
   },
@@ -150,9 +157,11 @@
         "nameRequest": "Tên yêu cầu",
         "branchRequest": "Nhánh",
         "entryRequest": "Loại",
-        "countAsset": "Số lượng thiết bị",
+        "countAsset": "Số lượng loại thiết bị",
+        "totalAsset": "Số lượng",
         "status": "Trạng thái",
-        "asset_ids": "Thiết bị"
+        "asset_ids": "Thiết bị",
+        "price": "Giá"
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -162,11 +171,15 @@
       },
       "button": {
         "create":"Tạo mới",
-        "send": "Gửi"
+        "send": "Gửi",
+        "delete": "Xóa"
       },
       "message": {
         "required": "bắt buộc",
         "assetsRequired": "* Bạn chưa chọn thiết bị"
+      },
+      "title": {
+        "create": "Tạo Request"
       }
     }
   }
