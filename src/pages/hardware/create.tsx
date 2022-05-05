@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  useCustom,
-  useCreate,
-} from "@pankod/refine-core";
+import { useTranslate, useCreate } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -16,6 +11,7 @@ import {
   Button,
   Row,
   Col,
+  Typography,
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -29,12 +25,21 @@ import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
-export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
+import "../../styles/hardware.less";
+
+type HardWareCreateProps = {
+  isModalVisible: boolean;
+  setIsModalVisible: (data: boolean) => void;
+};
+
+export const HardwareCreate = (props: HardWareCreateProps) => {
+  const { setIsModalVisible, isModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [activeModel, setActiveModel] = useState<String>("1");
-  const [payload, setPayload] = useState<object>({});
+  const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<any>(null);
 
   const t = useTranslate();
 
@@ -131,9 +136,10 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
-  const { mutate, data: createData } = useCreate();
+  const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
+    setMessageErr(null);
     const formData = new FormData();
     formData.append("name", event.name);
     formData.append("serial", event.serial);
@@ -159,12 +165,24 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
   };
 
   useEffect(() => {
-    mutate({
-      resource: "api/v1/hardware",
-      values: payload
-    });
-    if (createData?.data.message ) form.resetFields();
+    if (payload) {
+      mutate({
+        resource: "api/v1/hardware",
+        values: payload,
+      });
+      if (createData?.data.message) form.resetFields();
+    }
   }, [payload]);
+
+  useEffect(() => {
+    if (createData?.data.status === "success") {
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+    } else {
+      setMessageErr(createData?.data.messages);
+    }
+  }, [createData]);
 
   const findLabel = (value: number): Boolean => {
     let check = false;
@@ -232,6 +250,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
               showSearch
             />
           </Form.Item>
+          {messageErr?.company_id && (
+            <Typography.Text type="danger">
+              {messageErr.company_id[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.propertyCard")}
             name="asset_tag"
@@ -247,6 +270,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input />
           </Form.Item>
+          {messageErr?.asset_tag && (
+            <Typography.Text type="danger">
+              {messageErr.asset_tag[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.serial")}
             name="serial"
@@ -262,6 +290,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input />
           </Form.Item>
+          {messageErr?.serial && (
+            <Typography.Text type="danger">
+              {messageErr.serial[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.propertyType")}
             name="model_id"
@@ -280,6 +313,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
               {...modelSelectProps}
             />
           </Form.Item>
+          {messageErr?.model_id && (
+            <Typography.Text type="danger">
+              {messageErr.model_id[0]}
+            </Typography.Text>
+          )}
 
           <Form.Item
             label={t("hardware.label.field.locationFix")}
@@ -299,6 +337,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
               {...locationSelectProps}
             />
           </Form.Item>
+          {messageErr?.rtd_location_id && (
+            <Typography.Text type="danger">
+              {messageErr.rtd_location_id[0]}
+            </Typography.Text>
+          )}
 
           <Form.Item
             label={t("hardware.label.field.status")}
@@ -321,6 +364,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
+          {messageErr?.status_id && (
+            <Typography.Text type="danger">
+              {messageErr.status_id[0]}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           {" "}
@@ -339,6 +387,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input />
           </Form.Item>
+          {messageErr?.name && (
+            <Typography.Text type="danger">
+              {messageErr.name[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.dateBuy")}
             name="purchase_date"
@@ -354,6 +407,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input type="date" />
           </Form.Item>
+          {messageErr?.purchase_date && (
+            <Typography.Text type="danger">
+              {messageErr.purchase_date[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.supplier")}
             name="supplier_id"
@@ -372,6 +430,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
               {...supplierSelectProps}
             />
           </Form.Item>
+          {messageErr?.supplier_id && (
+            <Typography.Text type="danger">
+              {messageErr.supplier_id[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
@@ -387,6 +450,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input type="number" />
           </Form.Item>
+          {messageErr?.order_number && (
+            <Typography.Text type="danger">
+              {messageErr.order_number[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="puchase_cost"
@@ -402,6 +470,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input type="number" addonAfter={t("hardware.label.field.usd")} />
           </Form.Item>
+          {messageErr?.puchase_cost && (
+            <Typography.Text type="danger">
+              {messageErr.puchase_cost[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("hardware.label.field.insurance")}
             name="warranty_months"
@@ -417,6 +490,11 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           >
             <Input type="number" addonAfter={t("hardware.label.field.month")} />
           </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
+            </Typography.Text>
+          )}
         </Col>
       </Row>
 
@@ -542,6 +620,9 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           }
         />
       </Form.Item>
+      {messageErr?.notes && (
+        <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+      )}
 
       <Form.Item label="" name="requestable">
         <Checkbox
@@ -552,13 +633,23 @@ export const HardwareCreate: React.FC<IResourceComponentsProps> = () => {
           {t("hardware.label.field.checkbox")}
         </Checkbox>
       </Form.Item>
+      {messageErr?.requestable && (
+        <Typography.Text type="danger">
+          {messageErr.requestable[0]}
+        </Typography.Text>
+      )}
 
       <Form.Item label="Tải hình" name="image">
         <UploadImage file={file} setFile={setFile}></UploadImage>
       </Form.Item>
-      <Button type="primary" htmlType="submit">
-        {t("hardware.label.button.create")}
-      </Button>
+      {messageErr?.image && (
+        <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
+      )}
+      <div className="submit">
+        <Button type="primary" htmlType="submit" loading={isLoading}>
+          {t("hardware.label.button.create")}
+        </Button>
+      </div>
     </Form>
   );
 };

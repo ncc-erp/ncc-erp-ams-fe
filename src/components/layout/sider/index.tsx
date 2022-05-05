@@ -8,6 +8,7 @@ import {
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
+import { useGoogleLogout } from "react-google-login";
 
 const { RightOutlined, LogoutOutlined } = Icons;
 
@@ -21,6 +22,20 @@ export const Sider: React.FC = () => {
   const breakpoint = Grid.useBreakpoint();
 
   const isMobile = !breakpoint.lg;
+
+  const clientId = process.env.GOOGLE_CLIENT_ID
+    ? process.env.GOOGLE_CLIENT_ID
+    : "";
+
+  const { signOut: signOutGoogle } = useGoogleLogout({
+    clientId,
+    cookiePolicy: "single_host_origin",
+  });
+
+  const logoutAccount = () => {
+    signOutGoogle();
+    logout();
+  };
 
   return (
     <AntdLayout.Sider
@@ -37,7 +52,7 @@ export const Sider: React.FC = () => {
         mode="inline"
         onClick={({ key }) => {
           if (key === "logout") {
-            logout();
+            logoutAccount();
             return;
           }
 

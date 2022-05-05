@@ -3,25 +3,35 @@ import dataProvider from "providers/dataProvider";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
+
 export const authProvider: AuthProvider = {
   getToken: () => {
-    return localStorage.getItem(TOKEN_KEY);;
+    return localStorage.getItem(TOKEN_KEY);
   },
-  login: async ({ username, password }) => {
-    const {post} = dataProvider;
+  login: async ({ username, password, tokenId, profileObj, tokenObj }) => {
+    const { post } = dataProvider;
+    const url = tokenId ? "api/v1/auth/google" : "oauth/token";
+    const payload = tokenId
+      ? {
+          token_id: tokenId,
+          profile_obj: profileObj,
+          client_secret: tokenObj,
+        }
+      : {
+          grant_type: "password",
+          client_id: process.env.REACT_APP_AUTH_CLIENT_ID,
+          client_secret: process.env.REACT_APP_AUTH_SECRET_KEY,
+          username: username,
+          password: password,
+        };
+
     return post({
-      url: 'oauth/token',
-      payload: {
-        "grant_type": "password",
-        "client_id": process.env.REACT_APP_AUTH_CLIENT_ID,
-        "client_secret": process.env.REACT_APP_AUTH_SECRET_KEY,
-        "username": username,
-        "password": password
-      }
+      url: url,
+      payload: payload,
     }).then((data: any) => {
       localStorage.setItem(TOKEN_KEY, data.data.access_token);
       return;
-    })// todo others
+    }); // todo others
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);

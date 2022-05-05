@@ -23,11 +23,18 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
 import { TreeSelectComponent } from "components/request/treeSelect";
+import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 
-export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
+type RequestCreateProps = {
+  setIsModalVisible: (data: boolean) => void;
+};
+
+export const RequestCreate = (props: RequestCreateProps) => {
+  const { setIsModalVisible } = props;
   const [entryId, setEntryId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [selectedItems, setSelectedItem] = useState();
+  const [selectedAssets, setSelectedAssets] = useState([]);
 
   const t = useTranslate();
 
@@ -43,30 +50,55 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
     resource: "api/v1/finfast/supplier",
   });
 
-  const { data: assetSelecProps } = useCustom<any>({
+  const { data: assetSelecProps, refetch } = useCustom<any>({
     url: "api/v1/hardware",
     method: "get",
+    config: {
+      filters: [
+        {
+          field: "notRequest",
+          operator: "nnull",
+          value: 1,
+        },
+      ],
+    },
   });
 
-  const { mutate } = useCreate();
+  const { mutate, data, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
-    console.log("helo", event);
-      mutate({
-        resource: "api/v1/finfast-request",
-        values: {
-          name: event.name,
-          branch_id: event.branch_id,
-          supplier_id: event.supplier_id,
-          entry_id: entryId,
-          note: event.note,
-          asset_ids: JSON.stringify(event.asset_ids),
-        },
-      });
-      form.resetFields();
+    mutate({
+      resource: "api/v1/finfast-request",
+      values: {
+        name: event.name,
+        branch_id: event.branch_id,
+        supplier_id: event.supplier_id,
+        entry_id: entryId,
+        note: event.note,
+        asset_ids: JSON.stringify(event.asset_ids),
+      },
+    });
   };
 
+  useEffect(() => {
+    if (data?.data.status === "success") {
+      form.resetFields();
+      setIsModalVisible(false);
+      setSelectedAssets([]);
+      refetch();
+    }
+  }, [data]);
+
+
   const handleChange = (selectedItems: any) => {
+    const array = assetSelecProps?.data?.rows;
+
+    const assets_choose = selectedItems.map((item: number) => {
+      let arrayItem: any = {};
+      arrayItem.asset = array.filter((x: { id: number; }) => x.id === item)[0];
+      return  arrayItem;
+    })
+    setSelectedAssets(assets_choose);
     setSelectedItem(selectedItems);
   };
 
@@ -176,7 +208,6 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
               },
             ]}
           >
-
             <Select
               mode="multiple"
               placeholder={t("request.label.placeholder.asset_ids")}
@@ -194,12 +225,12 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
               }
             >
               {assetSelecProps?.data?.rows?.map((item: any) => (
-                <Select.Option value={item.id}>
-                  {item.name}
-                </Select.Option>
+                <Select.Option value={item.id}>{item.name}</Select.Option>
               ))}
             </Select>
           </Form.Item>
+
+         {selectedAssets.length > 0 && <ListAssetNotRequest assetData={selectedAssets} />} 
 
           <Form.Item
             label={t("request.label.field.entry")}
@@ -239,7 +270,7 @@ export const RequestCreate: React.FC<IResourceComponentsProps> = () => {
             />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={isLoading}>
             Submit
           </Button>
         </Form>

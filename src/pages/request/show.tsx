@@ -1,45 +1,41 @@
 import {
   useTranslate,
-  IResourceComponentsProps,
-  useOne,
-  useShow,
 } from "@pankod/refine-core";
-import { Show, Typography, Tag, MarkdownField } from "@pankod/refine-antd";
+import {  Typography, Tag } from "@pankod/refine-antd";
 
-import { IPost, ICategory } from "interfaces";
+
+import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 
 const { Title, Text } = Typography;
 
-export const HardwareShow: React.FC<IResourceComponentsProps> = () => {
+type RequestShowProps = {
+  setIsModalVisible: (data: boolean) => void;
+  detail: any;
+};
+
+export const RequestShow = (props: RequestShowProps) => {
+  const { setIsModalVisible, detail } = props;
   const t = useTranslate();
 
-  const { queryResult } = useShow<IPost>();
-  const { data, isLoading } = queryResult;
-  const record = data?.data;
-
-  const { data: categoryData } = useOne<ICategory>({
-    resource: "categories",
-    id: record?.category.id ?? "",
-    queryOptions: {
-      enabled: !!record?.category.id,
-    },
-  });
-
   return (
-    <Show isLoading={isLoading}>
-      <Title level={5}>{t("posts.fields.title")}</Title>
-      <Text>{record?.title}</Text>
-
+    <div>
+      <Title level={5}>{t("request.label.field.name")}</Title>
+      <Text>{detail?.name}</Text>
+      <Title level={5}>{t("request.label.field.supplier")}</Title>
+      <Text>{detail?.supplier?.name}</Text>
+      <Title level={5}>{t("request.label.field.branch")}</Title>
+      <Text>{detail?.branch?.name}</Text>
+      <Title level={5}>{t("request.label.field.entry")}</Title>
+      <Text>{detail?.entry_type?.code}</Text>
       <Title level={5}>{t("posts.fields.status.title")}</Title>
       <Text>
-        <Tag>{record?.status}</Tag>
+        <Tag>{detail?.status}</Tag>
       </Text>
-
-      <Title level={5}>{t("posts.fields.category.title")}</Title>
-      <Text>{categoryData?.data.title}</Text>
-
-      <Title level={5}>{t("posts.fields.content")}</Title>
-      <MarkdownField value={record?.content} />
-    </Show>
+      <Title level={5}>{t("request.label.field.countAsset")}</Title>
+      <Text>{detail?.finfast_request_assets?.length}</Text>
+      {detail?.finfast_request_assets.length > 0 && (
+        <ListAssetNotRequest assetData={detail?.finfast_request_assets} />
+      )}
+    </div>
   );
 };

@@ -1,15 +1,15 @@
-import { Modal} from "@pankod/refine-antd";
-import { HardwareCreate } from "pages/hardware";
+import { Modal } from "@pankod/refine-antd";
+import { ReactNode } from "react";
 
-
-type CreateAssetModalProps = {
+type MModalProps = {
   setIsModalVisible: (data: boolean) => void;
   isModalVisible: boolean;
+  children: ReactNode;
+  title?: string;
 };
 
-export const CreateAssetModal = (props: CreateAssetModalProps) => {
-  const { setIsModalVisible, isModalVisible } = props;
-
+export const MModal = (props: MModalProps) => {
+  const { setIsModalVisible, isModalVisible, children, title } = props;
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -18,16 +18,17 @@ export const CreateAssetModal = (props: CreateAssetModalProps) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  
+
   return (
     <Modal
-      title=""
+      title={title}
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
+      width={1000}
     >
-      <HardwareCreate/>
+      {children}
     </Modal>
   );
 };

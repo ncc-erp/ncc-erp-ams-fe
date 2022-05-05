@@ -13,6 +13,8 @@ import {
   Avatar,
   Typography,
 } from "@pankod/refine-antd";
+import { useGoogleLogout } from "react-google-login";
+
 const { LogoutOutlined } = Icons;
 
 const { Text } = Typography;
@@ -23,6 +25,21 @@ export const Header: React.FC = () => {
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
+  
+
+  const clientId = process.env.GOOGLE_CLIENT_ID
+    ? process.env.GOOGLE_CLIENT_ID
+    : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
+
+  const { signOut: signOutGoogle } = useGoogleLogout({
+    clientId,
+    cookiePolicy: "single_host_origin",
+  });
+
+  const logoutAccount = () => {
+    signOutGoogle();
+    logout();
+  };
 
   const menu = (
     <Menu selectedKeys={[currentLocale]}>
@@ -51,7 +68,9 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Button type="link" onClick={() => logout() }><LogoutOutlined /></Button>
+      <Button type="link" onClick={() => logoutAccount()}>
+        <LogoutOutlined />
+      </Button>
       {/* <Dropdown overlay={menu}>
         <Button type="link">
           <Space>
