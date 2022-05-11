@@ -14,14 +14,14 @@ export const ListAssetNotRequest = (props: ListAssetNotRequestProps) => {
   const t = useTranslate();
 
   const columns = [
-    {
-      title: t("request.label.field.nameAsset"),
-      dataIndex: "asset",
-      render: (value: any) =>
-        value.image && (
-          <img alt="" width={50} height={50} src={baseUrl + value.image} />
-        ),
-    },
+    // {
+    //   title: t("request.label.field.nameAsset"),
+    //   dataIndex: "asset",
+    //   render: (value: any) =>
+    //     value.image && (
+    //       <img alt="" width={50} height={50} src={baseUrl + value.image} />
+    //     ),
+    // },
     {
       title: t("request.label.field.nameAsset"),
       dataIndex: "asset",
@@ -40,7 +40,7 @@ export const ListAssetNotRequest = (props: ListAssetNotRequestProps) => {
     {
       title: t("request.label.field.price"),
       dataIndex: "asset",
-      render: (value: any) => <p>{value.puchase_cost}</p>,
+      render: (value: any) => <p>{value.purchase_cost}</p>,
     },
   ];
 

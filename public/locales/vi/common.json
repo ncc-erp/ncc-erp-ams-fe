@@ -179,7 +179,8 @@
         "assetsRequired": "* Bạn chưa chọn thiết bị"
       },
       "title": {
-        "create": "Tạo Request"
+        "create": "Tạo Request",
+        "detail":"Chi tiết Request"
       }
     }
   }

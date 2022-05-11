@@ -83,8 +83,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       asset_tag: data.asset_tag,
       serial: data.serial,
       model: {
-          value: data?.model?.id.toString(),
-          label: data?.model?.name,
+        value: data?.model?.id.toString(),
+        label: data?.model?.name,
       },
       model_number: data?.order_number,
       status_label: {
@@ -117,8 +117,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
       purchase_date: {
-          date: data?.purchase_date?.date,
-          formatted: data?.purchase_date?.formatted,
+        date: data?.purchase_date?.date,
+        formatted: data?.purchase_date?.formatted,
       },
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,

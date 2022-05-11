@@ -4,7 +4,12 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList, HardwareCreate, HardwareEdit, HardwareShow } from "pages/hardware";
+import {
+  HardwareList,
+  HardwareCreate,
+  HardwareEdit,
+  HardwareShow,
+} from "pages/hardware";
 import {
   Title,
   Header,
@@ -15,7 +20,8 @@ import {
 } from "components/layout";
 import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
-import {  RequestList, RequestShow } from "pages/request";
+import { RequestList, RequestShow, RequestCreate } from "pages/request";
+// import { CheckoutList } from "pages/checkout/list";
 import { LoginPage } from "pages/login/login";
 
 function App() {
@@ -45,6 +51,10 @@ function App() {
           name: "Tạo request",
           list: RequestList,
         },
+        // {
+        //   name: "Checkout",
+        //   list: CheckoutList,
+        // },
       ]}
       Title={Title}
       Header={Header}

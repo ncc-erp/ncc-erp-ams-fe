@@ -1,8 +1,5 @@
-import {
-  useTranslate,
-} from "@pankod/refine-core";
-import {  Typography, Tag } from "@pankod/refine-antd";
-
+import { useTranslate } from "@pankod/refine-core";
+import { Typography, Tag } from "@pankod/refine-antd";
 
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 

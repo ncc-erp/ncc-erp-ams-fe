@@ -172,7 +172,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("status_id", event.status_label.value);
     formData.append("warranty_months", event.warranty_months);
-    // formData.append("purchase_cost", event.purchase_cost);
+    // formData.append("purchase_cost", event.purchase_cost.toString());
     formData.append("purchase_date", event.purchase_date.date);
     // formData.append("assigned_to", event.assigned_to.toString());
     formData.append("supplier_id", event.supplier.value);
@@ -262,7 +262,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   };
 
   const demo = (data: string | undefined) => {
-    console.log(data);
+    // console.log(data);
     return data;
   };
 
@@ -345,7 +345,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             ]}
             initialValue={data?.serial}
           >
-            <Input defaultValue={data?.serial} value={data?.serial}/>
+            <Input defaultValue={data?.serial} value={data?.serial} />
           </Form.Item>
           {messageErr?.serial && (
             <Typography.Text type="danger">

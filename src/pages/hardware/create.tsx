@@ -158,7 +158,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("assigned_to", event.assigned_to);
     formData.append("supplier_id", event.supplier_id);
     formData.append("requestable", event.requestable);
-    formData.append("location_id", event.location_id);
+    formData.append("location_id", event.rtd_location_id);
     formData.append("image", event.image);
 
     setPayload(formData);
@@ -321,7 +321,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
           <Form.Item
             label={t("hardware.label.field.locationFix")}
-            name="rtd_location_id"
+            name="location_id"
             rules={[
               {
                 required: true,
@@ -457,7 +457,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
           <Form.Item
             label={t("hardware.label.field.cost")}
-            name="puchase_cost"
+            name="purchase_cost"
             rules={[
               {
                 required: true,
@@ -470,9 +470,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           >
             <Input type="number" addonAfter={t("hardware.label.field.usd")} />
           </Form.Item>
-          {messageErr?.puchase_cost && (
+          {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
           <Form.Item

@@ -7,6 +7,7 @@ import {
   useDelete,
   BaseKey,
   CrudFilters,
+  useCustom,
 } from "@pankod/refine-core";
 import {
   List,
@@ -37,30 +38,47 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
 
-  const { mutate: muteDelete } = useDelete();
+  const { mutate: muteDelete, data: dataDelete } = useDelete();
 
-  const { tableProps, sorter, searchFormProps } = useTable<IHardware>({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
-      },
-    ],
-    resource: "api/v1/finfast-request",
-    onSearch: (params: any) => {
-      const filters: CrudFilters = [];
-      const { search } = params;
-      console.log(params, "params");
-
-      filters.push({
-        field: "search",
-        operator: "eq",
-        value: search,
-      });
-
-      return filters;
+  const useHardwareNotRequest = useCustom<any>({
+    url: "api/v1/hardware",
+    method: "get",
+    config: {
+      filters: [
+        {
+          field: "notRequest",
+          operator: "null",
+          value: 1,
+        },
+      ],
     },
   });
+
+  const { refetch } = useHardwareNotRequest;
+
+  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+    useTable<IHardware>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      resource: "api/v1/finfast-request",
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const { search } = params;
+        console.log(params, "params");
+
+        filters.push({
+          field: "search",
+          operator: "eq",
+          value: search,
+        });
+
+        return filters;
+      },
+    });
 
   const { mutate, isLoading: isLoadingSendRequest } = useCreate<any>();
 
@@ -83,6 +101,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     let arr = [...isLoadingArr];
     arr[idSend] = isLoadingSendRequest;
     setIsLoadingArr(arr);
+    tableQueryResult.refetch();
   }, [isLoadingSendRequest]);
 
   const handleDelete = (id: BaseKey) => {
@@ -92,6 +111,12 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       mutationMode: "optimistic",
     });
   };
+
+  useEffect(() => {
+    if (dataDelete !== undefined) {
+      refetch();
+    }
+  }, [dataDelete, refetch]);
 
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
@@ -118,11 +143,14 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
       >
-        <RequestCreate setIsModalVisible={setIsModalVisible} />
+        <RequestCreate
+          setIsModalVisible={setIsModalVisible}
+          useHardwareNotRequest={useHardwareNotRequest}
+        />
       </MModal>
 
       <MModal
-        title={t("request.label.title.create")}
+        title={t("request.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >

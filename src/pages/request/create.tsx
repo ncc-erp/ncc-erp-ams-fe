@@ -19,18 +19,22 @@ import {
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 
+import "../../styles/request.less";
+
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
+import { IBranch } from "interfaces/branch";
 import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 
 type RequestCreateProps = {
+  useHardwareNotRequest: any;
   setIsModalVisible: (data: boolean) => void;
 };
 
 export const RequestCreate = (props: RequestCreateProps) => {
-  const { setIsModalVisible } = props;
+  const { setIsModalVisible, useHardwareNotRequest } = props;
   const [entryId, setEntryId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [selectedItems, setSelectedItem] = useState();
@@ -42,26 +46,13 @@ export const RequestCreate = (props: RequestCreateProps) => {
     action: "create",
   });
 
-  const { data: branchSelectProps } = useList<any>({
+  const { data: assetSelectProps, refetch } = useHardwareNotRequest;
+  const { data: branchSelectProps } = useList<IBranch>({
     resource: "api/v1/finfast/branch",
   });
 
   const { data: supplierSelectProps } = useList<any>({
     resource: "api/v1/finfast/supplier",
-  });
-
-  const { data: assetSelecProps, refetch } = useCustom<any>({
-    url: "api/v1/hardware",
-    method: "get",
-    config: {
-      filters: [
-        {
-          field: "notRequest",
-          operator: "nnull",
-          value: 1,
-        },
-      ],
-    },
   });
 
   const { mutate, data, isLoading } = useCreate();
@@ -87,17 +78,16 @@ export const RequestCreate = (props: RequestCreateProps) => {
       setSelectedAssets([]);
       refetch();
     }
-  }, [data]);
-
+  }, [data, form, refetch, setIsModalVisible]);
 
   const handleChange = (selectedItems: any) => {
-    const array = assetSelecProps?.data?.rows;
+    const array = assetSelectProps?.data?.rows;
 
     const assets_choose = selectedItems.map((item: number) => {
       let arrayItem: any = {};
-      arrayItem.asset = array.filter((x: { id: number; }) => x.id === item)[0];
-      return  arrayItem;
-    })
+      arrayItem.asset = array.filter((x: { id: number }) => x.id === item)[0];
+      return arrayItem;
+    });
     setSelectedAssets(assets_choose);
     setSelectedItem(selectedItems);
   };
@@ -224,13 +214,15 @@ export const RequestCreate = (props: RequestCreateProps) => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              {assetSelecProps?.data?.rows?.map((item: any) => (
+              {assetSelectProps?.data?.rows?.map((item: any) => (
                 <Select.Option value={item.id}>{item.name}</Select.Option>
               ))}
             </Select>
           </Form.Item>
 
-         {selectedAssets.length > 0 && <ListAssetNotRequest assetData={selectedAssets} />} 
+          {selectedAssets.length > 0 && (
+            <ListAssetNotRequest assetData={selectedAssets} />
+          )}
 
           <Form.Item
             label={t("request.label.field.entry")}

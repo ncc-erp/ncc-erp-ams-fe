@@ -36,7 +36,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   };
 
   const onChange = (valueNew: any) => {
-    console.log(valueNew);
+    // console.log(valueNew);
     setValue(valueNew);
     setEntryId(valueNew);
   };
@@ -51,7 +51,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
     style: {
       width: "100%",
     },
-    treeDefaultExpandAll: true
+    treeDefaultExpandAll: true,
   };
 
   useEffect(() => {
