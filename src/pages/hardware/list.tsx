@@ -3,6 +3,7 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   useCreate,
+  useSelect,
 } from "@pankod/refine-core";
 import {
   List,
@@ -17,7 +18,7 @@ import {
   TagField,
   CreateButton,
   Popconfirm,
-  Button,
+  Button
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -50,6 +51,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       permanentFilter: [{ field: "search", operator: "eq", value: keySearch }],
       resource: "api/v1/hardware",
       onSearch: (params: any) => {
+        console.log(params);
         const filters: CrudFilters = [];
         const { search } = params;
         filters.push({
@@ -77,14 +79,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const edit = (data: IHardwareResponse) => {
+    console.log(data?.model?.id.toString())
     const dataConvert: IHardwareResponseConvert = {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
       serial: data.serial,
       model: {
-          value: data?.model?.id.toString(),
-          label: data?.model?.name,
+        value: data?.model?.id.toString(),
+        label: data?.model?.name,
       },
       model_number: data?.order_number,
       status_label: {
@@ -116,16 +119,30 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       image: data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
-      purchase_date: {
-          date: data?.purchase_date?.date,
-          formatted: data?.purchase_date?.formatted,
-      },
+      purchase_date: data?.purchase_date.date,
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
+
+      // //add 
+      // requestable: data?.requestable,
+      // physical: data?.physical
     };
+
     setDetail(dataConvert);
     setIsEditModalVisible(true);
   };
+
+  // const { selectProps: categorySelectProps } = useSelect<IHardware>({
+  //   resource: "api/v1/hardware",
+  //   optionLabel: "title",
+  //   onSearch: (value) => [
+  //     {
+  //       field: "search",
+  //       operator: "containss",
+  //       value,
+  //     },
+  //   ],
+  // });
 
   const collumns = useMemo(
     () => [
@@ -154,10 +171,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
-        key: "createdAt",
-        title: "CreatedAt",
-        render: (value: any) => <DateField value={value} format="LLL" />,
-        defaultSortOrder: getDefaultSortOrder("createdAt", sorter),
+        key: "created_at",
+        title: "Created At",
+        render: (value: any) => <DateField format="LLL" value={value.datetime} />,
+        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
     []
@@ -190,6 +207,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         },
       });
     }
+    refreshData();
   }, [idSend]);
 
   useEffect(() => {
@@ -198,6 +216,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsLoadingArr(arr);
     refreshData();
   }, [isLoadingSendRequest]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isEditModalVisible])
 
   return (
     <List
@@ -248,8 +270,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                 >
                   {t("hardware.label.button.clone")}

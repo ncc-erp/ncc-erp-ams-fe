@@ -21,7 +21,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
     const handleVisibleChange = (show: boolean) => {
         setVisible(show);
     }
-    
+
     const onChange = (list: any) => {
         setCheckedList(list);
         setCheckAll(list.length === plainOptions.length);
@@ -47,11 +47,11 @@ export const SelectTableCol = (props: ISelectTableCol) => {
                 </Checkbox>
             </Col>
             <Checkbox.Group value={checkedList} onChange={onChange}>
-                    { plainOptions.map(opt =>
-                        <Col span={24} key={opt}>
-                            <Checkbox value={opt} checked={checkedList.includes(opt)}>{opt}</Checkbox>
-                        </Col>
-                    ) }
+                {plainOptions.map(opt =>
+                    <Col span={24} key={opt}>
+                        <Checkbox value={opt} checked={checkedList.includes(opt)}>{opt}</Checkbox>
+                    </Col>
+                )}
             </Checkbox.Group>
         </Row>
     </div>), [plainOptions])
@@ -61,7 +61,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
             onVisibleChange={handleVisibleChange}
             visible={visible}
         >
-            <Button><Icons.SelectOutlined/></Button>
+            <Button><Icons.SelectOutlined /></Button>
         </Dropdown>
     </>
 }
@@ -87,38 +87,37 @@ export const TableAction = (props: ITableAction) => {
         </Menu>
     ), [props.actions]);
     const onSelectCollumn = useCallback(
-      () => {
-        
-      },
-      [],
+        () => {
+
+        },
+        [],
     )
-    
+
     return <Row style={{ marginBottom: "10px" }}>
-            <Col xs={12}>
-                { props.actions && <Dropdown overlay={menu}  trigger={['click']}>
-                    <Button>Action <Icons.DownOutlined /></Button>
-                </Dropdown>}
-            </Col>
-            <Col xs={12}>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "end"
-                }}>
-                    { props.searchFormProps && (
-                        <Form {...props.searchFormProps}>
-                            <Form.Item name={"search"}>
-                                <Search placeholder="input search text" onSearch={(key) => {
-                                    
-                                    props.searchFormProps.form.submit();
-                                    console.log(props.searchFormProps);
-                                    
-                                }} style={{ width: 200 }} />
-                            </Form.Item>
-                        </Form>
-                    )}
-                    {props.collumns && props.defaultCollumns && <SelectTableCol options={props.collumns} defaultValue={props.defaultCollumns} onChange={onSelectCollumn}></SelectTableCol>}
-                </div>
-            </Col>
-        </Row>
+        <Col xs={12}>
+            {props.actions && <Dropdown overlay={menu} trigger={['click']}>
+                <Button>Action <Icons.DownOutlined /></Button>
+            </Dropdown>}
+        </Col>
+        <Col xs={12}>
+            <div style={{
+                display: "flex",
+                justifyContent: "end"
+            }}>
+                {props.searchFormProps && (
+                    <Form {...props.searchFormProps}>
+                        <Form.Item name={"search"}>
+                            <Search placeholder="input search text" onSearch={(key) => {
+
+                                props.searchFormProps.form.submit();
+                                // console.log(props.searchFormProps);
+
+                            }} style={{ width: 200 }} />
+                        </Form.Item>
+                    </Form>
+                )}
+                {props.collumns && props.defaultCollumns && <SelectTableCol options={props.collumns} defaultValue={props.defaultCollumns} onChange={onSelectCollumn}></SelectTableCol>}
+            </div>
+        </Col>
+    </Row>
 };
-  
