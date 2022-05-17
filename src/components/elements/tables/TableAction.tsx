@@ -108,10 +108,7 @@ export const TableAction = (props: ITableAction) => {
                     <Form {...props.searchFormProps}>
                         <Form.Item name={"search"}>
                             <Search placeholder="input search text" onSearch={(key) => {
-
                                 props.searchFormProps.form.submit();
-                                // console.log(props.searchFormProps);
-
                             }} style={{ width: 200 }} />
                         </Form.Item>
                     </Form>

@@ -150,10 +150,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    // formData.append("user_id", event.user_id);
-    // formData.append("archived", event.archived !== undefined ? event.archived : 0)
-    // formData.append("depreciate", event.depreciate !== undefined ? event.depreciate : 0)
-
     formData.append("physical", event.physical !== undefined ? event.physical : 1)
     formData.append("assigned_to", event.assigned_to);
 
@@ -172,7 +168,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.image !== null) {
       formData.append("image", event.image);
     }
-    // formData.append("assigned_asset", event.assigned_asset);
 
     setPayload(formData);
   };
@@ -186,6 +181,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
+
 
   useEffect(() => {
     if (createData?.data.status === "success") {

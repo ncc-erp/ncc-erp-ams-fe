@@ -69,7 +69,6 @@ export interface IHardwareResponse {
   assigned_to: number;
   last_audit_date: string;
 
-  //add
   requestable: number;
   physical: string;
 }
@@ -98,16 +97,8 @@ export interface IHardwareResponseConvert {
   warranty_months: string;
   purchase_cost: number;
   purchase_date: string;
-  // purchase_date: {
-  //   date: string;
-  //   formatted: string;
-  // };
   assigned_to: number;
   last_audit_date: string;
-
-  //add
-  // requestable: number;
-  // physical: string;
 }
 
 export interface IHardwareResponses {

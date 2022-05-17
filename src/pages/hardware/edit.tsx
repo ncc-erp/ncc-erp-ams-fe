@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate, useUpdate } from "@pankod/refine-core";
+import { useCustom, useList, useTranslate, useUpdate } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -13,7 +13,7 @@ import {
   Col,
   Typography,
 } from "@pankod/refine-antd";
-
+import { useQuery } from 'react-query'
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import {
@@ -48,7 +48,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<IHardwareRequest>({
+  const { form, formProps, queryResult } = useForm<IHardwareRequest>({
     action: "edit",
   });
 
@@ -65,7 +65,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
     ],
   });
-
 
   const { selectProps: companySelectProps } = useSelect<ICompany>({
     resource: "api/v1/companies/selectlist",
@@ -127,7 +126,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ],
   });
 
-  const { selectProps: supplierSelectProps, queryResult } = useSelect<ICompany>({
+  const { selectProps: supplierSelectProps } = useSelect<ICompany>({
     resource: "api/v1/suppliers",
     optionLabel: "name",
     onSearch: (value) => [
@@ -139,7 +138,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ],
   });
 
-  // queryResult.refetch();
   const {
     refetch,
     data: updateData,
@@ -155,13 +153,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     },
   });
 
-  useEffect(() => {
-    if (updateData !== undefined) {
-      queryResult.refetch();
-    }
-  }, [updateData])
-  console.log("check:", updateData)
-
   const onFinish = (event: IHardwareResponses) => {
     setMessageErr(null);
     const formData = new FormData();
@@ -173,28 +164,27 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    // formData.append("user_id", event.user_id);
-    // formData.append("archived", event.archived);
-    // if (event.physical !== null) formData.append("physical", event.physical);
-
     if (event.status_label.value !== undefined) { formData.append("status_id", event.status_label.value) };
     formData.append("warranty_months", event.warranty_months.toString());
 
     formData.append("purchase_cost", event.purchase_cost.toString());
     formData.append("purchase_date", event.purchase_date);
 
-    // formData.append("supplier_id", event.supplier.toString());
-    // formData.append("rtd_location_id", event.rtd_location.toString());
     if (event.rtd_location !== null) { formData.append("rtd_location_id", event.rtd_location.toString()) };
     if (event.supplier !== null) { formData.append("supplier_id", event.supplier.toString()) };
 
-    // if (event.requestable !== null) { formData.append("requestable", event.requestable.toString()) };
     if (event.image !== null) { formData.append("image", event.image) };
 
     formData.append("_method", "PATCH");
 
     setPayload(formData);
   };
+
+  useEffect(() => {
+    if (updateData !== undefined) {
+      queryResult?.refetch();
+    }
+  }, [updateData])
 
   useEffect(() => {
     setFields([
@@ -214,9 +204,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "supplier_id", value: data.supplier.value },
       { name: "rtd_location_id", value: data.rtd_location.value },
 
-      // { name: "assigned_to", value: data.assigned_to },
-      // { name: "location_id", value: data?.location.value },
-      // { name: "requestable", value: data?.requestable },
+      { name: "assigned_to", value: data.assigned_to },
       { name: "image", value: data.image },
     ]);
   }, [data, form, isModalVisible]);
@@ -260,6 +248,17 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     return check;
   };
 
+  const changeNumber = () => {
+    if (typeof (data?.purchase_cost) == "number") {
+      let purchase_cost = data?.purchase_cost;
+      return purchase_cost;
+    }
+  }
+
+  const changeWarranty_months = () => {
+    return data?.warranty_months.split(" ")[0]
+  }
+
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
     setIsReadyToDeploy(findLabel(Number(value.value)));
   };
@@ -274,11 +273,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         requestable: 0,
       });
   };
-
-  // const demo = (data: string | undefined) => {
-  //   console.log(data);
-  //   return data;
-  // };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -313,7 +307,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.nameCompany")}
               {...companySelectProps}
-              //defaultValue={data?.company}
               value={data?.company}
               showSearch
             />
@@ -339,7 +332,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             initialValue={data?.asset_tag}
           >
             <Input
-              // defaultValue={data?.asset_tag} 
               value={data?.asset_tag} />
           </Form.Item>
           {messageErr?.asset_tag && (
@@ -362,7 +354,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             initialValue={data?.serial}
           >
             <Input
-              // defaultValue={data?.serial} 
               value={data?.serial} />
           </Form.Item>
           {messageErr?.serial && (
@@ -383,7 +374,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.propertyType")}
               {...modelSelectProps}
-              defaultValue={data?.model}
               value={data?.model}
             />
           </Form.Item>
@@ -410,7 +400,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.location")}
               {...locationSelectProps}
-              // defaultValue={data?.rtd_location}
               value={data?.rtd_location}
             />
           </Form.Item>
@@ -438,7 +427,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               onChange={(value) => {
                 onChangeStatusLabel(value);
               }}
-              // defaultValue={data?.status_label}
               placeholder={t("hardware.label.placeholder.status")}
               {...statusLabelSelectProps}
             />
@@ -487,7 +475,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           >
             <Input
               type="date"
-              // defaultValue={data?.purchase_date}
               value={data?.purchase_date}
             />
           </Form.Item>
@@ -513,7 +500,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.supplier")}
               {...supplierSelectProps}
-              // defaultValue={data?.supplier}
               value={data?.supplier}
             />
           </Form.Item>
@@ -537,7 +523,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             initialValue={data?.order_number}
           >
             <Input
-              // defaultValue={data?.order_number}
               value={data?.order_number}
             />
           </Form.Item>
@@ -561,7 +546,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             initialValue={data?.purchase_cost}
           >
             <Input addonAfter={t("hardware.label.field.usd")}
-              // defaultValue={data?.purchase_cost}
               value={data?.purchase_cost} />
           </Form.Item>
           {messageErr?.puchase_cost && (
@@ -581,12 +565,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.warranty_months.split(" ")[0]}
+            initialValue={changeWarranty_months()}
           >
             <Input
               addonAfter={t("hardware.label.field.month")}
-              // defaultValue={data?.warranty_months}
-              value={data?.warranty_months}
+              value={changeWarranty_months()}
             />
           </Form.Item>
           {messageErr?.warranty_months && (
@@ -596,112 +579,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           )}
         </Col>
       </Row>
-
-      {/* {isReadyToDeploy && (
-        <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-          <Tabs
-            defaultActiveKey="1"
-            onTabClick={(value) => {
-              setActiveModel(value);
-            }}
-          >
-            <Tabs.TabPane
-              tab={
-                <span>
-                  <AppleOutlined />
-                  {t("hardware.label.field.user")}
-                </span>
-              }
-              key="1"
-            ></Tabs.TabPane>
-            <Tabs.TabPane
-              tab={
-                <span>
-                  <AndroidOutlined />
-                  {t("hardware.label.field.asset")}
-                </span>
-              }
-              key="2"
-            ></Tabs.TabPane>
-            <Tabs.TabPane
-              tab={
-                <span>
-                  <AndroidOutlined />
-                  {t("hardware.label.field.location")}
-                </span>
-              }
-              key="3"
-            ></Tabs.TabPane>
-          </Tabs>
-        </Form.Item>
-      )}
-
-      {activeModel === "1" && (
-        <Form.Item
-          label={t("hardware.label.field.checkoutTo")}
-          name="assigned_to"
-          rules={[
-            {
-              required: false,
-              message:
-                t("hardware.label.field.checkoutTo") +
-                " " +
-                t("hardware.label.message.required"),
-            },
-          ]}
-          initialValue={data?.assigned_to}
-        >
-          <Select
-            placeholder={t("hardware.label.placeholder.user")}
-            {...userSelectProps}
-          />
-        </Form.Item>
-      )}
-      {activeModel === "2" && (
-        <Form.Item
-          label={t("hardware.label.field.checkoutTo")}
-          name="physical"
-          rules={[
-            {
-              required: false,
-              message:
-                t("hardware.label.field.checkoutTo") +
-                " " +
-                t("hardware.label.message.required"),
-            },
-          ]}
-          initialValue={data?.physical}
-        >
-          <Select
-            placeholder={t("hardware.label.placeholder.asset")}
-            {...hardwareSelectProps}
-          />
-        </Form.Item>
-      )}
-
-      {activeModel === "3" && (
-        <Form.Item
-          label={t("hardware.label.field.location")}
-          name="location"
-          rules={[
-            {
-              required: false,
-              message:
-                t("hardware.label.field.location") +
-                " " +
-                t("hardware.label.message.required"),
-            },
-          ]}
-          initialValue={data?.location}
-        >
-          <Select
-            placeholder={t("hardware.label.placeholder.location")}
-            {...locationSelectProps}
-            // defaultValue={data.location}
-            value={data.location}
-          />
-        </Form.Item>
-      )} */}
 
       <Form.Item
         label={t("hardware.label.field.notes")}
@@ -718,7 +595,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         initialValue={data?.notes}
       >
         <Input.TextArea
-          // defaultValue={data?.notes} 
           value={data?.notes} />
       </Form.Item>
       {messageErr?.notes && (
