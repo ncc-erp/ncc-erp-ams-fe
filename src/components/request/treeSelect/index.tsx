@@ -1,4 +1,4 @@
-import { Modal, TreeSelect } from "@pankod/refine-antd";
+import { TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
 import { IEntryType, ITreeEntryType } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
@@ -36,7 +36,6 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   };
 
   const onChange = (valueNew: any) => {
-    // console.log(valueNew);
     setValue(valueNew);
     setEntryId(valueNew);
   };

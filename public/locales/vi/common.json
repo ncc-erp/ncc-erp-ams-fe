@@ -33,6 +33,8 @@
     "undo": "Undo",
     "import": "Import",
     "clone": "Clone",
+    "checkout":"Checkout",
+    "checkin":"Checkin",
     "notAccessTitle": "You don't have permission to access"
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
@@ -100,7 +102,7 @@
           "nameCompany": "Công ty",
           "propertyCard": "Thẻ tài sản",
           "serial": "Số Sê-ri",
-          "propertyType": "Kiểu tài sản",
+          "propertyType": "Kiểu tài sản ",
           "status": "Status",
           "checkoutTo": "Checkout đến",
           "user": "Người dùng",
@@ -108,6 +110,8 @@
           "location": "Địa phương",
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
+          "dateCheckout": "Ngày Checkout",
+          "dateWantCheckin":"Ngày mong muốn Checkin",
           "supplier": "Nhà cung cấp",
           "orderNumber": "Mã order",
           "cost": "Chi phí mua hàng",
@@ -115,6 +119,7 @@
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
+          "note": "Ghi chú",
           "locationFix": "Vị trí mặc định",
           "checkbox": "Cho phép đề xuất"
         },
@@ -135,11 +140,15 @@
         "button": {
           "create": "Thêm mới",
           "update": "Chỉnh sửa",
-          "clone": "Clone"
+          "clone": "Clone",
+          "checkout": "Checkout",
+          "checkin": "Checkin"
         },
         "title": {
           "create":"Tạo mới",
-          "edit": "Chỉnh sửa"
+          "edit": "Chỉnh sửa",
+          "checkout": "Checkout",
+          "checkin": "Checkin"
         }
     }
   },
@@ -180,7 +189,7 @@
       },
       "title": {
         "create": "Tạo Request",
-        "detail":"Chi tiết Request"
+        "detail": "Chi tiết Request"
       }
     }
   }

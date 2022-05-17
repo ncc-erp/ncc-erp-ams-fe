@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  useCustom,
-  useList,
-  useCreate,
-} from "@pankod/refine-core";
+import { useTranslate, useList, useCreate } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -24,7 +18,9 @@ import "../../styles/request.less";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
+
 import { IBranch } from "interfaces/branch";
+import { ISupplier } from "interfaces/supplier";
 import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 
@@ -51,7 +47,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
     resource: "api/v1/finfast/branch",
   });
 
-  const { data: supplierSelectProps } = useList<any>({
+  const { data: supplierSelectProps } = useList<ISupplier>({
     resource: "api/v1/finfast/supplier",
   });
 
@@ -81,6 +77,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
   }, [data, form, refetch, setIsModalVisible]);
 
   const handleChange = (selectedItems: any) => {
+    // console.log("check selectedItems", selectedItems);
     const array = assetSelectProps?.data?.rows;
 
     const assets_choose = selectedItems.map((item: number) => {

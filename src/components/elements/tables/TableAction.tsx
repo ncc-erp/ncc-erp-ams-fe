@@ -1,19 +1,7 @@
 import { Icons } from "@pankod/refine-antd";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Divider,
-  Dropdown,
-  Form,
-  Input,
-  List,
-  Menu,
-  Row,
-  Space,
-} from "antd";
+import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
 import { useCallback, useMemo, useState } from "react";
-
+import { ICheck } from "../../../interfaces/index";
 const { Search } = Input;
 
 export interface ISelectTableCol {
@@ -34,6 +22,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
   };
 
   const onChange = (list: any) => {
+    // console.log("onChange", list);
     setCheckedList(list);
     setCheckAll(list.length === plainOptions.length);
     setVisible(true);
@@ -106,24 +95,25 @@ export interface ITableAction {
 }
 
 export const TableAction = (props: ITableAction) => {
+  const { actions, searchFormProps, collumns, defaultCollumns } = props;
   const menu = useMemo(
     () => (
       <Menu>
-        {props.actions?.map((opt) => (
+        {actions?.map((opt) => (
           <Menu.Item key={opt.title} onClick={opt.handle}>
             {opt.title}
           </Menu.Item>
         ))}
       </Menu>
     ),
-    [props.actions]
+    [actions]
   );
   const onSelectCollumn = useCallback(() => {}, []);
 
   return (
     <Row style={{ marginBottom: "10px" }}>
       <Col xs={12}>
-        {props.actions && (
+        {actions && (
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button>
               Action <Icons.DownOutlined />
@@ -138,24 +128,23 @@ export const TableAction = (props: ITableAction) => {
             justifyContent: "end",
           }}
         >
-          {props.searchFormProps && (
-            <Form {...props.searchFormProps}>
+          {searchFormProps && (
+            <Form {...searchFormProps}>
               <Form.Item name={"search"}>
                 <Search
                   placeholder="tìm kiếm"
                   onSearch={(key) => {
-                    props.searchFormProps.form.submit();
-                    // console.log(props.searchFormProps);
+                    searchFormProps.form.submit();
                   }}
                   style={{ width: 200 }}
                 />
               </Form.Item>
             </Form>
           )}
-          {props.collumns && props.defaultCollumns && (
+          {collumns && defaultCollumns && (
             <SelectTableCol
-              options={props.collumns}
-              defaultValue={props.defaultCollumns}
+              options={collumns}
+              defaultValue={defaultCollumns}
               onChange={onSelectCollumn}
             ></SelectTableCol>
           )}

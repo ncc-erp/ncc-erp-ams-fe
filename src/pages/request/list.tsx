@@ -23,6 +23,7 @@ import {
   CreateButton,
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
+import { IHardwareRequest } from "interfaces/hardware";
 import { useEffect, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { RequestCreate } from "./create";
@@ -40,7 +41,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   const { mutate: muteDelete, data: dataDelete } = useDelete();
 
-  const useHardwareNotRequest = useCustom<any>({
+  const useHardwareNotRequest = useCustom<IHardwareRequest>({
     url: "api/v1/hardware",
     method: "get",
     config: {
@@ -68,7 +69,6 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-        console.log(params, "params");
 
         filters.push({
           field: "search",
