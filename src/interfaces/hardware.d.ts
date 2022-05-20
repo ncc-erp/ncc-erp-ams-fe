@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
 
 export interface IHardwareRequest {
@@ -116,7 +117,6 @@ export interface IHardwareRequestCheckout {
 export interface IHardwareResponseCheckout {
     id: number;
     name: string;
-    // asset_tag: string;
     model: {
         id: number;
         name: string;

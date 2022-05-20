@@ -77,7 +77,6 @@ export const RequestCreate = (props: RequestCreateProps) => {
   }, [data, form, refetch, setIsModalVisible]);
 
   const handleChange = (selectedItems: any) => {
-    // console.log("check selectedItems", selectedItems);
     const array = assetSelectProps?.data?.rows;
 
     const assets_choose = selectedItems.map((item: number) => {

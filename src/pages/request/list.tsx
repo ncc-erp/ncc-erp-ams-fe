@@ -95,7 +95,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         },
       });
     }
-  }, [idSend]);
+  }, [idSend, mutate]);
 
   useEffect(() => {
     let arr = [...isLoadingArr];
