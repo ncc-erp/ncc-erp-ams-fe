@@ -3,13 +3,13 @@ export interface ICategory {
   title: string;
 }
 export interface ITable<T> {
-  rows: T[],
-  total: number
+  rows: T[];
+  total: number;
 }
 
 export interface IHardware {
-  total: number,
-  id: string,
+  total: number;
+  id: string;
 }
 // from demo
 export interface IPost {

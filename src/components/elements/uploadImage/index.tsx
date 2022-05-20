@@ -38,7 +38,7 @@ export const UploadImage = (props: UploadImageProps) => {
       )}
 
       <Input className="file" id="file" type="file" onChange={fileHandler} />
-      {!file && ( 
+      {!file && (
         <label htmlFor="file">
           <Image
             preview={false}
