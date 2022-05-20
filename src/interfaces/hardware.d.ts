@@ -30,7 +30,7 @@ export interface IHardwareResponse {
     id: number;
     name: string;
   };
-  model_number: string;
+  // model_number: string;
   status_label: {
     id: number;
     name: string;
@@ -70,7 +70,7 @@ export interface IHardwareResponse {
   last_audit_date: string;
 
   requestable: number;
-  physical: string;
+  // physical: string;
 }
 
 export interface IDefaultValue {
@@ -101,48 +101,48 @@ export interface IHardwareResponseConvert {
   last_audit_date: string;
 }
 
-export interface IHardwareResponses {
-  id: number;
-  asset_tag: string;
-  company: {
-    label: string;
-    value: string;
-  };
-  image: string;
-  model: {
-    label: string;
-    value: string;
-  };
-  name: string;
-  notes: string;
-  order_number: string;
-  purchase_cost: number;
-  purchase_date: string;
-  requestable: boolean;
-  rtd_location:
-    | {
-        label: string;
-        value: string;
-      }
-    | string;
-  location:
-    | {
-        label: string;
-        value: string;
-      }
-    | string;
-  serial: string;
-  status_label: {
-    label: string;
-    value: string;
-  };
-  supplier:
-    | {
-        label: string;
-        value: string;
-      }
-    | string;
-  warranty_months: number;
-  physical: number;
-  assigned_to: number;
-}
+// export interface IHardwareResponses {
+//   id: number;
+//   asset_tag: string;
+//   company: {
+//     label: string;
+//     value: string;
+//   };
+//   image: string;
+//   model: {
+//     label: string;
+//     value: string;
+//   };
+//   name: string;
+//   notes: string;
+//   order_number: string;
+//   purchase_cost: number;
+//   purchase_date: string;
+//   requestable: boolean;
+//   rtd_location:
+//     | {
+//         label: string;
+//         value: string;
+//       }
+//     | string;
+//   location:
+//     | {
+//         label: string;
+//         value: string;
+//       }
+//     | string;
+//   serial: string;
+//   status_label: {
+//     label: string;
+//     value: string;
+//   };
+//   supplier:
+//     | {
+//         label: string;
+//         value: string;
+//       }
+//     | string;
+//   warranty_months: number;
+//   physical: number;
+//   assigned_to: number;
+// }
