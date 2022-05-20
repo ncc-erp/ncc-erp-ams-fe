@@ -139,6 +139,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
+    console.log("check create: ", event)
     setMessageErr(null);
     const formData = new FormData();
     formData.append("name", event.name);
@@ -150,22 +151,22 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    formData.append("physical", event.physical !== undefined ? event.physical : 1)
-    formData.append("assigned_to", event.assigned_to);
+    if (event.user_id !== undefined) { formData.append("user_id", event.user_id); }
+    if (event.assigned_to !== undefined) formData.append("assigned_to", event.assigned_to);
+    if (event.location !== undefined) formData.append("location_id", event.location);
+
+    if (event.physical !== undefined) formData.append("physical", event.physical)
 
     formData.append("status_id", event.status_label !== undefined ? event.status_label : 0)
     formData.append("warranty_months", event.warranty_months);
-
     formData.append("purchase_cost", event.purchase_cost);
     formData.append("purchase_date", event.purchase_date);
-
     formData.append("supplier_id", event.supplier !== undefined ? event.supplier : 0)
 
-    formData.append("requestable", event.requestable);
-    formData.append("location_id", event.location);
+    if (event.requestable !== undefined) { formData.append("requestable", event.requestable); }
     formData.append("rtd_location_id", event.rtd_location);
 
-    if (event.image !== null) {
+    if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
 
@@ -287,15 +288,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.serial")}
             name="serial"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.serial") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input placeholder={t("hardware.label.placeholder.serial")} />
           </Form.Item>
@@ -447,15 +439,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.orderNumber") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input placeholder={t("hardware.label.placeholder.orderNumber")} />
           </Form.Item>
@@ -488,15 +471,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.insurance")}
             name="warranty_months"
-          // rules={[
-          //   {
-          //     required: true,
-          //     message:
-          //       t("hardware.label.field.insurance") +
-          //       " " +
-          //       t("hardware.label.message.required"),
-          //   },
-          // ]}
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.insurance") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
           >
             <Input type="number" addonAfter={t("hardware.label.field.month")}
               placeholder={t("hardware.label.placeholder.insurance")} />
@@ -552,15 +535,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Form.Item
           label={t("hardware.label.field.checkoutTo")}
           name="assigned_to"
-        // rules={[
-        //   {
-        //     required: false,
-        //     message:
-        //       t("hardware.label.field.checkoutTo") +
-        //       " " +
-        //       t("hardware.label.message.required"),
-        //   },
-        // ]}
+          rules={[
+            {
+              required: false,
+              message:
+                t("hardware.label.field.checkoutTo") +
+                " " +
+                t("hardware.label.message.required"),
+            },
+          ]}
         >
           <Select
             placeholder={t("hardware.label.placeholder.user")}
@@ -572,15 +555,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Form.Item
           label={t("hardware.label.field.checkoutTo")}
           name="physical"
-        // rules={[
-        //   {
-        //     required: false,
-        //     message:
-        //       t("hardware.label.field.checkoutTo") +
-        //       " " +
-        //       t("hardware.label.message.required"),
-        //   },
-        // ]}
+          rules={[
+            {
+              required: false,
+              message:
+                t("hardware.label.field.checkoutTo") +
+                " " +
+                t("hardware.label.message.required"),
+            },
+          ]}
         >
           <Select
             placeholder={t("hardware.label.placeholder.asset")}
@@ -592,15 +575,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Form.Item
           label={t("hardware.label.field.checkoutTo")}
           name="location"
-        // rules={[
-        //   {
-        //     required: false,
-        //     message:
-        //       t("hardware.label.field.location") +
-        //       " " +
-        //       t("hardware.label.message.required"),
-        //   },
-        // ]}
+          rules={[
+            {
+              required: false,
+              message:
+                t("hardware.label.field.location") +
+                " " +
+                t("hardware.label.message.required"),
+            },
+          ]}
         >
           <Select
             placeholder={t("hardware.label.placeholder.location")}
@@ -634,7 +617,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable">
+      <Form.Item label="" name="requestable" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheck(event);

@@ -3,7 +3,6 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   useCreate,
-  useSelect,
 } from "@pankod/refine-core";
 import {
   List,
@@ -13,12 +12,11 @@ import {
   getDefaultSortOrder,
   DateField,
   Space,
+  CloneButton,
   EditButton,
   DeleteButton,
   TagField,
   CreateButton,
-  Popconfirm,
-  Button
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -26,9 +24,9 @@ import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
+import { HardwareClone } from "./clone";
 import {
   IHardwareResponse,
-  IHardwareResponseConvert,
 } from "interfaces/hardware";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
@@ -36,6 +34,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<any>({});
+
+  const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+  const [detailClone, setDetailClone] = useState<any>({});
+
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
   const [keySearch, setKeySearch] = useState<string>();
@@ -63,7 +65,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
       console.log(
@@ -73,76 +74,123 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       );
     },
     getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
+      disabled: record.name === "Disabled User",
       name: record.name,
     }),
   };
 
   const edit = (data: IHardwareResponse) => {
-    console.log(data?.model?.id.toString())
-    const dataConvert: IHardwareResponseConvert = {
+    const dataConvert: IHardwareResponse = {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial,
+      serial: data.serial !== "undefined" ? data.serial : "",
       model: {
-        value: data?.model?.id.toString(),
-        label: data?.model?.name,
+        id: data?.model?.id,
+        name: data?.model?.name,
       },
-      model_number: data?.order_number,
+      // model_number: data?.order_number,
       status_label: {
-        value: data?.status_label.id.toString(),
-        label: data?.status_label.name,
+        id: data?.status_label.id,
+        name: data?.status_label.name,
+        status_type: data?.status_label.status_type,
+        status_meta: data?.status_label.status_meta,
       },
       category: {
-        value: data?.category?.id.toString(),
-        label: data?.category?.name,
+        id: data?.category?.id,
+        name: data?.category?.name,
       },
       supplier: {
-        value: data?.supplier?.id.toString(),
-        label: data?.supplier?.name,
+        id: data?.supplier?.id,
+        name: data?.supplier?.name,
       },
       notes: data.notes,
       order_number: data?.order_number,
       company: {
-        value: data?.company?.id.toString(),
-        label: data?.company?.name,
+        id: data?.company?.id,
+        name: data?.company?.name,
       },
       location: {
-        value: data?.location?.id.toString(),
-        label: data?.location?.name,
+        id: data?.location?.id,
+        name: data?.location?.name,
       },
       rtd_location: {
-        value: data?.rtd_location?.id.toString(),
-        label: data?.rtd_location?.name,
+        id: data?.rtd_location?.id,
+        name: data?.rtd_location?.name,
       },
       image: data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
-      purchase_date: data?.purchase_date.date,
+      purchase_date: {
+        date: data?.purchase_date.date,
+        formatted: data?.purchase_date.formatted
+      },
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
 
-      // //add 
-      // requestable: data?.requestable,
-      // physical: data?.physical
+      requestable: data?.requestable,
     };
-
     setDetail(dataConvert);
     setIsEditModalVisible(true);
+
   };
 
-  // const { selectProps: categorySelectProps } = useSelect<IHardware>({
-  //   resource: "api/v1/hardware",
-  //   optionLabel: "title",
-  //   onSearch: (value) => [
-  //     {
-  //       field: "search",
-  //       operator: "containss",
-  //       value,
-  //     },
-  //   ],
-  // });
+  const clone = (data: IHardwareResponse) => {
+    const dataConvert: IHardwareResponse = {
+      id: data.id,
+      name: data.name,
+      asset_tag: data.asset_tag,
+      serial: data.serial !== "undefined" ? data.serial : "",
+      model: {
+        id: data?.model?.id,
+        name: data?.model?.name,
+      },
+      // model_number: data?.order_number,
+      status_label: {
+        id: data?.status_label.id,
+        name: data?.status_label.name,
+        status_type: data?.status_label.status_type,
+        status_meta: data?.status_label.status_meta,
+      },
+      category: {
+        id: data?.category?.id,
+        name: data?.category?.name,
+      },
+      supplier: {
+        id: data?.supplier?.id,
+        name: data?.supplier?.name,
+      },
+      notes: data.notes,
+      order_number: data?.order_number,
+      company: {
+        id: data?.company?.id,
+        name: data?.company?.name,
+      },
+      location: {
+        id: data?.location?.id,
+        name: data?.location?.name,
+      },
+      rtd_location: {
+        id: data?.rtd_location?.id,
+        name: data?.rtd_location?.name,
+      },
+      image: data?.image,
+      warranty_months: data?.warranty_months,
+      purchase_cost: data?.purchase_cost,
+      purchase_date: {
+        date: data?.purchase_date.date,
+        formatted: data?.purchase_date.formatted
+      },
+      assigned_to: data?.assigned_to,
+      last_audit_date: data?.last_audit_date,
+
+      requestable: data?.requestable,
+      // physical: data?.physical
+    };
+    setDetailClone(dataConvert);
+    setIsCloneModalVisible(true);
+
+  };
 
   const collumns = useMemo(
     () => [
@@ -221,6 +269,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible])
 
+  useEffect(() => {
+    refreshData();
+  }, [isCloneModalVisible])
+
   return (
     <List
       pageHeaderProps={{
@@ -249,6 +301,17 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
+      <MModal
+        title={t("hardware.label.title.clone")}
+        setIsModalVisible={setIsCloneModalVisible}
+        isModalVisible={isCloneModalVisible}
+      >
+        <HardwareClone
+          isModalVisible={isCloneModalVisible}
+          setIsModalVisible={setIsCloneModalVisible}
+          data={detailClone}
+        />
+      </MModal>
       <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
@@ -258,7 +321,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: any) => (
             <Space>
-              <Popconfirm
+              {/* <Popconfirm
                 title={t("request.label.button.send")}
                 onConfirm={() => onSendRequest(record.id)}
               >
@@ -276,7 +339,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 >
                   {t("hardware.label.button.clone")}
                 </Button>
-              </Popconfirm>
+              </Popconfirm> */}
+              <CloneButton
+                hideText
+                size="small"
+                recordItemId={record.id}
+                onClick={() => clone(record)}
+              />
               <EditButton
                 hideText
                 size="small"
