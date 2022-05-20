@@ -11,7 +11,7 @@ type RequestShowProps = {
 };
 
 export const RequestShow = (props: RequestShowProps) => {
-  const { setIsModalVisible, detail } = props;
+  const { detail } = props;
   const t = useTranslate();
 
   return (

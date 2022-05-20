@@ -139,12 +139,13 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
+    console.log("check event create: ", event);
     setMessageErr(null);
     const formData = new FormData();
     formData.append("name", event.name);
     formData.append("serial", event.serial);
     formData.append("company_id", event.company_id);
-    formData.append("model_id", event.model_id);
+    formData.append("model_id", event.model);
     formData.append("order_number", event.order_number);
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
@@ -167,7 +168,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware",
+        resource: "api/v1/hardware/",
         values: payload,
       });
       if (createData?.data.message) form.resetFields();
