@@ -13,8 +13,8 @@ export const DashboardPage: React.FC = () => {
     <div className="dashboardContainer">
       <Show isLoading={isLoading}>
         <Row gutter={[12, 12]}>
-          {(data?.data.payload || []).map((item: any) => (
-            <Col sm={24} md={24}>
+          {(data?.data.payload || []).map((item: any, index: number) => (
+            <Col key={index} sm={24} md={24}>
               <Locations location={item}></Locations>
             </Col>
           ))}

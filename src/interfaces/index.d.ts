@@ -10,7 +10,19 @@ export interface ITable<T> {
 export interface IHardware {
   total: number;
   id: string;
+
+  name: string;
+  model: {
+    id: number;
+    name: string;
+  };
+  category: {
+    id: number;
+    name: string;
+  };
+  datetime: string;
 }
+
 // from demo
 export interface IPost {
   id: string;
@@ -19,4 +31,13 @@ export interface IPost {
   status: "published" | "draft" | "rejected";
   createdAt: string;
   category: ICategory;
+}
+export interface ICheckboxProps {
+  name: string;
+}
+
+export interface ICheckboxChange {
+  target: {
+    checked: boolean;
+  };
 }
