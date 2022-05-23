@@ -6,11 +6,10 @@ import App from "./App";
 import "./i18n";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <React.Suspense fallback="loading">
-      <App />
-    </React.Suspense>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <React.Suspense fallback="loading">
+    <App />
+  </React.Suspense>,
   document.getElementById("root")
 );
 

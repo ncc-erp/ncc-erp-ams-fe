@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
 import { IEntryType, ITreeEntryType } from "interfaces/dashboard";
@@ -9,7 +10,7 @@ type TreeSelectComponentProps = {
 
 export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   const { setEntryId } = props;
-  const [value, setValue] = useState<number[]>([]);
+  const [value, setValue] = useState<number[]>();
   const [treeData, setTreeData] = useState<ITreeEntryType[]>([]);
 
   const { data } = useCustom({
@@ -64,6 +65,8 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
       allowClear
       showSearch
       fieldNames={{ label: "name", value: "id", children: "children" }}
+      treeNodeLabelProp="name"
+      treeNodeFilterProp="id"
       {...tProps}
     />
   );

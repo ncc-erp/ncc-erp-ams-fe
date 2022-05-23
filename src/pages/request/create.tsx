@@ -14,15 +14,15 @@ import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 
 import "../../styles/request.less";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { IHardwareRequest } from "interfaces/hardware";
-
 import { IBranch } from "interfaces/branch";
 import { ISupplier } from "interfaces/supplier";
 import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
+import { IRequest } from "interfaces/request";
+import { ISelectItem } from "interfaces";
 
 type RequestCreateProps = {
   useHardwareNotRequest: any;
@@ -33,11 +33,10 @@ export const RequestCreate = (props: RequestCreateProps) => {
   const { setIsModalVisible, useHardwareNotRequest } = props;
   const [entryId, setEntryId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [selectedItems, setSelectedItem] = useState();
+  const [selectedItems, setSelectedItem] = useState<ISelectItem>();
   const [selectedAssets, setSelectedAssets] = useState([]);
 
   const t = useTranslate();
-
   const { formProps, form } = useForm<IHardwareRequest>({
     action: "create",
   });
@@ -53,7 +52,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
 
   const { mutate, data, isLoading } = useCreate();
 
-  const onFinish = (event: any) => {
+  const onFinish = (event: IRequest) => {
     mutate({
       resource: "api/v1/finfast-request",
       values: {
@@ -76,14 +75,16 @@ export const RequestCreate = (props: RequestCreateProps) => {
     }
   }, [data, form, refetch, setIsModalVisible]);
 
-  const handleChange = (selectedItems: any) => {
+  const handleChange = (selectedItems: ISelectItem) => {
     const array = assetSelectProps?.data?.rows;
 
-    const assets_choose = selectedItems.map((item: number) => {
+    const assets_choose = selectedItems.map((item: number, index: number) => {
       let arrayItem: any = {};
       arrayItem.asset = array.filter((x: { id: number }) => x.id === item)[0];
+      arrayItem.key = index;
       return arrayItem;
     });
+
     setSelectedAssets(assets_choose);
     setSelectedItem(selectedItems);
   };
@@ -98,7 +99,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
         <Form
           {...formProps}
           layout="vertical"
-          onFinish={(event) => {
+          onFinish={(event: any) => {
             onFinish(event);
           }}
         >
@@ -145,7 +146,9 @@ export const RequestCreate = (props: RequestCreateProps) => {
               }
             >
               {branchSelectProps?.data.map((item) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -177,7 +180,9 @@ export const RequestCreate = (props: RequestCreateProps) => {
               }
             >
               {supplierSelectProps?.data.map((item) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -210,14 +215,16 @@ export const RequestCreate = (props: RequestCreateProps) => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              {assetSelectProps?.data?.rows?.map((item: any) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+              {assetSelectProps?.data?.rows?.map((item: any, index: number) => (
+                <Select.Option key={index} value={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
 
           {selectedAssets.length > 0 && (
-            <ListAssetNotRequest assetData={selectedAssets} />
+            <ListAssetNotRequest assetDatas={selectedAssets} />
           )}
 
           <Form.Item

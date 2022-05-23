@@ -1,13 +1,13 @@
 import { Modal, TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
 import { ITreeEntryType } from "interfaces/dashboard";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 type FilterModalProps = {
   setIsModalVisible: (data: boolean) => void;
   isModalVisible: boolean;
   treeData: ITreeEntryType[];
-  valueData: any;
+  valueData: number[] | (() => number[]);
 };
 
 export const FilterModal = (props: FilterModalProps) => {
@@ -33,7 +33,7 @@ export const FilterModal = (props: FilterModalProps) => {
     setValue(valueData);
   };
 
-  const onChange = (valueNew: any) => {
+  const onChange = (valueNew: SetStateAction<number[]>) => {
     setValue(valueNew);
   };
 

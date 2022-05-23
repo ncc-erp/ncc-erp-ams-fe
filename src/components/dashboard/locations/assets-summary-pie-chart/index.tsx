@@ -42,7 +42,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
         const Ul = (
           <ul>
             {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
-              <li>
+              <li key={item.id}>
                 {item.name}{" "}
                 <Typography.Text strong>
                   {calculation(item.assets_count, data[0]?.data?.assets_count)}

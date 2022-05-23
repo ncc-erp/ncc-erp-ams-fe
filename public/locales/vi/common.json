@@ -94,7 +94,8 @@
     }
   },
   "table": {
-    "actions": "Actions"
+    "actions": "Actions",
+    "search": "Tìm kiếm"
   },
   "hardware": {
     "label": {
@@ -170,7 +171,8 @@
         "totalAsset": "Số lượng",
         "status": "Trạng thái",
         "asset_ids": "Thiết bị",
-        "price": "Giá"
+        "price": "Giá",
+        "image": "Ảnh thiết bị"
       },
       "placeholder": {
         "name": "Nhập tên",

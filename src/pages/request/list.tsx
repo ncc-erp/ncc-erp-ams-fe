@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { DeleteOutlined } from "@ant-design/icons";
 
 import {
@@ -22,6 +23,7 @@ import {
   Button,
   CreateButton,
 } from "@pankod/refine-antd";
+
 import { IHardware } from "interfaces";
 import { IHardwareRequest } from "interfaces/hardware";
 import { useEffect, useState } from "react";
@@ -29,18 +31,18 @@ import { MModal } from "components/Modal/MModal";
 import { RequestCreate } from "./create";
 import { RequestShow } from "./show";
 import { TableAction } from "components/elements/tables/TableAction";
-import { IHardwareResponse } from "interfaces/hardware";
+import { IRequestResponse } from "interfaces/request";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-  const [detail, setDetail] = useState<IHardwareResponse>();
+  const [detail, setDetail] = useState<IRequestResponse | undefined>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
 
   const { mutate: muteDelete, data: dataDelete } = useDelete();
-
   const useHardwareNotRequest = useCustom<IHardwareRequest>({
     url: "api/v1/hardware",
     method: "get",
@@ -80,7 +82,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  const { mutate, isLoading: isLoadingSendRequest } = useCreate<any>();
+  const { mutate, isLoading: isLoadingSendRequest } =
+    useCreate<IHardwareRequest>();
 
   const onSendRequest = (value: number) => {
     setIdSend(value);
@@ -126,7 +129,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     handleOpenModel();
   };
 
-  const show = (data: IHardwareResponse) => {
+  const show = (data: IRequestResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };

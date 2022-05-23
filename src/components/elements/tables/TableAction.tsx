@@ -1,13 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
 import { useCallback, useMemo, useState } from "react";
-import { ICheck } from "../../../interfaces/index";
+import { useTranslate } from "@pankod/refine-core";
+import { ICheckboxChange } from "interfaces";
 const { Search } = Input;
-
+export declare type CheckboxValueType = string | number | boolean;
 export interface ISelectTableCol {
-  onChange: (list: any[]) => void;
-  options: any[];
-  defaultValue: any[];
+  onChange: (list: Array<CheckboxValueType>) => void;
+  options: string[];
+  defaultValue: Array<CheckboxValueType>;
 }
 
 export const SelectTableCol = (props: ISelectTableCol) => {
@@ -21,15 +23,14 @@ export const SelectTableCol = (props: ISelectTableCol) => {
     setVisible(show);
   };
 
-  const onChange = (list: any) => {
-    // console.log("onChange", list);
+  const onChange = (list: Array<CheckboxValueType>) => {
     setCheckedList(list);
     setCheckAll(list.length === plainOptions.length);
     setVisible(true);
     props.onChange(list);
   };
 
-  const onCheckAllChange = (e: any) => {
+  const onCheckAllChange = (e: ICheckboxChange) => {
     const newList = e.target.checked ? plainOptions : [];
     setCheckedList(newList);
     setCheckAll(e.target.checked);
@@ -51,10 +52,10 @@ export const SelectTableCol = (props: ISelectTableCol) => {
             </Checkbox>
           </Col>
           <Checkbox.Group value={checkedList} onChange={onChange}>
-            {plainOptions.map((opt) => (
-              <Col span={24} key={opt}>
-                <Checkbox value={opt} checked={checkedList.includes(opt)}>
-                  {opt}
+            {plainOptions.map((item) => (
+              <Col span={24} key={item}>
+                <Checkbox value={item} checked={checkedList.includes(item)}>
+                  {item}
                 </Checkbox>
               </Col>
             ))}
@@ -62,6 +63,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
         </Row>
       </div>
     ),
+
     [plainOptions]
   );
 
@@ -81,27 +83,32 @@ export const SelectTableCol = (props: ISelectTableCol) => {
   );
 };
 
+export interface MenuInfo {
+  key: string;
+}
 export interface ITableAction {
   actions?: [
     {
       title: string;
-      handle: (menu: any) => void; // todo interface
+      handle: (menu: MenuInfo) => void;
     }
   ];
   onSearch?: (keyword: string) => void;
-  collumns?: any[];
-  defaultCollumns?: any[];
+  collumns?: string[];
+  defaultCollumns?: string[];
   searchFormProps: any;
 }
 
 export const TableAction = (props: ITableAction) => {
   const { actions, searchFormProps, collumns, defaultCollumns } = props;
+  const t = useTranslate();
+
   const menu = useMemo(
     () => (
       <Menu>
-        {actions?.map((opt) => (
-          <Menu.Item key={opt.title} onClick={opt.handle}>
-            {opt.title}
+        {actions?.map((item) => (
+          <Menu.Item key={item.title} onClick={item.handle}>
+            {item.title}
           </Menu.Item>
         ))}
       </Menu>
@@ -132,7 +139,7 @@ export const TableAction = (props: ITableAction) => {
             <Form {...searchFormProps}>
               <Form.Item name={"search"}>
                 <Search
-                  placeholder="tìm kiếm"
+                  placeholder={t("table.search")}
                   onSearch={(key) => {
                     searchFormProps.form.submit();
                   }}
