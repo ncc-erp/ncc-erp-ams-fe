@@ -7,7 +7,6 @@ export interface IRequest {
     asset_ids: {}[]
 }
 export interface IRequestResponse {
-    finfast_request_assets: any ;
     status: string;
     entry_type:{
      code: string;
@@ -71,5 +70,6 @@ export interface IRequestResponse {
     }
     assigned_to: number;
     last_audit_date: string;
+    finfast_request_assets: any ;
 }
 

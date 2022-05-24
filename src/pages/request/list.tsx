@@ -210,10 +210,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
             <TagField value={value.length ? value.length : 0} />
           )}
         />
-        <Table.Column<IHardware>
+        <Table.Column<IRequestResponse>
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record: any) => (
+          render={(_, record: IRequestResponse) => (
             <Space>
               <ShowButton
                 hideText

@@ -2,6 +2,7 @@
 import { Interface } from "readline";
 
 export interface IHardwareRequest {
+    rows: any;
     id: number;
     asset_tag: string;
     status_id: number;
@@ -23,8 +24,7 @@ export interface IHardwareRequest {
     location_id: number;
 }
 
-
-export interface IHardwareResponse {
+export interface IHardwareResponse {    
     id: number;
     name: string;
     asset_tag: string;
@@ -101,6 +101,10 @@ export interface IDefaultValue {
 }
 
 export interface IHardwareRequestCheckout {
+    physical: string;
+    location: string;
+    status_label: string;
+    model: string;
     id: number;
     asset_tag: string;
     status_id: number;
@@ -112,6 +116,7 @@ export interface IHardwareRequestCheckout {
     last_checkout: string;
     last_audit_date: string;
     location_id: number;
+    assigned_to: string;
 }
 
 export interface IHardwareResponseCheckout {
@@ -152,47 +157,10 @@ export interface IHardwareResponseCheckout {
     }
     physical:string;
 }
-export interface IHardwareResponseCheckin {
-    id: number;
-    name: string;
-    asset_tag: string;
-    model: {
-        id: number;
-        name: string;
-    }
-    model_number: string;
-    status_label: {
-        id: number;
-        name: string;
-        status_type: string;
-        status_meta: string;
-    }
-    category: {
-        id: number;
-        name: string;
-    }
-  
-    notes: string;
-    company: {
-        id: number;
-        name: string;
-    }
-    location: {
-        id: number;
-        name: string;
-    }
- 
-    assigned_to: number;
-    last_audit_date: {
-        date: string;
-        formatted: string;
-    };
-    last_checkout: {
-        date: string;
-        formatted: string;
-    }
-    // next_audit_date: {
-    //     date: string;
-    //     formatted: string;
-    // }
+
+export interface IHardwareList {
+    data: {
+        data: IHardwareRequest;
+    } | undefined ;
+    refetch: Function;
 }

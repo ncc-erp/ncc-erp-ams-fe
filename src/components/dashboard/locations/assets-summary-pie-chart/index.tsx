@@ -1,4 +1,3 @@
-import React from "react";
 import { Pie, PieConfig } from "@ant-design/plots";
 import { renderToString } from "react-dom/server";
 import { Typography } from "@pankod/refine-antd";
@@ -44,14 +43,14 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
             {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
               <li key={item.id}>
                 {item.name}{" "}
-                <Typography.Text strong>
+                <strong>
                   {calculation(item.assets_count, data[0]?.data?.assets_count)}
-                </Typography.Text>
+                </strong>
               </li>
             ))}
           </ul>
         );
-        const Text = <Typography.Text strong>{title}</Typography.Text>;
+        const Text = <strong>{title}</strong>;
         return `<div>
                   ${renderToString(Text)}
                   ${renderToString(Ul)}

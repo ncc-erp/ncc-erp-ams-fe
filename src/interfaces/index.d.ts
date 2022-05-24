@@ -23,9 +23,7 @@ export interface IPost {
 export interface ISelectItem {
   key: number;
   map: any;
-  asset:[
-    id:number,
-  ]
+  asset: []
 }
 export interface ICheckboxChange {
   target: {

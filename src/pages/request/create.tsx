@@ -16,7 +16,7 @@ import ReactMde from "react-mde";
 import "../../styles/request.less";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareRequest } from "interfaces/hardware";
+import { IHardwareList, IHardwareRequest } from "interfaces/hardware";
 import { IBranch } from "interfaces/branch";
 import { ISupplier } from "interfaces/supplier";
 import { TreeSelectComponent } from "components/request/treeSelect";
@@ -25,7 +25,7 @@ import { IRequest } from "interfaces/request";
 import { ISelectItem } from "interfaces";
 
 type RequestCreateProps = {
-  useHardwareNotRequest: any;
+  useHardwareNotRequest: IHardwareList;
   setIsModalVisible: (data: boolean) => void;
 };
 
@@ -79,7 +79,11 @@ export const RequestCreate = (props: RequestCreateProps) => {
     const array = assetSelectProps?.data?.rows;
 
     const assets_choose = selectedItems.map((item: number, index: number) => {
-      let arrayItem: any = {};
+      let arrayItem: ISelectItem = {
+        key: 0,
+        map: undefined,
+        asset: [],
+      };
       arrayItem.asset = array.filter((x: { id: number }) => x.id === item)[0];
       arrayItem.key = index;
       return arrayItem;

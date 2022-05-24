@@ -16,7 +16,7 @@ export const DashboardPage: React.FC = () => {
         <Row gutter={[12, 12]}>
           {(data?.data.payload || []).map((item: ILocation, index: number) => (
             <Col sm={24} md={24} key={index}>
-              <Locations location={item}></Locations>
+              <Locations key={index} location={item}></Locations>
             </Col>
           ))}
         </Row>
