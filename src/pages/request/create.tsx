@@ -49,6 +49,19 @@ export const RequestCreate = (props: RequestCreateProps) => {
   const { data: supplierSelectProps } = useList<ISupplier>({
     resource: "api/v1/finfast/supplier",
   });
+  // const { data: selectedAssetProps } = useCustom<any>({
+  //   url: "api/v1/finfast/entry-type",
+  //   method: "get",
+  //   config: {
+  //     filters: [
+  //       {
+  //         field: "notRequest",
+  //         operator: "null",
+  //         value: 1,
+  //       },
+  //     ],
+  //   },
+  // });
 
   const { mutate, data, isLoading } = useCreate();
 

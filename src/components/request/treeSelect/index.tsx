@@ -66,7 +66,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
       showSearch
       fieldNames={{ label: "name", value: "id", children: "children" }}
       treeNodeLabelProp="name"
-      treeNodeFilterProp="id"
+      treeNodeFilterProp="name"
       {...tProps}
     />
   );

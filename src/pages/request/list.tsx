@@ -213,7 +213,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column<IRequestResponse>
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record: IRequestResponse) => (
+          render={(_, record) => (
             <Space>
               <ShowButton
                 hideText
