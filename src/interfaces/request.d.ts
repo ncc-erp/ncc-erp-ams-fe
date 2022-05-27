@@ -1,3 +1,4 @@
+
 export interface IRequest {
     name: string;
     branch_id: number;
@@ -8,7 +9,7 @@ export interface IRequest {
 }
 export interface IRequestResponse {
     status: string;
-    entry_type:{
+    entry_type: {
      code: string;
      expenseType: number;
      id: number;
@@ -70,6 +71,6 @@ export interface IRequestResponse {
     }
     assigned_to: number;
     last_audit_date: string;
-    finfast_request_assets: any ;
+    finfast_request_assets: any;
 }
 

@@ -104,7 +104,7 @@ const JsonServer = (
         // const total = +headers["x-total-count"];
         
         return {
-            data: data.rows,
+            data: data.rows || data?.results,
             total: data.total,
         };
     },
@@ -155,9 +155,10 @@ const JsonServer = (
 
     updateMany: async ({ resource, ids, variables }) => {
         const response = await Promise.all(
-            ids.map(async (id) => {
+            ids.map(async (id, index) => {
                 const { data } = await httpClient.patch(
                     `${apiUrl}/${resource}/${id}`,
+                    index,
                     variables,
                 );
                 return data;

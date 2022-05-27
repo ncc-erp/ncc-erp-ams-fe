@@ -2,14 +2,10 @@ import { Refine } from "@pankod/refine-core";
 import { notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
+import "../src/styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import {
-  HardwareList,
-  HardwareCreate,
-  HardwareEdit,
-  HardwareShow,
-} from "pages/hardware";
+import { HardwareList, HardwareShow } from "pages/hardware";
 import {
   Title,
   Header,
@@ -20,9 +16,9 @@ import {
 } from "components/layout";
 import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
-import { RequestList, RequestShow, RequestCreate } from "pages/request";
-// import { CheckoutList } from "pages/checkout/list";
+import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
+import { UserList } from "pages/users";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -51,10 +47,10 @@ function App() {
           name: "Tạo request",
           list: RequestList,
         },
-        // {
-        //   name: "Checkout",
-        //   list: CheckoutList,
-        // },
+        {
+          name: "user",
+          list: UserList,
+        },
       ]}
       Title={Title}
       Header={Header}

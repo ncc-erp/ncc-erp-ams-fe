@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -18,7 +19,6 @@ import {
   CreateButton,
   Popconfirm,
   Button,
-  useSelect,
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -27,33 +27,23 @@ import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareCheckout } from "./checkout";
-import { HardwareCheckin } from "./checkin";
 import {
   IHardwareResponse,
   IHardwareResponseCheckout,
   IHardwareResponseConvert,
-  IHardwareResponseCheckin,
 } from "interfaces/hardware";
-import { ICompany } from "interfaces/company";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-  const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
   const [detail, setDetail] = useState<any>({});
   const [detailCheckout, setDetailCheckout] = useState<any>({});
-  const [detailCheckin, setDetailCheckin] = useState<any>({});
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
-  const [keySearch, setKeySearch] = useState<string>();
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [keySearch] = useState<string>();
 
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
       initialSorter: [
@@ -90,18 +80,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       name: record.name,
     }),
   };
-
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponseConvert = {
@@ -174,87 +152,32 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.company?.id,
         name: data?.company?.name,
       },
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
+      assigned_location: {
+        id: data?.assigned_location?.id,
+        name: data?.assigned_location?.name,
       },
-      last_audit_date: {
+      expected_checkin: {
         date: "",
         formatted: "",
       },
-      last_checkout: {
+      checkout_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
       },
-      assigned_to: data?.assigned_to,
+      assigned_user: data?.assigned_user,
       model_number: data?.model_number,
-      physical: data?.physical,
+      assigned_asset: data?.assigned_asset,
+      checkout_to_type: {
+        assigned_asset: data?.assigned_asset,
+        assigned_location: {
+          id: data?.assigned_location?.id,
+          name: data?.assigned_location?.name,
+        },
+        assigned_user: data?.assigned_user,
+      },
     };
-    console.log("check dataConvert : ", dataConvert);
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);
-  };
-
-  const findLabel = (value: number): Boolean => {
-    let check = false;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
-          check = true;
-          return true;
-        }
-      }
-    });
-    return check;
-  };
-  const onChangeStatusLabel = (value: any) => {
-    setIsReadyToDeploy(findLabel(value));
-  };
-
-  const checkin = (data: IHardwareResponseCheckin) => {
-    const dataConvert: IHardwareResponseCheckin = {
-      id: data.id,
-      name: data.name,
-      model: {
-        id: data?.model?.id,
-        name: data?.model?.name,
-      },
-      status_label: {
-        id: data?.status_label.id,
-        name: data?.status_label.name,
-        status_type: data?.status_label.status_type,
-        status_meta: data?.status_label.status_meta,
-      },
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      notes: data.notes,
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
-      },
-      last_audit_date: {
-        date: "",
-        formatted: "",
-      },
-      last_checkout: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toISOString().substring(0, 10),
-      },
-      assigned_to: data?.assigned_to,
-      asset_tag: "",
-      model_number: data?.model_number,
-    };
-    setDetailCheckin(dataConvert);
-    setIsCheckinModalVisible(true);
   };
 
   const collumns = useMemo(
@@ -311,7 +234,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     await setIdSend(-1);
     await setIdSend(value);
   };
-  const table = tableProps;
   const { mutate, isLoading: isLoadingSendRequest } = useCreate<any>();
 
   useEffect(() => {
@@ -375,17 +297,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckout}
         />
       </MModal>
-      {/* <MModal
-        title={t("hardware.label.title.checkin")}
-        setIsModalVisible={setIsCheckinModalVisible}
-        isModalVisible={isCheckinModalVisible}
-      >
-        <HardwareCheckin
-          isModalVisible={isCheckinModalVisible}
-          setIsModalVisible={setIsCheckinModalVisible}
-          data={detailCheckin}
-        />
-      </MModal> */}
       <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
@@ -395,37 +306,75 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: any) => (
             <Space>
-              <Button
-                type="primary"
-                shape="round"
-                size="small"
-                loading={
-                  isLoadingArr[record.id] === undefined
-                    ? false
-                    : isLoadingArr[record.id] === false
-                    ? false
-                    : true
-                }
-                onClick={() => checkout(record)}
-              >
-                {t("hardware.label.button.checkout")}
-              </Button>
+              {(record.status_label.name === "Assign" && (
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                      ? false
+                      : true
+                  }
+                  onClick={() => checkout(record)}
+                >
+                  {t("hardware.label.button.checkout")}
+                </Button>
+              )) ||
+                (record.status_label.name === "Ready to deploy" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
+                (record.status_label.name === "Pending" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
+                (record.status_label.name === "Broken" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                ))}
 
-              {/* <Button
-                type="primary"
-                shape="round"
-                size="small"
-                loading={
-                  isLoadingArr[record.id] === undefined
-                    ? false
-                    : isLoadingArr[record.id] === false
-                    ? false
-                    : true
-                }
-                onClick={() => checkin(record)}
-              >
-                {t("hardware.label.button.checkin")}
-              </Button> */}
               <Popconfirm
                 title={t("request.label.button.send")}
                 onConfirm={() => onSendRequest(record.id)}

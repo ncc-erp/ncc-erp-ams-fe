@@ -101,8 +101,9 @@ export interface IDefaultValue {
 }
 
 export interface IHardwareRequestCheckout {
-    physical: string;
-    location: string;
+    assigned_asset: string;
+    assigned_location: string;
+    assigned_user: string;
     status_label: string;
     model: string;
     id: number;
@@ -113,10 +114,10 @@ export interface IHardwareRequestCheckout {
     notes: string;
     archived: boolean;
     depreciate: boolean;
-    last_checkout: string;
-    last_audit_date: string;
+    checkout_at: string;
+    expected_checkin: string;
     location_id: number;
-    assigned_to: string;
+    checkout_to_type : string;
 }
 
 export interface IHardwareResponseCheckout {
@@ -142,20 +143,29 @@ export interface IHardwareResponseCheckout {
         id: number;
         name: string;
     }
-    location: {
-        id: number;
-        name: string;
-    }
-    assigned_to: number;
-    last_audit_date: {
+    
+    expected_checkin: {
         date: string;
         formatted: string;
     };
-    last_checkout: {
+    checkout_at: {
         date: string;
         formatted: string;
     }
-    physical:string;
+    assigned_location: {
+        id: number;
+        name: string;
+    }
+    assigned_user: number;
+    assigned_asset: string;
+    checkout_to_type : {
+        assigned_user: number;
+        assigned_asset:string; 
+        assigned_location: {
+            id: number;
+            name: string;
+        }
+    }
 }
 
 export interface IHardwareList {
