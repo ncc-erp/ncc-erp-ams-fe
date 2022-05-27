@@ -32,10 +32,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [detail, setDetail] = useState<IHardwareResponse | undefined>();
+  const [detail, setDetail] = useState<IHardwareResponse>();
 
   const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
-  const [detailClone, setDetailClone] = useState<IHardwareResponse | undefined>();
+  const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<IHardware>({
     initialSorter: [
@@ -111,21 +111,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.rtd_location?.id,
         name: data?.rtd_location?.name,
       },
-      image: data?.image,
+      image: data?.image && data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
       purchase_date: {
-        date: data?.purchase_date.date,
-        formatted: data?.purchase_date.formatted
+        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
+        formatted: data?.purchase_date !== null ? data?.purchase_date.formatted : ""
       },
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
 
-      requestable: data?.requestable,
+      requestable: data?.requestable !== undefined ? 1 : 0,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
 
+    console.log("dataConvert", dataConvert)
   };
 
   const clone = (data: IHardwareResponse) => {
@@ -171,13 +172,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
       purchase_date: {
-        date: data?.purchase_date.date,
-        formatted: data?.purchase_date.formatted
+        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
+        formatted: data?.purchase_date !== null ? data?.purchase_date.formatted : ""
       },
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
 
-      requestable: data?.requestable,
+      requestable: data?.requestable !== undefined ? 1 : 0,
     };
     setDetailClone(dataConvert);
     setIsCloneModalVisible(true);
@@ -286,7 +287,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column<IHardwareResponse>
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record: IHardwareResponse) => (
+          render={(_, record) => (
             <Space>
               <CloneButton
                 hideText
