@@ -156,7 +156,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.category?.id,
         name: data?.category?.name,
       },
-      notes: data.notes,
+      note: data.note,
       company: {
         id: data?.company?.id,
         name: data?.company?.name,

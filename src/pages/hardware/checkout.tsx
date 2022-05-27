@@ -134,7 +134,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
     const formData = new FormData();
     formData.append("name", event.name);
-    formData.append("notes", event.notes);
+    formData.append("note", event.note);
     formData.append("status_id", event.status_label);
     formData.append("expected_checkin", event.expected_checkin);
     formData.append("checkout_at", event.checkout_at);
@@ -149,7 +149,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
     }
-    formData.append("checkout_to_type", event.assigned_user);
+    formData.append("checkout_to_type", "user");
 
     setPayload(formData);
   };
@@ -160,7 +160,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       { name: "name", value: data.name },
       { name: "model_id", value: data.model.name },
 
-      { name: "notes", value: data.notes },
+      { name: "note", value: data.note },
 
       { name: "status_id", value: data.status_label.id },
       {
@@ -451,7 +451,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
       <Form.Item
         label={t("hardware.label.field.note")}
-        name="notes"
+        name="note"
         rules={[
           {
             required: true,
@@ -461,12 +461,12 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               t("hardware.label.message.required"),
           },
         ]}
-        initialValue={data?.notes}
+        initialValue={data?.note}
       >
-        <Input.TextArea value={data?.notes} />
+        <Input.TextArea value={data?.note} />
       </Form.Item>
-      {messageErr?.notes && (
-        <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+      {messageErr?.note && (
+        <Typography.Text type="danger">{messageErr.note[0]}</Typography.Text>
       )}
 
       <div className="submit">

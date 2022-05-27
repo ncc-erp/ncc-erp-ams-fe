@@ -91,7 +91,7 @@ export interface IHardwareRequestCheckout {
     status_id: number;
     model_id: number;
     name: string;
-    notes: string;
+    note: string;
     archived: boolean;
     depreciate: boolean;
     checkout_at: string;
@@ -118,7 +118,7 @@ export interface IHardwareResponseCheckout {
         id: number;
         name: string;
     }
-    notes: string;
+    note: string;
     company: {
         id: number;
         name: string;
