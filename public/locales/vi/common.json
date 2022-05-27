@@ -126,6 +126,7 @@
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
+          "propertyCard": "Thẻ tài sản",
           "serial": "Serial",
           "propertyType": "Lựa chọn một kiểu tài sản",
           "status": "Chọn tình trạng",
@@ -133,7 +134,11 @@
           "user": "Lựa chọn một người dùng",
           "asset": "Chọn tài sản",
           "location": "Lựa chọn một địa phương",
-          "supplier": "Lựa chọn nhà cung cấp"
+          "supplier": "Lựa chọn nhà cung cấp",
+          "assetName": "Tên tài sản",
+          "orderNumber": "Mã order",
+          "cost": "Chi phí mua hàng",
+          "insurance": "Bảo hành"
         },
         "message": {
           "required":"bắt buộc"

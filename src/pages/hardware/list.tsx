@@ -13,6 +13,7 @@ import {
   getDefaultSortOrder,
   DateField,
   Space,
+  CloneButton,
   EditButton,
   DeleteButton,
   TagField,
@@ -30,7 +31,6 @@ import { HardwareCheckout } from "./checkout";
 import {
   IHardwareResponse,
   IHardwareResponseCheckout,
-  IHardwareResponseConvert,
 } from "interfaces/hardware";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
@@ -40,6 +40,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
   const [detail, setDetail] = useState<any>({});
   const [detailCheckout, setDetailCheckout] = useState<any>({});
+  const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+  const [detailClone, setDetailClone] = useState<any>({});
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
   const [keySearch] = useState<string>();
@@ -66,7 +68,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
       console.log(
@@ -76,54 +77,62 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       );
     },
     getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
+      disabled: record.name === "Disabled User",
       name: record.name,
     }),
   };
-
   const edit = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponseConvert = {
+    const dataConvert: IHardwareResponse = {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial,
+      serial: data.serial !== "undefined" ? data.serial : "",
       model: {
-        value: data?.model?.id.toString(),
-        label: data?.model?.name,
+        id: data?.model?.id,
+        name: data?.model?.name,
       },
-      model_number: data?.order_number,
+      // model_number: data?.order_number,
       status_label: {
-        value: data?.status_label.id.toString(),
-        label: data?.status_label.name,
+        id: data?.status_label.id,
+        name: data?.status_label.name,
+        status_type: data?.status_label.status_type,
+        status_meta: data?.status_label.status_meta,
       },
       category: {
-        value: data?.category?.id.toString(),
-        label: data?.category?.name,
+        id: data?.category?.id,
+        name: data?.category?.name,
       },
       supplier: {
-        value: data?.supplier?.id.toString(),
-        label: data?.supplier?.name,
+        id: data?.supplier?.id,
+        name: data?.supplier?.name,
       },
       notes: data.notes,
       order_number: data?.order_number,
       company: {
-        value: data?.company?.id.toString(),
-        label: data?.company?.name,
+        id: data?.company?.id,
+        name: data?.company?.name,
       },
-      location: {
-        value: data?.location?.id.toString(),
-        label: data?.location?.name,
-      },
-      rtd_location: {
-        value: data?.rtd_location?.id.toString(),
-        label: data?.rtd_location?.name,
-      },
+
       image: data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
-      purchase_date: data?.purchase_date.date,
-      assigned_to: data?.assigned_to,
+
       last_audit_date: data?.last_audit_date,
+
+      requestable: data?.requestable,
+
+      purchase_date: data?.purchase_date,
+      archived: data?.archived,
+      rtd_location_id: undefined,
+      location: {
+        id: 0,
+        name: "",
+      },
+      rtd_location: {
+        id: 0,
+        name: "",
+      },
+      assigned_to: 0,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -254,9 +263,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     tableQueryResult.refetch();
   }, [isLoadingSendRequest]);
 
+  const refreshData = () => {
+    tableQueryResult.refetch();
+  };
   useEffect(() => {
     tableQueryResult.refetch();
   }, [isCheckoutModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCloneModalVisible]);
 
   return (
     <List
@@ -394,6 +410,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   {t("hardware.label.button.clone")}
                 </Button>
               </Popconfirm>
+              <CloneButton
+                hideText
+                size="small"
+                recordItemId={record.id}
+                // onClick={() => clone(record)}
+              />
               <EditButton
                 hideText
                 size="small"

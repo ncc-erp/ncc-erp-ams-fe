@@ -19,7 +19,7 @@ import ReactMde from "react-mde";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareRequest } from "interfaces/hardware";
+// import { IHardwareRequest } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
@@ -48,7 +48,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<IHardwareRequest>({
+  const { form, formProps } = useForm<any>({
     action: "edit",
   });
 
@@ -139,7 +139,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
-    console.log("check event create: ", event);
+    console.log("check create: ", event);
     setMessageErr(null);
     const formData = new FormData();
     formData.append("name", event.name);
@@ -149,18 +149,38 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("order_number", event.order_number);
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-    formData.append("user_id", event.user_id);
-    formData.append("archived", event.archived);
-    formData.append("physical", event.physical);
-    formData.append("status_id", event.status_id);
+
+    if (event.user_id !== undefined) {
+      formData.append("user_id", event.user_id);
+    }
+    if (event.assigned_to !== undefined)
+      formData.append("assigned_to", event.assigned_to);
+    if (event.location !== undefined)
+      formData.append("location_id", event.location);
+
+    if (event.physical !== undefined)
+      formData.append("physical", event.physical);
+
+    formData.append(
+      "status_id",
+      event.status_label !== undefined ? event.status_label : 0
+    );
     formData.append("warranty_months", event.warranty_months);
     formData.append("purchase_cost", event.purchase_cost);
     formData.append("purchase_date", event.purchase_date);
-    formData.append("assigned_to", event.assigned_to);
-    formData.append("supplier_id", event.supplier_id);
-    formData.append("requestable", event.requestable);
-    formData.append("location_id", event.rtd_location_id);
-    formData.append("image", event.image);
+    formData.append(
+      "supplier_id",
+      event.supplier !== undefined ? event.supplier : 0
+    );
+
+    if (event.requestable !== undefined) {
+      formData.append("requestable", event.requestable);
+    }
+    formData.append("rtd_location_id", event.rtd_location);
+
+    if (event.image !== null && event.image !== undefined) {
+      formData.append("image", event.image);
+    }
 
     setPayload(formData);
   };
@@ -276,19 +296,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.asset_tag[0]}
             </Typography.Text>
           )}
-          <Form.Item
-            label={t("hardware.label.field.serial")}
-            name="serial"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.serial") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
+          <Form.Item label={t("hardware.label.field.serial")} name="serial">
             <Input />
           </Form.Item>
           {messageErr?.serial && (
@@ -439,15 +447,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.orderNumber") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input type="number" />
           </Form.Item>
@@ -581,8 +580,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
       {activeModel === "3" && (
         <Form.Item
-          label={t("hardware.label.field.location")}
-          name="location_id"
+          label={t("hardware.label.field.checkoutTo")}
+          name="location"
           rules={[
             {
               required: false,
@@ -625,7 +624,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable">
+      <Form.Item label="" name="requestable" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheck(event);
