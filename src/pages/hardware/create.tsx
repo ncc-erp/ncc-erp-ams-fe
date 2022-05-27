@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useCustom, useList } from "@pankod/refine-core";
+import { useTranslate, useCreate } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -19,7 +19,7 @@ import ReactMde from "react-mde";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareRequest } from "interfaces/hardware";
+// import { IHardwareRequest } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
@@ -48,13 +48,13 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ASSIGN = "Assign",
   }
 
-  const { formProps, form } = useForm<IHardwareRequest>({
-    action: "create",
+  const { form, formProps } = useForm<any>({
+    action: "edit",
   });
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
-    optionLabel: "text",
+    resource: "api/v1/models",
+    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -89,8 +89,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
-    optionLabel: "text",
+    resource: "api/v1/users",
+    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -102,7 +102,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
     resource: "api/v1/hardware/selectlist",
-    optionLabel: "text",
+    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -139,31 +139,43 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: any) => {
-    console.log("check create: ", event)
+    console.log("check create: ", event);
     setMessageErr(null);
     const formData = new FormData();
     formData.append("name", event.name);
     formData.append("serial", event.serial);
-    formData.append("company_id", event.company);
+    formData.append("company_id", event.company_id);
     formData.append("model_id", event.model);
     formData.append("order_number", event.order_number);
-
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    if (event.user_id !== undefined) { formData.append("user_id", event.user_id); }
-    if (event.assigned_to !== undefined) formData.append("assigned_to", event.assigned_to);
-    if (event.location !== undefined) formData.append("location_id", event.location);
+    if (event.user_id !== undefined) {
+      formData.append("user_id", event.user_id);
+    }
+    if (event.assigned_to !== undefined)
+      formData.append("assigned_to", event.assigned_to);
+    if (event.location !== undefined)
+      formData.append("location_id", event.location);
 
-    if (event.physical !== undefined) formData.append("physical", event.physical)
+    if (event.physical !== undefined)
+      formData.append("physical", event.physical);
 
-    formData.append("status_id", event.status_label !== undefined ? event.status_label : 0)
+    formData.append(
+      "status_id",
+      event.status_label !== undefined ? event.status_label : 0
+    );
     formData.append("warranty_months", event.warranty_months);
     formData.append("purchase_cost", event.purchase_cost);
     formData.append("purchase_date", event.purchase_date);
-    formData.append("supplier_id", event.supplier !== undefined ? event.supplier : 0)
+    formData.append(
+      "supplier_id",
+      event.supplier !== undefined ? event.supplier : 0
+    );
 
-    if (event.requestable !== undefined) { formData.append("requestable", event.requestable); }
+    if (event.requestable !== undefined) {
+      formData.append("requestable", event.requestable);
+    }
     formData.append("rtd_location_id", event.rtd_location);
 
     if (event.image !== null && event.image !== undefined) {
@@ -176,13 +188,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware",
+        resource: "api/v1/hardware/",
         values: payload,
       });
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
-
 
   useEffect(() => {
     if (createData?.data.status === "success") {
@@ -243,7 +254,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Col className="gutter-row" span={12}>
           <Form.Item
             label={t("hardware.label.field.nameCompany")}
-            name="company"
+            name="company_id"
             rules={[
               {
                 required: true,
@@ -260,9 +271,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               showSearch
             />
           </Form.Item>
-          {messageErr?.company && (
+          {messageErr?.company_id && (
             <Typography.Text type="danger">
-              {messageErr.company[0]}
+              {messageErr.company_id[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -278,18 +289,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input placeholder={t("hardware.label.placeholder.propertyCard")} />
+            <Input />
           </Form.Item>
           {messageErr?.asset_tag && (
             <Typography.Text type="danger">
               {messageErr.asset_tag[0]}
             </Typography.Text>
           )}
-          <Form.Item
-            label={t("hardware.label.field.serial")}
-            name="serial"
-          >
-            <Input placeholder={t("hardware.label.placeholder.serial")} />
+          <Form.Item label={t("hardware.label.field.serial")} name="serial">
+            <Input />
           </Form.Item>
           {messageErr?.serial && (
             <Typography.Text type="danger">
@@ -298,7 +306,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
           <Form.Item
             label={t("hardware.label.field.propertyType")}
-            name="model"
+            name="model_id"
             rules={[
               {
                 required: true,
@@ -314,15 +322,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...modelSelectProps}
             />
           </Form.Item>
-          {messageErr?.model && (
+          {messageErr?.model_id && (
             <Typography.Text type="danger">
-              {messageErr.model[0]}
+              {messageErr.model_id[0]}
             </Typography.Text>
           )}
 
           <Form.Item
             label={t("hardware.label.field.locationFix")}
-            name="rtd_location"
+            name="location_id"
             rules={[
               {
                 required: true,
@@ -338,15 +346,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...locationSelectProps}
             />
           </Form.Item>
-          {messageErr?.rtd_location && (
+          {messageErr?.rtd_location_id && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location_id[0]}
             </Typography.Text>
           )}
 
           <Form.Item
             label={t("hardware.label.field.status")}
-            name="status_label"
+            name="status_id"
             rules={[
               {
                 required: true,
@@ -365,9 +373,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_id && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_id[0]}
             </Typography.Text>
           )}
         </Col>
@@ -386,7 +394,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input placeholder={t("hardware.label.placeholder.assetName")} />
+            <Input />
           </Form.Item>
           {messageErr?.name && (
             <Typography.Text type="danger">
@@ -400,7 +408,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {
                 required: true,
                 message:
-                  t("hardware.label.field.dateBuy") +
+                  t("hardware.label.field.dataBuy") +
                   " " +
                   t("hardware.label.message.required"),
               },
@@ -415,7 +423,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
           <Form.Item
             label={t("hardware.label.field.supplier")}
-            name="supplier"
+            name="supplier_id"
             rules={[
               {
                 required: true,
@@ -431,16 +439,16 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...supplierSelectProps}
             />
           </Form.Item>
-          {messageErr?.supplier && (
+          {messageErr?.supplier_id && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier_id[0]}
             </Typography.Text>
           )}
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
           >
-            <Input placeholder={t("hardware.label.placeholder.orderNumber")} />
+            <Input type="number" />
           </Form.Item>
           {messageErr?.order_number && (
             <Typography.Text type="danger">
@@ -450,18 +458,17 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="purchase_cost"
-          // rules={[
-          //   {
-          //     required: true,
-          //     message:
-          //       t("hardware.label.field.cost") +
-          //       " " +
-          //       t("hardware.label.message.required"),
-          //   },
-          // ]}
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.cost") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
           >
-            <Input type="number" addonAfter={t("hardware.label.field.usd")}
-              placeholder={t("hardware.label.placeholder.cost")} />
+            <Input type="number" addonAfter={t("hardware.label.field.usd")} />
           </Form.Item>
           {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
@@ -481,8 +488,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input type="number" addonAfter={t("hardware.label.field.month")}
-              placeholder={t("hardware.label.placeholder.insurance")} />
+            <Input type="number" addonAfter={t("hardware.label.field.month")} />
           </Form.Item>
           {messageErr?.warranty_months && (
             <Typography.Text type="danger">
@@ -571,6 +577,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           />
         </Form.Item>
       )}
+
       {activeModel === "3" && (
         <Form.Item
           label={t("hardware.label.field.checkoutTo")}

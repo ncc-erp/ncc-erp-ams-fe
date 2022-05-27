@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -17,6 +18,8 @@ import {
   DeleteButton,
   TagField,
   CreateButton,
+  Popconfirm,
+  Button,
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -24,23 +27,24 @@ import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
-import { HardwareClone } from "./clone";
+import { HardwareCheckout } from "./checkout";
 import {
   IHardwareResponse,
+  IHardwareResponseCheckout,
 } from "interfaces/hardware";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
   const [detail, setDetail] = useState<any>({});
-
+  const [detailCheckout, setDetailCheckout] = useState<any>({});
   const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
   const [detailClone, setDetailClone] = useState<any>({});
-
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
-  const [keySearch, setKeySearch] = useState<string>();
+  const [keySearch] = useState<string>();
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
@@ -53,7 +57,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       permanentFilter: [{ field: "search", operator: "eq", value: keySearch }],
       resource: "api/v1/hardware",
       onSearch: (params: any) => {
-        console.log(params);
         const filters: CrudFilters = [];
         const { search } = params;
         filters.push({
@@ -78,7 +81,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       name: record.name,
     }),
   };
-
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
       id: data.id,
@@ -110,42 +112,40 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.company?.id,
         name: data?.company?.name,
       },
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
-      },
-      rtd_location: {
-        id: data?.rtd_location?.id,
-        name: data?.rtd_location?.name,
-      },
+
       image: data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
-      purchase_date: {
-        date: data?.purchase_date.date,
-        formatted: data?.purchase_date.formatted
-      },
-      assigned_to: data?.assigned_to,
+
       last_audit_date: data?.last_audit_date,
 
       requestable: data?.requestable,
+
+      purchase_date: data?.purchase_date,
+      archived: data?.archived,
+      rtd_location_id: undefined,
+      location: {
+        id: 0,
+        name: "",
+      },
+      rtd_location: {
+        id: 0,
+        name: "",
+      },
+      assigned_to: 0,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
-
   };
 
-  const clone = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
+  const checkout = (data: IHardwareResponseCheckout) => {
+    const dataConvert: IHardwareResponseCheckout = {
       id: data.id,
       name: data.name,
-      asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
       },
-      // model_number: data?.order_number,
       status_label: {
         id: data?.status_label.id,
         name: data?.status_label.name,
@@ -156,40 +156,37 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.category?.id,
         name: data?.category?.name,
       },
-      supplier: {
-        id: data?.supplier?.id,
-        name: data?.supplier?.name,
-      },
-      notes: data.notes,
-      order_number: data?.order_number,
+      note: data.note,
       company: {
         id: data?.company?.id,
         name: data?.company?.name,
       },
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
+      assigned_location: {
+        id: data?.assigned_location?.id,
+        name: data?.assigned_location?.name,
       },
-      rtd_location: {
-        id: data?.rtd_location?.id,
-        name: data?.rtd_location?.name,
+      expected_checkin: {
+        date: "",
+        formatted: "",
       },
-      image: data?.image,
-      warranty_months: data?.warranty_months,
-      purchase_cost: data?.purchase_cost,
-      purchase_date: {
-        date: data?.purchase_date.date,
-        formatted: data?.purchase_date.formatted
+      checkout_at: {
+        date: new Date().toISOString().substring(0, 10),
+        formatted: new Date().toDateString(),
       },
-      assigned_to: data?.assigned_to,
-      last_audit_date: data?.last_audit_date,
-
-      requestable: data?.requestable,
-      // physical: data?.physical
+      assigned_user: data?.assigned_user,
+      model_number: data?.model_number,
+      assigned_asset: data?.assigned_asset,
+      checkout_to_type: {
+        assigned_asset: data?.assigned_asset,
+        assigned_location: {
+          id: data?.assigned_location?.id,
+          name: data?.assigned_location?.name,
+        },
+        assigned_user: data?.assigned_user,
+      },
     };
-    setDetailClone(dataConvert);
-    setIsCloneModalVisible(true);
-
+    setDetailCheckout(dataConvert);
+    setIsCheckoutModalVisible(true);
   };
 
   const collumns = useMemo(
@@ -219,10 +216,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
-        key: "created_at",
-        title: "Created At",
-        render: (value: any) => <DateField format="LLL" value={value.datetime} />,
-        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+        key: "status_label",
+        title: "Status",
+        render: (value: any) => <TagField value={value.name} />,
+        defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+      },
+      {
+        key: "createdAt",
+        title: "CreatedAt",
+        render: (value: any) => <DateField value={value} format="LLL" />,
+        defaultSortOrder: getDefaultSortOrder("createdAt", sorter),
       },
     ],
     []
@@ -240,10 +243,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     await setIdSend(-1);
     await setIdSend(value);
   };
-
-  const refreshData = () => {
-    tableQueryResult.refetch();
-  };
   const { mutate, isLoading: isLoadingSendRequest } = useCreate<any>();
 
   useEffect(() => {
@@ -255,23 +254,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         },
       });
     }
-    refreshData();
   }, [idSend]);
 
   useEffect(() => {
     let arr = [...isLoadingArr];
     arr[idSend] = isLoadingSendRequest;
     setIsLoadingArr(arr);
-    refreshData();
+    tableQueryResult.refetch();
   }, [isLoadingSendRequest]);
 
+  const refreshData = () => {
+    tableQueryResult.refetch();
+  };
   useEffect(() => {
-    refreshData();
-  }, [isEditModalVisible])
+    tableQueryResult.refetch();
+  }, [isCheckoutModalVisible]);
 
   useEffect(() => {
     refreshData();
-  }, [isCloneModalVisible])
+  }, [isCloneModalVisible]);
 
   return (
     <List
@@ -302,14 +303,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
-        title={t("hardware.label.title.clone")}
-        setIsModalVisible={setIsCloneModalVisible}
-        isModalVisible={isCloneModalVisible}
+        title={t("hardware.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutModalVisible}
+        isModalVisible={isCheckoutModalVisible}
       >
-        <HardwareClone
-          isModalVisible={isCloneModalVisible}
-          setIsModalVisible={setIsCloneModalVisible}
-          data={detailClone}
+        <HardwareCheckout
+          isModalVisible={isCheckoutModalVisible}
+          setIsModalVisible={setIsCheckoutModalVisible}
+          data={detailCheckout}
         />
       </MModal>
       <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
@@ -321,7 +322,76 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: any) => (
             <Space>
-              {/* <Popconfirm
+              {(record.status_label.name === "Assign" && (
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                      ? false
+                      : true
+                  }
+                  onClick={() => checkout(record)}
+                >
+                  {t("hardware.label.button.checkout")}
+                </Button>
+              )) ||
+                (record.status_label.name === "Ready to deploy" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
+                (record.status_label.name === "Pending" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
+                (record.status_label.name === "Broken" && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                ))}
+
+              <Popconfirm
                 title={t("request.label.button.send")}
                 onConfirm={() => onSendRequest(record.id)}
               >
@@ -333,18 +403,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                 >
                   {t("hardware.label.button.clone")}
                 </Button>
-              </Popconfirm> */}
+              </Popconfirm>
               <CloneButton
                 hideText
                 size="small"
                 recordItemId={record.id}
-                onClick={() => clone(record)}
+                // onClick={() => clone(record)}
               />
               <EditButton
                 hideText

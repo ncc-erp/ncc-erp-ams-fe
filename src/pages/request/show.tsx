@@ -1,20 +1,18 @@
-import {
-  useTranslate,
-} from "@pankod/refine-core";
-import {  Typography, Tag } from "@pankod/refine-antd";
-
+import { useTranslate } from "@pankod/refine-core";
+import { Typography, Tag } from "@pankod/refine-antd";
 
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
+import { IRequestResponse } from "interfaces/request";
 
 const { Title, Text } = Typography;
 
 type RequestShowProps = {
   setIsModalVisible: (data: boolean) => void;
-  detail: any;
+  detail: IRequestResponse | undefined;
 };
 
 export const RequestShow = (props: RequestShowProps) => {
-  const { setIsModalVisible, detail } = props;
+  const { detail } = props;
   const t = useTranslate();
 
   return (
@@ -34,7 +32,7 @@ export const RequestShow = (props: RequestShowProps) => {
       <Title level={5}>{t("request.label.field.countAsset")}</Title>
       <Text>{detail?.finfast_request_assets?.length}</Text>
       {detail?.finfast_request_assets.length > 0 && (
-        <ListAssetNotRequest assetData={detail?.finfast_request_assets} />
+        <ListAssetNotRequest assetDatas={detail?.finfast_request_assets} />
       )}
     </div>
   );

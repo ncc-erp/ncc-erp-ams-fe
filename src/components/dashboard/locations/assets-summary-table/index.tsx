@@ -73,6 +73,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         broken: broken,
         assign: assign,
         ready_to_deploy: ready_to_deploy,
+        key: category.id,
       };
     });
 

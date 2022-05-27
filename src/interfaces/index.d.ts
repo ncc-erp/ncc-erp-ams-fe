@@ -20,3 +20,13 @@ export interface IPost {
   createdAt: string;
   category: ICategory;
 }
+export interface ISelectItem {
+  key: number;
+  map: any;
+  asset: []
+}
+export interface ICheckboxChange {
+  target: {
+    checked: boolean;
+  }
+}

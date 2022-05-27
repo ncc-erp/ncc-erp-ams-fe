@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  useCustom,
-  useList,
-  useCreate,
-} from "@pankod/refine-core";
+import { useTranslate, useList, useCreate } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -19,54 +13,46 @@ import {
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 
+import "../../styles/request.less";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareRequest } from "interfaces/hardware";
+import { IHardwareList, IHardwareRequest } from "interfaces/hardware";
+import { IBranch } from "interfaces/branch";
+import { ISupplier } from "interfaces/supplier";
 import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
+import { IRequest } from "interfaces/request";
+import { ISelectItem } from "interfaces";
 
 type RequestCreateProps = {
+  useHardwareNotRequest: IHardwareList;
   setIsModalVisible: (data: boolean) => void;
 };
 
 export const RequestCreate = (props: RequestCreateProps) => {
-  const { setIsModalVisible } = props;
+  const { setIsModalVisible, useHardwareNotRequest } = props;
   const [entryId, setEntryId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [selectedItems, setSelectedItem] = useState();
+  const [selectedItems, setSelectedItem] = useState<ISelectItem>();
   const [selectedAssets, setSelectedAssets] = useState([]);
 
   const t = useTranslate();
-
   const { formProps, form } = useForm<IHardwareRequest>({
     action: "create",
   });
 
-  const { data: branchSelectProps } = useList<any>({
+  const { data: assetSelectProps, refetch } = useHardwareNotRequest;
+  const { data: branchSelectProps } = useList<IBranch>({
     resource: "api/v1/finfast/branch",
   });
 
-  const { data: supplierSelectProps } = useList<any>({
+  const { data: supplierSelectProps } = useList<ISupplier>({
     resource: "api/v1/finfast/supplier",
-  });
-
-  const { data: assetSelecProps, refetch } = useCustom<any>({
-    url: "api/v1/hardware",
-    method: "get",
-    config: {
-      filters: [
-        {
-          field: "notRequest",
-          operator: "nnull",
-          value: 1,
-        },
-      ],
-    },
   });
 
   const { mutate, data, isLoading } = useCreate();
 
-  const onFinish = (event: any) => {
+  const onFinish = (event: IRequest) => {
     mutate({
       resource: "api/v1/finfast-request",
       values: {
@@ -87,17 +73,22 @@ export const RequestCreate = (props: RequestCreateProps) => {
       setSelectedAssets([]);
       refetch();
     }
-  }, [data]);
+  }, [data, form, refetch, setIsModalVisible]);
 
+  const handleChange = (selectedItems: ISelectItem) => {
+    const array = assetSelectProps?.data?.rows;
 
-  const handleChange = (selectedItems: any) => {
-    const array = assetSelecProps?.data?.rows;
+    const assets_choose = selectedItems.map((item: number, index: number) => {
+      let arrayItem: ISelectItem = {
+        key: 0,
+        map: undefined,
+        asset: [],
+      };
+      arrayItem.asset = array.filter((x: { id: number }) => x.id === item)[0];
+      arrayItem.key = index;
+      return arrayItem;
+    });
 
-    const assets_choose = selectedItems.map((item: number) => {
-      let arrayItem: any = {};
-      arrayItem.asset = array.filter((x: { id: number; }) => x.id === item)[0];
-      return  arrayItem;
-    })
     setSelectedAssets(assets_choose);
     setSelectedItem(selectedItems);
   };
@@ -105,14 +96,13 @@ export const RequestCreate = (props: RequestCreateProps) => {
   useEffect(() => {
     form.setFieldsValue({ entry_id: entryId });
   }, [entryId, form]);
-
   return (
     <Row gutter={16}>
       <Col span={24}>
         <Form
           {...formProps}
           layout="vertical"
-          onFinish={(event) => {
+          onFinish={(event: any) => {
             onFinish(event);
           }}
         >
@@ -159,7 +149,9 @@ export const RequestCreate = (props: RequestCreateProps) => {
               }
             >
               {branchSelectProps?.data.map((item) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -191,7 +183,9 @@ export const RequestCreate = (props: RequestCreateProps) => {
               }
             >
               {supplierSelectProps?.data.map((item) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -224,13 +218,17 @@ export const RequestCreate = (props: RequestCreateProps) => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              {assetSelecProps?.data?.rows?.map((item: any) => (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
+              {assetSelectProps?.data?.rows?.map((item: any, index: number) => (
+                <Select.Option key={index} value={item.id}>
+                  {item.name}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
 
-         {selectedAssets.length > 0 && <ListAssetNotRequest assetData={selectedAssets} />} 
+          {selectedAssets.length > 0 && (
+            <ListAssetNotRequest assetDatas={selectedAssets} />
+          )}
 
           <Form.Item
             label={t("request.label.field.entry")}

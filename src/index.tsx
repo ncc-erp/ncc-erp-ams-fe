@@ -10,7 +10,6 @@ ReactDOM.render(
   <React.Suspense fallback="loading">
     <App />
   </React.Suspense>,
-  // </React.StrictMode>,
   document.getElementById("root")
 );
 

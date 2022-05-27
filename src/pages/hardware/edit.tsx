@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { useCustom, useList, useTranslate, useUpdate } from "@pankod/refine-core";
+import {
+  useCustom,
+  useList,
+  useTranslate,
+  useUpdate,
+} from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -15,10 +20,7 @@ import {
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import {
-  IHardwareRequest,
-  IHardwareResponse,
-} from "interfaces/hardware";
+import { IHardwareRequest, IHardwareResponse } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
@@ -32,7 +34,7 @@ type HardwareEditProps = {
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [activeModel, setActiveModel] = useState<String>("1");
+  // const [activeModel, setActiveModel] = useState<String>("1");
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
@@ -150,20 +152,20 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const onFinish = (event: any) => {
-
     setMessageErr(null);
     const formData = new FormData();
+
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
 
-    formData.append("company_id", event.company)
+    formData.append("company_id", event.company);
     formData.append("model_id", event.model);
     formData.append("order_number", event.order_number);
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    formData.append("status_id", event.status_label)
+    formData.append("status_id", event.status_label);
     formData.append("warranty_months", event.warranty_months);
 
     formData.append("purchase_cost", event.purchase_cost);
@@ -171,16 +173,18 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("rtd_location_id", event.rtd_location);
 
-    formData.append("supplier_id", event.supplier)
+    formData.append("supplier_id", event.supplier);
 
-    if (event.image !== null) { formData.append("image", event.image) };
+    if (event.image !== null) {
+      formData.append("image", event.image);
+    }
 
     formData.append("_method", "PATCH");
     setPayload(formData);
   };
 
   useEffect(() => {
-    console.log("defect data: ", data)
+    console.log("defect data: ", data);
     form.resetFields();
     setFields([
       { name: "name", value: data.name },
@@ -193,20 +197,26 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "asset_tag", value: data.asset_tag },
 
       { name: "status_id", value: data.status_label.id },
-      { name: "warranty_months", value: data.warranty_months && data.warranty_months.split(" ")[0] },
-      { name: "purchase_cost", value: data.purchase_cost && data.purchase_cost.toString().split(",")[0] },
-      { name: "purchase_date", value: data.purchase_date.date },
+      // { name: "warranty_months", value: data.warranty_months && data.warranty_months.split(" ")[0] },
+      {
+        name: "purchase_cost",
+        value:
+          data.purchase_cost && data.purchase_cost.toString().split(",")[0],
+      },
+      { name: "purchase_date", value: data.purchase_date },
       { name: "supplier_id", value: data.supplier.id },
-      { name: "rtd_location_id", value: data.rtd_location.id },
+      { name: "rtd_location_id", value: data.rtd_location_id },
 
-      { name: "assigned_to", value: data.assigned_to },
+      { name: "assigned_to", value: data.archived },
       { name: "image", value: data.image },
     ]);
-  }, [data, form, isModalVisible]);
+  }, [data, form, isModalVisible, setFields]);
+
+  // const [warranty] = data?.warranty_months.split(" ");
 
   useEffect(() => {
     form.resetFields();
-  }, [isModalVisible]);
+  }, [form, isModalVisible]);
 
   useEffect(() => {
     if (payload) {
@@ -262,7 +272,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.setFieldsValue({
       image: file,
     });
-  }, [file]);
+  }, [file, form]);
 
   return (
     <Form
@@ -272,6 +282,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         onFinish(event);
       }}
     >
+      <div>id ne : {data.id}</div>
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -344,7 +355,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             initialValue={data?.model.id}
           >
             <Select {...modelSelectProps} />
-
           </Form.Item>
           {messageErr?.model && (
             <Typography.Text type="danger">
@@ -364,7 +374,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.rtd_location.id}
+            initialValue={data?.rtd_location_id}
           >
             <Select
               placeholder={t("hardware.label.placeholder.location")}
@@ -439,7 +449,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.purchase_date.date}
+            initialValue={data?.purchase_date}
           >
             <Input type="date" />
           </Form.Item>
@@ -486,9 +496,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             ]}
             initialValue={data?.order_number}
           >
-            <Input
-              value={data?.order_number}
-            />
+            <Input value={data?.order_number} />
           </Form.Item>
           {messageErr?.order_number && (
             <Typography.Text type="danger">
@@ -507,11 +515,16 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.purchase_cost && data?.purchase_cost.toString().split(",")[0]}
+            initialValue={
+              data?.purchase_cost &&
+              data?.purchase_cost.toString().split(",")[0]
+            }
           >
-            <Input type="number"
+            <Input
+              type="number"
               addonAfter={t("hardware.label.field.usd")}
-              value={data?.purchase_cost.toString().split(",")[0]} />
+              value={data?.purchase_cost.toString().split(",")[0]}
+            />
           </Form.Item>
           {messageErr?.puchase_cost && (
             <Typography.Text type="danger">
@@ -530,9 +543,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.warranty_months && data?.warranty_months.split(" ")[0]}
+            initialValue={
+              data?.warranty_months && data?.warranty_months.split(" ")[0]
+            }
           >
-            <Input type="number"
+            <Input
+              type="number"
               addonAfter={t("hardware.label.field.month")}
               value={data?.warranty_months.split(" ")[0]}
             />
@@ -559,8 +575,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         ]}
         initialValue={data?.notes}
       >
-        <Input.TextArea
-          value={data?.notes} />
+        <Input.TextArea value={data?.notes} />
       </Form.Item>
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>

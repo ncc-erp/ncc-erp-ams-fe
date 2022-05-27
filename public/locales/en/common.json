@@ -32,6 +32,8 @@
     "undo": "Undo",
     "import": "Import",
     "clone": "Clone",
+    "checkout":"Checkout",
+    "checkin":"Checkin",
     "notAccessTitle": "You don't have permission to access"
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
@@ -90,7 +92,7 @@
           "nameCompany": "Name company",
           "propertyCard": "Property Card",
           "serial": "Serial",
-          "propertyType": "Property type",
+          "propertyType": "Kiểu tài sản",
           "status": "Status",
           "checkoutTo": "Checkout to"
         }

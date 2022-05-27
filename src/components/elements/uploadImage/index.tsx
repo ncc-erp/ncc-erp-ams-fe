@@ -4,8 +4,8 @@ import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 
 type UploadImageProps = {
-  file: any;
-  setFile: (data: any) => void;
+  file: File;
+  setFile: (data: File) => void;
   url?: string;
 };
 
