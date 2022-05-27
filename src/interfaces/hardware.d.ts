@@ -1,6 +1,7 @@
 import { Interface } from "readline";
 import internal from "stream";
-export interface IHardwareRequest {
+
+export interface IHardwareCreateRequest {
   id: number;
   asset_tag: string;
   status_id: number;
@@ -20,6 +21,28 @@ export interface IHardwareRequest {
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
+}
+
+export interface IHardwareUpdateRequest {
+  name: string;
+  serial: string;
+  company: number;
+  model: number;
+  order_number: string;
+  notes: string;
+  asset_tag: string;
+  status_label: number;
+  warranty_months: string;
+  purchase_cost: string;
+  purchase_date: string;
+  rtd_location: number;
+  supplier: number;
+  image: string;
+  user_id: number;
+  assigned_to: number;
+  location: number;
+  physical: number;
+  requestable: number;
 }
 
 export interface IHardwareResponse {
@@ -99,26 +122,4 @@ export interface IHardwareResponseConvert {
   purchase_date: string;
   assigned_to: number;
   last_audit_date: string;
-}
-
-export interface IHardwareResponseOnFinish {
-  name: string;
-  serial: string;
-  company: string | number;
-  model: string | number;
-  order_number: string;
-  notes: string;
-  asset_tag: string;
-  status_label: string | number;
-  warranty_months: string;
-  purchase_cost: string;
-  purchase_date: string;
-  rtd_location: string | number;
-  supplier: string | number;
-  image: string;
-  user_id: string | number;
-  assigned_to: string | number;
-  location: string | number;
-  physical: string | number;
-  requestable: boolean | string;
 }

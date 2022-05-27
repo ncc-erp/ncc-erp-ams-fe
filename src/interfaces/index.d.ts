@@ -21,6 +21,10 @@ export interface IHardware {
     name: string;
   };
   datetime: string;
+  status_label: {
+    id: number;
+    name: string;
+  };
 }
 
 // from demo

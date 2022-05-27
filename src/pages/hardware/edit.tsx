@@ -13,11 +13,10 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
 import {
-  IHardwareRequest,
+  IHardwareCreateRequest,
   IHardwareResponse,
-  IHardwareResponseOnFinish,
+  IHardwareUpdateRequest,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
@@ -36,6 +35,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
+  const [checked, setChecked] = useState(false);
+
+  const toggleChecked = () => {
+    setChecked(!checked);
+  };
 
   const t = useTranslate();
 
@@ -44,7 +48,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<IHardwareRequest>({
+  const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "edit",
   });
 
@@ -125,12 +129,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     },
   });
 
-  const onFinish = (event: IHardwareResponseOnFinish) => {
+  const onFinish = (event: IHardwareUpdateRequest) => {
     setMessageErr(null);
     const formData = new FormData();
+
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
-
     formData.append("company_id", event.company.toString())
     formData.append("model_id", event.model.toString());
     formData.append("order_number", event.order_number);
@@ -142,16 +146,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("warranty_months", event.warranty_months);
 
     formData.append("purchase_cost", event.purchase_cost);
-    formData.append("purchase_date", event.purchase_date);
+    if (event.purchase_date !== null) formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
+    if (event.supplier !== undefined) formData.append("supplier_id", event.supplier.toString())
 
-    formData.append("supplier_id", event.supplier.toString())
+    if (event.image !== null) formData.append("image", event.image);
 
-    if (event.image !== null) { formData.append("image", event.image) };
+
+    formData.append("requestable", event.requestable !== undefined ? '1' : '0');
 
     formData.append("_method", "PATCH");
     setPayload(formData);
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -169,11 +176,13 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "status_id", value: data?.status_label.id },
       { name: "warranty_months", value: data?.warranty_months && data.warranty_months.split(" ")[0] },
       { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
-      { name: "purchase_date", value: data?.purchase_date.date && data.purchase_date.date },
+      { name: "purchase_date", value: data?.purchase_date.date !== null ? data?.purchase_date.date : "" },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
 
       { name: "assigned_to", value: data?.assigned_to },
+      { name: "requestable", value: data?.requestable },
+
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
@@ -411,16 +420,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.dateBuy")}
             name="purchase_date"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.dataBuy") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.purchase_date.date}
+            initialValue={data?.purchase_date.date !== null ? data?.purchase_date.date : ""}
           >
             <Input type="date" />
           </Form.Item>
@@ -432,15 +432,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.supplier")}
             name="supplier"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.supplier") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
             initialValue={data?.supplier.id}
           >
             <Select
@@ -470,15 +461,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="purchase_cost"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.cost") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
             initialValue={data?.purchase_cost && data?.purchase_cost.toString().split(",")[0]}
           >
             <Input type="number"
@@ -538,15 +520,27 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable" valuePropName="checked">
-        <Checkbox
-          value={data?.requestable}
-          onChange={(event) => {
-            onCheck(event);
-          }}
-        >
-          {t("hardware.label.field.checkbox")}
-        </Checkbox>
+      <Form.Item label="" valuePropName="checked">
+        {data?.requestable == 1 ? (
+          <Checkbox
+            checked={!checked}
+            value={data?.requestable}
+            onChange={(event) => {
+              onCheck(event);
+            }}
+            onClick={toggleChecked}
+
+          >{t("hardware.label.field.checkbox")}
+          </Checkbox>) : (<Checkbox
+            checked={checked}
+            value={data?.requestable}
+            onChange={(event) => {
+              onCheck(event);
+            }}
+            onClick={toggleChecked}
+
+          >{t("hardware.label.field.checkbox")}
+          </Checkbox>)}
       </Form.Item>
 
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>

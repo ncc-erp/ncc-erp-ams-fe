@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
 import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 

@@ -1,4 +1,5 @@
 import { Icons } from "@pankod/refine-antd";
+import { useTranslate } from "@pankod/refine-core";
 import { Button, Checkbox, Col, Divider, Dropdown, Form, Input, List, Menu, Row, Space } from "antd";
 import { useCallback, useMemo, useState } from "react";
 
@@ -78,7 +79,7 @@ export interface ITableAction {
 }
 
 export const TableAction = (props: ITableAction) => {
-
+    const t = useTranslate();
     const menu = useMemo(() => (
         <Menu>
             {props.actions?.map((opt) => (<Menu.Item key={opt.title} onClick={opt.handle} >
@@ -107,7 +108,7 @@ export const TableAction = (props: ITableAction) => {
                 {props.searchFormProps && (
                     <Form {...props.searchFormProps}>
                         <Form.Item name={"search"}>
-                            <Search placeholder="input search text" onSearch={(key) => {
+                            <Search placeholder={t("table.search")} onSearch={(key) => {
                                 props.searchFormProps.form.submit();
                             }} style={{ width: 200 }} />
                         </Form.Item>

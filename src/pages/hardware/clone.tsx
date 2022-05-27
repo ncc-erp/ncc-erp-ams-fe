@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCreate, useCustom, useTranslate } from "@pankod/refine-core";
+import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
     Form,
     Input,
@@ -15,9 +15,9 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import {
-    IHardwareRequest,
+    IHardwareCreateRequest,
     IHardwareResponse,
-    IHardwareResponseOnFinish,
+    IHardwareUpdateRequest,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
@@ -37,6 +37,12 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     const [file, setFile] = useState<any>(null);
     const [messageErr, setMessageErr] = useState<any>(null);
 
+    const [checked, setChecked] = useState(false);
+
+    const toggleChecked = () => {
+        setChecked(!checked);
+    };
+
     const t = useTranslate();
 
     enum EStatus {
@@ -44,7 +50,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
         ASSIGN = "Assign",
     }
 
-    const { form, formProps } = useForm<IHardwareRequest>({
+    const { form, formProps } = useForm<IHardwareCreateRequest>({
         action: "clone",
     });
 
@@ -112,15 +118,15 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
     const { mutate, data: cloneData, isLoading } = useCreate();
 
-    const onFinish = (event: IHardwareResponseOnFinish) => {
+    const onFinish = (event: IHardwareUpdateRequest) => {
         setMessageErr(null);
         const formData = new FormData();
+
         formData.append("name", event.name);
         if (event.serial !== undefined) formData.append("serial", event.serial);
-
         formData.append("company_id", event.company.toString())
         formData.append("model_id", event.model.toString());
-        formData.append("order_number", event.order_number);
+        if (event.order_number !== null) formData.append("order_number", event.order_number);
 
         formData.append("notes", event.notes);
         formData.append("asset_tag", event.asset_tag);
@@ -128,14 +134,14 @@ export const HardwareClone = (props: HardwareCloneProps) => {
         formData.append("status_id", event.status_label.toString())
         formData.append("warranty_months", event.warranty_months);
 
-        formData.append("purchase_cost", event.purchase_cost);
-        formData.append("purchase_date", event.purchase_date);
+        if (event.purchase_cost !== null) formData.append("purchase_cost", event.purchase_cost);
+        if (event.purchase_date !== null) formData.append("purchase_date", event.purchase_date);
 
         formData.append("rtd_location_id", event.rtd_location.toString());
-
         formData.append("supplier_id", event.supplier.toString())
 
-        if (event.image !== null) { formData.append("image", event.image) };
+        if (event.image !== null) formData.append("image", event.image);
+        formData.append("requestable", event.requestable !== undefined ? '1' : '0');
 
         setPayload(formData);
     };
@@ -151,6 +157,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     }, [payload]);
 
     useEffect(() => {
+        console.log("data useEffect clone:", data)
         form.resetFields();
         setFields([
             { name: "name", value: data?.name },
@@ -165,11 +172,13 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             { name: "status_id", value: data?.status_label.id },
             { name: "warranty_months", value: data?.warranty_months && data.warranty_months.split(" ")[0] },
             { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
-            { name: "purchase_date", value: data?.purchase_date.date && data.purchase_date.date },
+            { name: "purchase_date", value: data?.purchase_date.date !== null ? data?.purchase_date.date : "" },
             { name: "supplier_id", value: data?.supplier.id },
             { name: "rtd_location_id", value: data?.rtd_location.id },
 
             { name: "assigned_to", value: data?.assigned_to },
+            { name: "requestable", value: data?.requestable },
+
             { name: "image", value: data?.image },
         ]);
     }, [data, form, isModalVisible]);
@@ -397,16 +406,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                     <Form.Item
                         label={t("hardware.label.field.dateBuy")}
                         name="purchase_date"
-                        rules={[
-                            {
-                                required: true,
-                                message:
-                                    t("hardware.label.field.dataBuy") +
-                                    " " +
-                                    t("hardware.label.message.required"),
-                            },
-                        ]}
-                        initialValue={data?.purchase_date.date}
+                        initialValue={data?.purchase_date.date !== null ? data?.purchase_date.date : ""}
                     >
                         <Input
                             type="date"
@@ -458,15 +458,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                     <Form.Item
                         label={t("hardware.label.field.cost")}
                         name="purchase_cost"
-                        rules={[
-                            {
-                                required: true,
-                                message:
-                                    t("hardware.label.field.cost") +
-                                    " " +
-                                    t("hardware.label.message.required"),
-                            },
-                        ]}
                         initialValue={data?.purchase_cost && data?.purchase_cost.toString().split(",")[0]}
                     >
                         <Input type="number"
@@ -525,15 +516,27 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             {messageErr?.notes && (
                 <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
             )}
+            <Form.Item label="" valuePropName="checked">
+                {data?.requestable == 1 ? (
+                    <Checkbox
+                        checked={!checked}
+                        value={data?.requestable}
+                        onChange={(event) => {
+                            onCheck(event);
+                        }}
+                        onClick={toggleChecked}
 
-            <Form.Item label="" name="requestable" valuePropName="checked">
-                <Checkbox
-                    onChange={(event) => {
-                        onCheck(event);
-                    }}
-                >
-                    {t("hardware.label.field.checkbox")}
-                </Checkbox>
+                    >{t("hardware.label.field.checkbox")}
+                    </Checkbox>) : (<Checkbox
+                        checked={checked}
+                        value={data?.requestable}
+                        onChange={(event) => {
+                            onCheck(event);
+                        }}
+                        onClick={toggleChecked}
+
+                    >{t("hardware.label.field.checkbox")}
+                    </Checkbox>)}
             </Form.Item>
 
             <Form.Item label="Tải hình" name="image" initialValue={data?.image}>

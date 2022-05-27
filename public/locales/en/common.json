@@ -87,10 +87,6 @@
   "hardware": {
     "label": {
         "field": {
-          "nameCompany": "Name company",
-          "propertyCard": "Property Card",
-          "serial": "Serial",
-          "propertyType": "Property type",
           "status": "Status",
           "checkoutTo": "Checkout to"
         }

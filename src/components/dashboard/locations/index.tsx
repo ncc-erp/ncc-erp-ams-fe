@@ -22,9 +22,9 @@ export const Locations = (props: LocationProps) => {
           ></AssetsSummaryPieChart>
         </Col>
         <Col className="gutter-row assets-summary-table" sm={24} md={14}>
-            <AssetsSummaryTable
-              categories={location.categories}
-            ></AssetsSummaryTable>
+          <AssetsSummaryTable
+            categories={location.categories}
+          ></AssetsSummaryTable>
         </Col>
       </Row>
     </div>

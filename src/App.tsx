@@ -4,7 +4,7 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList, HardwareCreate, HardwareEdit, HardwareShow } from "pages/hardware";
+import { HardwareList, HardwareShow } from "pages/hardware";
 import {
   Title,
   Header,
@@ -15,8 +15,9 @@ import {
 } from "components/layout";
 import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
-import {  RequestList, RequestShow } from "pages/request";
+import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
+import { UserList } from "pages/users/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -44,6 +45,10 @@ function App() {
         {
           name: "Tạo request",
           list: RequestList,
+        },
+        {
+          name: "Users",
+          list: UserList,
         },
       ]}
       Title={Title}

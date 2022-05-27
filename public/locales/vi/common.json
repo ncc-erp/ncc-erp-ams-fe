@@ -92,7 +92,8 @@
     }
   },
   "table": {
-    "actions": "Actions"
+    "actions": "Actions",
+    "search": "Tìm kiếm"
   },
   "hardware": {
     "label": {
@@ -109,14 +110,15 @@
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
           "supplier": "Nhà cung cấp",
-          "orderNumber": "Mã order",
+          "orderNumber": "Số đơn đặt hàng",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
           "locationFix": "Vị trí mặc định",
-          "checkbox": "Cho phép đề xuất"
+          "checkbox": "Cho phép đề xuất",
+          "device": "Thiết bị"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -144,7 +146,8 @@
         },
         "title": {
           "create":"Tạo mới",
-          "edit": "Chỉnh sửa"
+          "edit": "Chỉnh sửa",
+          "clone": "Clone"
         }
     }
   },

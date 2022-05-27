@@ -19,9 +19,9 @@ import ReactMde from "react-mde";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareRequest, IHardwareResponseOnFinish } from "interfaces/hardware";
+import { IHardwareCreateRequest, IHardwareUpdateRequest } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
+import { UserOutlined, AndroidOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
@@ -49,7 +49,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ASSIGN = "Assign",
   }
 
-  const { formProps, form } = useForm<IHardwareRequest>({
+  const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
 
@@ -139,7 +139,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { mutate, data: createData, isLoading } = useCreate();
 
-  const onFinish = (event: IHardwareResponseOnFinish) => {
+  const onFinish = (event: IHardwareUpdateRequest) => {
     setMessageErr(null);
     const formData = new FormData();
 
@@ -158,12 +158,13 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
     if (event.purchase_cost !== undefined) formData.append("purchase_cost", event.purchase_cost);
     if (event.purchase_date !== undefined) formData.append("purchase_date", event.purchase_date);
+
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes);
 
-    if (event.image !== null && event.image !== undefined) formData.append("image", event.image);
-    if (event.requestable !== undefined && event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
+    if (event.image !== null) formData.append("image", event.image);
+    formData.append("requestable", event.requestable !== undefined ? '1' : '0');
 
     setPayload(formData);
   }
@@ -218,7 +219,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       form.setFieldsValue({
         requestable: 0,
       });
-    console.log(event)
   };
 
   useEffect(() => {
@@ -392,15 +392,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.dateBuy")}
             name="purchase_date"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.dateBuy") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input type="date" />
           </Form.Item>
@@ -446,15 +437,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="purchase_cost"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.cost") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input type="number" addonAfter={t("hardware.label.field.usd")}
               placeholder={t("hardware.label.placeholder.cost")} />
@@ -499,7 +481,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Tabs.TabPane
               tab={
                 <span>
-                  <AppleOutlined />
+                  <UserOutlined />
                   {t("hardware.label.field.user")}
                 </span>
               }
@@ -517,7 +499,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Tabs.TabPane
               tab={
                 <span>
-                  <AndroidOutlined />
+                  <EnvironmentOutlined />
                   {t("hardware.label.field.location")}
                 </span>
               }
@@ -529,6 +511,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
       {activeModel === "1" && (
         <Form.Item
+          className="tabUser"
           label={t("hardware.label.field.user")}
           name="assigned_to"
           rules={[
@@ -549,6 +532,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       )}
       {activeModel === "2" && (
         <Form.Item
+          className="tabAsset"
           label={t("hardware.label.field.asset")}
           name="physical"
           rules={[
@@ -569,6 +553,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       )}
       {activeModel === "3" && (
         <Form.Item
+          className="tabLocation"
           label={t("hardware.label.field.location")}
           name="location"
           rules={[
@@ -613,7 +598,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable" valuePropName="checked">
+      <Form.Item name="requestable" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheck(event);
