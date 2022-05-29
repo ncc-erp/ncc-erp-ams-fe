@@ -163,8 +163,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes);
 
-    if (event.image !== null) formData.append("image", event.image);
-    formData.append("requestable", event.requestable !== undefined ? '1' : '0');
+    if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
+
+    if (event.image !== null && event.image !== undefined) { formData.append("image", event.image); }
 
     setPayload(formData);
   }
@@ -598,7 +599,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item name="requestable" valuePropName="checked">
+      <Form.Item label="" name="requestable" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheck(event);

@@ -140,8 +140,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
         formData.append("rtd_location_id", event.rtd_location.toString());
         formData.append("supplier_id", event.supplier.toString())
 
-        if (event.image !== null) formData.append("image", event.image);
-        formData.append("requestable", event.requestable !== undefined ? '1' : '0');
+        if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
+
+        if (typeof (event.image) !== "string" && event.image !== null) formData.append("image", event.image);
 
         setPayload(formData);
     };
@@ -157,7 +158,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     }, [payload]);
 
     useEffect(() => {
-        console.log("data useEffect clone:", data)
         form.resetFields();
         setFields([
             { name: "name", value: data?.name },
@@ -516,27 +516,14 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             {messageErr?.notes && (
                 <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
             )}
-            <Form.Item label="" valuePropName="checked">
-                {data?.requestable == 1 ? (
-                    <Checkbox
-                        checked={!checked}
-                        value={data?.requestable}
-                        onChange={(event) => {
-                            onCheck(event);
-                        }}
-                        onClick={toggleChecked}
-
-                    >{t("hardware.label.field.checkbox")}
-                    </Checkbox>) : (<Checkbox
-                        checked={checked}
-                        value={data?.requestable}
-                        onChange={(event) => {
-                            onCheck(event);
-                        }}
-                        onClick={toggleChecked}
-
-                    >{t("hardware.label.field.checkbox")}
-                    </Checkbox>)}
+            <Form.Item label="" name="requestable" valuePropName="checked">
+                <Checkbox
+                    value={data?.requestable}
+                    onChange={(event) => {
+                        onCheck(event);
+                    }}
+                >{t("hardware.label.field.checkbox")}
+                </Checkbox>
             </Form.Item>
 
             <Form.Item label="Tải hình" name="image" initialValue={data?.image}>

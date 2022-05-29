@@ -17,6 +17,7 @@ import {
   TagField,
   CreateButton,
 } from "@pankod/refine-antd";
+import { Image } from 'antd';
 import { ICheckboxProps, IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -111,7 +112,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.rtd_location?.id,
         name: data?.rtd_location?.name,
       },
-      image: data?.image && data?.image,
+      image: data?.image,
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
       purchase_date: {
@@ -121,12 +122,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
 
-      requestable: data?.requestable !== undefined ? 1 : 0,
+      requestable: data?.requestable,
     };
+
     setDetail(dataConvert);
     setIsEditModalVisible(true);
-
-    console.log("dataConvert", dataConvert)
   };
 
   const clone = (data: IHardwareResponse) => {
@@ -178,7 +178,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_to: data?.assigned_to,
       last_audit_date: data?.last_audit_date,
 
-      requestable: data?.requestable !== undefined ? 1 : 0,
+      requestable: data?.requestable,
     };
     setDetailClone(dataConvert);
     setIsCloneModalVisible(true);

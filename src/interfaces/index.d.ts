@@ -25,6 +25,7 @@ export interface IHardware {
     id: number;
     name: string;
   };
+  image: string;
 }
 
 // from demo
@@ -44,4 +45,10 @@ export interface ICheckboxChange {
   target: {
     checked: boolean;
   };
+}
+
+export interface ISelectItem {
+  key: number;
+  map: any;
+  asset: [];
 }

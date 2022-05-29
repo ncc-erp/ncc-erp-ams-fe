@@ -137,7 +137,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("company_id", event.company.toString())
     formData.append("model_id", event.model.toString());
-    formData.append("order_number", event.order_number);
+    if (event.order_number !== null) formData.append("order_number", event.order_number);
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
@@ -145,18 +145,18 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("status_id", event.status_label.toString())
     formData.append("warranty_months", event.warranty_months);
 
-    formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_cost !== null) formData.append("purchase_cost", event.purchase_cost);
     if (event.purchase_date !== null) formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
     if (event.supplier !== undefined) formData.append("supplier_id", event.supplier.toString())
 
-    if (event.image !== null) formData.append("image", event.image);
+    if (typeof (event.image) !== "string" && event.image !== null) formData.append("image", event.image);
 
-
-    formData.append("requestable", event.requestable !== undefined ? '1' : '0');
+    if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
 
     formData.append("_method", "PATCH");
+
     setPayload(formData);
     form.resetFields();
   };
@@ -520,27 +520,15 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" valuePropName="checked">
-        {data?.requestable == 1 ? (
-          <Checkbox
-            checked={!checked}
-            value={data?.requestable}
-            onChange={(event) => {
-              onCheck(event);
-            }}
-            onClick={toggleChecked}
+      <Form.Item label="" name="requestable" valuePropName="checked">
+        <Checkbox
+          value={data?.requestable}
+          onChange={(event) => {
+            onCheck(event);
+          }}
 
-          >{t("hardware.label.field.checkbox")}
-          </Checkbox>) : (<Checkbox
-            checked={checked}
-            value={data?.requestable}
-            onChange={(event) => {
-              onCheck(event);
-            }}
-            onClick={toggleChecked}
-
-          >{t("hardware.label.field.checkbox")}
-          </Checkbox>)}
+        >{t("hardware.label.field.checkbox")}
+        </Checkbox>
       </Form.Item>
 
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
