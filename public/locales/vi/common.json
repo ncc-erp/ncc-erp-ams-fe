@@ -33,8 +33,6 @@
     "undo": "Undo",
     "import": "Import",
     "clone": "Clone",
-    "checkout":"Checkout",
-    "checkin":"Checkin",
     "notAccessTitle": "You don't have permission to access"
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
@@ -103,7 +101,7 @@
           "nameCompany": "Công ty",
           "propertyCard": "Thẻ tài sản",
           "serial": "Số Sê-ri",
-          "propertyType": "Kiểu tài sản ",
+          "propertyType": "Kiểu tài sản",
           "status": "Status",
           "checkoutTo": "Checkout đến",
           "user": "Người dùng",
@@ -111,18 +109,16 @@
           "location": "Địa phương",
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
-          "dateCheckout": "Ngày Checkout",
-          "dateWantCheckin":"Ngày mong muốn Checkin",
           "supplier": "Nhà cung cấp",
-          "orderNumber": "Mã order",
+          "orderNumber": "Số đơn đặt hàng",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
-          "note": "Ghi chú",
           "locationFix": "Vị trí mặc định",
-          "checkbox": "Cho phép đề xuất"
+          "checkbox": "Cho phép đề xuất",
+          "device": "Thiết bị"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -146,15 +142,12 @@
         "button": {
           "create": "Thêm mới",
           "update": "Chỉnh sửa",
-          "clone": "Clone",
-          "checkout": "Checkout",
-          "checkin": "Checkin"
+          "clone": "Clone"
         },
         "title": {
           "create":"Tạo mới",
           "edit": "Chỉnh sửa",
-          "checkout": "Checkout",
-          "checkin": "Checkin"
+          "clone": "Clone"
         }
     }
   },
@@ -176,8 +169,7 @@
         "totalAsset": "Số lượng",
         "status": "Trạng thái",
         "asset_ids": "Thiết bị",
-        "price": "Giá",
-        "image": "Ảnh thiết bị"
+        "price": "Giá"
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -195,8 +187,7 @@
         "assetsRequired": "* Bạn chưa chọn thiết bị"
       },
       "title": {
-        "create": "Tạo Request",
-        "detail": "Chi tiết Request"
+        "create": "Tạo Request"
       }
     }
   }

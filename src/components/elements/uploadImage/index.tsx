@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
 import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 
 type UploadImageProps = {
-  file: File;
-  setFile: (data: File) => void;
+  file: any;
+  setFile: (data: any) => void;
   url?: string;
 };
 

@@ -2,7 +2,6 @@ import { Refine } from "@pankod/refine-core";
 import { notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
-import "../src/styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
 import { HardwareList, HardwareShow } from "pages/hardware";
@@ -18,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { DashboardPage } from "pages/dashboard";
 import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
-import { UserList } from "pages/users";
+import { UserList } from "pages/users/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -48,7 +47,7 @@ function App() {
           list: RequestList,
         },
         {
-          name: "user",
+          name: "Users",
           list: UserList,
         },
       ]}

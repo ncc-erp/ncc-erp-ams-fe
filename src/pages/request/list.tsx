@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { DeleteOutlined } from "@ant-design/icons";
 
 import {
@@ -8,7 +7,6 @@ import {
   useDelete,
   BaseKey,
   CrudFilters,
-  useCustom,
 } from "@pankod/refine-core";
 import {
   List,
@@ -23,67 +21,48 @@ import {
   Button,
   CreateButton,
 } from "@pankod/refine-antd";
-
 import { IHardware } from "interfaces";
-import { IHardwareRequest } from "interfaces/hardware";
 import { useEffect, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { RequestCreate } from "./create";
 import { RequestShow } from "./show";
 import { TableAction } from "components/elements/tables/TableAction";
-import { IRequestResponse } from "interfaces/request";
+import { IHardwareResponse } from "interfaces/hardware";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-  const [detail, setDetail] = useState<IRequestResponse | undefined>();
+  const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
 
-  const { mutate: muteDelete, data: dataDelete } = useDelete();
-  const useHardwareNotRequest = useCustom<IHardwareRequest>({
-    url: "api/v1/hardware",
-    method: "get",
-    config: {
-      filters: [
-        {
-          field: "notRequest",
-          operator: "null",
-          value: 1,
-        },
-      ],
+  const { mutate: muteDelete } = useDelete();
+
+  const { tableProps, sorter, searchFormProps } = useTable<IHardware>({
+    initialSorter: [
+      {
+        field: "id",
+        order: "desc",
+      },
+    ],
+    resource: "api/v1/finfast-request",
+    onSearch: (params: any) => {
+      const filters: CrudFilters = [];
+      const { search } = params;
+      console.log(params, "params");
+
+      filters.push({
+        field: "search",
+        operator: "eq",
+        value: search,
+      });
+
+      return filters;
     },
   });
 
-  const { refetch } = useHardwareNotRequest;
-
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
-    useTable<IHardware>({
-      initialSorter: [
-        {
-          field: "id",
-          order: "desc",
-        },
-      ],
-      resource: "api/v1/finfast-request",
-      onSearch: (params: any) => {
-        const filters: CrudFilters = [];
-        const { search } = params;
-
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
-
-        return filters;
-      },
-    });
-
-  const { mutate, isLoading: isLoadingSendRequest } =
-    useCreate<IHardwareRequest>();
+  const { mutate, isLoading: isLoadingSendRequest } = useCreate<any>();
 
   const onSendRequest = (value: number) => {
     setIdSend(value);
@@ -98,13 +77,12 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         },
       });
     }
-  }, [idSend, mutate]);
+  }, [idSend]);
 
   useEffect(() => {
     let arr = [...isLoadingArr];
     arr[idSend] = isLoadingSendRequest;
     setIsLoadingArr(arr);
-    tableQueryResult.refetch();
   }, [isLoadingSendRequest]);
 
   const handleDelete = (id: BaseKey) => {
@@ -115,12 +93,6 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     });
   };
 
-  useEffect(() => {
-    if (dataDelete !== undefined) {
-      refetch();
-    }
-  }, [dataDelete, refetch]);
-
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -129,7 +101,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     handleOpenModel();
   };
 
-  const show = (data: IRequestResponse) => {
+  const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
@@ -146,14 +118,11 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
       >
-        <RequestCreate
-          setIsModalVisible={setIsModalVisible}
-          useHardwareNotRequest={useHardwareNotRequest}
-        />
+        <RequestCreate setIsModalVisible={setIsModalVisible} />
       </MModal>
 
       <MModal
-        title={t("request.label.title.detail")}
+        title={t("request.label.title.create")}
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
@@ -210,10 +179,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
             <TagField value={value.length ? value.length : 0} />
           )}
         />
-        <Table.Column<IRequestResponse>
+        <Table.Column<IHardware>
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record) => (
+          render={(_, record: any) => (
             <Space>
               <ShowButton
                 hideText
