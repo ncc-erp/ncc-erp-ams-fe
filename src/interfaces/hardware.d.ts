@@ -138,14 +138,9 @@ export interface IHardwareResponseCheckout {
     }
     assigned_user: number;
     assigned_asset: string;
-    checkout_to_type : {
-        assigned_user: number;
-        assigned_asset:string; 
-        assigned_location: {
-            id: number;
-            name: string;
-        }
-    }
+    checkout_to_type : string;
+    
+    user_can_checkout: boolean;
 }
 
 export interface IHardwareList {

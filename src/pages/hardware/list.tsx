@@ -176,15 +176,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_user: data?.assigned_user,
       model_number: data?.model_number,
       assigned_asset: data?.assigned_asset,
-      checkout_to_type: {
-        assigned_asset: data?.assigned_asset,
-        assigned_location: {
-          id: data?.assigned_location?.id,
-          name: data?.assigned_location?.name,
-        },
-        assigned_user: data?.assigned_user,
-      },
+      checkout_to_type: data?.checkout_to_type,
+      user_can_checkout: data?.user_can_checkout,
     };
+
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);
   };
@@ -322,24 +317,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: any) => (
             <Space>
-              {(record.status_label.name === "Assign" && (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="small"
-                  loading={
-                    isLoadingArr[record.id] === undefined
-                      ? false
-                      : isLoadingArr[record.id] === false
-                      ? false
-                      : true
-                  }
-                  onClick={() => checkout(record)}
-                >
-                  {t("hardware.label.button.checkout")}
-                </Button>
-              )) ||
-                (record.status_label.name === "Ready to deploy" && (
+              {(record.status_label.name === "Assign" &&
+                record.user_can_checkout === true && (
                   <Button
                     type="primary"
                     shape="round"
@@ -356,6 +335,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     {t("hardware.label.button.checkout")}
                   </Button>
                 )) ||
+                (record.status_label.name === "Ready to deploy" &&
+                  record.user_can_checkout === true && (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                      }
+                      onClick={() => checkout(record)}
+                    >
+                      {t("hardware.label.button.checkout")}
+                    </Button>
+                  )) ||
                 (record.status_label.name === "Pending" && (
                   <Button
                     type="primary"

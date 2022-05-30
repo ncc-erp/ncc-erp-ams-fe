@@ -142,14 +142,16 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
     if (event.assigned_location !== undefined) {
       formData.append("assigned_location", event.assigned_location);
+      formData.append("checkout_to_type", "location");
     }
     if (event.assigned_asset !== undefined) {
       formData.append("assigned_asset", event.assigned_asset);
+      formData.append("checkout_to_type", "asset");
     }
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
+      formData.append("checkout_to_type", "user");
     }
-    formData.append("checkout_to_type", "user");
 
     setPayload(formData);
   };
