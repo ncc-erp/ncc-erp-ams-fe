@@ -17,7 +17,6 @@ import {
   TagField,
   CreateButton,
 } from "@pankod/refine-antd";
-import { Image } from 'antd';
 import { ICheckboxProps, IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -100,10 +99,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       notes: data.notes,
       order_number: data.order_number !== "null" ? data.order_number : "",
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
+      // company: {
+      //   id: data?.company?.id,
+      //   name: data?.company?.name,
+      // },
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -124,6 +123,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
       requestable: data?.requestable,
     };
+
+    console.log("edit", dataConvert);
 
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -156,10 +157,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       notes: data.notes,
       order_number: data.order_number !== "null" ? data.order_number : "",
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
+      // company: {
+      //   id: data?.company?.id,
+      //   name: data?.company?.name,
+      // },
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -180,6 +181,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
       requestable: data?.requestable,
     };
+
+    console.log("clone", dataConvert);
+
     setDetailClone(dataConvert);
     setIsCloneModalVisible(true);
 
@@ -280,7 +284,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailClone}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
+      <Table {...tableProps} rowKey="id"> {/*rowSelection={rowSelection} */}
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
@@ -311,6 +315,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           )}
         />
       </Table>
-    </List>
+    </List >
   );
 };

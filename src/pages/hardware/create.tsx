@@ -143,7 +143,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(null);
     const formData = new FormData();
 
-    formData.append("company_id", event.company.toString());
+    // formData.append("company_id", event.company.toString());
     formData.append("name", event.name);
     formData.append("asset_tag", event.asset_tag);
     if (event.serial !== undefined) formData.append("serial", event.serial);
@@ -168,6 +168,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.image !== null && event.image !== undefined) { formData.append("image", event.image); }
 
     setPayload(formData);
+    form.resetFields();
   }
 
   useEffect(() => {
@@ -176,7 +177,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         resource: "api/v1/hardware",
         values: payload,
       });
-      if (createData?.data.message) form.resetFields();
+      if (createData?.data.message) {
+        form.resetFields();
+      }
     }
   }, [payload]);
 
@@ -184,6 +187,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (createData?.data.status === "success") {
       form.resetFields();
+      setFile(null);
       setIsModalVisible(false);
       setMessageErr(null);
     } else {
@@ -238,7 +242,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item
+          {/* <Form.Item
             label={t("hardware.label.field.nameCompany")}
             name="company"
             rules={[
@@ -261,25 +265,25 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Typography.Text type="danger">
               {messageErr.company[0]}
             </Typography.Text>
-          )}
+          )} */}
           <Form.Item
-            label={t("hardware.label.field.propertyCard")}
-            name="asset_tag"
+            label={t("hardware.label.field.assetName")}
+            name="name"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.propertyCard") +
+                  t("hardware.label.field.assetName") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
           >
-            <Input placeholder={t("hardware.label.placeholder.propertyCard")} />
+            <Input placeholder={t("hardware.label.placeholder.assetName")} />
           </Form.Item>
-          {messageErr?.asset_tag && (
+          {messageErr?.name && (
             <Typography.Text type="danger">
-              {messageErr.asset_tag[0]}
+              {messageErr.name[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -367,27 +371,129 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
+
+          {isReadyToDeploy && (
+            <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
+              <Tabs
+                defaultActiveKey="1"
+                onTabClick={(value) => {
+                  setActiveModel(value);
+                }}
+              >
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <UserOutlined />
+                      {t("hardware.label.field.user")}
+                    </span>
+                  }
+                  key="1"
+                ></Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <AndroidOutlined />
+                      {t("hardware.label.field.asset")}
+                    </span>
+                  }
+                  key="2"
+                ></Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <EnvironmentOutlined />
+                      {t("hardware.label.field.location")}
+                    </span>
+                  }
+                  key="3"
+                ></Tabs.TabPane>
+              </Tabs>
+            </Form.Item>
+          )}
+
+          {activeModel === "1" && (
+            <Form.Item
+              className="tabUser"
+              label={t("hardware.label.field.user")}
+              name="assigned_to"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.user") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.user")}
+                {...userSelectProps}
+              />
+            </Form.Item>
+          )}
+          {activeModel === "2" && (
+            <Form.Item
+              className="tabAsset"
+              label={t("hardware.label.field.asset")}
+              name="physical"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.asset") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.asset")}
+                {...hardwareSelectProps}
+              />
+            </Form.Item>
+          )}
+          {activeModel === "3" && (
+            <Form.Item
+              className="tabLocation"
+              label={t("hardware.label.field.location")}
+              name="location"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.location") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.location")}
+                {...locationSelectProps}
+              />
+            </Form.Item>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
-          {" "}
           <Form.Item
-            label={t("hardware.label.field.assetName")}
-            name="name"
+            label={t("hardware.label.field.propertyCard")}
+            name="asset_tag"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.assetName") +
+                  t("hardware.label.field.propertyCard") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
           >
-            <Input placeholder={t("hardware.label.placeholder.assetName")} />
+            <Input placeholder={t("hardware.label.placeholder.propertyCard")} />
           </Form.Item>
-          {messageErr?.name && (
+          {messageErr?.asset_tag && (
             <Typography.Text type="danger">
-              {messageErr.name[0]}
+              {messageErr.asset_tag[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -471,7 +577,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         </Col>
       </Row>
 
-      {isReadyToDeploy && (
+      {/* {isReadyToDeploy && (
         <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
           <Tabs
             defaultActiveKey="1"
@@ -572,7 +678,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             {...locationSelectProps}
           />
         </Form.Item>
-      )}
+      )} */}
 
       <Form.Item
         label={t("hardware.label.field.notes")}

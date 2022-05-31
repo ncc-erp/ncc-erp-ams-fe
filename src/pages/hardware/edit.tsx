@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Modal,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
@@ -22,6 +23,8 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
+import { Image, Upload } from 'antd';
+import "../../styles/hardware.less";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -35,7 +38,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const toggleChecked = () => {
     setChecked(!checked);
@@ -135,7 +138,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
-    formData.append("company_id", event.company.toString())
     formData.append("model_id", event.model.toString());
     if (event.order_number !== null) formData.append("order_number", event.order_number);
 
@@ -155,18 +157,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
 
+    console.log(event.image)
+    console.log("event edit", event)
     formData.append("_method", "PATCH");
-
     setPayload(formData);
-    form.resetFields();
+    // form.resetFields();
   };
 
   useEffect(() => {
     form.resetFields();
+    setFile(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
-      { name: "company_id", value: data?.company.id },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
 
@@ -181,7 +184,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "rtd_location_id", value: data?.rtd_location.id },
 
       { name: "assigned_to", value: data?.assigned_to },
-      { name: "requestable", value: data?.requestable },
+      { name: "requestable", value: true },
 
       { name: "image", value: data?.image },
     ]);
@@ -203,6 +206,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   useEffect(() => {
     if (updateData?.data.status === "success") {
       form.resetFields();
+      setFile(null);
       setIsModalVisible(false);
       setMessageErr(null);
     } else {
@@ -257,7 +261,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item
+          {/* <Form.Item
             label={t("hardware.label.field.nameCompany")}
             name="company"
             rules={[
@@ -281,27 +285,27 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Typography.Text type="danger">
               {messageErr.company[0]}
             </Typography.Text>
-          )}
+          )} */}
 
           <Form.Item
-            label={t("hardware.label.field.propertyCard")}
-            name="asset_tag"
+            label={t("hardware.label.field.assetName")}
+            name="name"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.propertyCard") +
+                  t("hardware.label.field.assetName") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.asset_tag}
+            initialValue={data?.name}
           >
             <Input />
           </Form.Item>
-          {messageErr?.asset_tag && (
+          {messageErr?.name && (
             <Typography.Text type="danger">
-              {messageErr.asset_tag[0]}
+              {messageErr.name[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -394,27 +398,51 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
-        </Col>
-        <Col className="gutter-row" span={12}>
           <Form.Item
-            label={t("hardware.label.field.assetName")}
-            name="name"
+            label={t("hardware.label.field.insurance")}
+            name="warranty_months"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.assetName") +
+                  t("hardware.label.field.insurance") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.name}
+            initialValue={data?.warranty_months && data?.warranty_months.split(" ")[0]}
+          >
+            <Input type="number"
+              addonAfter={t("hardware.label.field.month")}
+              value={data?.warranty_months && data?.warranty_months.split(" ")[0]}
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
+            </Typography.Text>
+          )}
+        </Col>
+        <Col className="gutter-row" span={12}>
+          <Form.Item
+            label={t("hardware.label.field.propertyCard")}
+            name="asset_tag"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.propertyCard") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.asset_tag}
           >
             <Input />
           </Form.Item>
-          {messageErr?.name && (
+          {messageErr?.asset_tag && (
             <Typography.Text type="danger">
-              {messageErr.name[0]}
+              {messageErr.asset_tag[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -472,30 +500,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.puchase_cost[0]}
             </Typography.Text>
           )}
-          <Form.Item
-            label={t("hardware.label.field.insurance")}
-            name="warranty_months"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.insurance") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.warranty_months && data?.warranty_months.split(" ")[0]}
-          >
-            <Input type="number"
-              addonAfter={t("hardware.label.field.month")}
-              value={data?.warranty_months && data?.warranty_months.split(" ")[0]}
-            />
-          </Form.Item>
-          {messageErr?.warranty_months && (
-            <Typography.Text type="danger">
-              {messageErr.warranty_months[0]}
-            </Typography.Text>
-          )}
         </Col>
       </Row>
 
@@ -521,14 +525,27 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       )}
 
       <Form.Item label="" name="requestable" valuePropName="checked">
-        <Checkbox
+        {/* {data?.requestable.toString() == "1" && */}
+        {<Checkbox
+          checked={data?.requestable.toString() === "1" ? true : false}
           value={data?.requestable}
           onChange={(event) => {
             onCheck(event);
           }}
-
         >{t("hardware.label.field.checkbox")}
         </Checkbox>
+        }
+        {/* {data?.requestable.toString() == "0" &&
+          <Checkbox
+            checked={!checked}
+            value={data?.requestable}
+            onChange={(event) => {
+              onCheck(event);
+            }}
+            onClick={toggleChecked}
+          >{t("hardware.label.field.checkbox")}
+          </Checkbox>
+        } */}
       </Form.Item>
 
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
@@ -541,15 +558,18 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         ) : (
           <UploadImage file={file} setFile={setFile}></UploadImage>
         )}
+
       </Form.Item>
-      {messageErr?.image && (
-        <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
-      )}
+      {
+        messageErr?.image && (
+          <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
+        )
+      }
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>
           {t("hardware.label.button.update")}
         </Button>
       </div>
-    </Form>
+    </Form >
   );
 };

@@ -18,7 +18,7 @@ export interface IHardwareCreateRequest {
   warranty_months: number;
   depreciate: boolean;
   supplier_id: number;
-  requestable: boolean;
+  requestable: number;
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
@@ -71,10 +71,10 @@ export interface IHardwareResponse {
   };
   notes: string;
   order_number: string;
-  company: {
-    id: number;
-    name: string;
-  };
+  // company: {
+  //   id: number;
+  //   name: string;
+  // };
   location: {
     id: number;
     name: string;
@@ -93,7 +93,7 @@ export interface IHardwareResponse {
   assigned_to: number;
   last_audit_date: string;
 
-  requestable: boolean;
+  requestable: number;
 }
 
 export interface IDefaultValue {
@@ -176,4 +176,27 @@ export interface IHardwareList {
       }
     | undefined;
   refetch: Function;
+}
+
+export interface IHardwareRequest {
+  rows: any;
+  id: number;
+  asset_tag: string;
+  status_id: number;
+  model_id: number;
+  name: string;
+  image: string;
+  serial: string;
+  purchase_date: string;
+  purchase_cost: number;
+  order_number: string;
+  notes: string;
+  archived: boolean;
+  warranty_months: number;
+  depreciate: boolean;
+  supplier_id: number;
+  requestable: number;
+  rtd_location_id: number;
+  last_audit_date: string;
+  location_id: number;
 }

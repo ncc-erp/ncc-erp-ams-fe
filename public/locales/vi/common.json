@@ -102,7 +102,7 @@
           "propertyCard": "Thẻ tài sản",
           "serial": "Số Sê-ri",
           "propertyType": "Kiểu tài sản",
-          "status": "Status",
+          "status": "Trạng thái",
           "checkoutTo": "Checkout đến",
           "user": "Người dùng",
           "asset": "Tài sản",
@@ -116,7 +116,7 @@
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
-          "locationFix": "Vị trí mặc định",
+          "locationFix": "Chi nhánh",
           "checkbox": "Cho phép đề xuất",
           "device": "Thiết bị"
         },
