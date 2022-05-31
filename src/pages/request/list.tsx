@@ -25,7 +25,7 @@ import {
 } from "@pankod/refine-antd";
 
 import { IHardware } from "interfaces";
-import { IHardwareRequest } from "interfaces/hardware";
+import { IHardwareCreateRequest } from "interfaces/hardware";
 import { useEffect, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { RequestCreate } from "./create";
@@ -43,7 +43,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const [idSend, setIdSend] = useState<number>(-1);
 
   const { mutate: muteDelete, data: dataDelete } = useDelete();
-  const useHardwareNotRequest = useCustom<IHardwareRequest>({
+  const useHardwareNotRequest = useCustom<IHardwareCreateRequest>({
     url: "api/v1/hardware",
     method: "get",
     config: {
@@ -83,7 +83,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     });
 
   const { mutate, isLoading: isLoadingSendRequest } =
-    useCreate<IHardwareRequest>();
+    useCreate<IHardwareCreateRequest>();
 
   const onSendRequest = (value: number) => {
     setIdSend(value);

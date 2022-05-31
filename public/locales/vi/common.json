@@ -33,8 +33,6 @@
     "undo": "Undo",
     "import": "Import",
     "clone": "Clone",
-    "checkout":"Checkout",
-    "checkin":"Checkin",
     "notAccessTitle": "You don't have permission to access"
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
@@ -78,7 +76,7 @@
         }
       },
       "status": {
-        "title": "Status",
+        "title": "Trạng thái",
         "published": "Published",
         "draft": "Draft",
         "rejected": "Rejected"
@@ -103,26 +101,27 @@
           "nameCompany": "Công ty",
           "propertyCard": "Thẻ tài sản",
           "serial": "Số Sê-ri",
-          "propertyType": "Kiểu tài sản ",
-          "status": "Status",
+          "propertyType": "Kiểu tài sản",
+          "status": "Trạng thái",
           "checkoutTo": "Checkout đến",
           "user": "Người dùng",
           "asset": "Tài sản",
           "location": "Địa phương",
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
-          "dateCheckout": "Ngày Checkout",
-          "dateWantCheckin":"Ngày mong muốn Checkin",
           "supplier": "Nhà cung cấp",
-          "orderNumber": "Mã order",
+          "orderNumber": "Số đơn đặt hàng",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
-          "note": "Ghi chú",
           "locationFix": "Vị trí mặc định",
-          "checkbox": "Cho phép đề xuất"
+          "checkbox": "Cho phép đề xuất",
+          "device": "Thiết bị",
+          "dateCheckout": "Ngày Checkout",
+          "dateWantCheckin": "Ngày mong muốn Checkin",
+          "note": "Ghi chú"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -147,14 +146,13 @@
           "create": "Thêm mới",
           "update": "Chỉnh sửa",
           "clone": "Clone",
-          "checkout": "Checkout",
-          "checkin": "Checkin"
+          "checkout": "Checkout"
         },
         "title": {
           "create":"Tạo mới",
           "edit": "Chỉnh sửa",
-          "checkout": "Checkout",
-          "checkin": "Checkin"
+          "clone": "Clone",
+          "checkout": "Checkout"
         }
     }
   },
@@ -177,7 +175,9 @@
         "status": "Trạng thái",
         "asset_ids": "Thiết bị",
         "price": "Giá",
-        "image": "Ảnh thiết bị"
+        "image": "Ảnh thiết bị",
+        "warranty_months": "Bảo hành"
+        
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -188,7 +188,10 @@
       "button": {
         "create":"Tạo mới",
         "send": "Gửi",
-        "delete": "Xóa"
+        "delete": "Xóa",
+        "cancle": "Từ chối",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối"
       },
       "message": {
         "required": "bắt buộc",

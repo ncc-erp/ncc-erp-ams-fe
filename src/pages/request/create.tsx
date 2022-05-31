@@ -16,7 +16,11 @@ import ReactMde from "react-mde";
 import "../../styles/request.less";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-import { IHardwareList, IHardwareRequest } from "interfaces/hardware";
+import {
+  IHardwareList,
+  IHardwareCreateRequest,
+  IHardwareResponse,
+} from "interfaces/hardware";
 import { IBranch } from "interfaces/branch";
 import { ISupplier } from "interfaces/supplier";
 import { TreeSelectComponent } from "components/request/treeSelect";
@@ -37,11 +41,12 @@ export const RequestCreate = (props: RequestCreateProps) => {
   const [selectedAssets, setSelectedAssets] = useState([]);
 
   const t = useTranslate();
-  const { formProps, form } = useForm<IHardwareRequest>({
+  const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
 
   const { data: assetSelectProps, refetch } = useHardwareNotRequest;
+
   const { data: branchSelectProps } = useList<IBranch>({
     resource: "api/v1/finfast/branch",
   });
@@ -96,6 +101,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
   useEffect(() => {
     form.setFieldsValue({ entry_id: entryId });
   }, [entryId, form]);
+
   return (
     <Row gutter={16}>
       <Col span={24}>
@@ -218,11 +224,13 @@ export const RequestCreate = (props: RequestCreateProps) => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              {assetSelectProps?.data?.rows?.map((item: any, index: number) => (
-                <Select.Option key={index} value={item.id}>
-                  {item.name}
-                </Select.Option>
-              ))}
+              {assetSelectProps?.data?.rows?.map(
+                (item: IHardwareResponse, index: number) => (
+                  <Select.Option key={index} value={item.id}>
+                    {item.name}
+                  </Select.Option>
+                )
+              )}
             </Select>
           </Form.Item>
 
