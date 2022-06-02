@@ -6,10 +6,11 @@ type UploadImageProps = {
   file: File;
   setFile: (data: File) => void;
   url?: string;
+  id?: string;
 };
 
 export const UploadImage = (props: UploadImageProps) => {
-  const { file, setFile, url } = props;
+  const {id, file, setFile, url } = props;
 
   const fileHandler = (e: any) => {
     setFile(e?.target?.files[0]);
@@ -30,15 +31,15 @@ export const UploadImage = (props: UploadImageProps) => {
               />
             }
           />
-          <label htmlFor="file" className="replace">
+          <label htmlFor={id} className="replace">
             <Typography.Text>Replace</Typography.Text>
           </label>
         </Space>
       )}
 
-      <Input className="file" id="file" type="file" onChange={fileHandler} />
+      <Input className="file" id={id} type="file" onChange={fileHandler} />
       {!file && (
-        <label htmlFor="file">
+        <label htmlFor={id}>
           <Image
             preview={false}
             src={url ? url : "/images/global/upload.png"}

@@ -552,6 +552,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
                 {data?.image ? (
                     <UploadImage
+                        id={"update" + data?.id}
                         url={data?.image}
                         file={file}
                         setFile={setFile}
