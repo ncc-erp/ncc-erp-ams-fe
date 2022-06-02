@@ -721,7 +721,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       )}
 
       <Form.Item label="Tải hình" name="image">
-        <UploadImage file={file} setFile={setFile}></UploadImage>
+        <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>
       </Form.Item>
       {messageErr?.image && (
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
