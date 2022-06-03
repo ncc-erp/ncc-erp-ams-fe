@@ -76,7 +76,7 @@
         }
       },
       "status": {
-        "title": "Status",
+        "title": "Trạng thái",
         "published": "Published",
         "draft": "Draft",
         "rejected": "Rejected"
@@ -118,7 +118,10 @@
           "notes": "Mô tả",
           "locationFix": "Chi nhánh",
           "checkbox": "Cho phép đề xuất",
-          "device": "Thiết bị"
+          "device": "Thiết bị",
+          "dateCheckout": "Ngày Checkout",
+          "dateWantCheckin": "Ngày mong muốn Checkin",
+          "note": "Ghi chú"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -142,12 +145,14 @@
         "button": {
           "create": "Thêm mới",
           "update": "Chỉnh sửa",
-          "clone": "Clone"
+          "clone": "Clone",
+          "checkout": "Checkout"
         },
         "title": {
           "create":"Tạo mới",
           "edit": "Chỉnh sửa",
-          "clone": "Clone"
+          "clone": "Clone",
+          "checkout": "Checkout"
         }
     }
   },
@@ -169,7 +174,10 @@
         "totalAsset": "Số lượng",
         "status": "Trạng thái",
         "asset_ids": "Thiết bị",
-        "price": "Giá"
+        "price": "Giá",
+        "image": "Ảnh thiết bị",
+        "warranty_months": "Bảo hành"
+        
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -180,14 +188,18 @@
       "button": {
         "create":"Tạo mới",
         "send": "Gửi",
-        "delete": "Xóa"
+        "delete": "Xóa",
+        "cancle": "Từ chối",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối"
       },
       "message": {
         "required": "bắt buộc",
         "assetsRequired": "* Bạn chưa chọn thiết bị"
       },
       "title": {
-        "create": "Tạo Request"
+        "create": "Tạo Request",
+        "detail": "Chi tiết Request"
       }
     }
   }

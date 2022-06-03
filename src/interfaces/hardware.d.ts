@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
-import internal from "stream";
 
 export interface IHardwareCreateRequest {
+  rows: any;
   id: number;
   asset_tag: string;
   status_id: number;
@@ -15,13 +15,14 @@ export interface IHardwareCreateRequest {
   order_number: string;
   notes: string;
   archived: boolean;
-  warranty_months: number;
+  warranty_months: string;
   depreciate: boolean;
   supplier_id: number;
-  requestable: number;
+  requestable: boolean;
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
+  
 }
 
 export interface IHardwareUpdateRequest {
@@ -46,6 +47,7 @@ export interface IHardwareUpdateRequest {
   requestable: number;
 }
 export interface IHardwareResponse {
+  
   id: number;
   name: string;
   asset_tag: string;
@@ -71,10 +73,10 @@ export interface IHardwareResponse {
   };
   notes: string;
   order_number: string;
-  // company: {
-  //   id: number;
-  //   name: string;
-  // };
+  company: {
+    id: number;
+    name: string;
+  };
   location: {
     id: number;
     name: string;
@@ -92,8 +94,27 @@ export interface IHardwareResponse {
   };
   assigned_to: number;
   last_audit_date: string;
+  requestable: boolean;
 
-  requestable: number;
+
+  note: string;
+  expected_checkin: {
+    date: string;
+    formatted: string;
+  };
+  checkout_at: {
+    date: string;
+    formatted: string;
+  };
+  assigned_location: {
+    id: number;
+    name: string;
+  };
+  assigned_user: number;
+  assigned_asset: string;
+  checkout_to_type: string;
+  user_can_checkout: boolean;
+  
 }
 
 export interface IDefaultValue {
@@ -159,14 +180,8 @@ export interface IHardwareResponseCheckout {
   };
   assigned_user: number;
   assigned_asset: string;
-  checkout_to_type: {
-    assigned_user: number;
-    assigned_asset: string;
-    assigned_location: {
-      id: number;
-      name: string;
-    };
-  };
+  checkout_to_type: string;
+  user_can_checkout: boolean;
 }
 
 export interface IHardwareList {
@@ -176,27 +191,4 @@ export interface IHardwareList {
       }
     | undefined;
   refetch: Function;
-}
-
-export interface IHardwareRequest {
-  rows: any;
-  id: number;
-  asset_tag: string;
-  status_id: number;
-  model_id: number;
-  name: string;
-  image: string;
-  serial: string;
-  purchase_date: string;
-  purchase_cost: number;
-  order_number: string;
-  notes: string;
-  archived: boolean;
-  warranty_months: number;
-  depreciate: boolean;
-  supplier_id: number;
-  requestable: number;
-  rtd_location_id: number;
-  last_audit_date: string;
-  location_id: number;
 }

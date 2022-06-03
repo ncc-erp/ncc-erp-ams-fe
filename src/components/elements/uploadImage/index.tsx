@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import React from "react";
 import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 
@@ -6,11 +7,10 @@ type UploadImageProps = {
   file: File;
   setFile: (data: File) => void;
   url?: string;
-  id?: string;
 };
 
 export const UploadImage = (props: UploadImageProps) => {
-  const {id, file, setFile, url } = props;
+  const { file, setFile, url } = props;
 
   const fileHandler = (e: any) => {
     setFile(e?.target?.files[0]);
@@ -31,15 +31,15 @@ export const UploadImage = (props: UploadImageProps) => {
               />
             }
           />
-          <label htmlFor={id} className="replace">
+          <label htmlFor="file" className="replace">
             <Typography.Text>Replace</Typography.Text>
           </label>
         </Space>
       )}
 
-      <Input className="file" id={id} type="file" onChange={fileHandler} />
+      <Input className="file" id="file" type="file" onChange={fileHandler} />
       {!file && (
-        <label htmlFor={id}>
+        <label htmlFor="file">
           <Image
             preview={false}
             src={url ? url : "/images/global/upload.png"}
