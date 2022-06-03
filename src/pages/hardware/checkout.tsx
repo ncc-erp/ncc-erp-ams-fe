@@ -138,7 +138,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     formData.append("status_id", event.status_label);
     formData.append("expected_checkin", event.expected_checkin);
     formData.append("checkout_at", event.checkout_at);
-    formData.append("model_id", event.model);
+    formData.append("model_id", event.model.toString());
 
     if (event.assigned_location !== undefined) {
       formData.append("assigned_location", event.assigned_location);

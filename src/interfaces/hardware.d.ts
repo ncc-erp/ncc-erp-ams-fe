@@ -1,6 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
-import internal from "stream";
 
 export interface IHardwareCreateRequest {
   rows: any;

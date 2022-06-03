@@ -10,6 +10,7 @@ export interface ITable<T> {
 export interface IHardware {
   total: number;
   id: string;
+  datetime: string;
 }
 // from demo
 export interface IPost {
@@ -24,6 +25,9 @@ export interface ISelectItem {
   key: number;
   map: any;
   asset: []
+}
+export interface ICheckboxProps {
+  name: string;
 }
 export interface ICheckboxChange {
   target: {
