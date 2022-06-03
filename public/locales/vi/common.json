@@ -116,7 +116,7 @@
           "usd": "VND",
           "month": "Tháng",
           "notes": "Mô tả",
-          "locationFix": "Vị trí mặc định",
+          "locationFix": "Chi nhánh",
           "checkbox": "Cho phép đề xuất",
           "device": "Thiết bị",
           "dateCheckout": "Ngày Checkout",

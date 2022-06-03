@@ -1,17 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import {
-  useCustom,
-  useList,
-  useTranslate,
-  useUpdate,
-} from "@pankod/refine-core";
+import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
   Form,
   Input,
   Select,
   useSelect,
   useForm,
-  Tabs,
   Checkbox,
   Button,
   Row,
@@ -19,22 +14,25 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
-import { IHardwareRequest, IHardwareResponse } from "interfaces/hardware";
+import {
+  IHardwareCreateRequest,
+  IHardwareResponse,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
+import { ICheckboxChange } from "interfaces";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
-  data: IHardwareResponse;
+  data: IHardwareResponse | undefined;
 };
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
-  // const [activeModel, setActiveModel] = useState<String>("1");
+  const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
@@ -46,7 +44,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<IHardwareRequest>({
+  const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "edit",
   });
 
@@ -79,30 +77,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: "api/v1/statuslabels",
     optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
-    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -151,72 +125,84 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     },
   });
 
-  const onFinish = (event: any) => {
+  const onFinish = (event: IHardwareUpdateRequest) => {
     setMessageErr(null);
     const formData = new FormData();
 
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
-
-    formData.append("company_id", event.company);
-    formData.append("model_id", event.model);
-    formData.append("order_number", event.order_number);
+    formData.append("company_id", event.company.toString());
+    formData.append("model_id", event.model.toString());
+    if (event.order_number !== null)
+      formData.append("order_number", event.order_number);
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
 
-    formData.append("status_id", event.status_label);
+    formData.append("status_id", event.status_label.toString());
     formData.append("warranty_months", event.warranty_months);
 
-    formData.append("purchase_cost", event.purchase_cost);
-    formData.append("purchase_date", event.purchase_date);
+    if (event.purchase_cost !== null)
+      formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== null)
+      formData.append("purchase_date", event.purchase_date);
 
-    formData.append("rtd_location_id", event.rtd_location);
+    formData.append("rtd_location_id", event.rtd_location.toString());
+    if (event.supplier !== undefined)
+      formData.append("supplier_id", event.supplier.toString());
 
-    formData.append("supplier_id", event.supplier);
-
-    if (event.image !== null) {
+    if (typeof event.image !== "string" && event.image !== null)
       formData.append("image", event.image);
-    }
+
+    if (event.requestable !== undefined)
+      formData.append("requestable", event.requestable.toString());
 
     formData.append("_method", "PATCH");
+
     setPayload(formData);
+    form.resetFields();
   };
 
   useEffect(() => {
-    console.log("defect data: ", data);
     form.resetFields();
     setFields([
-      { name: "name", value: data.name },
-      { name: "serial", value: data.serial },
-      { name: "company_id", value: data.company.id },
-      { name: "model_id", value: data.model.id },
-      { name: "order_number", value: data.order_number },
+      { name: "name", value: data?.name },
+      { name: "serial", value: data?.serial },
+      { name: "company_id", value: data?.company.id },
+      { name: "model_id", value: data?.model.id },
+      { name: "order_number", value: data?.order_number },
 
-      { name: "notes", value: data.notes },
-      { name: "asset_tag", value: data.asset_tag },
+      { name: "notes", value: data?.notes },
+      { name: "asset_tag", value: data?.asset_tag },
 
-      { name: "status_id", value: data.status_label.id },
-      // { name: "warranty_months", value: data.warranty_months && data.warranty_months.split(" ")[0] },
+      { name: "status_id", value: data?.status_label.id },
+      {
+        name: "warranty_months",
+        value: data?.warranty_months && data.warranty_months.split(" ")[0],
+      },
       {
         name: "purchase_cost",
         value:
-          data.purchase_cost && data.purchase_cost.toString().split(",")[0],
+          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
       },
-      { name: "purchase_date", value: data.purchase_date },
-      { name: "supplier_id", value: data.supplier.id },
-      { name: "rtd_location_id", value: data.rtd_location_id },
+      {
+        name: "purchase_date",
+        value:
+          data?.purchase_date.date !== null ? data?.purchase_date.date : "",
+      },
+      { name: "supplier_id", value: data?.supplier.id },
+      { name: "rtd_location_id", value: data?.rtd_location.id },
 
-      { name: "assigned_to", value: data.archived },
-      { name: "image", value: data.image },
+      { name: "assigned_to", value: data?.assigned_to },
+      { name: "requestable", value: data?.requestable },
+
+      { name: "image", value: data?.image },
     ]);
-  }, [data, form, isModalVisible, setFields]);
-
-  // const [warranty] = data?.warranty_months.split(" ");
+  }, [data, form, isModalVisible]);
 
   useEffect(() => {
     form.resetFields();
-  }, [form, isModalVisible]);
+  }, [isModalVisible]);
 
   useEffect(() => {
     if (payload) {
@@ -257,7 +243,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     setIsReadyToDeploy(findLabel(Number(value.value)));
   };
 
-  const onCheck = (event: any) => {
+  const onCheck = (event: ICheckboxChange) => {
     if (event.target.checked)
       form.setFieldsValue({
         requestable: 1,
@@ -272,7 +258,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.setFieldsValue({
       image: file,
     });
-  }, [file, form]);
+  }, [file]);
 
   return (
     <Form
@@ -282,7 +268,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         onFinish(event);
       }}
     >
-      <div>id ne : {data.id}</div>
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -350,11 +335,18 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             rules={[
               {
                 required: true,
+                message:
+                  t("hardware.label.field.propertyType") +
+                  " " +
+                  t("hardware.label.message.required"),
               },
             ]}
             initialValue={data?.model.id}
           >
-            <Select {...modelSelectProps} />
+            <Select
+              placeholder={t("hardware.label.placeholder.propertyType")}
+              {...modelSelectProps}
+            />
           </Form.Item>
           {messageErr?.model && (
             <Typography.Text type="danger">
@@ -374,7 +366,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.rtd_location_id}
+            initialValue={data?.rtd_location.id}
           >
             <Select
               placeholder={t("hardware.label.placeholder.location")}
@@ -440,16 +432,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.dateBuy")}
             name="purchase_date"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.dataBuy") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.purchase_date}
+            initialValue={
+              data?.purchase_date.date !== null ? data?.purchase_date.date : ""
+            }
           >
             <Input type="date" />
           </Form.Item>
@@ -461,15 +446,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.supplier")}
             name="supplier"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.supplier") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
             initialValue={data?.supplier.id}
           >
             <Select
@@ -485,15 +461,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.orderNumber") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
             initialValue={data?.order_number}
           >
             <Input value={data?.order_number} />
@@ -506,15 +473,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="purchase_cost"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.cost") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
             initialValue={
               data?.purchase_cost &&
               data?.purchase_cost.toString().split(",")[0]
@@ -523,7 +481,10 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Input
               type="number"
               addonAfter={t("hardware.label.field.usd")}
-              value={data?.purchase_cost.toString().split(",")[0]}
+              value={
+                data?.purchase_cost &&
+                data?.purchase_cost.toString().split(",")[0]
+              }
             />
           </Form.Item>
           {messageErr?.puchase_cost && (
@@ -550,7 +511,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             <Input
               type="number"
               addonAfter={t("hardware.label.field.month")}
-              value={data?.warranty_months.split(" ")[0]}
+              value={
+                data?.warranty_months && data?.warranty_months.split(" ")[0]
+              }
             />
           </Form.Item>
           {messageErr?.warranty_months && (

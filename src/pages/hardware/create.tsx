@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTranslate, useCreate } from "@pankod/refine-core";
 import {
@@ -19,13 +20,21 @@ import ReactMde from "react-mde";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-// import { IHardwareRequest } from "interfaces/hardware";
+import {
+  IHardwareCreateRequest,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  AndroidOutlined,
+  EnvironmentOutlined,
+} from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
+import { ICheckboxChange } from "interfaces";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -33,7 +42,7 @@ type HardWareCreateProps = {
 };
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
-  const { setIsModalVisible, isModalVisible } = props;
+  const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [activeModel, setActiveModel] = useState<String>("1");
@@ -48,13 +57,13 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<any>({
-    action: "edit",
+  const { formProps, form } = useForm<IHardwareCreateRequest>({
+    action: "create",
   });
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models",
-    optionLabel: "name",
+    resource: "api/v1/models/selectlist",
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -89,8 +98,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users",
-    optionLabel: "name",
+    resource: "api/v1/users/selectlist",
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -102,7 +111,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
     resource: "api/v1/hardware/selectlist",
-    optionLabel: "name",
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -138,45 +147,38 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { mutate, data: createData, isLoading } = useCreate();
 
-  const onFinish = (event: any) => {
-    console.log("check create: ", event);
+  const onFinish = (event: IHardwareUpdateRequest) => {
     setMessageErr(null);
     const formData = new FormData();
+
+    formData.append("company_id", event.company.toString());
     formData.append("name", event.name);
-    formData.append("serial", event.serial);
-    formData.append("company_id", event.company_id);
-    formData.append("model_id", event.model);
-    formData.append("order_number", event.order_number);
-    formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
+    if (event.serial !== undefined) formData.append("serial", event.serial);
+    formData.append("model_id", event.model.toString());
+    formData.append("rtd_location_id", event.rtd_location.toString());
+    if (event.order_number !== undefined)
+      formData.append("order_number", event.order_number);
 
-    if (event.user_id !== undefined) {
-      formData.append("user_id", event.user_id);
-    }
-    if (event.assigned_to !== undefined)
-      formData.append("assigned_to", event.assigned_to);
-    if (event.location !== undefined)
-      formData.append("location_id", event.location);
-
+    formData.append("status_id", event.status_label.toString());
+    if (event.user_id !== undefined)
+      formData.append("assigned_to", event.user_id.toString());
     if (event.physical !== undefined)
-      formData.append("physical", event.physical);
+      formData.append("physical", event.physical.toString());
+    if (event.location !== undefined)
+      formData.append("location_id", event.location.toString());
 
-    formData.append(
-      "status_id",
-      event.status_label !== undefined ? event.status_label : 0
-    );
+    if (event.purchase_cost !== undefined)
+      formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== undefined)
+      formData.append("purchase_date", event.purchase_date);
+
+    formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
-    formData.append("purchase_cost", event.purchase_cost);
-    formData.append("purchase_date", event.purchase_date);
-    formData.append(
-      "supplier_id",
-      event.supplier !== undefined ? event.supplier : 0
-    );
+    formData.append("notes", event.notes);
 
-    if (event.requestable !== undefined) {
-      formData.append("requestable", event.requestable);
-    }
-    formData.append("rtd_location_id", event.rtd_location);
+    if (event.requestable !== undefined)
+      formData.append("requestable", event.requestable.toString());
 
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
@@ -188,7 +190,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware/",
+        resource: "api/v1/hardware",
         values: payload,
       });
       if (createData?.data.message) form.resetFields();
@@ -221,11 +223,11 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     return check;
   };
 
-  const onChangeStatusLabel = (value: any) => {
-    setIsReadyToDeploy(findLabel(value));
+  const onChangeStatusLabel = (value: { value: string; label: string }) => {
+    setIsReadyToDeploy(findLabel(Number(value)));
   };
 
-  const onCheck = (event: any) => {
+  const onCheck = (event: ICheckboxChange) => {
     if (event.target.checked)
       form.setFieldsValue({
         requestable: 1,
@@ -246,7 +248,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     <Form
       {...formProps}
       layout="vertical"
-      onFinish={(event) => {
+      onFinish={(event: any) => {
         onFinish(event);
       }}
     >
@@ -254,7 +256,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Col className="gutter-row" span={12}>
           <Form.Item
             label={t("hardware.label.field.nameCompany")}
-            name="company_id"
+            name="company"
             rules={[
               {
                 required: true,
@@ -271,9 +273,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               showSearch
             />
           </Form.Item>
-          {messageErr?.company_id && (
+          {messageErr?.company && (
             <Typography.Text type="danger">
-              {messageErr.company_id[0]}
+              {messageErr.company[0]}
             </Typography.Text>
           )}
           <Form.Item
@@ -289,7 +291,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder={t("hardware.label.placeholder.propertyCard")} />
           </Form.Item>
           {messageErr?.asset_tag && (
             <Typography.Text type="danger">
@@ -297,7 +299,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             </Typography.Text>
           )}
           <Form.Item label={t("hardware.label.field.serial")} name="serial">
-            <Input />
+            <Input placeholder={t("hardware.label.placeholder.serial")} />
           </Form.Item>
           {messageErr?.serial && (
             <Typography.Text type="danger">
@@ -306,7 +308,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
           <Form.Item
             label={t("hardware.label.field.propertyType")}
-            name="model_id"
+            name="model"
             rules={[
               {
                 required: true,
@@ -322,15 +324,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...modelSelectProps}
             />
           </Form.Item>
-          {messageErr?.model_id && (
+          {messageErr?.model && (
             <Typography.Text type="danger">
-              {messageErr.model_id[0]}
+              {messageErr.model[0]}
             </Typography.Text>
           )}
 
           <Form.Item
             label={t("hardware.label.field.locationFix")}
-            name="location_id"
+            name="rtd_location"
             rules={[
               {
                 required: true,
@@ -346,15 +348,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...locationSelectProps}
             />
           </Form.Item>
-          {messageErr?.rtd_location_id && (
+          {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location_id[0]}
+              {messageErr.rtd_location[0]}
             </Typography.Text>
           )}
 
           <Form.Item
             label={t("hardware.label.field.status")}
-            name="status_id"
+            name="status_label"
             rules={[
               {
                 required: true,
@@ -373,9 +375,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status_id && (
+          {messageErr?.status && (
             <Typography.Text type="danger">
-              {messageErr.status_id[0]}
+              {messageErr.status[0]}
             </Typography.Text>
           )}
         </Col>
@@ -394,7 +396,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder={t("hardware.label.placeholder.assetName")} />
           </Form.Item>
           {messageErr?.name && (
             <Typography.Text type="danger">
@@ -404,15 +406,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.dateBuy")}
             name="purchase_date"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.dataBuy") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
             <Input type="date" />
           </Form.Item>
@@ -423,7 +416,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
           <Form.Item
             label={t("hardware.label.field.supplier")}
-            name="supplier_id"
+            name="supplier"
             rules={[
               {
                 required: true,
@@ -439,16 +432,16 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...supplierSelectProps}
             />
           </Form.Item>
-          {messageErr?.supplier_id && (
+          {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier_id[0]}
+              {messageErr.supplier[0]}
             </Typography.Text>
           )}
           <Form.Item
             label={t("hardware.label.field.orderNumber")}
             name="order_number"
           >
-            <Input type="number" />
+            <Input placeholder={t("hardware.label.placeholder.orderNumber")} />
           </Form.Item>
           {messageErr?.order_number && (
             <Typography.Text type="danger">
@@ -458,17 +451,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           <Form.Item
             label={t("hardware.label.field.cost")}
             name="purchase_cost"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.cost") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
           >
-            <Input type="number" addonAfter={t("hardware.label.field.usd")} />
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.usd")}
+              placeholder={t("hardware.label.placeholder.cost")}
+            />
           </Form.Item>
           {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
@@ -488,7 +476,11 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Input type="number" addonAfter={t("hardware.label.field.month")} />
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.month")}
+              placeholder={t("hardware.label.placeholder.insurance")}
+            />
           </Form.Item>
           {messageErr?.warranty_months && (
             <Typography.Text type="danger">
@@ -509,7 +501,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Tabs.TabPane
               tab={
                 <span>
-                  <AppleOutlined />
+                  <UserOutlined />
                   {t("hardware.label.field.user")}
                 </span>
               }
@@ -527,7 +519,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Tabs.TabPane
               tab={
                 <span>
-                  <AndroidOutlined />
+                  <EnvironmentOutlined />
                   {t("hardware.label.field.location")}
                 </span>
               }
@@ -539,13 +531,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
       {activeModel === "1" && (
         <Form.Item
-          label={t("hardware.label.field.checkoutTo")}
+          className="tabUser"
+          label={t("hardware.label.field.user")}
           name="assigned_to"
           rules={[
             {
               required: false,
               message:
-                t("hardware.label.field.checkoutTo") +
+                t("hardware.label.field.user") +
                 " " +
                 t("hardware.label.message.required"),
             },
@@ -559,13 +552,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       )}
       {activeModel === "2" && (
         <Form.Item
-          label={t("hardware.label.field.checkoutTo")}
+          className="tabAsset"
+          label={t("hardware.label.field.asset")}
           name="physical"
           rules={[
             {
               required: false,
               message:
-                t("hardware.label.field.checkoutTo") +
+                t("hardware.label.field.asset") +
                 " " +
                 t("hardware.label.message.required"),
             },
@@ -577,10 +571,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           />
         </Form.Item>
       )}
-
       {activeModel === "3" && (
         <Form.Item
-          label={t("hardware.label.field.checkoutTo")}
+          className="tabLocation"
+          label={t("hardware.label.field.location")}
           name="location"
           rules={[
             {
