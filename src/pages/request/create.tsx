@@ -227,7 +227,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
               {assetSelectProps?.data?.rows?.map(
                 (item: IHardwareResponse, index: number) => (
                   <Select.Option key={index} value={item.id}>
-                    {item.name}
+                    {item.id + "-" + item.name}
                   </Select.Option>
                 )
               )}
