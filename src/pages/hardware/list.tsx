@@ -27,7 +27,10 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 
-import { IHardwareResponse } from "interfaces/hardware";
+import {
+  IHardwareResponse,
+  IHardwareResponseCheckout,
+} from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {

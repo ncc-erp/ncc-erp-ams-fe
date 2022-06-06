@@ -2,8 +2,8 @@
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
 import { useCallback, useMemo, useState } from "react";
-import { useTranslate } from "@pankod/refine-core";
 import { ICheckboxChange } from "interfaces";
+import { useTranslate } from "@pankod/refine-core";
 const { Search } = Input;
 export declare type CheckboxValueType = string | number | boolean;
 export interface ISelectTableCol {
