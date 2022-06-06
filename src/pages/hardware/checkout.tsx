@@ -139,14 +139,14 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
 
-    if (event.assigned_location !== undefined) {
-      formData.append("assigned_location", event.assigned_location);
-      formData.append("checkout_to_type", "location");
-    }
-    if (event.assigned_asset !== undefined) {
-      formData.append("assigned_asset", event.assigned_asset);
-      formData.append("checkout_to_type", "asset");
-    }
+    // if (event.assigned_location !== undefined) {
+    //   formData.append("assigned_location", event.assigned_location);
+    //   formData.append("checkout_to_type", "location");
+    // }
+    // if (event.assigned_asset !== undefined) {
+    //   formData.append("assigned_asset", event.assigned_asset);
+    //   formData.append("checkout_to_type", "asset");
+    // }
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
       formData.append("checkout_to_type", "user");
@@ -298,7 +298,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                 }
                 key="1"
               ></Tabs.TabPane>
-              <Tabs.TabPane
+              {/* <Tabs.TabPane
                 tab={
                   <span>
                     <AndroidOutlined />
@@ -315,14 +315,14 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   </span>
                 }
                 key="3"
-              ></Tabs.TabPane>
+              ></Tabs.TabPane> */}
             </Tabs>
           </Form.Item>
 
           {activeModel === "1" && (
             <Form.Item
               className="tabUser"
-              label={t("hardware.label.field.user")}
+              // label={t("hardware.label.field.user")}
               name="assigned_user"
               rules={[
                 {
@@ -335,12 +335,12 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               ]}
             >
               <Select
-                placeholder={t("hardware.label.placeholder.user")}
+                // placeholder={t("hardware.label.placeholder.user")}
                 {...userSelectProps}
               />
             </Form.Item>
           )}
-          {activeModel === "2" && (
+          {/* {activeModel === "2" && (
             <Form.Item
               className="tabUser"
               label={t("hardware.label.field.asset")}
@@ -360,9 +360,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                 {...hardwareSelectProps}
               />
             </Form.Item>
-          )}
+          )} */}
 
-          {activeModel === "3" && (
+          {/* {activeModel === "3" && (
             <Form.Item
               className="tabUser"
               label={t("hardware.label.field.location")}
@@ -382,7 +382,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                 {...locationSelectProps}
               />
             </Form.Item>
-          )}
+          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
