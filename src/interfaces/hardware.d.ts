@@ -22,7 +22,6 @@ export interface IHardwareCreateRequest {
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
-  
 }
 
 export interface IHardwareUpdateRequest {
@@ -47,7 +46,6 @@ export interface IHardwareUpdateRequest {
   requestable: number;
 }
 export interface IHardwareResponse {
-  
   id: number;
   name: string;
   asset_tag: string;
@@ -73,10 +71,6 @@ export interface IHardwareResponse {
   };
   notes: string;
   order_number: string;
-  company: {
-    id: number;
-    name: string;
-  };
   location: {
     id: number;
     name: string;
@@ -94,8 +88,8 @@ export interface IHardwareResponse {
   };
   assigned_to: number;
   last_audit_date: string;
-  requestable: boolean;
-
+  requestable: number;
+  physical: number;
 
   note: string;
   expected_checkin: {
@@ -112,9 +106,15 @@ export interface IHardwareResponse {
   };
   assigned_user: number;
   assigned_asset: string;
-  checkout_to_type: string;
+  checkout_to_type: {
+    assigned_user: number;
+    assigned_asset: string;
+    assigned_location: {
+      id: number;
+      name: string;
+    };
+  };
   user_can_checkout: boolean;
-  
 }
 
 export interface IDefaultValue {
@@ -180,14 +180,21 @@ export interface IHardwareResponseCheckout {
   };
   assigned_user: number;
   assigned_asset: string;
-  checkout_to_type: string;
+  checkout_to_type: {
+    assigned_user: number;
+    assigned_asset: string;
+    assigned_location: {
+      id: number;
+      name: string;
+    };
+  };
   user_can_checkout: boolean;
 }
 
 export interface IHardwareList {
   data:
     | {
-        data: IHardwareRequest;
+        data: IHardwareCreateRequest;
       }
     | undefined;
   refetch: Function;

@@ -33,10 +33,11 @@ type HardwareCloneProps = {
 
 export const HardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
+  const [activeModel, setActiveModel] = useState<String>("1");
 
   const t = useTranslate();
 
@@ -119,7 +120,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
-    formData.append("company_id", event.company.toString());
     formData.append("model_id", event.model.toString());
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
@@ -162,7 +162,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: "" },
-      { name: "company_id", value: data?.company.id },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
 
@@ -255,32 +254,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("hardware.label.field.nameCompany")}
-            name="company"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.nameCompany") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.company.id}
-          >
-            <Select
-              placeholder={t("hardware.label.placeholder.nameCompany")}
-              {...companySelectProps}
-              showSearch
-            />
-          </Form.Item>
-          {messageErr?.company && (
-            <Typography.Text type="danger">
-              {messageErr.company[0]}
-            </Typography.Text>
-          )}
-
           <Form.Item
             label={t("hardware.label.field.propertyCard")}
             name="asset_tag"
@@ -532,7 +505,11 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      <Form.Item label="" name="requestable" valuePropName="checked">
+      <Form.Item
+        label=""
+        name="requestable"
+        valuePropName={data?.requestable.toString() === "1" ? "checked" : ""}
+      >
         <Checkbox
           value={data?.requestable}
           onChange={(event) => {
@@ -546,6 +523,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage
+            id={"create" + data?.id}
             url={data?.image}
             file={file}
             setFile={setFile}

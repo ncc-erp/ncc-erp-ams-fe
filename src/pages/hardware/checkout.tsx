@@ -246,6 +246,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.propertyType")}
               {...modelSelectProps}
+              disabled={true}
             />
           </Form.Item>
           {messageErr?.model && (

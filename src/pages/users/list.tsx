@@ -46,7 +46,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
-      permanentFilter: [{ field: "search", operator: "eq", value: keySearch }],
       resource: "api/v1/hardware/assign",
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
@@ -160,7 +159,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       <TableAction searchFormProps={searchFormProps} />
 
       <MModal
-        title={t("request.label.title.detail")}
+        title={t("user.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
