@@ -179,16 +179,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="status"
           key="status"
           title={t("request.label.field.status")}
-          render={(value) => (
-            <TagField
-              value={value}
-              style={{
-                background: value === "Sent" ? "#0073b7" : "red",
-                color: "white",
-                border: "none",
-              }}
-            />
-          )}
+          render={(value) => <TextField value={value} />}
         />
 
         <Table.Column
