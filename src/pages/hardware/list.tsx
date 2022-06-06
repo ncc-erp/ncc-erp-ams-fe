@@ -322,6 +322,21 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
+        key: "image",
+        title: "Image",
+        render: (value: string) => {
+          return value
+            ? (
+              <img
+                width={50}
+                height={'auto'}
+                src={value}
+              />
+            )
+            : ""
+        }
+      },
+      {
         key: "model",
         title: "Model",
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
@@ -437,8 +452,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -455,8 +470,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -472,8 +487,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -489,8 +504,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
