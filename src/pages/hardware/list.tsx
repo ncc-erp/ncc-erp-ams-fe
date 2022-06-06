@@ -442,8 +442,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record) => (
             <Space>
-              {(record.status_label.name === "Assign" &&
-                record.user_can_checkout === true && (
+              {(record.user_can_checkout === true && (
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                  }
+                  onClick={() => checkout(record)}
+                >
+                  {t("hardware.label.button.checkout")}
+                </Button>
+              )) ||
+                (record.user_can_checkout === true && (
                   <Button
                     type="primary"
                     shape="round"
@@ -460,24 +476,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     {t("hardware.label.button.checkout")}
                   </Button>
                 )) ||
-                (record.status_label.name === "Ready to deploy" &&
-                  record.user_can_checkout === true && (
-                    <Button
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
                 (record.status_label.name === "Pending" && (
                   <Button
                     type="primary"
