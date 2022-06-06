@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
@@ -247,6 +246,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             <Select
               placeholder={t("hardware.label.placeholder.propertyType")}
               {...modelSelectProps}
+              disabled={true}
             />
           </Form.Item>
           {messageErr?.model && (

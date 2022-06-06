@@ -23,9 +23,7 @@ export const UserShow = (props: UserShowProps) => {
       <Title level={5}>Thể loại</Title>
       <Tag>{detail?.category?.name}</Tag>
       <Title level={5}>{t("posts.fields.status.title")}</Title>
-      <Text>
-        <Tag>{detail?.status_label.name}</Tag>
-      </Text>
+      <Tag>{detail?.status_label.name}</Tag>
     </div>
   );
 };

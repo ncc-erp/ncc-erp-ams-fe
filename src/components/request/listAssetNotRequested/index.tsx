@@ -19,44 +19,52 @@ export const ListAssetNotRequest = (props: ListAssetNotRequestProps) => {
       title: t("request.label.field.image"),
       dataIndex: "asset",
       render: (value: IRequestResponse) =>
-        value.image && (
-          <img
-            alt=""
-            width={50}
-            height={50}
-            src={baseUrl + value.image ? value.image : ""}
-          />
-        ),
+        value
+          ? value.image && (
+              <img
+                alt=""
+                width={50}
+                height={50}
+                src={baseUrl + value.image ? value.image : ""}
+              />
+            )
+          : "",
     },
     {
       title: t("request.label.field.nameAsset"),
       dataIndex: "asset",
       key: "nameAsset",
-      render: (value: IRequestResponse) => <p>{value.name}</p>,
+      render: (value: IRequestResponse) => <p>{value ? value.name : ""}</p>,
     },
     {
       title: t("request.label.field.category"),
       dataIndex: "asset",
       key: "category",
-      render: (value: IRequestResponse) => <p>{value.asset_tag}</p>,
+      render: (value: IRequestResponse) => (
+        <p>{value ? value.asset_tag : ""}</p>
+      ),
     },
     {
       title: t("request.label.field.note"),
       dataIndex: "asset",
       key: "note",
-      render: (value: IRequestResponse) => <p>{value.notes}</p>,
+      render: (value: IRequestResponse) => <p>{value ? value.notes : ""}</p>,
     },
     {
       title: t("request.label.field.warranty_months"),
       dataIndex: "asset",
       key: "warranty_months",
-      render: (value: IRequestResponse) => <p>{value.warranty_months} </p>,
+      render: (value: IRequestResponse) => (
+        <p>{value ? value.warranty_months : ""} </p>
+      ),
     },
     {
       title: t("request.label.field.price"),
       dataIndex: "asset",
       key: "price",
-      render: (value: IRequestResponse) => <p>{value.purchase_cost}</p>,
+      render: (value: IRequestResponse) => (
+        <p>{value ? value.purchase_cost : ""}</p>
+      ),
     },
   ];
 

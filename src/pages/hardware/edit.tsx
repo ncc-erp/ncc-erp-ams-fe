@@ -32,7 +32,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
@@ -131,7 +131,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
-    formData.append("company_id", event.company.toString());
     formData.append("model_id", event.model.toString());
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
@@ -158,17 +157,15 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       formData.append("requestable", event.requestable.toString());
 
     formData.append("_method", "PATCH");
-
     setPayload(formData);
-    form.resetFields();
   };
 
   useEffect(() => {
     form.resetFields();
+    setFile(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
-      { name: "company_id", value: data?.company.id },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
 
@@ -216,6 +213,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   useEffect(() => {
     if (updateData?.data.status === "success") {
       form.resetFields();
+      setFile(null);
       setIsModalVisible(false);
       setMessageErr(null);
     } else {
@@ -271,32 +269,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
           <Form.Item
-            label={t("hardware.label.field.nameCompany")}
-            name="company"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.nameCompany") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.company.id}
-          >
-            <Select
-              placeholder={t("hardware.label.placeholder.nameCompany")}
-              {...companySelectProps}
-              showSearch
-            />
-          </Form.Item>
-          {messageErr?.company && (
-            <Typography.Text type="danger">
-              {messageErr.company[0]}
-            </Typography.Text>
-          )}
-
-          <Form.Item
             label={t("hardware.label.field.propertyCard")}
             name="asset_tag"
             rules={[
@@ -317,6 +289,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.asset_tag[0]}
             </Typography.Text>
           )}
+
           <Form.Item
             label={t("hardware.label.field.serial")}
             name="serial"
@@ -329,6 +302,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.serial[0]}
             </Typography.Text>
           )}
+
           <Form.Item
             label={t("hardware.label.field.propertyType")}
             name="model"
@@ -406,92 +380,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
-        </Col>
-        <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("hardware.label.field.assetName")}
-            name="name"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.assetName") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.name}
-          >
-            <Input />
-          </Form.Item>
-          {messageErr?.name && (
-            <Typography.Text type="danger">
-              {messageErr.name[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.dateBuy")}
-            name="purchase_date"
-            initialValue={
-              data?.purchase_date.date !== null ? data?.purchase_date.date : ""
-            }
-          >
-            <Input type="date" />
-          </Form.Item>
-          {messageErr?.purchase_date && (
-            <Typography.Text type="danger">
-              {messageErr.purchase_date[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.supplier")}
-            name="supplier"
-            initialValue={data?.supplier.id}
-          >
-            <Select
-              placeholder={t("hardware.label.placeholder.supplier")}
-              {...supplierSelectProps}
-            />
-          </Form.Item>
-          {messageErr?.supplier && (
-            <Typography.Text type="danger">
-              {messageErr.supplier[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.orderNumber")}
-            name="order_number"
-            initialValue={data?.order_number}
-          >
-            <Input value={data?.order_number} />
-          </Form.Item>
-          {messageErr?.order_number && (
-            <Typography.Text type="danger">
-              {messageErr.order_number[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.cost")}
-            name="purchase_cost"
-            initialValue={
-              data?.purchase_cost &&
-              data?.purchase_cost.toString().split(",")[0]
-            }
-          >
-            <Input
-              type="number"
-              addonAfter={t("hardware.label.field.usd")}
-              value={
-                data?.purchase_cost &&
-                data?.purchase_cost.toString().split(",")[0]
-              }
-            />
-          </Form.Item>
-          {messageErr?.puchase_cost && (
-            <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
-            </Typography.Text>
-          )}
+
           <Form.Item
             label={t("hardware.label.field.insurance")}
             name="warranty_months"
@@ -522,6 +411,96 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
         </Col>
+        <Col className="gutter-row" span={12}>
+          <Form.Item
+            label={t("hardware.label.field.assetName")}
+            name="name"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.assetName") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.name}
+          >
+            <Input />
+          </Form.Item>
+          {messageErr?.name && (
+            <Typography.Text type="danger">
+              {messageErr.name[0]}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("hardware.label.field.dateBuy")}
+            name="purchase_date"
+            initialValue={
+              data?.purchase_date.date !== null ? data?.purchase_date.date : ""
+            }
+          >
+            <Input type="date" />
+          </Form.Item>
+          {messageErr?.purchase_date && (
+            <Typography.Text type="danger">
+              {messageErr.purchase_date[0]}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("hardware.label.field.supplier")}
+            name="supplier"
+            initialValue={data?.supplier.id}
+          >
+            <Select
+              placeholder={t("hardware.label.placeholder.supplier")}
+              {...supplierSelectProps}
+            />
+          </Form.Item>
+          {messageErr?.supplier && (
+            <Typography.Text type="danger">
+              {messageErr.supplier[0]}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("hardware.label.field.orderNumber")}
+            name="order_number"
+            initialValue={data?.order_number}
+          >
+            <Input value={data?.order_number} />
+          </Form.Item>
+          {messageErr?.order_number && (
+            <Typography.Text type="danger">
+              {messageErr.order_number[0]}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("hardware.label.field.cost")}
+            name="purchase_cost"
+            initialValue={
+              data?.purchase_cost &&
+              data?.purchase_cost.toString().split(",")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.usd")}
+              value={
+                data?.purchase_cost &&
+                data?.purchase_cost.toString().split(",")[0]
+              }
+            />
+          </Form.Item>
+          {messageErr?.puchase_cost && (
+            <Typography.Text type="danger">
+              {messageErr.puchase_cost[0]}
+            </Typography.Text>
+          )}
+        </Col>
       </Row>
 
       <Form.Item
@@ -544,20 +523,32 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable" valuePropName="checked">
+      {/* <Form.Item label="" name="requestable" valuePropName={data?.requestable.toString() === "1" ? "checked" : ""}>
+          <Checkbox
+            value={data?.requestable}
+            onChange={(event: ICheckboxChange) => {
+              onCheck(event);
+            }}
+          >{t("hardware.label.field.checkbox")}
+          </Checkbox>
+        </Form.Item> */}
+      <div>
         <Checkbox
+          style={{ marginTop: 20 }}
+          checked={data?.requestable.toString() === "1" ? true : false}
           value={data?.requestable}
-          onChange={(event) => {
+          onChange={(event: ICheckboxChange) => {
             onCheck(event);
           }}
         >
           {t("hardware.label.field.checkbox")}
         </Checkbox>
-      </Form.Item>
+      </div>
 
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage
+            id={"update" + data?.id}
             url={data?.image}
             file={file}
             setFile={setFile}

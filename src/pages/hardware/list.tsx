@@ -107,10 +107,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       notes: data.notes,
       order_number: data.order_number !== "null" ? data.order_number : "",
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -131,7 +127,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       last_audit_date: data?.last_audit_date,
 
       requestable: data?.requestable,
-      user_can_checkout: false,
+      physical: data?.physical,
+
       note: "",
       expected_checkin: {
         date: "",
@@ -147,7 +144,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_user: 0,
       assigned_asset: "",
-      checkout_to_type: "",
+      checkout_to_type: {
+        assigned_user: 0,
+        assigned_asset: "",
+        assigned_location: {
+          id: 0,
+          name: "",
+        },
+      },
+      user_can_checkout: false,
     };
 
     setDetail(dataConvert);
@@ -181,10 +186,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       notes: data.notes,
       order_number: data.order_number !== "null" ? data.order_number : "",
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -205,7 +206,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       last_audit_date: data?.last_audit_date,
 
       requestable: data?.requestable,
-      user_can_checkout: false,
+      physical: data?.physical,
+      user_can_checkout: data?.user_can_checkout,
+
       note: "",
       expected_checkin: {
         date: "",
@@ -221,14 +224,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_user: 0,
       assigned_asset: "",
-      checkout_to_type: "",
+      checkout_to_type: {
+        assigned_user: 0,
+        assigned_asset: "",
+        assigned_location: {
+          id: 0,
+          name: "",
+        },
+      },
     };
+
     setDetailClone(dataConvert);
     setIsCloneModalVisible(true);
   };
 
-  const checkout = (data: IHardwareResponseCheckout) => {
-    const dataConvert: IHardwareResponseCheckout = {
+  const checkout = (data: IHardwareResponse) => {
+    const dataConvert: IHardwareResponse = {
       id: data.id,
       name: data.name,
       model: {
@@ -246,10 +257,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         name: data?.category?.name,
       },
       note: data.note,
-      company: {
-        id: data?.company?.id,
-        name: data?.company?.name,
-      },
       assigned_location: {
         id: data?.assigned_location?.id,
         name: data?.assigned_location?.name,
@@ -267,6 +274,34 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+
+      asset_tag: "",
+      serial: "",
+      supplier: {
+        id: 0,
+        name: "",
+      },
+      notes: "",
+      order_number: "",
+      location: {
+        id: 0,
+        name: "",
+      },
+      rtd_location: {
+        id: 0,
+        name: "",
+      },
+      image: "",
+      warranty_months: "",
+      purchase_cost: 0,
+      purchase_date: {
+        date: "",
+        formatted: "",
+      },
+      assigned_to: 0,
+      last_audit_date: "",
+      requestable: 0,
+      physical: 0,
     };
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);

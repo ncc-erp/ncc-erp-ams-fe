@@ -202,5 +202,12 @@
         "detail": "Chi tiết Request"
       }
     }
+  },
+  "user":{
+    "label": {
+      "title": {
+        "detail":"Chi tiết User"
+      }
+    }
   }
 }
