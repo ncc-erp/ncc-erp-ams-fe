@@ -18,7 +18,7 @@ export interface IHardwareCreateRequest {
   warranty_months: string;
   depreciate: boolean;
   supplier_id: number;
-  requestable: boolean;
+  requestable: number;
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;

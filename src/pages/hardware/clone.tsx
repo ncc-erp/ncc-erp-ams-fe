@@ -12,9 +12,10 @@ import {
   Row,
   Col,
   Typography,
+  Tabs,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
+import { UserOutlined, AndroidOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import {
   IHardwareCreateRequest,
   IHardwareResponse,
@@ -38,8 +39,13 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
   const [activeModel, setActiveModel] = useState<String>("1");
+  const [checked, setChecked] = useState(true);
 
   const t = useTranslate();
+
+  useEffect(() => {
+    setChecked(props.data?.requestable == 1 ? true : false)
+  }, [props])
 
   enum EStatus {
     READY_TO_DEPLOY = "Ready to deploy",
@@ -55,18 +61,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { selectProps: modelSelectProps } = useSelect<IModel>({
     resource: "api/v1/models/selectlist",
     optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: companySelectProps } = useSelect<ICompany>({
-    resource: "api/v1/companies",
-    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -112,6 +106,30 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     ],
   });
 
+  const { selectProps: userSelectProps } = useSelect<ICompany>({
+    resource: "api/v1/users/selectlist",
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
+    resource: "api/v1/hardware/selectlist",
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   const { mutate, data: cloneData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -128,21 +146,21 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     formData.append("asset_tag", event.asset_tag);
 
     formData.append("status_id", event.status_label.toString());
+    if (event.user_id !== undefined) formData.append("assigned_to", event.user_id.toString());
+    // if (event.physical !== undefined) formData.append("physical", event.physical.toString())
+    // if (event.location !== undefined) formData.append("location_id", event.location.toString());
+
     formData.append("warranty_months", event.warranty_months);
 
-    if (event.purchase_cost !== null)
-      formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== null)
-      formData.append("purchase_date", event.purchase_date);
+    if (event.purchase_cost !== null) formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== null) formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("supplier_id", event.supplier.toString());
 
-    if (event.requestable !== undefined)
-      formData.append("requestable", event.requestable.toString());
+    if (typeof event.image !== "string" && event.image !== null) formData.append("image", event.image);
 
-    if (typeof event.image !== "string" && event.image !== null)
-      formData.append("image", event.image);
+    formData.append("requestable", checked ? "1" : "0")
 
     setPayload(formData);
   };
@@ -159,6 +177,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
   useEffect(() => {
     form.resetFields();
+    setFile(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: "" },
@@ -169,20 +188,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       { name: "asset_tag", value: "" },
 
       { name: "status_id", value: data?.status_label.id },
-      {
-        name: "warranty_months",
-        value: data?.warranty_months && data.warranty_months.split(" ")[0],
-      },
-      {
-        name: "purchase_cost",
-        value:
-          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
-      },
-      {
-        name: "purchase_date",
-        value:
-          data?.purchase_date.date !== null ? data?.purchase_date.date : "",
-      },
+      { name: "warranty_months", value: data?.warranty_months && data.warranty_months.split(" ")[0] },
+      { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
+      { name: "purchase_date", value: data?.purchase_date.date !== null ? data?.purchase_date.date : "" },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
 
@@ -224,7 +232,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   };
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
-    setIsReadyToDeploy(findLabel(Number(value.value)));
+    setIsReadyToDeploy(findLabel(Number(value)));
   };
 
   const onCheck = (event: ICheckboxChange) => {
@@ -359,6 +367,111 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
+          {isReadyToDeploy && (
+            <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
+              <Tabs
+                defaultActiveKey="1"
+                onTabClick={(value) => {
+                  setActiveModel(value);
+                }}
+              >
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <UserOutlined />
+                      {t("hardware.label.field.user")}
+                    </span>
+                  }
+                  key="1"
+                ></Tabs.TabPane>
+                {/* <Tabs.TabPane
+                  tab={
+                    <span>
+                      <AndroidOutlined />
+                      {t("hardware.label.field.asset")}
+                    </span>
+                  }
+                  key="2"
+                ></Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <EnvironmentOutlined />
+                      {t("hardware.label.field.location")}
+                    </span>
+                  }
+                  key="3"
+                ></Tabs.TabPane> */}
+              </Tabs>
+            </Form.Item>
+          )}
+
+          {activeModel === "1" && (
+            <Form.Item
+              className="tabUser"
+              label={t("hardware.label.field.user")}
+              name="assigned_to"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.user") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+              initialValue={data?.assigned_to}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.user")}
+                {...userSelectProps}
+              />
+            </Form.Item>
+          )}
+          {/* {activeModel === "2" && (
+            <Form.Item
+              className="tabAsset"
+              label={t("hardware.label.field.asset")}
+              name="physical"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.asset") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+              initialValue={data?.physical}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.asset")}
+                {...hardwareSelectProps}
+              />
+            </Form.Item>
+          )}
+          {activeModel === "3" && (
+            <Form.Item
+              className="tabLocation"
+              label={t("hardware.label.field.location")}
+              name="location"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.location") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+              initialValue={data?.location}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.location")}
+                {...locationSelectProps}
+              />
+            </Form.Item>
+          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -505,20 +618,16 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      <Form.Item
-        label=""
+
+      <Checkbox
         name="requestable"
-        valuePropName={data?.requestable.toString() === "1" ? "checked" : ""}
-      >
-        <Checkbox
-          value={data?.requestable}
-          onChange={(event) => {
-            onCheck(event);
-          }}
-        >
-          {t("hardware.label.field.checkbox")}
-        </Checkbox>
-      </Form.Item>
+        style={{ marginTop: 20 }}
+        checked={checked}
+        value={data?.requestable}
+        onChange={(event: ICheckboxChange) => {
+          setChecked(event.target.checked)
+        }}
+      ></Checkbox> {t("hardware.label.field.checkbox")}
 
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (

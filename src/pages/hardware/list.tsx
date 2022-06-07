@@ -29,7 +29,6 @@ import { HardwareClone } from "./clone";
 
 import {
   IHardwareResponse,
-  IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 
