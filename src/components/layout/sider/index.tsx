@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   useTranslate,
   useLogout,
   useTitle,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
+import { axiosInstance } from "providers/axios";
 
 const { RightOutlined, LogoutOutlined } = Icons;
 
@@ -20,6 +22,9 @@ export const Sider: React.FC = () => {
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
+
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
 
   const isMobile = !breakpoint.lg;
 
@@ -36,6 +41,14 @@ export const Sider: React.FC = () => {
     signOutGoogle();
     logout();
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const dataRespone = await axiosInstance.get("api/v1/users/me");
+      setCurrentUser(dataRespone.data);
+    }
+    getUser()
+  }, [])
 
   return (
     <AntdLayout.Sider
@@ -63,7 +76,8 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {menuItems.map(({ icon, label, route }) => {
+
+        {currentUser && currentUser.id === 393 && menuItems.map(({ icon, label, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item
@@ -85,7 +99,33 @@ export const Sider: React.FC = () => {
               </div>
             </Menu.Item>
           );
-        })}
+        }) || menuItems.filter((item) =>
+          item.label === "Users"
+        ).map(({ icon, label, route }) => {
+          const isSelected = route === selectedKey;
+          return (
+            <Menu.Item
+              style={{
+                fontWeight: isSelected ? "bold" : "normal",
+              }}
+              key={route}
+              icon={icon}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {label}
+                {!collapsed && isSelected && <RightOutlined />}
+              </div>
+            </Menu.Item>
+          );
+        })
+
+        }
 
         <Menu.Item key="logout" icon={<LogoutOutlined />}>
           {translate("buttons.logout", "Logout")}
