@@ -156,32 +156,23 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("model_id", event.model.toString());
     formData.append("rtd_location_id", event.rtd_location.toString());
-    if (event.order_number !== undefined)
-      formData.append("order_number", event.order_number);
+    if (event.order_number !== undefined) formData.append("order_number", event.order_number);
 
     formData.append("status_id", event.status_label.toString());
-    if (event.user_id !== undefined)
-      formData.append("assigned_to", event.user_id.toString());
-    if (event.physical !== undefined)
-      formData.append("physical", event.physical.toString());
-    if (event.location !== undefined)
-      formData.append("location_id", event.location.toString());
+    if (event.user_id !== undefined) formData.append("assigned_to", event.user_id.toString());
+    // if (event.physical !== undefined) formData.append("physical", event.physical.toString());
+    // if (event.location !== undefined) formData.append("location_id", event.location.toString());
 
-    if (event.purchase_cost !== undefined)
-      formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== undefined)
-      formData.append("purchase_date", event.purchase_date);
+    if (event.purchase_cost !== undefined) formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== undefined) formData.append("purchase_date", event.purchase_date);
 
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes);
 
-    if (event.requestable !== undefined)
-      formData.append("requestable", event.requestable.toString());
+    if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
 
-    if (event.image !== null && event.image !== undefined) {
-      formData.append("image", event.image);
-    }
+    if (event.image !== null && event.image !== undefined) { formData.append("image", event.image); }
 
     setPayload(formData);
     // form.resetFields();
@@ -200,6 +191,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (createData?.data.status === "success") {
       form.resetFields();
+      setFile(null);
       setIsModalVisible(false);
       setMessageErr(null);
     } else {
@@ -233,9 +225,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         requestable: 1,
       });
     else
-      form.setFieldsValue({
-        requestable: 0,
-      });
+      form.setFieldsValue({ requestable: 0 })
   };
 
   useEffect(() => {
@@ -356,6 +346,108 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
+          {isReadyToDeploy && (
+            <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
+              <Tabs
+                defaultActiveKey="1"
+                onTabClick={(value) => {
+                  setActiveModel(value);
+                }}
+              >
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <UserOutlined />
+                      {t("hardware.label.field.user")}
+                    </span>
+                  }
+                  key="1"
+                ></Tabs.TabPane>
+                {/* <Tabs.TabPane
+                  tab={
+                    <span>
+                      <AndroidOutlined />
+                      {t("hardware.label.field.asset")}
+                    </span>
+                  }
+                  key="2"
+                ></Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <span>
+                      <EnvironmentOutlined />
+                      {t("hardware.label.field.location")}
+                    </span>
+                  }
+                  key="3"
+                ></Tabs.TabPane> */}
+              </Tabs>
+            </Form.Item>
+          )}
+
+          {activeModel === "1" && (
+            <Form.Item
+              className="tabUser"
+              label={t("hardware.label.field.user")}
+              name="assigned_to"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.user") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.user")}
+                {...userSelectProps}
+              />
+            </Form.Item>
+          )}
+          {/* {activeModel === "2" && (
+            <Form.Item
+              className="tabAsset"
+              label={t("hardware.label.field.asset")}
+              name="physical"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.asset") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.asset")}
+                {...hardwareSelectProps}
+              />
+            </Form.Item>
+          )}
+          {activeModel === "3" && (
+            <Form.Item
+              className="tabLocation"
+              label={t("hardware.label.field.location")}
+              name="location"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.location") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.location")}
+                {...locationSelectProps}
+              />
+            </Form.Item>
+          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           {" "}
@@ -507,7 +599,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       )}
 
       <Form.Item label="Tải hình" name="image">
-        <UploadImage file={file} setFile={setFile}></UploadImage>
+        <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>
       </Form.Item>
       {messageErr?.image && (
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
