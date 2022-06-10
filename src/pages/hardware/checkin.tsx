@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Tabs,
   Button,
   Row,
   Col,
@@ -16,27 +15,23 @@ import {
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
+  IHardwareRequestCheckin,
   IHardwareRequestCheckout,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
+
 import { ICompany } from "interfaces/company";
 
-type HardwareCheckoutProps = {
+type HardwareCheckinProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: IHardwareResponseCheckout;
 };
 
-export const HardwareCheckout = (props: HardwareCheckoutProps) => {
+export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<any>(null);
 
@@ -77,30 +72,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     ],
   });
 
-  const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: "api/v1/locations",
     optionLabel: "name",
@@ -118,7 +89,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id + "/checkout",
+    url: "api/v1/hardware/" + data?.id + "/checkin",
     method: "post",
     config: {
       payload: payload,
@@ -128,7 +99,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     },
   });
 
-  const onFinish = (event: IHardwareRequestCheckout) => {
+  const onFinish = (event: IHardwareRequestCheckin) => {
     setMessageErr(null);
 
     const formData = new FormData();
@@ -136,23 +107,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     formData.append("note", event.note);
     formData.append("status_id", event.status_label);
     formData.append("expected_checkin", event.expected_checkin);
-    formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
-
-    // formData.append("assigned_status", event.assigned_status.toString());
-
-    // if (event.assigned_location !== undefined) {
-    //   formData.append("assigned_location", event.assigned_location);
-    //   formData.append("checkout_to_type", "location");
-    // }
-    // if (event.assigned_asset !== undefined) {
-    //   formData.append("assigned_asset", event.assigned_asset);
-    //   formData.append("checkout_to_type", "asset");
-    // }
-    if (event.assigned_user !== undefined) {
-      formData.append("assigned_user", event.assigned_user);
-      formData.append("checkout_to_type", "user");
-    }
+    formData.append("rtd_location", event.rtd_location.toString());
+    formData.append("updated_at", new Date().toISOString().substring(0, 10));
 
     setPayload(formData);
   };
@@ -167,16 +124,11 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
       { name: "status_id", value: data.status_label.id },
       {
-        name: "expected_checkin",
-        value: data.expected_checkin.date,
-      },
-      {
-        name: "checkout_at",
+        name: "updated_at",
         value: new Date().toISOString().substring(0, 10),
       },
 
-      { name: "assigned_user", value: data.assigned_user },
-      { name: "assigned_location", value: data?.assigned_location.name },
+      { name: "rtd_location", value: "" },
     ]);
   }, [data, form, isModalVisible, setFields]);
 
@@ -268,7 +220,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.id}
           >
             <Select
               onChange={(value) => {
@@ -284,107 +235,24 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             </Typography.Text>
           )}
 
-          <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-            <Tabs
-              defaultActiveKey="1"
-              onTabClick={(value) => {
-                setActiveModel(value);
-              }}
-            >
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <UserOutlined />
-                    {t("hardware.label.field.user")}
-                  </span>
-                }
-                key="1"
-              ></Tabs.TabPane>
-              {/* <Tabs.TabPane
-                tab={
-                  <span>
-                    <AndroidOutlined />
-                    {t("hardware.label.field.asset")}
-                  </span>
-                }
-                key="2"
-              ></Tabs.TabPane>
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <EnvironmentOutlined />
-                    {t("hardware.label.field.location")}
-                  </span>
-                }
-                key="3"
-              ></Tabs.TabPane> */}
-            </Tabs>
+          <Form.Item
+            label={t("hardware.label.field.location")}
+            name="rtd_location"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.location") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t("hardware.label.placeholder.location")}
+              {...locationSelectProps}
+            />
           </Form.Item>
-
-          {activeModel === "1" && (
-            <Form.Item
-              className="tabUser"
-              // label={t("hardware.label.field.user")}
-              name="assigned_user"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.user") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                // placeholder={t("hardware.label.placeholder.user")}
-                {...userSelectProps}
-              />
-            </Form.Item>
-          )}
-          {/* {activeModel === "2" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.asset")}
-              name="assigned_asset"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.asset") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.asset")}
-                {...hardwareSelectProps}
-              />
-            </Form.Item>
-          )} */}
-
-          {/* {activeModel === "3" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.location")}
-              name="assigned_location"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.location") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.location")}
-                {...locationSelectProps}
-              />
-            </Form.Item>
-          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -409,13 +277,13 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.dateCheckout")}
-            name="checkout_at"
+            label={t("hardware.label.field.dateCheckin")}
+            name="updated_at"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.dateCheckout") +
+                  t("hardware.label.field.dateCheckin") +
                   " " +
                   t("hardware.label.message.required"),
               },
@@ -424,30 +292,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
           >
             <Input type="date" />
           </Form.Item>
-          {messageErr?.checkout_at && (
+          {messageErr?.updated_at && (
             <Typography.Text type="danger">
-              {messageErr.checkout_at[0]}
-            </Typography.Text>
-          )}
-
-          <Form.Item
-            label={t("hardware.label.field.dateWantCheckin")}
-            name="expected_checkin"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.dateWantCheckin") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
-            <Input type="date" />
-          </Form.Item>
-          {messageErr?.expected_checkin && (
-            <Typography.Text type="danger">
-              {messageErr.expected_checkin[0]}
+              {messageErr.updated_at[0]}
             </Typography.Text>
           )}
         </Col>
@@ -475,7 +322,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>
-          {t("hardware.label.button.checkout")}
+          {t("hardware.label.button.checkin")}
         </Button>
       </div>
     </Form>
