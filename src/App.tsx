@@ -19,7 +19,7 @@ import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
 import { newEnforcer } from "casbin.js";
 import { adapter, model } from "AccessControl";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ModelList } from "pages/model/list";
 
 function App() {
@@ -46,9 +46,9 @@ function App() {
       LoginPage={LoginPage}
       accessControlProvider={{
         can: async ({ resource, action, params }) => {
-
-          if (refCheck.current === false) {
-            const role = await authProvider.getPermissions()
+          let role = currentUser;
+          if (refCheck.current === false || role === null) {
+            role = await authProvider.getPermissions();
             refCheck.current = true;
             setCurrentUser(role);
           }
@@ -59,7 +59,7 @@ function App() {
             action === "show"
           ) {
             const can = await enforcer.enforce(
-              currentUser,
+              role,
               `${resource}/${params.id}`,
               action,
             );
@@ -68,14 +68,13 @@ function App() {
 
           if (action === "field") {
             const can = await enforcer.enforce(
-              currentUser,
+              role,
               `${resource}/${params.field}`,
               action,
             );
             return Promise.resolve({ can });
           }
-
-          const can = await enforcer.enforce(currentUser, resource, action);
+          const can = await enforcer.enforce(role, resource, action);
           return Promise.resolve({ can });
         },
       }}
