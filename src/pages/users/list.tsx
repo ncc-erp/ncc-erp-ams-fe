@@ -19,10 +19,7 @@ import {
   TagField,
   Popconfirm,
   Button,
-  Tooltip,
 } from "@pankod/refine-antd";
-import { Image } from "antd";
-
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -61,6 +58,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         return filters;
       },
     });
+
   const collumns = useMemo(
     () => [
       {
@@ -71,24 +69,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "name",
-        title: "Asset Name",
+        title: "Tên tài sản",
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
-        key: "image",
-        title: "Image",
-        render: (value: string) => {
-          return value ? (
-            <Image width={50} alt="" height={"auto"} src={value} />
-          ) : (
-            ""
-          );
-        },
-      },
-      {
         key: "model",
-        title: "Model",
+        title: "Kiểu tài sản",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -96,7 +83,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "category",
-        title: "Category",
+        title: "Thể loại",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -104,24 +91,39 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "rtd_location",
-        title: "Location",
+        title: "Vị trí",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
-      // {
-      //   key: "status_label",
-      //   title: "Status",
-      //   render: (value: IHardwareResponse) => (
-      //     <TagField value={value ? value.name : ""} />
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-      // },
+      {
+        key: "status_label",
+        title: "Trạng thái",
+        render: (value: IHardwareResponse) => (
+          <TagField
+            value={value ? value.name : ""}
+            style={{
+              background:
+                value.name === "Assign"
+                  ? "#0073b7"
+                  : value.name === "Ready to deploy"
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
+              color: "white",
+            }}
+          />
+        ),
+        defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+      },
 
       {
         key: "created_at",
-        title: "Created At",
+        title: "Ngày tạo",
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
@@ -139,26 +141,17 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setDetail(data);
   };
 
-  const OnAcceptRequest = (
-    id: number,
-    assigned_status: number,
-    user_can_checkout: boolean
-  ) => {
+  const OnAcceptRequest = (id: number, assigned_status: number) => {
     // setidConfirm(id);
-    confirmHardware(id, assigned_status, user_can_checkout);
+    confirmHardware(id, assigned_status);
   };
 
-  const confirmHardware = (
-    id: number,
-    assigned_status: number,
-    user_can_checkout: boolean
-  ) => {
+  const confirmHardware = (id: number, assigned_status: number) => {
     mutate({
       resource: "api/v1/hardware/" + id + "?_method=PUT",
       values: {
         send_accept: id,
         assigned_status: assigned_status,
-        user_can_checkout: user_can_checkout,
       },
     });
   };
@@ -196,18 +189,16 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: any) => (
             <Space>
-              <Tooltip title="Xem chi tiết" color={"#108ee9"}>
-                <ShowButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => show(record)}
-                />
-              </Tooltip>
+              <ShowButton
+                hideText
+                size="small"
+                recordItemId={record.id}
+                onClick={() => show(record)}
+              />
               {record.assigned_status === 0 && (
                 <Popconfirm
                   title={t("request.label.button.accept")}
-                  onConfirm={() => OnAcceptRequest(record.id, 1, false)}
+                  onConfirm={() => OnAcceptRequest(record.id, 1)}
                 >
                   {isLoadingArr[record.id] !== false && (
                     <Button
@@ -231,7 +222,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               {record.assigned_status === 0 && (
                 <Popconfirm
                   title={t("request.label.button.refuse")}
-                  onConfirm={() => OnAcceptRequest(record.id, 2, false)}
+                  onConfirm={() => OnAcceptRequest(record.id, 2)}
                 >
                   {isLoadingArr[record.id] !== false && (
                     <Button

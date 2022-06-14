@@ -116,6 +116,10 @@ export interface IHardwareResponse {
   };
   user_can_checkout: boolean;
   assigned_status: number;
+  checkin_at:{
+    date: string;
+    formatted: string;
+  }
 }
 
 export interface IDefaultValue {
@@ -215,7 +219,7 @@ export interface IHardwareRequestCheckin {
   note: string;
   archived: boolean;
   depreciate: boolean;
-  expected_checkin: string;
+  checkin_at: string;
   rtd_location: number;
 }
 
@@ -247,7 +251,7 @@ export interface IHardwareResponseCheckin {
     name: string;
   };
 
-  expected_checkin: {
+  checkin_at: {
     date: string;
     formatted: string;
   };

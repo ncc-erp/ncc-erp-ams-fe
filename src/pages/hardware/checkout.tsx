@@ -133,9 +133,13 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
     const formData = new FormData();
     formData.append("name", event.name);
-    formData.append("note", event.note);
+    if (event.note !== undefined) {
+      formData.append("note", event.note);
+    }
     formData.append("status_id", event.status_label);
-    formData.append("expected_checkin", event.expected_checkin);
+    if (event.expected_checkin !== undefined) {
+      formData.append("expected_checkin", event.expected_checkin);
+    }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
 
@@ -221,6 +225,15 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     setIsReadyToDeploy(findLabel(Number(value)));
   };
 
+  const filterStatusLabelSelectProps = () => {
+    const optionsFiltered = statusLabelSelectProps.options?.filter(
+      (item) =>
+        item.label === EStatus.READY_TO_DEPLOY || item.label === EStatus.ASSIGN
+    );
+    statusLabelSelectProps.options = optionsFiltered;
+    return statusLabelSelectProps;
+  };
+
   return (
     <Form
       {...formProps}
@@ -243,7 +256,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.model.id}
+            initialValue={data?.model.name}
           >
             <Select
               placeholder={t("hardware.label.placeholder.propertyType")}
@@ -275,12 +288,12 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                 onChangeStatusLabel(value);
               }}
               placeholder={t("hardware.label.placeholder.status")}
-              {...statusLabelSelectProps}
+              {...filterStatusLabelSelectProps()}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_label && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_label[0]}
             </Typography.Text>
           )}
 
@@ -324,11 +337,11 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
           {activeModel === "1" && (
             <Form.Item
               className="tabUser"
-              // label={t("hardware.label.field.user")}
+              label={t("hardware.label.field.user")}
               name="assigned_user"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message:
                     t("hardware.label.field.user") +
                     " " +
@@ -337,11 +350,17 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               ]}
             >
               <Select
-                // placeholder={t("hardware.label.placeholder.user")}
+                placeholder={t("hardware.label.placeholder.user")}
                 {...userSelectProps}
               />
             </Form.Item>
           )}
+          {messageErr?.assigned_user && (
+            <Typography.Text type="danger">
+              {messageErr.assigned_user[0]}
+            </Typography.Text>
+          )}
+
           {/* {activeModel === "2" && (
             <Form.Item
               className="tabUser"
@@ -435,7 +454,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             name="expected_checkin"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.dateWantCheckin") +
                   " " +
@@ -445,11 +464,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
           >
             <Input type="date" />
           </Form.Item>
-          {messageErr?.expected_checkin && (
-            <Typography.Text type="danger">
-              {messageErr.expected_checkin[0]}
-            </Typography.Text>
-          )}
         </Col>
       </Row>
 
@@ -458,7 +472,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
         name="note"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +
@@ -469,9 +483,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       >
         <Input.TextArea value={data?.note} />
       </Form.Item>
-      {messageErr?.note && (
-        <Typography.Text type="danger">{messageErr.note[0]}</Typography.Text>
-      )}
 
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>

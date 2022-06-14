@@ -25,7 +25,7 @@ export const RequestShow = (props: RequestShowProps) => {
       <Text>{detail?.branch?.name}</Text>
       <Title level={5}>{t("request.label.field.entry")}</Title>
       <Text>{detail?.entry_type?.code}</Text>
-      <Title level={5}>{t("posts.fields.status.title")}</Title>
+      <Title level={5}>{t("request.label.field.status")}</Title>
       <Text>
         <Tag>{detail?.status}</Tag>
       </Text>

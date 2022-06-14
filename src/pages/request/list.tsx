@@ -195,6 +195,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
               }}
             />
           )}
+          defaultSortOrder={getDefaultSortOrder("status", sorter)}
+          sorter
         />
 
         <Table.Column
@@ -230,7 +232,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: IRequestResponse) => (
             <Space>
-              <Tooltip title="Xem chi tiết" color={"#108ee9"}>
+              <Tooltip
+                title={t("hardware.label.tooltip.viewDetail")}
+                color={"#108ee9"}
+              >
                 <ShowButton
                   hideText
                   size="small"
@@ -238,6 +243,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                   onClick={() => show(record)}
                 />
               </Tooltip>
+
               {record.status === "Pending" && (
                 <Popconfirm
                   title={t("request.label.button.delete")}

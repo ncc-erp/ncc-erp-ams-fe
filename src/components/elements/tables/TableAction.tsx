@@ -4,6 +4,7 @@ import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { ICheckboxChange } from "interfaces";
 import { useTranslate } from "@pankod/refine-core";
+import { useTranslation } from "react-i18next";
 const { Search } = Input;
 export declare type CheckboxValueType = string | number | boolean;
 export interface ISelectTableCol {
@@ -13,6 +14,8 @@ export interface ISelectTableCol {
 }
 
 export const SelectTableCol = (props: ISelectTableCol) => {
+  const { t } = useTranslation();
+
   const plainOptions = props.options;
   const defaultCheckedList = props.defaultValue;
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -48,7 +51,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
         <Row>
           <Col span={24}>
             <Checkbox onChange={onCheckAllChange} checked={checkAll}>
-              Check all
+              {t("table.checkAll")}
             </Checkbox>
           </Col>
           <Checkbox.Group value={checkedList} onChange={onChange}>
@@ -123,7 +126,7 @@ export const TableAction = (props: ITableAction) => {
         {actions && (
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button>
-              Action <Icons.DownOutlined />
+              {t("table.actions")} <Icons.DownOutlined />
             </Button>
           </Dropdown>
         )}

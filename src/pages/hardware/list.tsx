@@ -163,6 +163,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       user_can_checkout: false,
       assigned_status: 0,
+      checkin_at: {
+        date: "",
+        formatted: "",
+      },
     };
 
     setDetail(dataConvert);
@@ -243,6 +247,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         },
       },
       assigned_status: 0,
+      checkin_at: {
+        date: "",
+        formatted: "",
+      },
     };
 
     setDetailClone(dataConvert);
@@ -314,6 +322,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       requestable: 0,
       physical: 0,
       assigned_status: data.assigned_status,
+      checkin_at: {
+        date: "",
+        formatted: "",
+      },
     };
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);
@@ -333,13 +345,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         status_type: data?.status_label.status_type,
         status_meta: data?.status_label.status_meta,
       },
-      expected_checkin: {
-        date: "",
-        formatted: "",
+      checkin_at: {
+        date: new Date().toISOString().substring(0, 10),
+        formatted: new Date().toDateString(),
       },
       rtd_location: {
         id: data?.id,
         name: data?.name,
+      },
+
+      expected_checkin: {
+        date: "",
+        formatted: "",
       },
       category: {
         id: data?.category?.id,
@@ -394,8 +411,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       user_can_checkout: false,
     };
 
-    // console.log("check dataConvert: ", dataConvert);
-
     setDetailCheckin(dataConvert);
     setIsCheckinModalVisible(true);
   };
@@ -410,13 +425,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "name",
-        title: "Asset Name",
+        title: "Tên tài sản",
         render: (value: IHardware) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "image",
-        title: "Image",
+        title: "Hình ảnh",
         render: (value: string) => {
           return value ? (
             <Image width={50} alt="" height={"auto"} src={value} />
@@ -427,43 +442,20 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "model",
-        title: "Model",
+        title: "Kiểu tài sản",
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "category",
-        title: "Category",
+        title: "Thể loại",
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
 
-      // {
-      //   key: "status_label",
-      //   title: "Trạng thái",
-      //   render: (value: IHardwareResponse) => (
-      //     <TagField
-      //       value={value.name}
-      //       style={{
-      //         background:
-      //           value.name === "Assign"
-      //             ? "#0073b7"
-      //             : value.name === "Ready to deploy"
-      //             ? "#00a65a"
-      //             : value.name === "Broken"
-      //             ? "red"
-      //             : value.name === "Pending"
-      //             ? "#f39c12"
-      //             : "",
-      //         color: "white",
-      //       }}
-      //     />
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("assigned_status.name", sorter),
-      // },
       {
         key: "assigned_to",
-        title: "Checkout đến",
+        title: "Cấp phát đến",
         render: (value: IHardwareResponse) => (
           <TextField value={value ? value.name : ""} />
         ),
@@ -491,7 +483,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   ? "red"
                   : value === 0
                   ? "#f39c12"
-                  : "black",
+                  : "gray",
               color: "white",
             }}
           />
@@ -500,7 +492,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "created_at",
-        title: "Created At",
+        title: "Ngày tạo",
         render: (value: IHardware) => (
           <DateField format="LLL" value={value.datetime} />
         ),
@@ -547,7 +539,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     <List
       pageHeaderProps={{
         extra: (
-          <Tooltip title="Tạo hardware" color={"#108ee9"}>
+          <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
             <CreateButton onClick={handleCreate} />
           </Tooltip>
         ),
@@ -624,7 +616,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record) => (
             <Space>
-              <Tooltip title="Xem chi tiết" color={"#108ee9"}>
+              <Tooltip
+                title={t("hardware.label.tooltip.viewDetail")}
+                color={"#108ee9"}
+              >
                 <ShowButton
                   hideText
                   size="small"
@@ -633,7 +628,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 />
               </Tooltip>
 
-              <Tooltip title="Clone tài sản" color={"#108ee9"}>
+              <Tooltip
+                title={t("hardware.label.tooltip.clone")}
+                color={"#108ee9"}
+              >
                 <CloneButton
                   hideText
                   size="small"
@@ -641,7 +639,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   onClick={() => clone(record)}
                 />
               </Tooltip>
-              <Tooltip title="Chỉnh sửa tài sản" color={"#108ee9"}>
+              <Tooltip
+                title={t("hardware.label.tooltip.edit")}
+                color={"#108ee9"}
+              >
                 <EditButton
                   hideText
                   size="small"
@@ -649,7 +650,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   onClick={() => edit(record)}
                 />
               </Tooltip>
-              <Tooltip title="Xóa tài sản" color={"red"}>
+              <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
                 <DeleteButton
                   resourceName="api/v1/hardware"
                   hideText
@@ -693,46 +694,44 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     {t("hardware.label.button.checkout")}
                   </Button>
                 )) ||
-                (record.user_can_checkout === true &&
-                  record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                (record.user_can_checkout === true &&
-                  record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
+                (record.status_label.name === "Pending" && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
+                (record.status_label.name === "Broken" && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    disabled
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                ))}
 
-              {record.user_can_checkout === false && (
+              {record.assigned_status === 1 && (
                 <Button
                   type="primary"
                   shape="round"

@@ -63,7 +63,7 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {menuItems.map(({ icon, label, route }) => {
+        {menuItems.map(({ icon, name, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item
@@ -80,7 +80,7 @@ export const Sider: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                {label}
+                {name}
                 {!collapsed && isSelected && <RightOutlined />}
               </div>
             </Menu.Item>

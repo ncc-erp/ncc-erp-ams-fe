@@ -104,12 +104,17 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
 
     const formData = new FormData();
     formData.append("name", event.name);
-    formData.append("note", event.note);
-    formData.append("status_id", event.status_label);
-    formData.append("expected_checkin", event.expected_checkin);
+    if (event.note !== undefined) {
+      formData.append("note", event.note);
+    }
+    if (event.status_label !== undefined) {
+      formData.append("status_id", event.status_label);
+    }
+    formData.append("checkin_at", new Date().toISOString().substring(0, 10));
     formData.append("model_id", event.model.toString());
-    formData.append("rtd_location", event.rtd_location.toString());
-    formData.append("updated_at", new Date().toISOString().substring(0, 10));
+    if (event.rtd_location !== undefined) {
+      formData.append("rtd_location", event.rtd_location.toString());
+    }
 
     setPayload(formData);
   };
@@ -124,7 +129,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
 
       { name: "status_id", value: data.status_label.id },
       {
-        name: "updated_at",
+        name: "checkin_at",
         value: new Date().toISOString().substring(0, 10),
       },
 
@@ -213,7 +218,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
             name="status_label"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.status") +
                   " " +
@@ -229,11 +234,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
-            <Typography.Text type="danger">
-              {messageErr.status[0]}
-            </Typography.Text>
-          )}
 
           <Form.Item
             label={t("hardware.label.field.location")}
@@ -260,7 +260,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
             name="name"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.assetName") +
                   " " +
@@ -271,17 +271,13 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
           >
             <Input />
           </Form.Item>
-          {messageErr?.name && (
-            <Typography.Text type="danger">
-              {messageErr.name[0]}
-            </Typography.Text>
-          )}
+
           <Form.Item
             label={t("hardware.label.field.dateCheckin")}
-            name="updated_at"
+            name="checkin_at"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.dateCheckin") +
                   " " +
@@ -292,11 +288,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
           >
             <Input type="date" />
           </Form.Item>
-          {messageErr?.updated_at && (
-            <Typography.Text type="danger">
-              {messageErr.updated_at[0]}
-            </Typography.Text>
-          )}
         </Col>
       </Row>
 
@@ -305,7 +296,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
         name="note"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +
@@ -316,9 +307,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
       >
         <Input.TextArea value={data?.note} />
       </Form.Item>
-      {messageErr?.note && (
-        <Typography.Text type="danger">{messageErr.note[0]}</Typography.Text>
-      )}
 
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>
