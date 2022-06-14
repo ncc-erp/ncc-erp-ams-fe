@@ -5,7 +5,6 @@ import {
   useLogout,
   useTitle,
   useNavigation,
-  usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
@@ -23,9 +22,6 @@ export const Sider: React.FC = () => {
   const { push } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
 
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-
   const isMobile = !breakpoint.lg;
 
   const clientId = process.env.GOOGLE_CLIENT_ID
@@ -42,13 +38,16 @@ export const Sider: React.FC = () => {
     logout();
   };
 
+  const [currentUser, setCurrentUser] = useState<any>(null);
   useEffect(() => {
     const getUser = async () => {
-      const dataRespone = await axiosInstance.get("api/v1/users/me");
-      setCurrentUser(dataRespone.data);
+      const dataRespone = await axiosInstance.get("api/v1/hardware/me");
+      setCurrentUser(dataRespone.data.role);
     }
-    getUser()
+    console.log("currentUser role: ", currentUser)
+    getUser();
   }, [])
+
 
   return (
     <AntdLayout.Sider
@@ -76,8 +75,83 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
+        {currentUser === "admin" ? (menuItems.map(({ icon, label, route }) => {
+          const isSelected = route === selectedKey;
+          return (
+            <Menu.Item
+              style={{
+                fontWeight: isSelected ? "bold" : "normal",
+              }}
+              key={route}
+              icon={icon}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {label}
+                {!collapsed && isSelected && <RightOutlined />}
+              </div>
+            </Menu.Item>
+          );
+        })) : (
+          menuItems.filter((item) =>
+            item.label === "Users" || item.label === "Dashboard"
+          ).map(({ icon, label, route }) => {
+            const isSelected = route === selectedKey;
+            return (
+              <Menu.Item
+                style={{
+                  fontWeight: isSelected ? "bold" : "normal",
+                }}
+                key={route}
+                icon={icon}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {label}
+                  {!collapsed && isSelected && <RightOutlined />}
+                </div>
+              </Menu.Item>
+            );
+          })
+        )}
 
-        {currentUser && currentUser.id === 393 && menuItems.map(({ icon, label, route }) => {
+        {/* {
+          menuItems.map(({ icon, label, route }) => {
+            const isSelected = route === selectedKey;
+            return (
+              <Menu.Item
+                style={{
+                  fontWeight: isSelected ? "bold" : "normal",
+                }}
+                key={route}
+                icon={icon}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {label}
+                  {!collapsed && isSelected && <RightOutlined />}
+                </div>
+              </Menu.Item>
+            );
+          })
+        } */}
+
+        {/* {currentUser && currentUser.id === 393 && menuItems.map(({ icon, label, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item
@@ -124,13 +198,12 @@ export const Sider: React.FC = () => {
             </Menu.Item>
           );
         })
+        } */}
 
-        }
-
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
+        < Menu.Item key="logout" icon={< LogoutOutlined />}>
           {translate("buttons.logout", "Logout")}
         </Menu.Item>
       </Menu>
-    </AntdLayout.Sider>
+    </AntdLayout.Sider >
   );
 };

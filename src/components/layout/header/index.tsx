@@ -3,6 +3,7 @@ import {
   useSetLocale,
   useGetIdentity,
   useLogout,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -19,14 +20,17 @@ const { LogoutOutlined } = Icons;
 
 const { Text } = Typography;
 
-export const Header: React.FC = () => {
+interface IHeaderProps {
+  resetRef: () => void
+}
+
+export const Header: React.FC<IHeaderProps> = ({ resetRef }) => {
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
-  
-
+  const { push } = useNavigation();
   const clientId = process.env.GOOGLE_CLIENT_ID
     ? process.env.GOOGLE_CLIENT_ID
     : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
@@ -39,6 +43,7 @@ export const Header: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    push("/login")
   };
 
   const menu = (
@@ -68,7 +73,10 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Button type="link" onClick={() => logoutAccount()}>
+      <Button type="link" onClick={() => {
+        logoutAccount()
+        resetRef()
+      }}>
         <LogoutOutlined />
       </Button>
       {/* <Dropdown overlay={menu}>
