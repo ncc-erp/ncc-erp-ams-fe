@@ -19,8 +19,7 @@ import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
 import { newEnforcer } from "casbin.js";
 import { adapter, model } from "AccessControl";
-import { useEffect, useRef, useState } from "react";
-import { ModelList } from "pages/model/list";
+import { useRef, useState } from "react";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -74,6 +73,7 @@ function App() {
             );
             return Promise.resolve({ can });
           }
+
           const can = await enforcer.enforce(role, resource, action);
           return Promise.resolve({ can });
         },
@@ -82,24 +82,29 @@ function App() {
         {
           name: "assets",
           list: HardwareList,
-          show: HardwareShow
+          show: HardwareShow,
+          options: {
+            route: "assets",
+          },
         },
         {
           name: "Tạo request",
           list: RequestList,
+          options: {
+            route: "create-request",
+          },
         },
         {
           name: "Users",
           list: UserList,
-        },
-        {
-          name: "Model",
-          list: ModelList,
+          options: {
+            route: "users",
+          },
         },
       ]}
       Title={Title}
       Header={() => <Header resetRef={resetRef} />}
-      Sider={() => <Sider />}
+      Sider={() => <Sider resetRef={resetRef} />}
       Footer={Footer}
       Layout={Layout}
       OffLayoutArea={OffLayoutArea}
