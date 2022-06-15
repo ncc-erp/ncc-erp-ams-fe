@@ -22,6 +22,7 @@ import {
   ShowButton,
   Button,
   CreateButton,
+  Tooltip,
 } from "@pankod/refine-antd";
 
 import { IHardware } from "interfaces";
@@ -136,8 +137,13 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
+      title="Tạo request"
       pageHeaderProps={{
-        extra: <CreateButton onClick={handleCreate} />,
+        extra: (
+          <Tooltip title="Tạo request" color={"#108ee9"}>
+            <CreateButton onClick={handleCreate} />
+          </Tooltip>
+        ),
       }}
     >
       <TableAction searchFormProps={searchFormProps} />
@@ -189,6 +195,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
               }}
             />
           )}
+          defaultSortOrder={getDefaultSortOrder("status", sorter)}
+          sorter
         />
 
         <Table.Column
@@ -219,25 +227,33 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
             <TagField value={value.length ? value.length : 0} />
           )}
         />
-        <Table.Column<IRequestResponse>
+        <Table.Column
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record) => (
+          render={(_, record: IRequestResponse) => (
             <Space>
-              <ShowButton
-                hideText
-                size="small"
-                recordItemId={record.id}
-                onClick={() => show(record)}
-              />
+              <Tooltip
+                title={t("hardware.label.tooltip.viewDetail")}
+                color={"#108ee9"}
+              >
+                <ShowButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => show(record)}
+                />
+              </Tooltip>
+
               {record.status === "Pending" && (
                 <Popconfirm
                   title={t("request.label.button.delete")}
                   onConfirm={() => handleDelete(record.id)}
                 >
-                  <Button size="small">
-                    <DeleteOutlined />
-                  </Button>
+                  <Tooltip title="Xóa tài sản" color={"red"}>
+                    <Button size="small">
+                      <DeleteOutlined />
+                    </Button>
+                  </Tooltip>
                 </Popconfirm>
               )}
               {record.status === "Pending" && (

@@ -14,18 +14,20 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
+import { useTranslation } from "react-i18next";
 
 const { LogoutOutlined } = Icons;
 
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
+  const { t } = useTranslation();
+
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
-  
 
   const clientId = process.env.GOOGLE_CLIENT_ID
     ? process.env.GOOGLE_CLIENT_ID
@@ -52,7 +54,7 @@ export const Header: React.FC = () => {
           </span>
         }
       >
-        Vietnamese
+        {t("lang.vi")}
       </Menu.Item>
     </Menu>
   );

@@ -69,13 +69,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "name",
-        title: "Asset Name",
+        title: "Tên tài sản",
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "model",
-        title: "Model",
+        title: "Kiểu tài sản",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -83,7 +83,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "category",
-        title: "Category",
+        title: "Thể loại",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -91,7 +91,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "rtd_location",
-        title: "Location",
+        title: "Vị trí",
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -99,16 +99,31 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "status_label",
-        title: "Status",
+        title: "Trạng thái",
         render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField
+            value={value ? value.name : ""}
+            style={{
+              background:
+                value.name === "Assign"
+                  ? "#0073b7"
+                  : value.name === "Ready to deploy"
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
+              color: "white",
+            }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
       },
 
       {
         key: "created_at",
-        title: "Created At",
+        title: "Ngày tạo",
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
@@ -155,7 +170,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   }, [isLoadingSendRequest]);
 
   return (
-    <List>
+    <List title="Tài sản của tôi">
       <TableAction searchFormProps={searchFormProps} />
 
       <MModal
