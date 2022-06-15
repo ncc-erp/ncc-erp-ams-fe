@@ -23,7 +23,7 @@ import { useRef, useState } from "react";
 
 function App() {
   const { t, i18n } = useTranslation();
-  const refCheck = useRef(false);
+  const checkCurrent = useRef(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
@@ -32,7 +32,7 @@ function App() {
   };
 
   const resetRef = () => {
-    refCheck.current = false;
+    checkCurrent.current = false;
   }
 
   return (
@@ -46,9 +46,9 @@ function App() {
       accessControlProvider={{
         can: async ({ resource, action, params }) => {
           let role = currentUser;
-          if (refCheck.current === false || role === null) {
+          if (checkCurrent.current === false || role === null) {
             role = await authProvider.getPermissions();
-            refCheck.current = true;
+            checkCurrent.current = true;
             setCurrentUser(role);
           }
           const enforcer = await newEnforcer(model, adapter);
