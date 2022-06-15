@@ -48,7 +48,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const t = useTranslate();
 
   useEffect(() => {
-    setChecked(props.data?.requestable === 1 ? true : false);
+    setChecked(props.data?.requestable === "1" ? true : false);
   }, [props]);
 
   enum EStatus {

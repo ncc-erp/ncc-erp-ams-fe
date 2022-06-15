@@ -25,15 +25,15 @@ export const HardwareShow = (props: HardwareShowProps) => {
       <Title level={5}>{t("hardware.label.field.status")}</Title>
       <Text>
         <Tag>
-          {detail?.status_label.name === "Assign"
-            ? "Đã xác nhận"
-            : detail?.status_label.name === "Ready to deploy"
-            ? "Đang đợi xác nhận"
-            : detail?.status_label.name === "Broken"
-            ? "Đã từ chối"
-            : detail?.status_label.name === "Pending"
-            ? "Chưa assign"
-            : ""}{" "}
+          {detail?.status_label?.name === "Assign"
+            ? "Đã lưu trữ"
+            : detail?.status_label?.name === "Ready to deploy"
+            ? "Cho phép cấp phát"
+            : detail?.status_label?.name === "Broken"
+            ? "Không cho phép cấp phát"
+            : detail?.status_label?.name === "Pending"
+            ? "Đang chờ"
+            : ""}
         </Tag>
       </Text>
       <Title level={5}>{t("hardware.label.field.rtd_location")}</Title>

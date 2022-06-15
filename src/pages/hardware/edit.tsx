@@ -32,14 +32,14 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
   const [checked, setChecked] = useState(true);
 
   useEffect(() => {
-    setChecked(props.data?.requestable === 1 ? true : false);
+    setChecked(props.data?.requestable === "1" ? true : false);
   }, [props]);
 
   const t = useTranslate();

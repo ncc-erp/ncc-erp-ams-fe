@@ -185,6 +185,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="status"
           key="status"
           title={t("request.label.field.status")}
+          defaultSortOrder={getDefaultSortOrder("status", sorter)}
           render={(value) => (
             <TagField
               value={value}
@@ -195,7 +196,6 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
               }}
             />
           )}
-          defaultSortOrder={getDefaultSortOrder("status", sorter)}
           sorter
         />
 

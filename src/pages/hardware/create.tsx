@@ -180,9 +180,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
+    // console.log("check data create: ", event);
 
     setPayload(formData);
-    // form.resetFields();
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -229,9 +230,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const onCheck = (event: ICheckboxChange) => {
     if (event.target.checked)
       form.setFieldsValue({
-        require_acceptance: 1,
+        requestable: 1,
       });
-    else form.setFieldsValue({ require_acceptance: 0 });
+    else form.setFieldsValue({ requestable: 0 });
   };
 
   useEffect(() => {

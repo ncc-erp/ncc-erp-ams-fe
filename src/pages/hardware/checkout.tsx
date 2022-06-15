@@ -137,9 +137,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       formData.append("note", event.note);
     }
     formData.append("status_id", event.status_label);
-    if (event.expected_checkin !== undefined) {
-      formData.append("expected_checkin", event.expected_checkin);
-    }
+
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
 
@@ -170,10 +168,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       { name: "note", value: data.note },
 
       { name: "status_id", value: data.status_label.id },
-      {
-        name: "expected_checkin",
-        value: data.expected_checkin.date,
-      },
+
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),
@@ -336,7 +331,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
           {activeModel === "1" && (
             <Form.Item
-              className="tabUser"
+              className="tabUserCheckout"
               label={t("hardware.label.field.user")}
               name="assigned_user"
               rules={[
@@ -448,22 +443,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               {messageErr.checkout_at[0]}
             </Typography.Text>
           )}
-
-          <Form.Item
-            label={t("hardware.label.field.dateWantCheckin")}
-            name="expected_checkin"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("hardware.label.field.dateWantCheckin") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
-            <Input type="date" />
-          </Form.Item>
         </Col>
       </Row>
 

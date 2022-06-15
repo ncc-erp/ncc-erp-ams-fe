@@ -23,7 +23,17 @@ export const UserShow = (props: UserShowProps) => {
       <Text>{detail?.category?.name}</Text>
       <Title level={5}>{t("user.label.field.status")}</Title>
       <Text>
-        <Tag>{detail?.status_label?.name}</Tag>
+        <Tag>
+          {detail?.status_label?.name === "Assign"
+            ? "Đã lưu trữ"
+            : detail?.status_label?.name === "Ready to deploy"
+            ? "Cho phép cấp phát"
+            : detail?.status_label?.name === "Broken"
+            ? "Không cho phép cấp phát"
+            : detail?.status_label?.name === "Pending"
+            ? "Đang chờ"
+            : ""}
+        </Tag>
       </Text>
       <Title level={5}>{t("user.label.field.location")}</Title>
       <Text>{detail?.rtd_location?.name}</Text>
