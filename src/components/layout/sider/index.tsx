@@ -13,7 +13,11 @@ import { axiosInstance } from "providers/axios";
 
 const { RightOutlined, LogoutOutlined } = Icons;
 
-export const Sider: React.FC = () => {
+interface ISiderProps {
+  resetRef: () => void
+}
+
+export const Sider: React.FC<ISiderProps> = ({ resetRef }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
@@ -36,6 +40,7 @@ export const Sider: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    resetRef();
   };
 
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -44,10 +49,8 @@ export const Sider: React.FC = () => {
       const dataRespone = await axiosInstance.get("api/v1/hardware/me");
       setCurrentUser(dataRespone.data.role);
     }
-    console.log("currentUser role: ", currentUser)
     getUser();
   }, [])
-
 
   return (
     <AntdLayout.Sider
@@ -99,7 +102,7 @@ export const Sider: React.FC = () => {
           );
         })) : (
           menuItems.filter((item) =>
-            item.label === "Users" || item.label === "Dashboard"
+            item.key === "/users" || item.key === "dashboard"
           ).map(({ icon, label, route }) => {
             const isSelected = route === selectedKey;
             return (
@@ -124,81 +127,6 @@ export const Sider: React.FC = () => {
             );
           })
         )}
-
-        {/* {
-          menuItems.map(({ icon, label, route }) => {
-            const isSelected = route === selectedKey;
-            return (
-              <Menu.Item
-                style={{
-                  fontWeight: isSelected ? "bold" : "normal",
-                }}
-                key={route}
-                icon={icon}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {label}
-                  {!collapsed && isSelected && <RightOutlined />}
-                </div>
-              </Menu.Item>
-            );
-          })
-        } */}
-
-        {/* {currentUser && currentUser.id === 393 && menuItems.map(({ icon, label, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={icon}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {label}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        }) || menuItems.filter((item) =>
-          item.label === "Users"
-        ).map(({ icon, label, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={icon}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {label}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        })
-        } */}
 
         < Menu.Item key="logout" icon={< LogoutOutlined />}>
           {translate("buttons.logout", "Logout")}

@@ -46,7 +46,6 @@ export const authProvider: AuthProvider = {
 
     return Promise.reject();
   },
-  // getPermissions: () => Promise.resolve(),
   getUserIdentity: async () => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) {
@@ -60,15 +59,11 @@ export const authProvider: AuthProvider = {
   getPermissions: async () => {
     const auth = localStorage.getItem(TOKEN_KEY);
     const dataRespone = await axiosInstance.get("api/v1/hardware/me");
-    console.log("dataRespone:", dataRespone.data);
     if (auth && dataRespone.data.role === role.admin) {
-      console.log("role: ", dataRespone.data.role);
       return Promise.resolve(dataRespone.data.role);
     } else if (auth && dataRespone.data.role === role.user) {
-      console.log("role: ", dataRespone.data.role);
       return Promise.resolve(dataRespone.data.role);
     }
     return Promise.reject();
   },
-  // getPermissions: () => Promise.resolve(),
 };
