@@ -31,6 +31,7 @@ export const RequestShow = (props: RequestShowProps) => {
       </Text>
       <Title level={5}>{t("request.label.field.countAsset")}</Title>
       <Text>{detail?.finfast_request_assets?.length}</Text>
+
       {detail?.finfast_request_assets.length > 0 && (
         <ListAssetNotRequest assetDatas={detail?.finfast_request_assets} />
       )}

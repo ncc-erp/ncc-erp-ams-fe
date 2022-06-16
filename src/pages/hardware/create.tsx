@@ -156,10 +156,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("model_id", event.model.toString());
     formData.append("rtd_location_id", event.rtd_location.toString());
+
     if (event.order_number !== undefined)
       formData.append("order_number", event.order_number);
 
     formData.append("status_id", event.status_label.toString());
+
     if (event.user_id !== undefined)
       formData.append("assigned_to", event.user_id.toString());
     // if (event.physical !== undefined) formData.append("physical", event.physical.toString());
@@ -180,7 +182,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
-    // console.log("check data create: ", event);
 
     setPayload(formData);
     form.resetFields();

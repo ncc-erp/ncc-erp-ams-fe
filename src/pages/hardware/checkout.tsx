@@ -137,11 +137,8 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       formData.append("note", event.note);
     }
     formData.append("status_id", event.status_label);
-
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
-
-    // formData.append("assigned_status", event.assigned_status.toString());
 
     // if (event.assigned_location !== undefined) {
     //   formData.append("assigned_location", event.assigned_location);
@@ -164,16 +161,12 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     setFields([
       { name: "name", value: data.name },
       { name: "model_id", value: data.model.name },
-
       { name: "note", value: data.note },
-
       { name: "status_id", value: data.status_label.id },
-
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),
       },
-
       { name: "assigned_user", value: data.assigned_user },
       { name: "assigned_location", value: data?.assigned_location.name },
     ]);

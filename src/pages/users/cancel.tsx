@@ -20,7 +20,6 @@ export const CancleAsset = (props: HardwareEditProps) => {
   const [messageErr, setMessageErr] = useState<any>(null);
 
   const t = useTranslate();
-
   const { formProps, form } = useForm<IHardwareUpdateRequest>({
     action: "edit",
   });

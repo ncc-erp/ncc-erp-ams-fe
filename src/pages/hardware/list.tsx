@@ -75,20 +75,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IHardware[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: ICheckboxProps) => ({
-      disabled: record.name === "Disabled User",
-      name: record.name,
-    }),
-  };
-
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
       id: data.id,

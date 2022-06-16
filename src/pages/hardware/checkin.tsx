@@ -124,9 +124,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     setFields([
       { name: "name", value: data.name },
       { name: "model_id", value: data.model.name },
-
       { name: "note", value: data.note },
-
       { name: "status_id", value: data.status_label.id },
       {
         name: "checkin_at",

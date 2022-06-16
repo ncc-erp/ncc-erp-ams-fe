@@ -19,9 +19,6 @@ import { DashboardPage } from "pages/dashboard";
 import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
-// import { CategoryList } from "pages/categories";
-// import { ManufacturesList } from "pages/manufacturers";
-// import { LocationList } from "pages/location";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -53,18 +50,6 @@ function App() {
           name: "Tài sản của tôi",
           list: UserList,
         },
-        // {
-        //   name: "Danh mục",
-        //   list: CategoryList,
-        // },
-        // {
-        //   name: "Nhà sản xuất",
-        //   list: ManufacturesList,
-        // },
-        // {
-        //   name: "Địa phương",
-        //   list: LocationList,
-        // },
       ]}
       Title={Title}
       Header={Header}

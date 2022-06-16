@@ -100,41 +100,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
-      // {
-      //   key: "status_label",
-      //   title: "Trạng thái",
-      //   render: (value: IHardwareResponse) => (
-      //     <TagField
-      //       value={
-      //         value
-      //           ? value.name === "Assign"
-      //             ? "Đã lưu trữ"
-      //             : value.name === "Ready to deploy"
-      //             ? "Cho phép cấp phát"
-      //             : value.name === "Broken"
-      //             ? "Không cho phép cấp phát"
-      //             : value.name === "Pending"
-      //             ? "Đang chờ"
-      //             : ""
-      //           : ""
-      //       }
-      //       style={{
-      //         background:
-      //           value.name === "Assign"
-      //             ? "#0073b7"
-      //             : value.name === "Ready to deploy"
-      //             ? "#00a65a"
-      //             : value.name === "Broken"
-      //             ? "red"
-      //             : value.name === "Pending"
-      //             ? "#f39c12"
-      //             : "",
-      //         color: "white",
-      //       }}
-      //     />
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-      // },
+
       {
         key: "assigned_status",
         title: "Tình trạng",
@@ -212,7 +178,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   }, [isLoadingSendRequest]);
 
   return (
-    <List title="Tài sản của tôi">
+    <List title={t("user.label.title.name")}>
       <TableAction searchFormProps={searchFormProps} />
 
       <MModal
@@ -273,34 +239,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 </Popconfirm>
               )}
               {record.assigned_status === 0 && (
-                // <Popconfirm
-                //   title={t("request.label.button.refuse")}
-                //   onConfirm={() => OnAcceptRequest(record.id, 2)}
-                // >
-                //   {isLoadingArr[record.id] !== false && (
-                //     <Button
-                //       type="primary"
-                //       shape="round"
-                //       size="small"
-                //       loading={
-                //         isLoadingArr[record.id] === undefined
-                //           ? false
-                //           : isLoadingArr[record.id] === false
-                //           ? false
-                //           : true
-                //       }
-                //     >
-                //       {t("request.label.button.refuse")}
-                //     </Button>
-                //   )}
-                // </Popconfirm>
-                // <Button
-                //   size="small"
-                //   // recordItemId={record.id}
-                //   onClick={() => cancle(record)}
-                // >
-                //   Từ chối
-                // </Button>
                 <Button
                   type="primary"
                   shape="round"

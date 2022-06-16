@@ -14,7 +14,7 @@ export const UserShow = (props: UserShowProps) => {
   const t = useTranslate();
 
   return (
-    <div>
+    <>
       <Title level={5}>{t("user.label.field.name")}</Title>
       <Text>{detail?.name}</Text>
       <Title level={5}>{t("user.label.field.model")}</Title>
@@ -41,6 +41,6 @@ export const UserShow = (props: UserShowProps) => {
       <Text>{detail?.warranty_months}</Text>
       <Title level={5}>{t("user.label.field.notes")}</Title>
       <Text>{detail?.notes}</Text>
-    </div>
+    </>
   );
 };

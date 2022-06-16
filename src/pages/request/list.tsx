@@ -137,10 +137,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
-      title="Tạo request"
+      title={t("request.label.title.create")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title="Tạo request" color={"#108ee9"}>
+          <Tooltip title={t("request.label.title.create")} color={"#108ee9"}>
             <CreateButton onClick={handleCreate} />
           </Tooltip>
         ),
@@ -185,7 +185,6 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="status"
           key="status"
           title={t("request.label.field.status")}
-          defaultSortOrder={getDefaultSortOrder("status", sorter)}
           render={(value) => (
             <TagField
               value={value}
@@ -196,6 +195,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
               }}
             />
           )}
+          defaultSortOrder={getDefaultSortOrder("status", sorter)}
           sorter
         />
 
