@@ -75,20 +75,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IHardware[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: ICheckboxProps) => ({
-      disabled: record.name === "Disabled User",
-      name: record.name,
-    }),
-  };
-
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
       id: data.id,
@@ -168,7 +154,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
     };
-
     setDetail(dataConvert);
     setIsEditModalVisible(true);
   };
@@ -319,13 +304,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_to: 0,
       last_audit_date: "",
-      requestable: 0,
       physical: 0,
       assigned_status: data.assigned_status,
       checkin_at: {
         date: "",
         formatted: "",
       },
+      requestable: data?.requestable,
     };
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);
@@ -386,7 +371,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_to: 0,
       last_audit_date: "",
-      requestable: 0,
+      requestable: data?.requestable,
       physical: 0,
       assigned_status: data.assigned_status,
       model_number: "",
@@ -594,7 +579,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
-        <HardwareShow setIsModalVisible={setIsModalVisible} detail={detail} />
+        <HardwareShow
+          setIsModalVisible={setIsShowModalVisible}
+          detail={detail}
+        />
       </MModal>{" "}
       <MModal
         title={t("hardware.label.title.checkin")}
@@ -658,24 +646,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   recordItemId={record.id}
                 />
               </Tooltip>
-              {(record.user_can_checkout === true && (
-                <Button
-                  className="ant-btn-checkout"
-                  type="primary"
-                  shape="round"
-                  size="small"
-                  loading={
-                    isLoadingArr[record.id] === undefined
-                      ? false
-                      : isLoadingArr[record.id] === false
-                      ? false
-                      : true
-                  }
-                  onClick={() => checkout(record)}
-                >
-                  {t("hardware.label.button.checkout")}
-                </Button>
-              )) ||
+              {record.assigned_status === 2 ||
+                (record.user_can_checkout === true && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )) ||
                 (record.user_can_checkout === true && (
                   <Button
                     className="ant-btn-checkout"

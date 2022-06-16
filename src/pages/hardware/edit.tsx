@@ -32,14 +32,14 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
   const [checked, setChecked] = useState(true);
 
   useEffect(() => {
-    setChecked(props.data?.requestable === 1 ? true : false);
+    setChecked(props.data?.requestable === "1" ? true : false);
   }, [props]);
 
   const t = useTranslate();
@@ -125,12 +125,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("name", event.name);
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("model_id", event.model.toString());
+
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
-
     formData.append("notes", event.notes);
-    formData.append("asset_tag", event.asset_tag);
 
+    formData.append("asset_tag", event.asset_tag);
     formData.append("status_id", event.status_label.toString());
     formData.append("warranty_months", event.warranty_months);
 
@@ -160,10 +160,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-
       { name: "notes", value: data?.notes },
       { name: "asset_tag", value: data?.asset_tag },
-
       { name: "status_id", value: data?.status_label.id },
       {
         name: "warranty_months",

@@ -137,10 +137,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
-      title="Tạo request"
+      title={t("request.label.title.create")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title="Tạo request" color={"#108ee9"}>
+          <Tooltip title={t("request.label.title.create")} color={"#108ee9"}>
             <CreateButton onClick={handleCreate} />
           </Tooltip>
         ),

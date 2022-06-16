@@ -156,10 +156,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("model_id", event.model.toString());
     formData.append("rtd_location_id", event.rtd_location.toString());
+
     if (event.order_number !== undefined)
       formData.append("order_number", event.order_number);
 
     formData.append("status_id", event.status_label.toString());
+
     if (event.user_id !== undefined)
       formData.append("assigned_to", event.user_id.toString());
     // if (event.physical !== undefined) formData.append("physical", event.physical.toString());
@@ -182,7 +184,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
 
     setPayload(formData);
-    // form.resetFields();
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -229,9 +231,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const onCheck = (event: ICheckboxChange) => {
     if (event.target.checked)
       form.setFieldsValue({
-        require_acceptance: 1,
+        requestable: 1,
       });
-    else form.setFieldsValue({ require_acceptance: 0 });
+    else form.setFieldsValue({ requestable: 0 });
   };
 
   useEffect(() => {

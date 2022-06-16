@@ -5,7 +5,6 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   useCreate,
-  useCustom,
 } from "@pankod/refine-core";
 import {
   List,
@@ -19,6 +18,8 @@ import {
   TagField,
   Popconfirm,
   Button,
+  Input,
+  EditButton,
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -26,11 +27,13 @@ import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { UserShow } from "./show";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
+import { CancleAsset } from "./cancel";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+  const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<any>({});
   const [keySearch] = useState<string>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
@@ -97,28 +100,35 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
+
       {
-        key: "status_label",
-        title: "Trạng thái",
-        render: (value: IHardwareResponse) => (
+        key: "assigned_status",
+        title: "Tình trạng",
+        render: (value: any) => (
           <TagField
-            value={value ? value.name : ""}
+            value={
+              value === 1
+                ? "Đã xác nhận"
+                : value === 2
+                ? "Đã từ chối"
+                : value === 0
+                ? "Đang chờ xác nhận"
+                : "Chưa assign"
+            }
             style={{
               background:
-                value.name === "Assign"
+                value === 1
                   ? "#0073b7"
-                  : value.name === "Ready to deploy"
-                  ? "#00a65a"
-                  : value.name === "Broken"
+                  : value === 2
                   ? "red"
-                  : value.name === "Pending"
+                  : value === 0
                   ? "#f39c12"
-                  : "",
+                  : "gray",
               color: "white",
             }}
           />
         ),
-        defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+        defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       },
 
       {
@@ -141,8 +151,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setDetail(data);
   };
 
+  const cancle = (data: IHardwareResponse) => {
+    setIsCancleModalVisible(true);
+    setDetail(data);
+  };
+
   const OnAcceptRequest = (id: number, assigned_status: number) => {
-    // setidConfirm(id);
     confirmHardware(id, assigned_status);
   };
 
@@ -156,12 +170,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (idConfirm !== -1) {
-  // confirmHardware(idConfirm);
-  //   }
-  // }, [idConfirm, mutate]);
-
   useEffect(() => {
     let arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
@@ -170,7 +178,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   }, [isLoadingSendRequest]);
 
   return (
-    <List title="Tài sản của tôi">
+    <List title={t("user.label.title.name")}>
       <TableAction searchFormProps={searchFormProps} />
 
       <MModal
@@ -178,7 +186,18 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
-        <UserShow setIsModalVisible={setIsModalVisible} detail={detail} />
+        <UserShow setIsModalVisible={setIsShowModalVisible} detail={detail} />
+      </MModal>
+      <MModal
+        title={t("user.label.title.cancle")}
+        setIsModalVisible={setIsCancleModalVisible}
+        isModalVisible={isCancleModalVisible}
+      >
+        <CancleAsset
+          setIsModalVisible={setIsCancleModalVisible}
+          isModalVisible={isCancleModalVisible}
+          data={detail}
+        />
       </MModal>
       <Table {...tableProps} rowKey="id">
         {collumns.map((col) => (
@@ -220,27 +239,21 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 </Popconfirm>
               )}
               {record.assigned_status === 0 && (
-                <Popconfirm
-                  title={t("request.label.button.refuse")}
-                  onConfirm={() => OnAcceptRequest(record.id, 2)}
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                      ? false
+                      : true
+                  }
+                  onClick={() => cancle(record)}
                 >
-                  {isLoadingArr[record.id] !== false && (
-                    <Button
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                    >
-                      {t("request.label.button.refuse")}
-                    </Button>
-                  )}
-                </Popconfirm>
+                  {t("request.label.button.refuse")}
+                </Button>
               )}
             </Space>
           )}

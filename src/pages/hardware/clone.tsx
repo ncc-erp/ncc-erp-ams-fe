@@ -48,7 +48,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const t = useTranslate();
 
   useEffect(() => {
-    setChecked(props.data?.requestable === 1 ? true : false);
+    setChecked(props.data?.requestable === "1" ? true : false);
   }, [props]);
 
   enum EStatus {
@@ -148,12 +148,10 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-
     formData.append("status_id", event.status_label.toString());
+
     if (event.user_id !== undefined)
       formData.append("assigned_to", event.user_id.toString());
-    // if (event.physical !== undefined) formData.append("physical", event.physical.toString())
-    // if (event.location !== undefined) formData.append("location_id", event.location.toString());
 
     formData.append("warranty_months", event.warranty_months);
 

@@ -4,7 +4,7 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList, HardwareShow } from "pages/hardware";
+import { HardwareList } from "pages/hardware";
 import {
   Title,
   Header,
@@ -14,6 +14,7 @@ import {
   OffLayoutArea,
 } from "components/layout";
 import { useTranslation } from "react-i18next";
+
 import { DashboardPage } from "pages/dashboard";
 import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
@@ -40,14 +41,13 @@ function App() {
         {
           name: "Hardware",
           list: HardwareList,
-          show: HardwareShow,
         },
         {
           name: "Tạo request",
           list: RequestList,
         },
         {
-          name: "Users",
+          name: "Tài sản của tôi",
           list: UserList,
         },
       ]}
