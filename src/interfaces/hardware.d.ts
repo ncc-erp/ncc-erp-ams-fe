@@ -44,6 +44,9 @@ export interface IHardwareUpdateRequest {
   location: number;
   physical: number;
   requestable: number;
+
+  reason: string;
+  assigned_status: number;
 }
 export interface IHardwareResponse {
   id: number;
@@ -88,7 +91,7 @@ export interface IHardwareResponse {
   };
   assigned_to: number;
   last_audit_date: string;
-  requestable: number;
+  requestable: string;
   physical: number;
 
   note: string;
@@ -255,6 +258,5 @@ export interface IHardwareResponseCheckin {
     date: string;
     formatted: string;
   };
-  
   user_can_checkout: boolean;
 }
