@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { LayoutProps, usePermissions, useNavigation } from "@pankod/refine-core";
-import routerProvider from "@pankod/refine-react-router-v6";
+import { LayoutProps } from "@pankod/refine-core";
 import { AntdLayout, Grid } from "@pankod/refine-antd";
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -11,11 +10,7 @@ export const Layout: React.FC<LayoutProps> = ({
   Footer,
   OffLayoutArea,
 }) => {
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const { pathname } = routerProvider.useLocation();
-  const { push } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
-
 
   return (
     <AntdLayout style={{ minHeight: "100vh", flexDirection: "row" }}>
