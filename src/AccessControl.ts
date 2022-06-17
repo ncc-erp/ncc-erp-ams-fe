@@ -27,11 +27,11 @@ p, admin, assets/*, (edit)|(show)|(clone)|(checkout)
 p, admin, Tạo request, (list)|(create)
 p, admin, Tạo request/*, (edit)|(show)|(delete)
 
-p, admin, Users, list
-p, admin, Users/*, (show)|(confirm)|(refuse)
+p, admin, Tài sản của tôi, list
+p, admin, Tài sản của tôi/*, (show)|(confirm)|(refuse)
 
 p, user, dashboard, list
-p, user, Users, (list)
-p, user, Users/*, (show)|(confirm)|(refuse)
+p, user, Tài sản của tôi, (list)
+p, user, Tài sản của tôi/*, (show)|(confirm)|(refuse)
 
 `);
