@@ -209,5 +209,14 @@
         "detail":"Chi tiết User"
       }
     }
+  },
+  "resource": {
+    "dashboard": "dashboard",
+    "assets": "assets",
+    "request": "Tạo request",
+    "users": "Tài sản của tôi"
+  },
+  "vi": {
+    "vietnamese": "Vietnamese"
   }
 }

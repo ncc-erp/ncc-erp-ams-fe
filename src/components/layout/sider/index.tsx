@@ -9,15 +9,16 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
-import { axiosInstance } from "providers/axios";
+import { UserAPI } from "../../../api/useApi";
+import { GETME_API } from "api/baseApi";
 
 const { RightOutlined, LogoutOutlined } = Icons;
 
 interface ISiderProps {
-  resetRef: () => void
+  setIsReloadPermission: () => void
 }
 
-export const Sider: React.FC<ISiderProps> = ({ resetRef }) => {
+export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
@@ -40,16 +41,18 @@ export const Sider: React.FC<ISiderProps> = ({ resetRef }) => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
-    resetRef();
+    setIsReloadPermission();
   };
 
   const [currentUser, setCurrentUser] = useState<any>(null);
+
   useEffect(() => {
-    const getUser = async () => {
-      const dataRespone = await axiosInstance.get("api/v1/hardware/me");
-      setCurrentUser(dataRespone.data.role);
-    }
-    getUser();
+    UserAPI.getAll(GETME_API).then(
+      function (response) {
+        setCurrentUser(response.data.role)
+      }
+    ).catch(function (error) {
+    });
   }, [])
 
   return (

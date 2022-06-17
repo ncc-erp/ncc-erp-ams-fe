@@ -4,6 +4,7 @@ import {
   useGetIdentity,
   useLogout,
   useNavigation,
+  useTranslate,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -21,16 +22,18 @@ const { LogoutOutlined } = Icons;
 const { Text } = Typography;
 
 interface IHeaderProps {
-  resetRef: () => void
+  setIsReloadPermission: () => void
 }
 
-export const Header: React.FC<IHeaderProps> = ({ resetRef }) => {
+export const Header: React.FC<IHeaderProps> = ({ setIsReloadPermission }) => {
+  const translate = useTranslate()
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
   const { push } = useNavigation();
+
   const clientId = process.env.GOOGLE_CLIENT_ID
     ? process.env.GOOGLE_CLIENT_ID
     : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
@@ -57,7 +60,7 @@ export const Header: React.FC<IHeaderProps> = ({ resetRef }) => {
           </span>
         }
       >
-        Vietnamese
+        {translate("vi.vietnamese")}
       </Menu.Item>
     </Menu>
   );
@@ -75,7 +78,7 @@ export const Header: React.FC<IHeaderProps> = ({ resetRef }) => {
     >
       <Button type="link" onClick={() => {
         logoutAccount()
-        resetRef()
+        setIsReloadPermission()
       }}>
         <LogoutOutlined />
       </Button>

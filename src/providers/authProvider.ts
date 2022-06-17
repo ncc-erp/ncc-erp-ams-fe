@@ -1,9 +1,9 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
 import { axiosInstance } from "./axios";
+import { role } from "mock";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
-export const role = { admin: "admin", user: "user" };
 
 export const authProvider: AuthProvider = {
   getToken: () => {

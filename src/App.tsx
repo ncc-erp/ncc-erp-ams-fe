@@ -1,30 +1,31 @@
 import { Refine } from "@pankod/refine-core";
-import { notificationProvider, Layout } from "@pankod/refine-antd";
+import { notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList, HardwareShow } from "pages/hardware";
+import { HardwareList } from "pages/hardware";
 import {
   Title,
   Header,
   Sider,
   Footer,
+  Layout,
   OffLayoutArea,
 } from "components/layout";
 import { useTranslation } from "react-i18next";
+
 import { DashboardPage } from "pages/dashboard";
 import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
 import { newEnforcer } from "casbin.js";
 import { adapter, model } from "AccessControl";
-import { useEffect, useRef, useState } from "react";
-import { ModelList } from "pages/model/list";
+import { useRef, useState } from "react";
 
 function App() {
   const { t, i18n } = useTranslation();
-  const refCheck = useRef(false);
+  const isReloadPermission = useRef(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
@@ -32,8 +33,8 @@ function App() {
     getLocale: () => i18n.language,
   };
 
-  const resetRef = () => {
-    refCheck.current = false;
+  const setIsReloadPermission = () => {
+    isReloadPermission.current = false;
   }
 
   return (
@@ -47,9 +48,9 @@ function App() {
       accessControlProvider={{
         can: async ({ resource, action, params }) => {
           let role = currentUser;
-          if (refCheck.current === false || role === null) {
+          if (isReloadPermission.current === false || role === null) {
             role = await authProvider.getPermissions();
-            refCheck.current = true;
+            isReloadPermission.current = true;
             setCurrentUser(role);
           }
           const enforcer = await newEnforcer(model, adapter);
@@ -74,32 +75,37 @@ function App() {
             );
             return Promise.resolve({ can });
           }
+
           const can = await enforcer.enforce(role, resource, action);
           return Promise.resolve({ can });
         },
       }}
       resources={[
         {
-          name: "assets",
+          name: t("resource.assets"),
           list: HardwareList,
-          show: HardwareShow
+          options: {
+            route: "assets",
+          },
         },
         {
-          name: "Tạo request",
+          name: t("resource.request"),
           list: RequestList,
+          options: {
+            route: "create-request",
+          },
         },
         {
-          name: "Users",
+          name: t("resource.users"),
           list: UserList,
-        },
-        {
-          name: "Model",
-          list: ModelList,
+          options: {
+            route: "users",
+          },
         },
       ]}
       Title={Title}
-      Header={() => <Header resetRef={resetRef} />}
-      Sider={() => <Sider />}
+      Header={() => <Header setIsReloadPermission={setIsReloadPermission} />}
+      Sider={() => <Sider setIsReloadPermission={setIsReloadPermission} />}
       Footer={Footer}
       Layout={Layout}
       OffLayoutArea={OffLayoutArea}
