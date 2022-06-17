@@ -1,7 +1,8 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
-import { axiosInstance } from "./axios";
 import { role } from "mock";
+import { UserAPI } from "api/userApi";
+import { GETME_API } from "api/baseApi";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -58,7 +59,7 @@ export const authProvider: AuthProvider = {
   },
   getPermissions: async () => {
     const auth = localStorage.getItem(TOKEN_KEY);
-    const dataRespone = await axiosInstance.get("api/v1/hardware/me");
+    const dataRespone = await UserAPI.getAll(GETME_API);
     if (auth && dataRespone.data.role === role.admin) {
       return Promise.resolve(dataRespone.data.role);
     } else if (auth && dataRespone.data.role === role.user) {
