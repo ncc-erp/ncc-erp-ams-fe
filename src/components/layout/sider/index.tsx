@@ -9,11 +9,16 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
-import { axiosInstance } from "providers/axios";
+import { UserAPI } from "../../../api/userApi";
+import { GETME_API } from "api/baseApi";
 
 const { RightOutlined, LogoutOutlined } = Icons;
 
-export const Sider: React.FC = () => {
+interface ISiderProps {
+  setIsReloadPermission: () => void
+}
+
+export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
@@ -36,18 +41,19 @@ export const Sider: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    setIsReloadPermission();
   };
 
   const [currentUser, setCurrentUser] = useState<any>(null);
-  useEffect(() => {
-    const getUser = async () => {
-      const dataRespone = await axiosInstance.get("api/v1/hardware/me");
-      setCurrentUser(dataRespone.data.role);
-    }
-    console.log("currentUser role: ", currentUser)
-    getUser();
-  }, [])
 
+  useEffect(() => {
+    UserAPI.getAll(GETME_API).then(
+      function (response) {
+        setCurrentUser(response.data.role)
+      }
+    ).catch(function (error) {
+    });
+  }, [])
 
   return (
     <AntdLayout.Sider
@@ -99,7 +105,7 @@ export const Sider: React.FC = () => {
           );
         })) : (
           menuItems.filter((item) =>
-            item.label === "Users" || item.label === "Dashboard"
+            item.key === "/users" || item.key === "dashboard"
           ).map(({ icon, label, route }) => {
             const isSelected = route === selectedKey;
             return (
@@ -124,81 +130,6 @@ export const Sider: React.FC = () => {
             );
           })
         )}
-
-        {/* {
-          menuItems.map(({ icon, label, route }) => {
-            const isSelected = route === selectedKey;
-            return (
-              <Menu.Item
-                style={{
-                  fontWeight: isSelected ? "bold" : "normal",
-                }}
-                key={route}
-                icon={icon}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {label}
-                  {!collapsed && isSelected && <RightOutlined />}
-                </div>
-              </Menu.Item>
-            );
-          })
-        } */}
-
-        {/* {currentUser && currentUser.id === 393 && menuItems.map(({ icon, label, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={icon}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {label}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        }) || menuItems.filter((item) =>
-          item.label === "Users"
-        ).map(({ icon, label, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={icon}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {label}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        })
-        } */}
 
         < Menu.Item key="logout" icon={< LogoutOutlined />}>
           {translate("buttons.logout", "Logout")}

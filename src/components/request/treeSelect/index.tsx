@@ -3,6 +3,7 @@ import { TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
 import { IEntryType, ITreeEntryType } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type TreeSelectComponentProps = {
   setEntryId: (data: number) => void;
@@ -10,6 +11,8 @@ type TreeSelectComponentProps = {
 
 export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   const { setEntryId } = props;
+  const { t } = useTranslation();
+
   const [value, setValue] = useState<number[]>();
   const [treeData, setTreeData] = useState<ITreeEntryType[]>([]);
 
@@ -47,7 +50,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
     onChange: onChange,
     treeCheckable: false,
     showCheckedStrategy: TreeSelect.SHOW_CHILD,
-    placeholder: "Lựa chọn tài sản",
+    placeholder: t("hardware.label.placeholder.choiceAsset"),
     style: {
       width: "100%",
     },

@@ -156,26 +156,35 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.serial !== undefined) formData.append("serial", event.serial);
     formData.append("model_id", event.model.toString());
     formData.append("rtd_location_id", event.rtd_location.toString());
-    if (event.order_number !== undefined) formData.append("order_number", event.order_number);
+
+    if (event.order_number !== undefined)
+      formData.append("order_number", event.order_number);
 
     formData.append("status_id", event.status_label.toString());
-    if (event.user_id !== undefined) formData.append("assigned_to", event.user_id.toString());
+
+    if (event.user_id !== undefined)
+      formData.append("assigned_to", event.user_id.toString());
     // if (event.physical !== undefined) formData.append("physical", event.physical.toString());
     // if (event.location !== undefined) formData.append("location_id", event.location.toString());
 
-    if (event.purchase_cost !== undefined) formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== undefined) formData.append("purchase_date", event.purchase_date);
+    if (event.purchase_cost !== undefined)
+      formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== undefined)
+      formData.append("purchase_date", event.purchase_date);
 
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes);
 
-    if (event.requestable !== undefined) formData.append("requestable", event.requestable.toString());
+    if (event.requestable !== undefined)
+      formData.append("requestable", event.requestable.toString());
 
-    if (event.image !== null && event.image !== undefined) { formData.append("image", event.image); }
+    if (event.image !== null && event.image !== undefined) {
+      formData.append("image", event.image);
+    }
 
     setPayload(formData);
-    // form.resetFields();
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -224,8 +233,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       form.setFieldsValue({
         requestable: 1,
       });
-    else
-      form.setFieldsValue({ requestable: 0 })
+    else form.setFieldsValue({ requestable: 0 });
   };
 
   useEffect(() => {

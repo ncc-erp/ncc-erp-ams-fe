@@ -277,7 +277,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
           </Form.Item>
 
           <Button type="primary" htmlType="submit" loading={isLoading}>
-            Submit
+            {t("request.label.button.create")}
           </Button>
         </Form>
       </Col>
