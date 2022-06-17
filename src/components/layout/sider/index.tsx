@@ -9,7 +9,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
-import { UserAPI } from "../../../api/useApi";
+import { UserAPI } from "../../../api/userApi";
 import { GETME_API } from "api/baseApi";
 
 const { RightOutlined, LogoutOutlined } = Icons;

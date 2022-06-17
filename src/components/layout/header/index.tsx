@@ -60,7 +60,7 @@ export const Header: React.FC<IHeaderProps> = ({ setIsReloadPermission }) => {
           </span>
         }
       >
-        {translate("vi.vietnamese")}
+        {translate("lang.vi")}
       </Menu.Item>
     </Menu>
   );
