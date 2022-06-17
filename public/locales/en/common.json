@@ -86,8 +86,7 @@
   "hardware": {
     "label": {
         "field": {
-          "status": "Status",
-          "checkoutTo": "Checkout to"
+          "checkoutTo": "Cấp phát đến"
         }
     }
   }
