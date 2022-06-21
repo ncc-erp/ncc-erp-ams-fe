@@ -117,7 +117,7 @@ export const Sider: React.FC = () => {
           })
         )}
 
-      </Menu>
+      </Menu >
     </AntdLayout.Sider >
   );
 };
