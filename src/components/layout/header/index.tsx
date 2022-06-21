@@ -2,6 +2,7 @@ import {
   useGetLocale,
   useSetLocale,
   useGetIdentity,
+  useLogout,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -9,38 +10,52 @@ import {
   Menu,
   Button,
   Icons,
-  Dropdown,
   Avatar,
   Typography,
 } from "@pankod/refine-antd";
+import { useGoogleLogout } from "react-google-login";
 import { useTranslation } from "react-i18next";
 
-const { DownOutlined } = Icons;
+const { LogoutOutlined } = Icons;
+
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
+
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
-
+  const { mutate: logout } = useLogout();
   const currentLocale = locale();
+
+  const clientId = process.env.GOOGLE_CLIENT_ID
+    ? process.env.GOOGLE_CLIENT_ID
+    : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
+
+  const { signOut: signOutGoogle } = useGoogleLogout({
+    clientId,
+    cookiePolicy: "single_host_origin",
+  });
+
+  const logoutAccount = () => {
+    signOutGoogle();
+    logout();
+  };
 
   const menu = (
     <Menu selectedKeys={[currentLocale]}>
-      {[...(i18n.languages || [])].sort().map((lang: string) => (
-        <Menu.Item
-          key={lang}
-          onClick={() => changeLanguage(lang)}
-          icon={
-            <span style={{ marginRight: 8 }}>
-              <Avatar size={16} src={`/images/flags/${lang}.svg`} />
-            </span>
-          }
-        >
-          {lang === "en" ? "English" : "German"}
-        </Menu.Item>
-      ))}
+      <Menu.Item
+        key="vi"
+        onClick={() => changeLanguage("vi")}
+        icon={
+          <span style={{ marginRight: 8 }}>
+            <Avatar size={16} src={`/images/flags/${"vi"}.svg`} />
+          </span>
+        }
+      >
+        {t("lang.vi")}
+      </Menu.Item>
     </Menu>
   );
 
@@ -55,15 +70,22 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Dropdown overlay={menu}>
+      <Button type="link" onClick={() => logoutAccount()}>
+        <LogoutOutlined />
+      </Button>
+      {/* <Dropdown overlay={menu}>
         <Button type="link">
           <Space>
             <Avatar size={16} src={`/images/flags/${currentLocale}.svg`} />
-            {currentLocale === "en" ? "English" : "German"}
+            {currentLocale === "en"
+              ? "English"
+              : currentLocale === "de"
+              ? "German"
+              : "Vietnamese"}
             <DownOutlined />
           </Space>
         </Button>
-      </Dropdown>
+      </Dropdown> */}
       <Space style={{ marginLeft: "8px" }}>
         {user?.name && (
           <Text ellipsis strong>

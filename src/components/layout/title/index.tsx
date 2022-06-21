@@ -1,30 +1,30 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import routerProvider from "@pankod/refine-react-router-v6";
 import { TitleProps } from "@pankod/refine-core";
 
 const { Link } = routerProvider;
+const logo: CSSProperties = {
+  height: "50px",
+  left: "50%",
+  position: "relative",
+  transform: "translateX(-50%)",
+  marginTop: "10px",
+  marginBottom: "10px"
+};
 
 export const Title: React.FC<TitleProps> = ({ collapsed }) => (
   <Link to="/">
     {collapsed ? (
       <img
-        src={"/refine-collapsed.svg"}
-        alt="Refine"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "12px 24px",
-        }}
+        src={"/images/global/nccsoft-logo-small.png"}
+        alt="NCC IT TOOL"
+        style={logo}
       />
     ) : (
       <img
-        src={"/refine.svg"}
-        alt="Refine"
-        style={{
-          width: "200px",
-          padding: "12px 24px",
-        }}
+        src={"/images/global/nccsoft-logo-small.png"}
+        alt="NCC IT TOOL"
+        style={logo}
       />
     )}
   </Link>

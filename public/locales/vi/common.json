@@ -1,0 +1,269 @@
+{
+  "lang":{
+    "vi":"Vietnamese"
+  },
+  "pages": {
+    "login": {
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "signinGoogle": "Sign in with google",
+      "username": "Username",
+      "password": "Password",
+      "remember": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "title": "Sign in your account",
+      "noAccount": "Don’t have an account?"
+    },
+    "error": {
+      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
+      "404": "Sorry, the page you visited does not exist.",
+      "resource404": "Are you sure you have created the {{resource}} resource.",
+      "backHome": "Back Home"
+    }
+  },
+  "buttons": {
+    "create": "Create",
+    "save": "Save",
+    "logout": "Logout",
+    "delete": "Delete",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "confirm": "Are you sure?",
+    "filter": "Filter",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "show": "Show",
+    "undo": "Undo",
+    "import": "Import",
+    "clone": "Clone",
+    "notAccessTitle": "You don't have permission to access"
+  },
+  "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+  "notifications": {
+    "success": "Successful",
+    "error": "Error (status code: {{statusCode}})",
+    "undoable": "You have {{seconds}} seconds to undo",
+    "createSuccess": "Successfully created {{resource}}",
+    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "Successfully deleted {{resource}}",
+    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "Successfully edited {{resource}}",
+    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
+    "importProgress": "Importing: {{processed}}/{{total}}"
+  },
+  "loading": "Loading",
+  "tags": {
+    "clone": "Clone"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "assetFilter": {
+      "filters" : {
+        "label": {
+          "from": "Từ ngày",
+          "to": "Đến ngày",
+          "filters": "Bộ lọc"
+        }
+      }
+    }
+  },
+  "posts": {
+    "posts": "Posts",
+    "fields": {
+      "id": "Id",
+      "title": "Title",
+      "category": {
+        "title": "Category",
+        "filter": {
+          "placeholder": "Select Category"
+        }
+      },
+      "status": {
+        "title": "Trạng thái",
+        "published": "Published",
+        "draft": "Draft",
+        "rejected": "Rejected"
+      },
+      "content": "Content",
+      "createdAt": "Created At"
+    },
+    "titles": {
+      "create": "Create Post",
+      "edit": "Edit Post",
+      "list": "Posts",
+      "show": "Show Post"
+    }
+  },
+  "table": {
+    "actions": "Actions",
+    "search": "Tìm kiếm",
+    "checkAll": "Check all"
+  },
+  "hardware": {
+    "label": {
+        "field": {
+          "nameCompany": "Công ty",
+          "propertyCard": "Thẻ tài sản",
+          "serial": "Số Sê-ri",
+          "propertyType": "Kiểu tài sản",
+          "status": "Trạng thái",
+          "checkoutTo": "Cấp phát đến",
+          "user": "Người dùng",
+          "asset": "Tài sản",
+          "location": "Địa phương",
+          "assetName": "Tên tài sản",
+          "dateBuy": "Ngày mua",
+          "supplier": "Nhà cung cấp",
+          "orderNumber": "Số đơn đặt hàng",
+          "cost": "Chi phí mua hàng",
+          "insurance": "Bảo hành",
+          "usd": "VND",
+          "month": "Tháng",
+          "notes": "Mô tả",
+          "locationFix": "Chi nhánh",
+          "checkbox": "Cho phép đề xuất",
+          "device": "Thiết bị",
+          "dateCheckout": "Ngày cấp phát",
+          "dateWantCheckin": "Ngày mong muốn thu hồi",
+          "dateCheckin": "Ngày thu hồi",
+          "note": "Ghi chú",
+          "category": "Thể loại",
+          "rtd_location": "Vị trí"
+        },
+        "placeholder": {
+          "nameCompany": "Chọn công ty",
+          "propertyCard": "Thẻ tài sản",
+          "serial": "Serial",
+          "propertyType": "Lựa chọn một kiểu tài sản",
+          "status": "Chọn tình trạng",
+          "checkoutTo": "Cấp phát đến",
+          "user": "Lựa chọn một người dùng",
+          "asset": "Chọn tài sản",
+          "location": "Lựa chọn một địa phương",
+          "supplier": "Lựa chọn nhà cung cấp",
+          "assetName": "Tên tài sản",
+          "orderNumber": "Mã order",
+          "cost": "Chi phí mua hàng",
+          "insurance": "Bảo hành",
+          "choiceAsset": "Lựa chọn tài sản"
+        },
+        "message": {
+          "required":"bắt buộc"
+        },
+        "button": {
+          "create": "Thêm mới",
+          "update": "Chỉnh sửa",
+          "clone": "Clone",
+          "checkout": "Cấp phát",
+          "checkin": "Thu hồi"
+        },
+        "title": {
+          "create":"Tạo mới",
+          "edit": "Chỉnh sửa",
+          "clone": "Clone",
+          "checkout": "Cấp phát",
+          "checkin": "Thu hồi",
+          "detail": "Chi tiết tài sản"
+        },
+        "tooltip":{
+          "create": "Tạo hardware",
+          "viewDetail": "Xem chi tiết",
+          "clone": "Clone tài sản",
+          "edit": "Chỉnh sửa tài sản",
+          "delete": "Xóa tài sản"
+        }
+    }
+  },
+  "request": {
+    "label": {
+      "field": {
+        "name": "Tên yêu cầu",
+        "branch": "Chọn nhánh",
+        "supplier": "Nhà cung cấp",
+        "entry": "Loại tài sản",
+        "note": "Mô tả",
+        "nameAsset": "Tên thiết bị",
+        "category": "Loại",
+        "location": "Vị trí",
+        "nameRequest": "Tên yêu cầu",
+        "branchRequest": "Nhánh",
+        "entryRequest": "Loại",
+        "countAsset": "Số lượng loại thiết bị",
+        "totalAsset": "Số lượng",
+        "status": "Trạng thái",
+        "asset_ids": "Thiết bị",
+        "price": "Giá",
+        "image": "Ảnh thiết bị",
+        "warranty_months": "Bảo hành",
+        "model": "Kiểu tài sản"
+        
+      },
+      "placeholder": {
+        "name": "Nhập tên",
+        "branch": "Chọn nhánh",
+        "supplier": "Lựa chọn nhà cung cấp",
+        "asset_ids": "Lựa chọn thiết bị"
+      },
+      "button": {
+        "create":"Tạo mới",
+        "send": "Gửi",
+        "delete": "Xóa",
+        "cancle": "Từ chối",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối"
+      },
+      "message": {
+        "required": "bắt buộc",
+        "assetsRequired": "* Bạn chưa chọn thiết bị"
+      },
+      "title": {
+        "create": "Tạo Request",
+        "detail": "Chi tiết Request"
+      }
+    }
+  },
+  "user":{
+    "label": {
+      "title": {
+        "name": "Tài sản của tôi",
+        "detail":"Chi tiết tài sản của tôi"
+      },
+      "field":{
+        "notes": "Mô tả",
+        "category": "Thể loại",
+        "status": "Trạng thái",
+        "location": "Vị trí",
+        "supplier": "Nhà cung cấp",
+        "name": "Tên tài sản",
+        "model": "Kiểu tài sản",
+        "insurance": "Bảo hành"
+      }
+    }
+  },
+  "category":{
+    "label":{
+      "title": {
+        "create":"Tạo danh mục",
+        "edit":"Chỉnh sửa danh mục"
+      },
+      "field": {
+        "create": "Tạo danh mục",
+        "edit": "Chỉnh sửa danh mục",
+        "delete": "Xóa danh mục",
+        "name": "Tên danh mục",
+        "category": "Loại",
+        "categoryEULA": "Danh mục EULA",
+        "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
+        "sendMail": "Gửi email đến người dùng khi checkin/checkout",
+        "image": "Tải hình"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      }
+    }
+  }
+}

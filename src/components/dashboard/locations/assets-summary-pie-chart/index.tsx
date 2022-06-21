@@ -1,9 +1,6 @@
-import React from "react";
 import { Pie, PieConfig } from "@ant-design/plots";
-import { renderToString } from 'react-dom/server';
-import { Typography } from "@pankod/refine-antd";
+import { renderToString, } from 'react-dom/server';
 import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
-
 
 type AssetsSummaryPieChartProps = {
   name: string;
@@ -17,6 +14,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const data = categories;
 
   const config: PieConfig = {
+
     appendPadding: 10,
     data,
     angleField: 'assets_count',
@@ -35,21 +33,22 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
     tooltip: {
       customContent: (title, data) => {
         const calculation = (value: number, sum: number) => {
-          if (value === 0){
+          if (value === 0) {
             return "0";
           }
           return value + "(" + ((value / sum) * 100).toFixed(2) + "%)";
         };
         const Ul = <ul>
-                      {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
-                          <li>{item.name} <Typography.Text strong>{calculation(item.assets_count,data[0]?.data?.assets_count)}</Typography.Text></li>
-                      ))}
-                   </ul>
-        const Text = <Typography.Text strong>{title}</Typography.Text>
+          {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
+            <li key={item.id}>{item.name}<strong>{calculation(item.assets_count, data[0]?.data?.assets_count)}</strong></li>
+          ))}
+        </ul>
+        const Text = <strong>{title}</strong>
         return `<div>
                   ${renderToString(Text)}
                   ${renderToString(Ul)}
                 </div>`;
+
       }
     },
     interactions: [

@@ -1,10 +1,10 @@
 import { Refine } from "@pankod/refine-core";
-import { notificationProvider, LoginPage } from "@pankod/refine-antd";
+import { notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList, HardwareCreate, HardwareEdit, HardwareShow } from "pages/hardware";
+import { HardwareList } from "pages/hardware";
 import {
   Title,
   Header,
@@ -14,7 +14,11 @@ import {
   OffLayoutArea,
 } from "components/layout";
 import { useTranslation } from "react-i18next";
+
 import { DashboardPage } from "pages/dashboard";
+import { RequestList } from "pages/request";
+import { LoginPage } from "pages/login/login";
+import { UserList } from "pages/users/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -35,11 +39,16 @@ function App() {
       LoginPage={LoginPage}
       resources={[
         {
-          name: "hardware",
+          name: "Hardware",
           list: HardwareList,
-          create: HardwareCreate,
-          edit: HardwareEdit,
-          show: HardwareShow,
+        },
+        {
+          name: "Tạo request",
+          list: RequestList,
+        },
+        {
+          name: "Tài sản của tôi",
+          list: UserList,
         },
       ]}
       Title={Title}

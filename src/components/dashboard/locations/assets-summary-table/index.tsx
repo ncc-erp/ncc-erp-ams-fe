@@ -72,6 +72,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         pending: pending,
         broken: broken,
         assign: assign,
+        key: category.id,
         ready_to_deploy: ready_to_deploy,
       };
     });
@@ -111,6 +112,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       dataIndex: "ready_to_deploy",
     },
   ];
+
   return (
     <Table
       columns={columns}
