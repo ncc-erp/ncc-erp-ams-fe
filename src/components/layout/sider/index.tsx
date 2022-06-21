@@ -5,6 +5,7 @@ import {
   useLogout,
   useTitle,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
@@ -35,7 +36,10 @@ export const Sider: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    push("/login");
   };
+
+  const { data: permissionsData } = usePermissions();
 
   return (
     <AntdLayout.Sider
@@ -63,7 +67,7 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {menuItems.map(({ icon, name, route }) => {
+        {(permissionsData && permissionsData.admin === "1") ? (menuItems.map(({ icon, label, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item
@@ -80,17 +84,40 @@ export const Sider: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                {name}
+                {label}
                 {!collapsed && isSelected && <RightOutlined />}
               </div>
             </Menu.Item>
           );
-        })}
+        })) : (
+          menuItems.filter((item) =>
+            item.name === `${translate('resource.dashboard')}` || item.name === `${translate('resource.users')}`
+          ).map(({ icon, label, route }) => {
+            const isSelected = route === selectedKey;
+            return (
+              <Menu.Item
+                style={{
+                  fontWeight: isSelected ? "bold" : "normal",
+                }}
+                key={route}
+                icon={icon}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {label}
+                  {!collapsed && isSelected && <RightOutlined />}
+                </div>
+              </Menu.Item>
+            );
+          })
+        )}
 
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
-          {translate("buttons.logout", "Logout")}
-        </Menu.Item>
       </Menu>
-    </AntdLayout.Sider>
+    </AntdLayout.Sider >
   );
 };

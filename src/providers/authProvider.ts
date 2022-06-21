@@ -1,8 +1,10 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
+import { UserAPI } from "api/userApi";
+import { GETME_API } from "api/baseApi";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
-
+export const STORE_PERMISSION = "permissions";
 
 export const authProvider: AuthProvider = {
   getToken: () => {
@@ -24,17 +26,20 @@ export const authProvider: AuthProvider = {
           username: username,
           password: password,
         };
-
-    return post({
+    const data = await post({
       url: url,
       payload: payload,
-    }).then((data: any) => {
-      localStorage.setItem(TOKEN_KEY, data.data.access_token);
-      return;
-    }); // todo others
+    });
+    localStorage.setItem(TOKEN_KEY, data.data.access_token);
+    const permissionRes = await UserAPI.getAll(GETME_API);
+    localStorage.setItem(
+      STORE_PERMISSION,
+      JSON.stringify(permissionRes.data.permissions)
+    );
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(STORE_PERMISSION);
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
@@ -46,7 +51,6 @@ export const authProvider: AuthProvider = {
 
     return Promise.reject();
   },
-  getPermissions: () => Promise.resolve(),
   getUserIdentity: async () => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) {
@@ -56,5 +60,9 @@ export const authProvider: AuthProvider = {
     return Promise.resolve({
       id: 1,
     });
+  },
+  getPermissions: () => {
+    const permissions = localStorage.getItem(STORE_PERMISSION);
+    return Promise.resolve(JSON.parse(permissions as string));
   },
 };
