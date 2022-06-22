@@ -3,6 +3,8 @@ import {
   useSetLocale,
   useGetIdentity,
   useLogout,
+  useNavigation,
+  useTranslate,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -14,23 +16,22 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
-import { useTranslation } from "react-i18next";
 
 const { LogoutOutlined } = Icons;
 
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const { t } = useTranslation();
-
+  const translate = useTranslate()
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
+  const { push } = useNavigation();
 
-  const clientId = process.env.GOOGLE_CLIENT_ID
-    ? process.env.GOOGLE_CLIENT_ID
+  const clientId = process.env.REACT_APP_AUTH_SECRET_KEY
+    ? process.env.REACT_APP_AUTH_SECRET_KEY
     : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
 
   const { signOut: signOutGoogle } = useGoogleLogout({
@@ -41,6 +42,7 @@ export const Header: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    push("/login");
   };
 
   const menu = (
@@ -54,7 +56,7 @@ export const Header: React.FC = () => {
           </span>
         }
       >
-        {t("lang.vi")}
+        {translate("lang.vi")}
       </Menu.Item>
     </Menu>
   );
@@ -70,7 +72,9 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Button type="link" onClick={() => logoutAccount()}>
+      <Button type="link" onClick={() => {
+        logoutAccount()
+      }}>
         <LogoutOutlined />
       </Button>
       {/* <Dropdown overlay={menu}>
