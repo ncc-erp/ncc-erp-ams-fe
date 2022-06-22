@@ -137,16 +137,6 @@ export const Sider: React.FC = () => {
                         <DashboardOutlined />
                       ) : name === "Thiết bị" ? (
                         <DesktopOutlined />
-                      ) : name === "Tạo request" ? (
-                        <PullRequestOutlined />
-                      ) : name === "Tài sản của tôi" ? (
-                        <ScheduleOutlined />
-                      ) : name === "Danh mục" ? (
-                        <UnorderedListOutlined />
-                      ) : name === "Nhà sản xuất" ? (
-                        <IdcardOutlined />
-                      ) : name === "Địa phương" ? (
-                        <EnvironmentOutlined />
                       ) : (
                         ""
                       )
