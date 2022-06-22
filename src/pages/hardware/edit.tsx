@@ -23,7 +23,7 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
-import { HARDWARE_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API } from "api/baseApi";
+import { HARDWARE_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API } from "api/baseApi";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -57,7 +57,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_API,
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {

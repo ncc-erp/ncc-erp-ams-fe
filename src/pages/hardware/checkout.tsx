@@ -26,7 +26,7 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
-import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, USERS_API } from "api/baseApi";
+import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, USERS_API } from "api/baseApi";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -55,7 +55,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_API,
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {

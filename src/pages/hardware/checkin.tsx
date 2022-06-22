@@ -22,7 +22,7 @@ import {
 import { IModel } from "interfaces/model";
 
 import { ICompany } from "interfaces/company";
-import { HARDWARE_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API } from "api/baseApi";
+import { HARDWARE_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API } from "api/baseApi";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -50,7 +50,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_API,
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {

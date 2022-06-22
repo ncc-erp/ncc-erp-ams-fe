@@ -3,7 +3,7 @@ export const GETME_API = "api/v1/hardware/me";
 export const DASHBOARD_API = "api/v1/dashboard";
 
 export const HARDWARE_API = "api/v1/hardware";
-export const MODELS_API = "api/v1/models/selectlist";
+export const MODELS_SELECTLIST_API = "api/v1/models/selectlist";
 export const STATUSLABELS_API = "api/v1/statuslabels";
 export const LOCATIONS_API = "api/v1/locations";
 export const USERS_API = "api/v1/users/selectlist";

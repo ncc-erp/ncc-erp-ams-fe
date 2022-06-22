@@ -29,7 +29,7 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
-import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
+import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -64,7 +64,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_API,
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {

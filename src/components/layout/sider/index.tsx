@@ -11,7 +11,7 @@ import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
 
-const { RightOutlined, LogoutOutlined } = Icons;
+const { RightOutlined } = Icons;
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);

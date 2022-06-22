@@ -35,7 +35,7 @@ import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
 import { ICheckboxChange } from "interfaces";
-import { COMPANIES_API, HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
+import { COMPANIES_API, HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -63,7 +63,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_API,
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
