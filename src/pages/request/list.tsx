@@ -33,6 +33,7 @@ import { RequestCreate } from "./create";
 import { RequestShow } from "./show";
 import { TableAction } from "components/elements/tables/TableAction";
 import { IRequestResponse } from "interfaces/request";
+import { FINFAST_REQUEST_API, HARDWARE_API, SEND_REQUEST_API } from "api/baseApi";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -45,7 +46,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   const { mutate: muteDelete, data: dataDelete } = useDelete();
   const useHardwareNotRequest = useCustom<IHardwareCreateRequest>({
-    url: "api/v1/hardware",
+    url: HARDWARE_API,
     method: "get",
     config: {
       filters: [
@@ -68,7 +69,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
-      resource: "api/v1/finfast-request",
+      resource: FINFAST_REQUEST_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
@@ -93,7 +94,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     if (idSend !== -1) {
       mutate({
-        resource: "api/v1/finfast/outcome",
+        resource: SEND_REQUEST_API,
         values: {
           finfast_request_id: idSend,
         },
@@ -110,7 +111,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDelete = (id: BaseKey) => {
     muteDelete({
-      resource: "api/v1/finfast-request",
+      resource: FINFAST_REQUEST_API,
       id: id,
       mutationMode: "optimistic",
     });
@@ -278,8 +279,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                     >
                       {t("request.label.button.send")}

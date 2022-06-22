@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-import { useLogout, useTitle, useNavigation } from "@pankod/refine-core";
+import {
+  useTranslate,
+  useLogout,
+  useTitle,
+  useNavigation,
+  usePermissions,
+} from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
@@ -20,6 +26,7 @@ export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
+  const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
@@ -38,7 +45,10 @@ export const Sider: React.FC = () => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    push("/login");
   };
+
+  const { data: permissionsData } = usePermissions();
 
   return (
     <AntdLayout.Sider
@@ -66,47 +76,77 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {menuItems.map(({ icon, name, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={
-                name === "Dashboard" ? (
-                  <DashboardOutlined />
-                ) : name === "Thiết bị" ? (
-                  <DesktopOutlined />
-                ) : name === "Tạo request" ? (
-                  <PullRequestOutlined />
-                ) : name === "Tài sản của tôi" ? (
-                  <ScheduleOutlined />
-                ) : name === "Danh mục" ? (
-                  <UnorderedListOutlined />
-                ) : name === "Nhà sản xuất" ? (
-                  <IdcardOutlined />
-                ) : name === "Địa phương" ? (
-                  <EnvironmentOutlined />
-                ) : (
-                  ""
-                )
-              }
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {name}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        })}
+        {permissionsData && permissionsData.admin === "1"
+          ? menuItems.map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === "Thống kê" ? (
+                      <DashboardOutlined />
+                    ) : name === "Thiết bị" ? (
+                      <DesktopOutlined />
+                    ) : name === "Tạo request" ? (
+                      <PullRequestOutlined />
+                    ) : name === "Tài sản của tôi" ? (
+                      <ScheduleOutlined />
+                    ) : name === "Danh mục" ? (
+                      <UnorderedListOutlined />
+                    ) : name === "Nhà sản xuất" ? (
+                      <IdcardOutlined />
+                    ) : name === "Địa phương" ? (
+                      <EnvironmentOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })
+          : menuItems
+              .filter(
+                (item) =>
+                  item.name === `${translate("resource.dashboard")}` ||
+                  item.name === `${translate("resource.users")}`
+              )
+              .map(({ icon, label, route }) => {
+                const isSelected = route === selectedKey;
+                return (
+                  <Menu.Item
+                    style={{
+                      fontWeight: isSelected ? "bold" : "normal",
+                    }}
+                    key={route}
+                    icon={icon}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      {label}
+                      {!collapsed && isSelected && <RightOutlined />}
+                    </div>
+                  </Menu.Item>
+                );
+              })}
       </Menu>
     </AntdLayout.Sider>
   );

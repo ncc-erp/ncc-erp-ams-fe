@@ -56,7 +56,7 @@
     "clone": "Clone"
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Thống kê",
     "assetFilter": {
       "filters" : {
         "label": {
@@ -341,5 +341,11 @@
         "update": "Chỉnh sửa"
       }
     }
+  },
+  "resource": {
+    "dashboard": "Thống kê",
+    "assets": "Thiết bị",
+    "request": "Tạo request",
+    "users": "Tài sản của tôi"
   }
 }

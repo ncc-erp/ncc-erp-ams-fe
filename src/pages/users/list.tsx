@@ -29,6 +29,7 @@ import { MModal } from "components/Modal/MModal";
 import { UserShow } from "./show";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
 import { CancleAsset } from "./cancel";
+import { ASSIGN_HARDWARE_API, HARDWARE_API } from "api/baseApi";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -47,7 +48,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
-      resource: "api/v1/hardware/assign",
+      resource: ASSIGN_HARDWARE_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
@@ -175,7 +176,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const confirmHardware = (id: number, assigned_status: number) => {
     mutate({
-      resource: "api/v1/hardware/" + id + "?_method=PUT",
+      resource: HARDWARE_API + "/" + id + "?_method=PUT",
       values: {
         send_accept: id,
         assigned_status: assigned_status,

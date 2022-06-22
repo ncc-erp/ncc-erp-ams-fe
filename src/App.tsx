@@ -19,9 +19,8 @@ import { DashboardPage } from "pages/dashboard";
 import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
-import { CategoryList } from "pages/categories";
-import { ManufacturesList } from "pages/manufacturers";
-import { LocationList } from "pages/location";
+import { newEnforcer } from "casbin.js";
+import { model, adapter } from "AccessControl";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -38,32 +37,62 @@ function App() {
       notificationProvider={notificationProvider}
       dataProvider={dataProvider}
       authProvider={authProvider}
-      DashboardPage={DashboardPage}
       LoginPage={LoginPage}
+      accessControlProvider={{
+        can: async ({ resource, action, params }) => {
+          let role = await authProvider.getPermissions();
+
+          const enforcer = await newEnforcer(model, adapter);
+          if (action === "delete" || action === "edit" || action === "show") {
+            const can = await enforcer.enforce(
+              role.admin,
+              `${resource}/${params.id}`,
+              action
+            );
+            return Promise.resolve({ can });
+          }
+
+          if (action === "field") {
+            const can = await enforcer.enforce(
+              role.admin,
+              `${resource}/${params.field}`,
+              action
+            );
+            return Promise.resolve({ can });
+          }
+
+          const can = await enforcer.enforce(role.admin, resource, action);
+          return Promise.resolve({ can });
+        },
+      }}
       resources={[
         {
-          name: "Thiết bị",
+          name: t("resource.dashboard"),
+          list: DashboardPage,
+          options: {
+            route: "dashboard",
+          },
+        },
+        {
+          name: t("resource.assets"),
           list: HardwareList,
+          options: {
+            route: "assets",
+          },
         },
         {
-          name: "Tạo request",
+          name: t("resource.request"),
           list: RequestList,
+          options: {
+            route: "create-request",
+          },
         },
         {
-          name: "Tài sản của tôi",
+          name: t("resource.users"),
           list: UserList,
-        },
-        {
-          name: "Danh mục",
-          list: CategoryList,
-        },
-        {
-          name: "Nhà sản xuất",
-          list: ManufacturesList,
-        },
-        {
-          name: "Địa phương",
-          list: LocationList,
+          options: {
+            route: "users",
+          },
         },
       ]}
       Title={Title}
