@@ -28,6 +28,7 @@ import { MModal } from "components/Modal/MModal";
 import { UserShow } from "./show";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
 import { CancleAsset } from "./cancel";
+import { ASSIGN_HARDWARE_API, HARDWARE_API } from "api/baseApi";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -49,7 +50,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
-      resource: "api/v1/hardware/assign",
+      resource: ASSIGN_HARDWARE_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
@@ -110,20 +111,20 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               value === 1
                 ? "Đã xác nhận"
                 : value === 2
-                ? "Đã từ chối"
-                : value === 0
-                ? "Đang chờ xác nhận"
-                : "Chưa assign"
+                  ? "Đã từ chối"
+                  : value === 0
+                    ? "Đang chờ xác nhận"
+                    : "Chưa assign"
             }
             style={{
               background:
                 value === 1
                   ? "#0073b7"
                   : value === 2
-                  ? "red"
-                  : value === 0
-                  ? "#f39c12"
-                  : "gray",
+                    ? "red"
+                    : value === 0
+                      ? "#f39c12"
+                      : "gray",
               color: "white",
             }}
           />
@@ -162,7 +163,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const confirmHardware = (id: number, assigned_status: number) => {
     mutate({
-      resource: "api/v1/hardware/" + id + "?_method=PUT",
+      resource: HARDWARE_API + "/" + id + "?_method=PUT",
       values: {
         send_accept: id,
         assigned_status: assigned_status,
@@ -229,8 +230,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                     >
                       {t("request.label.button.accept")}
@@ -247,8 +248,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => cancle(record)}
                 >

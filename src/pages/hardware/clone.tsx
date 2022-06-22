@@ -29,6 +29,7 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
+import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -63,7 +64,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -75,7 +76,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUSLABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -87,7 +88,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATIONS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -99,7 +100,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/suppliers",
+    resource: SUPPLIERS_HARDWARE_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -111,7 +112,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -123,7 +124,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
+    resource: HARDWARE_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -174,7 +175,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware",
+        resource: HARDWARE_API,
         values: payload,
       });
       if (cloneData?.data.message) form.resetFields();

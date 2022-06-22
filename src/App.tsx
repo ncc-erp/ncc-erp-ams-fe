@@ -20,22 +20,16 @@ import { RequestList } from "pages/request";
 import { LoginPage } from "pages/login/login";
 import { UserList } from "pages/users/list";
 import { newEnforcer } from "casbin.js";
-import { adapter, model } from "AccessControl";
-import { useRef, useState } from "react";
+import { model, adapter } from "AccessControl";
 
 function App() {
   const { t, i18n } = useTranslation();
-  const isReloadPermission = useRef(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
-
-  const setIsReloadPermission = () => {
-    isReloadPermission.current = false;
-  }
 
   return (
     <Refine
@@ -43,16 +37,11 @@ function App() {
       notificationProvider={notificationProvider}
       dataProvider={dataProvider}
       authProvider={authProvider}
-      DashboardPage={DashboardPage}
       LoginPage={LoginPage}
       accessControlProvider={{
         can: async ({ resource, action, params }) => {
-          let role = currentUser;
-          if (isReloadPermission.current === false || role === null) {
-            role = await authProvider.getPermissions();
-            isReloadPermission.current = true;
-            setCurrentUser(role);
-          }
+          let role = await authProvider.getPermissions();
+
           const enforcer = await newEnforcer(model, adapter);
           if (
             action === "delete" ||
@@ -60,7 +49,7 @@ function App() {
             action === "show"
           ) {
             const can = await enforcer.enforce(
-              role,
+              role.admin,
               `${resource}/${params.id}`,
               action,
             );
@@ -69,18 +58,25 @@ function App() {
 
           if (action === "field") {
             const can = await enforcer.enforce(
-              role,
+              role.admin,
               `${resource}/${params.field}`,
               action,
             );
             return Promise.resolve({ can });
           }
 
-          const can = await enforcer.enforce(role, resource, action);
+          const can = await enforcer.enforce(role.admin, resource, action);
           return Promise.resolve({ can });
         },
       }}
       resources={[
+        {
+          name: t("resource.dashboard"),
+          list: DashboardPage,
+          options: {
+            route: "dashboard",
+          },
+        },
         {
           name: t("resource.assets"),
           list: HardwareList,
@@ -104,12 +100,13 @@ function App() {
         },
       ]}
       Title={Title}
-      Header={() => <Header setIsReloadPermission={setIsReloadPermission} />}
-      Sider={() => <Sider setIsReloadPermission={setIsReloadPermission} />}
+      Header={Header}
+      Sider={Sider}
       Footer={Footer}
       Layout={Layout}
       OffLayoutArea={OffLayoutArea}
       i18nProvider={i18nProvider}
+
     />
   );
 }

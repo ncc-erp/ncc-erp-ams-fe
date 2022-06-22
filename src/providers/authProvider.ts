@@ -1,10 +1,10 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
-import { role } from "mock";
 import { UserAPI } from "api/userApi";
 import { GETME_API } from "api/baseApi";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
+export const STORE_PERMISSION = "permissions";
 
 export const authProvider: AuthProvider = {
   getToken: () => {
@@ -26,16 +26,20 @@ export const authProvider: AuthProvider = {
           username: username,
           password: password,
         };
-    return post({
+    const data = await post({
       url: url,
       payload: payload,
-    }).then((data: any) => {
-      localStorage.setItem(TOKEN_KEY, data.data.access_token);
-      return;
-    }); // todo others
+    });
+    localStorage.setItem(TOKEN_KEY, data.data.access_token);
+    const permissionRes = await UserAPI.getAll(GETME_API);
+    localStorage.setItem(
+      STORE_PERMISSION,
+      JSON.stringify(permissionRes.data.permissions)
+    );
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(STORE_PERMISSION);
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
@@ -57,14 +61,8 @@ export const authProvider: AuthProvider = {
       id: 1,
     });
   },
-  getPermissions: async () => {
-    const auth = localStorage.getItem(TOKEN_KEY);
-    const dataRespone = await UserAPI.getAll(GETME_API);
-    if (auth && dataRespone.data.role === role.admin) {
-      return Promise.resolve(dataRespone.data.role);
-    } else if (auth && dataRespone.data.role === role.user) {
-      return Promise.resolve(dataRespone.data.role);
-    }
-    return Promise.reject();
+  getPermissions: () => {
+    const permissions = localStorage.getItem(STORE_PERMISSION);
+    return Promise.resolve(JSON.parse(permissions as string));
   },
 };

@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   useTranslate,
   useLogout,
   useTitle,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
-import { UserAPI } from "../../../api/userApi";
-import { GETME_API } from "api/baseApi";
 
-const { RightOutlined, LogoutOutlined } = Icons;
+const { RightOutlined } = Icons;
 
-interface ISiderProps {
-  setIsReloadPermission: () => void
-}
-
-export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
+export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
@@ -41,19 +36,10 @@ export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
-    setIsReloadPermission();
+    push("/login");
   };
 
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-  useEffect(() => {
-    UserAPI.getAll(GETME_API).then(
-      function (response) {
-        setCurrentUser(response.data.role)
-      }
-    ).catch(function (error) {
-    });
-  }, [])
+  const { data: permissionsData } = usePermissions();
 
   return (
     <AntdLayout.Sider
@@ -81,7 +67,7 @@ export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
           push(key as string);
         }}
       >
-        {currentUser === "admin" ? (menuItems.map(({ icon, label, route }) => {
+        {(permissionsData && permissionsData.admin === "1") ? (menuItems.map(({ icon, label, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item
@@ -105,7 +91,7 @@ export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
           );
         })) : (
           menuItems.filter((item) =>
-            item.key === "/users" || item.key === "dashboard"
+            item.name === `${translate('resource.dashboard')}` || item.name === `${translate('resource.users')}`
           ).map(({ icon, label, route }) => {
             const isSelected = route === selectedKey;
             return (
@@ -131,10 +117,7 @@ export const Sider: React.FC<ISiderProps> = ({ setIsReloadPermission }) => {
           })
         )}
 
-        < Menu.Item key="logout" icon={< LogoutOutlined />}>
-          {translate("buttons.logout", "Logout")}
-        </Menu.Item>
-      </Menu>
+      </Menu >
     </AntdLayout.Sider >
   );
 };

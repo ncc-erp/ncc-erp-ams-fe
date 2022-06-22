@@ -21,11 +21,7 @@ const { LogoutOutlined } = Icons;
 
 const { Text } = Typography;
 
-interface IHeaderProps {
-  setIsReloadPermission: () => void
-}
-
-export const Header: React.FC<IHeaderProps> = ({ setIsReloadPermission }) => {
+export const Header: React.FC = () => {
   const translate = useTranslate()
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
@@ -46,7 +42,7 @@ export const Header: React.FC<IHeaderProps> = ({ setIsReloadPermission }) => {
   const logoutAccount = () => {
     signOutGoogle();
     logout();
-    push("/login")
+    push("/login");
   };
 
   const menu = (
@@ -78,7 +74,6 @@ export const Header: React.FC<IHeaderProps> = ({ setIsReloadPermission }) => {
     >
       <Button type="link" onClick={() => {
         logoutAccount()
-        setIsReloadPermission()
       }}>
         <LogoutOutlined />
       </Button>

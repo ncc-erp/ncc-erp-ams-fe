@@ -1,3 +1,5 @@
+import { HARDWARE_API } from "api/baseApi";
+import i18n from "./i18n";
 import { newModel, MemoryAdapter } from "casbin.js";
 
 export const model = newModel(`
@@ -17,21 +19,22 @@ e = some(where (p.eft == allow)) && !some(where (p.eft == deny))
 m = g(r.sub, p.sub) && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act)
 `);
 
-export const adapter = new MemoryAdapter(`
-p, admin, dashboard, list
+export const permissions = `
+p, 1, ${i18n.t("resource.dashboard")}, list
 
-p, admin, assets, (list)|(create)
-p, admin, api/v1/hardware/*, (delete)
-p, admin, assets/*, (edit)|(show)|(clone)|(checkout)
+p, 1, ${i18n.t("resource.assets")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets")}/*, (edit)|(show)|(clone)|(checkout)
 
-p, admin, Tạo request, (list)|(create)
-p, admin, Tạo request/*, (edit)|(show)|(delete)
+p, 1, ${i18n.t("resource.request")}, (list)|(create)
+p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
-p, admin, Tài sản của tôi, list
-p, admin, Tài sản của tôi/*, (show)|(confirm)|(refuse)
+p, 1, ${i18n.t("resource.users")}, list
+p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 
-p, user, dashboard, list
-p, user, Tài sản của tôi, (list)
-p, user, Tài sản của tôi/*, (show)|(confirm)|(refuse)
+p, 0, ${i18n.t("resource.dashboard")}, list
+p, 0, ${i18n.t("resource.users")}, (list)
+p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+`;
 
-`);
+export const adapter = new MemoryAdapter(permissions);

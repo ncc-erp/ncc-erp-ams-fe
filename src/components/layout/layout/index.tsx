@@ -1,5 +1,3 @@
-import React from "react";
-
 import { LayoutProps } from "@pankod/refine-core";
 import { AntdLayout, Grid } from "@pankod/refine-antd";
 
