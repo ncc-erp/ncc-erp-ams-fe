@@ -31,7 +31,7 @@ import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
-  data: IHardwareResponseCheckout;
+  data: IHardwareResponseCheckout | undefined;
 };
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
@@ -160,15 +160,15 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   useEffect(() => {
     form.resetFields();
     setFields([
-      { name: "name", value: data.name },
-      { name: "model_id", value: data.model.name },
-      { name: "note", value: data.note },
-      { name: "status_id", value: data.status_label.id },
+      { name: "name", value: data?.name },
+      { name: "model_id", value: data?.model.name },
+      { name: "note", value: data?.note },
+      { name: "status_id", value: data?.status_label.id },
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),
       },
-      { name: "assigned_user", value: data.assigned_user },
+      { name: "assigned_user", value: data?.assigned_user },
       { name: "assigned_location", value: data?.assigned_location.name },
     ]);
   }, [data, form, isModalVisible, setFields]);

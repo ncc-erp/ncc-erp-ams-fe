@@ -21,6 +21,7 @@ import {
   Input,
   EditButton,
 } from "@pankod/refine-antd";
+import { Image } from "antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -35,13 +36,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
-  const [detail, setDetail] = useState<any>({});
+  const [detail, setDetail] = useState<IHardwareResponse>();
   const [keySearch] = useState<string>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
-
-  const [payload, setPayload] = useState<FormData>();
-
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
       initialSorter: [
@@ -78,6 +76,17 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
+        key: "image",
+        title: "Hình ảnh",
+        render: (value: string) => {
+          return value ? (
+            <Image width={80} alt="" height={"auto"} src={value} />
+          ) : (
+            ""
+          );
+        },
+      },
+      {
         key: "model",
         title: "Kiểu tài sản",
         render: (value: IHardwareResponse) => (
@@ -108,23 +117,27 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         render: (value: any) => (
           <TagField
             value={
-              value === 1
-                ? "Đã xác nhận"
+              value === 0
+                ? "Chưa assign"
+                : value === 1
+                ? "Đang chờ xác nhận"
                 : value === 2
-                  ? "Đã từ chối"
-                  : value === 0
-                    ? "Đang chờ xác nhận"
-                    : "Chưa assign"
+                ? "Đã xác nhận"
+                : value === 3
+                ? "Đã từ chối"
+                : ""
             }
             style={{
               background:
-                value === 1
-                  ? "#0073b7"
+                value === 0
+                  ? "gray"
+                  : value === 1
+                  ? "#f39c12"
                   : value === 2
-                    ? "red"
-                    : value === 0
-                      ? "#f39c12"
-                      : "gray",
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "",
               color: "white",
             }}
           />
@@ -133,12 +146,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
 
       {
-        key: "created_at",
-        title: "Ngày tạo",
+        key: "last_checkout",
+        title: "Ngày cấp phát",
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
     ],
     []
@@ -171,12 +184,20 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     });
   };
 
+  const refreshData = () => {
+    tableQueryResult.refetch();
+  };
+
   useEffect(() => {
     let arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
     setIsLoadingArr(arr);
-    tableQueryResult.refetch();
+    refreshData();
   }, [isLoadingSendRequest]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCancleModalVisible]);
 
   return (
     <List title={t("user.label.title.name")}>
@@ -200,14 +221,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="id" scroll={{ x: 1250 }}>
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
-        <Table.Column<IHardware>
+        <Table.Column<IHardwareResponse>
           title={t("table.actions")}
           dataIndex="actions"
-          render={(_, record: any) => (
+          render={(_, record) => (
             <Space>
               <ShowButton
                 hideText
@@ -215,10 +236,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 recordItemId={record.id}
                 onClick={() => show(record)}
               />
-              {record.assigned_status === 0 && (
+              {record.assigned_status === 1 && (
                 <Popconfirm
                   title={t("request.label.button.accept")}
-                  onConfirm={() => OnAcceptRequest(record.id, 1)}
+                  onConfirm={() => OnAcceptRequest(record.id, 2)}
                 >
                   {isLoadingArr[record.id] !== false && (
                     <Button
@@ -230,8 +251,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                     >
                       {t("request.label.button.accept")}
@@ -239,7 +260,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   )}
                 </Popconfirm>
               )}
-              {record.assigned_status === 0 && (
+
+              {record.assigned_status === 1 && (
                 <Button
                   type="primary"
                   shape="round"
@@ -248,8 +270,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                   onClick={() => cancle(record)}
                 >

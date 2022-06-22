@@ -26,7 +26,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
       <Text>
         <Tag>
           {detail?.status_label?.name === "Assign"
-            ? "Đã lưu trữ"
+            ? "Cấp phát"
             : detail?.status_label?.name === "Ready to deploy"
             ? "Cho phép cấp phát"
             : detail?.status_label?.name === "Broken"

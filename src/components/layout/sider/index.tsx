@@ -11,7 +11,16 @@ import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
 
-const { RightOutlined } = Icons;
+const {
+  RightOutlined,
+  DashboardOutlined,
+  DesktopOutlined,
+  PullRequestOutlined,
+  ScheduleOutlined,
+  UnorderedListOutlined,
+  IdcardOutlined,
+  EnvironmentOutlined,
+} = Icons;
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -67,57 +76,86 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {(permissionsData && permissionsData.admin === "1") ? (menuItems.map(({ icon, label, route }) => {
-          const isSelected = route === selectedKey;
-          return (
-            <Menu.Item
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
-              key={route}
-              icon={icon}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                {label}
-                {!collapsed && isSelected && <RightOutlined />}
-              </div>
-            </Menu.Item>
-          );
-        })) : (
-          menuItems.filter((item) =>
-            item.name === `${translate('resource.dashboard')}` || item.name === `${translate('resource.users')}`
-          ).map(({ icon, label, route }) => {
-            const isSelected = route === selectedKey;
-            return (
-              <Menu.Item
-                style={{
-                  fontWeight: isSelected ? "bold" : "normal",
-                }}
-                key={route}
-                icon={icon}
-              >
-                <div
+        {permissionsData && permissionsData.admin === "1"
+          ? menuItems.map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    fontWeight: isSelected ? "bold" : "normal",
                   }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.dashboard")}` ? (
+                      <DashboardOutlined />
+                    ) : name === `${translate("resource.assets")}` ? (
+                      <DesktopOutlined />
+                    ) : name === `${translate("resource.request")}` ? (
+                      <PullRequestOutlined />
+                    ) : name === `${translate("resource.users")}` ? (
+                      <ScheduleOutlined />
+                    ) : name === `${translate("resource.category")}` ? (
+                      <UnorderedListOutlined />
+                    ) : name === `${translate("resource.manufactures")}` ? (
+                      <IdcardOutlined />
+                    ) : name === `${translate("resource.location")}` ? (
+                      <EnvironmentOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
                 >
-                  {label}
-                  {!collapsed && isSelected && <RightOutlined />}
-                </div>
-              </Menu.Item>
-            );
-          })
-        )}
-
-      </Menu >
-    </AntdLayout.Sider >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })
+          : menuItems
+              .filter(
+                (item) =>
+                  item.name === `${translate("resource.dashboard")}` ||
+                  item.name === `${translate("resource.users")}`
+              )
+              .map(({ icon, name, route }) => {
+                const isSelected = route === selectedKey;
+                return (
+                  <Menu.Item
+                    style={{
+                      fontWeight: isSelected ? "bold" : "normal",
+                    }}
+                    key={route}
+                    icon={
+                      name === `${translate("resource.dashboard")}` ? (
+                        <DashboardOutlined />
+                      ) : name === `${translate("resource.users")}` ? (
+                        <ScheduleOutlined />
+                      ) : (
+                        ""
+                      )
+                    }
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      {name}
+                      {!collapsed && isSelected && <RightOutlined />}
+                    </div>
+                  </Menu.Item>
+                );
+              })}
+      </Menu>
+    </AntdLayout.Sider>
   );
 };

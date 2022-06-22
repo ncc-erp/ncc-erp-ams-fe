@@ -166,7 +166,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       >
         <RequestShow setIsModalVisible={setIsModalVisible} detail={detail} />
       </MModal>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="id" scroll={{ x: 1170 }}>
         <Table.Column
           dataIndex="id"
           key="id"
@@ -190,7 +190,12 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
             <TagField
               value={value}
               style={{
-                background: value === "Sent" ? "#0073b7" : "red",
+                background:
+                  value === "Sent"
+                    ? "#0073b7"
+                    : value === "Approved"
+                    ? "red"
+                    : "#f39c12",
                 color: "white",
                 border: "none",
               }}
@@ -234,7 +239,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           render={(_, record: IRequestResponse) => (
             <Space>
               <Tooltip
-                title={t("hardware.label.tooltip.viewDetail")}
+                title={t("request.label.button.viewDetail")}
                 color={"#108ee9"}
               >
                 <ShowButton
@@ -250,7 +255,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                   title={t("request.label.button.delete")}
                   onConfirm={() => handleDelete(record.id)}
                 >
-                  <Tooltip title="Xóa tài sản" color={"red"}>
+                  <Tooltip
+                    title={t("request.label.button.delete")}
+                    color={"red"}
+                  >
                     <Button size="small">
                       <DeleteOutlined />
                     </Button>

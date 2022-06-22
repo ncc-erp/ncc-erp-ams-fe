@@ -43,15 +43,11 @@ function App() {
           let role = await authProvider.getPermissions();
 
           const enforcer = await newEnforcer(model, adapter);
-          if (
-            action === "delete" ||
-            action === "edit" ||
-            action === "show"
-          ) {
+          if (action === "delete" || action === "edit" || action === "show") {
             const can = await enforcer.enforce(
               role.admin,
               `${resource}/${params.id}`,
-              action,
+              action
             );
             return Promise.resolve({ can });
           }
@@ -60,7 +56,7 @@ function App() {
             const can = await enforcer.enforce(
               role.admin,
               `${resource}/${params.field}`,
-              action,
+              action
             );
             return Promise.resolve({ can });
           }
@@ -106,7 +102,6 @@ function App() {
       Layout={Layout}
       OffLayoutArea={OffLayoutArea}
       i18nProvider={i18nProvider}
-
     />
   );
 }

@@ -310,7 +310,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="rtd_location"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.locationFix") +
                   " " +
@@ -355,7 +355,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status[0]}
             </Typography.Text>
           )}
-          {isReadyToDeploy && (
+          {/* {isReadyToDeploy && (
             <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
               <Tabs
                 defaultActiveKey="1"
@@ -372,7 +372,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
                   }
                   key="1"
                 ></Tabs.TabPane>
-                {/* <Tabs.TabPane
+                <Tabs.TabPane
                   tab={
                     <span>
                       <AndroidOutlined />
@@ -389,32 +389,32 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
                     </span>
                   }
                   key="3"
-                ></Tabs.TabPane> */}
+                ></Tabs.TabPane>
               </Tabs>
             </Form.Item>
-          )}
+          )} */}
 
-          {activeModel === "1" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.user")}
-              name="assigned_to"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.user") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.user")}
-                {...userSelectProps}
-              />
-            </Form.Item>
-          )}
+          {/* {activeModel === "1" && ( */}
+          <Form.Item
+            className="tabUser"
+            label={t("hardware.label.field.checkoutTo")}
+            name="assigned_to"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.user") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t("hardware.label.placeholder.user")}
+              {...userSelectProps}
+            />
+          </Form.Item>
+          {/* )} */}
           {/* {activeModel === "2" && (
             <Form.Item
               className="tabAsset"
@@ -465,7 +465,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="name"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("hardware.label.field.assetName") +
                   " " +

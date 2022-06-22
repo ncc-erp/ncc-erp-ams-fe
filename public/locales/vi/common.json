@@ -114,7 +114,7 @@
           "assetName": "Tên tài sản",
           "dateBuy": "Ngày mua",
           "supplier": "Nhà cung cấp",
-          "orderNumber": "Số đơn đặt hàng",
+          "orderNumber": "Mã đơn hàng",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "usd": "VND",
@@ -124,7 +124,6 @@
           "checkbox": "Cho phép đề xuất",
           "device": "Thiết bị",
           "dateCheckout": "Ngày cấp phát",
-          "dateWantCheckin": "Ngày mong muốn thu hồi",
           "dateCheckin": "Ngày thu hồi",
           "note": "Ghi chú",
           "category": "Thể loại",
@@ -142,7 +141,7 @@
           "location": "Lựa chọn một địa phương",
           "supplier": "Lựa chọn nhà cung cấp",
           "assetName": "Tên tài sản",
-          "orderNumber": "Mã order",
+          "orderNumber": "Mã đơn hàng",
           "cost": "Chi phí mua hàng",
           "insurance": "Bảo hành",
           "choiceAsset": "Lựa chọn tài sản"
@@ -166,11 +165,11 @@
           "detail": "Chi tiết tài sản"
         },
         "tooltip":{
-          "create": "Tạo hardware",
+          "create": "Thêm mới",
           "viewDetail": "Xem chi tiết",
-          "clone": "Clone tài sản",
-          "edit": "Chỉnh sửa tài sản",
-          "delete": "Xóa tài sản"
+          "clone": "Clone",
+          "edit": "Chỉnh sửa",
+          "delete": "Xóa"
         }
     }
   },
@@ -205,12 +204,13 @@
         "asset_ids": "Lựa chọn thiết bị"
       },
       "button": {
-        "create":"Tạo mới",
+        "create":"Thêm mới",
         "send": "Gửi",
         "delete": "Xóa",
         "cancle": "Từ chối",
         "accept": "Xác nhận",
-        "refuse": "Từ chối"
+        "refuse": "Từ chối",
+        "viewDetail":"Xem chi tiết"
       },
       "message": {
         "required": "bắt buộc",
@@ -226,7 +226,8 @@
     "label": {
       "title": {
         "name": "Tài sản của tôi",
-        "detail":"Chi tiết tài sản của tôi"
+        "detail":"Chi tiết tài sản của tôi",
+        "cancle": "Từ chối"
       },
       "field":{
         "notes": "Mô tả",
@@ -236,7 +237,15 @@
         "supplier": "Nhà cung cấp",
         "name": "Tên tài sản",
         "model": "Kiểu tài sản",
-        "insurance": "Bảo hành"
+        "insurance": "Bảo hành",
+        "reason": "Lý do",
+        "inputReason": "Nhập lý do từ chối"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button":{
+        "cancle": "Từ chối"
       }
     }
   },
@@ -244,12 +253,13 @@
     "label":{
       "title": {
         "create":"Tạo danh mục",
-        "edit":"Chỉnh sửa danh mục"
+        "edit":"Chỉnh sửa danh mục",
+        "nameTitle": "Danh mục"
       },
       "field": {
-        "create": "Tạo danh mục",
-        "edit": "Chỉnh sửa danh mục",
-        "delete": "Xóa danh mục",
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
         "name": "Tên danh mục",
         "category": "Loại",
         "categoryEULA": "Danh mục EULA",
@@ -266,10 +276,79 @@
       }
     }
   },
+  "manufactures": {
+    "label":{
+      "title":{
+        "create": "Tạo hãng sản xuất",
+        "edit": "Chỉnh sửa hãng sản xuất",
+        "nameTitle": "Hãng sản xuất"
+      },
+      "field":{
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "name": "Tên",
+        "url": "URL",
+        "urlSupport": "URL Hỗ trợ",
+        "phone": "Điện thoại hỗ trợ",
+        "email": "Hỗ trợ Email",
+        "image":"Tải hình"
+
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      }
+    }
+  },
+  "location": {
+    "label":{
+      "title":{
+        "create": "Tạo địa phương",
+        "edit": "Chỉnh sửa địa phương",
+        "nameTitle": "Địa phương"
+      },
+      "field":{
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "name": " Tên địa phương",
+        "parent": "Parent",
+        "manager": "Người quản lý",
+        "currency": "Tiền tệ địa phương",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "state": "Tỉnh/Thành phố",
+        "country": "Nước",
+        "zip": "Zip",
+        "image":"Tải hình"
+
+      },
+      "placeholder":{
+        "parent": "Lựa chọn một địa phương",
+        "manager": "Lựa chọn một người dùng",
+        "country": "Lựa chọn một nước",
+        "currency": "USD"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      }
+    }
+  },
   "resource": {
     "dashboard": "Thống kê",
     "assets": "Thiết bị",
     "request": "Tạo request",
-    "users": "Tài sản của tôi"
+    "users": "Tài sản của tôi",
+    "category": "Danh mục",
+    "manufactures": "Nhà sản xuất",
+    "location": "Địa phương"
   }
 }

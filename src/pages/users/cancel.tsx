@@ -45,7 +45,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     const formData = new FormData();
 
     formData.append("reason", event.reason);
-    formData.append("assigned_status", "2");
+    formData.append("assigned_status", "3");
 
     formData.append("_method", "PATCH");
     setPayload(formData);

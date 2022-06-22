@@ -171,15 +171,7 @@ export interface IHardwareResponseCheckout {
     name: string;
   };
   note: string;
-  company: {
-    id: number;
-    name: string;
-  };
 
-  expected_checkin: {
-    date: string;
-    formatted: string;
-  };
   checkout_at: {
     date: string;
     formatted: string;
@@ -224,6 +216,7 @@ export interface IHardwareRequestCheckin {
   depreciate: boolean;
   checkin_at: string;
   rtd_location: number;
+  assigned_status: number;
 }
 
 export interface IHardwareResponseCheckin {
@@ -233,22 +226,13 @@ export interface IHardwareResponseCheckin {
     id: number;
     name: string;
   };
-  model_number: string;
   status_label: {
     id: number;
     name: string;
     status_type: string;
     status_meta: string;
   };
-  category: {
-    id: number;
-    name: string;
-  };
   note: string;
-  company: {
-    id: number;
-    name: string;
-  };
   rtd_location: {
     id: number;
     name: string;
