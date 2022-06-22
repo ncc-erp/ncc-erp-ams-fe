@@ -16,8 +16,7 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
   IHardwareRequestCheckin,
-  IHardwareRequestCheckout,
-  IHardwareResponseCheckout,
+  IHardwareResponseCheckin,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 
@@ -26,7 +25,7 @@ import { ICompany } from "interfaces/company";
 type HardwareCheckinProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
-  data: IHardwareResponseCheckout;
+  data: IHardwareResponseCheckin | undefined;
 };
 
 export const HardwareCheckin = (props: HardwareCheckinProps) => {
@@ -42,7 +41,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     ASSIGN = "Assign",
   }
 
-  const { form, formProps } = useForm<IHardwareRequestCheckout>({
+  const { form, formProps } = useForm<IHardwareRequestCheckin>({
     action: "edit",
   });
 
@@ -122,10 +121,10 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   useEffect(() => {
     form.resetFields();
     setFields([
-      { name: "name", value: data.name },
-      { name: "model_id", value: data.model.name },
-      { name: "note", value: data.note },
-      { name: "status_id", value: data.status_label.id },
+      { name: "name", value: data?.name },
+      { name: "model_id", value: data?.model.name },
+      { name: "note", value: data?.note },
+      { name: "status_id", value: data?.status_label.id },
       {
         name: "checkin_at",
         value: new Date().toISOString().substring(0, 10),
@@ -198,7 +197,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.model.id}
+            initialValue={data?.model.name}
           >
             <Select
               placeholder={t("hardware.label.placeholder.propertyType")}

@@ -24,7 +24,7 @@ import {
 import { Image } from "antd";
 import "styles/antd.less";
 
-import { ICheckboxProps, IHardware } from "interfaces";
+import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
@@ -33,7 +33,11 @@ import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
 
-import { IHardwareResponse } from "interfaces/hardware";
+import {
+  IHardwareResponse,
+  IHardwareResponseCheckin,
+  IHardwareResponseCheckout,
+} from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
 
@@ -42,7 +46,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
-  const [detailCheckout, setDetailCheckout] = useState<any>({});
+  const [detailCheckout, setDetailCheckout] =
+    useState<IHardwareResponseCheckout>();
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
 
   const [isLoadingArr] = useState<boolean[]>([]);
@@ -50,12 +55,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
 
   const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
-  const [detailCheckin, setDetailCheckin] = useState<any>({});
+  const [detailCheckin, setDetailCheckin] =
+    useState<IHardwareResponseCheckin>();
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
-    useTable<IHardwareResponse>({
+    useTable<IHardware>({
       initialSorter: [
         {
           field: "id",
@@ -243,7 +249,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const checkout = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
+    const dataConvert: IHardwareResponseCheckout = {
       id: data.id,
       name: data.name,
       model: {
@@ -265,10 +271,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.assigned_location?.id,
         name: data?.assigned_location?.name,
       },
-      expected_checkin: {
-        date: "",
-        formatted: "",
-      },
       checkout_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
@@ -278,46 +280,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
-
-      asset_tag: "",
-      serial: "",
-      supplier: {
-        id: 0,
-        name: "",
-      },
-      notes: "",
-      order_number: "",
-      location: {
-        id: 0,
-        name: "",
-      },
-      rtd_location: {
-        id: 0,
-        name: "",
-      },
-      image: "",
-      warranty_months: "",
-      purchase_cost: 0,
-      purchase_date: {
-        date: "",
-        formatted: "",
-      },
-      assigned_to: 0,
-      last_audit_date: "",
-      physical: 0,
-      assigned_status: data.assigned_status,
-      checkin_at: {
-        date: "",
-        formatted: "",
-      },
-      requestable: data?.requestable,
     };
+
     setDetailCheckout(dataConvert);
     setIsCheckoutModalVisible(true);
   };
 
   const checkin = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
+    const dataConvert: IHardwareResponseCheckin = {
       id: data.id,
       name: data.name,
       model: {
@@ -338,61 +308,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.id,
         name: data?.name,
       },
-
-      expected_checkin: {
-        date: "",
-        formatted: "",
-      },
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      note: data.note,
-
-      asset_tag: "",
-      serial: "",
-      supplier: {
-        id: 0,
-        name: "",
-      },
-      notes: "",
-      order_number: "",
-      location: {
-        id: data?.id,
-        name: data?.name,
-      },
-
-      image: "",
-      warranty_months: "",
-      purchase_cost: 0,
-      purchase_date: {
-        date: "",
-        formatted: "",
-      },
-      assigned_to: 0,
-      last_audit_date: "",
-      requestable: data?.requestable,
-      physical: 0,
-      assigned_status: data.assigned_status,
-      model_number: "",
-      checkout_at: {
-        date: "",
-        formatted: "",
-      },
-      assigned_location: {
-        id: 0,
-        name: "",
-      },
-      assigned_user: 0,
-      assigned_asset: "",
-      checkout_to_type: {
-        assigned_user: 0,
-        assigned_asset: "",
-        assigned_location: {
-          id: 0,
-          name: "",
-        },
-      },
+      note: data?.note,
       user_can_checkout: false,
     };
 
@@ -419,7 +335,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: "Hình ảnh",
         render: (value: string) => {
           return value ? (
-            <Image width={50} alt="" height={"auto"} src={value} />
+            <Image width={80} alt="" height={"auto"} src={value} />
           ) : (
             ""
           );
@@ -437,7 +353,74 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
-
+      {
+        key: "status_label",
+        title: "Trạng thái",
+        render: (value: IHardwareResponse) => (
+          <TagField
+            value={
+              value
+                ? value.name === "Assign"
+                  ? "Cấp phát"
+                  : value.name === "Ready to deploy"
+                  ? "Cho phép cấp phát"
+                  : value.name === "Broken"
+                  ? "Không cho phép cấp phát"
+                  : value.name === "Pending"
+                  ? "Đang chờ"
+                  : ""
+                : ""
+            }
+            style={{
+              background:
+                value.name === "Assign"
+                  ? "#0073b7"
+                  : value.name === "Ready to deploy"
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
+              color: "white",
+            }}
+          />
+        ),
+        defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+      },
+      {
+        key: "assigned_status",
+        title: "Tình trạng",
+        render: (value: any) => (
+          <TagField
+            value={
+              value === 0
+                ? "Chưa assign"
+                : value === 1
+                ? "Đang chờ xác nhận"
+                : value === 2
+                ? "Đã xác nhận"
+                : value === 3
+                ? "Đã từ chối"
+                : ""
+            }
+            style={{
+              background:
+                value === 0
+                  ? "gray"
+                  : value === 1
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "",
+              color: "white",
+            }}
+          />
+        ),
+        defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+      },
       {
         key: "assigned_to",
         title: "Cấp phát đến",
@@ -446,35 +429,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
-      {
-        key: "assigned_status",
-        title: "Tình trạng",
-        render: (value: any) => (
-          <TagField
-            value={
-              value === 1
-                ? "Đã xác nhận"
-                : value === 2
-                ? "Đã từ chối"
-                : value === 0
-                ? "Đang chờ xác nhận"
-                : "Chưa assign"
-            }
-            style={{
-              background:
-                value === 1
-                  ? "#0073b7"
-                  : value === 2
-                  ? "red"
-                  : value === 0
-                  ? "#f39c12"
-                  : "gray",
-              color: "white",
-            }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
-      },
+
       {
         key: "created_at",
         title: "Ngày tạo",
@@ -595,7 +550,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
@@ -646,25 +601,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   recordItemId={record.id}
                 />
               </Tooltip>
-              {record.assigned_status === 2 ||
-                (record.user_can_checkout === true && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkout(record)}
-                  >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
-                )) ||
+              {(record.user_can_checkout === true && (
+                <Button
+                  className="ant-btn-checkout"
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                      ? false
+                      : true
+                  }
+                  onClick={() => checkout(record)}
+                >
+                  {t("hardware.label.button.checkout")}
+                </Button>
+              )) ||
                 (record.user_can_checkout === true && (
                   <Button
                     className="ant-btn-checkout"
@@ -720,7 +674,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   </Button>
                 ))}
 
-              {record.assigned_status === 1 && (
+              {record.assigned_status === 2 ? (
                 <Button
                   type="primary"
                   shape="round"
@@ -736,6 +690,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 >
                   {t("hardware.label.button.checkin")}
                 </Button>
+              ) : record.assigned_status === 3 ? (
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="small"
+                  loading={
+                    isLoadingArr[record.id] === undefined
+                      ? false
+                      : isLoadingArr[record.id] === false
+                      ? false
+                      : true
+                  }
+                  onClick={() => checkin(record)}
+                >
+                  {t("hardware.label.button.checkin")}
+                </Button>
+              ) : (
+                ""
               )}
             </Space>
           )}

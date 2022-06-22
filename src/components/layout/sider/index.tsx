@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 
-import {
-  useTranslate,
-  useLogout,
-  useTitle,
-  useNavigation,
-} from "@pankod/refine-core";
+import { useLogout, useTitle, useNavigation } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import { useGoogleLogout } from "react-google-login";
 
-const { RightOutlined, LogoutOutlined } = Icons;
+const {
+  RightOutlined,
+  DashboardOutlined,
+  DesktopOutlined,
+  PullRequestOutlined,
+  ScheduleOutlined,
+  UnorderedListOutlined,
+  IdcardOutlined,
+  EnvironmentOutlined,
+} = Icons;
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const { mutate: logout } = useLogout();
   const Title = useTitle();
-  const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
   const breakpoint = Grid.useBreakpoint();
@@ -71,7 +74,25 @@ export const Sider: React.FC = () => {
                 fontWeight: isSelected ? "bold" : "normal",
               }}
               key={route}
-              icon={icon}
+              icon={
+                name === "Dashboard" ? (
+                  <DashboardOutlined />
+                ) : name === "Thiết bị" ? (
+                  <DesktopOutlined />
+                ) : name === "Tạo request" ? (
+                  <PullRequestOutlined />
+                ) : name === "Tài sản của tôi" ? (
+                  <ScheduleOutlined />
+                ) : name === "Danh mục" ? (
+                  <UnorderedListOutlined />
+                ) : name === "Nhà sản xuất" ? (
+                  <IdcardOutlined />
+                ) : name === "Địa phương" ? (
+                  <EnvironmentOutlined />
+                ) : (
+                  ""
+                )
+              }
             >
               <div
                 style={{
@@ -86,10 +107,6 @@ export const Sider: React.FC = () => {
             </Menu.Item>
           );
         })}
-
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
-          {translate("buttons.logout", "Logout")}
-        </Menu.Item>
       </Menu>
     </AntdLayout.Sider>
   );

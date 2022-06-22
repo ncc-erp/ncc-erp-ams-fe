@@ -128,8 +128,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
-    formData.append("notes", event.notes);
 
+    formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
     formData.append("status_id", event.status_label.toString());
     formData.append("warranty_months", event.warranty_months);
@@ -179,10 +179,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
-
       { name: "assigned_to", value: data?.assigned_to },
       { name: "requestable", value: data?.requestable },
-
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
