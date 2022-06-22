@@ -86,19 +86,19 @@ export const Sider: React.FC = () => {
                   }}
                   key={route}
                   icon={
-                    name === "Thống kê" ? (
+                    name === `${translate("resource.dashboard")}` ? (
                       <DashboardOutlined />
-                    ) : name === "Thiết bị" ? (
+                    ) : name === `${translate("resource.assets")}` ? (
                       <DesktopOutlined />
-                    ) : name === "Tạo request" ? (
+                    ) : name === `${translate("resource.request")}` ? (
                       <PullRequestOutlined />
-                    ) : name === "Tài sản của tôi" ? (
+                    ) : name === `${translate("resource.users")}` ? (
                       <ScheduleOutlined />
-                    ) : name === "Danh mục" ? (
+                    ) : name === `${translate("resource.category")}` ? (
                       <UnorderedListOutlined />
-                    ) : name === "Nhà sản xuất" ? (
+                    ) : name === `${translate("resource.manufactures")}` ? (
                       <IdcardOutlined />
-                    ) : name === "Địa phương" ? (
+                    ) : name === `${translate("resource.location")}` ? (
                       <EnvironmentOutlined />
                     ) : (
                       ""
@@ -133,9 +133,9 @@ export const Sider: React.FC = () => {
                     }}
                     key={route}
                     icon={
-                      name === "Thống kê" ? (
+                      name === `${translate("resource.dashboard")}` ? (
                         <DashboardOutlined />
-                      ) : name === "Tài sản của tôi" ? (
+                      ) : name === `${translate("resource.users")}` ? (
                         <ScheduleOutlined />
                       ) : (
                         ""

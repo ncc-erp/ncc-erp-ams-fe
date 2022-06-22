@@ -346,6 +346,9 @@
     "dashboard": "Thống kê",
     "assets": "Thiết bị",
     "request": "Tạo request",
-    "users": "Tài sản của tôi"
+    "users": "Tài sản của tôi",
+    "category": "Danh mục",
+    "manufactures": "Nhà sản xuất",
+    "location": "Địa phương"
   }
 }
