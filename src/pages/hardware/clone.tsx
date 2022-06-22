@@ -29,7 +29,15 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
-import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
+import {
+  HARDWARE_API,
+  HARDWARE_SELECTLIST_API,
+  LOCATIONS_API,
+  MODELS_SELECTLIST_API,
+  STATUSLABELS_API,
+  SUPPLIERS_HARDWARE_API,
+  USERS_API,
+} from "api/baseApi";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -348,6 +356,36 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           )}
 
           <Form.Item
+            label={t("hardware.label.field.insurance")}
+            name="warranty_months"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.insurance") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={
+              data?.warranty_months && data?.warranty_months.split(" ")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.month")}
+              value={
+                data?.warranty_months && data?.warranty_months.split(" ")[0]
+              }
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
+            </Typography.Text>
+          )}
+
+          <Form.Item
             label={t("hardware.label.field.status")}
             name="status_label"
             rules={[
@@ -375,48 +413,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             </Typography.Text>
           )}
           {isReadyToDeploy && (
-            <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-              <Tabs
-                defaultActiveKey="1"
-                onTabClick={(value) => {
-                  setActiveModel(value);
-                }}
-              >
-                <Tabs.TabPane
-                  tab={
-                    <span>
-                      <UserOutlined />
-                      {t("hardware.label.field.user")}
-                    </span>
-                  }
-                  key="1"
-                ></Tabs.TabPane>
-                {/* <Tabs.TabPane
-                  tab={
-                    <span>
-                      <AndroidOutlined />
-                      {t("hardware.label.field.asset")}
-                    </span>
-                  }
-                  key="2"
-                ></Tabs.TabPane>
-                <Tabs.TabPane
-                  tab={
-                    <span>
-                      <EnvironmentOutlined />
-                      {t("hardware.label.field.location")}
-                    </span>
-                  }
-                  key="3"
-                ></Tabs.TabPane> */}
-              </Tabs>
-            </Form.Item>
-          )}
-
-          {activeModel === "1" && (
             <Form.Item
               className="tabUser"
-              label={t("hardware.label.field.user")}
+              label={t("hardware.label.field.checkoutTo")}
               name="assigned_to"
               rules={[
                 {
@@ -427,7 +426,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                     t("hardware.label.message.required"),
                 },
               ]}
-              initialValue={data?.assigned_to}
             >
               <Select
                 placeholder={t("hardware.label.placeholder.user")}
@@ -435,50 +433,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               />
             </Form.Item>
           )}
-          {/* {activeModel === "2" && (
-            <Form.Item
-              className="tabAsset"
-              label={t("hardware.label.field.asset")}
-              name="physical"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.asset") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-              initialValue={data?.physical}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.asset")}
-                {...hardwareSelectProps}
-              />
-            </Form.Item>
-          )}
-          {activeModel === "3" && (
-            <Form.Item
-              className="tabLocation"
-              label={t("hardware.label.field.location")}
-              name="location"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.location") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-              initialValue={data?.location}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.location")}
-                {...locationSelectProps}
-              />
-            </Form.Item>
-          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -572,35 +526,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           {messageErr?.puchase_cost && (
             <Typography.Text type="danger">
               {messageErr.puchase_cost[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.insurance")}
-            name="warranty_months"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.insurance") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={
-              data?.warranty_months && data?.warranty_months.split(" ")[0]
-            }
-          >
-            <Input
-              type="number"
-              addonAfter={t("hardware.label.field.month")}
-              value={
-                data?.warranty_months && data?.warranty_months.split(" ")[0]
-              }
-            />
-          </Form.Item>
-          {messageErr?.warranty_months && (
-            <Typography.Text type="danger">
-              {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
         </Col>
