@@ -27,6 +27,7 @@ import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 import { IRequest } from "interfaces/request";
 import { ISelectItem } from "interfaces";
+import { BRANCH_REQUEST_API, FINFAST_REQUEST_API, SUPPLIER_REQUEST_API } from "api/baseApi";
 
 type RequestCreateProps = {
   useHardwareNotRequest: IHardwareList;
@@ -48,18 +49,18 @@ export const RequestCreate = (props: RequestCreateProps) => {
   const { data: assetSelectProps, refetch } = useHardwareNotRequest;
 
   const { data: branchSelectProps } = useList<IBranch>({
-    resource: "api/v1/finfast/branch",
+    resource: BRANCH_REQUEST_API,
   });
 
   const { data: supplierSelectProps } = useList<ISupplier>({
-    resource: "api/v1/finfast/supplier",
+    resource: SUPPLIER_REQUEST_API,
   });
 
   const { mutate, data, isLoading } = useCreate();
 
   const onFinish = (event: IRequest) => {
     mutate({
-      resource: "api/v1/finfast-request",
+      resource: FINFAST_REQUEST_API,
       values: {
         name: event.name,
         branch_id: event.branch_id,

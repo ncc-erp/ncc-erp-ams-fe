@@ -23,6 +23,7 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
+import { HARDWARE_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API } from "api/baseApi";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -56,7 +57,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -68,7 +69,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUSLABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -80,7 +81,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATIONS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -92,7 +93,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/suppliers",
+    resource: SUPPLIERS_HARDWARE_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -108,7 +109,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id,
+    url: HARDWARE_API + "/" + data?.id,
     method: "post",
     config: {
       payload: payload,

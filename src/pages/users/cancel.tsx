@@ -7,6 +7,7 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 
 import "../../styles/hardware.less";
 import { IHardwareResponse, IHardwareUpdateRequest } from "interfaces/hardware";
+import { HARDWARE_API } from "api/baseApi";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -29,7 +30,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id,
+    url: HARDWARE_API + "/" + data?.id,
     method: "post",
     config: {
       payload: payload,

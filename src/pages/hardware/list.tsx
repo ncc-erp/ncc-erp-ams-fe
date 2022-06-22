@@ -24,7 +24,7 @@ import {
 import { Image } from "antd";
 import "styles/antd.less";
 
-import { ICheckboxProps, IHardware } from "interfaces";
+import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
@@ -36,6 +36,7 @@ import { HardwareShow } from "./show";
 import { IHardwareResponse } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
+import { HARDWARE_API } from "api/baseApi";
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -62,7 +63,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
-      resource: "api/v1/hardware",
+      resource: HARDWARE_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
@@ -455,20 +456,20 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 1
                 ? "Đã xác nhận"
                 : value === 2
-                ? "Đã từ chối"
-                : value === 0
-                ? "Đang chờ xác nhận"
-                : "Chưa assign"
+                  ? "Đã từ chối"
+                  : value === 0
+                    ? "Đang chờ xác nhận"
+                    : "Chưa assign"
             }
             style={{
               background:
                 value === 1
                   ? "#0073b7"
                   : value === 2
-                  ? "red"
-                  : value === 0
-                  ? "#f39c12"
-                  : "gray",
+                    ? "red"
+                    : value === 0
+                      ? "#f39c12"
+                      : "gray",
               color: "white",
             }}
           />
@@ -640,7 +641,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               </Tooltip>
               <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
                 <DeleteButton
-                  resourceName="api/v1/hardware"
+                  resourceName={HARDWARE_API}
                   hideText
                   size="small"
                   recordItemId={record.id}
@@ -657,8 +658,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -675,8 +676,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -693,8 +694,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -711,8 +712,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -729,8 +730,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >
