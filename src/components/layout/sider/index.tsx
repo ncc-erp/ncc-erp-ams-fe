@@ -135,8 +135,8 @@ export const Sider: React.FC = () => {
                     icon={
                       name === "Thống kê" ? (
                         <DashboardOutlined />
-                      ) : name === "Thiết bị" ? (
-                        <DesktopOutlined />
+                      ) : name === "Tài sản của tôi" ? (
+                        <ScheduleOutlined />
                       ) : (
                         ""
                       )
