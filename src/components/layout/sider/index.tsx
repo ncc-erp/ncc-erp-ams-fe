@@ -124,7 +124,7 @@ export const Sider: React.FC = () => {
                   item.name === `${translate("resource.dashboard")}` ||
                   item.name === `${translate("resource.users")}`
               )
-              .map(({ icon, label, route }) => {
+              .map(({ icon, name, route }) => {
                 const isSelected = route === selectedKey;
                 return (
                   <Menu.Item
@@ -132,7 +132,25 @@ export const Sider: React.FC = () => {
                       fontWeight: isSelected ? "bold" : "normal",
                     }}
                     key={route}
-                    icon={icon}
+                    icon={
+                      name === "Thống kê" ? (
+                        <DashboardOutlined />
+                      ) : name === "Thiết bị" ? (
+                        <DesktopOutlined />
+                      ) : name === "Tạo request" ? (
+                        <PullRequestOutlined />
+                      ) : name === "Tài sản của tôi" ? (
+                        <ScheduleOutlined />
+                      ) : name === "Danh mục" ? (
+                        <UnorderedListOutlined />
+                      ) : name === "Nhà sản xuất" ? (
+                        <IdcardOutlined />
+                      ) : name === "Địa phương" ? (
+                        <EnvironmentOutlined />
+                      ) : (
+                        ""
+                      )
+                    }
                   >
                     <div
                       style={{
@@ -141,7 +159,7 @@ export const Sider: React.FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      {label}
+                      {name}
                       {!collapsed && isSelected && <RightOutlined />}
                     </div>
                   </Menu.Item>
