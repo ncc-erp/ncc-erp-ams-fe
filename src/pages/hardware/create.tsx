@@ -35,6 +35,7 @@ import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
 import { ICheckboxChange } from "interfaces";
+import { COMPANIES_API, HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API, USERS_API } from "api/baseApi";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -62,7 +63,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -74,7 +75,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: companySelectProps } = useSelect<ICompany>({
-    resource: "api/v1/companies",
+    resource: COMPANIES_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -86,7 +87,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUSLABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -98,7 +99,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -110,7 +111,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
+    resource: HARDWARE_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -122,7 +123,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATIONS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -134,7 +135,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/suppliers",
+    resource: SUPPLIERS_HARDWARE_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -190,7 +191,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware",
+        resource: HARDWARE_API,
         values: payload,
       });
       if (createData?.data.message) form.resetFields();

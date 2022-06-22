@@ -22,6 +22,7 @@ import {
 import { IModel } from "interfaces/model";
 
 import { ICompany } from "interfaces/company";
+import { HARDWARE_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API } from "api/baseApi";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -49,7 +50,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -61,7 +62,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUSLABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -73,7 +74,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATIONS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -89,7 +90,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id + "/checkin",
+    url: HARDWARE_API + "/" + data?.id + "/checkin",
     method: "post",
     config: {
       payload: payload,

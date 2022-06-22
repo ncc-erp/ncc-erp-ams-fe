@@ -26,6 +26,7 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
+import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_API, STATUSLABELS_API, USERS_API } from "api/baseApi";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -54,7 +55,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -66,7 +67,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUSLABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -78,7 +79,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -90,7 +91,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
+    resource: HARDWARE_SELECTLIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -102,7 +103,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATIONS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -118,7 +119,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id + "/checkout",
+    url: HARDWARE_API + "/" + data?.id + "/checkout",
     method: "post",
     config: {
       payload: payload,
