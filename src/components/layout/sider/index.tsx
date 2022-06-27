@@ -20,6 +20,9 @@ const {
   UnorderedListOutlined,
   IdcardOutlined,
   EnvironmentOutlined,
+  ContainerOutlined,
+  ShopOutlined,
+  ReconciliationOutlined,
 } = Icons;
 
 export const Sider: React.FC = () => {
@@ -100,6 +103,12 @@ export const Sider: React.FC = () => {
                       <IdcardOutlined />
                     ) : name === `${translate("resource.location")}` ? (
                       <EnvironmentOutlined />
+                    ) : name === `${translate("resource.supplier")}` ? (
+                      <ContainerOutlined />
+                    ) : name === `${translate("resource.department")}` ? (
+                      <ShopOutlined />
+                    ) : name === `${translate("resource.models")}` ? (
+                      <ReconciliationOutlined />
                     ) : (
                       ""
                     )

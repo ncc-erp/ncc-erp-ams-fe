@@ -1,4 +1,4 @@
-import { HARDWARE_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API, MANUFACTURES_API } from "api/baseApi";
 import i18n from "./i18n";
 import { newModel, MemoryAdapter } from "casbin.js";
 
@@ -31,6 +31,18 @@ p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
 p, 1, ${i18n.t("resource.users")}, list
 p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+
+p, 1, ${i18n.t("resource.category")}, (list)|(create)
+p, 1, ${CATEGORIES_API}/*, (delete)
+p, 1, ${i18n.t("resource.category")}/*, (edit)
+
+p, 1, ${i18n.t("resource.manufactures")}, (list)|(create)
+p, 1, ${MANUFACTURES_API}/*, (delete)
+p, 1, ${i18n.t("resource.manufactures")}/*, (edit)
+
+p, 1, ${i18n.t("resource.location")}, (list)|(create)
+p, 1, ${LOCATION_API}/*, (delete)
+p, 1, ${i18n.t("resource.location")}/*, (edit)
 
 p, 0, ${i18n.t("resource.dashboard")}, list
 p, 0, ${i18n.t("resource.users")}, (list)

@@ -38,10 +38,10 @@ import { ICheckboxChange } from "interfaces";
 import {
   COMPANIES_API,
   HARDWARE_API,
-  HARDWARE_SELECTLIST_API,
+  HARDWARE_SELECT_LIST_API,
   LOCATIONS_API,
-  MODELS_SELECTLIST_API,
-  STATUSLABELS_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
   SUPPLIERS_HARDWARE_API,
   USERS_API,
 } from "api/baseApi";
@@ -57,8 +57,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [activeModel, setActiveModel] = useState<String>("1");
   const [payload, setPayload] = useState<FormData>();
-  const [file, setFile] = useState<any>(null);
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [file, setFile] = useState<File>();
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
   const t = useTranslate();
 
@@ -72,7 +72,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECTLIST_API,
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -96,7 +96,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUSLABELS_API,
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -120,7 +120,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECTLIST_API,
+    resource: HARDWARE_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -158,7 +158,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("name", event.name);
@@ -210,9 +210,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   useEffect(() => {
     if (createData?.data.status === "success") {
       form.resetFields();
-      setFile(null);
+      setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(createData?.data.messages);
     }
@@ -309,9 +309,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             />
           </Form.Item>
           {messageErr?.model && (
-            <Typography.Text type="danger">
-              {messageErr.model[0]}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.model}</Typography.Text>
           )}
 
           <Form.Item
@@ -334,7 +332,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           </Form.Item>
           {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location}
             </Typography.Text>
           )}
           <Form.Item
@@ -382,9 +380,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_label && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_label}
             </Typography.Text>
           )}
           {isReadyToDeploy && (
@@ -462,7 +460,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier}
             </Typography.Text>
           )}
           <Form.Item
@@ -530,7 +528,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       </Form.Item>
       {messageErr?.requestable && (
         <Typography.Text type="danger">
-          {messageErr.requestable[0]}
+          {messageErr.requestable}
         </Typography.Text>
       )}
 

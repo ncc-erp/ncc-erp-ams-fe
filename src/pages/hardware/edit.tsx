@@ -23,7 +23,13 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
-import { HARDWARE_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, SUPPLIERS_HARDWARE_API } from "api/baseApi";
+import {
+  HARDWARE_API,
+  LOCATIONS_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
+  SUPPLIERS_HARDWARE_API,
+} from "api/baseApi";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -35,8 +41,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [file, setFile] = useState<any>(null);
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [file, setFile] = useState<File>();
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
   const [checked, setChecked] = useState(true);
 
   useEffect(() => {
@@ -57,7 +63,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECTLIST_API,
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -69,7 +75,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUSLABELS_API,
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -120,7 +126,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("name", event.name);
@@ -144,7 +150,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     if (event.supplier !== undefined)
       formData.append("supplier_id", event.supplier.toString());
 
-    if (typeof event.image !== "string" && event.image !== null)
+    if (
+      typeof event.image !== "string" &&
+      event.image !== undefined &&
+      event.image !== null
+    )
       formData.append("image", event.image);
 
     formData.append("requestable", checked ? "1" : "0");
@@ -155,7 +165,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   useEffect(() => {
     form.resetFields();
-    setFile(null);
+    setFile(undefined);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
@@ -202,9 +212,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   useEffect(() => {
     if (updateData?.data.status === "success") {
       form.resetFields();
-      setFile(null);
+      setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }
@@ -301,9 +311,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             />
           </Form.Item>
           {messageErr?.model && (
-            <Typography.Text type="danger">
-              {messageErr.model[0]}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.model}</Typography.Text>
           )}
 
           <Form.Item
@@ -327,7 +335,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           </Form.Item>
           {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location}
             </Typography.Text>
           )}
 
@@ -353,9 +361,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_label && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_label}
             </Typography.Text>
           )}
 
@@ -439,7 +447,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier}
             </Typography.Text>
           )}
 
@@ -473,9 +481,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               }
             />
           </Form.Item>
-          {messageErr?.puchase_cost && (
+          {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>

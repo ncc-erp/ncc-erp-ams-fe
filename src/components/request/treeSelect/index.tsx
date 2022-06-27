@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
+import { FINFAST_ENTRY_TYPE_API } from "api/baseApi";
 import { IEntryType, ITreeEntryType } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,7 +18,7 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
   const [treeData, setTreeData] = useState<ITreeEntryType[]>([]);
 
   const { data } = useCustom({
-    url: "api/v1/finfast/entry-type",
+    url: FINFAST_ENTRY_TYPE_API,
     method: "get",
   });
 

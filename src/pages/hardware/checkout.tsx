@@ -26,7 +26,14 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
-import { HARDWARE_API, HARDWARE_SELECTLIST_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API, USERS_API } from "api/baseApi";
+import {
+  HARDWARE_API,
+  HARDWARE_SELECT_LIST_API,
+  LOCATIONS_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
+  USERS_API,
+} from "api/baseApi";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -39,7 +46,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
 
@@ -55,7 +62,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECTLIST_API,
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -67,7 +74,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUSLABELS_API,
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -91,7 +98,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECTLIST_API,
+    resource: HARDWARE_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -130,7 +137,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const onFinish = (event: IHardwareRequestCheckout) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
 
     const formData = new FormData();
     formData.append("name", event.name);
@@ -188,7 +195,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     if (updateData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }

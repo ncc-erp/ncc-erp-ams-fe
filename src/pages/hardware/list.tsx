@@ -327,13 +327,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "name",
-        title: "Tên tài sản",
+        title: t("hardware.label.field.assetName"),
         render: (value: IHardware) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "image",
-        title: "Hình ảnh",
+        title: t("hardware.label.field.image"),
         render: (value: string) => {
           return value ? (
             <Image width={80} alt="" height={"auto"} src={value} />
@@ -344,31 +344,31 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "model",
-        title: "Kiểu tài sản",
+        title: t("hardware.label.field.propertyType"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "category",
-        title: "Thể loại",
+        title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
         key: "status_label",
-        title: "Trạng thái",
+        title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
             value={
               value
                 ? value.name === "Assign"
-                  ? "Cấp phát"
+                  ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                  ? "Cho phép cấp phát"
+                  ? t("hardware.label.detail.readyToDeploy")
                   : value.name === "Broken"
-                  ? "Không cho phép cấp phát"
+                  ? t("hardware.label.detail.broken")
                   : value.name === "Pending"
-                  ? "Đang chờ"
+                  ? t("hardware.label.detail.pending")
                   : ""
                 : ""
             }
@@ -391,19 +391,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "assigned_status",
-        title: "Tình trạng",
-        render: (value: any) => (
+        title: t("hardware.label.field.condition"),
+        render: (value: number) => (
           <TagField
             value={
-              value === 0
-                ? "Chưa assign"
+              value && value === 0
+                ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? "Đang chờ xác nhận"
+                ? t("hardware.label.detail.pendingAccept")
                 : value === 2
-                ? "Đã từ chối"
-                : value === 0
-                ? "Đang chờ xác nhận"
-                : "Chưa assign"
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
@@ -412,9 +412,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   : value === 1
                   ? "#f39c12"
                   : value === 2
+                  ? "#0073b7"
+                  : value === 3
                   ? "red"
-                  : value === 0
-                  ? "#f39c12"
                   : "gray",
               color: "white",
             }}
@@ -424,7 +424,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "assigned_to",
-        title: "Cấp phát đến",
+        title: t("hardware.label.field.checkoutTo"),
         render: (value: IHardwareResponse) => (
           <TextField value={value ? value.name : ""} />
         ),
@@ -433,7 +433,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
       {
         key: "created_at",
-        title: "Ngày tạo",
+        title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) => (
           <DateField format="LLL" value={value.datetime} />
         ),

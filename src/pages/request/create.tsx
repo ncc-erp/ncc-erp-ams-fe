@@ -27,7 +27,11 @@ import { TreeSelectComponent } from "components/request/treeSelect";
 import { ListAssetNotRequest } from "components/request/listAssetNotRequested";
 import { IRequest } from "interfaces/request";
 import { ISelectItem } from "interfaces";
-import { BRANCH_REQUEST_API, FINFAST_REQUEST_API, SUPPLIER_REQUEST_API } from "api/baseApi";
+import {
+  BRANCH_REQUEST_API,
+  FINFAST_REQUEST_API,
+  SUPPLIER_REQUEST_API,
+} from "api/baseApi";
 
 type RequestCreateProps = {
   useHardwareNotRequest: IHardwareList;
@@ -147,7 +151,9 @@ export const RequestCreate = (props: RequestCreateProps) => {
               placeholder={t("request.label.placeholder.name")}
               optionFilterProp="children"
               filterOption={(input, option: any) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
               }
               filterSort={(optionA, optionB) =>
                 optionA.children

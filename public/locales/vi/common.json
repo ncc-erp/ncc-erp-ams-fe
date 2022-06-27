@@ -127,7 +127,10 @@
           "dateCheckin": "Ngày thu hồi",
           "note": "Ghi chú",
           "category": "Thể loại",
-          "rtd_location": "Vị trí"
+          "rtd_location": "Vị trí",
+          "image": "Hình ảnh",
+          "condition": "Tình trạng",
+          "dateCreate": "Ngày tạo"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -170,6 +173,16 @@
           "clone": "Clone",
           "edit": "Chỉnh sửa",
           "delete": "Xóa"
+        },
+        "detail": {
+          "assign": "Cấp phát",
+          "readyToDeploy": "Cho phép cấp phát",
+          "broken": "Không cho phép cấp phát",
+          "pending": "Đang chờ",
+          "noAssign": "Chưa assign",
+          "pendingAccept": "Đang chờ xác nhận",
+          "accept": "Đã xác nhận",
+          "refuse": "Đã từ chối"
         }
     }
   },
@@ -239,7 +252,10 @@
         "model": "Kiểu tài sản",
         "insurance": "Bảo hành",
         "reason": "Lý do",
-        "inputReason": "Nhập lý do từ chối"
+        "inputReason": "Nhập lý do từ chối",
+        "image": "Hình ảnh",
+        "condition": "Tình trạng",
+        "dateCheckout": "Ngày cấp phát"
       },
       "message": {
         "required":"bắt buộc"
@@ -273,6 +289,15 @@
       "button": {
         "create": "Thêm mới",
         "update": "Chỉnh sửa"
+      },
+      "table": {
+        "nameAsset":"Tên tài sản",
+        "image": "Hình ảnh",
+        "category": "Loại",
+        "assetCount": "Số lượng",
+        "sendEmail": "Gửi email",
+        "accept": "Chấp nhận"
+
       }
     }
   },
@@ -292,7 +317,11 @@
         "urlSupport": "URL Hỗ trợ",
         "phone": "Điện thoại hỗ trợ",
         "email": "Hỗ trợ Email",
-        "image":"Tải hình"
+        "image":"Tải hình",
+        "imageTable": "Hình ảnh",
+        "assetCount": "Số lượng",
+        "dateCreate": "Ngày tạo"
+
 
       },
       "message": {
@@ -324,7 +353,11 @@
         "state": "Tỉnh/Thành phố",
         "country": "Nước",
         "zip": "Zip",
-        "image":"Tải hình"
+        "image":"Tải hình",
+        "imageTable": "Hình ảnh",
+        "assetCount":"Số lượng",
+        "assetAssign": "Assets Assigned",
+        "dateCreate": "Ngày tạo"
 
       },
       "placeholder":{
@@ -349,6 +382,9 @@
     "users": "Tài sản của tôi",
     "category": "Danh mục",
     "manufactures": "Nhà sản xuất",
-    "location": "Địa phương"
+    "location": "Địa phương",
+    "supplier": "Nhà cung cấp",
+    "department": "Phòng ban",
+    "models":"Kiểu tài sản"
   }
 }
