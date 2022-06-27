@@ -1,4 +1,10 @@
-import { CATEGORIES_API, HARDWARE_API, LOCATION_API, MANUFACTURES_API } from "api/baseApi";
+import {
+  CATEGORIES_API,
+  HARDWARE_API,
+  LOCATION_API,
+  MANUFACTURES_API,
+} from "api/baseApi";
+import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
 import { newModel, MemoryAdapter } from "casbin.js";
 
@@ -47,6 +53,18 @@ p, 1, ${i18n.t("resource.location")}/*, (edit)
 p, 0, ${i18n.t("resource.dashboard")}, list
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+
+p, 1, ${i18n.t("resource.model")}, (list)|(create)
+p, 1, ${MODELS_API}/*, (delete)
+p, 1, ${i18n.t("resource.model")}/*, (edit)
+
+p, 1, ${i18n.t("resource.suppliers")}, (list)|(create)
+p, 1, ${SUPPLIERS_API}/*, (delete)
+p, 1, ${i18n.t("resource.suppliers")}/*, (edit)
+
+p, 1, ${i18n.t("resource.department")}, (list)|(create)
+p, 1, ${DEPARTMENT_API}/*, (delete)
+p, 1, ${i18n.t("resource.department")}/*, (edit)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

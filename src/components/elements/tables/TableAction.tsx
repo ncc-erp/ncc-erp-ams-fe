@@ -118,7 +118,7 @@ export const TableAction = (props: ITableAction) => {
     ),
     [actions]
   );
-  const onSelectCollumn = useCallback(() => {}, []);
+  const onSelectCollumn = useCallback(() => { }, []);
 
   return (
     <Row style={{ marginBottom: "10px" }}>

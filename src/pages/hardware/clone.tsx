@@ -35,7 +35,7 @@ import {
   LOCATIONS_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  SUPPLIERS_HARDWARE_API,
+  SUPPLIERS_API,
   USERS_API,
 } from "api/baseApi";
 
@@ -108,7 +108,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: SUPPLIERS_HARDWARE_API,
+    resource: SUPPLIERS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
