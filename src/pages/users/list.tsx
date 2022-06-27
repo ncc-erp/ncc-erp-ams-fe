@@ -20,6 +20,7 @@ import {
   Button,
   Input,
   EditButton,
+  Tooltip,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import { IHardware } from "interfaces";
@@ -71,13 +72,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "name",
-        title: "Tên tài sản",
+        title: t("user.label.field.name"),
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "image",
-        title: "Hình ảnh",
+        title: t("user.label.field.image"),
         render: (value: string) => {
           return value ? (
             <Image width={80} alt="" height={"auto"} src={value} />
@@ -88,7 +89,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "model",
-        title: "Kiểu tài sản",
+        title: t("user.label.field.model"),
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -96,7 +97,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "category",
-        title: "Thể loại",
+        title: t("user.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -104,7 +105,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "rtd_location",
-        title: "Vị trí",
+        title: t("user.label.field.location"),
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -113,18 +114,18 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
       {
         key: "assigned_status",
-        title: "Tình trạng",
-        render: (value: any) => (
+        title: t("user.label.field.condition"),
+        render: (value: number) => (
           <TagField
             value={
               value === 0
-                ? "Chưa assign"
+                ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? "Đang chờ xác nhận"
+                ? t("hardware.label.detail.pendingAccept")
                 : value === 2
-                ? "Đã xác nhận"
+                ? t("hardware.label.detail.accept")
                 : value === 3
-                ? "Đã từ chối"
+                ? t("hardware.label.detail.refuse")
                 : ""
             }
             style={{
@@ -137,7 +138,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   ? "#0073b7"
                   : value === 3
                   ? "red"
-                  : "",
+                  : "gray",
               color: "white",
             }}
           />
@@ -147,7 +148,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
       {
         key: "last_checkout",
-        title: "Ngày cấp phát",
+        title: t("user.label.field.dateCheckout"),
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
@@ -202,7 +203,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={t("user.label.title.name")}>
       <TableAction searchFormProps={searchFormProps} />
-
       <MModal
         title={t("user.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
@@ -230,12 +230,17 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record) => (
             <Space>
-              <ShowButton
-                hideText
-                size="small"
-                recordItemId={record.id}
-                onClick={() => show(record)}
-              />
+              <Tooltip
+                title={t("hardware.label.tooltip.viewDetail")}
+                color={"#108ee9"}
+              >
+                <ShowButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => show(record)}
+                />
+              </Tooltip>
               {record.assigned_status === 1 && (
                 <Popconfirm
                   title={t("request.label.button.accept")}

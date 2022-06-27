@@ -21,7 +21,12 @@ import {
 import { IModel } from "interfaces/model";
 
 import { ICompany } from "interfaces/company";
-import { HARDWARE_API, LOCATIONS_API, MODELS_SELECTLIST_API, STATUSLABELS_API } from "api/baseApi";
+import {
+  HARDWARE_API,
+  LOCATIONS_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -33,7 +38,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<IHardwareRequestCheckin>();
 
   const t = useTranslate();
 
@@ -49,7 +54,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECTLIST_API,
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -61,7 +66,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUSLABELS_API,
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -100,7 +105,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   });
 
   const onFinish = (event: IHardwareRequestCheckin) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
 
     const formData = new FormData();
     formData.append("name", event.name);
@@ -150,7 +155,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (updateData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }

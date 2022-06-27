@@ -33,7 +33,11 @@ import { RequestCreate } from "./create";
 import { RequestShow } from "./show";
 import { TableAction } from "components/elements/tables/TableAction";
 import { IRequestResponse } from "interfaces/request";
-import { FINFAST_REQUEST_API, HARDWARE_API, SEND_REQUEST_API } from "api/baseApi";
+import {
+  FINFAST_REQUEST_API,
+  HARDWARE_API,
+  SEND_REQUEST_API,
+} from "api/baseApi";
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -279,8 +283,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                     >
                       {t("request.label.button.send")}

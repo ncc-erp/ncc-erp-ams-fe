@@ -18,7 +18,7 @@ type HardwareEditProps = {
 export const CancleAsset = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
   const t = useTranslate();
   const { formProps, form } = useForm<IHardwareUpdateRequest>({
@@ -41,7 +41,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("reason", event.reason);
@@ -68,7 +68,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     if (updateData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }

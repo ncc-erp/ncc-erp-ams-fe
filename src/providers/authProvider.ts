@@ -1,7 +1,7 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
 import { UserAPI } from "api/userApi";
-import { GETME_API } from "api/baseApi";
+import { GET_ME_API } from "api/baseApi";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 export const STORE_PERMISSION = "permissions";
@@ -31,7 +31,7 @@ export const authProvider: AuthProvider = {
       payload: payload,
     });
     localStorage.setItem(TOKEN_KEY, data.data.access_token);
-    const permissionRes = await UserAPI.getAll(GETME_API);
+    const permissionRes = await UserAPI.getAll(GET_ME_API);
     localStorage.setItem(
       STORE_PERMISSION,
       JSON.stringify(permissionRes.data.permissions)

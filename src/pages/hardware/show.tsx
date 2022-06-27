@@ -26,13 +26,13 @@ export const HardwareShow = (props: HardwareShowProps) => {
       <Text>
         <Tag>
           {detail?.status_label?.name === "Assign"
-            ? "Cấp phát"
+            ? t("hardware.label.detail.assign")
             : detail?.status_label?.name === "Ready to deploy"
-            ? "Cho phép cấp phát"
+            ? t("hardware.label.detail.readyToDeploy")
             : detail?.status_label?.name === "Broken"
-            ? "Không cho phép cấp phát"
+            ? t("hardware.label.detail.broken")
             : detail?.status_label?.name === "Pending"
-            ? "Đang chờ"
+            ? t("hardware.label.detail.pending")
             : ""}
         </Tag>
       </Text>

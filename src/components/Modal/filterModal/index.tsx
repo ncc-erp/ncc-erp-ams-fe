@@ -1,5 +1,6 @@
 import { Modal, TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
+import { DASHBOARD_FINFAST_SETTING_API } from "api/baseApi";
 import { ITreeEntryType } from "interfaces/dashboard";
 import { SetStateAction, useState } from "react";
 
@@ -15,7 +16,7 @@ export const FilterModal = (props: FilterModalProps) => {
   const [value, setValue] = useState<number[]>(valueData);
 
   const {} = useCustom({
-    url: `api/v1/dashboard/finfast-setting`,
+    url: DASHBOARD_FINFAST_SETTING_API,
     method: "post",
     config: {
       payload: {

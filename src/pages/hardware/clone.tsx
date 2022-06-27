@@ -31,10 +31,10 @@ import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
-  HARDWARE_SELECTLIST_API,
+  HARDWARE_SELECT_LIST_API,
   LOCATIONS_API,
-  MODELS_SELECTLIST_API,
-  STATUSLABELS_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
   SUPPLIERS_HARDWARE_API,
   USERS_API,
 } from "api/baseApi";
@@ -49,8 +49,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [file, setFile] = useState<any>(null);
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [file, setFile] = useState<File>();
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
   const [activeModel, setActiveModel] = useState<String>("1");
   const [checked, setChecked] = useState(true);
 
@@ -72,7 +72,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECTLIST_API,
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -84,7 +84,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUSLABELS_API,
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -132,7 +132,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECTLIST_API,
+    resource: HARDWARE_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -146,7 +146,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { mutate, data: cloneData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("name", event.name);
@@ -172,7 +172,11 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("supplier_id", event.supplier.toString());
 
-    if (typeof event.image !== "string" && event.image !== null)
+    if (
+      typeof event.image !== "string" &&
+      event.image !== undefined &&
+      event.image !== null
+    )
       formData.append("image", event.image);
 
     formData.append("requestable", checked ? "1" : "0");
@@ -192,7 +196,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
   useEffect(() => {
     form.resetFields();
-    setFile(null);
+    setFile(undefined);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: "" },
@@ -235,7 +239,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     if (cloneData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(cloneData?.data.messages);
     }
@@ -325,9 +329,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             />
           </Form.Item>
           {messageErr?.model && (
-            <Typography.Text type="danger">
-              {messageErr.model[0]}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.model}</Typography.Text>
           )}
 
           <Form.Item
@@ -351,7 +353,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           </Form.Item>
           {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location}
             </Typography.Text>
           )}
 
@@ -407,9 +409,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_label && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_label}
             </Typography.Text>
           )}
           {isReadyToDeploy && (
@@ -491,7 +493,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier}
             </Typography.Text>
           )}
           <Form.Item
@@ -523,9 +525,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               }
             />
           </Form.Item>
-          {messageErr?.puchase_cost && (
+          {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>
