@@ -1,4 +1,4 @@
-import { Tooltip } from 'antd';
+import { Image, Tooltip } from 'antd';
 import {
     useTranslate,
     IResourceComponentsProps,
@@ -56,6 +56,21 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
                 title: t("supplier.label.field.name"),
                 render: (value: ISupplier) => <TextField value={value} />,
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "image",
+                title: t("supplier.label.field.images"),
+                render: (value: string) => {
+                    return value
+                        ? (
+                            <Image
+                                width={50}
+                                height={'auto'}
+                                src={value}
+                            />
+                        )
+                        : ""
+                }
             },
             {
                 key: "address",
@@ -167,7 +182,7 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
-            <Table {...tableProps} rowKey="id" scroll={{ x: 1307 }}>
+            <Table {...tableProps} rowKey="id" scroll={{ x: 1360 }}>
                 {collumns.map((col) => (
                     <Table.Column dataIndex={col.key} {...col} sorter />
                 ))}

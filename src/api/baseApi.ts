@@ -29,6 +29,8 @@ export const USERS_SELECT_LIST_API = "api/v1/users/selectlist";
 
 export const MANUFACTURERS_SELECT_LIST_API = "api/v1/manufacturers/selectlist";
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
+export const DEPRECIATIONS_API = "api/v1/depreciations";
+export const FIELDSET_API = "api/v1/fields";
 
 export const MODELS_API = "api/v1/models";
 export const DEPARTMENT_API = "api/v1/departments";

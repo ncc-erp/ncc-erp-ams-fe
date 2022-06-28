@@ -12,7 +12,7 @@ export interface IModelRequest {
   eol: string;
   fieldset: string;
   notes: string;
-  requestable: boolean;
+  requestable: number;
   image: string;
   assets_count: number;
 }

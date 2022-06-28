@@ -24,7 +24,7 @@ import { UploadImage } from "components/elements/uploadImage";
 
 import "../../styles/hardware.less";
 import { ICheckboxChange } from "interfaces";
-import { MANUFACTURERS_SELECT_LIST_API, CATEGORIES_API, MODELS_API } from "api/baseApi";
+import { MANUFACTURERS_SELECT_LIST_API, CATEGORIES_API, MODELS_API, DEPRECIATIONS_API, FIELDSET_API } from "api/baseApi";
 
 type ModelCreateProps = {
     isModalVisible: boolean;
@@ -58,6 +58,30 @@ export const ModelCreate = (props: ModelCreateProps) => {
 
     const { selectProps: categorySelectProps } = useSelect<IModel>({
         resource: CATEGORIES_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: depreciationsSelectProps } = useSelect<IModel>({
+        resource: DEPRECIATIONS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: fieldsetSelectProps } = useSelect<IModel>({
+        resource: FIELDSET_API,
         optionLabel: "name",
         onSearch: (value) => [
             {
@@ -112,10 +136,10 @@ export const ModelCreate = (props: ModelCreateProps) => {
 
     const onCheck = (event: ICheckboxChange) => {
         if (event.target.checked) {
-            form.setFieldsValue({ requestable: true });
+            form.setFieldsValue({ requestable: 1 });
         }
         else {
-            form.setFieldsValue({ requestable: false });
+            form.setFieldsValue({ requestable: 0 });
         }
     };
 
@@ -221,9 +245,7 @@ export const ModelCreate = (props: ModelCreateProps) => {
                         label={t("model.label.field.depreciation")}
                         name="depreciation"
                     >
-                        <Select
-                        // {...ISelectProps}
-                        />
+                        <Select {...depreciationsSelectProps} />
                     </Form.Item>
                     {messageErr?.depreciation && (
                         <Typography.Text type="danger">
@@ -245,10 +267,10 @@ export const ModelCreate = (props: ModelCreateProps) => {
                         </Typography.Text>
                     )}
                     <Form.Item
-                        label={t("model.label.field.Fieldset")}
+                        label={t("model.label.field.fieldset")}
                         name="fieldset"
                     >
-                        <Select />
+                        <Select {...fieldsetSelectProps} />
                     </Form.Item>
                     {messageErr?.fieldset && (
                         <Typography.Text type="danger">

@@ -397,9 +397,9 @@
         "category": "Tên hạng mục",
         "depreciation": "Khấu hao",
         "model_number": "Model No",
-        "eol": "eol",
+        "eol": "EOL",
         "month": "tháng",
-        "Fieldset": "Fieldset",
+        "fieldset": "Fieldset",
         "notes": "Ghi chú",
         "image": "Tải hình",
         "checkbox": "Người dùng có thể yêu cầu mô hình này",
@@ -450,7 +450,8 @@
         "image": "Tải hình",
         "assets": "Tài sản",
         "accessories": "Phụ kiện",
-        "licenses": "Bản quyền"
+        "licenses": "Bản quyền",
+        "images":"Hình ảnh"
       },
       "message": {
         "required":"bắt buộc"

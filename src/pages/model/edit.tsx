@@ -17,7 +17,7 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import { IModel, IModelRequest, IModelResponse } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICheckboxChange } from "interfaces";
-import { MANUFACTURERS_SELECT_LIST_API, CATEGORIES_API, MODELS_API } from "api/baseApi";
+import { MANUFACTURERS_SELECT_LIST_API, CATEGORIES_API, MODELS_API, DEPRECIATIONS_API, FIELDSET_API } from "api/baseApi";
 
 type ModelEditProps = {
     isModalVisible: boolean;
@@ -58,6 +58,30 @@ export const ModelEdit = (props: ModelEditProps) => {
 
     const { selectProps: categorySelectProps } = useSelect<IModel>({
         resource: CATEGORIES_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: depreciationsSelectProps } = useSelect<IModel>({
+        resource: DEPRECIATIONS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: fieldsetSelectProps } = useSelect<IModel>({
+        resource: FIELDSET_API,
         optionLabel: "name",
         onSearch: (value) => [
             {
@@ -253,7 +277,7 @@ export const ModelEdit = (props: ModelEditProps) => {
                         name="depreciation"
                         initialValue={data?.depreciation}
                     >
-                        <Select />
+                        <Select {...depreciationsSelectProps} />
                     </Form.Item>
                     {messageErr?.depreciation && (
                         <Typography.Text type="danger">
@@ -278,12 +302,11 @@ export const ModelEdit = (props: ModelEditProps) => {
                         </Typography.Text>
                     )}
                     <Form.Item
-                        label={t("model.label.field.Fieldset")}
+                        label={t("model.label.field.fieldset")}
                         name="fieldset"
                         initialValue={data?.fieldset}
                     >
-                        <Select
-                        />
+                        <Select {...fieldsetSelectProps} />
                     </Form.Item>
                     {messageErr?.fieldset && (
                         <Typography.Text type="danger">
