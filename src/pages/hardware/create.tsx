@@ -39,7 +39,7 @@ import {
   COMPANIES_API,
   HARDWARE_API,
   HARDWARE_SELECT_LIST_API,
-  LOCATIONS_API,
+  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   SUPPLIERS_API,
@@ -132,7 +132,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATIONS_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTranslate, useCreate } from "@pankod/refine-core";
 import {
@@ -13,7 +14,7 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { UploadImage } from "components/elements/uploadImage";
 import "../../styles/hardware.less";
-import { COMPANY_API, DEPARTMENT_API, LOCATIONS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { COMPANIES_SELECT_LIST_API, DEPARTMENT_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
 import { IDepartment, IDepartmentRequest } from "interfaces/department";
 
 type DepartmentCreateProps = {
@@ -34,7 +35,7 @@ export const DepartmentCreate = (props: DepartmentCreateProps) => {
     });
 
     const { selectProps: companySelectProps } = useSelect<IDepartment>({
-        resource: COMPANY_API,
+        resource: COMPANIES_SELECT_LIST_API,
         optionLabel: "text",
         onSearch: (value) => [
             {
@@ -58,7 +59,7 @@ export const DepartmentCreate = (props: DepartmentCreateProps) => {
     });
 
     const { selectProps: locationSelectProps } = useSelect<IDepartment>({
-        resource: LOCATIONS_SELECT_LIST_API,
+        resource: LOCATION_SELECT_LIST_API,
         optionLabel: "text",
         onSearch: (value) => [
             {

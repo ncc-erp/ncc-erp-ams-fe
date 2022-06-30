@@ -28,7 +28,10 @@ export interface IModelResponse {
     id: number;
     name: string;
   };
-  depreciation: number;
+  depreciation: {
+    id: number;
+    name: string;
+  };
   image: string;
   eol: string;
   fieldset: string;

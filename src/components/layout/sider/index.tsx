@@ -1,15 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 
 import {
   useTranslate,
-  useLogout,
   useTitle,
   useNavigation,
   usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
-import { useGoogleLogout } from "react-google-login";
 
 const {
   RightOutlined,
@@ -22,13 +21,12 @@ const {
   EnvironmentOutlined,
   ContainerOutlined,
   ShopOutlined,
-  HomeOutlined,
   ReconciliationOutlined,
+  LineChartOutlined
 } = Icons;
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const { mutate: logout } = useLogout();
   const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
@@ -90,9 +88,12 @@ export const Sider: React.FC = () => {
                     <ShopOutlined />
                   ) : name === `${translate("resource.department")}` ? (
                     <ReconciliationOutlined />
-                  ) : (
-                    ""
+                  ) : name === `${translate("resource.depreciation")}` ? (
+                    <LineChartOutlined />
                   )
+                    : (
+                      ""
+                    )
                 }
               >
                 <div

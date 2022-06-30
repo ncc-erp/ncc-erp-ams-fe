@@ -185,7 +185,7 @@ export const ModelCreate = (props: ModelCreateProps) => {
                         name="manufacturer"
                         rules={[
                             {
-                                required: true,
+                                required: false,
                                 message:
                                     t("model.label.field.manufacturer") +
                                     " " +
@@ -296,7 +296,14 @@ export const ModelCreate = (props: ModelCreateProps) => {
                 <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
             )}
 
-            <Form.Item label="" name="requestable" valuePropName="checked">
+            <Form.Item label="" name="requestable" valuePropName="checked"
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            t("model.label.message.required"),
+                    },
+                ]}>
                 <Checkbox
                     onChange={(event) => {
                         onCheck(event);

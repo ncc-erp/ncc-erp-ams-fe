@@ -25,7 +25,7 @@ import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
-  LOCATIONS_API,
+  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   SUPPLIERS_API,
@@ -87,7 +87,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATIONS_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

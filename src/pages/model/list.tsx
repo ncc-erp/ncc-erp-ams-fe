@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { IModel } from "@antv/l7-core";
 import { Image, Tooltip } from 'antd';
 import {
@@ -16,6 +17,7 @@ import {
     EditButton,
     DeleteButton,
     CreateButton,
+    TagField,
 } from "@pankod/refine-antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -80,7 +82,7 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "assets_count",
                 title: t("model.label.field.assets"),
-                render: (value: number) => <TextField value={value} />,
+                render: (value: number) => <TagField value={value} />,
                 defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
             },
             {
@@ -119,7 +121,10 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
             notes: data?.notes,
             requestable: data?.requestable,
             assets_count: data?.assets_count,
-            depreciation: data?.depreciation,
+            depreciation: {
+                id: data.depreciation !== null ? data.depreciation.id : 0,
+                name: data.depreciation !== null ? data.depreciation.name : "",
+            },
             fieldset: data?.fieldset
         };
 
@@ -145,7 +150,10 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
             notes: data?.notes,
             requestable: data?.requestable,
             assets_count: data?.assets_count,
-            depreciation: data?.depreciation,
+            depreciation: {
+                id: data.depreciation !== null ? data.depreciation.id : 0,
+                name: data.depreciation !== null ? data.depreciation.name : "",
+            },
             fieldset: data?.fieldset
         };
 

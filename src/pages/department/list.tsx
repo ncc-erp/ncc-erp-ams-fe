@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'antd';
 import {
     useTranslate,
@@ -14,6 +15,7 @@ import {
     EditButton,
     DeleteButton,
     CreateButton,
+    TagField,
 } from "@pankod/refine-antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -65,7 +67,7 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "users_count",
                 title: t("department.label.field.user"),
-                render: (value: IDepartment) => <TextField value={value} />,
+                render: (value: IDepartment) => <TagField value={value} />,
             },
             {
                 key: "location",

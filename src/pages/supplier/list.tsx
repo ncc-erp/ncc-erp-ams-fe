@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Image, Tooltip } from 'antd';
 import {
     useTranslate,
@@ -14,6 +15,7 @@ import {
     EditButton,
     DeleteButton,
     CreateButton,
+    TagField,
 } from "@pankod/refine-antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -77,36 +79,36 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
                 title: t("supplier.label.field.address"),
                 render: (value: ISupplier) => <TextField value={value} />,
             },
-            {
-                key: "contact",
-                title: t("supplier.label.field.contact"),
-                render: (value: ISupplier) => <TextField value={value} />,
-            },
-            {
-                key: "email",
-                title: t("supplier.label.field.email"),
-                render: (value: ISupplier) => <TextField value={value} />,
-            },
-            {
-                key: "phone",
-                title: t("supplier.label.field.phone"),
-                render: (value: ISupplier) => <TextField value={value} />,
-            },
+            // {
+            //     key: "contact",
+            //     title: t("supplier.label.field.contact"),
+            //     render: (value: ISupplier) => <TextField value={value} />,
+            // },
+            // {
+            //     key: "email",
+            //     title: t("supplier.label.field.email"),
+            //     render: (value: ISupplier) => <TextField value={value} />,
+            // },
+            // {
+            //     key: "phone",
+            //     title: t("supplier.label.field.phone"),
+            //     render: (value: ISupplier) => <TextField value={value} />,
+            // },
             {
                 key: "assets_count",
                 title: t("supplier.label.field.assets"),
-                render: (value: number) => <TextField value={value} />,
+                render: (value: number) => <TagField value={value} />,
             },
-            {
-                key: "accessories_count",
-                title: t("supplier.label.field.accessories"),
-                render: (value: number) => <TextField value={value} />,
-            },
-            {
-                key: "licenses_count",
-                title: t("supplier.label.field.licenses"),
-                render: (value: number) => <TextField value={value} />,
-            },
+            // {
+            //     key: "accessories_count",
+            //     title: t("supplier.label.field.accessories"),
+            //     render: (value: number) => <TagField value={value} />,
+            // },
+            // {
+            //     key: "licenses_count",
+            //     title: t("supplier.label.field.licenses"),
+            //     render: (value: number) => <TagField value={value} />,
+            // },
         ],
         []
     );
@@ -182,7 +184,8 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
-            <Table {...tableProps} rowKey="id" scroll={{ x: 1360 }}>
+            {/* <Table {...tableProps} rowKey="id" scroll={{ x: 1360 }}> */}
+            <Table {...tableProps} rowKey="id">
                 {collumns.map((col) => (
                     <Table.Column dataIndex={col.key} {...col} sorter />
                 ))}

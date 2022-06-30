@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
@@ -11,7 +12,7 @@ import {
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { UploadImage } from "components/elements/uploadImage";
-import { COMPANY_API, DEPARTMENT_API, LOCATIONS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { COMPANIES_SELECT_LIST_API, DEPARTMENT_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
 import { IDepartment, IDepartmentRequest, IDepartmentResponse } from "interfaces/department";
 
 type DepartmentEditProps = {
@@ -35,7 +36,7 @@ export const DepartmentEdit = (props: DepartmentEditProps) => {
     const { setFields } = form;
 
     const { selectProps: companySelectProps } = useSelect<IDepartment>({
-        resource: COMPANY_API,
+        resource: COMPANIES_SELECT_LIST_API,
         optionLabel: "text",
         onSearch: (value) => [
             {
@@ -59,7 +60,7 @@ export const DepartmentEdit = (props: DepartmentEditProps) => {
     });
 
     const { selectProps: locationSelectProps } = useSelect<IDepartment>({
-        resource: LOCATIONS_SELECT_LIST_API,
+        resource: LOCATION_SELECT_LIST_API,
         optionLabel: "text",
         onSearch: (value) => [
             {

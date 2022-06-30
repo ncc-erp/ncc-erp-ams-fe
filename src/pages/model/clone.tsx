@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -130,7 +131,7 @@ export const ModelClone = (props: ModelCloneProps) => {
             { name: "manufacturer", value: data?.manufacturer.id },
             { name: "model_number", value: data?.model_number },
             { name: "category", value: data?.category.id },
-            { name: "depreciation", value: data?.depreciation },
+            { name: "depreciation", value: data?.depreciation.name },
             { name: "eol", value: data?.eol && data.eol.split(" ")[0] },
             { name: "fieldset", value: data?.fieldset },
             { name: "notes", value: data?.notes },
@@ -196,7 +197,7 @@ export const ModelClone = (props: ModelCloneProps) => {
                         name="manufacturer"
                         rules={[
                             {
-                                required: true,
+                                required: false,
                                 message:
                                     t("model.label.field.manufacturer") +
                                     " " +
@@ -260,7 +261,7 @@ export const ModelClone = (props: ModelCloneProps) => {
                     <Form.Item
                         label={t("model.label.field.depreciation")}
                         name="depreciation"
-                        initialValue={data?.depreciation}
+                        initialValue={data?.depreciation.name}
                     >
                         <Select {...depreciationsSelectProps} />
                     </Form.Item>
