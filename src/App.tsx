@@ -100,6 +100,13 @@ function App() {
           },
         },
         {
+          name: t("resource.model"),
+          list: ModelList,
+          options: {
+            route: "models",
+          },
+        },
+        {
           name: t("resource.category"),
           list: CategoryList,
           options: {
@@ -111,20 +118,6 @@ function App() {
           list: ManufacturesList,
           options: {
             route: "manufactures",
-          },
-        },
-        {
-          name: t("resource.location"),
-          list: LocationList,
-          options: {
-            route: "location",
-          }
-        },
-        {
-          name: t("resource.model"),
-          list: ModelList,
-          options: {
-            route: "models",
           },
         },
         {
@@ -141,6 +134,13 @@ function App() {
             route: "department",
           },
         },
+        {
+          name: t("resource.location"),
+          list: LocationList,
+          options: {
+            route: "location",
+          }
+        }
       ]}
       Title={Title}
       Header={Header}
