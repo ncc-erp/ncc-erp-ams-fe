@@ -384,7 +384,127 @@
     "manufactures": "Nhà sản xuất",
     "location": "Địa phương",
     "supplier": "Nhà cung cấp",
+    "model": "Kiểu tài sản",
+    "suppliers": "Nhà cung cấp",
     "department": "Phòng ban",
-    "models":"Kiểu tài sản"
+    "setting": "Cài đặt"
+  },
+  "model": {
+    "label": {
+      "field": {
+        "name": "Tên kiểu tài sản",
+        "manufacturer": "Nhà sản xuất",
+        "category": "Tên hạng mục",
+        "depreciation": "Khấu hao",
+        "model_number": "Model No",
+        "eol": "EOL",
+        "month": "tháng",
+        "fieldset": "Fieldset",
+        "notes": "Ghi chú",
+        "image": "Tải hình",
+        "checkbox": "Người dùng có thể yêu cầu mô hình này",
+        "assets": "Tài sản",
+        "images": "Hình ảnh"
+      },
+      "placeholder": {
+        "manufacturer": "Lựa chọn một nhà sản xuất",
+        "category": "Chọn một danh mục"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "clone": "Clone"
+      },
+      "title": {
+        "model": "Danh sách kiểu tài sản",
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "clone": "Clone"
+      },
+      "tooltip": {
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "clone": "Clone",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "supplier": {
+    "label": {
+      "field": {
+        "name": "Tên nhà cung cấp",
+        "address": "Địa chỉ nhà cung cấp",
+        "city": "Thành phố",
+        "state": "Tỉnh/Thành phố",
+        "zip": "Zip",
+        "country": "Nước",
+        "contact": "Tên người liên hệ",
+        "phone": "Điện thoại",
+        "fax": "Fax",
+        "email": "Email",
+        "url": "URL",
+        "notes": "Ghi chú",
+        "image": "Tải hình",
+        "assets": "Tài sản",
+        "accessories": "Phụ kiện",
+        "licenses": "Bản quyền",
+        "images":"Hình ảnh"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "supplier": "Nhà cung cấp",
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "department": {
+    "label": {
+      "field": {
+        "name": "Tên bộ phận",
+        "manager": "Giám đốc",
+        "user": "Người dùng",
+        "location": "Vị trí",
+        "company": "Công ty",
+        "image": "Tải hình"
+      },
+      "placeholder": {
+        "name": "Tên bộ phận",
+        "company": "Chọn công ty",
+        "manager": "Lựa chọn một Người dùng",
+        "location": "Lựa chọn một Địa phương"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "department": "Phòng ban",
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
   }
 }

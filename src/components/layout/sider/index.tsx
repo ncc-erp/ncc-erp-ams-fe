@@ -1,15 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 
 import {
   useTranslate,
-  useLogout,
   useTitle,
   useNavigation,
   usePermissions,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
-import { antLayoutSider, antLayoutSiderMobile } from "./styles";
-import { useGoogleLogout } from "react-google-login";
+import { antLayoutSider, antLayoutSiderMobile, } from "./styles";
+import "../../../styles/antd.less";
 
 const {
   RightOutlined,
@@ -17,17 +17,11 @@ const {
   DesktopOutlined,
   PullRequestOutlined,
   ScheduleOutlined,
-  UnorderedListOutlined,
-  IdcardOutlined,
-  EnvironmentOutlined,
-  ContainerOutlined,
-  ShopOutlined,
-  ReconciliationOutlined,
+  SettingOutlined
 } = Icons;
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const { mutate: logout } = useLogout();
   const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
@@ -36,22 +30,9 @@ export const Sider: React.FC = () => {
 
   const isMobile = !breakpoint.lg;
 
-  const clientId = process.env.GOOGLE_CLIENT_ID
-    ? process.env.GOOGLE_CLIENT_ID
-    : "";
-
-  const { signOut: signOutGoogle } = useGoogleLogout({
-    clientId,
-    cookiePolicy: "single_host_origin",
-  });
-
-  const logoutAccount = () => {
-    signOutGoogle();
-    logout();
-    push("/login");
-  };
-
   const { data: permissionsData } = usePermissions();
+
+  const SubMenu = Menu.SubMenu;
 
   return (
     <AntdLayout.Sider
@@ -67,11 +48,6 @@ export const Sider: React.FC = () => {
         selectedKeys={[selectedKey]}
         mode="inline"
         onClick={({ key }) => {
-          if (key === "logout") {
-            logoutAccount();
-            return;
-          }
-
           if (!breakpoint.lg) {
             setCollapsed(true);
           }
@@ -79,92 +55,126 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {permissionsData && permissionsData.admin === "1"
-          ? menuItems.map(({ icon, name, route }) => {
-              const isSelected = route === selectedKey;
-              return (
-                <Menu.Item
+        {permissionsData && permissionsData.admin === "1" && menuItems
+          .filter(
+            (item) =>
+              item.name === `${translate("resource.dashboard")}` ||
+              item.name === `${translate("resource.assets")}` ||
+              item.name === `${translate("resource.request")}` ||
+              item.name === `${translate("resource.users")}`
+          )
+          .map(({ icon, name, route }) => {
+            const isSelected = route === selectedKey;
+            return (
+              <Menu.Item
+                style={{
+                  fontWeight: isSelected ? "bold" : "normal",
+                }}
+                key={route}
+                icon={
+                  name === `${translate("resource.dashboard")}` ? (
+                    <DashboardOutlined />
+                  ) : name === `${translate("resource.assets")}` ? (
+                    <DesktopOutlined />
+                  ) : name === `${translate("resource.request")}` ? (
+                    <PullRequestOutlined />
+                  ) : name === `${translate("resource.users")}` ? (
+                    <ScheduleOutlined />
+                  ) : (
+                    ""
+                  )
+                }
+              >
+                <div
                   style={{
-                    fontWeight: isSelected ? "bold" : "normal",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
-                  key={route}
-                  icon={
-                    name === `${translate("resource.dashboard")}` ? (
-                      <DashboardOutlined />
-                    ) : name === `${translate("resource.assets")}` ? (
-                      <DesktopOutlined />
-                    ) : name === `${translate("resource.request")}` ? (
-                      <PullRequestOutlined />
-                    ) : name === `${translate("resource.users")}` ? (
-                      <ScheduleOutlined />
-                    ) : name === `${translate("resource.category")}` ? (
-                      <UnorderedListOutlined />
-                    ) : name === `${translate("resource.manufactures")}` ? (
-                      <IdcardOutlined />
-                    ) : name === `${translate("resource.location")}` ? (
-                      <EnvironmentOutlined />
-                    ) : name === `${translate("resource.supplier")}` ? (
-                      <ContainerOutlined />
-                    ) : name === `${translate("resource.department")}` ? (
-                      <ShopOutlined />
-                    ) : name === `${translate("resource.models")}` ? (
-                      <ReconciliationOutlined />
-                    ) : (
-                      ""
-                    )
-                  }
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {name}
-                    {!collapsed && isSelected && <RightOutlined />}
-                  </div>
-                </Menu.Item>
-              );
-            })
-          : menuItems
-              .filter(
-                (item) =>
-                  item.name === `${translate("resource.dashboard")}` ||
-                  item.name === `${translate("resource.users")}`
-              )
-              .map(({ icon, name, route }) => {
-                const isSelected = route === selectedKey;
-                return (
-                  <Menu.Item
-                    style={{
-                      fontWeight: isSelected ? "bold" : "normal",
-                    }}
-                    key={route}
-                    icon={
-                      name === `${translate("resource.dashboard")}` ? (
-                        <DashboardOutlined />
-                      ) : name === `${translate("resource.users")}` ? (
-                        <ScheduleOutlined />
-                      ) : (
-                        ""
-                      )
-                    }
-                  >
-                    <div
+                  {name}
+                  {!collapsed && isSelected && <RightOutlined />}
+                </div>
+              </Menu.Item>
+            );
+          })}
+
+        {permissionsData && permissionsData.admin === "1" &&
+          <SubMenu title={<span><SettingOutlined /><span>{translate("resource.setting")}</span></span>}>
+            {
+              menuItems && menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.model")}` ||
+                    item.name === `${translate("resource.category")}` ||
+                    item.name === `${translate("resource.manufactures")}` ||
+                    item.name === `${translate("resource.suppliers")}` ||
+                    item.name === `${translate("resource.department")}` ||
+                    item.name === `${translate("resource.location")}`
+                ).map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        fontWeight: isSelected ? "bold" : "normal",
                       }}
+                      key={route}
                     >
-                      {name}
-                      {!collapsed && isSelected && <RightOutlined />}
-                    </div>
-                  </Menu.Item>
-                );
-              })}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })
+            }
+          </SubMenu>
+        }
+
+        {permissionsData && permissionsData.admin === "0" && menuItems
+          .filter(
+            (item) =>
+              item.name === `${translate("resource.dashboard")}` ||
+              item.name === `${translate("resource.users")}`
+          )
+          .map(({ icon, name, route }) => {
+            const isSelected = route === selectedKey;
+            return (
+              <Menu.Item
+                style={{
+                  fontWeight: isSelected ? "bold" : "normal",
+                }}
+                key={route}
+                icon={
+                  name === `${translate("resource.dashboard")}` ? (
+                    <DashboardOutlined />
+                  ) : name === `${translate("resource.users")}` ? (
+                    <ScheduleOutlined />
+                  ) : (
+                    ""
+                  )
+                }
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {name}
+                  {!collapsed && isSelected && <RightOutlined />}
+                </div>
+              </Menu.Item>
+            );
+          })}
       </Menu>
-    </AntdLayout.Sider>
+    </AntdLayout.Sider >
   );
 };

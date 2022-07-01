@@ -25,10 +25,10 @@ import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
-  LOCATIONS_API,
+  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  SUPPLIERS_HARDWARE_API,
+  SUPPLIERS_API,
 } from "api/baseApi";
 
 type HardwareEditProps = {
@@ -87,7 +87,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATIONS_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -99,7 +99,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: SUPPLIERS_HARDWARE_API,
+    resource: SUPPLIERS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

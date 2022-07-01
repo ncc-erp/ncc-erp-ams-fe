@@ -29,7 +29,7 @@ import { ICompany } from "interfaces/company";
 import {
   HARDWARE_API,
   HARDWARE_SELECT_LIST_API,
-  LOCATIONS_API,
+  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   USERS_API,
@@ -110,7 +110,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATIONS_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

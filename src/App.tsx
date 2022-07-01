@@ -24,6 +24,9 @@ import { model, adapter } from "AccessControl";
 import { CategoryList } from "pages/categories";
 import { ManufacturesList } from "pages/manufacturers";
 import { LocationList } from "pages/location";
+import { ModelList } from "pages/model";
+import { SupplierList } from "pages/supplier";
+import { DepartmentList } from "pages/department";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -63,7 +66,6 @@ function App() {
             );
             return Promise.resolve({ can });
           }
-
           const can = await enforcer.enforce(role.admin, resource, action);
           return Promise.resolve({ can });
         },
@@ -98,6 +100,13 @@ function App() {
           },
         },
         {
+          name: t("resource.model"),
+          list: ModelList,
+          options: {
+            route: "models",
+          },
+        },
+        {
           name: t("resource.category"),
           list: CategoryList,
           options: {
@@ -112,12 +121,26 @@ function App() {
           },
         },
         {
+          name: t("resource.suppliers"),
+          list: SupplierList,
+          options: {
+            route: "suppliers",
+          },
+        },
+        {
+          name: t("resource.department"),
+          list: DepartmentList,
+          options: {
+            route: "department",
+          },
+        },
+        {
           name: t("resource.location"),
           list: LocationList,
           options: {
             route: "location",
-          },
-        },
+          }
+        }
       ]}
       Title={Title}
       Header={Header}

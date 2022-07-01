@@ -23,7 +23,7 @@ import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import {
   HARDWARE_API,
-  LOCATIONS_API,
+  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
 } from "api/baseApi";
@@ -78,7 +78,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATIONS_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

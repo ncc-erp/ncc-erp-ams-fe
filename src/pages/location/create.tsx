@@ -22,7 +22,7 @@ import { ILocations, ILocationRequest } from "interfaces/location";
 import {
   LOCATION_API,
   LOCATION_SELECT_LIST_API,
-  USERS_SELECT_LIST_API,
+  USERS_API,
 } from "api/baseApi";
 
 type LocationCreateProps = {
@@ -55,7 +55,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({
-    resource: USERS_SELECT_LIST_API,
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {

@@ -23,7 +23,7 @@ import {
 import {
   LOCATION_API,
   LOCATION_SELECT_LIST_API,
-  USERS_SELECT_LIST_API,
+  USERS_API,
 } from "api/baseApi";
 
 type LocationEditProps = {
@@ -57,7 +57,7 @@ export const LocationEdit = (props: LocationEditProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({
-    resource: USERS_SELECT_LIST_API,
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
