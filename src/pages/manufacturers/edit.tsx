@@ -152,7 +152,7 @@ export const ManufacturesEdit = (props: ManufacturesEditProps) => {
         ]}
         initialValue={data?.url}
       >
-        <Input placeholder={t("manufactures.label.field.url")} />
+        <Input placeholder={t("manufactures.label.placeholder.url")} />
       </Form.Item>
       <Form.Item
         label={t("manufactures.label.field.urlSupport")}
@@ -168,7 +168,7 @@ export const ManufacturesEdit = (props: ManufacturesEditProps) => {
         ]}
         initialValue={data?.support_url}
       >
-        <Input placeholder={t("manufactures.label.field.urlSupport")} />
+        <Input placeholder={t("manufactures.label.placeholder.urlSupport")} />
       </Form.Item>
       <Form.Item
         label={t("manufactures.label.field.phone")}

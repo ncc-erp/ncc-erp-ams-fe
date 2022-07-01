@@ -17,11 +17,11 @@ export const HardwareShow = (props: HardwareShowProps) => {
   return (
     <>
       <Title level={5}>{t("hardware.label.field.assetName")}</Title>
-      <Text>{detail?.name}</Text>
+      <Text>{detail && detail?.name}</Text>
       <Title level={5}>{t("hardware.label.field.propertyType")}</Title>
-      <Text>{detail?.model.name}</Text>
+      <Text>{detail?.model && detail?.model.name}</Text>
       <Title level={5}>{t("hardware.label.field.category")}</Title>
-      <Text>{detail?.category.name}</Text>
+      <Text>{detail && detail?.category.name}</Text>
       <Title level={5}>{t("hardware.label.field.status")}</Title>
       <Text>
         <Tag>
@@ -37,7 +37,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Tag>
       </Text>
       <Title level={5}>{t("hardware.label.field.rtd_location")}</Title>
-      <Text>{detail?.rtd_location.name}</Text>
+      <Text>{detail?.rtd_location && detail?.rtd_location.name}</Text>
       <Title level={5}>{t("hardware.label.field.supplier")}</Title>
       <Text>{detail?.supplier ? detail?.supplier.name : ""}</Text>
       <Title level={5}>{t("hardware.label.field.insurance")}</Title>

@@ -395,7 +395,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => (
           <TagField
             value={
-              value && value === 0
+              value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
                   ? t("hardware.label.detail.pendingAccept")

@@ -97,7 +97,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "category",
-        title: t("user.label.field.status"),
+        title: t("user.label.field.category"),
         render: (value: IHardwareResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
@@ -243,7 +243,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               </Tooltip>
               {record.assigned_status === 1 && (
                 <Popconfirm
-                  title={t("request.label.button.accept")}
+                  title={t("hardware.label.button.accept")}
                   onConfirm={() => OnAcceptRequest(record.id, 2)}
                 >
                   {isLoadingArr[record.id] !== false && (
@@ -260,7 +260,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                           : true
                       }
                     >
-                      {t("request.label.button.accept")}
+                      {t("hardware.label.button.accept")}
                     </Button>
                   )}
                 </Popconfirm>
@@ -280,7 +280,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   }
                   onClick={() => cancle(record)}
                 >
-                  {t("request.label.button.refuse")}
+                  {t("hardware.label.button.refuse")}
                 </Button>
               )}
             </Space>

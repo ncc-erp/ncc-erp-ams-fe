@@ -157,7 +157,9 @@
           "update": "Chỉnh sửa",
           "clone": "Clone",
           "checkout": "Cấp phát",
-          "checkin": "Thu hồi"
+          "checkin": "Thu hồi",
+          "accept": "Xác nhận",
+          "refuse": "Từ chối"
         },
         "title": {
           "create":"Tạo mới",
@@ -221,8 +223,6 @@
         "send": "Gửi",
         "delete": "Xóa",
         "cancle": "Từ chối",
-        "accept": "Xác nhận",
-        "refuse": "Từ chối",
         "viewDetail":"Xem chi tiết"
       },
       "message": {
@@ -323,6 +323,10 @@
         "dateCreate": "Ngày tạo"
 
 
+      },
+      "placeholder":{
+        "url": "https://",
+        "urlSupport": "https://"
       },
       "message": {
         "required": "bắt buộc"
