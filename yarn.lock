@@ -380,7 +380,7 @@
 "@antv/g6@^4.2.4":
   version "4.6.4"
   resolved "https://registry.npmjs.org/@antv/g6/-/g6-4.6.4.tgz#41297f577026697118ab87e365cc8a500c09fc7c"
-  integrity sha512-8xU96NISJ7G3Gwo6m1BTtqzfBeRd23BWcLDIpwX4v1KoE3NMHZlJkUaNvnKsoeoeolNCDYBvTfBfEwV4C5gWfw==
+  integrity sha512-8xU96NISJ7G3Gwo6m1BTtqzfBeRd23BWcLDIpwX4v1KoE3NMHZlJkUaNvnKsoeoEoLNCDYBvTfBfEwV4C5gWfw==
   dependencies:
     "@antv/g6-pc" "0.6.4"
 
@@ -1593,7 +1593,7 @@
 "@babel/plugin-transform-typeof-symbol@^7.16.7":
   version "7.16.7"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-typeof-symbol/-/plugin-transform-typeof-symbol-7.16.7.tgz#9cdbe622582c21368bd482b660ba87d5545d4f7e"
-  integrity sha512-p2rOixCKRJzpg9JB4gjnG4gjWkWa89ZoYUnl9snJ1cWIcTH/hvxZqfO+WjG6T8DRBpcteol5jw1O5rA8gkCokQ==
+  integrity sha512-p2rOixCKRJzpg9JB4gjnG4gjWkWa89ZoYUnl9snJ1cWIcTH/hvxZqfO+WjG6T8DRBpctEol5jw1O5rA8gkCokQ==
   dependencies:
     "@babel/helper-plugin-utils" "^7.16.7"
 
@@ -2405,7 +2405,7 @@
 "@svgr/babel-plugin-svg-em-dimensions@^5.4.0":
   version "5.4.0"
   resolved "https://registry.npmjs.org/@svgr/babel-plugin-svg-em-dimensions/-/babel-plugin-svg-em-dimensions-5.4.0.tgz#6543f69526632a133ce5cabab965deeaea2234a0"
-  integrity sha512-cPzDbDA5oT/sPXDCUYoVXEmm3VIoAWAPT6mSPTJNbQaBNUuEKVKyGH93oDY4e42PYHRW67N5alJx/eeol20abw==
+  integrity sha512-cPzDbDA5oT/sPXDCUYoVXEmm3VIoAWAPT6mSPTJNbQaBNUuEKVKyGH93oDY4e42PYHRW67N5alJx/eEol20abw==
 
 "@svgr/babel-plugin-transform-react-native-svg@^5.4.0":
   version "5.4.0"
@@ -3295,7 +3295,7 @@ aggregate-error@^3.0.0:
 ajv-formats@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
-  integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeolMsr4kf5h6dOW11I15MUA==
+  integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
   dependencies:
     ajv "^8.0.0"
 
@@ -8185,7 +8185,7 @@ natural-compare@^1.4.0:
 needle@^2.5.2:
   version "2.9.1"
   resolved "https://registry.npmjs.org/needle/-/needle-2.9.1.tgz#22d1dffbe3490c2b83e301f7709b6736cd8f2684"
-  integrity sha512-6R9fqJ5Zcmf+uYaFgdIHmLwNldn5HbK8L5ybn7Uz+ylX/rnOsSp1AHcvQSrCaFN+qNM1wpymHqD7mVaseolHGQ==
+  integrity sha512-6R9fqJ5Zcmf+uYaFgdIHmLwNldn5HbK8L5ybn7Uz+ylX/rnOsSp1AHcvQSrCaFN+qNM1wpymHqD7mVasEOlHGQ==
   dependencies:
     debug "^3.2.6"
     iconv-lite "^0.4.4"
