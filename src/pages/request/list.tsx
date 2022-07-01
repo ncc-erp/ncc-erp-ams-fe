@@ -113,6 +113,10 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     tableQueryResult.refetch();
   }, [isLoadingSendRequest]);
 
+  useEffect(() => {
+    tableQueryResult.refetch();
+  }, [isLoadingSendRequest, refetch]);
+
   const handleDelete = (id: BaseKey) => {
     muteDelete({
       resource: FINFAST_REQUEST_API,

@@ -20,11 +20,7 @@ import {
   ILocationRequest,
   ILocationResponse,
 } from "interfaces/location";
-import {
-  LOCATION_API,
-  LOCATION_SELECT_LIST_API,
-  USERS_API,
-} from "api/baseApi";
+import { LOCATION_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
 
 type LocationEditProps = {
   isModalVisible: boolean;

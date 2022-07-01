@@ -161,11 +161,17 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
 
-    formData.append("name", event.name);
+    if (event.name !== undefined) {
+      formData.append("name", event.name);
+    }
     formData.append("asset_tag", event.asset_tag);
-    if (event.serial !== undefined) formData.append("serial", event.serial);
+    if (event.serial !== undefined) {
+      formData.append("serial", event.serial);
+    }
     formData.append("model_id", event.model.toString());
-    formData.append("rtd_location_id", event.rtd_location.toString());
+    if (event.rtd_location !== undefined) {
+      formData.append("rtd_location_id", event.rtd_location.toString());
+    }
 
     if (event.order_number !== undefined)
       formData.append("order_number", event.order_number);

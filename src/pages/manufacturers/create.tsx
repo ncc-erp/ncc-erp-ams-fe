@@ -123,7 +123,7 @@ export const ManufacturesCreate = (props: ManufacturesCreateProps) => {
           },
         ]}
       >
-        <Input placeholder={t("manufactures.label.field.url")} />
+        <Input placeholder={t("manufactures.label.placeholder.url")} />
       </Form.Item>
 
       <Form.Item
@@ -139,7 +139,7 @@ export const ManufacturesCreate = (props: ManufacturesCreateProps) => {
           },
         ]}
       >
-        <Input placeholder={t("manufactures.label.field.urlSupport")} />
+        <Input placeholder={t("manufactures.label.placeholder.urlSupport")} />
       </Form.Item>
 
       <Form.Item
