@@ -167,7 +167,11 @@
           "clone": "Clone",
           "checkout": "Cấp phát",
           "checkin": "Thu hồi",
-          "detail": "Chi tiết tài sản"
+          "detail": "Chi tiết tài sản",
+          "list-assign": "Đã cấp phát Tài sản",
+          "list-readyToDeploy": "Sẵn sàng để cấp phát Tài sản",
+          "list-pending": "Đang chờ Tài sản",
+          "list-broken": "Không cho phép cấp phát Tài sản"
         },
         "tooltip":{
           "create": "Thêm mới",
@@ -391,7 +395,11 @@
     "model": "Kiểu tài sản",
     "suppliers": "Nhà cung cấp",
     "department": "Phòng ban",
-    "setting": "Cài đặt"
+    "setting": "Cài đặt",
+    "assets-assign": "Tất cả Đã cấp phát",
+    "assets-readyToDeploy": "Tất cả Sẵn sàng để cấp phát",
+    "assets-pending": "Tất cả Đang chờ",
+    "assets-broken": "Tất cả Không cho phép cấp phát"
   },
   "model": {
     "label": {

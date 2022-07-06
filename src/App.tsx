@@ -4,7 +4,13 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList } from "pages/hardware";
+import {
+  HardwareList,
+  HardwareListAssign,
+  HardwareListBroken,
+  HardwareListPending,
+  HardwareListReadyToDeploy,
+} from "pages/hardware";
 import {
   Title,
   Header,
@@ -86,6 +92,34 @@ function App() {
           },
         },
         {
+          name: t("resource.assets-assign"),
+          list: HardwareListAssign,
+          options: {
+            route: "assets-assign",
+          },
+        },
+        {
+          name: t("resource.assets-readyToDeploy"),
+          list: HardwareListReadyToDeploy,
+          options: {
+            route: "assets-readyToDeploy",
+          },
+        },
+        {
+          name: t("resource.assets-pending"),
+          list: HardwareListPending,
+          options: {
+            route: "assets-pending",
+          },
+        },
+        {
+          name: t("resource.assets-broken"),
+          list: HardwareListBroken,
+          options: {
+            route: "assets-broken",
+          },
+        },
+        {
           name: t("resource.request"),
           list: RequestList,
           options: {
@@ -139,8 +173,8 @@ function App() {
           list: LocationList,
           options: {
             route: "location",
-          }
-        }
+          },
+        },
       ]}
       Title={Title}
       Header={Header}

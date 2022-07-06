@@ -20,7 +20,9 @@ import {
   Button,
   ShowButton,
   Tooltip,
+  getDefaultFilter,
 } from "@pankod/refine-antd";
+
 import { Image } from "antd";
 import "styles/antd.less";
 
@@ -42,7 +44,7 @@ import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
 import { HARDWARE_API } from "api/baseApi";
 
-export const HardwareList: React.FC<IResourceComponentsProps> = () => {
+export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -61,12 +63,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IHardware>({
       initialSorter: [
         {
           field: "id",
           order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "status.id",
+          operator: "eq",
+          value: 4,
         },
       ],
       resource: HARDWARE_API,
@@ -388,6 +397,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
@@ -478,6 +488,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
+      title={t("hardware.label.title.list-assign")}
       pageHeaderProps={{
         extra: (
           <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>

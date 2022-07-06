@@ -20,6 +20,7 @@ import {
   Button,
   ShowButton,
   Tooltip,
+  getDefaultFilter,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -42,7 +43,9 @@ import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
 import { HARDWARE_API } from "api/baseApi";
 
-export const HardwareList: React.FC<IResourceComponentsProps> = () => {
+export const HardwareListReadyToDeploy: React.FC<
+  IResourceComponentsProps
+> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -61,7 +64,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IHardware>({
       initialSorter: [
         {
@@ -69,6 +72,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           order: "desc",
         },
       ],
+      initialFilter: [
+        {
+          field: "status.id",
+          operator: "eq",
+          value: 5,
+        },
+      ],
+
       resource: HARDWARE_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
@@ -326,6 +337,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("id", sorter),
       },
       {
+        key: "requestable",
+        title: "ì3",
+        render: (value: IHardware) => <TextField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("requestable", sorter),
+      },
+      {
         key: "name",
         title: t("hardware.label.field.assetName"),
         render: (value: IHardware) => <TextField value={value} />,
@@ -388,6 +405,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
@@ -430,7 +448,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
-
       {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
@@ -478,6 +495,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
+      title={t("hardware.label.title.list-readyToDeploy")}
       pageHeaderProps={{
         extra: (
           <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
