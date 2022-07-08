@@ -4,7 +4,13 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
 import { authProvider } from "./providers/authProvider";
-import { HardwareList } from "pages/hardware";
+import {
+  HardwareList,
+  HardwareListAssign,
+  HardwareListBroken,
+  HardwareListPending,
+  HardwareListReadyToDeploy,
+} from "pages/hardware";
 import {
   Title,
   Header,
@@ -27,6 +33,8 @@ import { LocationList } from "pages/location";
 import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
+import { DepreciationList } from "pages/depreciations/list";
+import { Hardware_RefuseList } from "pages/hardware_refuse/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -86,6 +94,34 @@ function App() {
           },
         },
         {
+          name: t("resource.assets-assign"),
+          list: HardwareListAssign,
+          options: {
+            route: "assets-assign",
+          },
+        },
+        {
+          name: t("resource.assets-readyToDeploy"),
+          list: HardwareListReadyToDeploy,
+          options: {
+            route: "assets-readyToDeploy",
+          },
+        },
+        {
+          name: t("resource.assets-pending"),
+          list: HardwareListPending,
+          options: {
+            route: "assets-pending",
+          },
+        },
+        {
+          name: t("resource.assets-broken"),
+          list: HardwareListBroken,
+          options: {
+            route: "assets-broken",
+          },
+        },
+        {
           name: t("resource.request"),
           list: RequestList,
           options: {
@@ -140,7 +176,14 @@ function App() {
           options: {
             route: "location",
           }
-        }
+        },
+        // {
+        //   name: t("resource.depreciation"),
+        //   list: DepreciationList,
+        //   options: {
+        //     route: "depreciation",
+        //   },
+        // },
       ]}
       Title={Title}
       Header={Header}

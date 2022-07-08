@@ -3,7 +3,6 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
-  HttpError,
 } from "@pankod/refine-core";
 import {
   List,
@@ -21,39 +20,32 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  Checkbox,
-  Modal,
-  Form,
-  Input,
+  getDefaultFilter,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
-import { MenuOutlined, FileSearchOutlined } from "@ant-design/icons";
 
 import {
-  IHardwareFilterVariables,
   IHardwareResponse,
   IHardwareResponseCheckin,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, } from "api/baseApi";
-import { HardwareSearch } from "./search";
+import { HARDWARE_API } from "api/baseApi";
 
-const defaultCheckedList = ["id", "name", "image", "model", "category", "status_label", "assigned_to",
-  "assigned_status", "created_at"];
-
-export const HardwareList: React.FC<IResourceComponentsProps> = () => {
+export const HardwareListReadyToDeploy: React.FC<
+  IResourceComponentsProps
+> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -69,47 +61,37 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
   const [detailCheckin, setDetailCheckin] =
     useState<IHardwareResponseCheckin>();
+
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
-  const [isActive, setIsActive] = useState(false);
-  const onClickDropDown = () => setIsActive(!isActive);
-  const menuRef = useRef(null);
-  const [listening, setListening] = useState(false);
-
-  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
-    IHardwareResponse,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
-      },
-    ],
-    resource: HARDWARE_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model } = params;
-      filters.push(
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<IHardware>({
+      initialSorter: [
         {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "status.id",
+          operator: "eq",
+          value: 5,
+        },
+      ],
+
+      resource: HARDWARE_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const { search } = params;
+        filters.push({
           field: "search",
           operator: "eq",
           value: search,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({ name, asset_tag, serial, model }),
-        },
-      );
-
-      return filters;
-    },
-  });
+        });
+        return filters;
+      },
+    });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
@@ -346,59 +328,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsCheckinModalVisible(true);
   };
 
-  const handleCreate = () => {
-    handleOpenModel();
-  };
-
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  const handleSearch = () => {
-    handleOpenSearchModel();
-  };
-
-  const handleOpenSearchModel = () => {
-    setIsSearchModalVisible(!isSearchModalVisible);
-  };
-
-  const refreshData = () => {
-    tableQueryResult.refetch();
-  };
-
-  const show = (data: IHardwareResponse) => {
-    setIsShowModalVisible(true);
-    setDetail(data);
-  };
-
-  useEffect(() => {
-    refreshData();
-  }, [isEditModalVisible]);
-
-  useEffect(() => {
-    refreshData();
-  }, [isCloneModalVisible]);
-
-  useEffect(() => {
-    refreshData();
-  }, [isCheckoutModalVisible]);
-
-  useEffect(() => {
-    refreshData();
-  }, [isCheckinModalVisible]);
-
   const collumns = useMemo(
     () => [
       {
         key: "id",
         title: "ID",
-        render: (value: number) => <TextField value={value} />,
+        render: (value: IHardware) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("id", sorter),
+      },
+      {
+        key: "requestable",
+        title: "ì3",
+        render: (value: IHardware) => <TextField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
         key: "name",
         title: t("hardware.label.field.assetName"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: IHardware) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -413,28 +360,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         },
       },
       {
-        key: "asset_tag",
-        title: t("hardware.label.field.propertyCard"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("asset_tag", sorter),
-      },
-      {
-        key: "serial",
-        title: t("hardware.label.field.serial"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("serial", sorter),
-      },
-      {
         key: "model",
         title: t("hardware.label.field.propertyType"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
-      },
-      {
-        key: "model_number",
-        title: "Model No",
-        render: (value: IHardwareResponse) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("model_number", sorter),
       },
       {
         key: "category",
@@ -476,89 +405,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-      },
-      {
-        key: "assigned_to",
-        title: t("hardware.label.field.checkoutTo"),
-        render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
-      },
-      {
-        key: "location",
-        title: t("hardware.label.field.rtd_location"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
-        defaultSortOrder: getDefaultSortOrder("location.name", sorter),
-      },
-      {
-        key: "rtd_location",
-        title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
-        defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
-      },
-      {
-        key: "manufacturer",
-        title: t("hardware.label.field.manufacturer"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
-        defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
-      },
-      {
-        key: "supplier",
-        title: t("hardware.label.field.supplier"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
-        defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
-      },
-      {
-        key: "purchase_date",
-        title: t("hardware.label.field.dateBuy"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("warranty_expires.datetime", sorter),
-      },
-      {
-        key: "order_number",
-        title: t("hardware.label.field.orderNumber"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("order_number", sorter),
-      },
-      {
-        key: "warranty_months",
-        title: t("hardware.label.field.insurance"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
-      },
-      {
-        key: "warranty_expires",
-        title: t("hardware.label.field.warranty_expires"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
-        ),
-      },
-      {
-        key: "notes",
-        title: t("hardware.label.field.note"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("notes", sorter),
-      },
-      {
-        key: "checkout_counter",
-        title: t("hardware.label.field.checkout_counter"),
-        render: (value: number) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
-      },
-      {
-        key: "checkin_counter",
-        title: t("hardware.label.field.checkin_counter"),
-        render: (value: number) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
-      },
-      {
-        key: "requestable",
-        title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("requestable", sorter),
+        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
@@ -594,6 +441,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       },
       {
+        key: "assigned_to",
+        title: t("hardware.label.field.checkoutTo"),
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
+      },
+      {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) => (
@@ -605,104 +460,51 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
-  const onCheckItem = (value: any) => {
-    if (collumnSelected.includes(value.key)) {
-      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
-    } else {
-      setColumnSelected(collumnSelected.concat(value.key))
-    }
+  const handleCreate = () => {
+    handleOpenModel();
   };
 
-  const listenForOutsideClicks = (
-    listening: boolean,
-    setListening: (arg0: boolean) => void,
-    menuRef: { current: any },
-    setIsActive: (arg0: boolean) => void,
-  ) => {
-    if (listening) return;
-    if (!menuRef.current) return;
-    setListening(true)
-      ;[`click`, `touchstart`].forEach((type) => {
-        document.addEventListener(`click`, (event) => {
-          const current = menuRef.current
-          const node = event.target
-          if (current && current.contains(node)) return;
-          setIsActive(false)
-        })
-      })
-  }
+  const handleOpenModel = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const refreshData = () => {
+    tableQueryResult.refetch();
+  };
+
+  const show = (data: IHardwareResponse) => {
+    setIsShowModalVisible(true);
+    setDetail(data);
+  };
 
   useEffect(() => {
-    const aboutController = new AbortController();
+    refreshData();
+  }, [isEditModalVisible]);
 
-    listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+  useEffect(() => {
+    refreshData();
+  }, [isCloneModalVisible]);
 
-    return function cleanup() {
-      aboutController.abort();
-    }
-  }, []);
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckinModalVisible]);
 
   return (
     <List
+      title={t("hardware.label.title.list-readyToDeploy")}
       pageHeaderProps={{
         extra: (
-          <>
-            <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
-              <CreateButton onClick={handleCreate} />
-            </Tooltip>
-          </>
+          <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
+            <CreateButton onClick={handleCreate} />
+          </Tooltip>
         ),
       }}
     >
-      <div className="all">
-        <TableAction searchFormProps={searchFormProps} />
-        <div className="other_function">
-          <div className="menu-container" ref={menuRef}>
-            <button onClick={onClickDropDown} className="menu-trigger"
-              style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
-              <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
-                <MenuOutlined style={{ color: "black" }} />
-              </Tooltip>
-            </button>
-            <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
-              <div className="menu-dropdown">
-                {collumns.map((item) => (
-                  <Checkbox
-                    className="checkbox"
-                    key={item.key}
-                    onChange={() => onCheckItem(item)}
-                    checked={collumnSelected.includes(item.key)}
-                  >
-                    {item.title}
-                  </Checkbox>
-                ))}
-              </div>
-            </nav>
-          </div>
-          <div>
-            <button className="menu-trigger"
-              style={{
-                borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px"
-              }}>
-              <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
-                <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
-              </Tooltip>
-            </button>
-          </div>
-        </div>
-      </div>
-      <MModal
-        title={t("hardware.label.title.search_advanced")}
-        setIsModalVisible={setIsSearchModalVisible}
-        isModalVisible={isSearchModalVisible}
-      >
-        <HardwareSearch
-          isModalVisible={isSearchModalVisible}
-          setIsModalVisible={setIsSearchModalVisible}
-          searchFormProps={searchFormProps}
-        />
-      </MModal>
+      <TableAction searchFormProps={searchFormProps} />
       <MModal
         title={t("hardware.label.title.create")}
         setIsModalVisible={setIsModalVisible}
@@ -768,7 +570,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
-        {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
+        {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
         <Table.Column<IHardwareResponse>
@@ -931,6 +733,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           )}
         />
       </Table>
-    </List >
+    </List>
   );
 };
