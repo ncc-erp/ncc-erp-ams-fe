@@ -1,6 +1,7 @@
 export interface IModel {
   id: number;
   name: string;
+  datetime: string;
 }
 
 export interface IModelRequest {
