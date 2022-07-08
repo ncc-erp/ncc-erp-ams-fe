@@ -32,6 +32,22 @@ p, 1, ${i18n.t("resource.assets")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.assets-assign")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-assign")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.assets-readyToDeploy")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-readyToDeploy")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.assets-pending")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-pending")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.assets-broken")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-broken")}/*, (edit)|(show)|(clone)|(checkout)
+
 p, 1, ${i18n.t("resource.request")}, (list)|(create)
 p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
