@@ -72,9 +72,9 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       ],
       initialFilter: [
         {
-          field: "status.id",
+          field: "status",
           operator: "eq",
-          value: 1,
+          value: "Pending",
         },
       ],
       resource: HARDWARE_API,
@@ -396,7 +396,6 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",

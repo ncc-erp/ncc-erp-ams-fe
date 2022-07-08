@@ -74,9 +74,9 @@ export const HardwareListReadyToDeploy: React.FC<
       ],
       initialFilter: [
         {
-          field: "status.id",
+          field: "status",
           operator: "eq",
-          value: 5,
+          value: "RTD",
         },
       ],
 
@@ -405,7 +405,6 @@ export const HardwareListReadyToDeploy: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",

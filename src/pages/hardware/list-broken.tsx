@@ -72,9 +72,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       ],
       initialFilter: [
         {
-          field: "status.id",
+          field: "status",
           operator: "eq",
-          value: 3,
+          value: "Undeployable",
         },
       ],
       resource: HARDWARE_API,
@@ -396,7 +396,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
