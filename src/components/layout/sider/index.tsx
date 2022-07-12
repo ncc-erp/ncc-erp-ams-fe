@@ -107,7 +107,7 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
-                      `${translate("resource.assets-readyToDeploy")}` ||
+                    `${translate("resource.assets-readyToDeploy")}` ||
                     item.name === `${translate("resource.assets-pending")}` ||
                     item.name === `${translate("resource.assets-broken")}`
                 )

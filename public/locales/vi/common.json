@@ -130,7 +130,13 @@
           "rtd_location": "Vị trí",
           "image": "Hình ảnh",
           "condition": "Tình trạng",
-          "dateCreate": "Ngày tạo"
+          "dateCreate": "Ngày tạo",
+          "manufacturer": "Nhà sản xuất",
+          "eol": "EOL",
+          "warranty_expires": "Hết hạn bảo hành",
+          "checkout_counter": "Thu hồi tài sản",
+          "checkin_counter": "Đăng kí tài sản",
+          "requestable": "Yêu cầu"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -159,7 +165,8 @@
           "checkout": "Cấp phát",
           "checkin": "Thu hồi",
           "accept": "Xác nhận",
-          "refuse": "Từ chối"
+          "refuse": "Từ chối",
+          "search":"Tìm kiếm"
         },
         "title": {
           "create":"Tạo mới",
@@ -168,6 +175,7 @@
           "checkout": "Cấp phát",
           "checkin": "Thu hồi",
           "detail": "Chi tiết tài sản",
+          "search_advanced":"Tìm kiếm nâng cao",
           "list-assign": "Đã cấp phát Tài sản",
           "list-readyToDeploy": "Sẵn sàng để cấp phát Tài sản",
           "list-pending": "Đang chờ Tài sản",
@@ -178,7 +186,10 @@
           "viewDetail": "Xem chi tiết",
           "clone": "Clone",
           "edit": "Chỉnh sửa",
-          "delete": "Xóa"
+          "delete": "Xóa",
+          "columns": "Danh sách các cột",
+          "search": "Tìm kiếm nâng cao",
+          "refresh": "Refresh"
         },
         "detail": {
           "assign": "Cấp phát",
@@ -213,8 +224,8 @@
         "price": "Giá",
         "image": "Ảnh thiết bị",
         "warranty_months": "Bảo hành",
-        "model": "Kiểu tài sản"
-        
+        "model": "Kiểu tài sản",
+        "dateCreate": "Ngày tạo"
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -285,7 +296,8 @@
         "categoryEULA": "Danh mục EULA",
         "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
         "sendMail": "Gửi email đến người dùng khi checkin/checkout",
-        "image": "Tải hình"
+        "image": "Tải hình",
+        "dateCreate": "Đã tạo lúc"
       },
       "message": {
         "required":"bắt buộc"
@@ -325,8 +337,6 @@
         "imageTable": "Hình ảnh",
         "assetCount": "Số lượng",
         "dateCreate": "Ngày tạo"
-
-
       },
       "placeholder":{
         "url": "https://",
@@ -365,8 +375,8 @@
         "imageTable": "Hình ảnh",
         "assetCount":"Số lượng",
         "assetAssign": "Assets Assigned",
-        "dateCreate": "Ngày tạo"
-
+        "dateCreate": "Ngày tạo",
+        "users_count": "Thành viên"
       },
       "placeholder":{
         "parent": "Lựa chọn một địa phương",
@@ -396,6 +406,8 @@
     "suppliers": "Nhà cung cấp",
     "department": "Phòng ban",
     "setting": "Cài đặt",
+    "depreciation":"Khấu hao",
+    "assets_refuse": "Thiết bị từ chối",
     "assets-assign": "Tất cả Đã cấp phát",
     "assets-readyToDeploy": "Tất cả Sẵn sàng để cấp phát",
     "assets-pending": "Tất cả Đang chờ",
@@ -404,6 +416,7 @@
   "model": {
     "label": {
       "field": {
+        "id": "ID",
         "name": "Tên kiểu tài sản",
         "manufacturer": "Nhà sản xuất",
         "category": "Tên hạng mục",
@@ -416,7 +429,9 @@
         "image": "Tải hình",
         "checkbox": "Người dùng có thể yêu cầu mô hình này",
         "assets": "Tài sản",
-        "images": "Hình ảnh"
+        "images": "Hình ảnh",
+        "requestable":"Cho phép đề xuất",
+        "created_at": "Đã tạo lúc"
       },
       "placeholder": {
         "manufacturer": "Lựa chọn một nhà sản xuất",
@@ -431,7 +446,7 @@
         "clone": "Clone"
       },
       "title": {
-        "model": "Danh sách kiểu tài sản",
+        "model": "Kiểu tài sản",
         "create":"Tạo mới",
         "edit": "Chỉnh sửa",
         "clone": "Clone"
@@ -447,6 +462,7 @@
   "supplier": {
     "label": {
       "field": {
+        "id": "ID",
         "name": "Tên nhà cung cấp",
         "address": "Địa chỉ nhà cung cấp",
         "city": "Thành phố",
@@ -509,6 +525,35 @@
       },
       "title": {
         "department": "Phòng ban",
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "depreciation": {
+    "label": {
+      "field": {
+        "name": "Tên khấu hao",
+        "rules": "Điều khoản",
+        "months": "Số lượng tháng",
+        "month": "tháng",
+        "depreciation_min": "Floor Value",
+        "minimum_value": "Giá trị tối thiểu sau khi khấu hao"
+      },
+      "message": {
+        "required":"bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "depreciation": "Khấu hao",
         "create":"Tạo mới",
         "edit": "Chỉnh sửa"
       },

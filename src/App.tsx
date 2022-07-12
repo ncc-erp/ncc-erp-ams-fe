@@ -33,6 +33,8 @@ import { LocationList } from "pages/location";
 import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
+import { DepreciationList } from "pages/depreciations/list";
+import { Hardware_RefuseList } from "pages/hardware_refuse/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -173,8 +175,15 @@ function App() {
           list: LocationList,
           options: {
             route: "location",
-          },
+          }
         },
+        // {
+        //   name: t("resource.depreciation"),
+        //   list: DepreciationList,
+        //   options: {
+        //     route: "depreciation",
+        //   },
+        // },
       ]}
       Title={Title}
       Header={Header}

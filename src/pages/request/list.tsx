@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DeleteOutlined } from "@ant-design/icons";
-
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -23,11 +21,13 @@ import {
   Button,
   CreateButton,
   Tooltip,
+  Checkbox,
+  DateField,
 } from "@pankod/refine-antd";
 
 import { IHardware } from "interfaces";
-import { IHardwareCreateRequest } from "interfaces/hardware";
-import { useEffect, useState } from "react";
+import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { RequestCreate } from "./create";
 import { RequestShow } from "./show";
@@ -38,6 +38,12 @@ import {
   HARDWARE_API,
   SEND_REQUEST_API,
 } from "api/baseApi";
+import "styles/antd.less";
+import { MenuOutlined, DeleteOutlined } from "@ant-design/icons"
+import React from "react";
+
+const defaultCheckedList = ["id", "name", "status", "branch", "entry_type", "supplier",
+  "finfast_request_assets"];
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -47,6 +53,12 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const [detail, setDetail] = useState<IRequestResponse | undefined>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
+
+  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
+  const [isActive, setIsActive] = useState(false);
+  const onClickDropDown = () => setIsActive(!isActive);
+  const menuRef = useRef(null);
+  const [listening, setListening] = useState(false);
 
   const { mutate: muteDelete, data: dataDelete } = useDelete();
   const useHardwareNotRequest = useCustom<IHardwareCreateRequest>({
@@ -77,13 +89,11 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-
         filters.push({
           field: "search",
           operator: "eq",
           value: search,
         });
-
         return filters;
       },
     });
@@ -145,6 +155,115 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   };
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
+  const collumns = useMemo(
+    () => [
+      {
+        key: "id",
+        title: "ID",
+        render: (value: string) => <TextField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("id", sorter),
+      },
+      {
+        key: "name",
+        title: t("request.label.field.nameRequest"),
+        render: (value: string) => <TextField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("name", sorter),
+      },
+      {
+        key: "status",
+        title: t("request.label.field.status"),
+        render: (value: string) =>
+        (
+          <TagField
+            value={value}
+            style={{
+              background:
+                value === "Sent"
+                  ? "#0073b7"
+                  : value === "Approved"
+                    ? "red"
+                    : "#f39c12",
+              color: "white",
+              border: "none",
+            }}
+          />
+        )
+      },
+      {
+        key: "branch",
+        title: t("request.label.field.branchRequest"),
+        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        defaultSortOrder: getDefaultSortOrder("branch", sorter),
+      },
+      {
+        key: "entry_type",
+        title: t("request.label.field.entryRequest"),
+        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        defaultSortOrder: getDefaultSortOrder("entry_type", sorter),
+      },
+      {
+        key: "supplier",
+        title: t("request.label.field.supplier"),
+        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        defaultSortOrder: getDefaultSortOrder("supplier", sorter),
+      },
+      {
+        key: "finfast_request_assets",
+        title: t("request.label.field.countAsset"),
+        render: (value: any) => <TagField value={value.length ? value.length : 0} />
+      },
+      {
+        key: "note",
+        title: t("request.label.field.note"),
+        render: (value: string) => <TextField value={value} />
+      },
+      {
+        key: "created_at",
+        title: t("request.label.field.dateCreate"),
+        render: (value: IHardware) => <DateField format="LLL" value={value.datetime} />,
+        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+      },
+    ],
+    []
+  );
+
+  const onCheckItem = (value: any) => {
+    if (collumnSelected.includes(value.key)) {
+      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
+    } else {
+      setColumnSelected(collumnSelected.concat(value.key))
+    }
+  };
+
+  const listenForOutsideClicks = (
+    listening: boolean,
+    setListening: (arg0: boolean) => void,
+    menuRef: { current: any },
+    setIsActive: (arg0: boolean) => void,
+  ) => {
+    if (listening) return;
+    if (!menuRef.current) return;
+    setListening(true)
+      ;[`click`, `touchstart`].forEach((type) => {
+        document.addEventListener(`click`, (event) => {
+          const current = menuRef.current
+          const node = event.target
+          if (current && current.contains(node)) return;
+          setIsActive(false)
+        })
+      })
+  }
+
+  useEffect(() => {
+    const aboutController = new AbortController();
+
+    listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+
+    return function cleanup() {
+      aboutController.abort();
+    }
+  }, []);
+
   return (
     <List
       title={t("request.label.title.create")}
@@ -156,7 +275,28 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         ),
       }}
     >
-      <TableAction searchFormProps={searchFormProps} />
+      <div className="all">
+        <TableAction searchFormProps={searchFormProps} />
+        <div className="menu-container" ref={menuRef}>
+          <button onClick={onClickDropDown} className="menu-trigger">
+            <MenuOutlined />
+          </button>
+          <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+            <div className="menu-dropdown">
+              {collumns.map((item) => (
+                <Checkbox
+                  className="checkbox"
+                  key={item.key}
+                  onChange={(e) => onCheckItem(item)}
+                  checked={collumnSelected.includes(item.key)}
+                >
+                  {item.title}
+                </Checkbox>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </div>
       <MModal
         title={t("request.label.title.create")}
         setIsModalVisible={setIsModalVisible}
@@ -175,81 +315,18 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       >
         <RequestShow setIsModalVisible={setIsModalVisible} detail={detail} />
       </MModal>
-      <Table
-        {...tableProps}
+      <Table {...tableProps}
         rowKey="id"
-        scroll={{ x: 1170 }}
+        scroll={{ x: 1250 }}
         pagination={{
           position: ["topRight", "bottomRight"],
           total: pageTotal ? pageTotal : 0,
         }}
       >
-        <Table.Column
-          dataIndex="id"
-          key="id"
-          title="ID"
-          render={(value) => <TextField value={value} />}
-          defaultSortOrder={getDefaultSortOrder("id", sorter)}
-          sorter
-        />
-        <Table.Column
-          dataIndex="name"
-          key="name"
-          title={t("request.label.field.nameRequest")}
-          render={(value) => <TextField value={value} />}
-        />
+        {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
+          <Table.Column dataIndex={col.key} {...col} sorter />
+        ))}
 
-        <Table.Column
-          dataIndex="status"
-          key="status"
-          title={t("request.label.field.status")}
-          render={(value) => (
-            <TagField
-              value={value}
-              style={{
-                background:
-                  value === "Sent"
-                    ? "#0073b7"
-                    : value === "Approved"
-                    ? "red"
-                    : "#f39c12",
-                color: "white",
-                border: "none",
-              }}
-            />
-          )}
-          defaultSortOrder={getDefaultSortOrder("status", sorter)}
-          sorter
-        />
-
-        <Table.Column
-          dataIndex="branch"
-          key="branch"
-          title={t("request.label.field.branchRequest")}
-          render={(value) => <TagField value={value.name} />}
-        />
-        <Table.Column
-          dataIndex="entry_type"
-          key="entry_type"
-          title={t("request.label.field.entryRequest")}
-          render={(value) => <TagField value={value.name} />}
-        />
-
-        <Table.Column
-          dataIndex="supplier"
-          key="supplier"
-          title={t("request.label.field.supplier")}
-          render={(value) => <TagField value={value.name} />}
-        />
-
-        <Table.Column
-          dataIndex="finfast_request_assets"
-          key="finfast_request_assets"
-          title={t("request.label.field.countAsset")}
-          render={(value) => (
-            <TagField value={value.length ? value.length : 0} />
-          )}
-        />
         <Table.Column
           title={t("table.actions")}
           dataIndex="actions"
@@ -296,8 +373,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                     >
                       {t("request.label.button.send")}
@@ -312,3 +389,4 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     </List>
   );
 };
+

@@ -1,5 +1,6 @@
 import {
   CATEGORIES_API,
+  DEPRECIATIONS_API,
   HARDWARE_API,
   LOCATION_API,
   MANUFACTURES_API,
@@ -81,6 +82,12 @@ p, 1, ${i18n.t("resource.suppliers")}/*, (edit)
 p, 1, ${i18n.t("resource.department")}, (list)|(create)
 p, 1, ${DEPARTMENT_API}/*, (delete)
 p, 1, ${i18n.t("resource.department")}/*, (edit)
+
+p, 1, ${i18n.t("resource.depreciation")}, (list)|(create)
+p, 1, ${DEPRECIATIONS_API}/*, (delete)
+p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
+
+p, 1, ${i18n.t("resource.assets_refuse")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

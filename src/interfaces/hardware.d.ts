@@ -119,10 +119,10 @@ export interface IHardwareResponse {
   };
   user_can_checkout: boolean;
   assigned_status: number;
-  checkin_at:{
+  checkin_at: {
     date: string;
     formatted: string;
-  }
+  };
 }
 
 export interface IDefaultValue {
@@ -203,7 +203,6 @@ export interface IHardwareList {
 }
 
 export interface IHardwareRequestCheckin {
-  
   status_label: string;
   model: string;
   id: number;
@@ -243,4 +242,13 @@ export interface IHardwareResponseCheckin {
     formatted: string;
   };
   user_can_checkout: boolean;
+}
+
+export interface IHardwareFilterVariables {
+  search: string;
+  name: string;
+  serial: string;
+  model: string;
+  asset_tag: string;
+  filter: string;
 }
