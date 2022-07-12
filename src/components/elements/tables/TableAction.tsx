@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ICheckboxChange } from "interfaces";
 import { useTranslate } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
@@ -120,6 +120,14 @@ export const TableAction = (props: ITableAction) => {
   );
   const onSelectCollumn = useCallback(() => { }, []);
 
+  const searchValues = useMemo(() => {
+    return localStorage.getItem("search");
+  }, [localStorage.getItem("search")])
+
+  useEffect(() => {
+    searchFormProps.form.submit();
+  }, [window.location.reload])
+
   return (
     <Row style={{ marginBottom: "10px" }}>
       <Col xs={12}>
@@ -139,11 +147,16 @@ export const TableAction = (props: ITableAction) => {
           }}
         >
           {searchFormProps && (
-            <Form {...searchFormProps}>
+            <Form {...searchFormProps} initialValues={{ "search": searchValues }}
+              onChange={() => {
+                localStorage.setItem("search", searchFormProps.form.getFieldsValue().search)
+                searchFormProps.form.submit();
+              }}>
               <Form.Item name={"search"}>
                 <Search
                   placeholder={t("table.search")}
                   onSearch={(key) => {
+                    localStorage.setItem("search", searchFormProps.form.getFieldsValue().search)
                     searchFormProps.form.submit();
                   }}
                   style={{ width: 200 }}

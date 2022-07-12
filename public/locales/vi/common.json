@@ -188,7 +188,8 @@
           "edit": "Chỉnh sửa",
           "delete": "Xóa",
           "columns": "Danh sách các cột",
-          "search": "Tìm kiếm nâng cao"
+          "search": "Tìm kiếm nâng cao",
+          "refresh": "Refresh"
         },
         "detail": {
           "assign": "Cấp phát",
