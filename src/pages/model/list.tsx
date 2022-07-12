@@ -151,6 +151,8 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
     tableQueryResult.refetch();
   };
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   useEffect(() => {
     refreshData();
   }, [isEditModalVisible]);
@@ -203,7 +205,14 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           data={detailClone}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id">
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}

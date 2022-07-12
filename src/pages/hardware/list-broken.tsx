@@ -20,7 +20,6 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  getDefaultFilter,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -62,7 +61,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
       initialSorter: [
         {
@@ -484,6 +483,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <List
       title={t("hardware.label.title.list-broken")}
@@ -560,7 +561,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
