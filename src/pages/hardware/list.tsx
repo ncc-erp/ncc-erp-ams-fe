@@ -476,6 +476,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <List
       pageHeaderProps={{
@@ -551,7 +553,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
@@ -594,14 +604,21 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   onClick={() => edit(record)}
                 />
               </Tooltip>
-              <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
+              {record.assigned_to !== null ? (
                 <DeleteButton
                   resourceName={HARDWARE_API}
                   hideText
                   size="small"
-                  recordItemId={record.id}
+                  disabled
                 />
-              </Tooltip>
+              ) : (
+                <Tooltip
+                  title={t("hardware.label.tooltip.delete")}
+                  color={"red"}
+                >
+                  <DeleteButton hideText size="small" />
+                </Tooltip>
+              )}
               {record.assigned_status === 2 ||
                 (record.user_can_checkout === true && (
                   <Button

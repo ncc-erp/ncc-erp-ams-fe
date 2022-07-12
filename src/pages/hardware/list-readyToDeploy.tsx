@@ -20,7 +20,6 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  getDefaultFilter,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -64,7 +63,7 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
       initialSorter: [
         {
@@ -74,9 +73,9 @@ export const HardwareListReadyToDeploy: React.FC<
       ],
       initialFilter: [
         {
-          field: "status.id",
+          field: "status",
           operator: "eq",
-          value: 5,
+          value: "RTD",
         },
       ],
 
@@ -337,12 +336,6 @@ export const HardwareListReadyToDeploy: React.FC<
         defaultSortOrder: getDefaultSortOrder("id", sorter),
       },
       {
-        key: "requestable",
-        title: "ì3",
-        render: (value: IHardware) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("requestable", sorter),
-      },
-      {
         key: "name",
         title: t("hardware.label.field.assetName"),
         render: (value: IHardware) => <TextField value={value} />,
@@ -405,7 +398,6 @@ export const HardwareListReadyToDeploy: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
@@ -493,6 +485,8 @@ export const HardwareListReadyToDeploy: React.FC<
     refreshData();
   }, [isCheckinModalVisible]);
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <List
       title={t("hardware.label.title.list-readyToDeploy")}
@@ -569,7 +563,15 @@ export const HardwareListReadyToDeploy: React.FC<
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}

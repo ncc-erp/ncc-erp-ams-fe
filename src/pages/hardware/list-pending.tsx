@@ -20,7 +20,6 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  getDefaultFilter,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -62,7 +61,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
 
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IHardware>({
       initialSorter: [
         {
@@ -72,9 +71,9 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       ],
       initialFilter: [
         {
-          field: "status.id",
+          field: "status",
           operator: "eq",
-          value: 1,
+          value: "Pending",
         },
       ],
       resource: HARDWARE_API,
@@ -396,7 +395,6 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-        defaultFilterValue: getDefaultFilter("status.id", filters, "eq"),
       },
       {
         key: "assigned_status",
@@ -485,6 +483,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <List
       title={t("hardware.label.title.list-pending")}
@@ -561,7 +561,15 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}

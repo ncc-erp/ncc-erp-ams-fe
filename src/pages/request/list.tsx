@@ -143,6 +143,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -174,7 +175,15 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       >
         <RequestShow setIsModalVisible={setIsModalVisible} detail={detail} />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1170 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1170 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         <Table.Column
           dataIndex="id"
           key="id"
