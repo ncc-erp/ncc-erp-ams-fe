@@ -21,7 +21,12 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  Checkbox
+  Checkbox,
+  Input,
+  Form,
+  Select,
+  useSelect,
+  DatePicker
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -44,9 +49,10 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, } from "api/baseApi";
+import { HARDWARE_API, LOCATION_API, } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from 'antd';
+import { ILocation } from "interfaces/dashboard";
 
 const defaultCheckedList = ["id", "name", "image", "model", "category", "status_label", "assigned_to",
   "assigned_status", "created_at"];
@@ -91,7 +97,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     resource: HARDWARE_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model } = params;
+      const { search, name, asset_tag, serial, model, location, purchase_date } = params;
       filters.push(
         {
           field: "search",
@@ -102,6 +108,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "filter",
           operator: "eq",
           value: JSON.stringify({ name, asset_tag, serial, model }),
+        },
+        {
+          field: "location_id",
+          operator: "eq",
+          value: location,
+        },
+        {
+          field: "purchase_date",
+          operator: "eq",
+          value: purchase_date ? purchase_date : undefined,
         },
       );
 
@@ -651,6 +667,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
+  const { selectProps: locationSelectProps } = useSelect<ILocation>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   return (
     <List
       pageHeaderProps={{
@@ -664,49 +692,72 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       }}
     >
       <div className="all">
-        <TableAction searchFormProps={searchFormProps} />
-        <div className="other_function">
-          <div className="menu-container" ref={menuRef}>
+        <div className="search_by_month">
+          <Form
+            layout="vertical"
+            {...searchFormProps}
+            onValuesChange={() => searchFormProps.form?.submit()}
+          >
+            <Space wrap>
+              <Form.Item label="Chi nhánh" name="location">
+                <Select
+                  onChange={() => searchFormProps.form?.submit()}
+                  {...locationSelectProps}
+                  placeholder="Search Locations"
+                />
+              </Form.Item>
+              <Form.Item label="Tháng" name="purchase_date">
+                <Input type="month" onChange={() => searchFormProps.form?.submit()} />
+              </Form.Item>
+            </Space>
+          </Form>
+        </div>
+
+        <div className="search">
+          <TableAction searchFormProps={searchFormProps} />
+          <div className="other_function">
+            <div className="menu-container" ref={menuRef}>
+              <div>
+                <button className="menu-trigger"
+                  style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
+                  <Tooltip title={t("hardware.label.tooltip.refresh")} color={"#108ee9"}>
+                    <SyncOutlined onClick={handleRefresh} style={{ color: "black" }} />
+                  </Tooltip>
+                </button>
+              </div>
+              <div>
+                <button onClick={onClickDropDown} className="menu-trigger">
+                  <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
+                    <MenuOutlined style={{ color: "black" }} />
+                  </Tooltip>
+                </button>
+              </div>
+              <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+                <div className="menu-dropdown">
+                  {collumns.map((item) => (
+                    <Checkbox
+                      className="checkbox"
+                      key={item.key}
+                      onChange={() => onCheckItem(item)}
+                      checked={collumnSelected.includes(item.key)}
+                    >
+                      {item.title}
+                    </Checkbox>
+                  ))}
+                </div>
+              </nav>
+            </div>
             <div>
               <button className="menu-trigger"
-                style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
-                <Tooltip title={t("hardware.label.tooltip.refresh")} color={"#108ee9"}>
-                  <SyncOutlined onClick={handleRefresh} style={{ color: "black" }} />
+                style={{
+                  borderTopRightRadius: "3px",
+                  borderBottomRightRadius: "3px"
+                }}>
+                <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
+                  <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
                 </Tooltip>
               </button>
             </div>
-            <div>
-              <button onClick={onClickDropDown} className="menu-trigger">
-                <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
-                  <MenuOutlined style={{ color: "black" }} />
-                </Tooltip>
-              </button>
-            </div>
-            <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
-              <div className="menu-dropdown">
-                {collumns.map((item) => (
-                  <Checkbox
-                    className="checkbox"
-                    key={item.key}
-                    onChange={() => onCheckItem(item)}
-                    checked={collumnSelected.includes(item.key)}
-                  >
-                    {item.title}
-                  </Checkbox>
-                ))}
-              </div>
-            </nav>
-          </div>
-          <div>
-            <button className="menu-trigger"
-              style={{
-                borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px"
-              }}>
-              <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
-                <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
-              </Tooltip>
-            </button>
           </div>
         </div>
       </div>
@@ -773,7 +824,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsShowModalVisible}
           detail={detail}
         />
-      </MModal>{" "}
+      </MModal>
       <MModal
         title={t("hardware.label.title.checkin")}
         setIsModalVisible={setIsCheckinModalVisible}

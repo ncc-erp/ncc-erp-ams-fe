@@ -251,4 +251,6 @@ export interface IHardwareFilterVariables {
   model: string;
   asset_tag: string;
   filter: string;
+  location: string;
+  purchase_date: Dayjs;
 }
