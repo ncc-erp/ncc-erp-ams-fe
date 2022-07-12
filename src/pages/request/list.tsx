@@ -153,6 +153,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   const collumns = useMemo(
     () => [
@@ -314,7 +315,14 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       >
         <RequestShow setIsModalVisible={setIsModalVisible} detail={detail} />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1250 }}>
+      <Table {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1250 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}

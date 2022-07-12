@@ -90,9 +90,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ],
     initialFilter: [
       {
-        field: "status.id",
+        field: "status",
         operator: "eq",
-        value: 4,
+        value: "Deployed",
       },
     ],
     resource: HARDWARE_API,
@@ -588,6 +588,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     tableQueryResult.refetch();
   };
 
+  console.log("chekc data: ", tableProps.dataSource);
+
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
@@ -645,6 +647,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       aboutController.abort();
     }
   }, []);
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -770,7 +773,15 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
@@ -813,14 +824,21 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                   onClick={() => edit(record)}
                 />
               </Tooltip>
-              <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
-                <DeleteButton
-                  resourceName={HARDWARE_API}
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                />
-              </Tooltip>
+              {record.assigned_to !== null ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
+                <Tooltip
+                  title={t("hardware.label.tooltip.delete")}
+                  color={"red"}
+                >
+                  <DeleteButton
+                    resourceName={HARDWARE_API}
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                  />
+                </Tooltip>
+              )}
               {record.assigned_status === 2 ||
                 (record.user_can_checkout === true && (
                   <Button
@@ -934,6 +952,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           )}
         />
       </Table>
-    </List>
+    </List >
   );
 };

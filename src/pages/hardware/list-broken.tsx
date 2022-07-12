@@ -89,9 +89,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     ],
     initialFilter: [
       {
-        field: "status.id",
+        field: "status",
         operator: "eq",
-        value: 3,
+        value: "Undeployable",
       },
     ],
     resource: HARDWARE_API,
@@ -644,6 +644,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       aboutController.abort();
     }
   }, []);
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -769,7 +770,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1850 }}>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
         {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
@@ -933,6 +942,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           )}
         />
       </Table>
-    </List>
+    </List >
   );
 };
