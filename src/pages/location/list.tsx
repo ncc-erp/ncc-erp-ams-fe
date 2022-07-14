@@ -155,9 +155,9 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       title={t("location.label.title.nameTitle")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title={t("location.label.field.create")} color={"#108ee9"}>
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {t("location.label.field.create")}
+          </CreateButton>
         ),
       }}
     >
