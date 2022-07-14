@@ -39,7 +39,11 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
-import { MenuOutlined, FileSearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  FileSearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 import {
   IHardwareFilterVariables,
@@ -49,13 +53,23 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, LOCATION_API, } from "api/baseApi";
-import { HardwareSearch } from "./search";
-import { Spin } from 'antd';
 import { ILocation } from "interfaces/dashboard";
+import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { HardwareSearch } from "./search";
+import { Spin } from "antd";
+import { ICompany } from "interfaces/company";
 
-const defaultCheckedList = ["id", "name", "image", "model", "category", "status_label", "assigned_to",
-  "assigned_status", "created_at"];
+const defaultCheckedList = [
+  "id",
+  "name",
+  "image",
+  "model",
+  "category",
+  "status_label",
+  "assigned_to",
+  "assigned_status",
+  "created_at",
+];
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -75,7 +89,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] =
+    useState<string[]>(defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -115,10 +130,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           value: location,
         },
         {
-          field: "purchase_date",
+          field: "dateFrom",
           operator: "eq",
-          value: purchase_date ? purchase_date : undefined,
+          value: purchase_date
+            ? purchase_date[0].toISOString().substring(0, 10)
+            : undefined,
         },
+        {
+          field: "dateTo",
+          operator: "eq",
+          value: purchase_date
+            ? purchase_date[1].toISOString().substring(0, 10)
+            : undefined,
+        }
       );
 
       return filters;
@@ -529,7 +553,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardware) => (
           <DateField format="LLL" value={value.datetime} />
         ),
-        defaultSortOrder: getDefaultSortOrder("warranty_expires.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder(
+          "warranty_expires.datetime",
+          sorter
+        ),
       },
       {
         key: "order_number",
@@ -621,9 +648,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
-      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
+      setColumnSelected(
+        collumnSelected.filter((item: any) => item !== value.key)
+      );
     } else {
-      setColumnSelected(collumnSelected.concat(value.key))
+      setColumnSelected(collumnSelected.concat(value.key));
     }
   };
 
@@ -631,20 +660,20 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     listening: boolean,
     setListening: (arg0: boolean) => void,
     menuRef: { current: any },
-    setIsActive: (arg0: boolean) => void,
+    setIsActive: (arg0: boolean) => void
   ) => {
     if (listening) return;
     if (!menuRef.current) return;
-    setListening(true)
-      ;[`click`, `touchstart`].forEach((type) => {
-        document.addEventListener(`click`, (event) => {
-          const current = menuRef.current
-          const node = event.target
-          if (current && current.contains(node)) return;
-          setIsActive(false)
-        })
-      })
-  }
+    setListening(true);
+    [`click`, `touchstart`].forEach((type) => {
+      document.addEventListener(`click`, (event) => {
+        const current = menuRef.current;
+        const node = event.target;
+        if (current && current.contains(node)) return;
+        setIsActive(false);
+      });
+    });
+  };
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -653,7 +682,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
     return function cleanup() {
       aboutController.abort();
-    }
+    };
   }, []);
 
   const [loading, setLoading] = useState(false);
@@ -663,11 +692,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       refreshData();
       setLoading(false);
     }, 300);
-  }
+  };
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const { selectProps: locationSelectProps } = useSelect<ILocation>({
+  const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
@@ -679,49 +708,60 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
+  const { RangePicker } = DatePicker;
+
   return (
     <List
       pageHeaderProps={{
         extra: (
-          <>
-            <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
-              <CreateButton onClick={handleCreate} />
-            </Tooltip>
-          </>
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
-      <div className="all">
-        <div className="search_by_month">
-          <Form
-            layout="vertical"
-            {...searchFormProps}
-            onValuesChange={() => searchFormProps.form?.submit()}
-          >
-            <Space wrap>
-              <Form.Item label="Chi nhánh" name="location">
-                <Select
-                  onChange={() => searchFormProps.form?.submit()}
-                  {...locationSelectProps}
-                  placeholder="Search Locations"
-                />
-              </Form.Item>
-              <Form.Item label="Tháng" name="purchase_date">
-                <Input type="month" onChange={() => searchFormProps.form?.submit()} />
-              </Form.Item>
-            </Space>
-          </Form>
-        </div>
+      <div className="search">
+        <Form
+          {...searchFormProps}
+          layout="vertical"
+          onValuesChange={() => searchFormProps.form?.submit()}
+          className="search-month-location"
+        >
+          <Space>
+            <Form.Item label="Thời gian" name="purchase_date">
+              <RangePicker onChange={() => searchFormProps.form?.submit()} />
+            </Form.Item>
+            <Form.Item label="Vị trí" name="location">
+              <Select
+                onChange={() => searchFormProps.form?.submit()}
+                {...locationSelectProps}
+                allowClear
+                placeholder="Lựa chọn vị trí"
+              />
+            </Form.Item>
+          </Space>
+        </Form>
 
-        <div className="search">
+        <div className="all">
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
             <div className="menu-container" ref={menuRef}>
               <div>
-                <button className="menu-trigger"
-                  style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
-                  <Tooltip title={t("hardware.label.tooltip.refresh")} color={"#108ee9"}>
-                    <SyncOutlined onClick={handleRefresh} style={{ color: "black" }} />
+                <button
+                  className="menu-trigger"
+                  style={{
+                    borderTopLeftRadius: "3px",
+                    borderBottomLeftRadius: "3px",
+                  }}
+                >
+                  <Tooltip
+                    title={t("hardware.label.tooltip.refresh")}
+                    color={"#108ee9"}
+                  >
+                    <SyncOutlined
+                      onClick={handleRefresh}
+                      style={{ color: "black" }}
+                    />
                   </Tooltip>
                 </button>
               </div>
@@ -731,7 +771,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     <MenuOutlined style={{ color: "black" }} />
                   </Tooltip>
                 </button>
-              </div>
+              </div >
               <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
                 <div className="menu-dropdown">
                   {collumns.map((item) => (
@@ -748,20 +788,39 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               </nav>
             </div>
             <div>
-              <button className="menu-trigger"
+              <button
+                className="menu-trigger"
                 style={{
                   borderTopRightRadius: "3px",
-                  borderBottomRightRadius: "3px"
-                }}>
-                <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
-                  <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
+                  borderBottomRightRadius: "3px",
+                }}
+              >
+                <Tooltip
+                  title={t("hardware.label.tooltip.search")}
+                  color={"#108ee9"}
+                >
+                  <FileSearchOutlined
+                    onClick={handleSearch}
+                    style={{ color: "black" }}
+                  />
                 </Tooltip>
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      <MModal
+        </div >
+      </div >
+      {/* <div className="result">
+        <label>
+          <b>Số lượng các thiết bị</b> :
+        </label>
+        <br />
+        <label>PC:</label>
+        <label>Monitor :</label>
+        <label>Mouse :</label>
+        <label>Keyboard :</label>
+        <label>Headphone :</label>
+      </div> */}
+      < MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
         isModalVisible={isSearchModalVisible}
@@ -771,7 +830,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsSearchModalVisible}
           searchFormProps={searchFormProps}
         />
-      </MModal>
+      </MModal >
       <MModal
         title={t("hardware.label.title.create")}
         setIsModalVisible={setIsModalVisible}
@@ -836,194 +895,200 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      {loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin tip="Loading..." style={{ fontSize: "18px", color: "black" }} />
-          </div>
-        </>
-      ) : (
-        <Table {...tableProps}
-          rowKey="id"
-          scroll={{ x: 1850 }}
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
-          {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
-          <Table.Column<IHardwareResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("hardware.label.tooltip.viewDetail")}
-                  color={"#108ee9"}
-                >
-                  <ShowButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => show(record)}
-                  />
-                </Tooltip>
-
-                <Tooltip
-                  title={t("hardware.label.tooltip.clone")}
-                  color={"#108ee9"}
-                >
-                  <CloneButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => clone(record)}
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                {record.assigned_to !== null ? (
-                  <DeleteButton
-                    hideText
-                    size="small"
-                    disabled
-                  />
-                ) : (
-                  <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
-                    <DeleteButton
-                      resourceName={HARDWARE_API}
+      {
+        loading ? (
+          <>
+            <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+              <Spin
+                tip="Loading..."
+                style={{ fontSize: "18px", color: "black" }}
+              />
+            </div>
+          </>
+        ) : (
+          <Table
+            {...tableProps}
+            rowKey="id"
+            scroll={{ x: 1850 }}
+            pagination={{
+              position: ["topRight", "bottomRight"],
+              total: pageTotal ? pageTotal : 0,
+            }}
+          >
+            {collumns
+              .filter((collumn) => collumnSelected.includes(collumn.key))
+              .map((col) => (
+                <Table.Column dataIndex={col.key} {...col} sorter />
+              ))}
+            <Table.Column<IHardwareResponse>
+              title={t("table.actions")}
+              dataIndex="actions"
+              render={(_, record) => (
+                <Space>
+                  <Tooltip
+                    title={t("hardware.label.tooltip.viewDetail")}
+                    color={"#108ee9"}
+                  >
+                    <ShowButton
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onClick={() => show(record)}
                     />
                   </Tooltip>
-                )}
-                {record.assigned_status === 2 ||
-                  (record.user_can_checkout === true && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.user_can_checkout === true && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
 
-                {record.assigned_status === 2 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
-                    onClick={() => checkin(record)}
+                  <Tooltip
+                    title={t("hardware.label.tooltip.clone")}
+                    color={"#108ee9"}
                   >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : record.assigned_status === 3 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
-                    onClick={() => checkin(record)}
+                    <CloneButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => clone(record)}
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
                   >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                  {record.assigned_to !== null ? (
+                    <DeleteButton hideText size="small" disabled />
+                  ) : (
+                    <Tooltip
+                      title={t("hardware.label.tooltip.delete")}
+                      color={"red"}
+                    >
+                      <DeleteButton
+                        resourceName={HARDWARE_API}
+                        hideText
+                        size="small"
+                        recordItemId={record.id}
+                      />
+                    </Tooltip>
+                  )}
+                  {record.assigned_status === 2 ||
+                    (record.user_can_checkout === true && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        onClick={() => checkout(record)}
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.user_can_checkout === true && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        onClick={() => checkout(record)}
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.status_label.name === "Pending" && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        disabled
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.status_label.name === "Broken" && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        disabled
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    ))}
+
+                  {record.assigned_status === 2 ? (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => checkin(record)}
+                    >
+                      {t("hardware.label.button.checkin")}
+                    </Button>
+                  ) : record.assigned_status === 3 ? (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => checkin(record)}
+                    >
+                      {t("hardware.label.button.checkin")}
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </Space>
+              )}
+            />
+          </Table>
+        )
+      }
     </List >
   );
 };
-

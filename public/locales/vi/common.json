@@ -22,19 +22,19 @@
     }
   },
   "buttons": {
-    "create": "Create",
-    "save": "Save",
-    "logout": "Logout",
-    "delete": "Delete",
-    "edit": "Edit",
-    "cancel": "Cancel",
+    "create": "Thêm mới",
+    "save": "Lưu",
+    "logout": "Đăng xuất",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "cancel": "Hủy",
     "confirm": "Are you sure?",
-    "filter": "Filter",
+    "filter": "Lọc",
     "clear": "Clear",
-    "refresh": "Refresh",
-    "show": "Show",
+    "refresh": "Làm mới",
+    "show": "Hiển thị",
     "undo": "Undo",
-    "import": "Import",
+    "import": "Nhập",
     "clone": "Clone",
     "notAccessTitle": "You don't have permission to access"
   },
@@ -206,6 +206,7 @@
   "request": {
     "label": {
       "field": {
+        "create": "Tạo request",
         "name": "Tên yêu cầu",
         "branch": "Chọn nhánh",
         "supplier": "Nhà cung cấp",
@@ -245,7 +246,7 @@
         "assetsRequired": "* Bạn chưa chọn thiết bị"
       },
       "title": {
-        "create": "Tạo Request",
+        "create": "Thêm mới",
         "detail": "Chi tiết Request"
       }
     }
@@ -411,7 +412,8 @@
     "assets-assign": "Tất cả Đã cấp phát",
     "assets-readyToDeploy": "Tất cả Sẵn sàng để cấp phát",
     "assets-pending": "Tất cả Đang chờ",
-    "assets-broken": "Tất cả Không cho phép cấp phát"
+    "assets-broken": "Tất cả Không cho phép cấp phát",
+    "report": "Báo cáo"
   },
   "model": {
     "label": {

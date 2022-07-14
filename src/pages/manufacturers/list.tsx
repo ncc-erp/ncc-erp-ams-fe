@@ -140,12 +140,9 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
       title={t("manufactures.label.title.nameTitle")}
       pageHeaderProps={{
         extra: (
-          <Tooltip
-            title={t("manufactures.label.field.create")}
-            color={"#108ee9"}
-          >
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {t("manufactures.label.field.create")}
+          </CreateButton>
         ),
       }}
     >

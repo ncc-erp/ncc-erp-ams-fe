@@ -39,11 +39,18 @@ import {
   SEND_REQUEST_API,
 } from "api/baseApi";
 import "styles/antd.less";
-import { MenuOutlined, DeleteOutlined } from "@ant-design/icons"
+import { MenuOutlined, DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 
-const defaultCheckedList = ["id", "name", "status", "branch", "entry_type", "supplier",
-  "finfast_request_assets"];
+const defaultCheckedList = [
+  "id",
+  "name",
+  "status",
+  "branch",
+  "entry_type",
+  "supplier",
+  "finfast_request_assets",
+];
 
 export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -54,7 +61,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idSend, setIdSend] = useState<number>(-1);
 
-  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] =
+    useState<string[]>(defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -172,8 +180,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "status",
         title: t("request.label.field.status"),
-        render: (value: string) =>
-        (
+        render: (value: string) => (
           <TagField
             value={value}
             style={{
@@ -181,13 +188,13 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                 value === "Sent"
                   ? "#0073b7"
                   : value === "Approved"
-                    ? "red"
-                    : "#f39c12",
+                  ? "red"
+                  : "#f39c12",
               color: "white",
               border: "none",
             }}
           />
-        )
+        ),
       },
       {
         key: "branch",
@@ -210,17 +217,21 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "finfast_request_assets",
         title: t("request.label.field.countAsset"),
-        render: (value: any) => <TagField value={value.length ? value.length : 0} />
+        render: (value: any) => (
+          <TagField value={value.length ? value.length : 0} />
+        ),
       },
       {
         key: "note",
         title: t("request.label.field.note"),
-        render: (value: string) => <TextField value={value} />
+        render: (value: string) => <TextField value={value} />,
       },
       {
         key: "created_at",
         title: t("request.label.field.dateCreate"),
-        render: (value: IHardware) => <DateField format="LLL" value={value.datetime} />,
+        render: (value: IHardware) => (
+          <DateField format="LLL" value={value.datetime} />
+        ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
@@ -229,9 +240,11 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
-      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
+      setColumnSelected(
+        collumnSelected.filter((item: any) => item !== value.key)
+      );
     } else {
-      setColumnSelected(collumnSelected.concat(value.key))
+      setColumnSelected(collumnSelected.concat(value.key));
     }
   };
 
@@ -239,20 +252,20 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     listening: boolean,
     setListening: (arg0: boolean) => void,
     menuRef: { current: any },
-    setIsActive: (arg0: boolean) => void,
+    setIsActive: (arg0: boolean) => void
   ) => {
     if (listening) return;
     if (!menuRef.current) return;
-    setListening(true)
-      ;[`click`, `touchstart`].forEach((type) => {
-        document.addEventListener(`click`, (event) => {
-          const current = menuRef.current
-          const node = event.target
-          if (current && current.contains(node)) return;
-          setIsActive(false)
-        })
-      })
-  }
+    setListening(true);
+    [`click`, `touchstart`].forEach((type) => {
+      document.addEventListener(`click`, (event) => {
+        const current = menuRef.current;
+        const node = event.target;
+        if (current && current.contains(node)) return;
+        setIsActive(false);
+      });
+    });
+  };
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -261,17 +274,17 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
 
     return function cleanup() {
       aboutController.abort();
-    }
+    };
   }, []);
 
   return (
     <List
-      title={t("request.label.title.create")}
+      title={t("request.label.field.create")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title={t("request.label.title.create")} color={"#108ee9"}>
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {t("request.label.title.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -281,7 +294,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           <button onClick={onClickDropDown} className="menu-trigger">
             <MenuOutlined />
           </button>
-          <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+          <nav className={`menu ${isActive ? "active" : "inactive"}`}>
             <div className="menu-dropdown">
               {collumns.map((item) => (
                 <Checkbox
@@ -315,7 +328,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
       >
         <RequestShow setIsModalVisible={setIsModalVisible} detail={detail} />
       </MModal>
-      <Table {...tableProps}
+      <Table
+        {...tableProps}
         rowKey="id"
         scroll={{ x: 1250 }}
         pagination={{
@@ -323,9 +337,11 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
           total: pageTotal ? pageTotal : 0,
         }}
       >
-        {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
+        {collumns
+          .filter((collumn) => collumnSelected.includes(collumn.key))
+          .map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
 
         <Table.Column
           title={t("table.actions")}
@@ -373,8 +389,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                     >
                       {t("request.label.button.send")}
@@ -389,4 +405,3 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     </List>
   );
 };
-

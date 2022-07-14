@@ -176,9 +176,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       title={t("category.label.title.nameTitle")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title={t("category.label.field.create")} color={"#108ee9"}>
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {" "}
+            {t("category.label.field.create")}{" "}
+          </CreateButton>
         ),
       }}
     >
