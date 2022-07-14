@@ -166,9 +166,9 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
       title={t("model.label.title.model")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title={t("model.label.tooltip.create")} color={"#108ee9"}>
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {t("model.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >

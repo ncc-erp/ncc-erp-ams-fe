@@ -21,7 +21,11 @@ import {
   Button,
   ShowButton,
   Tooltip,
-  Checkbox
+  Checkbox,
+  DatePicker,
+  Select,
+  useSelect,
+  Form,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -34,7 +38,11 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
-import { MenuOutlined, FileSearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  FileSearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 import {
   IHardwareFilterVariables,
@@ -44,12 +52,22 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, } from "api/baseApi";
+import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
-import { Spin } from 'antd';
+import { Spin } from "antd";
+import { ICompany } from "interfaces/company";
 
-const defaultCheckedList = ["id", "name", "image", "model", "category", "status_label", "assigned_to",
-  "assigned_status", "created_at"];
+const defaultCheckedList = [
+  "id",
+  "name",
+  "image",
+  "model",
+  "category",
+  "status_label",
+  "assigned_to",
+  "assigned_status",
+  "created_at",
+];
 
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -69,7 +87,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] =
+    useState<string[]>(defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -91,7 +110,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     resource: HARDWARE_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model } = params;
+      const {
+        search,
+        name,
+        asset_tag,
+        serial,
+        model,
+        location,
+        purchase_date,
+      } = params;
       filters.push(
         {
           field: "search",
@@ -103,6 +130,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           operator: "eq",
           value: JSON.stringify({ name, asset_tag, serial, model }),
         },
+        {
+          field: "location_id",
+          operator: "eq",
+          value: location,
+        },
+        {
+          field: "dateFrom",
+          operator: "eq",
+          value: purchase_date
+            ? purchase_date[0].toISOString().substring(0, 10)
+            : undefined,
+        },
+        {
+          field: "dateTo",
+          operator: "eq",
+          value: purchase_date
+            ? purchase_date[1].toISOString().substring(0, 10)
+            : undefined,
+        }
       );
 
       return filters;
@@ -450,12 +496,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === "Assign"
                   ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === "Broken"
-                      ? t("hardware.label.detail.broken")
-                      : value.name === "Pending"
-                        ? t("hardware.label.detail.pending")
-                        : ""
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : value.name === "Broken"
+                  ? t("hardware.label.detail.broken")
+                  : value.name === "Pending"
+                  ? t("hardware.label.detail.pending")
+                  : ""
                 : ""
             }
             style={{
@@ -463,12 +509,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 value.name === "Assign"
                   ? "#0073b7"
                   : value.name === "Ready to deploy"
-                    ? "#00a65a"
-                    : value.name === "Broken"
-                      ? "red"
-                      : value.name === "Pending"
-                        ? "#f39c12"
-                        : "",
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
               color: "white",
             }}
           />
@@ -513,7 +559,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardware) => (
           <DateField format="LLL" value={value.datetime} />
         ),
-        defaultSortOrder: getDefaultSortOrder("warranty_expires.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder(
+          "warranty_expires.datetime",
+          sorter
+        ),
       },
       {
         key: "order_number",
@@ -567,24 +616,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
-                    ? t("hardware.label.detail.accept")
-                    : value === 3
-                      ? t("hardware.label.detail.refuse")
-                      : ""
+                ? t("hardware.label.detail.pendingAccept")
+                : value === 2
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                    ? "#f39c12"
-                    : value === 2
-                      ? "#0073b7"
-                      : value === 3
-                        ? "red"
-                        : "gray",
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "gray",
               color: "white",
             }}
           />
@@ -605,9 +654,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
-      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
+      setColumnSelected(
+        collumnSelected.filter((item: any) => item !== value.key)
+      );
     } else {
-      setColumnSelected(collumnSelected.concat(value.key))
+      setColumnSelected(collumnSelected.concat(value.key));
     }
   };
 
@@ -615,20 +666,20 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     listening: boolean,
     setListening: (arg0: boolean) => void,
     menuRef: { current: any },
-    setIsActive: (arg0: boolean) => void,
+    setIsActive: (arg0: boolean) => void
   ) => {
     if (listening) return;
     if (!menuRef.current) return;
-    setListening(true)
-      ;[`click`, `touchstart`].forEach((type) => {
-        document.addEventListener(`click`, (event) => {
-          const current = menuRef.current
-          const node = event.target
-          if (current && current.contains(node)) return;
-          setIsActive(false)
-        })
-      })
-  }
+    setListening(true);
+    [`click`, `touchstart`].forEach((type) => {
+      document.addEventListener(`click`, (event) => {
+        const current = menuRef.current;
+        const node = event.target;
+        if (current && current.contains(node)) return;
+        setIsActive(false);
+      });
+    });
+  };
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -637,7 +688,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
     return function cleanup() {
       aboutController.abort();
-    }
+    };
   }, []);
 
   const [loading, setLoading] = useState(false);
@@ -647,69 +698,137 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       refreshData();
       setLoading(false);
     }, 300);
-  }
+  };
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
+  const { selectProps: locationSelectProps } = useSelect<ICompany>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const { RangePicker } = DatePicker;
 
   return (
     <List
       pageHeaderProps={{
         extra: (
-          <>
-            <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
-              <CreateButton onClick={handleCreate} />
-            </Tooltip>
-          </>
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
-      <div className="all">
-        <TableAction searchFormProps={searchFormProps} />
-        <div className="other_function">
-          <div className="menu-container" ref={menuRef}>
-            <div>
-              <button className="menu-trigger"
-                style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
-                <Tooltip title={t("hardware.label.tooltip.refresh")} color={"#108ee9"}>
-                  <SyncOutlined onClick={handleRefresh} style={{ color: "black" }} />
-                </Tooltip>
-              </button>
-            </div>
-            <div>
-              <button onClick={onClickDropDown} className="menu-trigger">
-                <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
-                  <MenuOutlined style={{ color: "black" }} />
-                </Tooltip>
-              </button>
-            </div>
-            <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
-              <div className="menu-dropdown">
-                {collumns.map((item) => (
-                  <Checkbox
-                    className="checkbox"
-                    key={item.key}
-                    onChange={() => onCheckItem(item)}
-                    checked={collumnSelected.includes(item.key)}
+      <div className="search">
+        <Form
+          {...searchFormProps}
+          layout="vertical"
+          onValuesChange={() => searchFormProps.form?.submit()}
+          className="search-month-location"
+        >
+          <Space>
+            <Form.Item label="Thời gian" name="purchase_date">
+              <RangePicker onChange={() => searchFormProps.form?.submit()} />
+            </Form.Item>
+            <Form.Item label="Vị trí" name="location">
+              <Select
+                onChange={() => searchFormProps.form?.submit()}
+                {...locationSelectProps}
+                allowClear
+                placeholder="Lựa chọn vị trí"
+              />
+            </Form.Item>
+          </Space>
+        </Form>
+
+        <div className="all">
+          <TableAction searchFormProps={searchFormProps} />
+          <div className="other_function">
+            <div className="menu-container" ref={menuRef}>
+              <div>
+                <button
+                  className="menu-trigger"
+                  style={{
+                    borderTopLeftRadius: "3px",
+                    borderBottomLeftRadius: "3px",
+                  }}
+                >
+                  <Tooltip
+                    title={t("hardware.label.tooltip.refresh")}
+                    color={"#108ee9"}
                   >
-                    {item.title}
-                  </Checkbox>
-                ))}
+                    <SyncOutlined
+                      onClick={handleRefresh}
+                      style={{ color: "black" }}
+                    />
+                  </Tooltip>
+                </button>
               </div>
-            </nav>
-          </div>
-          <div>
-            <button className="menu-trigger"
-              style={{
-                borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px"
-              }}>
-              <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
-                <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
-              </Tooltip>
-            </button>
+              <div>
+                <button onClick={onClickDropDown} className="menu-trigger">
+                  <Tooltip
+                    title={t("hardware.label.tooltip.columns")}
+                    color={"#108ee9"}
+                  >
+                    <MenuOutlined style={{ color: "black" }} />
+                  </Tooltip>
+                </button>
+              </div>
+              <nav className={`menu ${isActive ? "active" : "inactive"}`}>
+                <div className="menu-dropdown">
+                  {collumns.map((item) => (
+                    <Checkbox
+                      className="checkbox"
+                      key={item.key}
+                      onChange={() => onCheckItem(item)}
+                      checked={collumnSelected.includes(item.key)}
+                    >
+                      {item.title}
+                    </Checkbox>
+                  ))}
+                </div>
+              </nav>
+            </div>
+            <div>
+              <button
+                className="menu-trigger"
+                style={{
+                  borderTopRightRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                }}
+              >
+                <Tooltip
+                  title={t("hardware.label.tooltip.search")}
+                  color={"#108ee9"}
+                >
+                  <FileSearchOutlined
+                    onClick={handleSearch}
+                    style={{ color: "black" }}
+                  />
+                </Tooltip>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      {/* <div className="result">
+        <label>
+          <b>Số lượng các thiết bị</b> :
+        </label>
+        <br />
+        <label>PC:</label>
+        <label>Monitor :</label>
+        <label>Mouse :</label>
+        <label>Keyboard :</label>
+        <label>Headphone :</label>
+      </div> */}
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
@@ -788,11 +907,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin tip="Loading..." style={{ fontSize: "18px", color: "black" }} />
+            <Spin
+              tip="Loading..."
+              style={{ fontSize: "18px", color: "black" }}
+            />
           </div>
         </>
       ) : (
-        <Table {...tableProps}
+        <Table
+          {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}
           pagination={{
@@ -800,9 +923,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             total: pageTotal ? pageTotal : 0,
           }}
         >
-          {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
+          {collumns
+            .filter((collumn) => collumnSelected.includes(collumn.key))
+            .map((col) => (
+              <Table.Column dataIndex={col.key} {...col} sorter />
+            ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}
             dataIndex="actions"
@@ -843,13 +968,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
                 {record.assigned_to !== null ? (
-                  <DeleteButton
-                    hideText
-                    size="small"
-                    disabled
-                  />
+                  <DeleteButton hideText size="small" disabled />
                 ) : (
-                  <Tooltip title={t("hardware.label.tooltip.delete")} color={"red"}>
+                  <Tooltip
+                    title={t("hardware.label.tooltip.delete")}
+                    color={"red"}
+                  >
                     <DeleteButton
                       resourceName={HARDWARE_API}
                       hideText
@@ -869,8 +993,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -887,8 +1011,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -905,8 +1029,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -923,8 +1047,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -941,8 +1065,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
@@ -957,8 +1081,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
@@ -972,7 +1096,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           />
         </Table>
       )}
-    </List >
+    </List>
   );
 };
-

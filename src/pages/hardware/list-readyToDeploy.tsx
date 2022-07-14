@@ -47,8 +47,17 @@ import { HARDWARE_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { MenuOutlined, FileSearchOutlined } from "@ant-design/icons";
 
-const defaultCheckedList = ["id", "name", "image", "model", "category", "status_label", "assigned_to",
-  "assigned_status", "created_at"];
+const defaultCheckedList = [
+  "id",
+  "name",
+  "image",
+  "model",
+  "category",
+  "status_label",
+  "assigned_to",
+  "assigned_status",
+  "created_at",
+];
 
 export const HardwareListReadyToDeploy: React.FC<
   IResourceComponentsProps
@@ -70,7 +79,8 @@ export const HardwareListReadyToDeploy: React.FC<
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] = useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] =
+    useState<string[]>(defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -111,7 +121,7 @@ export const HardwareListReadyToDeploy: React.FC<
           field: "filter",
           operator: "eq",
           value: JSON.stringify({ name, asset_tag, serial, model }),
-        },
+        }
       );
       return filters;
     },
@@ -417,12 +427,12 @@ export const HardwareListReadyToDeploy: React.FC<
                 ? value.name === "Assign"
                   ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === "Broken"
-                      ? t("hardware.label.detail.broken")
-                      : value.name === "Pending"
-                        ? t("hardware.label.detail.pending")
-                        : ""
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : value.name === "Broken"
+                  ? t("hardware.label.detail.broken")
+                  : value.name === "Pending"
+                  ? t("hardware.label.detail.pending")
+                  : ""
                 : ""
             }
             style={{
@@ -430,12 +440,12 @@ export const HardwareListReadyToDeploy: React.FC<
                 value.name === "Assign"
                   ? "#0073b7"
                   : value.name === "Ready to deploy"
-                    ? "#00a65a"
-                    : value.name === "Broken"
-                      ? "red"
-                      : value.name === "Pending"
-                        ? "#f39c12"
-                        : "",
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
               color: "white",
             }}
           />
@@ -480,7 +490,10 @@ export const HardwareListReadyToDeploy: React.FC<
         render: (value: IHardware) => (
           <DateField format="LLL" value={value.datetime} />
         ),
-        defaultSortOrder: getDefaultSortOrder("warranty_expires.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder(
+          "warranty_expires.datetime",
+          sorter
+        ),
       },
       {
         key: "order_number",
@@ -534,24 +547,24 @@ export const HardwareListReadyToDeploy: React.FC<
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
-                    ? t("hardware.label.detail.accept")
-                    : value === 3
-                      ? t("hardware.label.detail.refuse")
-                      : ""
+                ? t("hardware.label.detail.pendingAccept")
+                : value === 2
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                    ? "#f39c12"
-                    : value === 2
-                      ? "#0073b7"
-                      : value === 3
-                        ? "red"
-                        : "gray",
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "gray",
               color: "white",
             }}
           />
@@ -613,9 +626,11 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
-      setColumnSelected(collumnSelected.filter((item: any) => item !== value.key))
+      setColumnSelected(
+        collumnSelected.filter((item: any) => item !== value.key)
+      );
     } else {
-      setColumnSelected(collumnSelected.concat(value.key))
+      setColumnSelected(collumnSelected.concat(value.key));
     }
   };
 
@@ -623,20 +638,20 @@ export const HardwareListReadyToDeploy: React.FC<
     listening: boolean,
     setListening: (arg0: boolean) => void,
     menuRef: { current: any },
-    setIsActive: (arg0: boolean) => void,
+    setIsActive: (arg0: boolean) => void
   ) => {
     if (listening) return;
     if (!menuRef.current) return;
-    setListening(true)
-      ;[`click`, `touchstart`].forEach((type) => {
-        document.addEventListener(`click`, (event) => {
-          const current = menuRef.current
-          const node = event.target
-          if (current && current.contains(node)) return;
-          setIsActive(false)
-        })
-      })
-  }
+    setListening(true);
+    [`click`, `touchstart`].forEach((type) => {
+      document.addEventListener(`click`, (event) => {
+        const current = menuRef.current;
+        const node = event.target;
+        if (current && current.contains(node)) return;
+        setIsActive(false);
+      });
+    });
+  };
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -645,7 +660,7 @@ export const HardwareListReadyToDeploy: React.FC<
 
     return function cleanup() {
       aboutController.abort();
-    }
+    };
   }, []);
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
@@ -654,9 +669,9 @@ export const HardwareListReadyToDeploy: React.FC<
       title={t("hardware.label.title.list-readyToDeploy")}
       pageHeaderProps={{
         extra: (
-          <Tooltip title={t("hardware.label.tooltip.create")} color={"#108ee9"}>
-            <CreateButton onClick={handleCreate} />
-          </Tooltip>
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -664,13 +679,22 @@ export const HardwareListReadyToDeploy: React.FC<
         <TableAction searchFormProps={searchFormProps} />
         <div className="other_function">
           <div className="menu-container" ref={menuRef}>
-            <button onClick={onClickDropDown} className="menu-trigger"
-              style={{ borderTopLeftRadius: "3px", borderBottomLeftRadius: "3px" }}>
-              <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
+            <button
+              onClick={onClickDropDown}
+              className="menu-trigger"
+              style={{
+                borderTopLeftRadius: "3px",
+                borderBottomLeftRadius: "3px",
+              }}
+            >
+              <Tooltip
+                title={t("hardware.label.tooltip.columns")}
+                color={"#108ee9"}
+              >
                 <MenuOutlined style={{ color: "black" }} />
               </Tooltip>
             </button>
-            <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
               <div className="menu-dropdown">
                 {collumns.map((item) => (
                   <Checkbox
@@ -686,13 +710,21 @@ export const HardwareListReadyToDeploy: React.FC<
             </nav>
           </div>
           <div>
-            <button className="menu-trigger"
+            <button
+              className="menu-trigger"
               style={{
                 borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px"
-              }}>
-              <Tooltip title={t("hardware.label.tooltip.search")} color={"#108ee9"}>
-                <FileSearchOutlined onClick={handleSearch} style={{ color: "black" }} />
+                borderBottomRightRadius: "3px",
+              }}
+            >
+              <Tooltip
+                title={t("hardware.label.tooltip.search")}
+                color={"#108ee9"}
+              >
+                <FileSearchOutlined
+                  onClick={handleSearch}
+                  style={{ color: "black" }}
+                />
               </Tooltip>
             </button>
           </div>
@@ -782,9 +814,11 @@ export const HardwareListReadyToDeploy: React.FC<
           total: pageTotal ? pageTotal : 0,
         }}
       >
-        {collumns.filter(collumn => collumnSelected.includes(collumn.key)).map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
+        {collumns
+          .filter((collumn) => collumnSelected.includes(collumn.key))
+          .map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
         <Table.Column<IHardwareResponse>
           title={t("table.actions")}
           dataIndex="actions"
@@ -843,8 +877,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -861,8 +895,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -879,8 +913,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     disabled
                   >
@@ -897,8 +931,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     disabled
                   >
@@ -915,8 +949,8 @@ export const HardwareListReadyToDeploy: React.FC<
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -931,8 +965,8 @@ export const HardwareListReadyToDeploy: React.FC<
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -945,6 +979,6 @@ export const HardwareListReadyToDeploy: React.FC<
           )}
         />
       </Table>
-    </List >
+    </List>
   );
 };
