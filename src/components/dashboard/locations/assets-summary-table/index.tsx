@@ -30,7 +30,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     if (value === 0) {
       return "0";
     }
-    return value + "(" + ((value / sum) * 100).toFixed(2) + "%)";
+    return value + "";
   };
 
   useEffect(() => {

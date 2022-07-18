@@ -68,6 +68,10 @@ export interface IHardwareResponse {
     id: number;
     name: string;
   };
+  manufacturer: {
+    id: number;
+    name: string;
+  }
   supplier: {
     id: number;
     name: string;
@@ -84,12 +88,19 @@ export interface IHardwareResponse {
   };
   image: string;
   warranty_months: string;
+  warranty_expires: {
+    date: string;
+    formatted: string;
+  }
   purchase_cost: number;
   purchase_date: {
     date: string;
     formatted: string;
   };
-  assigned_to: number;
+  assigned_to: {
+    name: string;
+    username: string;
+  };
   last_audit_date: string;
   requestable: string;
   physical: number;
@@ -123,6 +134,21 @@ export interface IHardwareResponse {
     date: string;
     formatted: string;
   };
+  created_at:{
+    datetime: string;
+    formatted: string;
+  }
+  updated_at:{
+    datetime: string;
+    formatted: string;
+  }
+  checkout_at: {
+    date: string;
+    formatted: string;
+  };
+  checkin_counter: number;
+  checkout_counter: number;
+  requests_counter: number;
 }
 
 export interface IDefaultValue {

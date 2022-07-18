@@ -148,6 +148,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "assigned_to",
+          operator: "eq",
+          value: purchase_date
+            ? purchase_date[0].toISOString().substring(0, 10)
+            : undefined,
         }
       );
 
@@ -233,6 +240,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
+        date: "",
+        formatted: "",
+      },
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -313,6 +339,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_status: 0,
       checkin_at: {
+        date: "",
+        formatted: "",
+      },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
         date: "",
         formatted: "",
       },
@@ -557,12 +602,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
-        defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.datetime",
-          sorter
-        ),
+        defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
         key: "order_number",
@@ -580,7 +622,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
       },
       {
@@ -718,6 +760,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
+      title={t("hardware.label.title.asset")}
       pageHeaderProps={{
         extra: (
           <CreateButton onClick={handleCreate}>
@@ -747,7 +790,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             </Form.Item>
           </Space>
         </Form>
-
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
@@ -818,17 +860,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      {/* <div className="result">
-        <label>
-          <b>Số lượng các thiết bị</b> :
-        </label>
-        <br />
-        <label>PC:</label>
-        <label>Monitor :</label>
-        <label>Mouse :</label>
-        <label>Keyboard :</label>
-        <label>Headphone :</label>
-      </div> */}
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}

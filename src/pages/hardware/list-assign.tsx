@@ -203,6 +203,25 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
+        date: "",
+        formatted: "",
+      },
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -283,6 +302,25 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_status: 0,
       checkin_at: {
+        date: "",
+        formatted: "",
+      },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
         date: "",
         formatted: "",
       },
@@ -486,12 +524,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
-        defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.datetime",
-          sorter
-        ),
+        defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
         key: "order_number",

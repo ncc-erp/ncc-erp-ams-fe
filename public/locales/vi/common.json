@@ -132,11 +132,13 @@
           "condition": "Tình trạng",
           "dateCreate": "Ngày tạo",
           "manufacturer": "Nhà sản xuất",
+          "purchase_date": "Ngày mua",
           "eol": "EOL",
-          "warranty_expires": "Hết hạn bảo hành",
+          "warranty_expires": "Hết hạn",
           "checkout_counter": "Thu hồi tài sản",
           "checkin_counter": "Đăng kí tài sản",
           "requestable": "Yêu cầu"
+        
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -169,6 +171,7 @@
           "search":"Tìm kiếm"
         },
         "title": {
+          "asset": "Tất cả tài sản",
           "create":"Tạo mới",
           "edit": "Chỉnh sửa",
           "clone": "Clone",
@@ -179,7 +182,9 @@
           "list-assign": "Đã cấp phát Tài sản",
           "list-readyToDeploy": "Sẵn sàng để cấp phát Tài sản",
           "list-pending": "Đang chờ Tài sản",
-          "list-broken": "Không cho phép cấp phát Tài sản"
+          "list-broken": "Không cho phép cấp phát Tài sản",
+          "dateCreate": "Đã tạo lúc",
+          "updateAt": "Cập nhật tại"
         },
         "tooltip":{
           "create": "Thêm mới",
@@ -192,10 +197,10 @@
           "refresh": "Refresh"
         },
         "detail": {
-          "assign": "Cấp phát",
-          "readyToDeploy": "Cho phép cấp phát",
-          "broken": "Không cho phép cấp phát",
-          "pending": "Đang chờ",
+          "assign": "Bàn giao",
+          "readyToDeploy": "Trong kho",
+          "broken": "Hỏng",
+          "pending": "Check lại-Bảo hành",
           "noAssign": "Chưa assign",
           "pendingAccept": "Đang chờ xác nhận",
           "accept": "Đã xác nhận",
@@ -396,7 +401,8 @@
   },
   "resource": {
     "dashboard": "Thống kê",
-    "assets": "Thiết bị",
+    "asset": "Thiết bị",
+    "assets": "Tất cả",
     "request": "Tạo request",
     "users": "Tài sản của tôi",
     "category": "Danh mục",
@@ -409,10 +415,10 @@
     "setting": "Cài đặt",
     "depreciation":"Khấu hao",
     "assets_refuse": "Thiết bị từ chối",
-    "assets-assign": "Tất cả Đã cấp phát",
-    "assets-readyToDeploy": "Tất cả Sẵn sàng để cấp phát",
-    "assets-pending": "Tất cả Đang chờ",
-    "assets-broken": "Tất cả Không cho phép cấp phát",
+    "assets-assign": "Tất cả đã cấp phát",
+    "assets-readyToDeploy": "Tất cả trong kho",
+    "assets-pending": "Tất cả bảo hành-check lại",
+    "assets-broken": "Tất cả hỏng",
     "report": "Báo cáo"
   },
   "model": {
@@ -420,8 +426,8 @@
       "field": {
         "id": "ID",
         "name": "Tên kiểu tài sản",
-        "manufacturer": "Nhà sản xuất",
-        "category": "Tên hạng mục",
+        "manufacturer": "Chi nhánh",
+        "category": "Danh mục",
         "depreciation": "Khấu hao",
         "model_number": "Model No",
         "eol": "EOL",
@@ -436,7 +442,7 @@
         "created_at": "Đã tạo lúc"
       },
       "placeholder": {
-        "manufacturer": "Lựa chọn một nhà sản xuất",
+        "manufacturer": "Lựa chọn một chi nhánh",
         "category": "Chọn một danh mục"
       },
       "message": {
@@ -563,6 +569,13 @@
         "create":"Tạo mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá"
+      }
+    }
+  },
+  "report":{
+    "label":{
+      "title":{
+        "name": "Báo cáo"
       }
     }
   }

@@ -18,6 +18,7 @@ const {
   PullRequestOutlined,
   ScheduleOutlined,
   SettingOutlined,
+  BarChartOutlined,
 } = Icons;
 
 export const Sider: React.FC = () => {
@@ -96,7 +97,7 @@ export const Sider: React.FC = () => {
             title={
               <span>
                 <SettingOutlined />
-                <span>{translate("resource.assets")}</span>
+                <span>{translate("resource.asset")}</span>
               </span>
             }
           >
@@ -107,7 +108,7 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
-                    `${translate("resource.assets-readyToDeploy")}` ||
+                      `${translate("resource.assets-readyToDeploy")}` ||
                     item.name === `${translate("resource.assets-pending")}` ||
                     item.name === `${translate("resource.assets-broken")}`
                 )
@@ -222,6 +223,40 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
+
+        {permissionsData &&
+          permissionsData.admin === "1" &&
+          menuItems
+            .filter((item) => item.name === `${translate("resource.report")}`)
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.report")}` ? (
+                      <BarChartOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
 
         {permissionsData &&
           permissionsData.admin === "0" &&

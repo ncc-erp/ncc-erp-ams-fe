@@ -11,6 +11,7 @@ export interface IHardware {
   total: number;
   id: string;
   datetime: string;
+  date: string;
 }
 // from demo
 export interface IPost {
