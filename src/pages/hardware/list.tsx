@@ -26,7 +26,6 @@ import {
   Form,
   Select,
   useSelect,
-  DatePicker
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -53,11 +52,12 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { ILocation } from "interfaces/dashboard";
 import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
 import { ICompany } from "interfaces/company";
+import moment from 'moment';
+import { DatePicker } from 'antd';
 
 const defaultCheckedList = [
   "id",
@@ -112,7 +112,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     resource: HARDWARE_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model, location, purchase_date } = params;
+      let { search, name, asset_tag, serial, model, location, status_label, purchase_date, assigned_to } = params;
       filters.push(
         {
           field: "search",
@@ -122,7 +122,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "filter",
           operator: "eq",
-          value: JSON.stringify({ name, asset_tag, serial, model }),
+          value: JSON.stringify({ name, asset_tag, serial, model, status_label, assigned_to }),
         },
         {
           field: "location_id",
@@ -133,14 +133,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "dateFrom",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[0].toISOString().substring(0, 10)
+            ? (purchase_date[0].toISOString().substring(0, 10))
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
+            ? (purchase_date[1].toISOString().substring(0, 10))
             : undefined,
         }
       );
@@ -551,10 +551,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value ? value.date : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.datetime",
+          "warranty_expires.date",
           sorter
         ),
       },
@@ -574,7 +574,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
       },
       {
@@ -696,9 +696,33 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
+  const { RangePicker } = DatePicker;
+
+  const searchValuesByDate1 = useMemo(() => {
+    return localStorage.getItem("purchase_date")?.substring(0, 33);
+  }, [localStorage.getItem("purchase_date")])
+
+  const searchValuesByDate2 = useMemo(() => {
+    return (localStorage.getItem("purchase_date")?.substring(34, 67));
+  }, [localStorage.getItem("purchase_date")])
+
+  let searchValuesLocation = useMemo(() => {
+    return Number(localStorage.getItem("location"));
+  }, [localStorage.getItem("location")])
+
+  useEffect(() => {
+    searchFormProps.form?.submit();
+  }, [window.location.reload])
+
+  const dateFormat = 'YYYY/MM/DD';
+
+  const date1 = moment(searchValuesByDate1).format(dateFormat)
+  const date2 = moment(searchValuesByDate2).format(dateFormat)
+
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
     optionLabel: "name",
+    optionValue: "id",
     onSearch: (value) => [
       {
         field: "search",
@@ -707,8 +731,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     ],
   });
-
-  const { RangePicker } = DatePicker;
 
   return (
     <List
@@ -723,23 +745,39 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       <div className="search">
         <Form
           {...searchFormProps}
+          initialValues={{
+            "location": searchValuesLocation,
+            "purchase_date": [moment(date1, dateFormat), moment(date2, dateFormat)]
+          }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
           className="search-month-location"
         >
-          <Space>
-            <Form.Item label="Thời gian" name="purchase_date">
-              <RangePicker onChange={() => searchFormProps.form?.submit()} />
-            </Form.Item>
-            <Form.Item label="Vị trí" name="location">
-              <Select
-                onChange={() => searchFormProps.form?.submit()}
-                {...locationSelectProps}
-                allowClear
-                placeholder="Lựa chọn vị trí"
-              />
-            </Form.Item>
-          </Space>
+          <Form.Item label="Thời gian" name="purchase_date">
+            <RangePicker
+              onChange={() => {
+                localStorage.setItem("purchase_date",
+                  searchFormProps.form?.getFieldsValue().purchase_date !== undefined
+                    ? searchFormProps.form?.getFieldsValue().purchase_date.toString()
+                    : "");
+                searchFormProps.form?.submit();
+              }}
+              format={dateFormat}
+            />
+          </Form.Item>
+          <Form.Item label="Vị trí" name="location">
+            <Select
+              onChange={() => {
+                localStorage.setItem("location",
+                  searchFormProps.form?.getFieldsValue()?.location !== undefined
+                    ? searchFormProps.form?.getFieldsValue()?.location
+                    : "");
+                searchFormProps.form?.submit();
+              }}
+              {...locationSelectProps}
+              placeholder="Lựa chọn vị trí"
+            />
+          </Form.Item>
         </Form>
 
         <div className="all">

@@ -22,6 +22,9 @@ import {
   ShowButton,
   Tooltip,
   Checkbox,
+  useSelect,
+  Form,
+  Select,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -43,9 +46,12 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API } from "api/baseApi";
+import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
-import { MenuOutlined, FileSearchOutlined } from "@ant-design/icons";
+import { MenuOutlined, FileSearchOutlined, SyncOutlined } from "@ant-design/icons";
+import moment from 'moment';
+import { DatePicker } from 'antd';
+import { ICompany } from "interfaces/company";
 
 const defaultCheckedList = [
   "id",
@@ -110,7 +116,7 @@ export const HardwareListReadyToDeploy: React.FC<
     resource: HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model } = params;
+      const { search, name, asset_tag, serial, model, location, status_label, purchase_date, assigned_to } = params;
       filters.push(
         {
           field: "search",
@@ -120,9 +126,29 @@ export const HardwareListReadyToDeploy: React.FC<
         {
           field: "filter",
           operator: "eq",
-          value: JSON.stringify({ name, asset_tag, serial, model }),
+          value: JSON.stringify({ name, asset_tag, serial, model, status_label, assigned_to }),
+        },
+        {
+          field: "location_id",
+          operator: "eq",
+          value: location,
+        },
+        {
+          field: "dateFrom",
+          operator: "eq",
+          value: purchase_date
+            ? (purchase_date[0].toISOString().substring(0, 10))
+            : undefined,
+        },
+        {
+          field: "dateTo",
+          operator: "eq",
+          value: purchase_date
+            ? (purchase_date[1].toISOString().substring(0, 10))
+            : undefined,
         }
       );
+
       return filters;
     },
   });
@@ -427,12 +453,12 @@ export const HardwareListReadyToDeploy: React.FC<
                 ? value.name === "Assign"
                   ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === "Broken"
-                  ? t("hardware.label.detail.broken")
-                  : value.name === "Pending"
-                  ? t("hardware.label.detail.pending")
-                  : ""
+                    ? t("hardware.label.detail.readyToDeploy")
+                    : value.name === "Broken"
+                      ? t("hardware.label.detail.broken")
+                      : value.name === "Pending"
+                        ? t("hardware.label.detail.pending")
+                        : ""
                 : ""
             }
             style={{
@@ -440,12 +466,12 @@ export const HardwareListReadyToDeploy: React.FC<
                 value.name === "Assign"
                   ? "#0073b7"
                   : value.name === "Ready to deploy"
-                  ? "#00a65a"
-                  : value.name === "Broken"
-                  ? "red"
-                  : value.name === "Pending"
-                  ? "#f39c12"
-                  : "",
+                    ? "#00a65a"
+                    : value.name === "Broken"
+                      ? "red"
+                      : value.name === "Pending"
+                        ? "#f39c12"
+                        : "",
               color: "white",
             }}
           />
@@ -488,10 +514,10 @@ export const HardwareListReadyToDeploy: React.FC<
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value ? value.date : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.datetime",
+          "warranty_expires.date",
           sorter
         ),
       },
@@ -547,24 +573,24 @@ export const HardwareListReadyToDeploy: React.FC<
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
+                  ? t("hardware.label.detail.pendingAccept")
+                  : value === 2
+                    ? t("hardware.label.detail.accept")
+                    : value === 3
+                      ? t("hardware.label.detail.refuse")
+                      : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                    ? "#f39c12"
+                    : value === 2
+                      ? "#0073b7"
+                      : value === 3
+                        ? "red"
+                        : "gray",
               color: "white",
             }}
           />
@@ -662,7 +688,53 @@ export const HardwareListReadyToDeploy: React.FC<
       aboutController.abort();
     };
   }, []);
+
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 300);
+  };
+
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
+  const { RangePicker } = DatePicker;
+
+  const searchValuesByDate1 = useMemo(() => {
+    return localStorage.getItem("purchase_date")?.substring(0, 33);
+  }, [localStorage.getItem("purchase_date")])
+
+  const searchValuesByDate2 = useMemo(() => {
+    return (localStorage.getItem("purchase_date")?.substring(34, 67));
+  }, [localStorage.getItem("purchase_date")])
+
+  let searchValuesLocation = useMemo(() => {
+    return Number(localStorage.getItem("location"));
+  }, [localStorage.getItem("location")])
+
+  useEffect(() => {
+    searchFormProps.form?.submit();
+  }, [window.location.reload])
+
+  const dateFormat = 'YYYY/MM/DD';
+
+  const date1 = moment(searchValuesByDate1).format(dateFormat)
+  const date2 = moment(searchValuesByDate2).format(dateFormat)
+
+  const { selectProps: locationSelectProps } = useSelect<ICompany>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+    optionValue: "id",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   return (
     <List
@@ -675,61 +747,111 @@ export const HardwareListReadyToDeploy: React.FC<
         ),
       }}
     >
-      <div className="all">
-        <TableAction searchFormProps={searchFormProps} />
-        <div className="other_function">
-          <div className="menu-container" ref={menuRef}>
-            <button
-              onClick={onClickDropDown}
-              className="menu-trigger"
-              style={{
-                borderTopLeftRadius: "3px",
-                borderBottomLeftRadius: "3px",
+      <div className="search">
+        <Form
+          {...searchFormProps}
+          initialValues={{
+            "location": searchValuesLocation,
+            "purchase_date": [moment(date1, dateFormat), moment(date2, dateFormat)]
+          }}
+          layout="vertical"
+          onValuesChange={() => searchFormProps.form?.submit()}
+          className="search-month-location"
+        >
+          <Form.Item label="Thời gian" name="purchase_date">
+            <RangePicker
+              onChange={() => {
+                localStorage.setItem("purchase_date",
+                  searchFormProps.form?.getFieldsValue().purchase_date !== undefined
+                    ? searchFormProps.form?.getFieldsValue().purchase_date.toString()
+                    : "");
+                searchFormProps.form?.submit();
               }}
-            >
-              <Tooltip
-                title={t("hardware.label.tooltip.columns")}
-                color={"#108ee9"}
-              >
-                <MenuOutlined style={{ color: "black" }} />
-              </Tooltip>
-            </button>
-            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
-              <div className="menu-dropdown">
-                {collumns.map((item) => (
-                  <Checkbox
-                    className="checkbox"
-                    key={item.key}
-                    onChange={() => onCheckItem(item)}
-                    checked={collumnSelected.includes(item.key)}
+              format={dateFormat}
+            />
+          </Form.Item>
+          <Form.Item label="Vị trí" name="location">
+            <Select
+              onChange={() => {
+                localStorage.setItem("location",
+                  searchFormProps.form?.getFieldsValue()?.location !== undefined
+                    ? searchFormProps.form?.getFieldsValue()?.location
+                    : "");
+                searchFormProps.form?.submit();
+              }}
+              {...locationSelectProps}
+              placeholder="Lựa chọn vị trí"
+            />
+          </Form.Item>
+        </Form>
+
+        <div className="all">
+          <TableAction searchFormProps={searchFormProps} />
+          <div className="other_function">
+            <div className="menu-container" ref={menuRef}>
+              <div>
+                <button
+                  className="menu-trigger"
+                  style={{
+                    borderTopLeftRadius: "3px",
+                    borderBottomLeftRadius: "3px",
+                  }}
+                >
+                  <Tooltip
+                    title={t("hardware.label.tooltip.refresh")}
+                    color={"#108ee9"}
                   >
-                    {item.title}
-                  </Checkbox>
-                ))}
+                    <SyncOutlined
+                      onClick={handleRefresh}
+                      style={{ color: "black" }}
+                    />
+                  </Tooltip>
+                </button>
               </div>
-            </nav>
-          </div>
-          <div>
-            <button
-              className="menu-trigger"
-              style={{
-                borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px",
-              }}
-            >
-              <Tooltip
-                title={t("hardware.label.tooltip.search")}
-                color={"#108ee9"}
+              <div>
+                <button onClick={onClickDropDown} className="menu-trigger">
+                  <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
+                    <MenuOutlined style={{ color: "black" }} />
+                  </Tooltip>
+                </button>
+              </div >
+              <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+                <div className="menu-dropdown">
+                  {collumns.map((item) => (
+                    <Checkbox
+                      className="checkbox"
+                      key={item.key}
+                      onChange={() => onCheckItem(item)}
+                      checked={collumnSelected.includes(item.key)}
+                    >
+                      {item.title}
+                    </Checkbox>
+                  ))}
+                </div>
+              </nav>
+            </div>
+            <div>
+              <button
+                className="menu-trigger"
+                style={{
+                  borderTopRightRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                }}
               >
-                <FileSearchOutlined
-                  onClick={handleSearch}
-                  style={{ color: "black" }}
-                />
-              </Tooltip>
-            </button>
+                <Tooltip
+                  title={t("hardware.label.tooltip.search")}
+                  color={"#108ee9"}
+                >
+                  <FileSearchOutlined
+                    onClick={handleSearch}
+                    style={{ color: "black" }}
+                  />
+                </Tooltip>
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
@@ -877,8 +999,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -895,8 +1017,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -913,8 +1035,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -931,8 +1053,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -949,8 +1071,8 @@ export const HardwareListReadyToDeploy: React.FC<
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -965,8 +1087,8 @@ export const HardwareListReadyToDeploy: React.FC<
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >

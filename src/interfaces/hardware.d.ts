@@ -252,5 +252,7 @@ export interface IHardwareFilterVariables {
   asset_tag: string;
   filter: string;
   location: string;
+  status_label: string;
   purchase_date: [Dayjs, Dayjs];
+  assigned_to: string;
 }
