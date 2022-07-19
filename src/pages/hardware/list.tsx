@@ -698,11 +698,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const { RangePicker } = DatePicker;
 
-  const searchValuesByDate1 = useMemo(() => {
+  const searchValuesByDateFrom = useMemo(() => {
     return localStorage.getItem("purchase_date")?.substring(0, 33);
   }, [localStorage.getItem("purchase_date")])
 
-  const searchValuesByDate2 = useMemo(() => {
+  const searchValuesByDateTo = useMemo(() => {
     return (localStorage.getItem("purchase_date")?.substring(34, 67));
   }, [localStorage.getItem("purchase_date")])
 
@@ -716,8 +716,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const dateFormat = 'YYYY/MM/DD';
 
-  const date1 = moment(searchValuesByDate1).format(dateFormat)
-  const date2 = moment(searchValuesByDate2).format(dateFormat)
+  const dateFrom = moment(searchValuesByDateFrom).format(dateFormat)
+  const dateTo = moment(searchValuesByDateTo).format(dateFormat)
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -747,7 +747,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {...searchFormProps}
           initialValues={{
             "location": searchValuesLocation,
-            "purchase_date": [moment(date1, dateFormat), moment(date2, dateFormat)]
+            "purchase_date": [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
