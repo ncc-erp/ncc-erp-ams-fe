@@ -30,7 +30,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     if (value === 0) {
       return "0";
     }
-    return value + "(" + ((value / sum) * 100).toFixed(2) + "%)";
+    return value + "";
   };
 
   useEffect(() => {
@@ -95,21 +95,33 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       title: "Pending",
       dataIndex: "pending",
       key: "pending",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Broken",
       dataIndex: "broken",
       key: "broken",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Assign",
       dataIndex: "assign",
       key: "assign",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Ready to deploy",
       key: "ready_to_deploy",
       dataIndex: "ready_to_deploy",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
   ];
 

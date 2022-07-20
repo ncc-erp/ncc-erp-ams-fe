@@ -37,7 +37,11 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
-import { MenuOutlined, FileSearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  FileSearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 
 import {
   IHardwareFilterVariables,
@@ -50,8 +54,8 @@ import { HardwareCheckin } from "./checkin";
 import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
-import moment from 'moment';
-import { DatePicker } from 'antd';
+import moment from "moment";
+import { DatePicker } from "antd";
 
 const defaultCheckedList = [
   "id",
@@ -113,7 +117,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     resource: HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
-      const { search, name, asset_tag, serial, model, location, status_label, purchase_date, assigned_to } = params;
+      const {
+        search,
+        name,
+        asset_tag,
+        serial,
+        model,
+        location,
+        status_label,
+        purchase_date,
+        assigned_to,
+      } = params;
       filters.push(
         {
           field: "search",
@@ -123,7 +137,14 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         {
           field: "filter",
           operator: "eq",
-          value: JSON.stringify({ name, asset_tag, serial, model, status_label, assigned_to }),
+          value: JSON.stringify({
+            name,
+            asset_tag,
+            serial,
+            model,
+            status_label,
+            assigned_to,
+          }),
         },
         {
           field: "location_id",
@@ -134,14 +155,14 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           field: "dateFrom",
           operator: "eq",
           value: purchase_date
-            ? (purchase_date[0].toISOString().substring(0, 10))
+            ? purchase_date[0].toISOString().substring(0, 10)
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
           value: purchase_date
-            ? (purchase_date[1].toISOString().substring(0, 10))
+            ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
         }
       );
@@ -228,6 +249,25 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
+        date: "",
+        formatted: "",
+      },
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -308,6 +348,25 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       },
       assigned_status: 0,
       checkin_at: {
+        date: "",
+        formatted: "",
+      },
+      created_at: {
+        datetime: "",
+        formatted: "",
+      },
+      updated_at: {
+        datetime: "",
+        formatted: "",
+      },
+      manufacturer: {
+        id: 0,
+        name: "",
+      },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      warranty_expires: {
         date: "",
         formatted: "",
       },
@@ -450,12 +509,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === "Assign"
                   ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === "Broken"
-                      ? t("hardware.label.detail.broken")
-                      : value.name === "Pending"
-                        ? t("hardware.label.detail.pending")
-                        : ""
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : value.name === "Broken"
+                  ? t("hardware.label.detail.broken")
+                  : value.name === "Pending"
+                  ? t("hardware.label.detail.pending")
+                  : ""
                 : ""
             }
             style={{
@@ -463,12 +522,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 value.name === "Assign"
                   ? "#0073b7"
                   : value.name === "Ready to deploy"
-                    ? "#00a65a"
-                    : value.name === "Broken"
-                      ? "red"
-                      : value.name === "Pending"
-                        ? "#f39c12"
-                        : "",
+                  ? "#00a65a"
+                  : value.name === "Broken"
+                  ? "red"
+                  : value.name === "Pending"
+                  ? "#f39c12"
+                  : "",
               color: "white",
             }}
           />
@@ -513,10 +572,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.date : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.date",
-          sorter
-        ),
+        defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
         key: "order_number",
@@ -534,7 +590,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
       },
       {
@@ -570,24 +626,24 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
-                    ? t("hardware.label.detail.accept")
-                    : value === 3
-                      ? t("hardware.label.detail.refuse")
-                      : ""
+                ? t("hardware.label.detail.pendingAccept")
+                : value === 2
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                    ? "#f39c12"
-                    : value === 2
-                      ? "#0073b7"
-                      : value === 3
-                        ? "red"
-                        : "gray",
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "gray",
               color: "white",
             }}
           />
@@ -701,24 +757,24 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const searchValuesByDateFrom = useMemo(() => {
     return localStorage.getItem("purchase_date")?.substring(0, 33);
-  }, [localStorage.getItem("purchase_date")])
+  }, [localStorage.getItem("purchase_date")]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return (localStorage.getItem("purchase_date")?.substring(34, 67));
-  }, [localStorage.getItem("purchase_date")])
+    return localStorage.getItem("purchase_date")?.substring(34, 67);
+  }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("location"));
-  }, [localStorage.getItem("location")])
+  }, [localStorage.getItem("location")]);
 
   useEffect(() => {
     searchFormProps.form?.submit();
-  }, [window.location.reload])
+  }, [window.location.reload]);
 
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = "YYYY/MM/DD";
 
-  const dateFrom = moment(searchValuesByDateFrom).format(dateFormat)
-  const dateTo = moment(searchValuesByDateTo).format(dateFormat)
+  const dateFrom = moment(searchValuesByDateFrom).format(dateFormat);
+  const dateTo = moment(searchValuesByDateTo).format(dateFormat);
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -748,8 +804,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            "location": searchValuesLocation,
-            "purchase_date": [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
+            location: searchValuesLocation,
+            purchase_date: [
+              moment(dateFrom, dateFormat),
+              moment(dateTo, dateFormat),
+            ],
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
@@ -758,10 +817,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           <Form.Item label="Thời gian" name="purchase_date">
             <RangePicker
               onChange={() => {
-                localStorage.setItem("purchase_date",
-                  searchFormProps.form?.getFieldsValue().purchase_date !== undefined
-                    ? searchFormProps.form?.getFieldsValue().purchase_date.toString()
-                    : "");
+                localStorage.setItem(
+                  "purchase_date",
+                  searchFormProps.form?.getFieldsValue().purchase_date !==
+                    undefined
+                    ? searchFormProps.form
+                        ?.getFieldsValue()
+                        .purchase_date.toString()
+                    : ""
+                );
                 searchFormProps.form?.submit();
               }}
               format={dateFormat}
@@ -770,10 +834,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           <Form.Item label="Vị trí" name="location">
             <Select
               onChange={() => {
-                localStorage.setItem("location",
+                localStorage.setItem(
+                  "location",
                   searchFormProps.form?.getFieldsValue()?.location !== undefined
                     ? searchFormProps.form?.getFieldsValue()?.location
-                    : "");
+                    : ""
+                );
                 searchFormProps.form?.submit();
               }}
               {...locationSelectProps}
@@ -807,12 +873,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               </div>
               <div>
                 <button onClick={onClickDropDown} className="menu-trigger">
-                  <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
+                  <Tooltip
+                    title={t("hardware.label.tooltip.columns")}
+                    color={"#108ee9"}
+                  >
                     <MenuOutlined style={{ color: "black" }} />
                   </Tooltip>
                 </button>
-              </div >
-              <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
+              </div>
+              <nav className={`menu ${isActive ? "active" : "inactive"}`}>
                 <div className="menu-dropdown">
                   {collumns.map((item) => (
                     <Checkbox
@@ -847,8 +916,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               </button>
             </div>
           </div>
-        </div >
-      </div >
+        </div>
+      </div>
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
@@ -996,8 +1065,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1014,8 +1083,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1032,8 +1101,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     disabled
                   >
@@ -1050,8 +1119,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     disabled
                   >
@@ -1068,8 +1137,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -1084,8 +1153,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                      ? false
+                      : true
                   }
                   onClick={() => checkin(record)}
                 >
