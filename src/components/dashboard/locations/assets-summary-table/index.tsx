@@ -95,21 +95,33 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       title: "Pending",
       dataIndex: "pending",
       key: "pending",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Broken",
       dataIndex: "broken",
       key: "broken",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Assign",
       dataIndex: "assign",
       key: "assign",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
     {
       title: "Ready to deploy",
       key: "ready_to_deploy",
       dataIndex: "ready_to_deploy",
+      render: (text: number) => (
+        <Typography.Text type="secondary">{text}</Typography.Text>
+      ),
     },
   ];
 

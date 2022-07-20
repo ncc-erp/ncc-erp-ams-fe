@@ -82,10 +82,10 @@
   overflow-y: scroll;
 }
 
-.all{
-  float: right;
+.search{
   display: flex;
   gap: 1rem;
+  justify-content: space-between;
 }
 
 .menu-container {
@@ -147,14 +147,15 @@
   margin-top: 8px !important;
 }
 
-// .ant-col.ant-form-item-control {
-//   margin-top: 2rem;
-// }
-.search{
-  display: flex;
-}
-.search-month-location{
+.search_by_month{
   width: 80%;
+  margin-top: 0.65rem;
+
+}
+
+.search-month-location{
+  display: flex;
+  gap: 2rem;
   margin-top: 0.65rem;
 }
 .datePicker{
@@ -186,6 +187,7 @@ font-size: 25px;
 font-weight: bold;
 
 }
-
-
-
+.all {
+  display: flex;
+  // float: right;
+}
