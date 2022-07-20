@@ -22,10 +22,10 @@ import {
   ShowButton,
   Tooltip,
   Checkbox,
-  DatePicker,
+  Input,
+  Form,
   Select,
   useSelect,
-  Form,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
@@ -56,6 +56,8 @@ import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
 import { ICompany } from "interfaces/company";
+import moment from 'moment';
+import { DatePicker } from 'antd';
 
 const defaultCheckedList = [
   "id",
@@ -110,15 +112,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     resource: HARDWARE_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      const {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        purchase_date,
-      } = params;
+      let { search, name, asset_tag, serial, model, location, status_label, purchase_date, assigned_to } = params;
       filters.push(
         {
           field: "search",
@@ -128,7 +122,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "filter",
           operator: "eq",
-          value: JSON.stringify({ name, asset_tag, serial, model }),
+          value: JSON.stringify({ name, asset_tag, serial, model, status_label, assigned_to }),
         },
         {
           field: "location_id",
@@ -139,14 +133,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "dateFrom",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[0].toISOString().substring(0, 10)
+            ? (purchase_date[0].toISOString().substring(0, 10))
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
+            ? (purchase_date[1].toISOString().substring(0, 10))
             : undefined,
         }
       );
@@ -496,12 +490,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === "Assign"
                   ? t("hardware.label.detail.assign")
                   : value.name === "Ready to deploy"
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === "Broken"
-                  ? t("hardware.label.detail.broken")
-                  : value.name === "Pending"
-                  ? t("hardware.label.detail.pending")
-                  : ""
+                    ? t("hardware.label.detail.readyToDeploy")
+                    : value.name === "Broken"
+                      ? t("hardware.label.detail.broken")
+                      : value.name === "Pending"
+                        ? t("hardware.label.detail.pending")
+                        : ""
                 : ""
             }
             style={{
@@ -509,12 +503,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 value.name === "Assign"
                   ? "#0073b7"
                   : value.name === "Ready to deploy"
-                  ? "#00a65a"
-                  : value.name === "Broken"
-                  ? "red"
-                  : value.name === "Pending"
-                  ? "#f39c12"
-                  : "",
+                    ? "#00a65a"
+                    : value.name === "Broken"
+                      ? "red"
+                      : value.name === "Pending"
+                        ? "#f39c12"
+                        : "",
               color: "white",
             }}
           />
@@ -557,10 +551,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value ? value.date : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder(
-          "warranty_expires.datetime",
+          "warranty_expires.date",
           sorter
         ),
       },
@@ -580,7 +574,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value.date} />
         ),
       },
       {
@@ -616,24 +610,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
+                  ? t("hardware.label.detail.pendingAccept")
+                  : value === 2
+                    ? t("hardware.label.detail.accept")
+                    : value === 3
+                      ? t("hardware.label.detail.refuse")
+                      : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                    ? "#f39c12"
+                    : value === 2
+                      ? "#0073b7"
+                      : value === 3
+                        ? "red"
+                        : "gray",
               color: "white",
             }}
           />
@@ -702,9 +696,33 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
+  const { RangePicker } = DatePicker;
+
+  const searchValuesByDateFrom = useMemo(() => {
+    return localStorage.getItem("purchase_date")?.substring(0, 33);
+  }, [localStorage.getItem("purchase_date")])
+
+  const searchValuesByDateTo = useMemo(() => {
+    return (localStorage.getItem("purchase_date")?.substring(34, 67));
+  }, [localStorage.getItem("purchase_date")])
+
+  let searchValuesLocation = useMemo(() => {
+    return Number(localStorage.getItem("location"));
+  }, [localStorage.getItem("location")])
+
+  useEffect(() => {
+    searchFormProps.form?.submit();
+  }, [window.location.reload])
+
+  const dateFormat = 'YYYY/MM/DD';
+
+  const dateFrom = moment(searchValuesByDateFrom).format(dateFormat)
+  const dateTo = moment(searchValuesByDateTo).format(dateFormat)
+
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
     optionLabel: "name",
+    optionValue: "id",
     onSearch: (value) => [
       {
         field: "search",
@@ -713,8 +731,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     ],
   });
-
-  const { RangePicker } = DatePicker;
 
   return (
     <List
@@ -729,23 +745,39 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       <div className="search">
         <Form
           {...searchFormProps}
+          initialValues={{
+            "location": searchValuesLocation,
+            "purchase_date": [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
+          }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
           className="search-month-location"
         >
-          <Space>
-            <Form.Item label="Thời gian" name="purchase_date">
-              <RangePicker onChange={() => searchFormProps.form?.submit()} />
-            </Form.Item>
-            <Form.Item label="Vị trí" name="location">
-              <Select
-                onChange={() => searchFormProps.form?.submit()}
-                {...locationSelectProps}
-                allowClear
-                placeholder="Lựa chọn vị trí"
-              />
-            </Form.Item>
-          </Space>
+          <Form.Item label="Thời gian" name="purchase_date">
+            <RangePicker
+              onChange={() => {
+                localStorage.setItem("purchase_date",
+                  searchFormProps.form?.getFieldsValue().purchase_date !== undefined
+                    ? searchFormProps.form?.getFieldsValue().purchase_date.toString()
+                    : "");
+                searchFormProps.form?.submit();
+              }}
+              format={dateFormat}
+            />
+          </Form.Item>
+          <Form.Item label="Vị trí" name="location">
+            <Select
+              onChange={() => {
+                localStorage.setItem("location",
+                  searchFormProps.form?.getFieldsValue()?.location !== undefined
+                    ? searchFormProps.form?.getFieldsValue()?.location
+                    : "");
+                searchFormProps.form?.submit();
+              }}
+              {...locationSelectProps}
+              placeholder="Lựa chọn vị trí"
+            />
+          </Form.Item>
         </Form>
 
         <div className="all">
@@ -773,15 +805,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               </div>
               <div>
                 <button onClick={onClickDropDown} className="menu-trigger">
-                  <Tooltip
-                    title={t("hardware.label.tooltip.columns")}
-                    color={"#108ee9"}
-                  >
+                  <Tooltip title={t("hardware.label.tooltip.columns")} color={"#108ee9"}>
                     <MenuOutlined style={{ color: "black" }} />
                   </Tooltip>
                 </button>
-              </div>
-              <nav className={`menu ${isActive ? "active" : "inactive"}`}>
+              </div >
+              <nav className={`menu ${isActive ? 'active' : 'inactive'}`}>
                 <div className="menu-dropdown">
                   {collumns.map((item) => (
                     <Checkbox
@@ -816,8 +845,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
       {/* <div className="result">
         <label>
           <b>Số lượng các thiết bị</b> :
@@ -829,7 +858,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         <label>Keyboard :</label>
         <label>Headphone :</label>
       </div> */}
-      <MModal
+      < MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
         isModalVisible={isSearchModalVisible}
@@ -839,7 +868,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsSearchModalVisible}
           searchFormProps={searchFormProps}
         />
-      </MModal>
+      </MModal >
       <MModal
         title={t("hardware.label.title.create")}
         setIsModalVisible={setIsModalVisible}
@@ -892,7 +921,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsShowModalVisible}
           detail={detail}
         />
-      </MModal>{" "}
+      </MModal>
       <MModal
         title={t("hardware.label.title.checkin")}
         setIsModalVisible={setIsCheckinModalVisible}
@@ -904,198 +933,200 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      {loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip="Loading..."
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          {...tableProps}
-          rowKey="id"
-          scroll={{ x: 1850 }}
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
-          {collumns
-            .filter((collumn) => collumnSelected.includes(collumn.key))
-            .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
-            ))}
-          <Table.Column<IHardwareResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("hardware.label.tooltip.viewDetail")}
-                  color={"#108ee9"}
-                >
-                  <ShowButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => show(record)}
-                  />
-                </Tooltip>
-
-                <Tooltip
-                  title={t("hardware.label.tooltip.clone")}
-                  color={"#108ee9"}
-                >
-                  <CloneButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => clone(record)}
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                {record.assigned_to !== null ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
+      {
+        loading ? (
+          <>
+            <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+              <Spin
+                tip="Loading..."
+                style={{ fontSize: "18px", color: "black" }}
+              />
+            </div>
+          </>
+        ) : (
+          <Table
+            {...tableProps}
+            rowKey="id"
+            scroll={{ x: 1850 }}
+            pagination={{
+              position: ["topRight", "bottomRight"],
+              total: pageTotal ? pageTotal : 0,
+            }}
+          >
+            {collumns
+              .filter((collumn) => collumnSelected.includes(collumn.key))
+              .map((col) => (
+                <Table.Column dataIndex={col.key} {...col} sorter />
+              ))}
+            <Table.Column<IHardwareResponse>
+              title={t("table.actions")}
+              dataIndex="actions"
+              render={(_, record) => (
+                <Space>
                   <Tooltip
-                    title={t("hardware.label.tooltip.delete")}
-                    color={"red"}
+                    title={t("hardware.label.tooltip.viewDetail")}
+                    color={"#108ee9"}
                   >
-                    <DeleteButton
-                      resourceName={HARDWARE_API}
+                    <ShowButton
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onClick={() => show(record)}
                     />
                   </Tooltip>
-                )}
-                {record.assigned_status === 2 ||
-                  (record.user_can_checkout === true && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.user_can_checkout === true && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
 
-                {record.assigned_status === 2 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkin(record)}
+                  <Tooltip
+                    title={t("hardware.label.tooltip.clone")}
+                    color={"#108ee9"}
                   >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : record.assigned_status === 3 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkin(record)}
+                    <CloneButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => clone(record)}
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
                   >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
-    </List>
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                  {record.assigned_to !== null ? (
+                    <DeleteButton hideText size="small" disabled />
+                  ) : (
+                    <Tooltip
+                      title={t("hardware.label.tooltip.delete")}
+                      color={"red"}
+                    >
+                      <DeleteButton
+                        resourceName={HARDWARE_API}
+                        hideText
+                        size="small"
+                        recordItemId={record.id}
+                      />
+                    </Tooltip>
+                  )}
+                  {record.assigned_status === 2 ||
+                    (record.user_can_checkout === true && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        onClick={() => checkout(record)}
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.user_can_checkout === true && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        onClick={() => checkout(record)}
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.status_label.name === "Pending" && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        disabled
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    )) ||
+                    (record.status_label.name === "Broken" && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        disabled
+                      >
+                        {t("hardware.label.button.checkout")}
+                      </Button>
+                    ))}
+
+                  {record.assigned_status === 2 ? (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => checkin(record)}
+                    >
+                      {t("hardware.label.button.checkin")}
+                    </Button>
+                  ) : record.assigned_status === 3 ? (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => checkin(record)}
+                    >
+                      {t("hardware.label.button.checkin")}
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </Space>
+              )}
+            />
+          </Table>
+        )
+      }
+    </List >
   );
 };

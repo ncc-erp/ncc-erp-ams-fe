@@ -4,7 +4,8 @@ import {
     Form,
     Input,
     Button,
-    FormProps
+    FormProps,
+    DatePicker
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -51,6 +52,20 @@ export const HardwareSearch = (props: HardWareSearchProps) => {
                 name="model"
             >
                 <Input placeholder={t("hardware.label.placeholder.propertyType")} />
+            </Form.Item>
+
+            <Form.Item
+                label={t("hardware.label.field.status")}
+                name="status_label"
+            >
+                <Input placeholder={t("hardware.label.field.status")} />
+            </Form.Item>
+
+            <Form.Item
+                label={t("hardware.label.field.checkoutTo")}
+                name="assigned_to"
+            >
+                <Input placeholder={t("hardware.label.field.checkoutTo")} />
             </Form.Item>
 
             <Form.Item>
