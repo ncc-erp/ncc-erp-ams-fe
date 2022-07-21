@@ -15,16 +15,20 @@ export const Locations = (props: LocationProps) => {
     <div className="locationContainer">
       <Row gutter={16}>
         <Col className="gutter-row assets-summary-pie-chart" sm={24} md={10}>
-          <AssetsSummaryPieChart
-            categories={location.categories}
-            name={location.name}
-            count={location.assets_count}
-          ></AssetsSummaryPieChart>
+          {location.assets_count !== 0 && (
+            <AssetsSummaryPieChart
+              categories={location.categories}
+              name={location.name}
+              count={location.assets_count}
+            ></AssetsSummaryPieChart>
+          )}
         </Col>
         <Col className="gutter-row assets-summary-table" sm={24} md={14}>
-          <AssetsSummaryTable
-            categories={location.categories}
-          ></AssetsSummaryTable>
+          {location.assets_count !== 0 && (
+            <AssetsSummaryTable
+              categories={location.categories}
+            ></AssetsSummaryTable>
+          )}
         </Col>
       </Row>
     </div>

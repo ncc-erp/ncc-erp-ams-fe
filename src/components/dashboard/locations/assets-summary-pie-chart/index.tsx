@@ -36,13 +36,13 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           if (value === 0) {
             return "0";
           }
-          return value + "(" + ((value / sum) * 100).toFixed(2) + "%)";
+          return value + " (" + ((value / sum) * 100).toFixed(2) + "%)";
         };
         const Ul = (
           <ul>
             {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
               <li key={item.id}>
-                {item.name}
+                <span>{item.name}: </span>
 
                 <strong>
                   {calculation(item.assets_count, data[0]?.data?.assets_count)}
@@ -78,5 +78,6 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       },
     },
   };
+
   return <Pie {...config} />;
 };

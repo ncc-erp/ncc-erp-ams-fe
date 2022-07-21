@@ -9,53 +9,77 @@ import {
 
 import { DASHBOARD_API } from "api/baseApi";
 import { useState } from "react";
+import { ILocation } from "interfaces/dashboard";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-
-  const { data, isLoading } = useCustom({
-    url: DASHBOARD_API,
-    method: "get",
-  });
+  const { RangePicker } = DatePicker;
 
   const [locationSelected, setLocationSelected] = useState<number | null>(null);
+  const [dateSelected, setDateSelected] = useState<[string, string]>(["", ""]);
 
-  const handleChangeLocation = (value: any) => {
+  const { data, isLoading, refetch } = useCustom({
+    url: DASHBOARD_API,
+    method: "get",
+    config: {
+      query: {
+        purchase_date_from: dateSelected[0],
+        purchase_date_to: dateSelected[1],
+      },
+    },
+  });
+
+  const handleChangeLocation = (value: number) => {
     if (value) {
       setLocationSelected(value);
     }
   };
 
-  const { RangePicker } = DatePicker;
+  const handleChangePickerByMonth = (
+    values: any,
+    formatString: [string, string]
+  ) => {
+    setDateSelected(formatString);
+    refetch();
+  };
+
+  console.log(
+    data?.data.payload[data?.data.payload.length - 1],
+    "ddadadđâ----------"
+  );
 
   return (
     <div className="dashboardContainer">
       <Show isLoading={isLoading} title={translate("dashboard.title")}>
-        <Select
-          allowClear
-          placeholder="Lựa chọn vị trí"
-          onChange={handleChangeLocation}
-          defaultValue={data?.data.payload[data?.data.payload.length - 1]}
-        >
-          {(data?.data.payload || []).map((item: any) => (
-            <Select.Option value={item.id} key={item.id}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
-        <Form layout="vertical" className="search-month-location">
-          <Form.Item label="Thời gian" name="purchase_date">
-            <RangePicker />
-          </Form.Item>
-        </Form>
+        <div className="dashboard-search-select">
+          <Select
+            allowClear
+            placeholder={translate("dashboard.placeholder.select-category")}
+            onChange={handleChangeLocation}
+            defaultValue={data?.data.payload[data?.data.payload.length - 1]}
+          >
+            {(data?.data.payload || []).map((item: ILocation) => (
+              <Select.Option value={item.id} key={item.id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+
+          <Form layout="vertical" className="search-month-to-location">
+            <RangePicker
+              format="YYYY-MM-DD"
+              onChange={handleChangePickerByMonth}
+            />
+          </Form>
+        </div>
 
         <Row gutter={[12, 12]}>
           {(data?.data.payload || [])
             .filter(
-              (item: any) =>
+              (item: ILocation) =>
                 locationSelected === null || item.id === locationSelected
             )
-            .map((item: any, index: number) => (
+            .map((item: ILocation, index: number) => (
               <Col key={index} sm={24} md={24}>
                 <Locations location={item}></Locations>
               </Col>

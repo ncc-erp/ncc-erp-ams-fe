@@ -57,6 +57,14 @@
   },
   "dashboard": {
     "title": "Thống kê",
+    "field": {
+      "name": "Tên thiết bị",
+      "pending": "Check Lại - Bảo Hành",
+      "broken": "Hỏng",
+      "assign": "Bàn Giao",
+      "ready-to-deploy": "Trong Kho",
+      "sum": "Tổng"
+    },
     "assetFilter": {
       "filters" : {
         "label": {
@@ -65,6 +73,10 @@
           "filters": "Bộ lọc"
         }
       }
+    },
+    "placeholder": {
+      "select-category": "Lựa chọn vị trí",
+      "searchToDate": "Thời gian"
     }
   },
   "posts": {
@@ -419,7 +431,13 @@
     "assets-readyToDeploy": "Tất cả trong kho",
     "assets-pending": "Tất cả bảo hành-check lại",
     "assets-broken": "Tất cả hỏng",
-    "report": "Báo cáo"
+    "report": "Báo cáo",
+    "asset-category-PC": "Tất cả máy tính",
+    "asset-category-Monitor": "Tất cả màn hình",
+    "asset-category-Mouse": "Tất cả chuột",
+    "asset-category-Keyboard": "Tất cả bàn phím",
+    "asset-category-Headphone": "Tất cả tai nghe",
+    "asset-category-Device": "Tất cả thiết bị"
   },
   "model": {
     "label": {
