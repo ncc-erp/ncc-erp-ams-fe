@@ -184,42 +184,42 @@ function App() {
           name: t("resource.asset-category-PC"),
           list: HardwareListCategoryPC,
           options: {
-            route: "assets?location_id=5",
+            route: "assets?category_id=5",
           },
         },
         {
           name: t("resource.asset-category-Monitor"),
           list: HardwareListCategoryMonitor,
           options: {
-            route: `assets?location_id=6`,
+            route: `assets?category_id=6`,
           },
         },
         {
           name: t("resource.asset-category-Mouse"),
           list: HardwareListCategoryMouse,
           options: {
-            route: `assets?location_id=7`,
+            route: `assets?category_id=7`,
           },
         },
         {
           name: t("resource.asset-category-Keyboard"),
           list: HardwareListCategoryKeyboard,
           options: {
-            route: `assets?location_id=8`,
+            route: `assets?category_id=8`,
           },
         },
         {
           name: t("resource.asset-category-Headphone"),
           list: HardwareListCategoryHeadphone,
           options: {
-            route: `assets?location_id=10`,
+            route: `assets?category_id=10`,
           },
         },
         {
           name: t("resource.asset-category-Device"),
           list: HardwareListCategoryDevice,
           options: {
-            route: `assets?location_id=13`,
+            route: `assets?category_id=13`,
           },
         },
       ]}

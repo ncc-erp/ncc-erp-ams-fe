@@ -98,18 +98,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === "PC"
-              ? list("assets?location_id=5")
+              ? list("assets?category_id=5")
               : text === "Monitor"
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === "Mouse"
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === "Keyboard"
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === "Headphone"
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === "Device"
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
@@ -126,18 +126,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === 5
-              ? list("assets?location_id=5")
+              ? list("assets?category_id=5")
               : text === 6
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === 7
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === 8
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === 10
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === 13
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
@@ -154,18 +154,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === 5
-              ? list(`assets?location_id=5`)
+              ? list(`assets?category_id=5`)
               : text === 6
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === 7
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === 8
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === 10
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === 13
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
@@ -182,18 +182,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === 5
-              ? list(`assets?location_id=5`)
+              ? list(`assets?category_id=5`)
               : text === 6
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === 7
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === 8
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === 10
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === 13
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
@@ -210,18 +210,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === 5
-              ? list(`assets?location_id=5`)
+              ? list(`assets?category_id=5`)
               : text === 6
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === 7
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === 8
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === 10
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === 13
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
@@ -238,18 +238,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             text === 5
-              ? list(`assets?location_id=5`)
+              ? list(`assets?category_id=5`)
               : text === 6
-              ? list(`assets?location_id=6`)
+              ? list(`assets?category_id=6`)
               : text === 7
-              ? list(`assets?location_id=7`)
+              ? list(`assets?category_id=7`)
               : text === 8
-              ? list(`assets?location_id=8`)
+              ? list(`assets?category_id=8`)
               : text === 10
-              ? list(`assets?location_id=10`)
+              ? list(`assets?category_id=10`)
               : text === 13
-              ? list(`assets?location_id=13`)
-              : list(`assets?location_id=5`);
+              ? list(`assets?category_id=13`)
+              : list(`assets?category_id=5`);
           }}
         >
           {text}
