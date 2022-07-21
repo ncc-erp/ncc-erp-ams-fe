@@ -56,7 +56,7 @@ export const LoginPage: React.FC = () => {
 
   const clientId = process.env.GOOGLE_CLIENT_ID
     ? process.env.GOOGLE_CLIENT_ID
-    : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
+    : "773310957148-o1bk15p279jst37itlfqmfulglnh4t1k.apps.googleusercontent.com";
 
   const { mutate: loginGoogle, isLoading: isLoadingGoogle } =
     useLogin<GoogleLoginResponse>();
