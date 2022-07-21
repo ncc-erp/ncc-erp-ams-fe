@@ -43,11 +43,6 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     refetch();
   };
 
-  console.log(
-    data?.data.payload[data?.data.payload.length - 1],
-    "ddadadđâ----------"
-  );
-
   return (
     <div className="dashboardContainer">
       <Show isLoading={isLoading} title={translate("dashboard.title")}>
