@@ -4,6 +4,7 @@ import { ICategoryAsset } from "interfaces/dashboard";
 import { useNavigation, useTranslate } from "@pankod/refine-core";
 
 type AssetsSummaryTableProps = {
+  id: number;
   categories: ICategoryAsset[];
 };
 
@@ -23,7 +24,8 @@ type DataTable = {
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
-  const { categories } = props;
+  const { id, categories } = props;
+
   const t = useTranslate();
 
   const [data, setData] = useState<DataTable[]>([]);
@@ -97,19 +99,16 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="success"
           className="field-category"
           onClick={(): void => {
-            text === "PC"
-              ? list("assets?category_id=5")
-              : text === "Monitor"
-              ? list(`assets?category_id=6`)
-              : text === "Mouse"
-              ? list(`assets?category_id=7`)
-              : text === "Keyboard"
-              ? list(`assets?category_id=8`)
-              : text === "Headphone"
-              ? list(`assets?category_id=10`)
-              : text === "Device"
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            text === "PC" && list(`assets?location_id=${id}&category_id=5`);
+            text === "Monitor" &&
+              list(`assets?location_id=${id}&category_id=6`);
+            text === "Mouse" && list(`assets?location_id=${id}&category_id=7`);
+            text === "Keyboard" &&
+              list(`assets?location_id=${id}&category_id=8`);
+            text === "Headphone" &&
+              list(`assets?location_id=${id}&category_id=10`);
+            text === "Device" &&
+              list(`assets?location_id=${id}&category_id=13`);
           }}
         >
           {text}
@@ -125,19 +124,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="secondary"
           className="field-category"
           onClick={(): void => {
-            text === 5
-              ? list("assets?category_id=5")
-              : text === 6
-              ? list(`assets?category_id=6`)
-              : text === 7
-              ? list(`assets?category_id=7`)
-              : text === 8
-              ? list(`assets?category_id=8`)
-              : text === 10
-              ? list(`assets?category_id=10`)
-              : text === 13
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            list(`assets?location_id=${id}`);
           }}
         >
           {text}
@@ -153,19 +140,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="secondary"
           className="field-category"
           onClick={(): void => {
-            text === 5
-              ? list(`assets?category_id=5`)
-              : text === 6
-              ? list(`assets?category_id=6`)
-              : text === 7
-              ? list(`assets?category_id=7`)
-              : text === 8
-              ? list(`assets?category_id=8`)
-              : text === 10
-              ? list(`assets?category_id=10`)
-              : text === 13
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            list(`assets?location_id=${id}`);
           }}
         >
           {text}
@@ -181,19 +156,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="secondary"
           className="field-category"
           onClick={(): void => {
-            text === 5
-              ? list(`assets?category_id=5`)
-              : text === 6
-              ? list(`assets?category_id=6`)
-              : text === 7
-              ? list(`assets?category_id=7`)
-              : text === 8
-              ? list(`assets?category_id=8`)
-              : text === 10
-              ? list(`assets?category_id=10`)
-              : text === 13
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            list(`assets?location_id=${id}`);
           }}
         >
           {text}
@@ -209,19 +172,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="secondary"
           className="field-category"
           onClick={(): void => {
-            text === 5
-              ? list(`assets?category_id=5`)
-              : text === 6
-              ? list(`assets?category_id=6`)
-              : text === 7
-              ? list(`assets?category_id=7`)
-              : text === 8
-              ? list(`assets?category_id=8`)
-              : text === 10
-              ? list(`assets?category_id=10`)
-              : text === 13
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            list(`assets?location_id=${id}`);
           }}
         >
           {text}
@@ -237,19 +188,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           type="secondary"
           className="field-category"
           onClick={(): void => {
-            text === 5
-              ? list(`assets?category_id=5`)
-              : text === 6
-              ? list(`assets?category_id=6`)
-              : text === 7
-              ? list(`assets?category_id=7`)
-              : text === 8
-              ? list(`assets?category_id=8`)
-              : text === 10
-              ? list(`assets?category_id=10`)
-              : text === 13
-              ? list(`assets?category_id=13`)
-              : list(`assets?category_id=5`);
+            list(`assets?location_id=${id}`);
           }}
         >
           {text}

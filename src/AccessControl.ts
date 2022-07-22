@@ -89,14 +89,6 @@ p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
 
 p, 1, ${i18n.t("resource.assets_refuse")}, (list)
 
-p, 1, ${i18n.t("resource.asset-category-PC")}, (list)
-p, 1, ${i18n.t("resource.asset-category-Monitor")}, (list)
-p, 1, ${i18n.t("resource.asset-category-Mouse")}, (list)
-p, 1, ${i18n.t("resource.asset-category-Keyboard")}, (list)
-p, 1, ${i18n.t("resource.asset-category-Headphone")}, (list)
-p, 1, ${i18n.t("resource.asset-category-Device")}, (list)
-
-
 `;
 
 export const adapter = new MemoryAdapter(permissions);

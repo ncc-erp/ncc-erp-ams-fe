@@ -33,12 +33,6 @@ import { LocationList } from "pages/location";
 import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
-import { HardwareListCategoryPC } from "pages/hardware/list-category-PC";
-import { HardwareListCategoryMonitor } from "pages/hardware/list-category-monitor";
-import { HardwareListCategoryMouse } from "pages/hardware/list-category-mouse";
-import { HardwareListCategoryKeyboard } from "pages/hardware/list-category-keyboard";
-import { HardwareListCategoryHeadphone } from "pages/hardware/list-category-headphone";
-import { HardwareListCategoryDevice } from "pages/hardware/list-category-device";
 function App() {
   const { t, i18n } = useTranslation();
 
@@ -178,48 +172,6 @@ function App() {
           list: LocationList,
           options: {
             route: "location",
-          },
-        },
-        {
-          name: t("resource.asset-category-PC"),
-          list: HardwareListCategoryPC,
-          options: {
-            route: "assets?category_id=5",
-          },
-        },
-        {
-          name: t("resource.asset-category-Monitor"),
-          list: HardwareListCategoryMonitor,
-          options: {
-            route: `assets?category_id=6`,
-          },
-        },
-        {
-          name: t("resource.asset-category-Mouse"),
-          list: HardwareListCategoryMouse,
-          options: {
-            route: `assets?category_id=7`,
-          },
-        },
-        {
-          name: t("resource.asset-category-Keyboard"),
-          list: HardwareListCategoryKeyboard,
-          options: {
-            route: `assets?category_id=8`,
-          },
-        },
-        {
-          name: t("resource.asset-category-Headphone"),
-          list: HardwareListCategoryHeadphone,
-          options: {
-            route: `assets?category_id=10`,
-          },
-        },
-        {
-          name: t("resource.asset-category-Device"),
-          list: HardwareListCategoryDevice,
-          options: {
-            route: `assets?category_id=13`,
           },
         },
       ]}

@@ -58,6 +58,7 @@ import { Spin } from "antd";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 const defaultCheckedList = [
   "id",
@@ -98,6 +99,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const category_id = searchParams.get("category_id");
+  const location_id = searchParams.get("location_id");
+  const deployed = searchParams.get("Deployed");
+  const unDeployable = searchParams.get("Undeployable");
+  const pending = searchParams.get("Pending");
+  const readyToDeploy = searchParams.get("RTD");
+
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
     HttpError,
@@ -107,6 +116,38 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         field: "id",
         order: "desc",
+      },
+    ],
+    initialFilter: [
+      {
+        field: "location.id",
+        operator: "eq",
+        value: location_id,
+      },
+      {
+        field: "category_id",
+        operator: "eq",
+        value: category_id,
+      },
+      {
+        field: "status",
+        operator: "eq",
+        value: deployed,
+      },
+      {
+        field: "status",
+        operator: "eq",
+        value: unDeployable,
+      },
+      {
+        field: "status",
+        operator: "eq",
+        value: pending,
+      },
+      {
+        field: "status",
+        operator: "eq",
+        value: readyToDeploy,
       },
     ],
     resource: HARDWARE_API,
@@ -146,6 +187,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           operator: "eq",
           value: location,
         },
+
         {
           field: "dateFrom",
           operator: "eq",
@@ -165,6 +207,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           operator: "eq",
           value: purchase_date
             ? purchase_date[0].toISOString().substring(0, 10)
+            : undefined,
+        },
+        {
+          field: "dateTo",
+          operator: "eq",
+          value: purchase_date
+            ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
         }
       );

@@ -26,6 +26,7 @@ export const Locations = (props: LocationProps) => {
         <Col className="gutter-row assets-summary-table" sm={24} md={14}>
           {location.assets_count !== 0 && (
             <AssetsSummaryTable
+              id={location.id}
               categories={location.categories}
             ></AssetsSummaryTable>
           )}
