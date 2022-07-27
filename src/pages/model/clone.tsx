@@ -221,7 +221,6 @@ export const ModelClone = (props: ModelCloneProps) => {
         checked={checked}
         value={data?.requestable}
         onChange={(event: ICheckboxChange) => {
-          console.log("check event target", event.target.checked);
           setChecked(event.target.checked);
         }}
       >

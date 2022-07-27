@@ -57,6 +57,7 @@ import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 const defaultCheckedList = [
   "id",
@@ -97,6 +98,13 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const category_id = searchParams.get("category_id");
+  const location_id = searchParams.get("location_id");
+  const status_id = searchParams.get("status_id");
+  const dateFromParam = searchParams.get("dateFrom");
+  const dateToParam = searchParams.get("dateTo");
+
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
     HttpError,
@@ -110,9 +118,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ],
     initialFilter: [
       {
-        field: "status",
+        field: "status.id",
         operator: "eq",
-        value: "Deployed",
+        value: "4",
       },
     ],
     resource: HARDWARE_API,
@@ -150,7 +158,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         {
           field: "location_id",
           operator: "eq",
-          value: location,
+          value: location ? location : location_id,
         },
         {
           field: "dateFrom",
@@ -165,6 +173,16 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
+        },
+        {
+          field: "status_id",
+          operator: "eq",
+          value: status_id,
         }
       );
       return filters;
@@ -563,7 +581,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
       {
@@ -583,14 +603,14 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       {
         key: "warranty_months",
         title: t("hardware.label.field.insurance"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
       },
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
       },
       {
@@ -756,11 +776,11 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
 
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 33);
+    return localStorage.getItem("purchase_date")?.substring(0, 10);
   }, [localStorage.getItem("purchase_date")]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(34, 67);
+    return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
@@ -804,11 +824,21 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            location: searchValuesLocation,
-            purchase_date: [
-              moment(dateFrom, dateFormat),
-              moment(dateTo, dateFormat),
-            ],
+            location:
+              searchValuesLocation !== 0
+                ? searchValuesLocation
+                : location_id
+                ? Number(location_id)
+                : "ALL LOCATION",
+            purchase_date:
+              typeof localStorage.getItem("purchase_date") !== "object"
+                ? [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
+                : dateFromParam && dateToParam
+                ? [
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
+                : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
@@ -844,6 +874,11 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               }}
               {...locationSelectProps}
               placeholder="Lựa chọn vị trí"
+              className={
+                searchValuesLocation !== 0
+                  ? "search-month-location"
+                  : "search-month-location-null"
+              }
             />
           </Form.Item>
         </Form>

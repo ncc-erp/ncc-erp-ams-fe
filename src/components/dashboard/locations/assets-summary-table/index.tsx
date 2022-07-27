@@ -1,16 +1,22 @@
+/* eslint-disable no-lone-blocks */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
-import { ICategoryAsset } from "interfaces/dashboard";
+import { ICategoryAsset, ILocation } from "interfaces/dashboard";
+import { useNavigation, useTranslate } from "@pankod/refine-core";
+import { useSearchParams } from "react-router-dom";
 
 type AssetsSummaryTableProps = {
+  id: number;
   categories: ICategoryAsset[];
+  data: any;
 };
 
 enum Status {
-  "PENDING" = "Pending",
-  "BROKEN" = "Broken",
-  "ASSIGN" = "Assign",
-  "READY_TO_DEPLOY" = "Ready to deploy",
+  "PENDING" = "Check Lại - Bảo Hành",
+  "BROKEN" = "Hỏng",
+  "ASSIGN" = "Bàn Giao",
+  "READY_TO_DEPLOY" = "Trong Kho",
 }
 
 type DataTable = {
@@ -19,13 +25,24 @@ type DataTable = {
   broken: string;
   assign: string;
   ready_to_deploy: string;
+  category_id: number;
+  location_id: number;
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
-  const { categories } = props;
+  const { id, categories, data } = props;
 
-  const [data, setData] = useState<DataTable[]>([]);
+  const t = useTranslate();
+  const { list } = useNavigation();
 
+  const [dataCategory, setDataCategory] = useState<DataTable[]>([]);
+  const [dataAllLocation, setDataAllLocation] = useState<DataTable[]>([]);
+
+  const [searchParams] = useSearchParams();
+  const purchase_date_from = searchParams.get("purchase_date_from");
+  const purchase_date_to = searchParams.get("purchase_date_to");
+
+  const response = data?.data.payload || [];
   const calculation = (value: number, sum: number) => {
     if (value === 0) {
       return "0";
@@ -40,6 +57,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       let broken = "";
       let assign = "";
       let ready_to_deploy = "";
+      let assets_count = category.assets_count;
 
       category.status_labels.forEach((status_label) => {
         if (status_label.name === Status.ASSIGN) {
@@ -67,68 +85,262 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           );
         }
       });
+
       return {
+        location_id: id,
+        category_id: category.id,
         name: name,
         pending: pending,
         broken: broken,
         assign: assign,
-        key: category.id,
         ready_to_deploy: ready_to_deploy,
+        assets_count: assets_count,
       };
     });
 
-    setData(items);
+    setDataCategory(items);
   }, [categories]);
 
   const columns = [
     {
-      title: "Name",
+      title: `${t("dashboard.field.name")}`,
       dataIndex: "name",
       key: "name",
-      render: (text: string) => (
-        <Typography.Text strong type="success">
+      render: (text: string, record: DataTable) => (
+        <Typography.Text
+          strong
+          type="success"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                  );
+            }
+          }}
+        >
           {text}
         </Typography.Text>
       ),
     },
     {
-      title: "Pending",
+      title: `${t("dashboard.field.pending")}`,
       dataIndex: "pending",
       key: "pending",
-      render: (text: number) => (
-        <Typography.Text type="secondary">{text}</Typography.Text>
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
+                  );
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
       ),
     },
     {
-      title: "Broken",
+      title: `${t("dashboard.field.broken")}`,
       dataIndex: "broken",
       key: "broken",
-      render: (text: number) => (
-        <Typography.Text type="secondary">{text}</Typography.Text>
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={(): void => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
+                  );
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
       ),
     },
+
     {
-      title: "Assign",
+      title: `${t("dashboard.field.assign")}`,
       dataIndex: "assign",
       key: "assign",
-      render: (text: number) => (
-        <Typography.Text type="secondary">{text}</Typography.Text>
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
+                  );
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
       ),
     },
+
     {
-      title: "Ready to deploy",
+      title: `${t("dashboard.field.ready-to-deploy")}`,
       key: "ready_to_deploy",
       dataIndex: "ready_to_deploy",
-      render: (text: number) => (
-        <Typography.Text type="secondary">{text}</Typography.Text>
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
+                  );
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
+      ),
+    },
+
+    {
+      title: `${t("dashboard.field.sum")}`,
+      dataIndex: "assets_count",
+      key: "assets_count",
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                  );
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
       ),
     },
   ];
 
+  useEffect(() => {
+    const arrNameAsset = response[0]?.categories.map(
+      (item: ICategoryAsset) => item.name
+    );
+
+    let dataAll = [] as any;
+    arrNameAsset?.forEach((nameAsset: any) => {
+      const type = {} as any;
+      let category = "" as ICategoryAsset | string | undefined;
+      type.type = nameAsset;
+      response.forEach((item: ILocation) => {
+        category = item.categories.find(
+          (c: ICategoryAsset) => c.name === nameAsset
+        );
+        type["location_" + item.id] = category && category.assets_count;
+        type.category_id = category && category.id;
+      });
+
+      dataAll.push(type);
+    });
+
+    setDataAllLocation(dataAll);
+  }, [response]);
+
+  let columnSum = [
+    {
+      title: "Tên thiết bị",
+      dataIndex: "type",
+      key: "type",
+      render: (text: string, record: DataTable) => (
+        <Typography.Text
+          strong
+          type="success"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? list(
+                    `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                  )
+                : list(`assets?category_id=${record.category_id}`);
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
+      ),
+    },
+  ];
+
+  let columnTypes = response.map((item: ILocation) => {
+    return {
+      title: item.name,
+      dataIndex: "location_" + item.id,
+      key: "location_" + item.id,
+      render: (text: string | number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              purchase_date_from && purchase_date_to
+                ? item.id !== 6
+                  ? list(
+                      `assets?location_id=${item.id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    )
+                  : list(
+                      `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    )
+                : item.id !== 6
+                ? list(
+                    `assets?location_id=${item.id}&category_id=${record.category_id}`
+                  )
+                : list(`assets?category_id=${record.category_id}`);
+            }
+          }}
+        >
+          {text}
+        </Typography.Text>
+      ),
+    };
+  });
+
+  columnSum = [...columnSum, ...columnTypes];
+
   return (
     <Table
-      columns={columns}
-      dataSource={data}
+      columns={id === 6 ? columnSum : columns}
+      dataSource={id === 6 ? dataAllLocation : dataCategory}
       pagination={categories.length <= 10 ? false : { pageSize: 10 }}
     />
   );
