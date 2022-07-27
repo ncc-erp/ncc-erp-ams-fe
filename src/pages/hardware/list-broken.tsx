@@ -56,6 +56,7 @@ import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 const defaultCheckedList = [
   "id",
@@ -96,6 +97,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const location_id = searchParams.get("location_id");
+  const dateFromParam = searchParams.get("dateFrom");
+  const dateToParam = searchParams.get("dateTo");
+
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
     HttpError,
@@ -109,9 +115,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     ],
     initialFilter: [
       {
-        field: "status",
+        field: "status.id",
         operator: "eq",
-        value: "Undeployable",
+        value: "3",
       },
     ],
     resource: HARDWARE_API,
@@ -149,7 +155,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         {
           field: "location_id",
           operator: "eq",
-          value: location,
+          value: location ? location : location_id,
         },
         {
           field: "dateFrom",
@@ -455,7 +461,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("hardware.label.field.assetName"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -472,31 +478,37 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "asset_tag",
         title: t("hardware.label.field.propertyCard"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("asset_tag", sorter),
       },
       {
         key: "serial",
         title: t("hardware.label.field.serial"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("serial", sorter),
       },
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TagField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "model_number",
         title: "Model No",
-        render: (value: IHardwareResponse) => <TextField value={value} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("model_number", sorter),
       },
       {
         key: "category",
         title: t("hardware.label.field.category"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TagField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
@@ -545,25 +557,33 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "location",
         title: t("hardware.label.field.rtd_location"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
       {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
       {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value.name : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
       {
@@ -577,44 +597,44 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "order_number",
         title: t("hardware.label.field.orderNumber"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("order_number", sorter),
       },
       {
         key: "warranty_months",
         title: t("hardware.label.field.insurance"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
       },
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.date} />
+          <DateField format="LLL" value={value ? value.date : ""} />
         ),
       },
       {
         key: "notes",
         title: t("hardware.label.field.note"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
       {
         key: "checkout_counter",
         title: t("hardware.label.field.checkout_counter"),
-        render: (value: number) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("hardware.label.field.checkin_counter"),
-        render: (value: number) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "requestable",
         title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
@@ -654,7 +674,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
@@ -756,11 +776,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
 
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 33);
+    return localStorage.getItem("purchase_date")?.substring(0, 10);
   }, [localStorage.getItem("purchase_date")]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(34, 67);
+    return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
@@ -804,11 +824,21 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            location: searchValuesLocation,
-            purchase_date: [
-              moment(dateFrom, dateFormat),
-              moment(dateTo, dateFormat),
-            ],
+            location:
+              searchValuesLocation !== 0
+                ? searchValuesLocation
+                : location_id
+                ? Number(location_id)
+                : "ALL LOCATION",
+            purchase_date:
+              typeof localStorage.getItem("purchase_date") !== "object"
+                ? [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
+                : dateFromParam && dateToParam
+                ? [
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
+                : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
@@ -844,6 +874,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               }}
               {...locationSelectProps}
               placeholder="Lựa chọn vị trí"
+              className={
+                searchValuesLocation !== 0
+                  ? "search-month-location"
+                  : "search-month-location-null"
+              }
             />
           </Form.Item>
         </Form>

@@ -6,10 +6,11 @@ import "./style.less";
 
 type LocationProps = {
   location: ILocation;
+  data: any;
 };
 
 export const Locations = (props: LocationProps) => {
-  const { location } = props;
+  const { location, data } = props;
 
   return (
     <div className="locationContainer">
@@ -28,6 +29,7 @@ export const Locations = (props: LocationProps) => {
             <AssetsSummaryTable
               id={location.id}
               categories={location.categories}
+              data={data}
             ></AssetsSummaryTable>
           )}
         </Col>

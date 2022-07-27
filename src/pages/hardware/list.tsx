@@ -102,10 +102,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [searchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
   const location_id = searchParams.get("location_id");
-  const deployed = searchParams.get("Deployed");
-  const unDeployable = searchParams.get("Undeployable");
-  const pending = searchParams.get("Pending");
-  const readyToDeploy = searchParams.get("RTD");
+  const status_id = searchParams.get("status_id");
+  const dateFromParam = searchParams.get("dateFrom");
+  const dateToParam = searchParams.get("dateTo");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -116,38 +115,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         field: "id",
         order: "desc",
-      },
-    ],
-    initialFilter: [
-      {
-        field: "location.id",
-        operator: "eq",
-        value: location_id,
-      },
-      {
-        field: "category_id",
-        operator: "eq",
-        value: category_id,
-      },
-      {
-        field: "status",
-        operator: "eq",
-        value: deployed,
-      },
-      {
-        field: "status",
-        operator: "eq",
-        value: unDeployable,
-      },
-      {
-        field: "status",
-        operator: "eq",
-        value: pending,
-      },
-      {
-        field: "status",
-        operator: "eq",
-        value: readyToDeploy,
       },
     ],
     resource: HARDWARE_API,
@@ -185,7 +152,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "location_id",
           operator: "eq",
-          value: location,
+          value: location ? location : location_id,
         },
 
         {
@@ -215,6 +182,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
+        },
+        {
+          field: "status_id",
+          operator: "eq",
+          value: status_id,
         }
       );
 
@@ -807,11 +784,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
 
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 33);
+    return localStorage.getItem("purchase_date")?.substring(0, 10);
   }, [localStorage.getItem("purchase_date")]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(34, 67);
+    return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
@@ -855,11 +832,21 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            location: searchValuesLocation,
-            purchase_date: [
-              moment(dateFrom, dateFormat),
-              moment(dateTo, dateFormat),
-            ],
+            location:
+              searchValuesLocation !== 0
+                ? searchValuesLocation
+                : location_id
+                ? Number(location_id)
+                : "",
+            purchase_date:
+              typeof localStorage.getItem("purchase_date") !== "object"
+                ? [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
+                : dateFromParam && dateToParam
+                ? [
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
+                : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
@@ -895,6 +882,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               }}
               {...locationSelectProps}
               placeholder="Lựa chọn vị trí"
+              className={
+                searchValuesLocation !== 0
+                  ? "search-month-location"
+                  : "search-month-location-null"
+              }
             />
           </Form.Item>
         </Form>
