@@ -10,6 +10,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
+import { useSearchParams } from 'react-router-dom';
 
 const {
   RightOutlined,
@@ -35,6 +36,10 @@ export const Sider: React.FC = () => {
 
   const SubMenu = Menu.SubMenu;
 
+  const [searchParams] = useSearchParams();
+  const date_From = searchParams.get('from');
+  const date_To = searchParams.get('to');
+
   return (
     <AntdLayout.Sider
       collapsible
@@ -56,7 +61,7 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {permissionsData &&
+        {/* {permissionsData &&
           permissionsData.admin === "1" &&
           menuItems
             .filter(
@@ -90,7 +95,50 @@ export const Sider: React.FC = () => {
                   </div>
                 </Menu.Item>
               );
-            })}
+            }
+            )
+        } */}
+
+        {permissionsData && permissionsData.admin === "1" && (
+          <SubMenu
+            title={
+              <span>
+                <DashboardOutlined />
+                <span>{translate("resource.dashboard")}</span>
+              </span>
+            }
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.dashboard")}` ||
+                    item.name === `${translate("resource.checkin-checkout")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
 
         {permissionsData && permissionsData.admin === "1" && (
           <SubMenu
@@ -108,7 +156,7 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
-                      `${translate("resource.assets-readyToDeploy")}` ||
+                    `${translate("resource.assets-readyToDeploy")}` ||
                     item.name === `${translate("resource.assets-pending")}` ||
                     item.name === `${translate("resource.assets-broken")}`
                 )

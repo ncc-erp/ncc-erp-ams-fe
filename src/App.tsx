@@ -33,6 +33,9 @@ import { LocationList } from "pages/location";
 import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
+import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
+import { ReportList } from "pages/report/list";
+
 function App() {
   const { t, i18n } = useTranslation();
 
@@ -60,6 +63,7 @@ function App() {
               `${resource}/${params.id}`,
               action
             );
+            console.log("check:", resource)
             return Promise.resolve({ can });
           }
 
@@ -81,6 +85,13 @@ function App() {
           list: DashboardPage,
           options: {
             route: "dashboard",
+          },
+        },
+        {
+          name: t("resource.checkin-checkout"),
+          list: ListCheckin_Checkout,
+          options: {
+            route: "checkin_checkout",
           },
         },
         {
@@ -172,6 +183,13 @@ function App() {
           list: LocationList,
           options: {
             route: "location",
+          },
+        },
+        {
+          name: t("resource.report"),
+          list: ReportList,
+          options: {
+            route: "report",
           },
         },
       ]}

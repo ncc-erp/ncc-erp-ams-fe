@@ -65,6 +65,8 @@
       "ready-to-deploy": "Trong Kho",
       "sum": "Tổng"
     },
+    "titleStatistic": "Thống kê thiết bị đã cấp phát - thu hồi",
+    "time": "Thời gian",
     "assetFilter": {
       "filters" : {
         "label": {
@@ -149,8 +151,11 @@
           "warranty_expires": "Hết hạn",
           "checkout_counter": "Thu hồi tài sản",
           "checkin_counter": "Đăng kí tài sản",
-          "requestable": "Yêu cầu"
-        
+          "requestable": "Yêu cầu",
+          "assign": "Bàn Giao",
+          "readyToDeploy":"Trong Kho",
+          "broken": "Hỏng",
+          "pending": "Check Lại - Bảo Hành"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -196,7 +201,9 @@
           "list-pending": "Đang chờ Tài sản",
           "list-broken": "Không cho phép cấp phát Tài sản",
           "dateCreate": "Đã tạo lúc",
-          "updateAt": "Cập nhật tại"
+          "updateAt": "Cập nhật tại",
+          "time": "Thời gian",
+          "location": "Chi nhánh"
         },
         "tooltip":{
           "create": "Thêm mới",
@@ -437,7 +444,8 @@
     "asset-category-Mouse": "Tất cả chuột",
     "asset-category-Keyboard": "Tất cả bàn phím",
     "asset-category-Headphone": "Tất cả tai nghe",
-    "asset-category-Device": "Tất cả thiết bị"
+    "asset-category-Device": "Tất cả thiết bị",
+    "checkin-checkout": "Cấp phát/thu hồi"
   },
   "model": {
     "label": {
@@ -593,7 +601,20 @@
   "report":{
     "label":{
       "title":{
-        "name": "Báo cáo"
+        "name": "Báo cáo",
+        "nameReportCheckIn": "Thiết bị thu hồi",
+        "nameReportCheckOut": "Thiết bị bàn giao"
+      },
+      "field":{
+        "id": "ID",
+        "name": "Tên tài sản",
+        "image":"Hình ảnh",
+        "propertyCard": "Thẻ tài sản",
+        "serial":"Số Sê-ri",
+        "dateBuy":"Ngày mua",
+        "orderNumber":"Mã đơn hàng",
+        "note":"Mô tả",
+        "dateCreate":"Ngày tạo"
       }
     }
   }
