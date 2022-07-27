@@ -34,7 +34,6 @@ import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
 import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
-import { useSearchParams } from 'react-router-dom';
 import { ReportList } from "pages/report/list";
 
 function App() {
@@ -45,10 +44,6 @@ function App() {
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
-
-  // const [searchParams] = useSearchParams();
-  // const date_From = searchParams.get('from');
-  // const date_To = searchParams.get('to');
 
   return (
     <Refine
@@ -93,7 +88,7 @@ function App() {
           },
         },
         {
-          name: 'Cấp phát/thu hồi',
+          name: t("resource.checkin-checkout"),
           list: ListCheckin_Checkout,
           options: {
             route: "checkin_checkout",

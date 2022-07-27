@@ -89,7 +89,7 @@ p, 1, ${i18n.t("resource.depreciation")}, (list)|(create)
 p, 1, ${DEPRECIATIONS_API}/*, (delete)
 p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
 
-p, 1, Cấp phát/thu hồi, (list)
+p, 1, ${i18n.t("resource.checkin-checkout")}, (list)
 
 p, 1, ${i18n.t("resource.report")}, (list)
 `;
