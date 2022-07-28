@@ -139,7 +139,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataIndex: "type",
             key: "type",
             render: (text: string, record: IReport) => <strong onClick={() => {
-                list(`report_checkout?category_id=${record.id}`)
+                list(`report?category_id=${record.id}`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
     ];
@@ -152,7 +152,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             render: (text: string, record: IReport) => <a onClick={() => {
                 (dataReport[0] && dataReport[1])
                     ? (list(`report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`))
-                    : (list(`reportt?category_id=${record.id}&location=${item.id}&assetHistoryType=0`))
+                    : (list(`report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`))
             }}>{text}</a>
         };
     });
@@ -173,7 +173,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataIndex: "type",
             key: "type",
             render: (text: string, record: IReport) => <strong onClick={() => {
-                list(`report_checkin?category_id=${record.id}`)
+                list(`report?category_id=${record.id}`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
     ];
