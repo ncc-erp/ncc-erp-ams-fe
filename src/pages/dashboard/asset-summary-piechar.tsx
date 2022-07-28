@@ -2,12 +2,8 @@ import { Pie } from "@ant-design/plots";
 import { useTranslate } from "@pankod/refine-core";
 
 export interface IAssetHistory {
-    id: number;
-    location_id: number;
-    locationName: string;
-    name: string;
-    checkin: string;
-    checkout: string;
+    count: number;
+    type: string;
 }
 
 type AssetsSummaryPieChartProps = {

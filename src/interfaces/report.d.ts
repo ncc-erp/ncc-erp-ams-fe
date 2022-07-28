@@ -13,6 +13,9 @@ export interface IReport {
   type: number;
   assigned_status: number;
   user_id: number;
+  location_id: number;
+  checkin: number;
+  checkout: number;
 }
 
 export interface IReportResponse {
@@ -129,4 +132,10 @@ export interface IReportResponse {
   checkin_counter: number;
   checkout_counter: number;
   requests_counter: number;
+}
+
+export interface responseCheckIn {
+  type: string;
+  id: number;
+  count: number;
 }

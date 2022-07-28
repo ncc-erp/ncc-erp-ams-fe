@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Col, Form, List, Row, Table, Typography } from "@pankod/refine-antd";
+import { Col, Form, List, Row, Table } from "@pankod/refine-antd";
 import { IResourceComponentsProps, useCustom, useNavigation, useTranslate } from "@pankod/refine-core";
 import { DatePicker } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import { AssetsSummaryPieChartCheckIn, AssetsSummaryPieChartCheckOut } from "./asset-summary-piechar";
+import { IReport } from "interfaces/report";
 
 export interface IReportAsset {
     id: number;
@@ -59,15 +60,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
-        var assetNames = (data?.data.payload.assets_statistic || []).map((item: any) => item.name);
-        var assetArr: any[] = []
-        assetArr = assetNames.filter(function (item: any) {
+        var assetNames = (data?.data.payload.assets_statistic || []).map((item: IReport) => item.name);
+        var assetArr: string[] = []
+        assetArr = assetNames.filter(function (item: string) {
             return assetArr.includes(item) ? '' : assetArr.push(item);
         })
 
         var dataResponseCheckInt: any = [];
         var iteLocationKey: any = [];
-        let dataSource = data?.data.payload.categories.map((category: any) => {
+        let dataSource = data?.data.payload.categories.map((category: IReport) => {
             var iteDataSource = { type: category.name, id: category.id }
             var iteLocation = {};
             for (let i of data?.data.payload.locations) {
@@ -77,7 +78,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             return { ...iteDataSource, ...iteLocation };
         });
 
-        (data?.data.payload.assets_statistic || []).forEach((items: any) => {
+        (data?.data.payload.assets_statistic || []).forEach((items: IReport) => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
@@ -90,22 +91,21 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                 }
             })
         });
-
         dataResponseCheckInt = dataSource;
 
         setDataReportCheckIn(dataResponseCheckInt);
     }, [data?.data.payload.assets_statistic || []])
 
     useEffect(() => {
-        var assetNames = (data?.data.payload.assets_statistic || []).map((item: IReportAsset) => item.name);
-        var assetArr: any[] = []
-        assetArr = assetNames.filter(function (item: any) {
+        var assetNames = (data?.data.payload.assets_statistic || []).map((item: IReport) => item.name);
+        var assetArr: string[] = []
+        assetArr = assetNames.filter(function (item: string) {
             return assetArr.includes(item) ? '' : assetArr.push(item);
         })
 
         var dataResponseCheckOut: any = [];
         var iteLocationKey: any = [];
-        let dataSource = data?.data.payload.categories.map((category: IReportAsset) => {
+        let dataSource = data?.data.payload.categories.map((category: IReport) => {
             var iteDataSource = { type: category.name, id: category.id }
             var iteLocation = {};
             for (let i of data?.data.payload.locations) {
@@ -115,7 +115,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             return { ...iteDataSource, ...iteLocation };
         });
 
-        (data?.data.payload.assets_statistic || []).forEach((items: any) => {
+        (data?.data.payload.assets_statistic || []).forEach((items: IReport) => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
@@ -138,7 +138,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             title: "Thiết bị cấp phát",
             dataIndex: "type",
             key: "type",
-            render: (text: any, record: any) => <strong onClick={() => {
+            render: (text: string, record: IReport) => <strong onClick={() => {
                 list(`report_checkout?category_id=${record.id}`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
@@ -149,7 +149,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             title: item.name,
             dataIndex: "location_" + item.id,
             key: "location_" + item.id,
-            render: (text: any, record: any) => <a onClick={() => {
+            render: (text: string, record: IReport) => <a onClick={() => {
                 (dataReport[0] && dataReport[1])
                     ? (list(`report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`))
                     : (list(`reportt?category_id=${record.id}&location=${item.id}&assetHistoryType=0`))
@@ -161,7 +161,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     //     title: "tong",
     //     dataIndex: "count",
     //     key: "count",
-    //     render: (text: any, record: any) => text
+    //     render: (text: string, record: IReport) => text
     // }
     // columnsCheckOut = [...columnsCheckOut, ...columntypesCheckOut, Titletong];
 
@@ -172,7 +172,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             title: "Thiết bị thu hồi",
             dataIndex: "type",
             key: "type",
-            render: (text: any, record: any) => <strong onClick={() => {
+            render: (text: string, record: IReport) => <strong onClick={() => {
                 list(`report_checkin?category_id=${record.id}`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
@@ -183,7 +183,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             title: item.name,
             dataIndex: "location_" + item.id,
             key: "location_" + item.id,
-            render: (text: any, record: any) => <a onClick={() => {
+            render: (text: string, record: IReport) => <a onClick={() => {
                 (dataReport[0] && dataReport[1])
                     ? (list(`report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`))
                     : (list(`report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`))
