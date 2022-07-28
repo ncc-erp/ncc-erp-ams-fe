@@ -73,6 +73,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           whiteSpace: "pre-wrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          fontSize: '15px',
         },
         content: `${name} ${count}`,
       },

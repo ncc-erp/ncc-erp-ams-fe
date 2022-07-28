@@ -1,22 +1,21 @@
 import { Col, Row } from "@pankod/refine-antd";
 import { ILocation } from "interfaces/dashboard";
-import { AssetsSummaryTable } from "./assets-summary-table";
 import { AssetsSummaryPieChart } from "./assets-summary-pie-chart";
 import "./style.less";
+import { AssetsSummaryTableAllLocation } from "./assets-summary-table/index-all-location";
 
 type LocationProps = {
   location: ILocation;
-  data: any;
 };
 
-export const Locations = (props: LocationProps) => {
-  const { location, data } = props;
+export const AllLocations = (props: LocationProps) => {
+  const { location } = props;
 
   return (
     <div className="locationContainer">
       <Row gutter={16}>
         <Col className="gutter-row assets-summary-pie-chart" sm={24} md={10}>
-          {location.id === 6 && (
+          {location.assets_count !== 0 && (
             <AssetsSummaryPieChart
               categories={location.categories}
               name={location.name}
@@ -25,12 +24,11 @@ export const Locations = (props: LocationProps) => {
           )}
         </Col>
         <Col className="gutter-row assets-summary-table" sm={24} md={14}>
-          {location.id === 6 && (
-            <AssetsSummaryTable
+          {location.assets_count !== 0 && (
+            <AssetsSummaryTableAllLocation
               id={location.id}
               categories={location.categories}
-              data={data}
-            ></AssetsSummaryTable>
+            ></AssetsSummaryTableAllLocation>
           )}
         </Col>
       </Row>

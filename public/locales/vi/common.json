@@ -63,7 +63,13 @@
       "broken": "Hỏng",
       "assign": "Bàn Giao",
       "ready-to-deploy": "Trong Kho",
-      "sum": "Tổng"
+      "sum": "Tổng",
+      "tilte-section-1": "Chi tiết các loại thiết bị",
+      "tilte-section-2": "Số lượng thiết bị theo văn phòng",
+      "search-date": "Thời gian mua thiết bị",
+      "search-location": "Vị trí",
+      "start-date": "Ngày bắt đầu",
+      "end-date": "Ngày kết thúc"
     },
     "titleStatistic": "Thống kê thiết bị đã cấp phát - thu hồi",
     "time": "Thời gian",
