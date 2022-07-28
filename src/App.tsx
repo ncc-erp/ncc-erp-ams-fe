@@ -33,7 +33,7 @@ import { LocationList } from "pages/location";
 import { ModelList } from "pages/model";
 import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
-// import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
+import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
 import { ReportList } from "pages/report/list";
 
 function App() {
@@ -86,13 +86,13 @@ function App() {
             route: "dashboard",
           },
         },
-        // {
-        //   name: t("resource.checkin-checkout"),
-        //   list: ListCheckin_Checkout,
-        //   options: {
-        //     route: "checkin_checkout",
-        //   },
-        // },
+        {
+          name: t("resource.checkin-checkout"),
+          list: ListCheckin_Checkout,
+          options: {
+            route: "checkin_checkout",
+          },
+        },
         {
           name: t("resource.assets"),
           list: HardwareList,

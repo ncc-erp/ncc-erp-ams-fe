@@ -72,6 +72,20 @@ const defaultCheckedList = [
 ];
 
 export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
+
+  const { RangePicker } = DatePicker;
+
+  const [searchParams] = useSearchParams();
+  const location_id = searchParams.get('location_id');
+  const category_id = searchParams.get('category_id');
+  const type = searchParams.get('type');
+  const status_id = searchParams.get("status_id");
+  const dateFromParam = searchParams.get("dateFrom");
+  const dateToParam = searchParams.get("dateTo");
+
+  const date_From_params = searchParams.get('date_From');
+  const date_To_params = searchParams.get('date_To');
+
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -98,13 +112,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
-  const location_id = searchParams.get("location_id");
-  const status_id = searchParams.get("status_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
     HttpError,
@@ -123,7 +130,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         value: "4",
       },
     ],
-    resource: HARDWARE_API,
+    resource: `api/v1/hardware`,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const {
@@ -185,6 +192,21 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           value: status_id,
         }
       );
+
+      if (type) {
+        filters.push({
+          field: "type",
+          operator: "eq",
+          value: type,
+        })
+      }
+      if (category_id) {
+        filters.push({
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
+        })
+      }
       return filters;
     },
   });
@@ -524,28 +546,28 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={
               value
-                ? value.name === "Assign"
+                ? value.name === t("hardware.label.field.assign")
                   ? t("hardware.label.detail.assign")
-                  : value.name === "Ready to deploy"
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === "Broken"
-                  ? t("hardware.label.detail.broken")
-                  : value.name === "Pending"
-                  ? t("hardware.label.detail.pending")
-                  : ""
+                  : value.name === t("hardware.label.field.readyToDeploy")
+                    ? t("hardware.label.detail.readyToDeploy")
+                    : value.name === t("hardware.label.field.broken")
+                      ? t("hardware.label.detail.broken")
+                      : value.name === t("hardware.label.field.pending")
+                        ? t("hardware.label.detail.pending")
+                        : ""
                 : ""
             }
             style={{
               background:
-                value.name === "Assign"
+                value.name === t("hardware.label.field.assign")
                   ? "#0073b7"
-                  : value.name === "Ready to deploy"
-                  ? "#00a65a"
-                  : value.name === "Broken"
-                  ? "red"
-                  : value.name === "Pending"
-                  ? "#f39c12"
-                  : "",
+                  : value.name === t("hardware.label.field.readyToDeploy")
+                    ? "#00a65a"
+                    : value.name === t("hardware.label.field.broken")
+                      ? "red"
+                      : value.name === t("hardware.label.field.pending")
+                        ? "#f39c12"
+                        : "",
               color: "white",
             }}
           />
@@ -646,24 +668,24 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
+                  ? t("hardware.label.detail.pendingAccept")
+                  : value === 2
+                    ? t("hardware.label.detail.accept")
+                    : value === 3
+                      ? t("hardware.label.detail.refuse")
+                      : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                    ? "#f39c12"
+                    : value === 2
+                      ? "#0073b7"
+                      : value === 3
+                        ? "red"
+                        : "gray",
               color: "white",
             }}
           />
@@ -754,9 +776,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     const aboutController = new AbortController();
-
     listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
-
     return function cleanup() {
       aboutController.abort();
     };
@@ -772,8 +792,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   };
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
-
-  const { RangePicker } = DatePicker;
 
   const searchValuesByDateFrom = useMemo(() => {
     return localStorage.getItem("purchase_date")?.substring(0, 10);
@@ -828,23 +846,23 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               searchValuesLocation !== 0
                 ? searchValuesLocation
                 : location_id
-                ? Number(location_id)
-                : "ALL LOCATION",
+                  ? Number(location_id)
+                  : "ALL LOCATION",
             purchase_date:
               typeof localStorage.getItem("purchase_date") !== "object"
                 ? [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
                 : dateFromParam && dateToParam
-                ? [
+                  ? [
                     moment(dateFromParam, dateFormat),
                     moment(dateToParam, dateFormat),
                   ]
-                : "",
+                  : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
           className="search-month-location"
         >
-          <Form.Item label="Thời gian" name="purchase_date">
+          <Form.Item label={t("hardware.label.title.time")} name="purchase_date">
             <RangePicker
               onChange={() => {
                 localStorage.setItem(
@@ -852,8 +870,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                   searchFormProps.form?.getFieldsValue().purchase_date !==
                     undefined
                     ? searchFormProps.form
-                        ?.getFieldsValue()
-                        .purchase_date.toString()
+                      ?.getFieldsValue()
+                      .purchase_date.toString()
                     : ""
                 );
                 searchFormProps.form?.submit();
@@ -861,7 +879,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               format={dateFormat}
             />
           </Form.Item>
-          <Form.Item label="Vị trí" name="location">
+          <Form.Item label={t("hardware.label.title.location")} name="location">
             <Select
               onChange={() => {
                 localStorage.setItem(
@@ -1107,8 +1125,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1125,8 +1143,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1143,8 +1161,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -1161,8 +1179,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -1179,8 +1197,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -1195,8 +1213,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >

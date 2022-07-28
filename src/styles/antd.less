@@ -144,24 +144,16 @@
   display: flex;
 }
 
-.ant-row {
-  margin-top: 8px !important;
-}
-
 .search_by_month{
   width: 80%;
   margin-top: 0.65rem;
-
 }
 
-.search-month-location{
+.search-month-location {
+  margin-top: 0.65rem;
   display: flex;
   gap: 2rem;
-}
-.search-month-location-null{
-  display: flex;
-  gap: 2rem;
-  width: 150px !important;
+  margin-bottom: 0.5rem;
 }
 
 .datePicker{
@@ -186,16 +178,18 @@
   width: 12rem;
   font-size: 15px;
   border-radius: 3px;
+}
 
-}
 .count-categories{
-font-size: 25px;
-font-weight: bold;
+  font-size: 25px;
+  font-weight: bold;
 }
+
 .all {
   display: flex;
   float: right;
 }
+
 .field-category{
   cursor: pointer;
 }
@@ -211,6 +205,53 @@ font-weight: bold;
 }
 .selected-location{
   width: 150px !important;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.list_report_assets {
+  background-color: #b3a6a6;
+}
+
+.report_assets {
+  border: "1px solid gray";
+  width: 17.5%;
+  border-collapse: collapse;
+  float: left;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+}
+
+.report_assets tr:nth-child(even){background-color: #f2f2f2;}
+
+.report_assets td, .report_assets th {
+  padding: 5px; 
+  border: 1px solid #ccc; 
+  color: black;
+}
+
+.report_assets th {
+  background-color: #04AA6D;
+  color: white; 
+  text-align: center; 
+}
+
+.report_assets td {
+  padding-left: 1rem;
+}
+
+.report_assets tr:hover {
+  background-color: rgb(236, 233, 231);
+}
+
+a{
+  color: #000000bf;
+}
+
+.ant-form{
+  display: flex;
+  gap: 1rem;
 }
 .title-section-dashboard{
   font-size: 20px;

@@ -518,28 +518,28 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={
               value
-                ? value.name === "Assign"
+                ? value.name === t("hardware.label.field.assign")
                   ? t("hardware.label.detail.assign")
-                  : value.name === "Ready to deploy"
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === "Broken"
-                  ? t("hardware.label.detail.broken")
-                  : value.name === "Pending"
-                  ? t("hardware.label.detail.pending")
-                  : ""
+                  : value.name === t("hardware.label.field.readyToDeploy")
+                    ? t("hardware.label.detail.readyToDeploy")
+                    : value.name === t("hardware.label.field.broken")
+                      ? t("hardware.label.detail.broken")
+                      : value.name === t("hardware.label.field.pending")
+                        ? t("hardware.label.detail.pending")
+                        : ""
                 : ""
             }
             style={{
               background:
-                value.name === "Assign"
+                value.name === t("hardware.label.field.assign")
                   ? "#0073b7"
-                  : value.name === "Ready to deploy"
-                  ? "#00a65a"
-                  : value.name === "Broken"
-                  ? "red"
-                  : value.name === "Pending"
-                  ? "#f39c12"
-                  : "",
+                  : value.name === t("hardware.label.field.readyToDeploy")
+                    ? "#00a65a"
+                    : value.name === t("hardware.label.field.broken")
+                      ? "red"
+                      : value.name === t("hardware.label.field.pending")
+                        ? "#f39c12"
+                        : "",
               color: "white",
             }}
           />
@@ -646,24 +646,24 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
+                  ? t("hardware.label.detail.pendingAccept")
+                  : value === 2
+                    ? t("hardware.label.detail.accept")
+                    : value === 3
+                      ? t("hardware.label.detail.refuse")
+                      : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                    ? "#f39c12"
+                    : value === 2
+                      ? "#0073b7"
+                      : value === 3
+                        ? "red"
+                        : "gray",
               color: "white",
             }}
           />
@@ -828,23 +828,23 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               searchValuesLocation !== 0
                 ? searchValuesLocation
                 : location_id
-                ? Number(location_id)
-                : "ALL LOCATION",
+                  ? Number(location_id)
+                  : "ALL LOCATION",
             purchase_date:
               typeof localStorage.getItem("purchase_date") !== "object"
                 ? [moment(dateFrom, dateFormat), moment(dateTo, dateFormat)]
                 : dateFromParam && dateToParam
-                ? [
+                  ? [
                     moment(dateFromParam, dateFormat),
                     moment(dateToParam, dateFormat),
                   ]
-                : "",
+                  : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
           className="search-month-location"
         >
-          <Form.Item label="Thời gian" name="purchase_date">
+          <Form.Item label={t("hardware.label.title.time")} name="purchase_date">
             <RangePicker
               onChange={() => {
                 localStorage.setItem(
@@ -852,8 +852,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                   searchFormProps.form?.getFieldsValue().purchase_date !==
                     undefined
                     ? searchFormProps.form
-                        ?.getFieldsValue()
-                        .purchase_date.toString()
+                      ?.getFieldsValue()
+                      .purchase_date.toString()
                     : ""
                 );
                 searchFormProps.form?.submit();
@@ -861,7 +861,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               format={dateFormat}
             />
           </Form.Item>
-          <Form.Item label="Vị trí" name="location">
+          <Form.Item label={t("hardware.label.title.location")} name="location">
             <Select
               onChange={() => {
                 localStorage.setItem(
@@ -1100,8 +1100,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1118,8 +1118,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1136,8 +1136,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -1154,8 +1154,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     disabled
                   >
@@ -1172,8 +1172,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >
@@ -1188,8 +1188,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => checkin(record)}
                 >

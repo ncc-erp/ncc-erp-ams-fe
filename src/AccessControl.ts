@@ -92,6 +92,9 @@ p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
 p, 1, ${i18n.t("resource.checkin-checkout")}, (list)
 
 p, 1, ${i18n.t("resource.report")}, (list)
+
+p, 1, ${i18n.t("resource.checkin")}, (list)
+p, 1, ${i18n.t("resource.checkout")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

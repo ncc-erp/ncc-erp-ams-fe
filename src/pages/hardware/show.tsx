@@ -54,15 +54,15 @@ export const HardwareShow = (props: HardwareShowProps) => {
           {" "}
           <Text>
             <Tag>
-              {detail?.status_label?.name === "Assign"
+              {detail?.status_label?.name === t("hardware.label.field.assign")
                 ? t("hardware.label.detail.assign")
-                : detail?.status_label?.name === "Ready to deploy"
-                ? t("hardware.label.detail.readyToDeploy")
-                : detail?.status_label?.name === "Broken"
-                ? t("hardware.label.detail.broken")
-                : detail?.status_label?.name === "Pending"
-                ? t("hardware.label.detail.pending")
-                : ""}
+                : detail?.status_label?.name === t("hardware.label.field.readyToDeploy")
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : detail?.status_label?.name === t("hardware.label.field.broken")
+                    ? t("hardware.label.detail.broken")
+                    : detail?.status_label?.name === t("hardware.label.field.pending")
+                      ? t("hardware.label.detail.pending")
+                      : ""}
             </Tag>
             {detail?.assigned_to ? (
               <>
