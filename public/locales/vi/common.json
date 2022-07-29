@@ -451,7 +451,9 @@
     "asset-category-Keyboard": "Tất cả bàn phím",
     "asset-category-Headphone": "Tất cả tai nghe",
     "asset-category-Device": "Tất cả thiết bị",
-    "checkin-checkout": "Cấp phát/thu hồi"
+    "checkin-checkout": "Cấp phát/thu hồi",
+    "checkout": "Cấp phát",
+    "checkin": "Thu hồi"
   },
   "model": {
     "label": {
@@ -620,7 +622,11 @@
         "dateBuy":"Ngày mua",
         "orderNumber":"Mã đơn hàng",
         "note":"Mô tả",
-        "dateCreate":"Ngày tạo"
+        "dateCreate":"Ngày tạo",
+        "dateCheckout":"Ngày cấp phát",
+        "dateCheckin":"Ngày thu hồi",
+        "dateStart": "Ngày bắt đầu",
+        "dateEnd": "Ngày kết thúc"
       }
     }
   }
