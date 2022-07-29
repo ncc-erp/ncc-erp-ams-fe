@@ -16,6 +16,10 @@ export interface IReport {
   location_id: number;
   checkin: number;
   checkout: number;
+  user: {
+    last_name: string;
+    first_name: string;
+  };
 }
 
 export interface IReportResponse {

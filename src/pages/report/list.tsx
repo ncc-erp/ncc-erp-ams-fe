@@ -107,7 +107,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           />
         ),
       },
-
+      {
+        key: "asset_history",
+        title: translate("report.label.field.user"),
+        render: (value: IReport) => (
+          <TextField value={value ? value.user.first_name + " " + value.user.last_name : ""} />
+        ),
+      },
       {
         key: "asset",
         title: translate("report.label.field.note"),
@@ -201,9 +207,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
         </Form>
       </div>
-      <Table dataSource={data?.data} rowKey="id">
+      <Table
+        dataSource={data?.data}
+        rowKey="id"
+        scroll={{ x: 1400 }}>
         {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
+          <Table.Column
+            dataIndex={col.key} {...col} sorter />
         ))}
       </Table>
     </List>
