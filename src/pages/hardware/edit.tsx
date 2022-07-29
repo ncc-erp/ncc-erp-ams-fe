@@ -52,8 +52,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    PENDING = "Check Lại - Bảo Hành",
-    BROKEN = "Hỏng",
+    PENDING = "Pending",
+    BROKEN = "Broken",
   }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({

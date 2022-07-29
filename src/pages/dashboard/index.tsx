@@ -23,18 +23,65 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
 
   const [locationSelected, setLocationSelected] = useState<number | null>(6);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams1, setSearchParams1] = useSearchParams();
+
+  const [dataDashboard, setDataDasshboard] = useState<[string, string]>([
+    "",
+    "",
+  ]);
+  const purchase_date_from = searchParams.get("purchase_date_from");
+  const purchase_date_to = searchParams.get("purchase_date_to");
+
+  const purchase_date_from1 = searchParams.get("purchase_date_from");
+  const purchase_date_to1 = searchParams.get("purchase_date_to");
 
   const { data, isLoading } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
       query: {
-        purchase_date_from: searchParams.get("purchase_date_from"),
-        purchase_date_to: searchParams.get("purchase_date_to"),
+        purchase_date_from: purchase_date_from
+          ? purchase_date_from
+          : dataDashboard[0],
+        purchase_date_to: purchase_date_to
+          ? purchase_date_to
+          : dataDashboard[1],
         location: searchParams.get("location"),
       },
     },
   });
+  useEffect(() => {
+    setDataDasshboard([
+      purchase_date_from !== null ? purchase_date_from : "",
+      purchase_date_to !== null ? purchase_date_to : "",
+    ]);
+  }, [purchase_date_from, purchase_date_to]);
+
+  useEffect(() => {
+    setDataDasshboard([
+      purchase_date_from1 !== null ? purchase_date_from1 : "",
+      purchase_date_to1 !== null ? purchase_date_to1 : "",
+    ]);
+  }, [purchase_date_from1, purchase_date_to1]);
+
+  const { data: data1 } = useCustom({
+    url: DASHBOARD_API,
+    method: "get",
+    config: {
+      query: {
+        purchase_date_from1: purchase_date_from1
+          ? purchase_date_from1
+          : dataDashboard[0],
+        purchase_date_to1: purchase_date_to1
+          ? purchase_date_to1
+          : dataDashboard[1],
+        location: searchParams.get("location"),
+      },
+    },
+  });
+  const [nameSearch, setNameSearch] = useState(
+    "Tổng số lượng thiết bị của các văn phòng"
+  );
 
   const handleChangeLocation = (value: any) => {
     localStorage.setItem("location", value !== undefined ? value : "");
@@ -58,6 +105,33 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
     );
     setSearchParams(searchParams);
+    setNameSearch(
+      `Số lượng của các văn phòng trong khoảng thời gian: ${searchParams.get(
+        "purchase_date_from"
+      )} đến ${searchParams.get("purchase_date_to")}`
+    );
+  };
+
+  const handleChangePickerByMonthByCategory = (val: any, formatString: any) => {
+    const [from, to] = Array.from(val || []);
+    localStorage.setItem(
+      "purchase_date",
+      formatString !== undefined ? formatString : ""
+    );
+    searchParams1.set(
+      "purchase_date_from",
+      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+    );
+    searchParams1.set(
+      "purchase_date_to",
+      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+    );
+    setSearchParams1(searchParams1);
+    setNameSearch(
+      `Số lượng của các văn phòng trong khoảng thời gian: ${searchParams1.get(
+        "purchase_date_from"
+      )} đến ${searchParams1.get("purchase_date_to")}`
+    );
   };
 
   useEffect(() => {
@@ -88,9 +162,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                 />
               </Form.Item>
             </Form>
-            <div className="title-sum-location">
-              {translate("dashboard.field.sum-assets")}
-            </div>
+            <div className="title-sum-location">{nameSearch}</div>
           </div>
 
           <Row gutter={[12, 12]}>
@@ -137,7 +209,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
               >
                 <RangePicker
                   format={dateFormat}
-                  onChange={handleChangePickerByMonth}
+                  onChange={handleChangePickerByMonthByCategory}
                   placeholder={[
                     `${translate("dashboard.field.start-date")}`,
                     `${translate("dashboard.field.end-date")}`,
@@ -151,7 +223,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
           </div>
 
           <Row gutter={[12, 12]}>
-            {(data?.data.payload || [])
+            {(data1?.data.payload || [])
               .filter(
                 (item: ILocation) =>
                   locationSelected === null || item.id === locationSelected

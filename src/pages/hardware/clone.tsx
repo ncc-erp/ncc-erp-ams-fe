@@ -54,8 +54,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   }, [props]);
 
   enum EStatus {
-    READY_TO_DEPLOY = "Trong Kho",
-    ASSIGN = "Bàn Giao",
+    READY_TO_DEPLOY = "Ready to Deploy",
+    ASSIGN = "Assign",
   }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
