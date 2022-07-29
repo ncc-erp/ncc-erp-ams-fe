@@ -111,7 +111,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "asset_history",
         title: translate("report.label.field.user"),
         render: (value: IReport) => (
-          <TextField value={value ? value.user.first_name + " " + value.user.last_name : ""} />
+          <TextField value={value.user ? value.user.first_name + " " + value.user.last_name : ""} />
         ),
       },
       {
