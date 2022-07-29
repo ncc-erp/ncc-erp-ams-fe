@@ -43,8 +43,8 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Trong Kho",
-    ASSIGN = "Bàn Giao",
+    PENDING = "Ready to deploy",
+    ASSIGN = "Assign",
   }
 
   const { form, formProps } = useForm<IHardwareRequestCheckin>({
@@ -165,16 +165,21 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
+        if (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN) {
           check = true;
           return true;
         }
       }
     });
     return check;
+  };
+
+  const filterStatusLabelSelectProps = () => {
+    const optionsFiltered = statusLabelSelectProps.options?.filter(
+      (item) => item.label === EStatus.PENDING || item.label === EStatus.ASSIGN
+    );
+    statusLabelSelectProps.options = optionsFiltered;
+    return statusLabelSelectProps;
   };
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
@@ -234,11 +239,12 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                 onChangeStatusLabel(value);
               }}
               placeholder={t("hardware.label.placeholder.status")}
-              {...statusLabelSelectProps}
+              // {...statusLabelSelectProps}
+              {...filterStatusLabelSelectProps()}
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label={t("hardware.label.field.location")}
             name="rtd_location"
             rules={[
@@ -255,7 +261,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
               placeholder={t("hardware.label.placeholder.location")}
               {...locationSelectProps}
             />
-          </Form.Item>
+          </Form.Item> */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item

@@ -54,8 +54,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Trong Kho",
-    ASSIGN = "Bàn Giao",
+    READY_TO_DEPLOY = "Ready to deploy",
+    ASSIGN = "Assign",
   }
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({

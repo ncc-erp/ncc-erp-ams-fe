@@ -45,8 +45,8 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Trong Kho",
-    ASSIGN = "Bàn Giao",
+    READY_TO_DEPLOY = "Ready to deploy",
+    ASSIGN = "Assign",
   }
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({

@@ -14,10 +14,10 @@ type AssetsSummaryTableAllLocation = {
 };
 
 enum Status {
-  "PENDING" = "Check Lại - Bảo Hành",
-  "BROKEN" = "Hỏng",
-  "ASSIGN" = "Bàn Giao",
-  "READY_TO_DEPLOY" = "Trong Kho",
+  "PENDING" = "Pending",
+  "BROKEN" = "Broken",
+  "ASSIGN" = "Assign",
+  "READY_TO_DEPLOY" = "Ready to Deploy",
 }
 
 type DataTable = {
@@ -140,6 +140,7 @@ export const AssetsSummaryTableAllLocation = (
       key: "pending",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -170,6 +171,7 @@ export const AssetsSummaryTableAllLocation = (
       key: "broken",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={(): void => {
@@ -201,6 +203,7 @@ export const AssetsSummaryTableAllLocation = (
       key: "assign",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -232,6 +235,7 @@ export const AssetsSummaryTableAllLocation = (
       dataIndex: "ready_to_deploy",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -263,6 +267,7 @@ export const AssetsSummaryTableAllLocation = (
       key: "assets_count",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {

@@ -13,10 +13,10 @@ type AssetsSummaryTableProps = {
 };
 
 enum Status {
-  "PENDING" = "Check Lại - Bảo Hành",
-  "BROKEN" = "Hỏng",
-  "ASSIGN" = "Bàn Giao",
-  "READY_TO_DEPLOY" = "Trong Kho",
+  "PENDING" = "Pending",
+  "BROKEN" = "Broken",
+  "ASSIGN" = "Assign",
+  "READY_TO_DEPLOY" = "Ready to deploy",
 }
 
 type DataTable = {
@@ -133,6 +133,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "pending",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -157,6 +158,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "broken",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={(): void => {
@@ -182,6 +184,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "assign",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -207,6 +210,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       dataIndex: "ready_to_deploy",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -232,6 +236,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "assets_count",
       render: (text: number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -309,6 +314,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "location_" + item.id,
       render: (text: string | number, record: DataTable) => (
         <Typography.Text
+          strong
           type="secondary"
           className="field-category"
           onClick={() => {
