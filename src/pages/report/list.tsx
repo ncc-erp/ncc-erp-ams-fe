@@ -1,6 +1,5 @@
 import {
   DateField,
-  DatePicker,
   Form,
   List,
   Select,
@@ -19,12 +18,18 @@ import { IReport } from "interfaces/report";
 import { LOCATION_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
+import moment from "moment";
+import { DatePicker } from "antd";
 
 const { RangePicker } = DatePicker;
 
 export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const location_id = searchParams.get("location");
+  const dateFromParam = searchParams.get("purchaseDateFrom");
+  const dateToParam = searchParams.get("purchaseDateTo");
 
   const { data } = useCustom<any>({
     url: "api/v1/asset-history",
@@ -65,12 +70,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               (value.assigned_status === 0
                 ? translate("hardware.label.detail.noAssign")
                 : value.assigned_status === 1
-                ? translate("hardware.label.detail.pendingAccept")
-                : value.assigned_status === 2
-                ? translate("hardware.label.detail.accept")
-                : value.assigned_status === 3
-                ? translate("hardware.label.detail.refuse")
-                : "")
+                  ? translate("hardware.label.detail.pendingAccept")
+                  : value.assigned_status === 2
+                    ? translate("hardware.label.detail.accept")
+                    : value.assigned_status === 3
+                      ? translate("hardware.label.detail.refuse")
+                      : "")
             }
             style={{
               background:
@@ -78,12 +83,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
                 (value.assigned_status === 0
                   ? "gray"
                   : value.assigned_status === 1
-                  ? "#f39c12"
-                  : value.assigned_status === 2
-                  ? "#0073b7"
-                  : value.assigned_status === 3
-                  ? "red"
-                  : "gray"),
+                    ? "#f39c12"
+                    : value.assigned_status === 2
+                      ? "#0073b7"
+                      : value.assigned_status === 3
+                        ? "red"
+                        : "gray"),
               color: "white",
             }}
           />
@@ -102,7 +107,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           />
         ),
       },
-
+      {
+        key: "asset_history",
+        title: translate("report.label.field.user"),
+        render: (value: IReport) => (
+          <TextField value={value ? value.user.first_name + " " + value.user.last_name : ""} />
+        ),
+      },
       {
         key: "asset",
         title: translate("report.label.field.note"),
@@ -146,21 +157,33 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (val: any) => {
     const [from, to] = Array.from(val || []);
-      searchParams.set(
-        "purchaseDateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "purchaseDateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+    searchParams.set(
+      "purchaseDateFrom",
+      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+    );
+    searchParams.set(
+      "purchaseDateTo",
+      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+    );
     setSearchParams(searchParams);
   };
+
+  const { Option } = Select;
 
   return (
     <List title={translate("report.label.title.name")}>
       <div className="search" style={{ marginBottom: "20px" }}>
-        <Form layout="vertical" className="search-month-location">
+        <Form layout="vertical" className="search-month-location"
+          initialValues={{
+            location:
+              (location_id)
+                ? (Number(location_id)) : "All Location",
+            purchase_date:
+              dateFromParam && dateToParam
+                ? [moment(dateFromParam, dateFormat), moment(dateToParam, dateFormat)]
+                : "",
+          }}
+        >
           <Form.Item label="Thời gian" name="purchase_date">
             <RangePicker
               onCalendarChange={handleDateChange}
@@ -175,19 +198,24 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <Form.Item label="Vị trí" name="location">
             <Select
               onChange={handleLocationChange}
-              {...locationSelectProps}
-              placeholder="Lựa chọn vị trí"
-            />
+              placeholder="All Location"
+            >
+              {locationSelectProps.options?.map((item: any) =>
+                <Option value={item.value}>{item.label}</Option>
+              )}
+            </Select>
           </Form.Item>
         </Form>
       </div>
       <Table
         dataSource={data?.data}
         rowKey="id"
+        scroll={{ x: 1400 }}
         pagination={data?.data.length <= 10 ? false : { pageSize: 10 }}
       >
         {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
+          <Table.Column
+            dataIndex={col.key} {...col} sorter />
         ))}
       </Table>
     </List>
