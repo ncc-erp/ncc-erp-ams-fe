@@ -28,8 +28,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         method: "get",
         config: {
             query: {
-                from: dataReport[0],
-                to: dataReport[1]
+                from: dateFrom ? dateFrom : dataReport[0],
+                to: dateTo ? dateTo : dataReport[1]
             }
         },
     });
@@ -44,10 +44,6 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     const handleChangePickerByMonth = (val: any, formatString: any) => {
         const [from, to] = Array.from(val || []);
-        localStorage.setItem(
-            "purchase_date",
-            formatString !== undefined ? formatString : ""
-        );
         searchParams.set(
             "from",
             from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -68,7 +64,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
         var dataResponseCheckInt: any = [];
         var iteLocationKey: any = [];
-        let dataSource = data?.data.payload.categories.map((category: IReport) => {
+        let dataSource = (data?.data.payload.categories || []).map((category: IReport) => {
             var iteDataSource = { type: category.name, id: category.id }
             var iteLocation = {};
             for (let i of data?.data.payload.locations) {
@@ -105,7 +101,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
         var dataResponseCheckOut: any = [];
         var iteLocationKey: any = [];
-        let dataSource = data?.data.payload.categories.map((category: IReport) => {
+        let dataSource = (data?.data.payload.categories || []).map((category: IReport) => {
             var iteDataSource = { type: category.name, id: category.id }
             var iteLocation = {};
             for (let i of data?.data.payload.locations) {
@@ -139,7 +135,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataIndex: "type",
             key: "type",
             render: (text: string, record: IReport) => <strong onClick={() => {
-                list(`report?category_id=${record.id}`)
+                (dataReport[0] && dataReport[1])
+                    ? list(`report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`)
+                    : list(`report?category_id=${record.id}&assetHistoryType=0`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
     ];
@@ -173,7 +171,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataIndex: "type",
             key: "type",
             render: (text: string, record: IReport) => <strong onClick={() => {
-                list(`report?category_id=${record.id}`)
+                (dataReport[0] && dataReport[1])
+                    ? list(`report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`)
+                    : list(`report?category_id=${record.id}&assetHistoryType=1`)
             }} style={{ color: "#52c41a", cursor: "pointer" }}>{text}</strong>
         },
     ];
@@ -193,6 +193,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     // columnsCheckIn = [...columnsCheckOut, ...columntypesCheckOut, Titletong];
     columnsCheckIn = [...columnsCheckIn, ...columntypesCheckIn];
+
+    useEffect(() => {
+        localStorage.removeItem("purchase_date")
+    }, [window.location.reload])
 
     return (
         <>
