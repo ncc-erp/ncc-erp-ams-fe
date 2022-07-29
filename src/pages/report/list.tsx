@@ -32,9 +32,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     config: {
       query: {
         location: searchParams.get("location"),
-        purchaseDateFrom: searchParams.get("dateFrom"),
-        purchaseDateTo: searchParams.get("dateTo"),
-        assetHistoryType: "",
+        purchaseDateFrom: searchParams.get("purchaseDateFrom"),
+        purchaseDateTo: searchParams.get("purchaseDateTo"),
+        assetHistoryType: searchParams.get("assetHistoryType") ? searchParams.get("assetHistoryType") : "",
       },
     },
   });
@@ -146,14 +146,14 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (val: any) => {
     const [from, to] = Array.from(val || []);
-    searchParams.set(
-      "dateFrom",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "dateTo",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
+      searchParams.set(
+        "purchaseDateFrom",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "purchaseDateTo",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
     setSearchParams(searchParams);
   };
 

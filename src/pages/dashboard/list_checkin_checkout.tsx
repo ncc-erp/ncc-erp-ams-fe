@@ -5,6 +5,7 @@ import { DatePicker } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import { AssetsSummaryPieChartCheckIn, AssetsSummaryPieChartCheckOut } from "./asset-summary-piechar";
 import { IReport } from "interfaces/report";
+import "styles/antd.less";
 
 export interface IReportAsset {
     id: number;
@@ -78,7 +79,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
-                        if (key == `location_${items.location_id}`) {
+                        if (key === `location_${items.location_id}`) {
                             item[key] = item[key] + Number(items.checkin);
                             item[`count`] += Number(items.checkin);
                             break;
@@ -115,7 +116,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
-                        if (key == `location_${items.location_id}`) {
+                        if (key === `location_${items.location_id}`) {
                             item[key] = item[key] + Number(items.checkout);
                             item[`count`] += Number(items.checkout);
                             break;
@@ -200,52 +201,86 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     return (
         <>
-            <div className="reportAssetContainer">
-                <List title={translate("dashboard.titleStatistic")}>
-                    <Form
-                        layout="vertical"
-                        className="search-month-location"
-                    >
-                        <Form.Item label={translate("dashboard.time")} name="dataReport">
-                            <RangePicker
-                                format={dateFormat}
-                                onChange={handleChangePickerByMonth}
-                                placeholder={[`${translate("report.label.field.dateStart")}`, `${translate("report.label.field.dateEnd")}`]}
+            <List title={translate("dashboard.titleStatistic")}>
+                <section className="reportAssetContainer">
+                    <span className="title-section-dashboard">
+                        {translate("report.label.title.nameReportCheckOut")}
+                    </span>
+                    <div className="search-all-location">
+                        <Form
+                            layout="vertical"
+                            className="search-month-location"
+                        >
+                            <Form.Item label={translate("dashboard.time")} name="dataReport">
+                                <RangePicker
+                                    format={dateFormat}
+                                    onChange={handleChangePickerByMonth}
+                                    placeholder={[`${translate("report.label.field.dateStart")}`, `${translate("report.label.field.dateEnd")}`]}
 
-                            />
-                        </Form.Item>
-                    </Form>
-                </List>
-            </div>
+                                />
+                            </Form.Item>
+                        </Form>
+                    </div>
+                    <div style={{ marginTop: "6rem" }}>
+                        <Row gutter={[12, 12]}>
+                            <Col sm={24} md={24}>
+                                <Row gutter={16}>
+                                    <Col sm={10} md={10}>
+                                        <AssetsSummaryPieChartCheckOut assets_statistic={dataReportCheckOut ? dataReportCheckOut : ""} />
+                                    </Col>
+                                    <Col sm={24} md={14}>
+                                        <Table
+                                            key="id"
+                                            dataSource={dataReportCheckOut}
+                                            columns={columnsCheckOut}
+                                            pagination={dataReportCheckOut ?? dataReportCheckOut.length <= 10 ? false : { pageSize: 10 }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </div>
+                </section>
 
-            <List title={translate("report.label.title.nameReportCheckOut")}>
-                <Row gutter={16} title={translate("report.label.title.nameReportCheckOut")}>
-                    <Col sm={24} md={10}>
-                        <AssetsSummaryPieChartCheckOut assets_statistic={dataReportCheckOut ? dataReportCheckOut : ""} />
-                    </Col>
-                    <Col sm={24} md={14}>
-                        <Table
-                            key="id"
-                            dataSource={dataReportCheckOut}
-                            columns={columnsCheckOut}
-                        />
-                    </Col>
-                </Row>
-            </List>
+                <section className="reportAssetContainer">
+                    <span className="title-section-dashboard">
+                        {translate("report.label.title.nameReportCheckIn")}
+                    </span>
+                    <div className="search-all-location">
+                        <Form
+                            layout="vertical"
+                            className="search-month-location"
+                        >
+                            <Form.Item label={translate("dashboard.time")} name="dataReport">
+                                <RangePicker
+                                    format={dateFormat}
+                                    onChange={handleChangePickerByMonth}
+                                    placeholder={[`${translate("report.label.field.dateStart")}`, `${translate("report.label.field.dateEnd")}`]}
 
-            <List title={translate("report.label.title.nameReportCheckIn")}>
-                <Row gutter={16}>
-                    <Col sm={24} md={10}>
-                        <AssetsSummaryPieChartCheckIn assets_statistic={dataReportCheckIn ? dataReportCheckIn : ""} />
-                    </Col>
-                    <Col sm={24} md={14}>
-                        <Table
-                            key="id"
-                            dataSource={dataReportCheckIn}
-                            columns={columnsCheckIn}
-                        />
-                    </Col>
-                </Row>
+                                />
+                            </Form.Item>
+                        </Form>
+                    </div>
+                    <div style={{ marginTop: "6rem" }}>
+                        <Row gutter={[12, 12]}>
+                            <Col sm={24} md={24}>
+                                <Row gutter={16}>
+                                    <Col sm={24} md={10}>
+                                        <AssetsSummaryPieChartCheckIn assets_statistic={dataReportCheckIn ? dataReportCheckIn : ""} />
+                                    </Col>
+                                    <Col sm={24} md={14}>
+                                        <Table
+                                            key="id"
+                                            dataSource={dataReportCheckIn}
+                                            columns={columnsCheckIn}
+                                            pagination={dataReportCheckIn ?? dataReportCheckIn.length <= 10 ? false : { pageSize: 10 }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </div>
+                </section>
             </List>
         </>
     );

@@ -71,7 +71,7 @@
       "start-date": "Ngày bắt đầu",
       "end-date": "Ngày kết thúc"
     },
-    "titleStatistic": "Thống kê thiết bị đã cấp phát - thu hồi",
+    "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian",
     "assetFilter": {
       "filters" : {
