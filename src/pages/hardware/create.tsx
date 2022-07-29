@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Tabs,
   Checkbox,
   Button,
   Row,
@@ -25,20 +24,13 @@ import {
   IHardwareUpdateRequest,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
 import { ICheckboxChange } from "interfaces";
 import {
-  COMPANIES_API,
   HARDWARE_API,
-  HARDWARE_SELECT_LIST_API,
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
@@ -55,7 +47,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [activeModel, setActiveModel] = useState<String>("1");
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
@@ -63,8 +54,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
+    READY_TO_DEPLOY = "Trong Kho",
+    ASSIGN = "Bàn Giao",
   }
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
@@ -74,18 +65,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { selectProps: modelSelectProps } = useSelect<IModel>({
     resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: companySelectProps } = useSelect<ICompany>({
-    resource: COMPANIES_API,
-    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -109,18 +88,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -180,9 +147,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
     if (event.user_id !== undefined)
       formData.append("assigned_to", event.user_id.toString());
-    // if (event.physical !== undefined) formData.append("physical", event.physical.toString());
-    // if (event.location !== undefined) formData.append("location_id", event.location.toString());
-
+ 
     if (event.purchase_cost !== undefined)
       formData.append("purchase_cost", event.purchase_cost);
     if (event.purchase_date !== undefined)
@@ -398,7 +363,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               name="assigned_to"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message:
                     t("hardware.label.field.user") +
                     " " +
@@ -503,7 +468,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         name="notes"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +

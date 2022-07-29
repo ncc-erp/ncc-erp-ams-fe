@@ -14,7 +14,6 @@ import { DASHBOARD_API } from "api/baseApi";
 import { useEffect, useState } from "react";
 import { ILocation } from "interfaces/dashboard";
 import { useSearchParams } from "react-router-dom";
-import moment from "moment";
 import { AllLocations } from "components/dashboard/locations/index-all-location";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
@@ -23,112 +22,94 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const dateFormat = "YYYY/MM/DD";
 
   const [locationSelected, setLocationSelected] = useState<number | null>(6);
-  const [dateSelected, setDateSelected] = useState<[string, string]>(["", ""]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchParams] = useSearchParams();
-  const purchase_date_from = searchParams.get("purchase_date_from");
-  const purchase_date_to = searchParams.get("purchase_date_to");
-  const location_id = searchParams.get("location_id");
-
-  const { data, isLoading, refetch } = useCustom({
+  const { data, isLoading } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
       query: {
-        purchase_date_from: dateSelected[0],
-        purchase_date_to: dateSelected[1],
-        location_id: locationSelected,
+        purchase_date_from: searchParams.get("purchase_date_from"),
+        purchase_date_to: searchParams.get("purchase_date_to"),
+        location: searchParams.get("location"),
       },
     },
   });
 
   const handleChangeLocation = (value: any) => {
-    if (value) {
-      localStorage.setItem("location", value !== undefined ? value : "");
-      setLocationSelected(value);
-      refetch();
-    }
+    localStorage.setItem("location", value !== undefined ? value : "");
+    setLocationSelected(value);
+    searchParams.set("location", JSON.stringify(value));
+    setSearchParams(searchParams);
   };
 
-  const handleChangePickerByMonth = (values: any, formatString: any) => {
+  const handleChangePickerByMonth = (val: any, formatString: any) => {
+    const [from, to] = Array.from(val || []);
     localStorage.setItem(
       "purchase_date",
       formatString !== undefined ? formatString : ""
     );
-    setDateSelected(formatString);
+    searchParams.set(
+      "purchase_date_from",
+      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+    );
+    searchParams.set(
+      "purchase_date_to",
+      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+    );
+    setSearchParams(searchParams);
   };
 
   useEffect(() => {
-    if (location_id) {
-      setLocationSelected(location_id as any);
-    }
-  }, [location_id]);
+    localStorage.removeItem("purchase_date");
+    localStorage.removeItem("location");
+  }, [window.location.reload]);
 
-  useEffect(() => {
-    if (purchase_date_from && purchase_date_to) {
-      setDateSelected([purchase_date_from, purchase_date_to]);
-    }
-  }, [purchase_date_from, purchase_date_to]);
   return (
     <div className="dashboardContainer">
       <Show isLoading={isLoading} title={translate("dashboard.title")}>
-      <section className="all-location">
+        <section className="all-location">
           <span className="title-section-dashboard">
             {translate("dashboard.field.tilte-section-2")}
           </span>
           <div className="search-all-location">
-            <Form
-              initialValues={{
-                purchase_date:
-                  purchase_date_from && purchase_date_to
-                    ? [
-                        moment(purchase_date_from, dateFormat),
-                        moment(purchase_date_to, dateFormat),
-                      ]
-                    : "",
-              }}
-              layout="vertical"
-              className="search-month-location"
-            >
-              <Form.Item label={translate("dashboard.field.search-date")} name="purchase_date">
+            <Form layout="vertical" className="search-month-location">
+              <Form.Item
+                label={translate("dashboard.field.search-date")}
+                name="purchase_date"
+              >
                 <RangePicker
                   format={dateFormat}
                   onChange={handleChangePickerByMonth}
-                  placeholder={[`${translate("dashboard.field.start-date")}`, `${translate("dashboard.field.end-date")}`]} 
+                  placeholder={[
+                    `${translate("dashboard.field.start-date")}`,
+                    `${translate("dashboard.field.end-date")}`,
+                  ]}
                 />
               </Form.Item>
             </Form>
           </div>
 
           <Row gutter={[12, 12]}>
-            {(data?.data.payload || [])
-              .map((item: ILocation, index: number) => (
+            {(data?.data.payload || []).map(
+              (item: ILocation, index: number) => (
                 <Col key={index} sm={24} md={24}>
                   <Locations location={item} data={data}></Locations>
                 </Col>
-              ))}
+              )
+            )}
           </Row>
         </section>
         <section className="all-location">
           <span className="title-section-dashboard">
-          {translate("dashboard.field.tilte-section-1")}
+            {translate("dashboard.field.tilte-section-1")}
           </span>
           <div className="search">
-            <Form
-              initialValues={{
-                location: location_id ? Number(location_id) : 6,
-                purchase_date:
-                  purchase_date_from && purchase_date_to
-                    ? [
-                        moment(purchase_date_from, dateFormat),
-                        moment(purchase_date_to, dateFormat),
-                      ]
-                    : "",
-              }}
-              layout="vertical"
-              className="search-month-location"
-            >
-              <Form.Item label={translate("dashboard.field.search-location")} name="location">
+            <Form layout="vertical" className="search-month-location">
+              <Form.Item
+                label={translate("dashboard.field.search-location")}
+                name="location"
+              >
                 <Select
                   allowClear
                   placeholder={
@@ -136,8 +117,8 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                       ? translate("dashboard.placeholder.select-category")
                       : translate("dashboard.placeholder.select-category")
                   }
-                  onChange={(value: number) => handleChangeLocation(value)}
-                  className="selected-location" 
+                  onChange={handleChangeLocation}
+                  className="selected-location"
                 >
                   {(data?.data.payload || []).map((item: ILocation) => (
                     <Select.Option value={item.id} key={item.id}>
@@ -146,11 +127,17 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item label={translate("dashboard.field.search-date")} name="purchase_date">
+              <Form.Item
+                label={translate("dashboard.field.search-date")}
+                name="purchase_date"
+              >
                 <RangePicker
                   format={dateFormat}
                   onChange={handleChangePickerByMonth}
-                  placeholder={[`${translate("dashboard.field.start-date")}`, `${translate("dashboard.field.end-date")}`]} 
+                  placeholder={[
+                    `${translate("dashboard.field.start-date")}`,
+                    `${translate("dashboard.field.end-date")}`,
+                  ]}
                 />
               </Form.Item>
             </Form>
