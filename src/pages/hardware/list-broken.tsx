@@ -825,6 +825,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
+  const { Option } = Select;
   return (
     <List
       title={t("hardware.label.title.list-broken")}
@@ -841,13 +842,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           {...searchFormProps}
           initialValues={{
             location:
-              localStorage.getItem("location") !== null
-                ? searchValuesLocation !== 0
-                  ? searchValuesLocation
-                  : location_id
-                  ? Number(location_id)
-                  : ""
-                : "",
+              localStorage.getItem("location") !== null ??
+              searchValuesLocation !== 0
+                ? searchValuesLocation
+                : location_id ?? Number(location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
@@ -895,14 +893,18 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              {...locationSelectProps}
-              placeholder="Lựa chọn vị trí"
               className={
                 searchValuesLocation !== 0
-                  ? "search-month-location"
+                  ? "search-month-location-null"
                   : "search-month-location-null"
               }
-            />
+              placeholder="ALL_LOCATION"
+            >
+              <Option value={0}>{"ALL LOCATION"}</Option>
+              {locationSelectProps.options?.map((item: any) => (
+                <Option value={item.value}>{item.label}</Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
 

@@ -69,7 +69,9 @@
       "search-date": "Thời gian mua thiết bị",
       "search-location": "Vị trí",
       "start-date": "Ngày bắt đầu",
-      "end-date": "Ngày kết thúc"
+      "end-date": "Ngày kết thúc",
+      "sum-assets": "Tổng số lượng thiết bị của các văn phòng",
+      "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian",
@@ -211,7 +213,9 @@
           "dateCreate": "Đã tạo lúc",
           "updateAt": "Cập nhật tại",
           "time": "Thời gian",
-          "location": "Chi nhánh"
+          "location": "Chi nhánh",
+          "sum-assets": "Tổng thiết bị"
+
         },
         "tooltip":{
           "create": "Thêm mới",

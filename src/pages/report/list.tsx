@@ -210,7 +210,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
       <Table
         dataSource={data?.data}
         rowKey="id"
-        scroll={{ x: 1400 }}>
+        scroll={{ x: 1400 }}
+        pagination={data?.data.length <= 10 ? false : { pageSize: 10 }}
+      >
         {collumns.map((col) => (
           <Table.Column
             dataIndex={col.key} {...col} sorter />

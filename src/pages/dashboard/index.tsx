@@ -88,6 +88,9 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                 />
               </Form.Item>
             </Form>
+            <div className="title-sum-location">
+              {translate("dashboard.field.sum-assets")}
+            </div>
           </div>
 
           <Row gutter={[12, 12]}>
@@ -118,6 +121,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                       : translate("dashboard.placeholder.select-category")
                   }
                   onChange={handleChangeLocation}
+                  defaultValue={6}
                   className="selected-location"
                 >
                   {(data?.data.payload || []).map((item: ILocation) => (
@@ -141,6 +145,9 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                 />
               </Form.Item>
             </Form>
+            <div className="title-sum-category">
+              {translate("dashboard.field.sum-assets-by-category")}
+            </div>
           </div>
 
           <Row gutter={[12, 12]}>

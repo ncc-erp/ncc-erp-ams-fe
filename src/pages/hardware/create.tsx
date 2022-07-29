@@ -147,7 +147,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
     if (event.user_id !== undefined)
       formData.append("assigned_to", event.user_id.toString());
- 
+
     if (event.purchase_cost !== undefined)
       formData.append("purchase_cost", event.purchase_cost);
     if (event.purchase_date !== undefined)

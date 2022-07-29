@@ -12,14 +12,9 @@ import {
   Row,
   Col,
   Typography,
-  Tabs,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
+
 import {
   IHardwareCreateRequest,
   IHardwareResponse,
@@ -31,7 +26,6 @@ import { ICompany } from "interfaces/company";
 import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
-  HARDWARE_SELECT_LIST_API,
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
@@ -51,7 +45,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
-  const [activeModel, setActiveModel] = useState<String>("1");
   const [checked, setChecked] = useState(true);
 
   const t = useTranslate();
@@ -61,8 +54,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   }, [props]);
 
   enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
+    READY_TO_DEPLOY = "Trong Kho",
+    ASSIGN = "Bàn Giao",
   }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
@@ -121,18 +114,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -537,7 +518,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
         name="notes"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +

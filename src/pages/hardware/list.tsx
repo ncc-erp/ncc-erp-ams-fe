@@ -22,7 +22,6 @@ import {
   ShowButton,
   Tooltip,
   Checkbox,
-  Input,
   Form,
   Select,
   useSelect,
@@ -173,13 +172,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "assigned_to",
           operator: "eq",
           value: assigned_to,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
-            : undefined,
         },
         {
           field: "category_id",
@@ -828,6 +820,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       },
     ],
   });
+  const { Option } = Select;
 
   return (
     <List
@@ -845,13 +838,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {...searchFormProps}
           initialValues={{
             location:
-              localStorage.getItem("location") !== null
-                ? searchValuesLocation !== 0
-                  ? searchValuesLocation
-                  : location_id
-                  ? Number(location_id)
-                  : ""
-                : "",
+              localStorage.getItem("location") !== null ??
+              searchValuesLocation !== 0
+                ? searchValuesLocation
+                : location_id ?? Number(location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
@@ -899,14 +889,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              {...locationSelectProps}
-              placeholder="Lựa chọn vị trí"
               className={
                 searchValuesLocation !== 0
-                  ? "search-month-location"
+                  ? "search-month-location-null"
                   : "search-month-location-null"
               }
-            />
+              placeholder="ALL_LOCATION"
+            >
+              <Option value={0}>{"ALL LOCATION"}</Option>
+              {locationSelectProps.options?.map((item: any) => (
+                <Option value={item.value}>{item.label}</Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
         <div className="all">
@@ -1054,6 +1048,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
+      <div className="sum-assets">
+        <span className="name-sum-assets">
+          {t("hardware.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
