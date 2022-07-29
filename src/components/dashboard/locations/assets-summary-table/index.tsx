@@ -39,8 +39,8 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
   const [dataAllLocation, setDataAllLocation] = useState<DataTable[]>([]);
 
   const [searchParams] = useSearchParams();
-  const purchase_date_from = searchParams.get("purchase_date_from");
-  const purchase_date_to = searchParams.get("purchase_date_to");
+  const dateFrom = searchParams.get("purchase_date_from");
+  const dateTo = searchParams.get("purchase_date_to");
 
   const response = data?.data.payload || [];
   const calculation = (value: number, sum: number) => {
@@ -113,9 +113,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}`
@@ -137,9 +137,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
@@ -161,9 +161,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={(): void => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
@@ -186,9 +186,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
@@ -211,9 +211,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
@@ -236,9 +236,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
                     `assets?location_id=${record.location_id}&category_id=${record.category_id}`
@@ -288,9 +288,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(`assets?category_id=${record.category_id}`);
             }
@@ -313,13 +313,13 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              purchase_date_from && purchase_date_to
+              dateFrom && dateTo
                 ? item.id !== 6
                   ? list(
-                      `assets?location_id=${item.id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                      `assets?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                   : list(
-                      `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                 : item.id !== 6
                 ? list(

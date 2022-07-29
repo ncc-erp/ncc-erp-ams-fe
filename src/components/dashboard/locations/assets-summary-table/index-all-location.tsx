@@ -40,9 +40,9 @@ export const AssetsSummaryTableAllLocation = (
 
   const [dataCategory, setDataCategory] = useState<DataTable[]>([]);
 
-  const [searchParams] = useSearchParams();
-  const purchase_date_from = searchParams.get("purchase_date_from");
-  const purchase_date_to = searchParams.get("purchase_date_to");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dateFrom = searchParams.get("purchase_date_from");
+  const dateTo = searchParams.get("purchase_date_to");
 
   const calculation = (value: number, sum: number) => {
     if (value === 0) {
@@ -114,20 +114,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6 ? 
-             (purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}`
-                  )) : (purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}`
-                      ))
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                  );
             }
           }}
         >
@@ -145,20 +144,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6 ? ( purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}&status_id=1`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&status_id=1&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}&status_id=1`
-                  )) : ( purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
-                      ))
-             
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
+                  );
             }
           }}
         >
@@ -176,20 +174,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={(): void => {
             {
-              record.location_id === 6 ? (purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}&status_id=3`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&status_id=3&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}&status_id=3`
-                  )) : (purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
-                      ))
-              
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
+                  );
             }
           }}
         >
@@ -208,20 +205,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6 ? (purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}&status_id=4`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?&category_id=${record.category_id}&status_id=4&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}&status_id=4`
-                  )) : (purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
-                      ))
-              
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
+                  );
             }
           }}
         >
@@ -240,20 +236,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6 ? (purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}&status_id=5`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&status_id=5&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}&status_id=5`
-                  )) : (purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
-                      ))
-              
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
+                  );
             }
           }}
         >
@@ -272,20 +267,19 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6 ? (purchase_date_from && purchase_date_to
+              record.location_id === 6
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}`)
+                : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?category_id=${record.category_id}`
-                  )) : (purchase_date_from && purchase_date_to
-                    ? list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}&purchase_date_from=${purchase_date_from}&purchase_date_to=${purchase_date_to}`
-                      )
-                    : list(
-                        `assets?location_id=${record.location_id}&category_id=${record.category_id}`
-                      ))
-              
+                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                  );
             }
           }}
         >
@@ -294,6 +288,10 @@ export const AssetsSummaryTableAllLocation = (
       ),
     },
   ];
+
+  useEffect(() => {
+    setSearchParams(searchParams);
+  }, [dateFrom, dateTo]);
 
   return (
     <Table
