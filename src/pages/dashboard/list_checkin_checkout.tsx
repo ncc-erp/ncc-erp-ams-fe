@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Form, List, Row, Show, Table } from "@pankod/refine-antd";
+import { Col, Form, List, Row, Table } from "@pankod/refine-antd";
 import { IResourceComponentsProps, useCustom, useNavigation, useTranslate } from "@pankod/refine-core";
 import { DatePicker } from 'antd';
 import { useSearchParams } from 'react-router-dom';
@@ -24,7 +24,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
     const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
 
-    const { data, isLoading, refetch } = useCustom<any>({
+    const { data, refetch } = useCustom<any>({
         url: `api/v1/dashboard/reportAsset`,
         method: "get",
         config: {
@@ -79,7 +79,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
-                        if (key == `location_${items.location_id}`) {
+                        if (key === `location_${items.location_id}`) {
                             item[key] = item[key] + Number(items.checkin);
                             item[`count`] += Number(items.checkin);
                             break;
@@ -116,7 +116,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             dataSource.forEach((item: any) => {
                 if (item.type === items.name) {
                     for (const key of iteLocationKey) {
-                        if (key == `location_${items.location_id}`) {
+                        if (key === `location_${items.location_id}`) {
                             item[key] = item[key] + Number(items.checkout);
                             item[`count`] += Number(items.checkout);
                             break;
