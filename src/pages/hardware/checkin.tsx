@@ -43,8 +43,8 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
+    READY_TO_DEPLOY = "Trong Kho",
+    ASSIGN = "Bàn Giao",
   }
 
   const { form, formProps } = useForm<IHardwareRequestCheckin>({

@@ -20,16 +20,10 @@ import {
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
 import {
   HARDWARE_API,
-  HARDWARE_SELECT_LIST_API,
-  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   USERS_API,
@@ -51,8 +45,8 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
+    READY_TO_DEPLOY = "Trong Kho",
+    ASSIGN = "Bàn Giao",
   }
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
@@ -97,30 +91,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     ],
   });
 
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: HARDWARE_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
   const {
     refetch,
     data: updateData,
@@ -148,14 +118,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
 
-    // if (event.assigned_location !== undefined) {
-    //   formData.append("assigned_location", event.assigned_location);
-    //   formData.append("checkout_to_type", "location");
-    // }
-    // if (event.assigned_asset !== undefined) {
-    //   formData.append("assigned_asset", event.assigned_asset);
-    //   formData.append("checkout_to_type", "asset");
-    // }
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
       formData.append("checkout_to_type", "user");
@@ -309,24 +271,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                 }
                 key="1"
               ></Tabs.TabPane>
-              {/* <Tabs.TabPane
-                tab={
-                  <span>
-                    <AndroidOutlined />
-                    {t("hardware.label.field.asset")}
-                  </span>
-                }
-                key="2"
-              ></Tabs.TabPane>
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <EnvironmentOutlined />
-                    {t("hardware.label.field.location")}
-                  </span>
-                }
-                key="3"
-              ></Tabs.TabPane> */}
             </Tabs>
           </Form.Item>
 
@@ -356,50 +300,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               {messageErr.assigned_user[0]}
             </Typography.Text>
           )}
-
-          {/* {activeModel === "2" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.asset")}
-              name="assigned_asset"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.asset") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.asset")}
-                {...hardwareSelectProps}
-              />
-            </Form.Item>
-          )} */}
-
-          {/* {activeModel === "3" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.location")}
-              name="assigned_location"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.location") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.location")}
-                {...locationSelectProps}
-              />
-            </Form.Item>
-          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
