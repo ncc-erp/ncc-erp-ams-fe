@@ -22,7 +22,6 @@ import {
   ShowButton,
   Tooltip,
   Checkbox,
-  Input,
   Form,
   Select,
   useSelect,
@@ -173,13 +172,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "assigned_to",
           operator: "eq",
           value: assigned_to,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
-            : undefined,
         },
         {
           field: "category_id",
@@ -1054,6 +1046,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
+      <div className="sum-assets">
+        <span className="name-sum-assets">
+          {t("hardware.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

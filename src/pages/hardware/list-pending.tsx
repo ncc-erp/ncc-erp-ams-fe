@@ -49,6 +49,7 @@ import {
   IHardwareResponseCheckin,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
+
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
 import { HARDWARE_API, LOCATION_API } from "api/baseApi";

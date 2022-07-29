@@ -52,8 +52,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
+    PENDING = "Check Lại - Bảo Hành",
+    BROKEN = "Hỏng",
   }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
@@ -224,10 +224,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
+        if (item.label === EStatus.PENDING || item.label === EStatus.BROKEN) {
           check = true;
           return true;
         }
@@ -238,6 +235,14 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
     setIsReadyToDeploy(findLabel(Number(value.value)));
+  };
+
+  const filterStatusLabelSelectProps = () => {
+    const optionsFiltered = statusLabelSelectProps.options?.filter(
+      (item) => item.label === EStatus.PENDING || item.label === EStatus.BROKEN
+    );
+    statusLabelSelectProps.options = optionsFiltered;
+    return statusLabelSelectProps;
   };
 
   useEffect(() => {
@@ -339,32 +344,68 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
 
-          <Form.Item
-            label={t("hardware.label.field.status")}
-            name="status_label"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.status") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.status_label.id}
-          >
-            <Select
-              onChange={(value) => {
-                onChangeStatusLabel(value);
-              }}
-              placeholder={t("hardware.label.placeholder.status")}
-              {...statusLabelSelectProps}
-            />
-          </Form.Item>
-          {messageErr?.status_label && (
-            <Typography.Text type="danger">
-              {messageErr.status_label}
-            </Typography.Text>
+          {data?.status_label.id === 1 && (
+            <>
+              <Form.Item
+                label={t("hardware.label.field.status")}
+                name="status_label"
+                rules={[
+                  {
+                    required: false,
+                    message:
+                      t("hardware.label.field.status") +
+                      " " +
+                      t("hardware.label.message.required"),
+                  },
+                ]}
+                initialValue={data?.status_label.id}
+              >
+                <Select
+                  onChange={(value) => {
+                    onChangeStatusLabel(value);
+                  }}
+                  placeholder={t("hardware.label.placeholder.status")}
+                  {...filterStatusLabelSelectProps()}
+                />
+              </Form.Item>
+              {messageErr?.status_label && (
+                <Typography.Text type="danger">
+                  {messageErr.status_label}
+                </Typography.Text>
+              )}
+            </>
+          )}
+
+          {data?.status_label.id === 3 && (
+            <>
+              <Form.Item
+                label={t("hardware.label.field.status")}
+                name="status_label"
+                rules={[
+                  {
+                    required: false,
+                    message:
+                      t("hardware.label.field.status") +
+                      " " +
+                      t("hardware.label.message.required"),
+                  },
+                ]}
+                initialValue={data?.status_label.id}
+              >
+                <Select
+                  onChange={(value) => {
+                    onChangeStatusLabel(value);
+                  }}
+                  placeholder={t("hardware.label.placeholder.status")}
+                  {...filterStatusLabelSelectProps()}
+                />
+              </Form.Item>
+              {messageErr?.status_label && (
+                <Typography.Text type="danger">
+                  {messageErr.status_label}
+                </Typography.Text>
+              )}
+            </>
           )}
 
           <Form.Item
@@ -493,7 +534,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         name="notes"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +

@@ -181,7 +181,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
         </Form>
       </div>
-      <Table dataSource={data?.data} rowKey="id">
+      <Table
+        dataSource={data?.data}
+        rowKey="id"
+        pagination={data?.data.length <= 10 ? false : { pageSize: 10 }}
+      >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
