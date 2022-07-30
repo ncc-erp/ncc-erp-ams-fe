@@ -128,13 +128,14 @@ function App() {
             route: "assets-broken",
           },
         },
-        {
-          name: t("resource.request"),
-          list: RequestList,
-          options: {
-            route: "create-request",
-          },
-        },
+        //TODO: Develop later
+        // {
+        //   name: t("resource.request"),
+        //   list: RequestList,
+        //   options: {
+        //     route: "create-request",
+        //   },
+        // },
         {
           name: t("resource.users"),
           list: UserList,

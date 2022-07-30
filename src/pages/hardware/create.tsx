@@ -488,7 +488,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      <Form.Item label="" name="requestable" valuePropName="checked">
+      {/* <Form.Item label="" name="requestable" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheck(event);
@@ -501,7 +501,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">
           {messageErr.requestable}
         </Typography.Text>
-      )}
+      )} */}
 
       <Form.Item label="Tải hình" name="image">
         <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>

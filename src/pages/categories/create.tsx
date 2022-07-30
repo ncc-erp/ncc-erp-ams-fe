@@ -52,13 +52,15 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
     formData.append("eula_text", event.eula_text);
 
     if (event.require_acceptance !== undefined) {
-      formData.append(
-        "require_acceptance",
-        event.require_acceptance.toString()
-      );
+      formData.append("require_acceptance", '0');
+      // formData.append(
+      //   "require_acceptance",
+      //   event.require_acceptance.toString()
+      // );
     }
     if (event.checkin_email !== undefined) {
-      formData.append("checkin_email", event.checkin_email.toString());
+      formData.append("checkin_email", '0');
+      // formData.append("checkin_email", event.checkin_email.toString());
     }
     if (event.use_default_eula !== undefined) {
       formData.append("use_default_eula", event.use_default_eula.toString());
@@ -203,7 +205,7 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
         />
       </Form.Item>
 
-      <Form.Item label="" name="require_acceptance" valuePropName="checked">
+      {/* <Form.Item label="" name="require_acceptance" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             OnCheckRequireAccept(event);
@@ -211,9 +213,9 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
         >
           {t("category.label.field.accept")}
         </Checkbox>
-      </Form.Item>
+      </Form.Item> */}
 
-      <Form.Item label="" name="checkin_email" valuePropName="checked">
+      {/* <Form.Item label="" name="checkin_email" valuePropName="checked">
         <Checkbox
           onChange={(event) => {
             onCheckEmail(event);
@@ -221,7 +223,7 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
         >
           {t("category.label.field.sendMail")}
         </Checkbox>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label={t("category.label.field.image")} name="image">
         <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>

@@ -1206,7 +1206,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     </Button>
                   ))}
 
-                {record.assigned_status === 2 ? (
+                {!record.user_can_checkout ? (
                   <Button
                     type="primary"
                     shape="round"

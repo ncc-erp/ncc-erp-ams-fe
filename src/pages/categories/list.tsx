@@ -113,44 +113,44 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
       },
-      {
-        key: "checkin_email",
-        title: t("category.label.table.sendEmail"),
-        render: (value: boolean) => (
-          <TextField
-            value={
-              value === false ? (
-                <CloseOutlined color="#a94442" />
-              ) : (
-                <CheckOutlined />
-              )
-            }
-            style={{
-              color: value === false ? "#a94444" : "#44793f",
-            }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("checkin_email", sorter),
-      },
-      {
-        key: "require_acceptance",
-        title: t("category.label.table.accept"),
-        render: (value: boolean) => (
-          <TextField
-            value={
-              value === false ? (
-                <CloseOutlined color="#a94442" />
-              ) : (
-                <CheckOutlined />
-              )
-            }
-            style={{
-              color: value === false ? "#a94444" : "#44793f",
-            }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("require_acceptance", sorter),
-      },
+      // {
+      //   key: "checkin_email",
+      //   title: t("category.label.table.sendEmail"),
+      //   render: (value: boolean) => (
+      //     <TextField
+      //       value={
+      //         value === false ? (
+      //           <CloseOutlined color="#a94442" />
+      //         ) : (
+      //           <CheckOutlined />
+      //         )
+      //       }
+      //       style={{
+      //         color: value === false ? "#a94444" : "#44793f",
+      //       }}
+      //     />
+      //   ),
+      //   defaultSortOrder: getDefaultSortOrder("checkin_email", sorter),
+      // },
+      // {
+      //   key: "require_acceptance",
+      //   title: t("category.label.table.accept"),
+      //   render: (value: boolean) => (
+      //     <TextField
+      //       value={
+      //         value === false ? (
+      //           <CloseOutlined color="#a94442" />
+      //         ) : (
+      //           <CheckOutlined />
+      //         )
+      //       }
+      //       style={{
+      //         color: value === false ? "#a94444" : "#44793f",
+      //       }}
+      //     />
+      //   ),
+      //   defaultSortOrder: getDefaultSortOrder("require_acceptance", sorter),
+      // },
     ],
     []
   );

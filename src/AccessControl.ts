@@ -69,7 +69,6 @@ p, 1, ${i18n.t("resource.location")}, (list)|(create)
 p, 1, ${LOCATION_API}/*, (delete)
 p, 1, ${i18n.t("resource.location")}/*, (edit)
 
-p, 0, ${i18n.t("resource.dashboard")}, list
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 

@@ -1071,6 +1071,12 @@ export const HardwareListReadyToDeploy: React.FC<
           data={detailCheckin}
         />
       </MModal>
+      <div className="sum-assets">
+        <span className="name-sum-assets">
+          {t("hardware.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
       <Table
         {...tableProps}
         rowKey="id"

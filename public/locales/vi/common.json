@@ -74,7 +74,7 @@
       "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
-    "time": "Thời gian",
+    "time": "Thời gian mua thiết bị",
     "assetFilter": {
       "filters" : {
         "label": {
@@ -151,7 +151,7 @@
           "category": "Thể loại",
           "rtd_location": "Vị trí",
           "image": "Hình ảnh",
-          "condition": "Tình trạng",
+          "condition": "Xác nhận",
           "dateCreate": "Ngày tạo",
           "manufacturer": "Nhà sản xuất",
           "purchase_date": "Ngày mua",
@@ -214,8 +214,7 @@
           "updateAt": "Cập nhật tại",
           "time": "Thời gian",
           "location": "Chi nhánh",
-          "sum-assets": "Tổng thiết bị"
-
+          "sum-assets": "Số lượng"
         },
         "tooltip":{
           "create": "Thêm mới",
@@ -232,7 +231,7 @@
           "readyToDeploy": "Trong kho",
           "broken": "Hỏng",
           "pending": "Check lại-Bảo hành",
-          "noAssign": "Chưa assign",
+          "noAssign": "",
           "pendingAccept": "Đang chờ xác nhận",
           "accept": "Đã xác nhận",
           "refuse": "Đã từ chối"
@@ -306,7 +305,7 @@
         "reason": "Lý do",
         "inputReason": "Nhập lý do từ chối",
         "image": "Hình ảnh",
-        "condition": "Tình trạng",
+        "condition": "Xác nhận",
         "dateCheckout": "Ngày cấp phát"
       },
       "message": {
@@ -330,7 +329,7 @@
         "delete": "Xóa",
         "name": "Tên danh mục",
         "category": "Loại",
-        "categoryEULA": "Danh mục EULA",
+        "categoryEULA": "Mô tả danh mục",
         "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
         "sendMail": "Gửi email đến người dùng khi checkin/checkout",
         "image": "Tải hình",

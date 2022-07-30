@@ -532,7 +532,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      <Checkbox
+      {/* <Checkbox
         name="requestable"
         style={{ marginTop: 20 }}
         checked={checked}
@@ -541,7 +541,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           setChecked(event.target.checked);
         }}
       ></Checkbox>{" "}
-      {t("hardware.label.field.checkbox")}
+      {t("hardware.label.field.checkbox")} */}
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage

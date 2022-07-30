@@ -43,7 +43,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const t = useTranslate();
 
   enum EStatus {
-    PENDING = "Ready to deploy",
+    PENDING = "Ready to Deploy",
     ASSIGN = "Assign",
   }
 
@@ -162,12 +162,12 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   }, [updateData]);
 
   const findLabel = (value: number): Boolean => {
-    let check = false;
+    let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
         if (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN) {
-          check = true;
-          return true;
+          check = false;
+          return false;
         }
       }
     });
@@ -176,7 +176,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
 
   const filterStatusLabelSelectProps = () => {
     const optionsFiltered = statusLabelSelectProps.options?.filter(
-      (item) => item.label === EStatus.PENDING || item.label === EStatus.ASSIGN
+      (item) => item.label !== EStatus.ASSIGN
     );
     statusLabelSelectProps.options = optionsFiltered;
     return statusLabelSelectProps;

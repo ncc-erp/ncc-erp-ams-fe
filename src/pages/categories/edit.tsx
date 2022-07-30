@@ -193,7 +193,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
       >
         <Input.TextArea value={data?.eula} />
       </Form.Item>
-      <Form.Item label="" valuePropName="checkedRequireAccept">
+      {/* <Form.Item label="" valuePropName="checkedRequireAccept">
         <Checkbox
           name="require_acceptance"
           style={{ marginTop: 20 }}
@@ -205,8 +205,8 @@ export const CategoryEdit = (props: CategoryEditProps) => {
         ></Checkbox>
         {"  "}
         {t("category.label.field.accept")}
-      </Form.Item>
-      <Form.Item label="" valuePropName="checkedEmail">
+      </Form.Item> */}
+      {/* <Form.Item label="" valuePropName="checkedEmail">
         <Checkbox
           name="checkin_email"
           style={{ marginTop: 20 }}
@@ -218,7 +218,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
         ></Checkbox>
         {"  "}
         {t("category.label.field.sendMail")}
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage
