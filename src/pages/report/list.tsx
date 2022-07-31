@@ -30,6 +30,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const location_id = searchParams.get("location");
   const dateFromParam = searchParams.get("purchaseDateFrom");
   const dateToParam = searchParams.get("purchaseDateTo");
+  const assetHistoryType = searchParams.get("assetHistoryType");
 
   const { data } = useCustom<any>({
     url: "api/v1/asset-history",
@@ -39,7 +40,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         location: searchParams.get("location"),
         purchaseDateFrom: searchParams.get("purchaseDateFrom"),
         purchaseDateTo: searchParams.get("purchaseDateTo"),
-        assetHistoryType: searchParams.get("assetHistoryType") ? searchParams.get("assetHistoryType") : "",
+        assetHistoryType: searchParams.get("assetHistoryType"),
       },
     },
   });
@@ -197,7 +198,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               dateFromParam && dateToParam
                 ? [moment(dateFromParam, dateFormat), moment(dateToParam, dateFormat)]
                 : "",
-            type: (searchParams.get('assetHistoryType') ? (Number(location_id)) : "Tất cả")
+            type: (searchParams.get('assetHistoryType') ? (Number(assetHistoryType)) : "Tất cả")
           }}
         >
           <Form.Item label="Thời gian" name="purchase_date">
