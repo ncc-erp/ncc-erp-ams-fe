@@ -151,7 +151,22 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     value: string;
     label: React.ReactNode;
   }) => {
-    searchParams.set("location", JSON.stringify(value));
+    console.log(JSON.stringify(value));
+    if (JSON.stringify(value) === JSON.stringify("all")) {
+      searchParams.delete("location");
+    }
+    else searchParams.set("location", JSON.stringify(value));
+    setSearchParams(searchParams);
+  };
+  const handleTypeChange = (value: {
+    value: string;
+    label: React.ReactNode;
+  }) => {
+    console.log(JSON.stringify(value));
+    if (JSON.stringify(value) === JSON.stringify("all")) {
+      searchParams.delete("assetHistoryType");
+    }
+    else searchParams.set("assetHistoryType", JSON.stringify(value));
     setSearchParams(searchParams);
   };
 
@@ -177,11 +192,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               (location_id)
-                ? (Number(location_id)) : "All Location",
+                ? (Number(location_id)) : "Tất cả",
             purchase_date:
               dateFromParam && dateToParam
                 ? [moment(dateFromParam, dateFormat), moment(dateToParam, dateFormat)]
                 : "",
+            type: (searchParams.get('assetHistoryType') ? (Number(location_id)) : "Tất cả")
           }}
         >
           <Form.Item label="Thời gian" name="purchase_date">
@@ -195,14 +211,26 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Vị trí" name="location">
+          <Form.Item label="Vị trí" name="location" initialValue={"all"}>
             <Select
               onChange={handleLocationChange}
-              placeholder="All Location"
+              placeholder="Vị trí"
             >
+              <Option value={"all"}>{"Tất cả"}</Option>
               {locationSelectProps.options?.map((item: any) =>
                 <Option value={item.value}>{item.label}</Option>
               )}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Loại" name="type">
+            <Select
+              onChange={handleTypeChange}
+              placeholder="Loại"
+            >
+              <Option value={"all"}>{"Tất cả"}</Option>
+              <Option value={0}>{"Cấp phát"}</Option>
+              <Option value={1}>{"Thu hồi"}</Option>
             </Select>
           </Form.Item>
         </Form>

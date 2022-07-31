@@ -281,4 +281,5 @@ export interface IHardwareFilterVariables {
   status_label: string;
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
+  assigned_status: string;
 }

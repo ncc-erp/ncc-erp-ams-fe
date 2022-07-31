@@ -311,7 +311,6 @@ export const Sider: React.FC = () => {
           menuItems
             .filter(
               (item) =>
-                item.name === `${translate("resource.dashboard")}` ||
                 item.name === `${translate("resource.users")}`
             )
             .map(({ icon, name, route }) => {
