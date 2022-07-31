@@ -85,7 +85,7 @@
       }
     },
     "placeholder": {
-      "select-category": "ALL LOCATION",
+      "select-category": "Tất cả",
       "searchToDate": "Thời gian"
     }
   },
@@ -165,7 +165,8 @@
           "broken": "Broken",
           "pending": "Pending",
           "start-date": "Ngày bắt đầu",
-          "end-date": "Ngày kết thúc"
+          "end-date": "Ngày kết thúc",
+          "confirmStatus": "Trạng thái xác nhận"
         },
         "placeholder": {
           "nameCompany": "Chọn công ty",
@@ -214,7 +215,8 @@
           "updateAt": "Cập nhật tại",
           "time": "Thời gian",
           "location": "Chi nhánh",
-          "sum-assets": "Số lượng"
+          "sum-assets": "Số lượng",
+          "confirmStatus": "Trạng thái xác nhận"
         },
         "tooltip":{
           "create": "Thêm mới",

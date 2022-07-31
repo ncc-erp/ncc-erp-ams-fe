@@ -32,8 +32,8 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const purchase_date_from = searchParams.get("purchase_date_from");
   const purchase_date_to = searchParams.get("purchase_date_to");
 
-  const purchase_date_from1 = searchParams.get("purchase_date_from");
-  const purchase_date_to1 = searchParams.get("purchase_date_to");
+  const purchase_date_from1 = searchParams.get("purchase_date_from1");
+  const purchase_date_to1 = searchParams.get("purchase_date_to1");
 
   const { data, isLoading } = useCustom({
     url: DASHBOARD_API,
@@ -50,29 +50,29 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       },
     },
   });
-  useEffect(() => {
-    setDataDasshboard([
-      purchase_date_from !== null ? purchase_date_from : "",
-      purchase_date_to !== null ? purchase_date_to : "",
-    ]);
-  }, [purchase_date_from, purchase_date_to]);
+  // useEffect(() => {
+  //   setDataDasshboard([
+  //     purchase_date_from !== null ? purchase_date_from : "",
+  //     purchase_date_to !== null ? purchase_date_to : "",
+  //   ]);
+  // }, [purchase_date_from, purchase_date_to]);
 
-  useEffect(() => {
-    setDataDasshboard([
-      purchase_date_from1 !== null ? purchase_date_from1 : "",
-      purchase_date_to1 !== null ? purchase_date_to1 : "",
-    ]);
-  }, [purchase_date_from1, purchase_date_to1]);
+  // useEffect(() => {
+  //   setDataDasshboard([
+  //     purchase_date_from1 !== null ? purchase_date_from1 : "",
+  //     purchase_date_to1 !== null ? purchase_date_to1 : "",
+  //   ]);
+  // }, [purchase_date_from1, purchase_date_to1]);
 
   const { data: data1 } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
       query: {
-        purchase_date_from1: purchase_date_from1
+        purchase_date_from: purchase_date_from1
           ? purchase_date_from1
           : dataDashboard[0],
-        purchase_date_to1: purchase_date_to1
+        purchase_date_to: purchase_date_to1
           ? purchase_date_to1
           : dataDashboard[1],
         location: searchParams.get("location"),
@@ -119,11 +119,11 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       formatString !== undefined ? formatString : ""
     );
     searchParams1.set(
-      "purchase_date_from",
+      "purchase_date_from1",
       from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
     );
     searchParams1.set(
-      "purchase_date_to",
+      "purchase_date_to1",
       to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
     );
     setSearchParams1(searchParams1);
