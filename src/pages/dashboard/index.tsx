@@ -50,19 +50,19 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       },
     },
   });
-  useEffect(() => {
-    setDataDasshboard([
-      purchase_date_from !== null ? purchase_date_from : "",
-      purchase_date_to !== null ? purchase_date_to : "",
-    ]);
-  }, [purchase_date_from, purchase_date_to]);
+  // useEffect(() => {
+  //   setDataDasshboard([
+  //     purchase_date_from !== null ? purchase_date_from : "",
+  //     purchase_date_to !== null ? purchase_date_to : "",
+  //   ]);
+  // }, [purchase_date_from, purchase_date_to]);
 
-  useEffect(() => {
-    setDataDasshboard([
-      purchase_date_from1 !== null ? purchase_date_from1 : "",
-      purchase_date_to1 !== null ? purchase_date_to1 : "",
-    ]);
-  }, [purchase_date_from1, purchase_date_to1]);
+  // useEffect(() => {
+  //   setDataDasshboard([
+  //     purchase_date_from1 !== null ? purchase_date_from1 : "",
+  //     purchase_date_to1 !== null ? purchase_date_to1 : "",
+  //   ]);
+  // }, [purchase_date_from1, purchase_date_to1]);
 
   const { data: data1 } = useCustom({
     url: DASHBOARD_API,
