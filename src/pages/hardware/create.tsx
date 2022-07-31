@@ -288,7 +288,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="rtd_location"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("hardware.label.field.locationFix") +
                   " " +
