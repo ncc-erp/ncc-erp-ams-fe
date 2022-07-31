@@ -30,8 +30,8 @@ export const Header: React.FC = () => {
   const currentLocale = locale();
   const { push } = useNavigation();
 
-  const clientId = process.env.GOOGLE_CLIENT_ID
-    ? process.env.GOOGLE_CLIENT_ID
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
+    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
     : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
 
   const { signOut: signOutGoogle } = useGoogleLogout({
