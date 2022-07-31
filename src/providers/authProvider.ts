@@ -36,6 +36,10 @@ export const authProvider: AuthProvider = {
       STORE_PERMISSION,
       JSON.stringify(permissionRes.data.permissions)
     );
+    if (tokenId) {
+      return Promise.resolve('users');
+    }
+    return Promise.resolve();
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);

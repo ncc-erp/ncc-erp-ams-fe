@@ -66,7 +66,6 @@ export const LoginPage: React.FC = () => {
   const { signIn } = useGoogleLogin({
     onSuccess: (response) => {
       loginGoogle(response as GoogleLoginResponse);
-      list('users');
     },
     clientId,
     isSignedIn: false,
