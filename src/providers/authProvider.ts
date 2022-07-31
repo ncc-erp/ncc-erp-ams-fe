@@ -37,7 +37,7 @@ export const authProvider: AuthProvider = {
       JSON.stringify(permissionRes.data.permissions)
     );
     if (tokenId) {
-      return Promise.resolve('users');
+      return Promise.resolve('/users');
     }
     return Promise.resolve();
   },
