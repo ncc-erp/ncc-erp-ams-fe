@@ -13,7 +13,7 @@ import {
 
 import { Icons } from "@pankod/refine-antd";
 
-import { useLogin, useTranslate } from "@pankod/refine-core";
+import { useLogin, useNavigation, useTranslate } from "@pankod/refine-core";
 
 import {
   layoutStyles,
@@ -47,6 +47,8 @@ export const LoginPage: React.FC = () => {
   const translate = useTranslate();
 
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
+  const { list } = useNavigation();
+
 
   const CardTitle = (
     <Title level={3} style={titleStyles}>
@@ -62,7 +64,10 @@ export const LoginPage: React.FC = () => {
     useLogin<GoogleLoginResponse>();
 
   const { signIn } = useGoogleLogin({
-    onSuccess: (response) => loginGoogle(response as GoogleLoginResponse),
+    onSuccess: (response) => {
+      loginGoogle(response as GoogleLoginResponse);
+      list('users');
+    },
     clientId,
     isSignedIn: false,
     cookiePolicy: "single_host_origin",
