@@ -293,7 +293,11 @@
       "title": {
         "name": "Tài sản của tôi",
         "detail":"Chi tiết tài sản của tôi",
-        "cancle": "Từ chối"
+        "cancle": "Từ chối",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "edit": "Chỉnh sửa",
+        "clone": "Clone",
+        "create": "Tạo mới"
       },
       "field":{
         "notes": "Mô tả",
@@ -308,13 +312,58 @@
         "inputReason": "Nhập lý do từ chối",
         "image": "Hình ảnh",
         "condition": "Xác nhận",
-        "dateCheckout": "Ngày cấp phát"
+        "dateCheckout": "Ngày cấp phát",
+        "title": "Tiêu đề",
+        "email": "Email",
+        "phone": "Điện thoại",
+        "username": "Tên đăng nhập",
+        "locations": "Địa phương",
+        "remote": "Remote",
+        "first_name": "Họ và tên đệm",
+        "nameUser": "Tên",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "employee_num": "Employee Number",
+        "job_title": "Tiêu đề",
+        "user_manager": "Người quản lý",
+        "department": "Bộ phận",
+        "website": "Website",
+        "state": "Tỉnh/Thành phố",
+        "country": "Nước",
+        "zip": "Zip",
+        "note": "Ghi chú",
+        "activated": "Cho phép đăng nhập",
+        "checkbox": "Người dùng có thể đăng nhập",
+        "locale": "Ngôn ngữ",
+        "remote_checkbox": "Đây là một người dùng từ xa",
+        "assets_count": "Tài sản",
+        "accessories_count": "Phụ kiện",
+        "licenses_count": "Bản quyền",
+        "consumables_count": "Hàng tiêu dùng"
       },
       "message": {
         "required":"bắt buộc"
       },
       "button":{
-        "cancle": "Từ chối"
+        "cancle": "Từ chối",
+        "create": "Thêm mới",
+        "synchronized": "Đồng bộ",
+        "update": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create":"Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      },
+      "placeholder": {
+        "first_name": "Họ và tên đệm",
+        "nameUser": "Tên",
+        "username": "Tên đăng nhập",
+        "email": "Email",
+        "user_manager": "Lựa chọn một Người dùng",
+        "department": "Chọn một phòng",
+        "locations": "Lựa chọn một Địa phương",
+        "phone": "Điện thoại"
       }
     }
   },
@@ -460,7 +509,8 @@
     "asset-category-Device": "Tất cả thiết bị",
     "checkin-checkout": "Cấp phát/thu hồi",
     "checkout": "Cấp phát",
-    "checkin": "Thu hồi"
+    "checkin": "Thu hồi",
+    "manager_user": "Người dùng"
   },
   "model": {
     "label": {

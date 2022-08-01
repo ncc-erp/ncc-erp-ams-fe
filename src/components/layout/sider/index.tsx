@@ -344,6 +344,46 @@ export const Sider: React.FC = () => {
                 </Menu.Item>
               );
             })}
+
+        {permissionsData && permissionsData.admin === "1" && (
+          <SubMenu
+            title={
+              <span>
+                <DashboardOutlined />
+                <span>{translate("resource.manager_user")}</span>
+              </span>
+            }
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.manager_user")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
       </Menu>
     </AntdLayout.Sider>
   );

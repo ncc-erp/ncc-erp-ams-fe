@@ -35,6 +35,7 @@ import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
 import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
 import { ReportList } from "pages/report/list";
+import { Manager_UserList } from "pages/manager_users/list"
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -75,6 +76,8 @@ function App() {
             return Promise.resolve({ can });
           }
           const can = await enforcer.enforce(role.admin, resource, action);
+
+          console.log(resource, action, params)
           return Promise.resolve({ can });
         },
       }}
@@ -190,6 +193,13 @@ function App() {
           list: ReportList,
           options: {
             route: "report",
+          },
+        },
+        {
+          name: t("resource.manager_user"),
+          list: Manager_UserList,
+          options: {
+            route: "manager_user",
           },
         },
       ]}
