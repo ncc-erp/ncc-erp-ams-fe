@@ -1,11 +1,12 @@
 import { Button, Checkbox, DeleteButton, getDefaultSortOrder, List, Space, Table, TextField, Tooltip, useTable } from "@pankod/refine-antd";
-import { CrudFilters, IResourceComponentsProps, useTranslate } from "@pankod/refine-core";
+import { CrudFilters, IResourceComponentsProps, useTranslate, useCustom } from "@pankod/refine-core";
 import { IUser, IUserResponse } from "interfaces/user";
 import { useMemo, useRef, useState } from "react";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { Image } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
+import dataProvider from "providers/dataProvider";
 
 const defaultCheckedList = [
     "id",
@@ -24,10 +25,10 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     const [collumnSelected, setColumnSelected] =
         useState<string[]>(defaultCheckedList);
     const [isActive, setIsActive] = useState(false);
+    const [hrmLoading, setHrmLoading] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
     const menuRef = useRef(null);
-
-    const { tableProps, sorter, tableQueryResult, searchFormProps } = useTable({
+    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable({
         initialSorter: [
             {
                 field: "id",
@@ -46,6 +47,18 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             return filters;
         },
     });
+
+    const syncHrm = () => {
+        const { custom } = dataProvider;
+        setHrmLoading(true);
+        custom && custom({
+            url: `api/v1/users/sync-list-user`,
+            method: "get",
+        }).then(x => {
+            setHrmLoading(false);
+            tableQueryResult.refetch();
+        });
+    }
 
     const collumns = useMemo(
         () => [
@@ -266,7 +279,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     );
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
-
+    const isLoading = tableProps.loading || hrmLoading;
     const onCheckItem = (value: any) => {
         if (collumnSelected.includes(value.key)) {
             setColumnSelected(
@@ -285,7 +298,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             <div className="search" style={{ float: "right" }}>
                 <div className="all">
                     <div style={{ display: "flex", marginTop: "3rem", marginRight: "10px" }}>
-                        <Button>{translate("user.label.button.synchronized")}</Button>
+                        <Button onClick={syncHrm}>{translate("user.label.button.synchronized")}</Button>
                     </div>
                     <TableAction searchFormProps={searchFormProps} />
                     <div className="other_function">
@@ -321,7 +334,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 </div>
             </div>
             <Table
-                {...tableProps}
+                {...tableProps }
+                loading={isLoading}
                 rowKey="id"
                 scroll={{ x: 1500 }}
                 pagination={{
