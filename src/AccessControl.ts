@@ -94,6 +94,10 @@ p, 1, ${i18n.t("resource.report")}, (list)
 
 p, 1, ${i18n.t("resource.checkin")}, (list)
 p, 1, ${i18n.t("resource.checkout")}, (list)
+
+p, 1, ${i18n.t("resource.manager_user")}, (list)|(create)
+p, 1, api/v1/users/*, (delete)
+p, 1, ${i18n.t("resource.manager_user")}/*, (edit)
 `;
 
 export const adapter = new MemoryAdapter(permissions);
