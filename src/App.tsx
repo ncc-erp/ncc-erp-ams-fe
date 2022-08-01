@@ -76,8 +76,6 @@ function App() {
             return Promise.resolve({ can });
           }
           const can = await enforcer.enforce(role.admin, resource, action);
-
-          console.log(resource, action, params)
           return Promise.resolve({ can });
         },
       }}
