@@ -22,8 +22,9 @@ import {
   imageContainer,
   logo,
   buttonLoginGoogle,
-  forgotPass
+  forgotPass,
 } from "./styles";
+import "styles/antd.less";
 
 import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
 
@@ -48,7 +49,6 @@ export const LoginPage: React.FC = () => {
 
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
   const { list } = useNavigation();
-
 
   const CardTitle = (
     <Title level={3} style={titleStyles}>
@@ -86,7 +86,7 @@ export const LoginPage: React.FC = () => {
             <div style={imageContainer}>
               <img
                 style={logo}
-                src="/images/global/nccsoft-logo.png"
+                src="/images/global/nccsoft-logo-small.png"
                 alt="Refine Logo"
               />
             </div>
@@ -130,16 +130,6 @@ export const LoginPage: React.FC = () => {
                       {translate("pages.login.remember", "Remember me")}
                     </Checkbox>
                   </Form.Item>
-
-                  <a
-                    style={forgotPass}
-                    href="/"
-                  >
-                    {translate(
-                      "pages.login.forgotPassword",
-                      "Forgot password?"
-                    )}
-                  </a>
                 </div>
                 <Button
                   type="primary"
@@ -159,17 +149,10 @@ export const LoginPage: React.FC = () => {
                 loading={isLoadingGoogle}
                 onClick={() => signIn()}
                 style={buttonLoginGoogle}
+                className="btn-login-google"
               >
                 {translate("pages.login.signinGoogle", "Sign in with google")}
               </Button>
-              <div style={{ marginTop: 8 }}>
-                <Text style={{ fontSize: 12 }}>
-                  {translate("pages.login.noAccount", "Don’t have an account?")}{" "}
-                  <a href="/" style={{ fontWeight: "bold" }}>
-                    {translate("pages.login.signup", "Sign up")}
-                  </a>
-                </Text>
-              </div>
             </Card>
           </div>
         </Col>

@@ -22,7 +22,7 @@ const { LogoutOutlined } = Icons;
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const translate = useTranslate()
+  const translate = useTranslate();
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
@@ -72,9 +72,12 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Button type="link" onClick={() => {
-        logoutAccount()
-      }}>
+      <Button
+        type="link"
+        onClick={() => {
+          logoutAccount();
+        }}
+      >
         <LogoutOutlined />
       </Button>
       {/* <Dropdown overlay={menu}>

@@ -120,8 +120,8 @@
   padding: 4px 8px;
   vertical-align: middle;
   transition: box-shadow 0.4s ease;
-  margin-top: 3.1rem;
-  height: 29px;
+  margin-top: 3rem;
+  height: 32px;
   width: 32px;
   border-width: thin;
   border-color: #8080801a;
@@ -149,12 +149,14 @@
 }
 .search-month-location{
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
+  width: 66%;
 }
 .search-month-location-null{
   display: flex;
-  gap: 2rem;
-  width: 150px !important;
+  gap: 1rem;
+  width: 160px !important;
+  width: 66%;
 }
 
 .datePicker{
@@ -187,6 +189,8 @@
 .all {
   display: flex;
   float: right;
+  margin-top: -10px;
+  
 }
 .field-category{
   cursor: pointer;
@@ -212,7 +216,7 @@
   margin-top: 2rem;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  max-height: 665px;
+  // max-height: 665px;
   padding: 25px 30px;
 }
 .search-all-location{
@@ -258,13 +262,13 @@ a{
 
 .title-sum-location{
   font-size: 18px;
-  margin-top: 2rem;
+  margin-top: -2.5rem;
   width: 50%;
   font-weight: 700;
 }
 .title-sum-category{
   font-size: 17px;
-  margin-top: 5.5rem;
+  margin-top: -2.5rem;
   width: 50%;
   font-weight: 700;
 }
@@ -280,8 +284,15 @@ a{
   margin-top: 2rem;
   border-radius: 5px;
   box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px;
-  max-height: 630px;
   padding: 25px 30px;
+}
+
+
+.btn-login-google {
+  &:hover{
+    background-color: #000000db !important;
+
+  }
 }
 
 

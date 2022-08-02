@@ -105,7 +105,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
 
-
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
     HttpError,
@@ -187,7 +186,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "assigned_status",
           operator: "eq",
-          value: searchParams.get('assigned_status'),
+          value: searchParams.get("assigned_status"),
         }
       );
 
@@ -574,12 +573,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === t("hardware.label.field.assign")
                   ? t("hardware.label.detail.assign")
                   : value.name === t("hardware.label.field.readyToDeploy")
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === t("hardware.label.field.broken")
-                      ? t("hardware.label.detail.broken")
-                      : value.name === t("hardware.label.field.pending")
-                        ? t("hardware.label.detail.pending")
-                        : ""
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : value.name === t("hardware.label.field.broken")
+                  ? t("hardware.label.detail.broken")
+                  : value.name === t("hardware.label.field.pending")
+                  ? t("hardware.label.detail.pending")
+                  : ""
                 : ""
             }
             style={{
@@ -587,12 +586,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 value.name === t("hardware.label.field.assign")
                   ? "#0073b7"
                   : value.name === t("hardware.label.field.readyToDeploy")
-                    ? "#00a65a"
-                    : value.name === t("hardware.label.field.broken")
-                      ? "red"
-                      : value.name === t("hardware.label.field.pending")
-                        ? "#f39c12"
-                        : "",
+                  ? "#00a65a"
+                  : value.name === t("hardware.label.field.broken")
+                  ? "red"
+                  : value.name === t("hardware.label.field.pending")
+                  ? "#f39c12"
+                  : "",
               color: "white",
             }}
           />
@@ -603,7 +602,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "assigned_to",
         title: t("hardware.label.field.checkoutTo"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField strong value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
@@ -691,24 +690,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
-                    ? t("hardware.label.detail.accept")
-                    : value === 3
-                      ? t("hardware.label.detail.refuse")
-                      : ""
+                ? t("hardware.label.detail.pendingAccept")
+                : value === 2
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                    ? "#f39c12"
-                    : value === 2
-                      ? "#0073b7"
-                      : value === 3
-                        ? "red"
-                        : "gray",
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "gray",
               color: "white",
             }}
           />
@@ -845,19 +844,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-                searchValuesLocation !== 0
+              searchValuesLocation !== 0
                 ? searchValuesLocation
-                : location_id ?? Number(location_id),
+                : Number(location_id) ?? Number(location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -877,7 +876,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item label={t("hardware.label.title.location")} name="location">
+          <Form.Item
+            label={t("hardware.label.title.location")}
+            name="location"
+            className={
+              searchValuesLocation !== 0
+                ? "search-month-location-null"
+                : "search-month-location-null"
+            }
+          >
             <Select
               onChange={() => {
                 localStorage.setItem(
@@ -895,31 +902,37 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              className={
-                searchValuesLocation !== 0
-                  ? "search-month-location-null"
-                  : "search-month-location-null"
-              }
-              placeholder="ALL_LOCATION"
+              placeholder="Tất cả"
             >
-              <Option value={0}>{"ALL LOCATION"}</Option>
+              <Option value={0}>{"Tất cả"}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label={t("hardware.label.title.confirmStatus")} name="assigned_status">
+          <Form.Item
+            label={t("hardware.label.title.confirmStatus")}
+            name="assigned_status"
+            className={
+              searchValuesLocation !== 0
+                ? "search-month-location-null"
+                : "search-month-location-null"
+            }
+          >
             <Select
               defaultValue={"all"}
               onChange={() => {
-                if (searchFormProps.form?.getFieldsValue()?.assigned_status === "all") {
-                  searchParams.delete('assigned_status');
-                  console.log(searchFormProps.form?.getFieldsValue()?.assigned_status);
+                if (
+                  searchFormProps.form?.getFieldsValue()?.assigned_status ===
+                  "all"
+                ) {
+                  searchParams.delete("assigned_status");
+                  console.log(
+                    searchFormProps.form?.getFieldsValue()?.assigned_status
+                  );
                   setSearchParams(searchParams);
                   searchFormProps.form?.submit();
-
-                }
-                else {
+                } else {
                   searchFormProps.form?.submit();
                   searchParams.set(
                     "assigned_status",
@@ -929,13 +942,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   );
                   setSearchParams(searchParams);
                 }
-
               }}
-              className={
-                searchValuesLocation !== 0
-                  ? "search-month-location-null"
-                  : "search-month-location-null"
-              }
             >
               <Option value={"all"}>{"Tất cả"}</Option>
               <Option value={0}>{"Chưa checkout"}</Option>
@@ -1185,8 +1192,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -1203,8 +1210,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -1221,8 +1228,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -1239,8 +1246,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -1257,8 +1264,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
@@ -1273,8 +1280,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
