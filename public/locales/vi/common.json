@@ -297,7 +297,8 @@
         "search_advanced": "Tìm kiếm nâng cao",
         "edit": "Chỉnh sửa",
         "clone": "Clone",
-        "create": "Tạo mới"
+        "create": "Tạo mới",
+        "name_user": "Người dùng"
       },
       "field":{
         "notes": "Mô tả",
@@ -333,13 +334,15 @@
         "zip": "Zip",
         "note": "Ghi chú",
         "activated": "Cho phép đăng nhập",
-        "checkbox": "Người dùng có thể đăng nhập",
+        "checkbox": "Người dùng này có thể đăng nhập",
         "locale": "Ngôn ngữ",
         "remote_checkbox": "Đây là một người dùng từ xa",
         "assets_count": "Tài sản",
         "accessories_count": "Phụ kiện",
         "licenses_count": "Bản quyền",
-        "consumables_count": "Hàng tiêu dùng"
+        "consumables_count": "Hàng tiêu dùng",
+        "password": "Mật khẩu",
+        "password_confirmation": "Xác nhận mật khẩu"
       },
       "message": {
         "required":"bắt buộc"
@@ -353,7 +356,10 @@
       "tooltip": {
         "create":"Tạo mới",
         "edit": "Chỉnh sửa",
-        "delete": "Xoá"
+        "delete": "Xoá",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh",
+        "columns": "Danh sách các cột"
       },
       "placeholder": {
         "first_name": "Họ và tên đệm",

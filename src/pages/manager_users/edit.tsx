@@ -1,0 +1,629 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
+import { useTranslate, useCustom } from "@pankod/refine-core";
+import {
+    Form,
+    Input,
+    Select,
+    useSelect,
+    useForm,
+    Checkbox,
+    Button,
+    Row,
+    Col,
+    Typography,
+} from "@pankod/refine-antd";
+
+import { Tabs, Collapse, Radio } from 'antd';
+
+import "react-mde/lib/styles/css/react-mde-all.css";
+
+import { UploadImage } from "components/elements/uploadImage";
+import { ICompany } from "interfaces/company";
+
+import "../../styles/hardware.less";
+import { ICheckboxChange } from "interfaces";
+import {
+    DEPARTMENT_SELECT_LIST_API,
+    LOCATION_API,
+    USERS_API,
+} from "api/baseApi";
+import { IUser, IUserCreateRequest, IUserResponse } from "interfaces/user";
+import "styles/antd.less";
+
+const RadioGroup = Radio.Group;
+
+type UserCreateProps = {
+    isModalVisible: boolean;
+    setIsModalVisible: (data: boolean) => void;
+    data: IUserResponse | undefined;
+};
+
+const { TabPane } = Tabs;
+
+export const UserEdit = (props: UserCreateProps) => {
+    const { setIsModalVisible, data, isModalVisible } = props;
+    const [payload, setPayload] = useState<FormData>();
+    const [file, setFile] = useState<File>();
+    const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
+    const [checkedRemote, setCheckedRemote] = useState(true);
+    const [checkedActivated, setCheckedActivated] = useState(true);
+    const [checkedPermission, setCheckedPermission] = useState(true);
+
+    useEffect(() => {
+        setCheckedActivated(props.data?.activated === true ? true : false);
+    }, [props]);
+
+    useEffect(() => {
+        setCheckedRemote(props.data?.remote === true ? true : false);
+    }, [props]);
+
+    useEffect(() => {
+        setCheckedPermission(props.data?.permissions === 1 ? true : false);
+    }, [props]);
+
+    const t = useTranslate();
+
+    const { form, formProps } = useForm<IUserCreateRequest>({
+        action: "edit",
+    });
+
+    const { setFields } = form;
+
+    const { selectProps: departmentSelectProps } = useSelect<ICompany>({
+        resource: DEPARTMENT_SELECT_LIST_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: userSelectProps } = useSelect<IUser>({
+        resource: USERS_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: locationSelectProps } = useSelect<ICompany>({
+        resource: LOCATION_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const {
+        refetch,
+        data: updateData,
+        isLoading,
+    } = useCustom({
+        url: "api/v1/users" + "/" + data?.id + "/" + "update",
+        method: "put",
+        config: {
+            payload: payload,
+        },
+        queryOptions: {
+            enabled: false,
+        },
+    });
+
+    const onFinish = (event: IUserCreateRequest) => {
+        setMessageErr(messageErr);
+        const formData = new FormData();
+
+        formData.append("first_name", event.first_name);
+        formData.append("last_name", event.last_name);
+        formData.append("username", event.username);
+
+        if (event.email !== undefined) {
+            formData.append("email", event.email);
+        }
+        if (event.employee_num !== undefined) {
+            formData.append("employee_num", event.employee_num.toString());
+        }
+        if (event.jobtitle !== undefined) {
+            formData.append("jobtitle", event.jobtitle);
+        }
+        if (event.manager !== undefined) {
+            formData.append("manager_id", event.manager.toString());
+        }
+        if (event.department !== undefined) {
+            formData.append("department_id", event.department.toString());
+        }
+        if (event.location !== undefined) {
+            formData.append("location_id", event.location.toString());
+        }
+        if (event.phone !== null) {
+            formData.append("phone", event.phone.toString());
+        }
+        if (event.website !== undefined) {
+            formData.append("website", event.website);
+        }
+        if (event.address !== undefined) {
+            formData.append("address", event.address);
+        }
+        if (event.city !== undefined) {
+            formData.append("city", event.city);
+        }
+        if (event.state !== undefined) {
+            formData.append("state", event.state);
+        }
+        if (event.notes !== undefined) {
+            formData.append("notes", event.notes);
+        }
+        if (event.locale !== undefined) {
+            formData.append("locale", event.locale);
+        }
+        if (event.avatar !== null && event.avatar !== undefined) {
+            formData.append("avatar", event.avatar);
+        }
+
+        formData.append("remote", checkedRemote ? "1" : "0");
+        formData.append("activated", checkedActivated ? "1" : "0");
+        formData.append("ldap_import", "true");
+        formData.append("two_factor_activated", "false");
+        formData.append("two_factor_enrolled", "false");
+
+        if (event.permissions !== undefined) {
+            formData.append("permissions", checkedPermission ? "1" : "0");
+        }
+
+        formData.append("_method", "PUT");
+        setPayload(formData);
+    };
+
+    useEffect(() => {
+        form.resetFields();
+        setFile(undefined);
+        setFields([
+            { name: "first_name", value: data?.first_name },
+            { name: "last_name", value: data?.last_name },
+            { name: "username", value: data?.username },
+            { name: "password", value: data?.password },
+            { name: "activated", value: data?.activated },
+            { name: "email", value: data?.email },
+            { name: "employee_num", value: data?.employee_num },
+            { name: "jobtitle", value: data?.jobtitle },
+            { name: "manager_id", value: data?.manager.id },
+            { name: "department", value: data?.department.id },
+            { name: "remote", value: data?.remote },
+            { name: "location", value: data?.location.id },
+            { name: "phone", value: data?.phone },
+            { name: "website", value: data?.website },
+            { name: "address", value: data?.address },
+            { name: "city", value: data?.city },
+            { name: "state", value: data?.state },
+            { name: "country", value: data?.country },
+            { name: "zip", value: data?.zip },
+            { name: "notes", value: data?.notes },
+            { name: "locale", value: data?.locale },
+            { name: "permissions", value: data?.permissions },
+            { name: "avatar", value: data?.avatar },
+        ]);
+    }, [data, form, isModalVisible]);
+
+    useEffect(() => {
+        form.resetFields();
+    }, [isModalVisible]);
+
+    useEffect(() => {
+        if (payload) {
+            refetch();
+            if (updateData?.data.message) {
+                form.resetFields();
+            }
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        if (updateData?.data.status === "success") {
+            form.resetFields();
+            setFile(undefined);
+            setIsModalVisible(false);
+            setMessageErr(messageErr);
+        } else {
+            setMessageErr(updateData?.data.messages);
+        }
+    }, [updateData]);
+
+    useEffect(() => {
+        form.setFieldsValue({
+            image: file,
+        });
+    }, [file]);
+
+    const { Option } = Select;
+
+    return (
+        <Form
+            {...formProps}
+            layout="vertical"
+            onFinish={(event: any) => {
+                onFinish(event);
+            }}
+        >
+            <Tabs defaultActiveKey="1">
+                <TabPane tab="Thông tin" key="1">
+                    <Row gutter={16}>
+                        <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label={t("user.label.field.first_name")}
+                                name="first_name"
+                                // rules={[
+                                //     {
+                                //         required: true,
+                                //         message:
+                                //             t("user.label.field.first_name") +
+                                //             " " +
+                                //             t("user.label.message.required"),
+                                //     },
+                                // ]}
+                                initialValue={data?.first_name}
+                            >
+                                <Input placeholder={t("user.label.placeholder.first_name")} />
+                            </Form.Item>
+                            {messageErr?.first_name && (
+                                <Typography.Text type="danger">
+                                    {messageErr.first_name[0]}
+                                </Typography.Text>
+                            )}
+                            <Form.Item
+                                label={t("user.label.field.nameUser")}
+                                name="last_name"
+                                initialValue={data?.last_name}
+                            >
+                                <Input placeholder={t("user.label.placeholder.nameUser")} />
+                            </Form.Item>
+                            {messageErr?.last_name && (
+                                <Typography.Text type="danger">
+                                    {messageErr.last_name[0]}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.username")}
+                                name="username"
+                                // rules={[
+                                //     {
+                                //         required: true,
+                                //         message:
+                                //             t("user.label.field.username") +
+                                //             " " +
+                                //             t("user.label.message.required"),
+                                //     },
+                                // ]}
+                                initialValue={data?.username}
+                            >
+                                <Input />
+                            </Form.Item>
+                            {messageErr?.username && (
+                                <Typography.Text type="danger">
+                                    {messageErr.username[0]}
+                                </Typography.Text>
+                            )}
+
+                            <Checkbox
+                                name="activated"
+                                style={{ marginTop: 20 }}
+                                checked={checkedActivated}
+                                value={data?.activated}
+                                onChange={(event: ICheckboxChange) => {
+                                    setCheckedActivated(event.target.checked);
+                                }}
+                            ></Checkbox>{" "}
+                            {t("user.label.field.checkbox")}
+
+                            <Form.Item
+                                label={t("user.label.field.email")}
+                                name="email"
+                                initialValue={data?.email}
+                            >
+                                <Input
+                                    placeholder={t("user.label.placeholder.email")}
+                                />
+                            </Form.Item>
+                            {messageErr?.email && (
+                                <Typography.Text type="danger">
+                                    {messageErr.email}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.locale")}
+                                name="locale"
+                                initialValue={data?.locale}
+                            >
+                                <Select
+                                    options={[
+                                        {
+                                            label: "Vietnamese",
+                                            value: "vi",
+                                        },
+                                        {
+                                            label: "England, US",
+                                            value: "en",
+                                        },
+                                    ]}
+                                />
+                            </Form.Item>
+                            {messageErr?.locale && (
+                                <Typography.Text type="danger">
+                                    {messageErr.locale[0]}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.employee_num")}
+                                name="employee_num"
+                                initialValue={data?.employee_num}
+                            >
+                                <Input />
+                            </Form.Item>
+                            {messageErr?.employee_num && (
+                                <Typography.Text type="danger">
+                                    {messageErr.employee_num}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.job_title")}
+                                name="jobtitle"
+                                initialValue={data?.jobtitle}
+                            >
+                                <Input />
+                            </Form.Item>
+                            {messageErr?.jobtitle && (
+                                <Typography.Text type="danger">
+                                    {messageErr.jobtitle}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.user_manager")}
+                                name="manager"
+                                initialValue={data?.manager.id}
+                            >
+                                <Select
+                                    {...userSelectProps}
+                                    placeholder={t("user.label.placeholder.user_manager")}
+                                />
+                            </Form.Item>
+                            {messageErr?.manager && (
+                                <Typography.Text type="danger">
+                                    {messageErr.manager}
+                                </Typography.Text>
+                            )}
+                        </Col>
+                        <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label={t("user.label.field.department")}
+                                name="department"
+                                initialValue={data?.department.id}
+                            >
+                                <Select
+                                    {...departmentSelectProps}
+                                    placeholder={t("user.label.placeholder.department")}
+                                />
+                            </Form.Item>
+                            {messageErr?.department && (
+                                <Typography.Text type="danger">
+                                    {messageErr.department}
+                                </Typography.Text>
+                            )}
+
+                            <Checkbox
+                                name="remote"
+                                style={{ marginTop: 20, marginBottom: "1.8rem" }}
+                                checked={checkedRemote}
+                                value={data?.remote}
+                                onChange={(event: ICheckboxChange) => {
+                                    setCheckedRemote(event.target.checked);
+                                }}
+                            ></Checkbox>{" "}
+                            {t("user.label.field.remote_checkbox")}
+
+                            <Form.Item
+                                label={t("user.label.field.locations")}
+                                name="location"
+                                initialValue={data?.location.id}
+                                style={{ marginBottom: "3.1rem" }}
+                            >
+                                <Select
+                                    {...locationSelectProps}
+                                    placeholder={t("user.label.placeholder.locations")}
+                                />
+                            </Form.Item>
+                            {messageErr?.location && (
+                                <Typography.Text type="danger">
+                                    {messageErr.location}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.phone")}
+                                name="phone"
+                                initialValue={data?.phone}
+                            >
+                                <Input
+                                    type="number"
+                                    placeholder={t("user.label.placeholder.phone")}
+                                />
+                            </Form.Item>
+                            {messageErr?.phone && (
+                                <Typography.Text type="danger">
+                                    {messageErr.phone}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.website")}
+                                name="website"
+                                initialValue={data?.website}
+                            >
+                                <Input
+                                />
+                            </Form.Item>
+                            {messageErr?.website && (
+                                <Typography.Text type="danger">
+                                    {messageErr.website}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.address")}
+                                name="address"
+                                initialValue={data?.address}
+                            >
+                                <Input />
+                            </Form.Item>
+                            {messageErr?.address && (
+                                <Typography.Text type="danger">
+                                    {messageErr.address}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.city")}
+                                name="city"
+                                initialValue={data?.city}
+                            >
+                                <Input
+                                />
+                            </Form.Item>
+                            {messageErr?.city && (
+                                <Typography.Text type="danger">
+                                    {messageErr.city}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.state")}
+                                name="state"
+                                initialValue={data?.state}
+                            >
+                                <Input />
+                            </Form.Item>
+                            {messageErr?.state && (
+                                <Typography.Text type="danger">
+                                    {messageErr.state}
+                                </Typography.Text>
+                            )}
+                        </Col>
+                    </Row>
+
+                    <Form.Item
+                        label={t("user.label.field.note")}
+                        name="notes"
+                        initialValue={data?.notes}
+                    >
+                        <Input.TextArea value={data?.notes} />
+                    </Form.Item>
+                    {messageErr?.notes && (
+                        <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+                    )}
+
+                    <Form.Item label="Tải hình" name="avatar" initialValue={data?.avatar}>
+                        {data?.avatar ? (
+                            <UploadImage
+                                id={"update" + data?.id}
+                                url={data?.avatar}
+                                file={file}
+                                setFile={setFile}
+                            ></UploadImage>
+                        ) : (
+                            <UploadImage file={file} setFile={setFile}></UploadImage>
+                        )}
+                    </Form.Item>
+                    {messageErr?.avatar && (
+                        <Typography.Text type="danger">{messageErr.avatar[0]}</Typography.Text>
+                    )}
+
+                    <div className="submit">
+                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                            {t("user.label.button.update")}
+                        </Button>
+                    </div>
+                </TabPane>
+                <TabPane tab="Phân quyền" key="2">
+                    <div className="title_permission">
+                        <Form.Item
+                            label=""
+                            name="permissions"
+                            initialValue={data?.permissions}
+                        >
+                            <Row gutter={16}>
+                                <Radio.Group name="permissions" style={{ display: "flex", gap: "10rem" }}>
+                                    {/* <Radio
+                                        checked={checkedPermission}
+                                        value={data?.permissions}
+                                        onChange={(event: ICheckboxChange) => {
+                                            setCheckedPermission(event.target.checked);
+                                        }}
+                                    >{data?.permissions === 0 ? "Super User" : "Admin"}
+                                    </Radio>
+
+                                    <Radio
+                                        checked={checkedPermission}
+                                        value={data?.permissions}
+                                        onChange={(event: ICheckboxChange) => {
+                                            setCheckedPermission(event.target.checked);
+                                        }}
+                                    >{data?.permissions === 1 ? "Admin" : "Super User"}
+                                    </Radio> */}
+                                    {
+                                        data?.permissions === 1
+                                            ? (
+                                                <>
+                                                    <Radio
+                                                        checked={checkedPermission}
+                                                        value={data?.permissions}
+                                                        onChange={(event: ICheckboxChange) => {
+                                                            setCheckedPermission(event.target.checked);
+                                                        }}
+                                                    >Super User
+                                                    </Radio>
+                                                    <Radio>Admin</Radio>
+                                                </>
+                                            )
+                                            : (
+                                                <>
+                                                    <Radio>Super User</Radio>
+                                                    <Radio
+                                                        checked={checkedPermission}
+                                                        value={data?.permissions}
+                                                        onChange={(event: ICheckboxChange) => {
+                                                            setCheckedPermission(event.target.checked);
+                                                        }}
+                                                    >Admin
+                                                    </Radio>
+                                                </>
+                                            )
+                                    }
+                                </Radio.Group>
+                            </Row>
+                        </Form.Item>
+                    </div>
+                    <div className="submit">
+                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                            {t("user.label.button.update")}
+                        </Button>
+                    </div>
+                </TabPane>
+            </Tabs >
+        </Form >
+    );
+};

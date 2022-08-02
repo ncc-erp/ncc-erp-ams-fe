@@ -1,12 +1,19 @@
-import { Button, Checkbox, DeleteButton, getDefaultSortOrder, List, Space, Table, TextField, Tooltip, useTable } from "@pankod/refine-antd";
-import { CrudFilters, IResourceComponentsProps, useTranslate, useCustom } from "@pankod/refine-core";
+import { Button, Checkbox, CreateButton, DeleteButton, EditButton, getDefaultSortOrder, List, Space, Spin, Table, TextField, Tooltip, useTable } from "@pankod/refine-antd";
+import { CrudFilters, IResourceComponentsProps, useTranslate } from "@pankod/refine-core";
 import { IUser, IUserResponse } from "interfaces/user";
-import { useMemo, useRef, useState } from "react";
-import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+    CloseOutlined,
+    CheckOutlined,
+    SyncOutlined
+} from "@ant-design/icons";
+import { MModal } from "components/Modal/MModal";
+import { UserCreate } from "./create";
 import { Image } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
+import { UserEdit } from "./edit";
 
 const defaultCheckedList = [
     "id",
@@ -22,13 +29,21 @@ const defaultCheckedList = [
 export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     const translate = useTranslate();
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [detail, setDetail] = useState<IUserResponse>();
+
+    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+
     const [collumnSelected, setColumnSelected] =
         useState<string[]>(defaultCheckedList);
     const [isActive, setIsActive] = useState(false);
     const [hrmLoading, setHrmLoading] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
     const menuRef = useRef(null);
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable({
+    const [listening, setListening] = useState(false);
+
+    const { tableProps, sorter, tableQueryResult, searchFormProps } = useTable({
         initialSorter: [
             {
                 field: "id",
@@ -278,6 +293,82 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         []
     );
 
+    const handleCreate = () => {
+        handleOpenModel();
+    };
+
+    const handleOpenModel = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
+
+    const edit = (data: IUserResponse) => {
+        const dataConvert: IUserResponse = {
+            id: data.id,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            username: data.username,
+            manager: {
+                id: data?.manager?.id,
+                name: data?.manager?.name,
+            },
+            email: data?.email,
+            employee_num: data.employee_num,
+            department: {
+                id: data?.department?.id,
+                name: data?.department?.name,
+            },
+            jobtitle: data.jobtitle,
+            notes: data.notes,
+            phone: data.phone,
+            location: {
+                id: data?.location?.id,
+                name: data?.location?.name,
+            },
+            avatar: data?.avatar,
+            website: data?.website,
+            address: data?.address,
+            state: data.state,
+            city: data?.city,
+            country: data?.country,
+
+            zip: data?.zip,
+            activated: data?.activated,
+
+            locale: data.locale,
+            remote: data.remote,
+            ldap_import: data.ldap_import,
+            two_factor_activated: data.two_factor_activated,
+            two_factor_enrolled: data.two_factor_enrolled,
+            assets_count: data?.assets_count,
+            name: data?.name,
+            password: data?.password,
+            permissions: data?.permissions
+        };
+        setDetail(dataConvert);
+        setIsEditModalVisible(true);
+    };
+
+    useEffect(() => {
+        refreshData();
+    }, [isEditModalVisible]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isCloneModalVisible]);
+
+    const [loading, setLoading] = useState(false);
+    const handleRefresh = () => {
+        setLoading(true);
+        setTimeout(() => {
+            refreshData();
+            setLoading(false);
+        }, 300);
+    };
+
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
     const isLoading = tableProps.loading || hrmLoading;
     const onCheckItem = (value: any) => {
@@ -290,10 +381,43 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         }
     };
 
+    const listenForOutsideClicks = (
+        listening: boolean,
+        setListening: (arg0: boolean) => void,
+        menuRef: { current: any },
+        setIsActive: (arg0: boolean) => void
+    ) => {
+        if (listening) return;
+        if (!menuRef.current) return;
+        setListening(true);
+        [`click`, `touchstart`].forEach((type) => {
+            document.addEventListener(`click`, (event) => {
+                const current = menuRef.current;
+                const node = event.target;
+                if (current && current.contains(node)) return;
+                setIsActive(false);
+            });
+        });
+    };
+
+    useEffect(() => {
+        const aboutController = new AbortController();
+        listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+        return function cleanup() {
+            aboutController.abort();
+        };
+    }, []);
 
     return (
         <List
-            title={translate("")}
+            title={translate("user.label.title.name_user")}
+            pageHeaderProps={{
+                extra: (
+                    <CreateButton onClick={handleCreate}>
+                        {translate("user.label.button.create")}
+                    </CreateButton>
+                ),
+            }}
         >
             <div className="search" style={{ float: "right" }}>
                 <div className="all">
@@ -304,9 +428,28 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                     <div className="other_function">
                         <div className="menu-container" ref={menuRef}>
                             <div>
+                                <button
+                                    className="menu-trigger"
+                                    style={{
+                                        borderTopLeftRadius: "3px",
+                                        borderBottomLeftRadius: "3px",
+                                    }}
+                                >
+                                    <Tooltip
+                                        title={translate("user.label.tooltip.refresh")}
+                                        color={"#108ee9"}
+                                    >
+                                        <SyncOutlined
+                                            onClick={handleRefresh}
+                                            style={{ color: "black" }}
+                                        />
+                                    </Tooltip>
+                                </button>
+                            </div>
+                            <div>
                                 <button onClick={onClickDropDown} className="menu-trigger">
                                     <Tooltip
-                                        title={translate("hardware.label.tooltip.columns")}
+                                        title={translate("user.label.tooltip.columns")}
                                         color={"#108ee9"}
                                     >
                                         <MenuOutlined style={{ color: "black" }} />
@@ -328,13 +471,30 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                                 </div>
                             </nav>
                         </div>
-                        <div>
-                        </div>
+                        {/* <div>
+                            <button
+                                className="menu-trigger"
+                                style={{
+                                    borderTopRightRadius: "3px",
+                                    borderBottomRightRadius: "3px",
+                                }}
+                            >
+                                <Tooltip
+                                    title={translate("user.label.tooltip.search")}
+                                    color={"#108ee9"}
+                                >
+                                    <FileSearchOutlined
+                                        onClick={handleSearch}
+                                        style={{ color: "black" }}
+                                    />
+                                </Tooltip>
+                            </button>
+                        </div> */}
                     </div>
                 </div>
             </div>
             <Table
-                {...tableProps }
+                {...tableProps}
                 loading={isLoading}
                 rowKey="id"
                 scroll={{ x: 1500 }}
@@ -352,6 +512,28 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                     dataIndex="actions"
                     render={(_, record) => (
                         <Space>
+                            {/* <Tooltip
+                                        title={translate("user.label.tooltip.clone")}
+                                        color={"#108ee9"}
+                                    >
+                                        <CloneButton
+                                            hideText
+                                            size="small"
+                                            recordItemId={record.id}
+                                        // onClick={() => clone(record)}
+                                        />
+                                    </Tooltip> */}
+                            <Tooltip
+                                title={translate("user.label.tooltip.edit")}
+                                color={"#108ee9"}
+                            >
+                                <EditButton
+                                    hideText
+                                    size="small"
+                                    recordItemId={record.id}
+                                    onClick={() => edit(record)}
+                                />
+                            </Tooltip>
                             {record.assets_count > 0 ? (
                                 <DeleteButton hideText size="small" disabled />
                             ) : (
@@ -371,6 +553,27 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                     )}
                 />
             </Table>
+            <MModal
+                title={translate("user.label.title.create")}
+                setIsModalVisible={setIsModalVisible}
+                isModalVisible={isModalVisible}
+            >
+                <UserCreate
+                    setIsModalVisible={setIsModalVisible}
+                    isModalVisible={isModalVisible}
+                />
+            </MModal>
+            <MModal
+                title={translate("user.label.title.edit")}
+                setIsModalVisible={setIsEditModalVisible}
+                isModalVisible={isEditModalVisible}
+            >
+                <UserEdit
+                    isModalVisible={isEditModalVisible}
+                    setIsModalVisible={setIsEditModalVisible}
+                    data={detail}
+                />
+            </MModal>
         </List >
     )
 }
