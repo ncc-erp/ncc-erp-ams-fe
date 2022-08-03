@@ -17,6 +17,9 @@ import {
   CreateButton,
   TagField,
 } from "@pankod/refine-antd";
+import { Spin } from "antd";
+import { SyncOutlined } from "@ant-design/icons";
+
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
@@ -145,6 +148,15 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 300);
+  };
+
   return (
     <List
       title={t("supplier.label.title.supplier")}
@@ -156,7 +168,28 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         ),
       }}
     >
-      <TableAction searchFormProps={searchFormProps} />
+      <div className="all">
+        <TableAction searchFormProps={searchFormProps} />
+        <div>
+          <button
+            className="menu-trigger"
+            style={{
+              borderTopLeftRadius: "3px",
+              borderBottomLeftRadius: "3px",
+            }}
+          >
+            <Tooltip
+              title={t("hardware.label.tooltip.refresh")}
+              color={"#108ee9"}
+            >
+              <SyncOutlined
+                onClick={handleRefresh}
+                style={{ color: "black" }}
+              />
+            </Tooltip>
+          </button>
+        </div>
+      </div>
       <MModal
         title={t("supplier.label.title.create")}
         setIsModalVisible={setIsModalVisible}
@@ -179,46 +212,56 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
 
-      {/* <Table {...tableProps} rowKey="id" scroll={{ x: 1360 }}> */}
-      <Table {...tableProps} rowKey="id">
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-        <Table.Column<ISupplierRequest>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("supplier.label.tooltip.edit")}
-                color={"#108ee9"}
-              >
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.assets_count > 0 ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip="Loading..."
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table {...tableProps} rowKey="id">
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
+          <Table.Column<ISupplierRequest>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("supplier.label.tooltip.delete")}
-                  color={"#d73925"}
+                  title={t("supplier.label.tooltip.edit")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={SUPPLIERS_API}
+                  <EditButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                {record.assets_count > 0 ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("supplier.label.tooltip.delete")}
+                    color={"#d73925"}
+                  >
+                    <DeleteButton
+                      resourceName={SUPPLIERS_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };

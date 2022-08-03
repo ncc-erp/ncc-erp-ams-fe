@@ -25,6 +25,7 @@ export interface IHardwareCreateRequest {
 }
 
 export interface IHardwareUpdateRequest {
+  assigned_user: number;
   name: string;
   serial: string;
   company: number;
@@ -98,6 +99,7 @@ export interface IHardwareResponse {
     formatted: string;
   };
   assigned_to: {
+    id: number;
     name: string;
     username: string;
   };

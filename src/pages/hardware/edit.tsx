@@ -138,7 +138,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-    formData.append("status_id", event.status_label.toString());
+    if (event.status_label !== undefined) {
+      formData.append("status_id", event.status_label.toString());
+    }
     formData.append("warranty_months", event.warranty_months);
 
     if (event.purchase_cost !== null)

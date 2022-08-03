@@ -8,6 +8,7 @@ export const layoutStyles: CSSProperties = {
 export const containerStyles: CSSProperties = {
   maxWidth: "408px",
   margin: "auto",
+  marginTop: "70px"
 };
 
 export const titleStyles: CSSProperties = {
@@ -31,10 +32,14 @@ export const logo: CSSProperties = {
 
 export const buttonLoginGoogle: CSSProperties = {
   marginTop: "10px",
-  backgroundColor: "blue",
+  backgroundColor: "black",
+  borderColor: "black",
+
+  
 };
 
 export const forgotPass: CSSProperties = {
   float: "right",
   fontSize: "12px",
 };
+

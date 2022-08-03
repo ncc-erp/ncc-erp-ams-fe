@@ -71,12 +71,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               (value.assigned_status === 0
                 ? translate("hardware.label.detail.noAssign")
                 : value.assigned_status === 1
-                  ? translate("hardware.label.detail.pendingAccept")
-                  : value.assigned_status === 2
-                    ? translate("hardware.label.detail.accept")
-                    : value.assigned_status === 3
-                      ? translate("hardware.label.detail.refuse")
-                      : "")
+                ? translate("hardware.label.detail.pendingAccept")
+                : value.assigned_status === 2
+                ? translate("hardware.label.detail.accept")
+                : value.assigned_status === 3
+                ? translate("hardware.label.detail.refuse")
+                : "")
             }
             style={{
               background:
@@ -84,12 +84,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
                 (value.assigned_status === 0
                   ? "gray"
                   : value.assigned_status === 1
-                    ? "#f39c12"
-                    : value.assigned_status === 2
-                      ? "#0073b7"
-                      : value.assigned_status === 3
-                        ? "red"
-                        : "gray"),
+                  ? "#f39c12"
+                  : value.assigned_status === 2
+                  ? "#0073b7"
+                  : value.assigned_status === 3
+                  ? "red"
+                  : "gray"),
               color: "white",
             }}
           />
@@ -112,7 +112,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "asset_history",
         title: translate("report.label.field.user"),
         render: (value: IReport) => (
-          <TextField value={value.user ? value.user.first_name + " " + value.user.last_name : ""} />
+          <TextField
+            value={
+              value.user
+                ? value.user.first_name + " " + value.user.last_name
+                : ""
+            }
+          />
         ),
       },
       {
@@ -155,8 +161,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     console.log(JSON.stringify(value));
     if (JSON.stringify(value) === JSON.stringify("all")) {
       searchParams.delete("location");
-    }
-    else searchParams.set("location", JSON.stringify(value));
+    } else searchParams.set("location", JSON.stringify(value));
     setSearchParams(searchParams);
   };
   const handleTypeChange = (value: {
@@ -166,8 +171,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     console.log(JSON.stringify(value));
     if (JSON.stringify(value) === JSON.stringify("all")) {
       searchParams.delete("assetHistoryType");
-    }
-    else searchParams.set("assetHistoryType", JSON.stringify(value));
+    } else searchParams.set("assetHistoryType", JSON.stringify(value));
     setSearchParams(searchParams);
   };
 
@@ -189,16 +193,21 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={translate("report.label.title.name")}>
       <div className="search" style={{ marginBottom: "20px" }}>
-        <Form layout="vertical" className="search-month-location"
+        <Form
+          layout="vertical"
+          className="search-month-location"
           initialValues={{
-            location:
-              (location_id)
-                ? (Number(location_id)) : "Tất cả",
+            location: location_id ? Number(location_id) : "Tất cả",
             purchase_date:
               dateFromParam && dateToParam
-                ? [moment(dateFromParam, dateFormat), moment(dateToParam, dateFormat)]
+                ? [
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
-            type: (searchParams.get('assetHistoryType') ? (Number(assetHistoryType)) : "Tất cả")
+            type: searchParams.get("assetHistoryType")
+              ? Number(assetHistoryType)
+              : "Tất cả",
           }}
         >
           <Form.Item label="Thời gian" name="purchase_date">
@@ -212,23 +221,26 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Vị trí" name="location" initialValue={"all"}>
-            <Select
-              onChange={handleLocationChange}
-              placeholder="Vị trí"
-            >
+          <Form.Item
+            label="Vị trí"
+            name="location"
+            initialValue={"all"}
+            className="search-month-location-null"
+          >
+            <Select onChange={handleLocationChange} placeholder="Vị trí">
               <Option value={"all"}>{"Tất cả"}</Option>
-              {locationSelectProps.options?.map((item: any) =>
+              {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
-              )}
+              ))}
             </Select>
           </Form.Item>
 
-          <Form.Item label="Loại" name="type">
-            <Select
-              onChange={handleTypeChange}
-              placeholder="Loại"
-            >
+          <Form.Item
+            label="Loại"
+            name="type"
+            className="search-month-location-null"
+          >
+            <Select onChange={handleTypeChange} placeholder="Loại">
               <Option value={"all"}>{"Tất cả"}</Option>
               <Option value={0}>{"Cấp phát"}</Option>
               <Option value={1}>{"Thu hồi"}</Option>
@@ -243,8 +255,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         pagination={data?.data.length <= 10 ? false : { pageSize: 10 }}
       >
         {collumns.map((col) => (
-          <Table.Column
-            dataIndex={col.key} {...col} sorter />
+          <Table.Column dataIndex={col.key} {...col} sorter />
         ))}
       </Table>
     </List>

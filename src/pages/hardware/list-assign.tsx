@@ -58,6 +58,7 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { Spin } from "antd";
 
 const defaultCheckedList = [
   "id",
@@ -81,9 +82,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const status_id = searchParams.get("status_id");
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
-
-  const date_From_params = searchParams.get("date_From");
-  const date_To_params = searchParams.get("date_To");
 
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -892,7 +890,15 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item label={t("hardware.label.title.location")} name="location">
+          <Form.Item
+            label={t("hardware.label.title.location")}
+            name="location"
+            className={
+              searchValuesLocation !== 0
+                ? "search-month-location-null"
+                : "search-month-location-null"
+            }
+          >
             <Select
               onChange={() => {
                 localStorage.setItem(
@@ -910,14 +916,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              className={
-                searchValuesLocation !== 0
-                  ? "search-month-location-null"
-                  : "search-month-location-null"
-              }
-              placeholder="ALL_LOCATION"
+              placeholder="Tất cả"
             >
-              <Option value={0}>{"ALL LOCATION"}</Option>
+              <Option value={0}>{"Tất cả"}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -1076,187 +1077,198 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         </span>{" "}
         : {tableProps.pagination ? tableProps.pagination?.total : 0}
       </div>
-      <Table
-        {...tableProps}
-        rowKey="id"
-        scroll={{ x: 1850 }}
-        pagination={{
-          position: ["topRight", "bottomRight"],
-          total: pageTotal ? pageTotal : 0,
-        }}
-      >
-        {collumns
-          .filter((collumn) => collumnSelected.includes(collumn.key))
-          .map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
-        <Table.Column<IHardwareResponse>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("hardware.label.tooltip.viewDetail")}
-                color={"#108ee9"}
-              >
-                <ShowButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => show(record)}
-                />
-              </Tooltip>
-
-              <Tooltip
-                title={t("hardware.label.tooltip.clone")}
-                color={"#108ee9"}
-              >
-                <CloneButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => clone(record)}
-                />
-              </Tooltip>
-              <Tooltip
-                title={t("hardware.label.tooltip.edit")}
-                color={"#108ee9"}
-              >
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.assigned_to !== null ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip="Loading..."
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          {...tableProps}
+          rowKey="id"
+          scroll={{ x: 1850 }}
+          pagination={{
+            position: ["topRight", "bottomRight"],
+            total: pageTotal ? pageTotal : 0,
+          }}
+        >
+          {collumns
+            .filter((collumn) => collumnSelected.includes(collumn.key))
+            .map((col) => (
+              <Table.Column dataIndex={col.key} {...col} sorter />
+            ))}
+          <Table.Column<IHardwareResponse>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("hardware.label.tooltip.delete")}
-                  color={"red"}
+                  title={t("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={HARDWARE_API}
+                  <ShowButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => show(record)}
                   />
                 </Tooltip>
-              )}
-              {record.assigned_status === 2 ||
-                (record.user_can_checkout === true && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkout(record)}
-                  >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
-                )) ||
-                (record.user_can_checkout === true && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkout(record)}
-                  >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
-                )) ||
-                (record.status_label.name === "Pending" && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    disabled
-                  >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
-                )) ||
-                (record.status_label.name === "Broken" && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    disabled
-                  >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
-                ))}
 
-              {record.assigned_status === 2 ? (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="small"
-                  loading={
-                    isLoadingArr[record.id] === undefined
-                      ? false
-                      : isLoadingArr[record.id] === false
-                      ? false
-                      : true
-                  }
-                  onClick={() => checkin(record)}
+                <Tooltip
+                  title={t("hardware.label.tooltip.clone")}
+                  color={"#108ee9"}
                 >
-                  {t("hardware.label.button.checkin")}
-                </Button>
-              ) : record.assigned_status === 3 ? (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="small"
-                  loading={
-                    isLoadingArr[record.id] === undefined
-                      ? false
-                      : isLoadingArr[record.id] === false
-                      ? false
-                      : true
-                  }
-                  onClick={() => checkin(record)}
+                  <CloneButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => clone(record)}
+                  />
+                </Tooltip>
+                <Tooltip
+                  title={t("hardware.label.tooltip.edit")}
+                  color={"#108ee9"}
                 >
-                  {t("hardware.label.button.checkin")}
-                </Button>
-              ) : (
-                ""
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                  <EditButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => edit(record)}
+                  />
+                </Tooltip>
+                {record.assigned_to !== null ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.delete")}
+                    color={"red"}
+                  >
+                    <DeleteButton
+                      resourceName={HARDWARE_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+                {record.assigned_status === 2 ||
+                  (record.user_can_checkout === true && (
+                    <Button
+                      className="ant-btn-checkout"
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                      }
+                      onClick={() => checkout(record)}
+                    >
+                      {t("hardware.label.button.checkout")}
+                    </Button>
+                  )) ||
+                  (record.user_can_checkout === true && (
+                    <Button
+                      className="ant-btn-checkout"
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                      }
+                      onClick={() => checkout(record)}
+                    >
+                      {t("hardware.label.button.checkout")}
+                    </Button>
+                  )) ||
+                  (record.status_label.name === "Pending" && (
+                    <Button
+                      className="ant-btn-checkout"
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                      }
+                      disabled
+                    >
+                      {t("hardware.label.button.checkout")}
+                    </Button>
+                  )) ||
+                  (record.status_label.name === "Broken" && (
+                    <Button
+                      className="ant-btn-checkout"
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                      }
+                      disabled
+                    >
+                      {t("hardware.label.button.checkout")}
+                    </Button>
+                  ))}
+
+                {record.assigned_status === 2 ? (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkin(record)}
+                  >
+                    {t("hardware.label.button.checkin")}
+                  </Button>
+                ) : record.assigned_status === 3 ? (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkin(record)}
+                  >
+                    {t("hardware.label.button.checkin")}
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };

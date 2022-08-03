@@ -41,8 +41,9 @@ export const AssetsSummaryTableAllLocation = (
   const [dataCategory, setDataCategory] = useState<DataTable[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const dateFrom = searchParams.get("purchase_date_from");
-  const dateTo = searchParams.get("purchase_date_to");
+  const dateFrom = searchParams.get("purchase_date_from1");
+  const dateTo = searchParams.get("purchase_date_to1");
+  const location_id = searchParams.get("location_id");
 
   const calculation = (value: number, sum: number) => {
     if (value === 0) {
@@ -122,10 +123,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?location_id=${location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                    `assets?location_id=${location_id}&category_id=${record.category_id}`
                   );
             }
           }}
@@ -302,7 +303,7 @@ export const AssetsSummaryTableAllLocation = (
     <Table
       columns={columns}
       dataSource={dataCategory}
-      pagination={categories.length <= 10 ? false : { pageSize: 10 }}
+      pagination={categories.length <= 6 ? false : { pageSize: 6 }}
     />
   );
 };
