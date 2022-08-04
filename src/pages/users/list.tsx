@@ -18,8 +18,6 @@ import {
   TagField,
   Popconfirm,
   Button,
-  Input,
-  EditButton,
   Tooltip,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
@@ -31,6 +29,19 @@ import { UserShow } from "./show";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
 import { CancleAsset } from "./cancel";
 import { ASSIGN_HARDWARE_API, HARDWARE_API } from "api/baseApi";
+import type { ColumnsType } from 'antd/es/table';
+
+interface DataType {
+  key: React.Key;
+  id: number;
+  name: string;
+  image: string;
+  assigned_status: number;
+  model: any;
+  category: any;
+  rtd_location: any;
+  last_checkout: any;
+}
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -41,7 +52,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [keySearch] = useState<string>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IHardware>({
       initialSorter: [
         {
@@ -62,101 +73,117 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  const collumns = useMemo(
-    () => [
-      {
-        key: "id",
-        title: "ID",
-        render: (value: IHardware) => <TextField value={value ? value : ""} />,
-        defaultSortOrder: getDefaultSortOrder("id", sorter),
+  const collumns: ColumnsType<DataType> = [
+    {
+      dataIndex: "id",
+      title: "ID",
+      render: (value: IHardware) => <TextField value={value ? value : ""} />,
+      defaultSortOrder: getDefaultSortOrder("id", sorter),
+    },
+    {
+      dataIndex: "name",
+      title: t("user.label.field.name"),
+      render: (value: IHardware) => <TextField value={value ? value : ""} />,
+      defaultSortOrder: getDefaultSortOrder("name", sorter),
+    },
+    {
+      dataIndex: "image",
+      title: t("user.label.field.image"),
+      render: (value: string) => {
+        return value ? (
+          <Image width={80} alt="" height={"auto"} src={value} />
+        ) : (
+          ""
+        );
       },
-      {
-        key: "name",
-        title: t("user.label.field.name"),
-        render: (value: IHardware) => <TextField value={value ? value : ""} />,
-        defaultSortOrder: getDefaultSortOrder("name", sorter),
-      },
-      {
-        key: "image",
-        title: t("user.label.field.image"),
-        render: (value: string) => {
-          return value ? (
-            <Image width={80} alt="" height={"auto"} src={value} />
-          ) : (
-            ""
-          );
-        },
-      },
-      {
-        key: "model",
-        title: t("user.label.field.model"),
-        render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("model.name", sorter),
-      },
-      {
-        key: "category",
-        title: t("user.label.field.category"),
-        render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("category.name", sorter),
-      },
-      {
-        key: "rtd_location",
-        title: t("user.label.field.location"),
-        render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
-      },
+    },
+    {
+      dataIndex: "model",
+      title: t("user.label.field.model"),
+      render: (value: IHardwareResponse) => (
+        <TagField value={value ? value.name : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("model.name", sorter),
+    },
+    {
+      dataIndex: "category",
+      title: t("user.label.field.category"),
+      render: (value: IHardwareResponse) => (
+        <TagField value={value ? value.name : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+    },
+    {
+      dataIndex: "rtd_location",
+      title: t("user.label.field.location"),
+      render: (value: IHardwareResponse) => (
+        <TagField value={value ? value.name : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
+    },
 
-      {
-        key: "assigned_status",
-        title: t("user.label.field.condition"),
-        render: (value: number) => (
-          <TagField
-            value={
-              value === 0
-                ? t("hardware.label.detail.noAssign")
-                : value === 1
+    {
+      dataIndex: "assigned_status",
+      title: t("user.label.field.condition"),
+      render: (value: number) => (
+        <TagField
+          value={
+            value === 0
+              ? t("hardware.label.detail.noAssign")
+              : value === 1
                 ? t("hardware.label.detail.pendingAccept")
                 : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
-            }
-            style={{
-              background:
-                value === 0
-                  ? "gray"
-                  : value === 1
+                  ? t("hardware.label.detail.accept")
+                  : value === 3
+                    ? t("hardware.label.detail.refuse")
+                    : ""
+          }
+          style={{
+            background:
+              value === 0
+                ? "gray"
+                : value === 1
                   ? "#f39c12"
                   : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
-              color: "white",
-            }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
-      },
+                    ? "#0073b7"
+                    : value === 3
+                      ? "red"
+                      : "gray",
+            color: "white",
+          }}
+        />
+      ),
+      defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+      // filters: [
+      //   {
+      //     text: t("hardware.label.detail.noAssign"),
+      //     value: 0,
+      //   },
+      //   {
+      //     text: t("hardware.label.detail.pendingAccept"),
+      //     value: 1,
+      //   },
+      //   {
+      //     text: t("hardware.label.detail.accept"),
+      //     value: 2,
+      //   },
+      //   {
+      //     text: t("hardware.label.detail.refuse"),
+      //     value: 3,
+      //   },
+      // ],
+      // onFilter: (value, record: any) => record.assigned_status.indexOf(value)
+    },
 
-      {
-        key: "last_checkout",
-        title: t("user.label.field.dateCheckout"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.datetime : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
-      },
-    ],
-    []
-  );
+    {
+      dataIndex: "last_checkout",
+      title: t("user.label.field.dateCheckout"),
+      render: (value: IHardware) => (
+        <DateField format="LLL" value={value ? value.datetime : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
+    },
+  ];
 
   const { mutate, isLoading: isLoadingSendRequest } =
     useCreate<IHardwareCreateRequest>();
@@ -200,6 +227,18 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCancleModalVisible]);
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
   return (
     <List title={t("user.label.title.name")}>
       <TableAction searchFormProps={searchFormProps} />
@@ -221,9 +260,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      <Table {...tableProps} rowKey="id" scroll={{ x: 1250 }}>
+      <Table {...tableProps} rowKey="id" rowSelection={rowSelection}>
         {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
+          <Table.Column dataIndex={col.key} {...col as ColumnsType} sorter />
         ))}
         <Table.Column<IHardwareResponse>
           title={t("table.actions")}
@@ -256,8 +295,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                     >
                       {t("hardware.label.button.accept")}
@@ -275,8 +314,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     isLoadingArr[record.id] === undefined
                       ? false
                       : isLoadingArr[record.id] === false
-                      ? false
-                      : true
+                        ? false
+                        : true
                   }
                   onClick={() => cancle(record)}
                 >
@@ -290,3 +329,4 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     </List>
   );
 };
+
