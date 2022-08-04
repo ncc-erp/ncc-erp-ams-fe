@@ -887,6 +887,17 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     } else {
       setSelectedCheckin(false);
     }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+        0 &&
+      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
+        .length > 0
+    ) {
+      setSelectedCheckout(false);
+      setSelectedCheckin(false);
+    } else {
+    }
   }, [initselectedRowKeys]);
 
   const onSelectChange = (
@@ -1254,11 +1265,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <div
             className="list-checkouts"
             style={
-              !selectedCheckout ? { display: "none" } : { display: "inline" }
+              selectedCheckout ? { display: "none" } : { display: "inline" }
             }
           >
+            <span className="title-remove-name">
+              Những tài sản này ko đc phép cấp phát.
+              <br />
+              Hãy xóa chúng khỏi danh sách đi
+            </span>
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkout)
+              .filter((item: any) => !item.user_can_checkout)
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -1286,11 +1302,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <div
             className="list-checkins"
             style={
-              !selectedCheckin ? { display: "none" } : { display: "inline" }
+              selectedCheckin ? { display: "none" } : { display: "inline" }
             }
           >
+            <span className="title-remove-name">
+              Những tài sản này ko đc phép thu hồi.
+              <br />
+              Hãy xóa chúng khỏi danh sách đi
+            </span>
             {initselectedRowKeys
-              .filter((item: any) => !item.user_can_checkout)
+              .filter((item: any) => item.user_can_checkout)
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
