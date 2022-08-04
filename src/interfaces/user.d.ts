@@ -11,7 +11,7 @@ export interface IUserCreateRequest {
   email: string;
   avatar: string;
   employee_num: number;
-  job_title: string;
+  jobtitle: string;
   manager: number;
   department: number;
   location: number;
@@ -24,13 +24,19 @@ export interface IUserCreateRequest {
   zip: string;
   notes: string;
   last_name: string;
-  activated: boolean;
+  activated: number;
   locale: string;
-  remote: boolean;
-  ldap_import: boolean;
+  remote: number;
+  ldap_import: number;
   two_factor_activated: boolean;
   two_factor_enrolled: boolean;
   assets_count: number;
+  password: string;
+  permissions: {
+    admin: string;
+    superuser: string;
+  };
+  password_confirmation: string;
 }
 
 export interface IUserResponse {
@@ -40,7 +46,6 @@ export interface IUserResponse {
   username: string;
   email: string;
   employee_num: number;
-  job_title: string;
   manager: {
     id: number;
     name: string;
@@ -54,20 +59,21 @@ export interface IUserResponse {
     name: string;
   };
   phone: number;
-  website: string;
   address: string;
   city: string;
   state: string;
-  country: string;
-  zip: string;
   notes: string;
   last_name: string;
   activated: boolean;
-  locale: string;
   remote: boolean;
   ldap_import: boolean;
   two_factor_activated: boolean;
   two_factor_enrolled: boolean;
   assets_count: number;
   avatar: string;
+  password: string;
+  permissions: {
+    admin: string;
+    superuser: string;
+  };
 }
