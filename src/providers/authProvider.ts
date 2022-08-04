@@ -37,7 +37,7 @@ export const authProvider: AuthProvider = {
       JSON.stringify(permissionRes.data.permissions)
     );
     if (tokenId) {
-      return Promise.resolve('/users');
+      return Promise.resolve("/users");
     }
     return Promise.resolve();
   },
@@ -56,14 +56,17 @@ export const authProvider: AuthProvider = {
     return Promise.reject();
   },
   getUserIdentity: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      return Promise.reject();
-    }
+    const permissionRes = await UserAPI.getAll(GET_ME_API);
+    localStorage.setItem(
+      "username",
+      JSON.stringify(permissionRes.data.username)
+    );
 
-    return Promise.resolve({
-      id: 1,
-    });
+    const token = localStorage.getItem("username");
+    if (token) {
+      return Promise.resolve(token);
+    }
+    return Promise.reject();
   },
   getPermissions: () => {
     const permissions = localStorage.getItem(STORE_PERMISSION);
