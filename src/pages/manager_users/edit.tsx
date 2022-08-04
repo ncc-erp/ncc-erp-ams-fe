@@ -41,14 +41,26 @@ type UserCreateProps = {
 
 const { TabPane } = Tabs;
 
+const options = [
+    {
+        label: "",
+        value: "0",
+    },
+    {
+        label: "",
+        value: "1",
+    },
+];
+
 export const UserEdit = (props: UserCreateProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
     const [payload, setPayload] = useState<FormData>();
-    const [file, setFile] = useState<File>();
+    const [file, setFile] = useState<any>();
     const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
     const [checkedRemote, setCheckedRemote] = useState(true);
     const [checkedActivated, setCheckedActivated] = useState(true);
-    const [checkedPermission, setCheckedPermission] = useState(true);
+    const [permissionsAdmin, setPermissionsAdmin] = useState(props?.data?.permissions && props?.data?.permissions.admin);
+    const [permissionsSuperUser, setPermissionsSuperUser] = useState(props?.data?.permissions && props.data?.permissions.superuser);
 
     useEffect(() => {
         setCheckedActivated(props.data?.activated === true ? true : false);
@@ -58,9 +70,9 @@ export const UserEdit = (props: UserCreateProps) => {
         setCheckedRemote(props.data?.remote === true ? true : false);
     }, [props]);
 
-    useEffect(() => {
-        setCheckedPermission(props.data?.permissions === 1 ? true : false);
-    }, [props]);
+    // useEffect(() => {
+    //     setPermissionsAdmin(props.data?.permissions && props.data?.permissions.admin ? "1" : "0");
+    // }, [props]);
 
     const t = useTranslate();
 
@@ -112,7 +124,7 @@ export const UserEdit = (props: UserCreateProps) => {
         isLoading,
     } = useCustom({
         url: "api/v1/users" + "/" + data?.id + "/" + "update",
-        method: "put",
+        method: "post",
         config: {
             payload: payload,
         },
@@ -132,12 +144,6 @@ export const UserEdit = (props: UserCreateProps) => {
         if (event.email !== undefined) {
             formData.append("email", event.email);
         }
-        if (event.employee_num !== undefined) {
-            formData.append("employee_num", event.employee_num.toString());
-        }
-        if (event.jobtitle !== undefined) {
-            formData.append("jobtitle", event.jobtitle);
-        }
         if (event.manager !== undefined) {
             formData.append("manager_id", event.manager.toString());
         }
@@ -149,9 +155,6 @@ export const UserEdit = (props: UserCreateProps) => {
         }
         if (event.phone !== null) {
             formData.append("phone", event.phone.toString());
-        }
-        if (event.website !== undefined) {
-            formData.append("website", event.website);
         }
         if (event.address !== undefined) {
             formData.append("address", event.address);
@@ -165,12 +168,8 @@ export const UserEdit = (props: UserCreateProps) => {
         if (event.notes !== undefined) {
             formData.append("notes", event.notes);
         }
-        if (event.locale !== undefined) {
-            formData.append("locale", event.locale);
-        }
-        if (event.avatar !== null && event.avatar !== undefined) {
-            formData.append("avatar", event.avatar);
-        }
+
+        formData.append("avatar", event.avatar);
 
         formData.append("remote", checkedRemote ? "1" : "0");
         formData.append("activated", checkedActivated ? "1" : "0");
@@ -178,9 +177,11 @@ export const UserEdit = (props: UserCreateProps) => {
         formData.append("two_factor_activated", "false");
         formData.append("two_factor_enrolled", "false");
 
-        if (event.permissions !== undefined) {
-            formData.append("permissions", checkedPermission ? "1" : "0");
-        }
+        const permissions = JSON.stringify({
+            admin: permissionsAdmin,
+            superuser: permissionsSuperUser,
+        });
+        formData.append("permissions", permissions);
 
         formData.append("_method", "PUT");
         setPayload(formData);
@@ -193,26 +194,25 @@ export const UserEdit = (props: UserCreateProps) => {
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
             { name: "username", value: data?.username },
-            { name: "password", value: data?.password },
             { name: "activated", value: data?.activated },
             { name: "email", value: data?.email },
-            { name: "employee_num", value: data?.employee_num },
-            { name: "jobtitle", value: data?.jobtitle },
-            { name: "manager_id", value: data?.manager.id },
+            { name: "manager", value: data?.manager.id },
             { name: "department", value: data?.department.id },
-            { name: "remote", value: data?.remote },
             { name: "location", value: data?.location.id },
+            { name: "remote", value: data?.remote },
             { name: "phone", value: data?.phone },
-            { name: "website", value: data?.website },
-            { name: "address", value: data?.address },
-            { name: "city", value: data?.city },
-            { name: "state", value: data?.state },
-            { name: "country", value: data?.country },
-            { name: "zip", value: data?.zip },
+            { name: "address", value: data?.address !== "null" ? data?.address : "" },
+            { name: "city", value: data?.city !== "null" ? data?.city : "" },
+            { name: "state", value: data?.state !== "nul" ? data?.state : "" },
             { name: "notes", value: data?.notes },
-            { name: "locale", value: data?.locale },
-            { name: "permissions", value: data?.permissions },
             { name: "avatar", value: data?.avatar },
+            {
+                name: "permissions",
+                value: [
+                    { name: "admin", value: data?.permissions ? data?.permissions.admin : "" },
+                    { name: "superuser", value: data?.permissions ? data?.permissions.superuser : "" },
+                ],
+            },
         ]);
     }, [data, form, isModalVisible]);
 
@@ -242,11 +242,11 @@ export const UserEdit = (props: UserCreateProps) => {
 
     useEffect(() => {
         form.setFieldsValue({
-            image: file,
+            avatar: file,
         });
     }, [file]);
 
-    const { Option } = Select;
+    // const { Option } = Select;
 
     return (
         <Form
@@ -263,15 +263,6 @@ export const UserEdit = (props: UserCreateProps) => {
                             <Form.Item
                                 label={t("user.label.field.first_name")}
                                 name="first_name"
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message:
-                                //             t("user.label.field.first_name") +
-                                //             " " +
-                                //             t("user.label.message.required"),
-                                //     },
-                                // ]}
                                 initialValue={data?.first_name}
                             >
                                 <Input placeholder={t("user.label.placeholder.first_name")} />
@@ -297,15 +288,6 @@ export const UserEdit = (props: UserCreateProps) => {
                             <Form.Item
                                 label={t("user.label.field.username")}
                                 name="username"
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message:
-                                //             t("user.label.field.username") +
-                                //             " " +
-                                //             t("user.label.message.required"),
-                                //     },
-                                // ]}
                                 initialValue={data?.username}
                             >
                                 <Input />
@@ -316,16 +298,23 @@ export const UserEdit = (props: UserCreateProps) => {
                                 </Typography.Text>
                             )}
 
-                            <Checkbox
-                                name="activated"
-                                style={{ marginTop: 20 }}
-                                checked={checkedActivated}
-                                value={data?.activated}
-                                onChange={(event: ICheckboxChange) => {
-                                    setCheckedActivated(event.target.checked);
-                                }}
-                            ></Checkbox>{" "}
-                            {t("user.label.field.checkbox")}
+                            <Form.Item label={t("user.label.field.activated")} name="activated" valuePropName="checked">
+                                <Checkbox
+                                    name="activated"
+                                    checked={checkedActivated}
+                                    value={data?.activated}
+                                    onChange={(event: ICheckboxChange) => {
+                                        setCheckedActivated(event.target.checked);
+                                    }}
+                                >
+                                    {t("user.label.field.checkbox")}
+                                </Checkbox>
+                            </Form.Item>
+                            {messageErr?.activated && (
+                                <Typography.Text type="danger">
+                                    {messageErr.activated}
+                                </Typography.Text>
+                            )}
 
                             <Form.Item
                                 label={t("user.label.field.email")}
@@ -339,56 +328,6 @@ export const UserEdit = (props: UserCreateProps) => {
                             {messageErr?.email && (
                                 <Typography.Text type="danger">
                                     {messageErr.email}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.locale")}
-                                name="locale"
-                                initialValue={data?.locale}
-                            >
-                                <Select
-                                    options={[
-                                        {
-                                            label: "Vietnamese",
-                                            value: "vi",
-                                        },
-                                        {
-                                            label: "England, US",
-                                            value: "en",
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
-                            {messageErr?.locale && (
-                                <Typography.Text type="danger">
-                                    {messageErr.locale[0]}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.employee_num")}
-                                name="employee_num"
-                                initialValue={data?.employee_num}
-                            >
-                                <Input />
-                            </Form.Item>
-                            {messageErr?.employee_num && (
-                                <Typography.Text type="danger">
-                                    {messageErr.employee_num}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.job_title")}
-                                name="jobtitle"
-                                initialValue={data?.jobtitle}
-                            >
-                                <Input />
-                            </Form.Item>
-                            {messageErr?.jobtitle && (
-                                <Typography.Text type="danger">
-                                    {messageErr.jobtitle}
                                 </Typography.Text>
                             )}
 
@@ -407,6 +346,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                     {messageErr.manager}
                                 </Typography.Text>
                             )}
+
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
@@ -440,7 +380,6 @@ export const UserEdit = (props: UserCreateProps) => {
                                 label={t("user.label.field.locations")}
                                 name="location"
                                 initialValue={data?.location.id}
-                                style={{ marginBottom: "3.1rem" }}
                             >
                                 <Select
                                     {...locationSelectProps}
@@ -466,20 +405,6 @@ export const UserEdit = (props: UserCreateProps) => {
                             {messageErr?.phone && (
                                 <Typography.Text type="danger">
                                     {messageErr.phone}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.website")}
-                                name="website"
-                                initialValue={data?.website}
-                            >
-                                <Input
-                                />
-                            </Form.Item>
-                            {messageErr?.website && (
-                                <Typography.Text type="danger">
-                                    {messageErr.website}
                                 </Typography.Text>
                             )}
 
@@ -566,54 +491,24 @@ export const UserEdit = (props: UserCreateProps) => {
                             initialValue={data?.permissions}
                         >
                             <Row gutter={16}>
-                                <Radio.Group name="permissions" style={{ display: "flex", gap: "10rem" }}>
-                                    {/* <Radio
-                                        checked={checkedPermission}
-                                        value={data?.permissions}
-                                        onChange={(event: ICheckboxChange) => {
-                                            setCheckedPermission(event.target.checked);
-                                        }}
-                                    >{data?.permissions === 0 ? "Super User" : "Admin"}
-                                    </Radio>
-
-                                    <Radio
-                                        checked={checkedPermission}
-                                        value={data?.permissions}
-                                        onChange={(event: ICheckboxChange) => {
-                                            setCheckedPermission(event.target.checked);
-                                        }}
-                                    >{data?.permissions === 1 ? "Admin" : "Super User"}
-                                    </Radio> */}
-                                    {
-                                        data?.permissions === 1
-                                            ? (
-                                                <>
-                                                    <Radio
-                                                        checked={checkedPermission}
-                                                        value={data?.permissions}
-                                                        onChange={(event: ICheckboxChange) => {
-                                                            setCheckedPermission(event.target.checked);
-                                                        }}
-                                                    >Super User
-                                                    </Radio>
-                                                    <Radio>Admin</Radio>
-                                                </>
-                                            )
-                                            : (
-                                                <>
-                                                    <Radio>Super User</Radio>
-                                                    <Radio
-                                                        checked={checkedPermission}
-                                                        value={data?.permissions}
-                                                        onChange={(event: ICheckboxChange) => {
-                                                            setCheckedPermission(event.target.checked);
-                                                        }}
-                                                    >Admin
-                                                    </Radio>
-                                                </>
-                                            )
-                                    }
-                                </Radio.Group>
+                                <Typography.Text style={{ marginLeft: "7.5rem" }}>Từ chối</Typography.Text>
+                                <Typography.Text style={{ marginLeft: "11rem" }}>Chấp nhận</Typography.Text>
+                            </Row>
+                            <Row gutter={16}>
+                                <Typography.Text style={{ marginRight: "1rem" }}>Super User</Typography.Text>
+                                <Radio.Group
+                                    options={options}
+                                    onChange={event => setPermissionsSuperUser(event.target.value)}
+                                    defaultValue={permissionsSuperUser}
+                                />
+                            </Row>
+                            <Row gutter={17}>
+                                <Typography.Text style={{ marginRight: "3rem" }}>Admin</Typography.Text>
+                                <Radio.Group
+                                    options={options}
+                                    onChange={event => setPermissionsAdmin(event.target.value)}
+                                    defaultValue={permissionsAdmin}
+                                />
                             </Row>
                         </Form.Item>
                     </div>

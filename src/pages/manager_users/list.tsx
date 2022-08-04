@@ -321,7 +321,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 id: data?.department?.id,
                 name: data?.department?.name,
             },
-            jobtitle: data.jobtitle,
             notes: data.notes,
             phone: data.phone,
             location: {
@@ -329,16 +328,11 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 name: data?.location?.name,
             },
             avatar: data?.avatar,
-            website: data?.website,
-            address: data?.address,
-            state: data.state,
-            city: data?.city,
-            country: data?.country,
+            address: data.address !== "null" ? data.address : "",
+            state: data.state !== "nul" ? data.state : "",
+            city: data.city !== "null" ? data.city : "",
+            activated: data.activated,
 
-            zip: data?.zip,
-            activated: data?.activated,
-
-            locale: data.locale,
             remote: data.remote,
             ldap_import: data.ldap_import,
             two_factor_activated: data.two_factor_activated,
@@ -346,8 +340,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             assets_count: data?.assets_count,
             name: data?.name,
             password: data?.password,
-            permissions: data?.permissions
+            permissions: {
+                admin: data?.permissions !== null ? data?.permissions.admin : "",
+                superuser: data?.permissions !== null ? data?.permissions.superuser : ""
+            }
         };
+
         setDetail(dataConvert);
         setIsEditModalVisible(true);
     };

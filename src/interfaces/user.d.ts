@@ -32,7 +32,10 @@ export interface IUserCreateRequest {
   two_factor_enrolled: boolean;
   assets_count: number;
   password: string;
-  permissions: string;
+  permissions: {
+    admin: string;
+    superuser: string;
+  };
   password_confirmation: string;
 }
 
@@ -43,7 +46,6 @@ export interface IUserResponse {
   username: string;
   email: string;
   employee_num: number;
-  jobtitle: string;
   manager: {
     id: number;
     name: string;
@@ -57,16 +59,12 @@ export interface IUserResponse {
     name: string;
   };
   phone: number;
-  website: string;
   address: string;
   city: string;
   state: string;
-  country: string;
-  zip: string;
   notes: string;
   last_name: string;
   activated: boolean;
-  locale: string;
   remote: boolean;
   ldap_import: boolean;
   two_factor_activated: boolean;
@@ -74,5 +72,8 @@ export interface IUserResponse {
   assets_count: number;
   avatar: string;
   password: string;
-  permissions: number;
+  permissions: {
+    admin: string;
+    superuser: string;
+  };
 }

@@ -40,12 +40,25 @@ type UserCreateProps = {
 
 const { TabPane } = Tabs;
 
+const options = [
+    {
+        label: "",
+        value: "0",
+    },
+    {
+        label: "",
+        value: "1",
+    },
+];
+
 export const UserCreate = (props: UserCreateProps) => {
     const { setIsModalVisible } = props;
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
     const [payload, setPayload] = useState<FormData>();
     const [file, setFile] = useState<File>();
     const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
+    const [permissionsAdmin, setPermissionsAdmin] = useState(0);
+    const [permissionsSuperUser, setPermissionsSuperUser] = useState(0);
 
     const t = useTranslate();
 
@@ -104,12 +117,6 @@ export const UserCreate = (props: UserCreateProps) => {
         if (event.email !== undefined) {
             formData.append("email", event.email);
         }
-        if (event.employee_num !== undefined) {
-            formData.append("employee_num", event.employee_num.toString());
-        }
-        if (event.jobtitle !== undefined) {
-            formData.append("jobtitle", event.jobtitle);
-        }
         if (event.manager !== undefined) {
             formData.append("manager_id", event.manager.toString());
         }
@@ -121,9 +128,6 @@ export const UserCreate = (props: UserCreateProps) => {
         }
         if (event.phone !== undefined) {
             formData.append("phone", event.phone.toString());
-        }
-        if (event.website !== undefined) {
-            formData.append("website", event.website);
         }
         if (event.address !== undefined) {
             formData.append("address", event.address);
@@ -137,16 +141,7 @@ export const UserCreate = (props: UserCreateProps) => {
         if (event.notes !== undefined) {
             formData.append("notes", event.notes);
         }
-        if (event.locale !== undefined) {
-            formData.append("locale", event.locale);
-        }
-        if (
-            typeof event.avatar !== "string" &&
-            event.avatar !== undefined &&
-            event.avatar !== null
-        ) {
-            formData.append("avatar", event.avatar);
-        }
+        formData.append("avatar", event.avatar);
 
         if (event.remote !== undefined) {
             formData.append("remote", event.remote.toString());
@@ -158,8 +153,12 @@ export const UserCreate = (props: UserCreateProps) => {
         formData.append("two_factor_activated", "false");
         formData.append("two_factor_enrolled", "false");
 
-        if (event.permissions !== undefined) {
-            formData.append("permissions", event.permissions);
+        if (event.permissions !== null) {
+            const permissions = JSON.stringify({
+                admin: permissionsAdmin,
+                superuser: permissionsSuperUser,
+            });
+            formData.append("permissions", permissions);
         }
 
         setPayload(formData);
@@ -205,7 +204,7 @@ export const UserCreate = (props: UserCreateProps) => {
 
     useEffect(() => {
         form.setFieldsValue({
-            image: file,
+            avatar: file,
         });
     }, [file]);
 
@@ -352,54 +351,6 @@ export const UserCreate = (props: UserCreateProps) => {
                             )}
 
                             <Form.Item
-                                label={t("user.label.field.locale")}
-                                name="locale"
-                            >
-                                <Select
-                                    options={[
-                                        {
-                                            label: "Vietnamese",
-                                            value: "vi",
-                                        },
-                                        {
-                                            label: "England, US",
-                                            value: "en",
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
-                            {messageErr?.locale && (
-                                <Typography.Text type="danger">
-                                    {messageErr.locale[0]}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.employee_num")}
-                                name="employee_num"
-                            >
-                                <Input />
-                            </Form.Item>
-                            {messageErr?.employee_num && (
-                                <Typography.Text type="danger">
-                                    {messageErr.employee_num}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label={t("user.label.field.job_title")}
-                                name="jobtitle"
-                            >
-                                <Input />
-                            </Form.Item>
-                            {messageErr?.jobtitle && (
-                                <Typography.Text type="danger">
-                                    {messageErr.jobtitle}
-                                </Typography.Text>
-                            )}
-                        </Col>
-                        <Col className="gutter-row" span={12}>
-                            <Form.Item
                                 label={t("user.label.field.user_manager")}
                                 name="manager"
                             >
@@ -413,7 +364,8 @@ export const UserCreate = (props: UserCreateProps) => {
                                     {messageErr.manager}
                                 </Typography.Text>
                             )}
-
+                        </Col>
+                        <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label={t("user.label.field.department")}
                                 name="department"
@@ -480,19 +432,6 @@ export const UserCreate = (props: UserCreateProps) => {
                             )}
 
                             <Form.Item
-                                label={t("user.label.field.website")}
-                                name="website"
-                            >
-                                <Input
-                                />
-                            </Form.Item>
-                            {messageErr?.website && (
-                                <Typography.Text type="danger">
-                                    {messageErr.website}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
                                 label={t("user.label.field.address")}
                                 name="address"
                             >
@@ -549,14 +488,8 @@ export const UserCreate = (props: UserCreateProps) => {
                         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
                     )}
 
-                    <Form.Item
-                        label="Tải hình"
-                        name="avatar">
-                        <UploadImage
-                            id={"create"}
-                            file={file}
-                            setFile={setFile}
-                        ></UploadImage>
+                    <Form.Item label="Tải hình" name="avatar">
+                        <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>
                     </Form.Item>
                     {messageErr?.avatar && (
                         <Typography.Text type="danger">{messageErr.avatar[0]}</Typography.Text>
@@ -569,14 +502,26 @@ export const UserCreate = (props: UserCreateProps) => {
                 </TabPane>
                 <TabPane tab="Phân quyền" key="2">
                     <div className="title_permission">
-                        <Form.Item
-                            name="permissions"
-                        >
+                        <Form.Item name="permissions">
                             <Row gutter={16}>
-                                <Radio.Group style={{ display: "flex", gap: "10rem" }}>
-                                    <Radio value={0}>Super User</Radio>
-                                    <Radio value={1}>Admin</Radio>
-                                </Radio.Group>
+                                <Typography.Text style={{ marginLeft: "7.5rem" }}>Từ chối</Typography.Text>
+                                <Typography.Text style={{ marginLeft: "11rem" }}>Chấp nhận</Typography.Text>
+                            </Row>
+                            <Row gutter={16}>
+                                <Typography.Text style={{ marginRight: "1rem" }}>Super User</Typography.Text>
+                                <Radio.Group
+                                    options={options}
+                                    onChange={event => setPermissionsSuperUser(event.target.value)}
+                                    defaultValue={permissionsSuperUser}
+                                />
+                            </Row>
+                            <Row gutter={17}>
+                                <Typography.Text style={{ marginRight: "3rem" }}>Admin</Typography.Text>
+                                <Radio.Group
+                                    options={options}
+                                    onChange={event => setPermissionsAdmin(event.target.value)}
+                                    defaultValue={permissionsAdmin}
+                                />
                             </Row>
                         </Form.Item>
                     </div>
@@ -587,6 +532,6 @@ export const UserCreate = (props: UserCreateProps) => {
                     </div>
                 </TabPane>
             </Tabs>
-        </Form>
+        </Form >
     );
 };
