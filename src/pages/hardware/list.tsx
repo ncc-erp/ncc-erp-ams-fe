@@ -29,6 +29,8 @@ import {
 import { Image } from "antd";
 import "styles/antd.less";
 
+import { CloseOutlined } from "@ant-design/icons";
+
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -58,6 +60,8 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 
 const defaultCheckedList = [
   "id",
@@ -97,6 +101,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [listening, setListening] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+  const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
+    useState(false);
+  const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
+    useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
@@ -104,7 +112,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const status_id = searchParams.get("status_id");
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
-
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -187,7 +194,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "assigned_status",
           operator: "eq",
-          value: searchParams.get('assigned_status'),
+          value: searchParams.get("assigned_status"),
         }
       );
 
@@ -509,6 +516,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutManyAssetModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckinManyAssetModalVisible]);
+
   const collumns = useMemo(
     () => [
       {
@@ -574,12 +589,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === t("hardware.label.field.assign")
                   ? t("hardware.label.detail.assign")
                   : value.name === t("hardware.label.field.readyToDeploy")
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === t("hardware.label.field.broken")
-                      ? t("hardware.label.detail.broken")
-                      : value.name === t("hardware.label.field.pending")
-                        ? t("hardware.label.detail.pending")
-                        : ""
+                  ? t("hardware.label.detail.readyToDeploy")
+                  : value.name === t("hardware.label.field.broken")
+                  ? t("hardware.label.detail.broken")
+                  : value.name === t("hardware.label.field.pending")
+                  ? t("hardware.label.detail.pending")
+                  : ""
                 : ""
             }
             style={{
@@ -587,12 +602,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 value.name === t("hardware.label.field.assign")
                   ? "#0073b7"
                   : value.name === t("hardware.label.field.readyToDeploy")
-                    ? "#00a65a"
-                    : value.name === t("hardware.label.field.broken")
-                      ? "red"
-                      : value.name === t("hardware.label.field.pending")
-                        ? "#f39c12"
-                        : "",
+                  ? "#00a65a"
+                  : value.name === t("hardware.label.field.broken")
+                  ? "red"
+                  : value.name === t("hardware.label.field.pending")
+                  ? "#f39c12"
+                  : "",
               color: "white",
             }}
           />
@@ -603,7 +618,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "assigned_to",
         title: t("hardware.label.field.checkoutTo"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField strong value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
@@ -691,24 +706,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
-                    ? t("hardware.label.detail.accept")
-                    : value === 3
-                      ? t("hardware.label.detail.refuse")
-                      : ""
+                ? t("hardware.label.detail.pendingAccept")
+                : value === 2
+                ? t("hardware.label.detail.accept")
+                : value === 3
+                ? t("hardware.label.detail.refuse")
+                : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                    ? "#f39c12"
-                    : value === 2
-                      ? "#0073b7"
-                      : value === 3
-                        ? "red"
-                        : "gray",
+                  ? "#f39c12"
+                  : value === 2
+                  ? "#0073b7"
+                  : value === 3
+                  ? "red"
+                  : "gray",
               color: "white",
             }}
           />
@@ -828,6 +843,108 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   });
   const { Option } = Select;
 
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+
+  const initselectedRowKeys = useMemo(() => {
+    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
+  }, [localStorage.getItem("selectedRowKeys")]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
+    initselectedRowKeys as React.Key[]
+  );
+
+  const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+  const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+
+  const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+  const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      0
+    ) {
+      setSelectedCheckout(true);
+      setSelectdStoreCheckout(
+        initselectedRowKeys
+          .filter((item: any) => item.user_can_checkout)
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckout(false);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
+        .length > 0
+    ) {
+      setSelectedCheckin(true);
+      setSelectdStoreCheckin(
+        initselectedRowKeys
+          .filter((item: any) => !item.user_can_checkout)
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckin(false);
+    }
+  }, [initselectedRowKeys]);
+
+  const onSelectChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: any[]
+  ) => {
+    setSelectedRows(selectedRows);
+  };
+
+  const onSelect = (record: any, selected: boolean) => {
+    if (!selected) {
+      const newSelectRow = initselectedRowKeys.filter(
+        (item: any) => item.id !== record.id
+      );
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    } else {
+      const newselectedRowKeys = [record, ...initselectedRowKeys];
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify(
+          newselectedRowKeys.filter(function (item, index) {
+            return newselectedRowKeys.findIndex((item) => item.id === index);
+          })
+        )
+      );
+      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+    }
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    onSelect: onSelect,
+    selectedRows,
+  };
+  useEffect(() => {
+    localStorage.removeItem("selectedRowKeys");
+  }, [window.location.reload]);
+
+  const handleCheckout = () => {
+    setIsCheckoutManyAssetModalVisible(!isCheckoutManyAssetModalVisible);
+    localStorage.removeItem("selectedRowKeys");
+  };
+
+  const handleCheckin = () => {
+    setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
+    localStorage.removeItem("selectedRowKeys");
+  };
+
+  const handleRemoveCheckInCheckOutItem = (id: number) => {
+    const newSelectRow = initselectedRowKeys.filter(
+      (item: any) => item.id !== id
+    );
+    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+  };
+
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -845,19 +962,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-                searchValuesLocation !== 0
+              searchValuesLocation !== 0
                 ? searchValuesLocation
-                : location_id ?? Number(location_id),
+                : Number(location_id) ?? Number(location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -877,7 +994,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item label={t("hardware.label.title.location")} name="location">
+          <Form.Item
+            label={t("hardware.label.title.location")}
+            name="location"
+            className={
+              searchValuesLocation !== 0
+                ? "search-month-location-null"
+                : "search-month-location-null"
+            }
+          >
             <Select
               onChange={() => {
                 localStorage.setItem(
@@ -895,31 +1020,34 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              className={
-                searchValuesLocation !== 0
-                  ? "search-month-location-null"
-                  : "search-month-location-null"
-              }
-              placeholder="ALL_LOCATION"
+              placeholder="Tất cả"
             >
-              <Option value={0}>{"ALL LOCATION"}</Option>
+              <Option value={0}>{"Tất cả"}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label={t("hardware.label.title.confirmStatus")} name="assigned_status">
+          <Form.Item
+            label={t("hardware.label.title.confirmStatus")}
+            name="assigned_status"
+            className={
+              searchValuesLocation !== 0
+                ? "search-month-location-null"
+                : "search-month-location-null"
+            }
+          >
             <Select
               defaultValue={"all"}
               onChange={() => {
-                if (searchFormProps.form?.getFieldsValue()?.assigned_status === "all") {
-                  searchParams.delete('assigned_status');
-                  console.log(searchFormProps.form?.getFieldsValue()?.assigned_status);
+                if (
+                  searchFormProps.form?.getFieldsValue()?.assigned_status ===
+                  "all"
+                ) {
+                  searchParams.delete("assigned_status");
                   setSearchParams(searchParams);
                   searchFormProps.form?.submit();
-
-                }
-                else {
+                } else {
                   searchFormProps.form?.submit();
                   searchParams.set(
                     "assigned_status",
@@ -929,13 +1057,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   );
                   setSearchParams(searchParams);
                 }
-
               }}
-              className={
-                searchValuesLocation !== 0
-                  ? "search-month-location-null"
-                  : "search-month-location-null"
-              }
             >
               <Option value={"all"}>{"Tất cả"}</Option>
               <Option value={0}>{"Chưa checkout"}</Option>
@@ -1015,6 +1137,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
@@ -1090,11 +1213,97 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <div className="sum-assets">
-        <span className="name-sum-assets">
-          {t("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      <MModal
+        title={t("hardware.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+        isModalVisible={isCheckoutManyAssetModalVisible}
+      >
+        <HardwareCheckoutMultipleAsset
+          isModalVisible={isCheckoutManyAssetModalVisible}
+          setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+          data={selectdStoreCheckout}
+        />
+      </MModal>
+      <MModal
+        title={t("hardware.label.title.checkin")}
+        setIsModalVisible={setIsCheckinManyAssetModalVisible}
+        isModalVisible={isCheckinManyAssetModalVisible}
+      >
+        <HardwareCheckinMultipleAsset
+          isModalVisible={isCheckinManyAssetModalVisible}
+          setIsModalVisible={setIsCheckinManyAssetModalVisible}
+          data={selectdStoreCheckin}
+        />
+      </MModal>
+      <div className="checkout-checkin-multiple">
+        <div className="sum-assets">
+          <span className="name-sum-assets">
+            {t("hardware.label.title.sum-assets")}
+          </span>{" "}
+          : {tableProps.pagination ? tableProps.pagination?.total : 0}
+        </div>
+        <div className="checkout-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            onClick={handleCheckout}
+            disabled={!selectedCheckout}
+          >
+            Cấp phát
+          </Button>
+          <div
+            className="list-checkouts"
+            style={
+              !selectedCheckout ? { display: "none" } : { display: "inline" }
+            }
+          >
+            {initselectedRowKeys
+              .filter((item: any) => item.user_can_checkout)
+              .map((item: any) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
+
+        <div className="checkin-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            disabled={!selectedCheckin}
+            onClick={handleCheckin}
+          >
+            Thu hồi
+          </Button>
+
+          <div
+            className="list-checkins"
+            style={
+              !selectedCheckin ? { display: "none" } : { display: "inline" }
+            }
+          >
+            {initselectedRowKeys
+              .filter((item: any) => !item.user_can_checkout)
+              .map((item: any) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
       </div>
       {loading ? (
         <>
@@ -1113,6 +1322,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
+          }}
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
           }}
         >
           {collumns
@@ -1185,8 +1398,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -1203,8 +1416,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       onClick={() => checkout(record)}
                     >
@@ -1221,8 +1434,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -1239,8 +1452,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                          ? false
+                          : true
                       }
                       disabled
                     >
@@ -1257,8 +1470,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
@@ -1273,8 +1486,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >

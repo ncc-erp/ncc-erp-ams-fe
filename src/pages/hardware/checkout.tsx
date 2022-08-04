@@ -239,7 +239,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.id}
+            initialValue={Number(data?.status_label.id)}
           >
             <Select
               onChange={(value) => {

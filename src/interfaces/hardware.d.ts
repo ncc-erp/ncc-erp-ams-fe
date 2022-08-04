@@ -25,6 +25,7 @@ export interface IHardwareCreateRequest {
 }
 
 export interface IHardwareUpdateRequest {
+  assigned_user: number;
   name: string;
   serial: string;
   company: number;
@@ -98,6 +99,7 @@ export interface IHardwareResponse {
     formatted: string;
   };
   assigned_to: {
+    id: number;
     name: string;
     username: string;
   };
@@ -177,6 +179,27 @@ export interface IHardwareRequestCheckout {
   assigned_status: number;
   user_can_checkout: boolean;
 }
+export interface IHardwareRequestMultipleCheckout {
+  assets:{}[];
+  assigned_asset: string;
+  assigned_location: string;
+  assigned_user: string;
+  checkout_at: string;
+  checkout_to_type: string;
+  assigned_status: number;
+  user_can_checkout: boolean;
+  note: string;
+}
+
+export interface IHardwareRequestMultipleCheckin {
+  assets:{}[];
+  status_label: string;
+  status_id: number;
+  checkin_at: string;
+  rtd_location: string;
+  note: string;
+}
+
 
 export interface IHardwareResponseCheckout {
   id: number;

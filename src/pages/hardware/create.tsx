@@ -140,16 +140,21 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       formData.append("rtd_location_id", event.rtd_location.toString());
     }
 
+    if (event.rtd_location !== undefined) {
+      formData.append("location_id", event.rtd_location.toString());
+    }
+
     if (event.order_number !== undefined)
       formData.append("order_number", event.order_number);
 
     formData.append("status_id", event.status_label.toString());
 
-    if (event.user_id !== undefined)
-      formData.append("assigned_to", event.user_id.toString());
+    if (event.assigned_to !== undefined)
+      formData.append("assigned_user", event.assigned_to.toString());
 
     if (event.purchase_cost !== undefined)
       formData.append("purchase_cost", event.purchase_cost);
+
     if (event.purchase_date !== undefined)
       formData.append("purchase_date", event.purchase_date);
 
@@ -209,13 +214,13 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     setIsReadyToDeploy(findLabel(Number(value)));
   };
 
-  const onCheck = (event: ICheckboxChange) => {
-    if (event.target.checked)
-      form.setFieldsValue({
-        requestable: 1,
-      });
-    else form.setFieldsValue({ requestable: 0 });
-  };
+  // const onCheck = (event: ICheckboxChange) => {
+  //   if (event.target.checked)
+  //     form.setFieldsValue({
+  //       requestable: 1,
+  //     });
+  //   else form.setFieldsValue({ requestable: 0 });
+  // };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -360,7 +365,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Form.Item
               className="tabUser"
               label={t("hardware.label.field.checkoutTo")}
-              name="assigned_to"
+              name="assigned_user"
               rules={[
                 {
                   required: true,

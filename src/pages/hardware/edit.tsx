@@ -22,7 +22,8 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-import { ICheckboxChange } from "interfaces";
+
+// import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
   LOCATION_API,
@@ -138,7 +139,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-    formData.append("status_id", event.status_label.toString());
+    if (event.status_label !== undefined) {
+      formData.append("status_id", event.status_label.toString());
+    }
     formData.append("warranty_months", event.warranty_months);
 
     if (event.purchase_cost !== null)
@@ -147,6 +150,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
+
+    formData.append("location_id", event.rtd_location.toString());
+
     if (event.supplier !== undefined)
       formData.append("supplier_id", event.supplier.toString());
 

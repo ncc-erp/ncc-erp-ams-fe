@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Row, Col, Show, Select, Form } from "@pankod/refine-antd";
+import { Row, Col, Select, Form, List } from "@pankod/refine-antd";
 import { DatePicker } from "antd";
 import "styles/antd.less";
 import { Locations } from "components/dashboard/locations";
@@ -21,7 +21,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
   const dateFormat = "YYYY/MM/DD";
 
-  const [locationSelected, setLocationSelected] = useState<number | null>(6);
+  const [locationSelected, setLocationSelected] = useState<number | null>(99999);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchParams1, setSearchParams1] = useSearchParams();
 
@@ -50,19 +50,6 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       },
     },
   });
-  // useEffect(() => {
-  //   setDataDasshboard([
-  //     purchase_date_from !== null ? purchase_date_from : "",
-  //     purchase_date_to !== null ? purchase_date_to : "",
-  //   ]);
-  // }, [purchase_date_from, purchase_date_to]);
-
-  // useEffect(() => {
-  //   setDataDasshboard([
-  //     purchase_date_from1 !== null ? purchase_date_from1 : "",
-  //     purchase_date_to1 !== null ? purchase_date_to1 : "",
-  //   ]);
-  // }, [purchase_date_from1, purchase_date_to1]);
 
   const { data: data1 } = useCustom({
     url: DASHBOARD_API,
@@ -106,7 +93,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     );
     setSearchParams(searchParams);
     setNameSearch(
-      `Số lượng của các văn phòng trong khoảng thời gian: ${searchParams.get(
+      `Số lượng thiết bị của các văn phòng trong khoảng thời gian: ${searchParams.get(
         "purchase_date_from"
       )} đến ${searchParams.get("purchase_date_to")}`
     );
@@ -128,7 +115,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     );
     setSearchParams1(searchParams1);
     setNameSearch(
-      `Số lượng của các văn phòng trong khoảng thời gian: ${searchParams1.get(
+      `Số lượng thiết bị của các văn phòng trong khoảng thời gian: ${searchParams1.get(
         "purchase_date_from"
       )} đến ${searchParams1.get("purchase_date_to")}`
     );
@@ -141,7 +128,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <div className="dashboardContainer">
-      <Show isLoading={isLoading} title={translate("dashboard.title")}>
+      <List title={translate("dashboard.title")}>
         <section className="all-location">
           <span className="title-section-dashboard">
             {translate("dashboard.field.tilte-section-2")}
@@ -235,7 +222,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
               ))}
           </Row>
         </section>
-      </Show>
+      </List>
     </div>
   );
 };
