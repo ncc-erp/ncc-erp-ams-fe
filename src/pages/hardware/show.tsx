@@ -56,13 +56,6 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col>
           <Text>{detail && detail?.name}</Text>
-          {detail?.serial ? (
-            <>
-              <Text>{detail && detail?.serial}</Text>
-            </>
-          ) : (
-            ""
-          )}
         </Col>
       </Row>
       <Row gutter={16}>
@@ -70,9 +63,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.field.serial")}</Title>
         </Col>
         <Col span={18}>
-          <Title level={5} className="show-asset">
-            {detail && detail?.serial}
-          </Title>
+          <Text>{detail && detail?.serial}</Text>
         </Col>
       </Row>
       <Row gutter={16}>
