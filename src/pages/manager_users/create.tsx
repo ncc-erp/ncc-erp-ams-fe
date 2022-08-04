@@ -141,14 +141,15 @@ export const UserCreate = (props: UserCreateProps) => {
         if (event.notes !== undefined) {
             formData.append("notes", event.notes);
         }
-        formData.append("avatar", event.avatar);
+
+        if (event.avatar !== undefined) {
+            formData.append("avatar", event.avatar);
+        }
 
         if (event.remote !== undefined) {
             formData.append("remote", event.remote.toString());
         }
-        if (event.activated !== undefined) {
-            formData.append("activated", event.activated.toString());
-        }
+        formData.append("activated", "true");
         formData.append("ldap_import", "true");
         formData.append("two_factor_activated", "false");
         formData.append("two_factor_enrolled", "false");
@@ -165,13 +166,7 @@ export const UserCreate = (props: UserCreateProps) => {
         form.resetFields();
     };
 
-    const onCheckActivated = (event: ICheckboxChange) => {
-        if (event.target.checked)
-            form.setFieldsValue({
-                activated: 1
-            });
-        else form.setFieldsValue({ activated: 0 });
-    };
+    const [checked, setChecked] = useState(true);
 
     const onCheckRemote = (event: ICheckboxChange) => {
         if (event.target.checked)
@@ -318,21 +313,6 @@ export const UserCreate = (props: UserCreateProps) => {
                             {messageErr?.password_confirmation && (
                                 <Typography.Text type="danger">
                                     {messageErr.password_confirmation[0]}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item label={t("user.label.field.activated")} name="activated" valuePropName="checked">
-                                <Checkbox
-                                    onChange={(event) => {
-                                        onCheckActivated(event);
-                                    }}
-                                >
-                                    {t("user.label.field.checkbox")}
-                                </Checkbox>
-                            </Form.Item>
-                            {messageErr?.activated && (
-                                <Typography.Text type="danger">
-                                    {messageErr.activated}
                                 </Typography.Text>
                             )}
 

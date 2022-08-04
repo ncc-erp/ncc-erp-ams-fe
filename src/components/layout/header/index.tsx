@@ -61,6 +61,8 @@ export const Header: React.FC = () => {
     </Menu>
   );
 
+  const { data: userIdentity } = useGetIdentity<string>();
+
   return (
     <AntdLayout.Header
       style={{
@@ -72,6 +74,11 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
+      <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      <Button type="link" onClick={() => {
+        logoutAccount()
+      }}>
+      </Button>
       <Button
         type="link"
         onClick={() => {

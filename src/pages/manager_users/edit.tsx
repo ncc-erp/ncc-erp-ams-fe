@@ -58,21 +58,12 @@ export const UserEdit = (props: UserCreateProps) => {
     const [file, setFile] = useState<any>();
     const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
     const [checkedRemote, setCheckedRemote] = useState(true);
-    const [checkedActivated, setCheckedActivated] = useState(true);
     const [permissionsAdmin, setPermissionsAdmin] = useState(props?.data?.permissions && props?.data?.permissions.admin);
     const [permissionsSuperUser, setPermissionsSuperUser] = useState(props?.data?.permissions && props.data?.permissions.superuser);
 
     useEffect(() => {
-        setCheckedActivated(props.data?.activated === true ? true : false);
-    }, [props]);
-
-    useEffect(() => {
         setCheckedRemote(props.data?.remote === true ? true : false);
     }, [props]);
-
-    // useEffect(() => {
-    //     setPermissionsAdmin(props.data?.permissions && props.data?.permissions.admin ? "1" : "0");
-    // }, [props]);
 
     const t = useTranslate();
 
@@ -123,7 +114,7 @@ export const UserEdit = (props: UserCreateProps) => {
         data: updateData,
         isLoading,
     } = useCustom({
-        url: "api/v1/users" + "/" + data?.id + "/" + "update",
+        url: "api/v1/users" + "/" + data?.id,
         method: "post",
         config: {
             payload: payload,
@@ -169,10 +160,11 @@ export const UserEdit = (props: UserCreateProps) => {
             formData.append("notes", event.notes);
         }
 
-        formData.append("avatar", event.avatar);
+        if (event.avatar !== undefined && typeof (event.avatar) !== "string") {
+            formData.append("avatar", event.avatar);
+        }
 
         formData.append("remote", checkedRemote ? "1" : "0");
-        formData.append("activated", checkedActivated ? "1" : "0");
         formData.append("ldap_import", "true");
         formData.append("two_factor_activated", "false");
         formData.append("two_factor_enrolled", "false");
@@ -194,7 +186,6 @@ export const UserEdit = (props: UserCreateProps) => {
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
             { name: "username", value: data?.username },
-            { name: "activated", value: data?.activated },
             { name: "email", value: data?.email },
             { name: "manager", value: data?.manager.id },
             { name: "department", value: data?.department.id },
@@ -246,8 +237,6 @@ export const UserEdit = (props: UserCreateProps) => {
         });
     }, [file]);
 
-    // const { Option } = Select;
-
     return (
         <Form
             {...formProps}
@@ -298,24 +287,6 @@ export const UserEdit = (props: UserCreateProps) => {
                                 </Typography.Text>
                             )}
 
-                            <Form.Item label={t("user.label.field.activated")} name="activated" valuePropName="checked">
-                                <Checkbox
-                                    name="activated"
-                                    checked={checkedActivated}
-                                    value={data?.activated}
-                                    onChange={(event: ICheckboxChange) => {
-                                        setCheckedActivated(event.target.checked);
-                                    }}
-                                >
-                                    {t("user.label.field.checkbox")}
-                                </Checkbox>
-                            </Form.Item>
-                            {messageErr?.activated && (
-                                <Typography.Text type="danger">
-                                    {messageErr.activated}
-                                </Typography.Text>
-                            )}
-
                             <Form.Item
                                 label={t("user.label.field.email")}
                                 name="email"
@@ -347,8 +318,6 @@ export const UserEdit = (props: UserCreateProps) => {
                                 </Typography.Text>
                             )}
 
-                        </Col>
-                        <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label={t("user.label.field.department")}
                                 name="department"
@@ -375,7 +344,8 @@ export const UserEdit = (props: UserCreateProps) => {
                                 }}
                             ></Checkbox>{" "}
                             {t("user.label.field.remote_checkbox")}
-
+                        </Col>
+                        <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label={t("user.label.field.locations")}
                                 name="location"

@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useState, CSSProperties } from "react";
 
 import {
   useTranslate,
   useTitle,
   useNavigation,
   usePermissions,
+  useRouterContext,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
@@ -22,6 +23,15 @@ const {
   UsergroupAddOutlined
 } = Icons;
 
+const logo: CSSProperties = {
+  height: "50px",
+  left: "50%",
+  position: "relative",
+  transform: "translateX(-50%)",
+  marginTop: "10px",
+  marginBottom: "10px"
+};
+
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const Title = useTitle();
@@ -36,6 +46,8 @@ export const Sider: React.FC = () => {
 
   const SubMenu = Menu.SubMenu;
 
+  const { Link } = useRouterContext();
+
   return (
     <AntdLayout.Sider
       collapsible
@@ -45,7 +57,46 @@ export const Sider: React.FC = () => {
       breakpoint="lg"
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
     >
-      {Title && <Title collapsed={collapsed} />}
+      {/* {Title && <Title collapsed={collapsed} />} */}
+      {permissionsData && permissionsData.admin === "0" && (
+        <>
+          <Link to="users">
+            {collapsed ? (
+              <img
+                src={"/images/global/nccsoft-logo-small.png"}
+                alt="NCC IT TOOL"
+                style={logo}
+              />
+            ) : (
+              <img
+                src={"/images/global/nccsoft-logo-small.png"}
+                alt="NCC IT TOOL"
+                style={logo}
+              />
+            )}
+          </Link>
+        </>
+      )}
+
+      {permissionsData && permissionsData.admin === "1" && (
+        <>
+          <Link to="dashboard">
+            {collapsed ? (
+              <img
+                src={"/images/global/nccsoft-logo-small.png"}
+                alt="NCC IT TOOL"
+                style={logo}
+              />
+            ) : (
+              <img
+                src={"/images/global/nccsoft-logo-small.png"}
+                alt="NCC IT TOOL"
+                style={logo}
+              />
+            )}
+          </Link>
+        </>
+      )}
       <Menu
         selectedKeys={[selectedKey]}
         mode="inline"
@@ -338,6 +389,6 @@ export const Sider: React.FC = () => {
               );
             })}
       </Menu>
-    </AntdLayout.Sider>
+    </AntdLayout.Sider >
   );
 };
