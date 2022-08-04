@@ -158,7 +158,6 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     value: string;
     label: React.ReactNode;
   }) => {
-    console.log(JSON.stringify(value));
     if (JSON.stringify(value) === JSON.stringify("all")) {
       searchParams.delete("location");
     } else searchParams.set("location", JSON.stringify(value));
@@ -168,7 +167,6 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     value: string;
     label: React.ReactNode;
   }) => {
-    console.log(JSON.stringify(value));
     if (JSON.stringify(value) === JSON.stringify("all")) {
       searchParams.delete("assetHistoryType");
     } else searchParams.set("assetHistoryType", JSON.stringify(value));

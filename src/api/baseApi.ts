@@ -5,6 +5,8 @@ export const DASHBOARD_FINFAST_SETTING_API = "api/v1/dashboard/finfast-setting";
 
 export const HARDWARE_API = "api/v1/hardware";
 export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";
+export const HARDWARE_CHECKOUT_API = "api/v1/hardware/checkout";
+export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
 
 export const MODELS_API = "api/v1/models";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
