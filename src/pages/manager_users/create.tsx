@@ -143,7 +143,7 @@ export const UserCreate = (props: UserCreateProps) => {
         }
 
         if (event.avatar !== undefined) {
-            formData.append("avatar", event.avatar);
+            formData.append("image", event.avatar);
         }
 
         if (event.remote !== undefined) {
@@ -165,8 +165,6 @@ export const UserCreate = (props: UserCreateProps) => {
         setPayload(formData);
         form.resetFields();
     };
-
-    const [checked, setChecked] = useState(true);
 
     const onCheckRemote = (event: ICheckboxChange) => {
         if (event.target.checked)

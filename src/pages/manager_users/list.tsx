@@ -31,9 +31,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] = useState(false);
     const [detail, setDetail] = useState<IUserResponse>();
-
-    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
 
     const [collumnSelected, setColumnSelected] =
         useState<string[]>(defaultCheckedList);
@@ -353,11 +352,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     useEffect(() => {
         refreshData();
     }, [isEditModalVisible]);
-
-    useEffect(() => {
-        refreshData();
-    }, [isCloneModalVisible]);
-
     const [loading, setLoading] = useState(false);
     const handleRefresh = () => {
         setLoading(true);
@@ -510,17 +504,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                     dataIndex="actions"
                     render={(_, record) => (
                         <Space>
-                            {/* <Tooltip
-                                        title={translate("user.label.tooltip.clone")}
-                                        color={"#108ee9"}
-                                    >
-                                        <CloneButton
-                                            hideText
-                                            size="small"
-                                            recordItemId={record.id}
-                                        // onClick={() => clone(record)}
-                                        />
-                                    </Tooltip> */}
                             <Tooltip
                                 title={translate("user.label.tooltip.edit")}
                                 color={"#108ee9"}

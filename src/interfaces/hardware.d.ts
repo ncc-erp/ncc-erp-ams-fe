@@ -72,7 +72,7 @@ export interface IHardwareResponse {
   manufacturer: {
     id: number;
     name: string;
-  }
+  };
   supplier: {
     id: number;
     name: string;
@@ -92,7 +92,7 @@ export interface IHardwareResponse {
   warranty_expires: {
     date: string;
     formatted: string;
-  }
+  };
   purchase_cost: number;
   purchase_date: {
     date: string;
@@ -136,14 +136,14 @@ export interface IHardwareResponse {
     date: string;
     formatted: string;
   };
-  created_at:{
+  created_at: {
     datetime: string;
     formatted: string;
-  }
-  updated_at:{
+  };
+  updated_at: {
     datetime: string;
     formatted: string;
-  }
+  };
   checkout_at: {
     date: string;
     formatted: string;
@@ -180,7 +180,7 @@ export interface IHardwareRequestCheckout {
   user_can_checkout: boolean;
 }
 export interface IHardwareRequestMultipleCheckout {
-  assets:{}[];
+  assets: {}[];
   assigned_asset: string;
   assigned_location: string;
   assigned_user: string;
@@ -192,14 +192,13 @@ export interface IHardwareRequestMultipleCheckout {
 }
 
 export interface IHardwareRequestMultipleCheckin {
-  assets:{}[];
+  assets: {}[];
   status_label: string;
   status_id: number;
   checkin_at: string;
   rtd_location: string;
   note: string;
 }
-
 
 export interface IHardwareResponseCheckout {
   id: number;
@@ -305,4 +304,9 @@ export interface IHardwareFilterVariables {
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
   assigned_status: string;
+}
+
+export interface IHardwareRequestMultipleCancel {
+  assets: {}[];
+  reason: string;
 }

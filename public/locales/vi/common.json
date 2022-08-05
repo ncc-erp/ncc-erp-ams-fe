@@ -298,7 +298,8 @@
         "edit": "Chỉnh sửa",
         "clone": "Clone",
         "create": "Tạo mới",
-        "name_user": "Người dùng"
+        "name_user": "Người dùng",
+        "changePassword": "Thay đổi mật khẩu"
       },
       "field": {
         "notes": "Mô tả",
@@ -342,7 +343,10 @@
         "licenses_count": "Bản quyền",
         "consumables_count": "Hàng tiêu dùng",
         "password": "Mật khẩu",
-        "password_confirmation": "Xác nhận mật khẩu"
+        "password_confirmation": "Xác nhận mật khẩu",
+        "old_password": "Mật khẩu cũ",
+        "new_password": "Mật khẩu mới",
+        "list_assets": "Danh sách các thiết bị"
       },
       "message": {
         "required": "bắt buộc"
@@ -351,7 +355,9 @@
         "cancle": "Từ chối",
         "create": "Thêm mới",
         "synchronized": "Đồng bộ",
-        "update": "Chỉnh sửa"
+        "update": "Chỉnh sửa",
+        "changePass": "Đổi mật khẩu",
+        "accept": "Xác nhận"
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -359,7 +365,8 @@
         "delete": "Xoá",
         "search": "Tìm kiếm nâng cao",
         "refresh": "Refresh",
-        "columns": "Danh sách các cột"
+        "columns": "Danh sách các cột",
+        "changePass": "Đổi mật khẩu"
       },
       "placeholder": {
         "first_name": "Họ và tên đệm",
