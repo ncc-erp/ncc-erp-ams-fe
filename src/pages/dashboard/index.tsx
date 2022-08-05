@@ -21,7 +21,9 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
   const dateFormat = "YYYY/MM/DD";
 
-  const [locationSelected, setLocationSelected] = useState<number | null>(99999);
+  const [locationSelected, setLocationSelected] = useState<number | null>(
+    99999
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchParams1, setSearchParams1] = useSearchParams();
 

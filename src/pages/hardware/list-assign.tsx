@@ -52,6 +52,7 @@ import {
   MenuOutlined,
   FileSearchOutlined,
   SyncOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
@@ -59,6 +60,8 @@ import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
+import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 
 const defaultCheckedList = [
   "id",
@@ -108,6 +111,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const [listening, setListening] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+  const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
+    useState(false);
+  const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
+    useState(false);
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -742,6 +749,14 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutManyAssetModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckinManyAssetModalVisible]);
+
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
       setColumnSelected(
@@ -840,6 +855,129 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ],
   });
   const { Option } = Select;
+
+  const initselectedRowKeys = useMemo(() => {
+    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
+  }, [localStorage.getItem("selectedRowKeys")]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
+    initselectedRowKeys as React.Key[]
+  );
+
+  const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+  const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+
+  const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+  const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      0
+    ) {
+      setSelectedCheckout(true);
+      setSelectdStoreCheckout(
+        initselectedRowKeys
+          .filter((item: any) => item.user_can_checkout)
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckout(false);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
+        .length > 0
+    ) {
+      setSelectedCheckin(true);
+      setSelectdStoreCheckin(
+        initselectedRowKeys
+          .filter((item: any) => !item.user_can_checkout)
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckin(false);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+        0 &&
+      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
+        .length > 0
+    ) {
+      setSelectedCheckout(false);
+      setSelectedCheckin(false);
+    } else {
+    }
+  }, [initselectedRowKeys]);
+
+  const onSelect = (record: any, selected: boolean) => {
+    if (!selected) {
+      const newSelectRow = initselectedRowKeys.filter(
+        (item: any) => item.id !== record.id
+      );
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    } else {
+      const newselectedRowKeys = [record, ...initselectedRowKeys];
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify(
+          newselectedRowKeys.filter(function (item, index) {
+            return newselectedRowKeys.findIndex((item) => item.id === index);
+          })
+        )
+      );
+      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+    }
+  };
+  const onSelectAll = (
+    selected: boolean,
+    selectedRows: any,
+    changeRows: any
+  ) => {
+    if (!selected) {
+      localStorage.removeItem("selectedRowKeys");
+      setSelectedRowKeys(selectedRows);
+    } else {
+      localStorage.setItem("selectedRowKeys", JSON.stringify(selectedRows));
+      setSelectedRowKeys(selectedRows);
+    }
+  };
+
+  const onSelectChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: any[]
+  ) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    onSelect: onSelect,
+    onSelectAll: onSelectAll,
+  };
+
+  useEffect(() => {
+    localStorage.removeItem("selectedRowKeys");
+  }, [window.location.reload]);
+
+  const handleCheckout = () => {
+    setIsCheckoutManyAssetModalVisible(!isCheckoutManyAssetModalVisible);
+  };
+
+  const handleCheckin = () => {
+    setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
+  };
+
+  const handleRemoveCheckInCheckOutItem = (id: number) => {
+    const newSelectRow = initselectedRowKeys.filter(
+      (item: any) => item.id !== id
+    );
+    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+  };
 
   return (
     <List
@@ -1071,11 +1209,121 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <div className="sum-assets">
-        <span className="name-sum-assets">
-          {t("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      <MModal
+        title={t("hardware.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+        isModalVisible={isCheckoutManyAssetModalVisible}
+      >
+        <HardwareCheckoutMultipleAsset
+          isModalVisible={isCheckoutManyAssetModalVisible}
+          setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+          data={selectdStoreCheckout}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
+      <MModal
+        title={t("hardware.label.title.checkin")}
+        setIsModalVisible={setIsCheckinManyAssetModalVisible}
+        isModalVisible={isCheckinManyAssetModalVisible}
+      >
+        <HardwareCheckinMultipleAsset
+          isModalVisible={isCheckinManyAssetModalVisible}
+          setIsModalVisible={setIsCheckinManyAssetModalVisible}
+          data={selectdStoreCheckin}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
+      <div className="checkout-checkin-multiple">
+        <div className="sum-assets">
+          <span className="name-sum-assets">
+            {t("hardware.label.title.sum-assets")}
+          </span>{" "}
+          : {tableProps.pagination ? tableProps.pagination?.total : 0}
+        </div>
+        <div className="checkout-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            onClick={handleCheckout}
+            disabled={!selectedCheckout}
+          >
+            Cấp phát
+          </Button>
+          <div
+            className={!selectedCheckin ? "list-checkoutss" : "list-checkouts"}
+          >
+            <span
+              className="title-remove-name"
+              style={
+                !selectedCheckin ? { display: "none" } : { display: "inline" }
+              }
+            >
+              Những tài sản này không được phép cấp phát.
+              <br />
+              Hãy xóa chúng khỏi danh sách đi
+            </span>
+            {initselectedRowKeys
+              .filter((item: any) => !item.user_can_checkout)
+              .map((item: any) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
+
+        <div className="checkin-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            disabled={!selectedCheckin}
+            onClick={handleCheckin}
+          >
+            Thu hồi
+          </Button>
+
+          <div
+            className={!selectedCheckout ? "list-checkins" : "list-checkinss"}
+          >
+            <span
+              className="title-remove-name"
+              style={
+                !selectedCheckout ? { display: "none" } : { display: "inline" }
+              }
+            >
+              Những tài sản này không được phép thu hồi.
+              <br />
+              Hãy xóa chúng khỏi danh sách đi
+            </span>
+            {initselectedRowKeys
+              .filter((item: any) => item.user_can_checkout)
+              .map((item: any) => (
+                <span
+                  className="list-checkin"
+                  key={item.id}
+                  // style={
+                  //   selectedCheckin
+                  //     ? { display: "none" }
+                  //     : { display: "inline" }
+                  // }
+                >
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
       </div>
       {loading ? (
         <>
@@ -1094,6 +1342,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
+          }}
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
           }}
         >
           {collumns

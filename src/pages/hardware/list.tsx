@@ -29,8 +29,6 @@ import {
 import { Image } from "antd";
 import "styles/antd.less";
 
-import { CloseOutlined } from "@ant-design/icons";
-
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -43,6 +41,7 @@ import {
   MenuOutlined,
   FileSearchOutlined,
   SyncOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -843,7 +842,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   });
   const { Option } = Select;
 
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  // const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   const initselectedRowKeys = useMemo(() => {
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
@@ -904,7 +903,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     selectedRowKeys: React.Key[],
     selectedRows: any[]
   ) => {
-    setSelectedRows(selectedRows);
+    setSelectedRowKeys(selectedRowKeys);
   };
 
   const onSelect = (record: any, selected: boolean) => {
@@ -928,24 +927,37 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
+  const onSelectAll = (
+    selected: boolean,
+    selectedRows: any,
+    changeRows: any
+  ) => {
+    if (!selected) {
+      localStorage.removeItem("selectedRowKeys");
+      setSelectedRowKeys(selectedRows);
+    } else {
+      localStorage.setItem("selectedRowKeys", JSON.stringify(selectedRows));
+      setSelectedRowKeys(selectedRows);
+    }
+  };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
     onSelect: onSelect,
-    selectedRows,
+    onSelectAll: onSelectAll,
   };
+
   useEffect(() => {
     localStorage.removeItem("selectedRowKeys");
   }, [window.location.reload]);
 
   const handleCheckout = () => {
     setIsCheckoutManyAssetModalVisible(!isCheckoutManyAssetModalVisible);
-    localStorage.removeItem("selectedRowKeys");
   };
 
   const handleCheckin = () => {
     setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
-    localStorage.removeItem("selectedRowKeys");
   };
 
   const handleRemoveCheckInCheckOutItem = (id: number) => {
@@ -1233,6 +1245,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckoutManyAssetModalVisible}
           setIsModalVisible={setIsCheckoutManyAssetModalVisible}
           data={selectdStoreCheckout}
+          setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
       <MModal
@@ -1244,6 +1257,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckinManyAssetModalVisible}
           setIsModalVisible={setIsCheckinManyAssetModalVisible}
           data={selectdStoreCheckin}
+          setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
       <div className="checkout-checkin-multiple">
@@ -1263,16 +1277,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             Cấp phát
           </Button>
           <div
-            className="list-checkouts"
-            style={
-              selectedCheckout ? { display: "none" } : { display: "inline" }
-            }
+            className={!selectedCheckin ? "" : "list-checkouts"}
+            // style={
+            //   selectedCheckout ? { display: "none" } : { display: "inline" }
+            // }
           >
-            <span className="title-remove-name">
-              Những tài sản này ko đc phép cấp phát.
+            <span
+              className="title-remove-name"
+              style={
+                !selectedCheckin ? { display: "none" } : { display: "inline" }
+              }
+            >
+              Những tài sản này không được phép cấp phát.
               <br />
               Hãy xóa chúng khỏi danh sách đi
             </span>
+
             {initselectedRowKeys
               .filter((item: any) => !item.user_can_checkout)
               .map((item: any) => (
@@ -1300,16 +1320,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           </Button>
 
           <div
-            className="list-checkins"
-            style={
-              selectedCheckin ? { display: "none" } : { display: "inline" }
-            }
+            className={!selectedCheckout ? "" : "list-checkins"}
+            // style={
+            //   selectedCheckin ? { display: "none" } : { display: "inline" }
+            // }
           >
-            <span className="title-remove-name">
-              Những tài sản này ko đc phép thu hồi.
+            <span
+              className="title-remove-name"
+              style={
+                !selectedCheckout ? { display: "none" } : { display: "inline" }
+              }
+            >
+              Những tài sản này không được phép thu hồi.
               <br />
               Hãy xóa chúng khỏi danh sách đi
             </span>
+
             {initselectedRowKeys
               .filter((item: any) => item.user_can_checkout)
               .map((item: any) => (
