@@ -1300,15 +1300,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             {initselectedRowKeys
               .filter((item: any) => item.user_can_checkout)
               .map((item: any) => (
-                <span
-                  className="list-checkin"
-                  key={item.id}
-                  // style={
-                  //   selectedCheckin
-                  //     ? { display: "none" }
-                  //     : { display: "inline" }
-                  // }
-                >
+                <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-checkin-checkout"
