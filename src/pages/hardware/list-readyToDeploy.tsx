@@ -1255,12 +1255,7 @@ export const HardwareListReadyToDeploy: React.FC<
           >
             Cấp phát
           </Button>
-          <div
-            className={!selectedCheckin ? "list-checkoutss" : "list-checkouts"}
-            // style={
-            //   selectedCheckout ? { display: "none" } : { display: "inline" }
-            // }
-          >
+          <div className={!selectedCheckin ? "" : "list-checkouts"}>
             <span
               className="title-remove-name"
               style={
@@ -1298,12 +1293,7 @@ export const HardwareListReadyToDeploy: React.FC<
             Thu hồi
           </Button>
 
-          <div
-            className={!selectedCheckout ? "list-checkins" : "list-checkinss"}
-            // style={
-            //   selectedCheckin ? { display: "none" } : { display: "inline" }
-            // }
-          >
+          <div className={!selectedCheckout ? "" : "list-checkins"}>
             <span
               className="title-remove-name"
               style={

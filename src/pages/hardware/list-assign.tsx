@@ -1249,9 +1249,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           >
             Cấp phát
           </Button>
-          <div
-            className={!selectedCheckin ? "list-checkoutss" : "list-checkouts"}
-          >
+          <div className={!selectedCheckin ? "" : "list-checkouts"}>
             <span
               className="title-remove-name"
               style={
@@ -1288,9 +1286,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             Thu hồi
           </Button>
 
-          <div
-            className={!selectedCheckout ? "list-checkins" : "list-checkinss"}
-          >
+          <div className={!selectedCheckout ? "" : "list-checkins"}>
             <span
               className="title-remove-name"
               style={
