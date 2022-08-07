@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Checkbox, CreateButton, DeleteButton, EditButton, getDefaultSortOrder, List, Space, Spin, Table, TextField, Tooltip, useTable } from "@pankod/refine-antd";
 import { CrudFilters, IResourceComponentsProps, useTranslate } from "@pankod/refine-core";
 import { IUser, IUserResponse } from "interfaces/user";

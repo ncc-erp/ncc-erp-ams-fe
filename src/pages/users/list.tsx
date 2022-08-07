@@ -32,18 +32,7 @@ import { ASSIGN_HARDWARE_API, HARDWARE_API } from "api/baseApi";
 import type { ColumnsType } from 'antd/es/table';
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
-
-interface DataType {
-  key: React.Key;
-  id: number;
-  name: string;
-  image: string;
-  assigned_status: number;
-  model: any;
-  category: any;
-  rtd_location: any;
-  last_checkout: any;
-}
+import { IUserAssets } from "interfaces/user";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -53,7 +42,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
-    useTable<IHardware>({
+    useTable<IUserAssets>({
       initialSorter: [
         {
           field: "id",
@@ -73,7 +62,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
-  const collumns: ColumnsType<DataType> = [
+  const collumns: ColumnsType<IUserAssets> = [
     {
       dataIndex: "id",
       title: "ID",
@@ -172,9 +161,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           value: 3,
         },
       ],
-      onFilter: (value, record: any) => record.assigned_status === value
+      onFilter: (value, record: IUserAssets) => record.assigned_status === value
     },
-
     {
       dataIndex: "last_checkout",
       title: t("user.label.field.dateCheckout"),
@@ -212,18 +200,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     });
   };
 
-  const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
-    mutate({
-      resource: HARDWARE_API + "?_method=PUT",
-      values: {
-        assets: assets,
-        assigned_status: assigned_status,
-      },
-    });
-    setSelectedRowKeys([]);
-    localStorage.removeItem("selectedRowKeys_AcceptRefuse")
-  };
-
   const refreshData = () => {
     tableQueryResult.refetch();
   };
@@ -239,12 +215,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCancleModalVisible]);
 
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
-
+  const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [selectedCancel, setSelectedCancel] = useState<boolean>(true);
-
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] = useState(false);
-  const [selectdStoreCancel, setSelectdStoreCancel] = useState<any[]>([]);
+  const [selectdStoreCancel, setSelectdStoreCancel] = useState<IUserAssets[]>([]);
 
   const initselectedRowKeys = useMemo(() => {
     return JSON.parse(localStorage.getItem("selectedRowKeys_AcceptRefuse") as string) || [];
@@ -256,14 +230,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length >
+      initselectedRowKeys.filter((item: IUserAssets) => item.assigned_status === 1).length >
       0
     ) {
       setSelectedCancel(true);
       setSelectdStoreCancel(
         initselectedRowKeys
-          .filter((item: any) => item.assigned_status === 1)
-          .map((item: any) => item)
+          .filter((item: IUserAssets) => item.assigned_status === 1)
+          .map((item: IUserAssets) => item)
       );
     } else {
       setSelectedCancel(false);
@@ -273,13 +247,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: any[]
+    selectedRows: IUserAssets[]
   ) => {
     setSelectedRows(selectedRows);
     setSelectedRowKeys(selectedRowKeys)
   };
 
-  const onSelectAll = (selected: any, selectedRows: any, changeRows: any) => {
+  const onSelectAll = (selected: boolean, selectedRows: any, changeRows: any) => {
     if (!selected) {
       localStorage.removeItem("selectedRowKeys_AcceptRefuse");
       setSelectedRowKeys(selectedRows);
@@ -289,14 +263,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     }
   }
 
-  const onSelect = (record: any, selected: boolean) => {
+  const onSelect = (record: IUserAssets, selected: boolean) => {
     if (!selected) {
       const newSelectRow = initselectedRowKeys.filter(
-        (item: any) => item.id !== record.id
+        (item: IUserAssets) => item.id !== record.id
       );
 
       localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRow));
-      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+      setSelectedRowKeys(newSelectRow.map((item: IUserAssets) => item.id));
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
@@ -307,7 +281,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           })
         )
       );
-      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+      setSelectedRowKeys(newselectedRowKeys.map((item: IUserAssets) => item.id));
     }
   };
 
@@ -321,14 +295,26 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const handleRemoveItem = (id: number) => {
     const newSelectRow = initselectedRowKeys.filter(
-      (item: any) => item.id !== id
+      (item: IUserAssets) => item.id !== id
     );
     localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRow));
-    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    setSelectedRowKeys(newSelectRow.map((item: IUserAssets) => item.id));
   };
 
   const handleCancel = () => {
     setIsCancelManyAssetModalVisible(!isCancelManyAssetModalVisible);
+  };
+
+  const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
+    mutate({
+      resource: HARDWARE_API + "?_method=PUT",
+      values: {
+        assets: assets,
+        assigned_status: assigned_status,
+      },
+    });
+    setSelectedRowKeys([]);
+    localStorage.removeItem("selectedRowKeys_AcceptRefuse")
   };
 
   useEffect(() => {
@@ -344,7 +330,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
-              onConfirm={() => confirmMultipleHardware(initselectedRowKeys.map((item: any) => item.id), 2)}
+              onConfirm={() => confirmMultipleHardware(initselectedRowKeys.map((item: IUserAssets) => item.id), 2)}
             >
               <Button type="primary" disabled={!selectedCancel}>{t("user.label.button.accept")}</Button>
             </Popconfirm>
@@ -360,7 +346,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             }
           >
             {initselectedRowKeys
-              .map((item: any) => (
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
