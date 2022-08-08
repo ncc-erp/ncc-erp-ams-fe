@@ -222,6 +222,41 @@ export const LocationEdit = (props: LocationEditProps) => {
             />
           </Form.Item>
           <Form.Item
+            label={t("location.label.field.zip")}
+            name="zip"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("location.label.field.zip") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+            initialValue={data?.zip}
+          >
+            <Input placeholder={t("location.label.field.zip")} />
+          </Form.Item>
+        </Col>
+
+        <Col className="gutter-row" span={12}>
+          <Form.Item
+            label={t("location.label.field.address_detail")}
+            name="address_detail"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("location.label.field.address_detail") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+            initialValue={data?.address2}
+          >
+            <Input placeholder={t("location.label.field.address_detail")} />
+          </Form.Item>
+          <Form.Item
             label={t("location.label.field.address")}
             name="address"
             rules={[
@@ -254,60 +289,6 @@ export const LocationEdit = (props: LocationEditProps) => {
             <Input placeholder={t("location.label.field.state")} />
           </Form.Item>
           <Form.Item
-            label={t("location.label.field.zip")}
-            name="zip"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.zip") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.zip}
-          >
-            <Input placeholder={t("location.label.field.zip")} />
-          </Form.Item>
-        </Col>
-
-        <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("location.label.field.parent")}
-            name="parent"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.parent") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.parent.id ? data?.parent.id : ""}
-          >
-            <Select
-              placeholder={t("location.label.placeholder.parent")}
-              {...locationSelectProps}
-            />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.currency")}
-            name="currency"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.currency") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.currency}
-          >
-            <Input placeholder={t("location.label.placeholder.currency")} />
-          </Form.Item>
-          <Form.Item
             label={t("location.label.field.city")}
             name="city"
             rules={[
@@ -323,7 +304,7 @@ export const LocationEdit = (props: LocationEditProps) => {
           >
             <Input placeholder={t("location.label.field.city")} />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label={t("location.label.field.country")}
             name="country"
             rules={[
@@ -350,7 +331,7 @@ export const LocationEdit = (props: LocationEditProps) => {
                 },
               ]}
             />
-          </Form.Item>
+          </Form.Item> */}
         </Col>
       </Row>
 

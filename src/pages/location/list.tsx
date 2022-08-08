@@ -73,6 +73,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         id: data.manager !== null ? data.manager.id : 0,
         name: data.manager !== null ? data.manager.name : "",
       },
+      address2: data?.address2,
       address: data?.address,
       city: data?.city,
       state: data?.state,

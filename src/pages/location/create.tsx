@@ -75,6 +75,9 @@ export const LocationCreate = (props: LocationCreateProps) => {
     if (event.manager !== undefined) {
       formData.append("manager_id", event.manager.toString());
     }
+    if (event.address_detail !== undefined) {
+      formData.append("address2", event.address_detail);
+    }
     if (event.address !== undefined) {
       formData.append("address", event.address);
     }
@@ -180,6 +183,39 @@ export const LocationCreate = (props: LocationCreateProps) => {
             />
           </Form.Item>
           <Form.Item
+            label={t("location.label.field.zip")}
+            name="zip"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("location.label.field.zip") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+          >
+            <Input placeholder={t("location.label.field.zip")} />
+          </Form.Item>
+        </Col>
+
+        <Col className="gutter-row" span={12}>
+          <Form.Item
+            label={t("location.label.field.address_detail")}
+            name="address_detail"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("location.label.field.address_detail") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+          >
+            <Input placeholder={t("location.label.field.address_detail")} />
+          </Form.Item>
+          <Form.Item
             label={t("location.label.field.address")}
             name="address"
             rules={[
@@ -210,57 +246,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
             <Input placeholder={t("location.label.field.state")} />
           </Form.Item>
           <Form.Item
-            label={t("location.label.field.zip")}
-            name="zip"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.zip") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Input placeholder={t("location.label.field.zip")} />
-          </Form.Item>
-        </Col>
-
-        <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("location.label.field.parent")}
-            name="parent"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.parent") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("location.label.placeholder.parent")}
-              {...locationSelectProps}
-            />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.currency")}
-            name="currency"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.currency") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Input placeholder={t("location.label.placeholder.currency")} />
-          </Form.Item>
-          <Form.Item
             label={t("location.label.field.city")}
             name="city"
             rules={[
@@ -274,33 +259,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
             ]}
           >
             <Input placeholder={t("location.label.field.city")} />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.country")}
-            name="country"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.country") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("location.label.placeholder.country")}
-              options={[
-                {
-                  label: "Việt Nam",
-                  value: "VN",
-                },
-                {
-                  label: "England",
-                  value: "English",
-                },
-              ]}
-            />
           </Form.Item>
         </Col>
       </Row>

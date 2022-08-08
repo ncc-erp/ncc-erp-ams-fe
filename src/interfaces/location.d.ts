@@ -13,6 +13,7 @@ export interface ILocationResponse {
         id: number;
         name: string;
     };
+    address2: string;
     address: string;
     city: string;
     state: string;
@@ -29,6 +30,7 @@ export interface ILocationRequest {
     name: string;
     parent: number;
     manager: number;
+    address_detail: string;
     address: string;
     city: string;
     state: string;
@@ -41,5 +43,4 @@ export interface ILocationRequest {
     assigned_assets_count: number;
     users_count : number;
     ldap_ou: string;
-   
 }
