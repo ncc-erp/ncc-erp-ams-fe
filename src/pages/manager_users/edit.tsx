@@ -14,7 +14,7 @@ import {
     Typography,
 } from "@pankod/refine-antd";
 
-import { Tabs, Collapse, Radio } from 'antd';
+import { Tabs, Radio } from 'antd';
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
@@ -30,8 +30,6 @@ import {
 } from "api/baseApi";
 import { IUser, IUserCreateRequest, IUserResponse } from "interfaces/user";
 import "styles/antd.less";
-
-const RadioGroup = Radio.Group;
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -132,6 +130,13 @@ export const UserEdit = (props: UserCreateProps) => {
         formData.append("last_name", event.last_name);
         formData.append("username", event.username);
 
+        if (event.password !== undefined) {
+            formData.append("password", event.password);
+        }
+        if (event.password_confirmation !== undefined) {
+            formData.append("password_confirmation", event.password_confirmation);
+        }
+
         if (event.email !== undefined) {
             formData.append("email", event.email);
         }
@@ -147,21 +152,21 @@ export const UserEdit = (props: UserCreateProps) => {
         if (event.phone !== null) {
             formData.append("phone", event.phone.toString());
         }
-        if (event.address !== undefined) {
+        if (event.address !== null) {
             formData.append("address", event.address);
         }
-        if (event.city !== undefined) {
+        if (event.city !== null) {
             formData.append("city", event.city);
         }
-        if (event.state !== undefined) {
+        if (event.state !== null) {
             formData.append("state", event.state);
         }
         if (event.notes !== undefined) {
             formData.append("notes", event.notes);
         }
 
-        if (event.avatar !== undefined && typeof (event.avatar) !== "string") {
-            formData.append("avatar", event.avatar);
+        if (event.avatar !== undefined) {
+            formData.append("image", event.avatar);
         }
 
         formData.append("remote", checkedRemote ? "1" : "0");
@@ -186,6 +191,7 @@ export const UserEdit = (props: UserCreateProps) => {
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
             { name: "username", value: data?.username },
+            { name: "password", value: data?.password },
             { name: "email", value: data?.email },
             { name: "manager", value: data?.manager.id },
             { name: "department", value: data?.department.id },
@@ -284,6 +290,39 @@ export const UserEdit = (props: UserCreateProps) => {
                             {messageErr?.username && (
                                 <Typography.Text type="danger">
                                     {messageErr.username[0]}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.password")}
+                                name="password"
+                                initialValue={data?.password}
+                                rules={[{
+                                    required: true,
+                                    message: 'The password must be at least 10 characters. !'
+                                }]}
+                            >
+                                <Input type="password" />
+                            </Form.Item>
+                            {messageErr?.password && (
+                                <Typography.Text type="danger">
+                                    {messageErr.password[0]}
+                                </Typography.Text>
+                            )}
+
+                            <Form.Item
+                                label={t("user.label.field.password_confirmation")}
+                                name="password_confirmation"
+                                rules={[{
+                                    required: true,
+                                    message: 'The password must be at least 10 characters. !'
+                                }]}
+                            >
+                                <Input type="password" />
+                            </Form.Item>
+                            {messageErr?.password_confirmation && (
+                                <Typography.Text type="danger">
+                                    {messageErr.password_confirmation[0]}
                                 </Typography.Text>
                             )}
 

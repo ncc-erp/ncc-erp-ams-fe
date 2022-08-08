@@ -77,3 +77,26 @@ export interface IUserResponse {
     superuser: string;
   };
 }
+
+interface IUserAssets {
+  id: number;
+  name: string;
+  image: string;
+  model: {
+    id: number;
+    name: string;
+  };
+  category: {
+    id: number;
+    name: string;
+  };
+  rtd_location: {
+    id: number;
+    name: string;
+  };
+  assigned_status: number;
+  last_checkout: {
+    datetime: string;
+    formatted: string;
+  };
+}
