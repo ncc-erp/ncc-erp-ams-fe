@@ -26,7 +26,7 @@ type DataTable = {
   assign: string;
   ready_to_deploy: string;
   category_id: number;
-  location_id: number;
+  rtd_location_id: number;
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
@@ -87,7 +87,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       });
 
       return {
-        location_id: id,
+        rtd_location_id: id,
         category_id: category.id,
         name: name,
         pending: pending,
@@ -115,10 +115,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}`
                   );
             }
           }}
@@ -140,10 +140,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                   );
             }
           }}
@@ -165,10 +165,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
                   );
             }
           }}
@@ -191,10 +191,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
                   );
             }
           }}
@@ -217,10 +217,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
                   );
             }
           }}
@@ -243,10 +243,10 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             {
               dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}`
                   );
             }
           }}
@@ -322,14 +322,14 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
               dateFrom && dateTo
                 ? item.id !== 99999
                   ? list(
-                      `assets?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                   : list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                 : item.id !== 99999
                 ? list(
-                    `assets?location_id=${item.id}&category_id=${record.category_id}`
+                    `assets?rtd_location_id=${item.id}&category_id=${record.category_id}`
                   )
                 : list(`assets?category_id=${record.category_id}`);
             }
