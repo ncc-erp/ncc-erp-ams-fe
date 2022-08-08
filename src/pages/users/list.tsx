@@ -19,6 +19,7 @@ import {
   Popconfirm,
   Button,
   Tooltip,
+  Spin,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import { IHardware } from "interfaces";
@@ -110,7 +111,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ),
       defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
     },
-
     {
       dataIndex: "assigned_status",
       title: t("user.label.field.condition"),
@@ -145,10 +145,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       filters: [
         {
-          text: t("hardware.label.detail.noAssign"),
-          value: 0,
-        },
-        {
           text: t("hardware.label.detail.pendingAccept"),
           value: 1,
         },
@@ -164,12 +160,37 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       onFilter: (value, record: IUserAssets) => record.assigned_status === value
     },
     {
+      dataIndex: "assigned_to",
+      title: t("user.label.field.name_user"),
+      render: (value: IHardwareResponse) => (
+        <TextField value={value ? value.name : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
+    },
+    {
       dataIndex: "last_checkout",
       title: t("user.label.field.dateCheckout"),
       render: (value: IHardware) => (
         <DateField format="LLL" value={value ? value.datetime : ""} />
       ),
       defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
+    },
+    {
+      dataIndex: "purchase_date",
+      title: t("user.label.field.dateBuy"),
+      render: (value: IHardware) => (
+        value ?
+          <DateField format="LLL" value={value ? value.date : ""} /> : ""
+      ),
+      defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
+    },
+    {
+      dataIndex: "warranty_months",
+      title: t("user.label.field.warranty_months"),
+      render: (value: string) => (
+        <TagField value={value ? value : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
     },
   ];
 
@@ -216,9 +237,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   }, [isCancleModalVisible]);
 
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
-  const [selectedCancel, setSelectedCancel] = useState<boolean>(true);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] = useState(false);
-  const [selectdStoreCancel, setSelectdStoreCancel] = useState<IUserAssets[]>([]);
+
+  const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] = useState<boolean>(true);
+  const [selectdStoreAcceptAndRefuse, setSelectdStoreAcceptAndRefuse] = useState<IUserAssets[]>([]);
 
   const initselectedRowKeys = useMemo(() => {
     return JSON.parse(localStorage.getItem("selectedRowKeys_AcceptRefuse") as string) || [];
@@ -230,17 +252,45 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: IUserAssets) => item.assigned_status === 1).length >
-      0
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length > 0
     ) {
-      setSelectedCancel(true);
-      setSelectdStoreCancel(
+      setSelectedAcceptAndRefuse(false);
+      setSelectdStoreAcceptAndRefuse(
         initselectedRowKeys
-          .filter((item: IUserAssets) => item.assigned_status === 1)
-          .map((item: IUserAssets) => item)
+          .filter((item: any) => item.assigned_status === 1)
+          .map((item: any) => item)
       );
     } else {
-      setSelectedCancel(false);
+      setSelectedAcceptAndRefuse(true);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+    } else {
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length > 0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+    } else {
     }
 
   }, [initselectedRowKeys]);
@@ -255,10 +305,15 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectAll = (selected: boolean, selectedRows: any, changeRows: any) => {
     if (!selected) {
-      localStorage.removeItem("selectedRowKeys_AcceptRefuse");
+      const unSelectIds = changeRows.map((item: any) => item.id);
+      let newSelectRows = initselectedRowKeys.filter((item: any) => item);
+      newSelectRows = initselectedRowKeys.filter((item: any) => !unSelectIds.includes(item.id));
+      localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRows));
       setSelectedRowKeys(selectedRows);
     } else {
-      localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(selectedRows));
+      selectedRows = selectedRows.filter((item: IUserAssets) => item);
+      localStorage.setItem("selectedRowKeys_AcceptRefuse",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows]));
       setSelectedRowKeys(selectedRows);
     }
   }
@@ -305,6 +360,15 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setIsCancelManyAssetModalVisible(!isCancelManyAssetModalVisible);
   };
 
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 1300);
+  };
+
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
     mutate({
       resource: HARDWARE_API + "?_method=PUT",
@@ -313,6 +377,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         assigned_status: assigned_status,
       },
     });
+    handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRowKeys_AcceptRefuse")
   };
@@ -330,22 +395,32 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
-              onConfirm={() => confirmMultipleHardware(initselectedRowKeys.map((item: IUserAssets) => item.id), 2)}
+              onConfirm={
+                () => confirmMultipleHardware(initselectedRowKeys.map((item: IUserAssets) => item.id), 2)
+              }
             >
-              <Button type="primary" disabled={!selectedCancel}>{t("user.label.button.accept")}</Button>
+              <Button
+                type="primary"
+                disabled={selectedAcceptAndRefuse}
+                loading={loading}
+              >{t("user.label.button.accept")}
+              </Button>
             </Popconfirm>
-            <Button type="primary"
+            <Button
+              type="primary"
               onClick={handleCancel}
-              disabled={!selectedCancel}
-            >{t("user.label.button.cancle")}</Button>
+              disabled={selectedAcceptAndRefuse}
+            >{t("user.label.button.cancle")}
+            </Button>
           </div>
 
           <div className={"list-users-accept-refuse"}
             style={
-              !selectedCancel ? { display: "none" } : { display: "inline" }
+              selectedAcceptAndRefuse ? { display: "none" } : { display: "inline" }
             }
           >
             {initselectedRowKeys
+              // .filter((item: any) => item.assigned_status === 1)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -388,87 +463,99 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <HardwareCancelMultipleAsset
           isModalVisible={isCancelManyAssetModalVisible}
           setIsModalVisible={setIsCancelManyAssetModalVisible}
-          data={selectdStoreCancel}
+          data={selectdStoreAcceptAndRefuse}
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
-      <Table
-        {...tableProps}
-        rowKey="id"
-        pagination={{
-          position: ["topRight", "bottomRight"],
-          total: pageTotal ? pageTotal : 0,
-        }}
-        rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
-      >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col as ColumnsType} sorter />
-        ))}
-        <Table.Column<IHardwareResponse>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("hardware.label.tooltip.viewDetail")}
-                color={"#108ee9"}
-              >
-                <ShowButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => show(record)}
-                />
-              </Tooltip>
-              {record.assigned_status === 1 && (
-                <Popconfirm
-                  title={t("hardware.label.button.accept")}
-                  onConfirm={() => OnAcceptRequest(record.id, 2)}
+      {loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip="Loading..."
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          {...tableProps}
+          rowKey="id"
+          pagination={{
+            position: ["topRight", "bottomRight"],
+            total: pageTotal ? pageTotal : 0,
+          }}
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
+          }}
+          scroll={{ x: 1810 }}
+        >
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col as ColumnsType} sorter />
+          ))}
+          <Table.Column<IHardwareResponse>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
+                <Tooltip
+                  title={t("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
                 >
-                  {isLoadingArr[record.id] !== false && (
-                    <Button
-                      className="ant-btn-accept"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
+                  <ShowButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => show(record)}
+                  />
+                </Tooltip>
+                {record.assigned_status === 1 && (
+                  <Popconfirm
+                    title={t("hardware.label.button.accept")}
+                    onConfirm={() => OnAcceptRequest(record.id, 2)}
+                  >
+                    {isLoadingArr[record.id] !== false && (
+                      <Button
+                        className="ant-btn-accept"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
                             ? false
-                            : true
-                      }
-                    >
-                      {t("hardware.label.button.accept")}
-                    </Button>
-                  )}
-                </Popconfirm>
-              )}
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                      >
+                        {t("hardware.label.button.accept")}
+                      </Button>
+                    )}
+                  </Popconfirm>
+                )}
 
-              {record.assigned_status === 1 && (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="small"
-                  loading={
-                    isLoadingArr[record.id] === undefined
-                      ? false
-                      : isLoadingArr[record.id] === false
+                {record.assigned_status === 1 && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
                         ? false
-                        : true
-                  }
-                  onClick={() => cancle(record)}
-                >
-                  {t("hardware.label.button.refuse")}
-                </Button>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                        : isLoadingArr[record.id] === false
+                          ? false
+                          : true
+                    }
+                    onClick={() => cancle(record)}
+                  >
+                    {t("hardware.label.button.refuse")}
+                  </Button>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List >
   );
 };
