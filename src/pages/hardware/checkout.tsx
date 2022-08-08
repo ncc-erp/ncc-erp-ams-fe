@@ -22,12 +22,7 @@ import {
 import { IModel } from "interfaces/model";
 import { UserOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
-import {
-  HARDWARE_API,
-  MODELS_SELECT_LIST_API,
-  STATUS_LABELS_API,
-  USERS_API,
-} from "api/baseApi";
+import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -37,17 +32,11 @@ type HardwareCheckoutProps = {
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
     action: "edit",
@@ -58,18 +47,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { selectProps: modelSelectProps } = useSelect<IModel>({
     resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: STATUS_LABELS_API,
-    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -114,7 +91,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     if (event.note !== undefined) {
       formData.append("note", event.note);
     }
-    formData.append("status_id", event.status_label);
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
 
@@ -132,7 +108,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       { name: "name", value: data?.name },
       { name: "model_id", value: data?.model.name },
       { name: "note", value: data?.note },
-      { name: "status_id", value: data?.status_label.id },
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),
@@ -162,35 +137,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       setMessageErr(updateData?.data.messages);
     }
   }, [updateData]);
-
-  const findLabel = (value: number): Boolean => {
-    let check = false;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
-          check = true;
-          return true;
-        }
-      }
-    });
-    return check;
-  };
-
-  const onChangeStatusLabel = (value: { value: string; label: string }) => {
-    setIsReadyToDeploy(findLabel(Number(value)));
-  };
-
-  const filterStatusLabelSelectProps = () => {
-    const optionsFiltered = statusLabelSelectProps.options?.filter(
-      (item) =>
-        item.label === EStatus.READY_TO_DEPLOY || item.label === EStatus.ASSIGN
-    );
-    statusLabelSelectProps.options = optionsFiltered;
-    return statusLabelSelectProps;
-  };
 
   return (
     <Form
@@ -227,74 +173,26 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               {messageErr.model[0]}
             </Typography.Text>
           )}
+
           <Form.Item
-            label={t("hardware.label.field.status")}
-            name="status_label"
+            className="tabUserCheckout"
+            label={t("hardware.label.field.checkoutTo")}
+            name="assigned_user"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.status") +
+                  t("hardware.label.field.user") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={Number(data?.status_label.id)}
           >
             <Select
-              onChange={(value) => {
-                onChangeStatusLabel(value);
-              }}
-              placeholder={t("hardware.label.placeholder.status")}
-              {...filterStatusLabelSelectProps()}
+              placeholder={t("hardware.label.placeholder.user")}
+              {...userSelectProps}
             />
           </Form.Item>
-          {messageErr?.status_label && (
-            <Typography.Text type="danger">
-              {messageErr.status_label[0]}
-            </Typography.Text>
-          )}
-
-          <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-            <Tabs
-              defaultActiveKey="1"
-              onTabClick={(value) => {
-                setActiveModel(value);
-              }}
-            >
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <UserOutlined />
-                    {t("hardware.label.field.user")}
-                  </span>
-                }
-                key="1"
-              ></Tabs.TabPane>
-            </Tabs>
-          </Form.Item>
-
-          {activeModel === "1" && (
-            <Form.Item
-              className="tabUserCheckout"
-              label={t("hardware.label.field.user")}
-              name="assigned_user"
-              rules={[
-                {
-                  required: true,
-                  message:
-                    t("hardware.label.field.user") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.user")}
-                {...userSelectProps}
-              />
-            </Form.Item>
-          )}
           {messageErr?.assigned_user && (
             <Typography.Text type="danger">
               {messageErr.assigned_user[0]}

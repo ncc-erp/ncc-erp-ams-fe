@@ -115,7 +115,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -146,7 +146,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -177,7 +177,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={(): void => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -209,7 +209,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -241,7 +241,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -273,7 +273,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 6
+              record.location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`

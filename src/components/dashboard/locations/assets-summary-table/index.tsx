@@ -320,14 +320,14 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           onClick={() => {
             {
               dateFrom && dateTo
-                ? item.id !== 6
+                ? item.id !== 99999
                   ? list(
                       `assets?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                   : list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                : item.id !== 6
+                : item.id !== 99999
                 ? list(
                     `assets?location_id=${item.id}&category_id=${record.category_id}`
                   )
@@ -345,8 +345,8 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
 
   return (
     <Table
-      columns={id === 6 ? columnSum : columns}
-      dataSource={id === 6 ? dataAllLocation : dataCategory}
+      columns={id === 99999 ? columnSum : columns}
+      dataSource={id === 99999 ? dataAllLocation : dataCategory}
       pagination={categories.length <= 6 ? false : { pageSize: 6 }}
     />
   );

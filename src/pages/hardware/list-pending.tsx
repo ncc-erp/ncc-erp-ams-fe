@@ -276,6 +276,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -378,6 +379,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
 
     setDetailClone(dataConvert);
@@ -1124,8 +1126,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                     recordItemId={record.id}
                   />
                 </Tooltip>
-                {record.assigned_status === 2 ||
-                  (record.user_can_checkout === true && (
+                {record.user_can_checkout === true &&
+                  record.status_label.id === 4 && (
                     <Button
                       className="ant-btn-checkout"
                       type="primary"
@@ -1142,61 +1144,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                     >
                       {t("hardware.label.button.checkout")}
                     </Button>
-                  )) ||
-                  (record.user_can_checkout === true && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
+                  )}
 
                 {record.assigned_status === 2 ? (
                   <Button

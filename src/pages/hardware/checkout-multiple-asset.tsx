@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Title,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -25,10 +26,11 @@ type HardwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
+  setSelectedRowKeys: any;
 };
 
 export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
-  const { setIsModalVisible, data, isModalVisible } = props;
+  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
@@ -88,14 +90,13 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
+      setSelectedRowKeys([]);
       localStorage.removeItem("selectedRowKeys");
     }
   }, [dataCheckout, form, setIsModalVisible]);
 
-  useEffect(() => {
-    localStorage.removeItem("selectedRowKeys");
-  }, [window.location.reload]);
-
+  console.log(data, "data");
+  const { Title, Text } = Typography;
   return (
     <Form
       {...formProps}
@@ -110,7 +111,8 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
             {data &&
               data?.map((item: any) => (
                 <div>
-                  {item.asset_tag} - {item.model.name}
+                  <span className="show-asset">{item.asset_tag}</span> -{" "}
+                  {item.category.name}
                 </div>
               ))}
           </Form.Item>

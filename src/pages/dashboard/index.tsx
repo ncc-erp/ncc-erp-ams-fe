@@ -21,11 +21,13 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
   const dateFormat = "YYYY/MM/DD";
 
-  const [locationSelected, setLocationSelected] = useState<number | null>(99999);
+  const [locationSelected, setLocationSelected] = useState<number | null>(
+    99999
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchParams1, setSearchParams1] = useSearchParams();
 
-  const [dataDashboard, setDataDasshboard] = useState<[string, string]>([
+  const [dataDashboard, setDataDashboard] = useState<[string, string]>([
     "",
     "",
   ]);
@@ -180,7 +182,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                       : translate("dashboard.placeholder.select-category")
                   }
                   onChange={handleChangeLocation}
-                  defaultValue={6}
+                  defaultValue={99999}
                   className="selected-location"
                 >
                   {(data?.data.payload || []).map((item: ILocation) => (

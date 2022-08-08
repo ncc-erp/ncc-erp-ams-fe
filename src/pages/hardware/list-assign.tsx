@@ -52,6 +52,7 @@ import {
   MenuOutlined,
   FileSearchOutlined,
   SyncOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
@@ -59,6 +60,8 @@ import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
+import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 
 const defaultCheckedList = [
   "id",
@@ -108,6 +111,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const [listening, setListening] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+  const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
+    useState(false);
+  const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
+    useState(false);
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -305,6 +312,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -407,6 +415,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
 
     setDetailClone(dataConvert);
@@ -742,6 +751,14 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinModalVisible]);
 
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutManyAssetModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckinManyAssetModalVisible]);
+
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
       setColumnSelected(
@@ -840,6 +857,165 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ],
   });
   const { Option } = Select;
+
+  const initselectedRowKeys = useMemo(() => {
+    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
+  }, [localStorage.getItem("selectedRowKeys")]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
+    initselectedRowKeys as React.Key[]
+  );
+
+  const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+  const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+
+  const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+  const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+
+  const [nameCheckout, setNameCheckout] = useState("");
+  const [nameCheckin, setNameCheckin] = useState("");
+  useEffect(() => {
+    if (
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.user_can_checkout && item.status_label.id === 4) ||
+          (item.user_can_checkout && item.status_label.id === 5)
+      ).length > 0
+    ) {
+      setSelectedCheckout(true);
+      setNameCheckin(
+        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+      );
+      setSelectdStoreCheckout(
+        initselectedRowKeys
+          .filter(
+            (item: any) =>
+              (item.user_can_checkout && item.status_label.id === 4) ||
+              (item.user_can_checkout && item.status_label.id === 5)
+          )
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckout(false);
+      setNameCheckin("");
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+      0
+    ) {
+      setSelectedCheckin(true);
+      setNameCheckout(
+        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+      );
+      setSelectdStoreCheckin(
+        initselectedRowKeys
+          .filter((item: any) => item.user_can_checkin)
+          .map((item: any) => item)
+      );
+    } else {
+      setSelectedCheckin(false);
+      setNameCheckout("");
+    }
+
+    if (
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.user_can_checkout && item.status_label.id === 4) ||
+          (item.user_can_checkout && item.status_label.id === 5)
+      ).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+        0
+    ) {
+      setSelectedCheckout(false);
+      setSelectedCheckin(false);
+      setNameCheckin(
+        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+      );
+      setNameCheckout(
+        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+      );
+    } else {
+    }
+  }, [initselectedRowKeys]);
+
+  const onSelect = (record: any, selected: boolean) => {
+    if (!selected) {
+      const newSelectRow = initselectedRowKeys.filter(
+        (item: any) => item.id !== record.id
+      );
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    } else {
+      const newselectedRowKeys = [record, ...initselectedRowKeys];
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify(
+          newselectedRowKeys.filter(function (item, index) {
+            return newselectedRowKeys.findIndex((item) => item.id === index);
+          })
+        )
+      );
+      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+    }
+  };
+
+  const onSelectAll = (
+    selected: boolean,
+    selectedRows: any,
+    changeRows: any
+  ) => {
+    if (!selected) {
+      const unSelectIds = changeRows.map((item: any) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter((item: any) => item);
+      newSelectedRows = initselectedRowKeys.filter(
+        (item: any) => !unSelectIds.includes(item.id)
+      );
+
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
+    } else {
+      selectedRows = selectedRows.filter((item: any) => item);
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows])
+      );
+      setSelectedRowKeys(selectedRows);
+    }
+  };
+
+  const onSelectChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: any[]
+  ) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    onChange: onSelectChange,
+    onSelect: onSelect,
+    onSelectAll: onSelectAll,
+  };
+
+  useEffect(() => {
+    localStorage.removeItem("selectedRowKeys");
+  }, [window.location.reload]);
+
+  const handleCheckout = () => {
+    setIsCheckoutManyAssetModalVisible(!isCheckoutManyAssetModalVisible);
+  };
+
+  const handleCheckin = () => {
+    setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
+  };
+
+  const handleRemoveCheckInCheckOutItem = (id: number) => {
+    const newSelectRow = initselectedRowKeys.filter(
+      (item: any) => item.id !== id
+    );
+    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+  };
 
   return (
     <List
@@ -1071,11 +1247,97 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <div className="sum-assets">
-        <span className="name-sum-assets">
-          {t("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      <MModal
+        title={t("hardware.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+        isModalVisible={isCheckoutManyAssetModalVisible}
+      >
+        <HardwareCheckoutMultipleAsset
+          isModalVisible={isCheckoutManyAssetModalVisible}
+          setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+          data={selectdStoreCheckout}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
+      <MModal
+        title={t("hardware.label.title.checkin")}
+        setIsModalVisible={setIsCheckinManyAssetModalVisible}
+        isModalVisible={isCheckinManyAssetModalVisible}
+      >
+        <HardwareCheckinMultipleAsset
+          isModalVisible={isCheckinManyAssetModalVisible}
+          setIsModalVisible={setIsCheckinManyAssetModalVisible}
+          data={selectdStoreCheckin}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
+      <div className="checkout-checkin-multiple">
+        <div className="sum-assets">
+          <span className="name-sum-assets">
+            {t("hardware.label.title.sum-assets")}
+          </span>{" "}
+          : {tableProps.pagination ? tableProps.pagination?.total : 0}
+        </div>
+        <div className="checkout-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            onClick={handleCheckout}
+            disabled={!selectedCheckout}
+          >
+            Cấp phát
+          </Button>
+          <div className={nameCheckout ? "list-checkouts" : ""}>
+            <span className="title-remove-name">{nameCheckout}</span>
+
+            {initselectedRowKeys
+              .filter((item: any) => item.user_can_checkin)
+              .map((item: any) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
+
+        <div className="checkin-multiple-asset">
+          <Button
+            type="primary"
+            className="btn-select-checkout"
+            disabled={!selectedCheckin}
+            onClick={handleCheckin}
+          >
+            Thu hồi
+          </Button>
+
+          <div className={nameCheckin ? "list-checkins" : ""}>
+            <span className="title-remove-name">{nameCheckin}</span>
+
+            {initselectedRowKeys
+              .filter(
+                (item: any) =>
+                  (item.user_can_checkout && item.status_label.id === 4) ||
+                  (item.user_can_checkout && item.status_label.id === 5)
+              )
+              .map((item: any) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
       </div>
       {loading ? (
         <>
@@ -1094,6 +1356,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
+          }}
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
           }}
         >
           {collumns
@@ -1155,8 +1421,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     />
                   </Tooltip>
                 )}
-                {record.assigned_status === 2 ||
-                  (record.user_can_checkout === true && (
+                {record.user_can_checkout === true &&
+                  record.status_label.id === 4 && (
                     <Button
                       className="ant-btn-checkout"
                       type="primary"
@@ -1173,8 +1439,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     >
                       {t("hardware.label.button.checkout")}
                     </Button>
-                  )) ||
-                  (record.user_can_checkout === true && (
+                  )}
+                {record.user_can_checkout === true &&
+                  record.status_label.id === 5 && (
                     <Button
                       className="ant-btn-checkout"
                       type="primary"
@@ -1191,43 +1458,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     >
                       {t("hardware.label.button.checkout")}
                     </Button>
-                  )) ||
-                  (record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
+                  )}
 
                 {record.assigned_status === 2 ? (
                   <Button

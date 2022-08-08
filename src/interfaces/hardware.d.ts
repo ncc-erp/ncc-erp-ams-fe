@@ -131,6 +131,7 @@ export interface IHardwareResponse {
     };
   };
   user_can_checkout: boolean;
+  user_can_checkin: boolean;
   assigned_status: number;
   checkin_at: {
     date: string;
@@ -194,7 +195,7 @@ export interface IHardwareRequestMultipleCheckout {
 export interface IHardwareRequestMultipleCheckin {
   assets: {}[];
   status_label: string;
-  status_id: number;
+  status_id: string;
   checkin_at: string;
   rtd_location: string;
   note: string;
