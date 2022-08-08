@@ -27,7 +27,7 @@ type DataTable = {
   assign: string;
   ready_to_deploy: string;
   category_id: number;
-  location_id: number;
+  rtd_location_id: number;
 };
 
 export const AssetsSummaryTableAllLocation = (
@@ -43,7 +43,7 @@ export const AssetsSummaryTableAllLocation = (
   const [searchParams, setSearchParams] = useSearchParams();
   const dateFrom = searchParams.get("purchase_date_from1");
   const dateTo = searchParams.get("purchase_date_to1");
-  const location_id = searchParams.get("location_id");
+  const rtd_rtd_location_id = searchParams.get("rtd_rtd_location_id");
 
   const calculation = (value: number, sum: number) => {
     if (value === 0) {
@@ -89,7 +89,7 @@ export const AssetsSummaryTableAllLocation = (
       });
 
       return {
-        location_id: id,
+        rtd_location_id: id,
         category_id: category.id,
         name: name,
         pending: pending,
@@ -115,7 +115,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -123,10 +123,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_rtd_location_id=${rtd_rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${location_id}&category_id=${record.category_id}`
+                    `assets?rtd_rtd_location_id=${rtd_rtd_location_id}&category_id=${record.category_id}`
                   );
             }
           }}
@@ -146,7 +146,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -154,10 +154,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}&status_id=1`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=1`
+                    `assets?rtd_rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                   );
             }
           }}
@@ -177,7 +177,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={(): void => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -185,10 +185,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}&status_id=3`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=3`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
                   );
             }
           }}
@@ -209,7 +209,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -217,10 +217,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}&status_id=4`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=4`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
                   );
             }
           }}
@@ -241,7 +241,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -249,10 +249,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}&status_id=5`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&status_id=5`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
                   );
             }
           }}
@@ -273,7 +273,7 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.location_id === 99999
+              record.rtd_location_id === 99999
                 ? dateFrom && dateTo
                   ? list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
@@ -281,10 +281,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?location_id=${record.location_id}&category_id=${record.category_id}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}`
                   );
             }
           }}

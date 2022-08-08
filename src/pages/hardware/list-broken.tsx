@@ -99,7 +99,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const location_id = searchParams.get("location_id");
+  const rtd_location_id = searchParams.get("rtd_location_id");
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
 
@@ -154,9 +154,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           }),
         },
         {
-          field: "location_id",
+          field: "rtd_location_id",
           operator: "eq",
-          value: location ? location : location_id,
+          value: location ? location : rtd_location_id,
         },
         {
           field: "dateFrom",
@@ -848,7 +848,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("location") !== null ??
               searchValuesLocation !== 0
                 ? searchValuesLocation
-                : location_id ?? Number(location_id),
+                : rtd_location_id ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
