@@ -345,8 +345,8 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
 
   return (
     <Table
-      columns={id === 6 ? columnSum : columns}
-      dataSource={id === 6 ? dataAllLocation : dataCategory}
+      columns={id === 99999 ? columnSum : columns}
+      dataSource={id === 99999 ? dataAllLocation : dataCategory}
       pagination={categories.length <= 6 ? false : { pageSize: 6 }}
     />
   );
