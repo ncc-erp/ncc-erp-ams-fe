@@ -140,7 +140,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         dataSource.forEach((item: any) => {
           if (item.type === items.name) {
             for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
+              if (key === `location_${items.rtd_location_id}`) {
                 item[key] = item[key] + Number(items.checkin);
                 item[`count`] += Number(items.checkin);
                 break;
@@ -187,7 +187,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         dataSource.forEach((item: any) => {
           if (item.type === items.name) {
             for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
+              if (key === `location_${items.rtd_location_id}`) {
                 item[key] = item[key] + Number(items.checkout);
                 item[`count`] += Number(items.checkout);
                 break;
@@ -201,7 +201,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     setDataReportCheckOut(dataResponseCheckOut);
   }, [dataCheckOut?.data.payload.assets_statistic || []]);
-
+  
   var columnsCheckOut = [
     {
       title: "Thiết bị cấp phát",

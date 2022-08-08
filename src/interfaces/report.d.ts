@@ -13,6 +13,7 @@ export interface IReport {
   type: number;
   assigned_status: number;
   user_id: number;
+  rtd_location_id: number;
   location_id: number;
   checkin: number;
   checkout: number;
