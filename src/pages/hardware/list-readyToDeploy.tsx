@@ -316,6 +316,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -418,6 +419,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
+      user_can_checkin: false,
     };
 
     setDetailClone(dataConvert);
@@ -875,43 +877,70 @@ export const HardwareListReadyToDeploy: React.FC<
   const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
   const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
 
+  const [nameCheckout, setNameCheckout] = useState("");
+  const [nameCheckin, setNameCheckin] = useState("");
+
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-      0
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.user_can_checkout && item.status_label.id === 4) ||
+          (item.user_can_checkout && item.status_label.id === 5)
+      ).length > 0
     ) {
       setSelectedCheckout(true);
+      setNameCheckin(
+        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+      );
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkout)
+          .filter(
+            (item: any) =>
+              (item.user_can_checkout && item.status_label.id === 4) ||
+              (item.user_can_checkout && item.status_label.id === 5)
+          )
           .map((item: any) => item)
       );
     } else {
       setSelectedCheckout(false);
+      setNameCheckin("");
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
-        .length > 0
+      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+      0
     ) {
       setSelectedCheckin(true);
+      setNameCheckout(
+        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+      );
       setSelectdStoreCheckin(
         initselectedRowKeys
-          .filter((item: any) => !item.user_can_checkout)
+          .filter((item: any) => item.user_can_checkin)
           .map((item: any) => item)
       );
     } else {
       setSelectedCheckin(false);
+      setNameCheckout("");
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-        0 &&
-      initselectedRowKeys.filter((item: any) => !item.user_can_checkout)
-        .length > 0
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.user_can_checkout && item.status_label.id === 4) ||
+          (item.user_can_checkout && item.status_label.id === 5)
+      ).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+        0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
+      setNameCheckin(
+        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+      );
+      setNameCheckout(
+        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+      );
     } else {
     }
   }, [initselectedRowKeys]);
@@ -936,17 +965,25 @@ export const HardwareListReadyToDeploy: React.FC<
       setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
     }
   };
-
   const onSelectAll = (
     selected: boolean,
     selectedRows: any,
     changeRows: any
   ) => {
     if (!selected) {
-      localStorage.removeItem("selectedRowKeys");
-      setSelectedRowKeys(selectedRows);
+      const unSelectIds = changeRows.map((item: any) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter((item: any) => item);
+      newSelectedRows = initselectedRowKeys.filter(
+        (item: any) => !unSelectIds.includes(item.id)
+      );
+
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
     } else {
-      localStorage.setItem("selectedRowKeys", JSON.stringify(selectedRows));
+      selectedRows = selectedRows.filter((item: any) => item);
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows])
+      );
       setSelectedRowKeys(selectedRows);
     }
   };
@@ -959,7 +996,7 @@ export const HardwareListReadyToDeploy: React.FC<
   };
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -1255,20 +1292,11 @@ export const HardwareListReadyToDeploy: React.FC<
           >
             Cấp phát
           </Button>
-          <div className={!selectedCheckin ? "" : "list-checkouts"}>
-            <span
-              className="title-remove-name"
-              style={
-                !selectedCheckin ? { display: "none" } : { display: "inline" }
-              }
-            >
-              Những tài sản này không được phép cấp phát.
-              <br />
-              Hãy xóa chúng khỏi danh sách đi
-            </span>
+          <div className={nameCheckout ? "list-checkouts" : ""}>
+            <span className="title-remove-name">{nameCheckout}</span>
 
             {initselectedRowKeys
-              .filter((item: any) => !item.user_can_checkout)
+              .filter((item: any) => item.user_can_checkin)
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -1293,19 +1321,15 @@ export const HardwareListReadyToDeploy: React.FC<
             Thu hồi
           </Button>
 
-          <div className={!selectedCheckout ? "" : "list-checkins"}>
-            <span
-              className="title-remove-name"
-              style={
-                !selectedCheckout ? { display: "none" } : { display: "inline" }
-              }
-            >
-              Những tài sản này không được phép thu hồi.
-              <br />
-              Hãy xóa chúng khỏi danh sách đi
-            </span>
+          <div className={nameCheckin ? "list-checkins" : ""}>
+            <span className="title-remove-name">{nameCheckin}</span>
+
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkout)
+              .filter(
+                (item: any) =>
+                  (item.user_can_checkout && item.status_label.id === 4) ||
+                  (item.user_can_checkout && item.status_label.id === 5)
+              )
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -1398,8 +1422,9 @@ export const HardwareListReadyToDeploy: React.FC<
                     recordItemId={record.id}
                   />
                 </Tooltip>
-                {record.assigned_status === 2 ||
-                  (record.user_can_checkout === true && (
+
+                {record.user_can_checkout === true &&
+                  record.status_label.id === 4 && (
                     <Button
                       className="ant-btn-checkout"
                       type="primary"
@@ -1416,8 +1441,10 @@ export const HardwareListReadyToDeploy: React.FC<
                     >
                       {t("hardware.label.button.checkout")}
                     </Button>
-                  )) ||
-                  (record.user_can_checkout === true && (
+                  )}
+
+                {record.user_can_checkout === true &&
+                  record.status_label.id === 5 && (
                     <Button
                       className="ant-btn-checkout"
                       type="primary"
@@ -1434,43 +1461,7 @@ export const HardwareListReadyToDeploy: React.FC<
                     >
                       {t("hardware.label.button.checkout")}
                     </Button>
-                  )) ||
-                  (record.status_label.name === "Pending" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )) ||
-                  (record.status_label.name === "Broken" && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      disabled
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  ))}
+                  )}
 
                 {record.assigned_status === 2 ? (
                   <Button

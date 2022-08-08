@@ -233,35 +233,16 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
+            initialValue={data?.status_label.name}
           >
             <Select
               onChange={(value) => {
                 onChangeStatusLabel(value);
               }}
               placeholder={t("hardware.label.placeholder.status")}
-              // {...statusLabelSelectProps}
               {...filterStatusLabelSelectProps()}
             />
           </Form.Item>
-
-          {/* <Form.Item
-            label={t("hardware.label.field.location")}
-            name="rtd_location"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("hardware.label.field.location") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("hardware.label.placeholder.location")}
-              {...locationSelectProps}
-            />
-          </Form.Item> */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item

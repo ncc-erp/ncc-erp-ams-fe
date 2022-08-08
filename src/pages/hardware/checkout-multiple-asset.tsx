@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Title,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -93,6 +94,9 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       localStorage.removeItem("selectedRowKeys");
     }
   }, [dataCheckout, form, setIsModalVisible]);
+
+  console.log(data, "data");
+  const { Title, Text } = Typography;
   return (
     <Form
       {...formProps}
@@ -107,7 +111,8 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
             {data &&
               data?.map((item: any) => (
                 <div>
-                  {item.asset_tag} - {item.model.name}
+                  <span className="show-asset">{item.asset_tag}</span> -{" "}
+                  {item.category.name}
                 </div>
               ))}
           </Form.Item>

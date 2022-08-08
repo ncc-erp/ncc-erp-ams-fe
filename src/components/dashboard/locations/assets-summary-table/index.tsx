@@ -320,14 +320,14 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           onClick={() => {
             {
               dateFrom && dateTo
-                ? item.id !== 6
+                ? item.id !== 99999
                   ? list(
                       `assets?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
                   : list(
                       `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                : item.id !== 6
+                : item.id !== 99999
                 ? list(
                     `assets?location_id=${item.id}&category_id=${record.category_id}`
                   )

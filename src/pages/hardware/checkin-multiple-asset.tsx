@@ -1,12 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { Form, Input, useForm, Button, Row, Col } from "@pankod/refine-antd";
+import {
+  Form,
+  Input,
+  useForm,
+  Button,
+  Row,
+  Col,
+  Select,
+  useSelect,
+} from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 
-import { HARDWARE_CHECKIN_API } from "api/baseApi";
+import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
+import { ICompany } from "interfaces/company";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -19,13 +29,29 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] =
     useState<IHardwareRequestMultipleCheckin>();
+  const [, setIsReadyToDeploy] = useState<Boolean>(false);
 
   const t = useTranslate();
 
+  enum EStatus {
+    PENDING = "Ready to Deploy",
+    ASSIGN = "Assign",
+  }
   const { form, formProps } = useForm<IHardwareRequestMultipleCheckin>({
     action: "create",
   });
 
+  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
+    resource: STATUS_LABELS_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
   const { setFields } = form;
 
   const { mutate, data: dataCheckin, isLoading } = useCreate();
@@ -65,6 +91,30 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
     }
   }, [dataCheckin, form, setIsModalVisible]);
 
+  const findLabel = (value: number): Boolean => {
+    let check = true;
+    statusLabelSelectProps.options?.forEach((item) => {
+      if (value === item.value) {
+        if (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN) {
+          check = false;
+          return false;
+        }
+      }
+    });
+    return check;
+  };
+
+  const filterStatusLabelSelectProps = () => {
+    const optionsFiltered = statusLabelSelectProps.options?.filter(
+      (item) => item.label !== EStatus.ASSIGN
+    );
+    statusLabelSelectProps.options = optionsFiltered;
+    return statusLabelSelectProps;
+  };
+
+  const onChangeStatusLabel = (value: { value: string; label: string }) => {
+    setIsReadyToDeploy(findLabel(Number(value)));
+  };
   return (
     <Form
       {...formProps}
@@ -79,8 +129,8 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
             {data &&
               data?.map((item: any) => (
                 <div>
-                  {" "}
-                  {item.asset_tag} - {item.model && item.model.name}
+                  <span className="show-asset">{item.asset_tag}</span> -{" "}
+                  {item.category.name}
                 </div>
               ))}
           </Form.Item>
@@ -101,6 +151,28 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
             initialValue={new Date().toISOString().substring(0, 10)}
           >
             <Input type="date" />
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.status")}
+            name="status_id"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.status") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data.map((item: any) => item.status_label.id)}
+          >
+            <Select
+              onChange={(value) => {
+                onChangeStatusLabel(value);
+              }}
+              placeholder={t("hardware.label.placeholder.status")}
+              {...filterStatusLabelSelectProps()}
+            />
           </Form.Item>
         </Col>
       </Row>
