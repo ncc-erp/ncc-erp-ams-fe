@@ -43,7 +43,7 @@ export const AssetsSummaryTableAllLocation = (
   const [searchParams, setSearchParams] = useSearchParams();
   const dateFrom = searchParams.get("purchase_date_from1");
   const dateTo = searchParams.get("purchase_date_to1");
-  const rtd_rtd_location_id = searchParams.get("rtd_rtd_location_id");
+  const rtd_location_id = searchParams.get("rtd_location_id");
 
   const calculation = (value: number, sum: number) => {
     if (value === 0) {
@@ -123,10 +123,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?rtd_rtd_location_id=${rtd_rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?rtd_rtd_location_id=${rtd_rtd_location_id}&category_id=${record.category_id}`
+                    `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
                   );
             }
           }}
@@ -154,10 +154,10 @@ export const AssetsSummaryTableAllLocation = (
                   : list(`assets?category_id=${record.category_id}&status_id=1`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?rtd_rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(
-                    `assets?rtd_rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                   );
             }
           }}
