@@ -90,13 +90,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
     if (event.zip !== undefined) {
       formData.append("zip", event.zip);
     }
-    if (event.country !== undefined) {
-      formData.append("country", event.country);
-    }
-
-    if (event.currency !== undefined) {
-      formData.append("currency", event.currency.toString());
-    }
 
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
@@ -205,7 +198,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             name="address_detail"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.address_detail") +
                   " " +
@@ -220,7 +213,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             name="address"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.address") +
                   " " +
@@ -235,7 +228,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             name="state"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.state") +
                   " " +
@@ -250,7 +243,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             name="city"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.city") +
                   " " +

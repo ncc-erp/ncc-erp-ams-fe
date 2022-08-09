@@ -91,6 +91,9 @@ export const LocationEdit = (props: LocationEditProps) => {
     if (event.manager !== undefined) {
       formData.append("manager_id", event.manager.toString());
     }
+    if (event.address_detail !== null) {
+      formData.append("address2", event.address_detail);
+    }
     if (event.address !== null) {
       formData.append("address", event.address);
     }
@@ -102,13 +105,6 @@ export const LocationEdit = (props: LocationEditProps) => {
     }
     if (event.zip !== null) {
       formData.append("zip", event.zip);
-    }
-    if (event.country !== null) {
-      formData.append("country", event.country);
-    }
-
-    if (event.currency !== null) {
-      formData.append("currency", event.currency.toString());
     }
     if (
       typeof event.image !== "string" &&
@@ -128,13 +124,11 @@ export const LocationEdit = (props: LocationEditProps) => {
       { name: "name", value: data?.name },
       { name: "parent_id", value: data?.parent.id },
       { name: "manager_id", value: data?.manager.id },
-
+      { name: "address2", value: data?.address2 },
       { name: "address", value: data?.address },
       { name: "city", value: data?.city },
       { name: "state", value: data?.state },
       { name: "zip", value: data?.zip },
-      { name: "country", value: data?.country },
-      { name: "currency", value: data?.currency },
 
       { name: "image", value: data?.image },
     ]);
@@ -245,7 +239,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="address_detail"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.address_detail") +
                   " " +
@@ -261,7 +255,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="address"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.address") +
                   " " +
@@ -277,7 +271,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="state"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.state") +
                   " " +
@@ -293,7 +287,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="city"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.city") +
                   " " +
@@ -304,34 +298,6 @@ export const LocationEdit = (props: LocationEditProps) => {
           >
             <Input placeholder={t("location.label.field.city")} />
           </Form.Item>
-          {/* <Form.Item
-            label={t("location.label.field.country")}
-            name="country"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.country") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.country}
-          >
-            <Select
-              placeholder={t("location.label.placeholder.country")}
-              options={[
-                {
-                  label: "Việt Nam",
-                  value: "Vietnammese",
-                },
-                {
-                  label: "England",
-                  value: "English",
-                },
-              ]}
-            />
-          </Form.Item> */}
         </Col>
       </Row>
 
