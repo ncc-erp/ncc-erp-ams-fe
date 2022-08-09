@@ -465,7 +465,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("hardware.label.field.assetName"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -482,31 +482,37 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "asset_tag",
         title: t("hardware.label.field.propertyCard"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("asset_tag", sorter),
       },
       {
         key: "serial",
         title: t("hardware.label.field.serial"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("serial", sorter),
       },
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TagField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "model_number",
         title: "Model No",
-        render: (value: IHardwareResponse) => <TextField value={value} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value ? value : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("model_number", sorter),
       },
       {
         key: "category",
         title: t("hardware.label.field.category"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TagField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
@@ -555,25 +561,33 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "location",
         title: t("hardware.label.field.rtd_location"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
       {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
       {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => (
+          <TextField value={value && value.name} />
+        ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
       {
@@ -587,44 +601,44 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "order_number",
         title: t("hardware.label.field.orderNumber"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("order_number", sorter),
       },
       {
         key: "warranty_months",
         title: t("hardware.label.field.insurance"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
       },
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.date} />
+          <DateField format="LLL" value={value && value.date} />
         ),
       },
       {
         key: "notes",
         title: t("hardware.label.field.note"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
       {
         key: "checkout_counter",
         title: t("hardware.label.field.checkout_counter"),
-        render: (value: number) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("hardware.label.field.checkin_counter"),
-        render: (value: number) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "requestable",
         title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
@@ -664,7 +678,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value.datetime} />
+          <DateField format="LLL" value={value && value.datetime} />
         ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
