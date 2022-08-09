@@ -245,6 +245,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     initselectedRowKeys as React.Key[]
   );
 
+  const ASSIGNED_STATUS = {
+    PENDING_ACCEPT: 1,
+    ACCEPT: 2,
+    REFUSE: 3
+  }
+
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] = useState(false);
 
@@ -260,8 +266,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     if (
       initselectedRowKeys.filter(
         (item: any) =>
-          (item.assigned_status === 2) ||
-          (item.assigned_status === 3)
+          (item.assigned_status === ASSIGNED_STATUS.ACCEPT) ||
+          (item.assigned_status === ASSIGNED_STATUS.REFUSE)
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(true);
@@ -274,8 +280,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length >
-      0
+      initselectedRowKeys.filter(
+        (item: any) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+      ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(
@@ -283,7 +291,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       );
       setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
-          .filter((item: any) => item.assigned_status === 1)
+          .filter((item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT)
           .map((item: any) => item)
       );
     } else {
@@ -294,11 +302,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     if (
       initselectedRowKeys.filter(
         (item: any) =>
-          (item.assigned_status === 2) ||
-          (item.assigned_status === 3)
+          (item.assigned_status === ASSIGNED_STATUS.ACCEPT) ||
+          (item.assigned_status === ASSIGNED_STATUS.REFUSE)
       ).length > 0 &&
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length >
-      0
+      initselectedRowKeys.filter(
+        (item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+      ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
       setSelectedAcceptAndRefuse(false);
@@ -414,7 +423,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <Popconfirm
               title={t("user.label.button.accept")}
               onConfirm={
-                () => confirmMultipleHardware(initselectedRowKeys.map((item: IUserAssets) => item.id), 2)
+                () => confirmMultipleHardware(initselectedRowKeys.map(
+                  (item: IUserAssets) => item.id), ASSIGNED_STATUS.ACCEPT
+                )
               }
             >
               <Button
@@ -435,7 +446,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           <div className={nameAcceptAndRefuse ? "list-users-accept-refuse" : ""}>
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {initselectedRowKeys
-              .filter((item: any) => item.assigned_status === 1)
+              .filter((item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -452,7 +463,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           <div className={nameNotAcceptAndRefuse ? "list-users-accept-refuse" : ""}>
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
             {initselectedRowKeys
-              .filter((item: any) => item.assigned_status === 2 || item.assigned_status === 3)
+              .filter((item: any) =>
+                item.assigned_status === ASSIGNED_STATUS.ACCEPT
+                || item.assigned_status === ASSIGNED_STATUS.REFUSE
+              )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -541,10 +555,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => show(record)}
                   />
                 </Tooltip>
-                {record.assigned_status === 1 && (
+                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Popconfirm
                     title={t("hardware.label.button.accept")}
-                    onConfirm={() => OnAcceptRequest(record.id, 2)}
+                    onConfirm={() => OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)}
                   >
                     {isLoadingArr[record.id] !== false && (
                       <Button
@@ -566,7 +580,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   </Popconfirm>
                 )}
 
-                {record.assigned_status === 1 && (
+                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Button
                     type="primary"
                     shape="round"
