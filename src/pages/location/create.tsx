@@ -75,6 +75,9 @@ export const LocationCreate = (props: LocationCreateProps) => {
     if (event.manager !== undefined) {
       formData.append("manager_id", event.manager.toString());
     }
+    if (event.address_detail !== undefined) {
+      formData.append("address2", event.address_detail);
+    }
     if (event.address !== undefined) {
       formData.append("address", event.address);
     }
@@ -86,13 +89,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
     }
     if (event.zip !== undefined) {
       formData.append("zip", event.zip);
-    }
-    if (event.country !== undefined) {
-      formData.append("country", event.country);
-    }
-
-    if (event.currency !== undefined) {
-      formData.append("currency", event.currency.toString());
     }
 
     if (event.image !== null && event.image !== undefined) {
@@ -180,36 +176,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
             />
           </Form.Item>
           <Form.Item
-            label={t("location.label.field.address")}
-            name="address"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.address") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Input placeholder={t("location.label.field.address")} />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.state")}
-            name="state"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.state") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Input placeholder={t("location.label.field.state")} />
-          </Form.Item>
-          <Form.Item
             label={t("location.label.field.zip")}
             name="zip"
             rules={[
@@ -228,44 +194,56 @@ export const LocationCreate = (props: LocationCreateProps) => {
 
         <Col className="gutter-row" span={12}>
           <Form.Item
-            label={t("location.label.field.parent")}
-            name="parent"
+            label={t("location.label.field.address_detail")}
+            name="address_detail"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
-                  t("location.label.field.parent") +
+                  t("location.label.field.address_detail") +
                   " " +
                   t("location.label.message.required"),
               },
             ]}
           >
-            <Select
-              placeholder={t("location.label.placeholder.parent")}
-              {...locationSelectProps}
-            />
+            <Input placeholder={t("location.label.field.address_detail")} />
           </Form.Item>
           <Form.Item
-            label={t("location.label.field.currency")}
-            name="currency"
+            label={t("location.label.field.address")}
+            name="address"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
-                  t("location.label.field.currency") +
+                  t("location.label.field.address") +
                   " " +
                   t("location.label.message.required"),
               },
             ]}
           >
-            <Input placeholder={t("location.label.placeholder.currency")} />
+            <Input placeholder={t("location.label.field.address")} />
+          </Form.Item>
+          <Form.Item
+            label={t("location.label.field.state")}
+            name="state"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("location.label.field.state") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+          >
+            <Input placeholder={t("location.label.field.state")} />
           </Form.Item>
           <Form.Item
             label={t("location.label.field.city")}
             name="city"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("location.label.field.city") +
                   " " +
@@ -274,33 +252,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
             ]}
           >
             <Input placeholder={t("location.label.field.city")} />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.country")}
-            name="country"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.country") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("location.label.placeholder.country")}
-              options={[
-                {
-                  label: "Việt Nam",
-                  value: "VN",
-                },
-                {
-                  label: "England",
-                  value: "English",
-                },
-              ]}
-            />
           </Form.Item>
         </Col>
       </Row>
