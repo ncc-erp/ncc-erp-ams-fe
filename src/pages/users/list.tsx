@@ -236,11 +236,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCancleModalVisible]);
 
-  const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
-  const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] = useState(false);
-
-  const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] = useState<boolean>(true);
-  const [selectdStoreAcceptAndRefuse, setSelectdStoreAcceptAndRefuse] = useState<IUserAssets[]>([]);
 
   const initselectedRowKeys = useMemo(() => {
     return JSON.parse(localStorage.getItem("selectedRowKeys_AcceptRefuse") as string) || [];
@@ -250,80 +245,86 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     initselectedRowKeys as React.Key[]
   );
 
+  const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
+  const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] = useState(false);
+
+  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
+  const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] = useState<boolean>(true);
+
+  const [selectdStoreAcceptAndRefuse, setSelectedStoreAcceptAndRefuse] = useState<any[]>([]);
+
+  const [nameAcceptAndRefuse, setNameAcceptAndRefuse] = useState("");
+  const [nameNotAcceptAndRefuse, setNameNotAcceptAndRefuse] = useState("");
+
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length > 0
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.assigned_status === 2) ||
+          (item.assigned_status === 3)
+      ).length > 0
     ) {
-      setSelectedAcceptAndRefuse(false);
-      setSelectdStoreAcceptAndRefuse(
+      setSelectedNotAcceptAndRefuse(true);
+      setNameNotAcceptAndRefuse(
+        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
+      );
+    } else {
+      setSelectedNotAcceptAndRefuse(false);
+      setNameNotAcceptAndRefuse("");
+    }
+
+    if (
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length >
+      0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+      setNameAcceptAndRefuse(
+        "Những tài sản này được phép xác nhận và từ chối"
+      );
+      setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
           .filter((item: any) => item.assigned_status === 1)
           .map((item: any) => item)
       );
     } else {
-      setSelectedAcceptAndRefuse(true);
+      setSelectedAcceptAndRefuse(false);
+      setNameAcceptAndRefuse("");
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0
+      initselectedRowKeys.filter(
+        (item: any) =>
+          (item.assigned_status === 2) ||
+          (item.assigned_status === 3)
+      ).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length >
+      0
     ) {
-      setSelectedAcceptAndRefuse(true);
-    }
-
-    if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0
-    ) {
-      setSelectedAcceptAndRefuse(true);
-    }
-
-    if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0 &&
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0
-    ) {
-      setSelectedAcceptAndRefuse(true);
+      setSelectedNotAcceptAndRefuse(false);
+      setSelectedAcceptAndRefuse(false);
+      setNameNotAcceptAndRefuse(
+        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
+      );
+      setNameAcceptAndRefuse(
+        "Những tài sản này được phép xác nhận và từ chối"
+      );
     } else {
     }
-
-    if (
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 2).length > 0 &&
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 3).length > 0 &&
-      initselectedRowKeys.filter((item: any) => item.assigned_status === 1).length > 0
-    ) {
-      setSelectedAcceptAndRefuse(true);
-    } else {
-    }
-
   }, [initselectedRowKeys]);
+
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IUserAssets[]
   ) => {
-    setSelectedRows(selectedRows);
     setSelectedRowKeys(selectedRowKeys)
   };
-
-  const onSelectAll = (selected: boolean, selectedRows: any, changeRows: any) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectRows = initselectedRowKeys.filter((item: any) => item);
-      newSelectRows = initselectedRowKeys.filter((item: any) => !unSelectIds.includes(item.id));
-      localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRows));
-      setSelectedRowKeys(selectedRows);
-    } else {
-      selectedRows = selectedRows.filter((item: IUserAssets) => item);
-      localStorage.setItem("selectedRowKeys_AcceptRefuse",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows]));
-      setSelectedRowKeys(selectedRows);
-    }
-  }
 
   const onSelect = (record: IUserAssets, selected: boolean) => {
     if (!selected) {
       const newSelectRow = initselectedRowKeys.filter(
         (item: IUserAssets) => item.id !== record.id
       );
-
       localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRow));
       setSelectedRowKeys(newSelectRow.map((item: IUserAssets) => item.id));
     } else {
@@ -340,12 +341,29 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
+  const onSelectAll = (selected: boolean, selectedRows: any, changeRows: any) => {
+    if (!selected) {
+      const unSelectIds = changeRows.map((item: any) => item.id);
+      let newSelectRows = initselectedRowKeys.filter((item: any) => item);
+      newSelectRows = initselectedRowKeys.filter((item: any) => !unSelectIds.includes(item.id));
+      localStorage.setItem("selectedRowKeys_AcceptRefuse", JSON.stringify(newSelectRows));
+      setSelectedRowKeys(newSelectRows);
+    } else {
+      selectedRows = selectedRows.filter((item: IUserAssets) => item);
+      localStorage.setItem(
+        "selectedRowKeys_AcceptRefuse",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows])
+      );
+      setSelectedRowKeys(selectedRows);
+    }
+  }
+
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    selectedRows,
+    onSelectChange,
   };
 
   const handleRemoveItem = (id: number) => {
@@ -401,7 +419,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             >
               <Button
                 type="primary"
-                disabled={selectedAcceptAndRefuse}
+                disabled={!selectedAcceptAndRefuse}
                 loading={loading}
               >{t("user.label.button.accept")}
               </Button>
@@ -409,18 +427,32 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <Button
               type="primary"
               onClick={handleCancel}
-              disabled={selectedAcceptAndRefuse}
+              disabled={!selectedAcceptAndRefuse}
             >{t("user.label.button.cancle")}
             </Button>
           </div>
 
-          <div className={"list-users-accept-refuse"}
-            style={
-              selectedAcceptAndRefuse ? { display: "none" } : { display: "inline" }
-            }
-          >
+          <div className={nameAcceptAndRefuse ? "list-users-accept-refuse" : ""}>
+            <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {initselectedRowKeys
-              // .filter((item: any) => item.assigned_status === 1)
+              .filter((item: any) => item.assigned_status === 1)
+              .map((item: IHardwareResponse) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-users-accept-refuse"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+
+          <div className={nameNotAcceptAndRefuse ? "list-users-accept-refuse" : ""}>
+            <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
+            {initselectedRowKeys
+              .filter((item: any) => item.assigned_status === 2 || item.assigned_status === 3)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
