@@ -105,7 +105,6 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
     );
     setSearchParamsCheckOut(searchParamsCheckOut);
-    setDataReport(formatString);
   };
 
   useEffect(() => {
@@ -201,7 +200,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     setDataReportCheckOut(dataResponseCheckOut);
   }, [dataCheckOut?.data.payload.assets_statistic || []]);
-  
+
   var columnsCheckOut = [
     {
       title: "Thiết bị cấp phát",
@@ -212,8 +211,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             data_CheckOut[0] && data_CheckOut[1]
               ? list(
-                  `report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-                )
+                `report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
+              )
               : list(`report?category_id=${record.id}&assetHistoryType=0`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
@@ -235,11 +234,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               data_CheckOut[0] && data_CheckOut[1]
                 ? list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-                  )
+                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
+                )
                 : list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`
-                  );
+                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`
+                );
             }}
           >
             {text}
@@ -261,8 +260,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dataReport[0] && dataReport[1]
               ? list(
-                  `report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-                )
+                `report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
+              )
               : list(`report?category_id=${record.id}&assetHistoryType=1`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
@@ -284,11 +283,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dataReport[0] && dataReport[1]
                 ? list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-                  )
+                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
+                )
                 : list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`
-                  );
+                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`
+                );
             }}
           >
             {text}
@@ -346,7 +345,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                       columns={columnsCheckOut}
                       pagination={
                         (dataCheckOut?.data.payload.categories || []).length <=
-                        6
+                          6
                           ? false
                           : { pageSize: 6 }
                       }
