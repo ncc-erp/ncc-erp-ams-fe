@@ -41,6 +41,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         purchaseDateFrom: searchParams.get("purchaseDateFrom"),
         purchaseDateTo: searchParams.get("purchaseDateTo"),
         assetHistoryType: searchParams.get("assetHistoryType"),
+        category_id: searchParams.get("category_id"),
       },
     },
   });
@@ -62,45 +63,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         ),
       },
       {
-        key: "asset",
-        title: translate("hardware.label.field.condition"),
-        render: (value: IReport) => (
-          <TagField
-            value={
-              value &&
-              (value.assigned_status === 0
-                ? translate("hardware.label.detail.noAssign")
-                : value.assigned_status === 1
-                ? translate("hardware.label.detail.pendingAccept")
-                : value.assigned_status === 2
-                ? translate("hardware.label.detail.accept")
-                : value.assigned_status === 3
-                ? translate("hardware.label.detail.refuse")
-                : "")
-            }
-            style={{
-              background:
-                value &&
-                (value.assigned_status === 0
-                  ? "gray"
-                  : value.assigned_status === 1
-                  ? "#f39c12"
-                  : value.assigned_status === 2
-                  ? "#0073b7"
-                  : value.assigned_status === 3
-                  ? "red"
-                  : "gray"),
-              color: "white",
-            }}
-          />
-        ),
-      },
-      {
         key: "asset_history",
         title: translate("report.label.field.type"),
         render: (value: IReport) => (
           <TagField
-            value={value.type === 0 ? "Cấp phát" : "Thu hồi"}
+            value={value && value.type === 0 ? "Cấp phát" : "Thu hồi"}
             style={{
               background: value.type === 0 ? "#0073b7" : "red",
               color: "white",
@@ -114,8 +81,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IReport) => (
           <TextField
             value={
-              value.user
-                ? value.user.first_name + " " + value.user.last_name
+              value &&
+                value.user
+                ? value.user.last_name + " " + value.user.first_name
                 : ""
             }
           />
@@ -125,14 +93,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "asset",
         title: translate("report.label.field.note"),
         render: (value: IReport) => (
-          <TextField value={value ? value.notes : ""} />
+          <TextField value={value && (value.notes !== "undefined" ? value.notes : "")} />
         ),
       },
       {
-        key: "created_at",
-        title: translate("report.label.field.dateCreate"),
+        key: "asset_history",
+        title: "Ngày",
         render: (value: IReport) => (
-          <DateField format="LLL" value={value ? value.created_at : ""} />
+          value ?
+            <DateField format="LLL" value={value ? value.created_at : ""} />
+            : ""
         ),
       },
     ],
@@ -199,9 +169,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, dateFormat),
-                    moment(dateToParam, dateFormat),
-                  ]
+                  moment(dateFromParam, dateFormat),
+                  moment(dateToParam, dateFormat),
+                ]
                 : "",
             type: searchParams.get("assetHistoryType")
               ? Number(assetHistoryType)
@@ -245,6 +215,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
         </Form>
+      </div>
+      <div className="sum-report">
+        <span className="name-sum-report">
+          {translate("dashboard.field.sum-report")}
+        </span>{" "}
+        : {data ? data.data.length : 0}
       </div>
       <Table
         dataSource={data?.data}
