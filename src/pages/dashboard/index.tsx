@@ -75,7 +75,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const handleChangeLocation = (value: any) => {
     localStorage.setItem("location", value !== undefined ? value : "");
     setLocationSelected(value);
-    searchParams.set("location", JSON.stringify(value));
+    searchParams.set("rtd_location_id", JSON.stringify(value));
     setSearchParams(searchParams);
   };
 
@@ -126,6 +126,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     localStorage.removeItem("purchase_date");
     localStorage.removeItem("location");
+    localStorage.removeItem("search");
   }, [window.location.reload]);
 
   return (

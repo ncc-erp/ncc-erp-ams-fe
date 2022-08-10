@@ -233,7 +233,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.name}
+            initialValue={Number(5)}
           >
             <Select
               onChange={(value) => {

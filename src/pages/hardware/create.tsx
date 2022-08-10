@@ -47,7 +47,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
@@ -125,74 +124,37 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(messageErr);
-    const formData = new FormData();
+    console.log(event, "event");
 
-    if (event.name !== undefined) {
-      formData.append("name", event.name);
-    }
-    formData.append("asset_tag", event.asset_tag);
-    if (event.serial !== undefined) {
-      formData.append("serial", event.serial);
-    }
-    formData.append("model_id", event.model.toString());
-    if (event.rtd_location !== undefined) {
-      formData.append("rtd_location_id", event.rtd_location.toString());
-    }
-
-    if (event.rtd_location !== undefined) {
-      formData.append("location_id", event.rtd_location.toString());
-    }
-
-    if (event.order_number !== undefined)
-      formData.append("order_number", event.order_number);
-
-    formData.append("status_id", event.status_label.toString());
-
-    if (event.assigned_to !== undefined)
-      formData.append("assigned_user", event.assigned_to.toString());
-
-    if (event.purchase_cost !== undefined)
-      formData.append("purchase_cost", event.purchase_cost);
-
-    if (event.purchase_date !== undefined)
-      formData.append("purchase_date", event.purchase_date);
-
-    formData.append("supplier_id", event.supplier.toString());
-    formData.append("warranty_months", event.warranty_months);
-    formData.append("notes", event.notes);
-
-    if (event.requestable !== undefined)
-      formData.append("requestable", event.requestable.toString());
-
-    if (event.image !== null && event.image !== undefined) {
-      formData.append("image", event.image);
-    }
-
-    setPayload(formData);
-    form.resetFields();
+    mutate({
+      resource: HARDWARE_API,
+      values: {
+        name: event.name,
+        asset_tag: event.asset_tag,
+        serial: event.serial,
+        model_id: event.model,
+        status_id: event.status_label,
+        supplier_id: event.supplier,
+        assigned_user: event.assigned_user,
+        image: event.image,
+        notes: event.notes,
+        warranty_months: event.warranty_months,
+        purchase_date: event.purchase_date,
+        purchase_cost: event.purchase_cost,
+        order_number: event.order_number,
+        location_id: event.rtd_location,
+        rtd_location_id: event.rtd_location,
+      },
+    });
   };
-
-  useEffect(() => {
-    if (payload) {
-      mutate({
-        resource: HARDWARE_API,
-        values: payload,
-      });
-      if (createData?.data.message) form.resetFields();
-    }
-  }, [payload]);
 
   useEffect(() => {
     if (createData?.data.status === "success") {
       form.resetFields();
-      setFile(undefined);
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
-      setMessageErr(createData?.data.messages);
     }
-  }, [createData]);
+  }, [createData, form, setIsModalVisible]);
 
   const findLabel = (value: number): Boolean => {
     let check = false;

@@ -300,6 +300,7 @@ export interface IHardwareFilterVariables {
   model: string;
   asset_tag: string;
   filter: string;
+  rtd_location_id: string;
   location: string;
   status_label: string;
   purchase_date: [Dayjs, Dayjs];

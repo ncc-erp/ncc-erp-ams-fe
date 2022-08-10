@@ -83,9 +83,9 @@ export const HardwareListReadyToDeploy: React.FC<
   const rtd_location_id = searchParams.get("rtd_location_id");
   const category_id = searchParams.get("category_id");
   const type = searchParams.get("type");
-
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
+  const searchParam = searchParams.get("search");
 
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -154,7 +154,7 @@ export const HardwareListReadyToDeploy: React.FC<
         {
           field: "search",
           operator: "eq",
-          value: search,
+          value: search ? search : searchParam,
         },
         {
           field: "filter",
@@ -894,11 +894,8 @@ export const HardwareListReadyToDeploy: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: any) =>
-          (item.user_can_checkout && item.status_label.id === 4) ||
-          (item.user_can_checkout && item.status_label.id === 5)
-      ).length > 0
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      0
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
@@ -906,11 +903,7 @@ export const HardwareListReadyToDeploy: React.FC<
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter(
-            (item: any) =>
-              (item.user_can_checkout && item.status_label.id === 4) ||
-              (item.user_can_checkout && item.status_label.id === 5)
-          )
+          .filter((item: any) => item.user_can_checkout)
           .map((item: any) => item)
       );
     } else {
@@ -937,11 +930,8 @@ export const HardwareListReadyToDeploy: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: any) =>
-          (item.user_can_checkout && item.status_label.id === 4) ||
-          (item.user_can_checkout && item.status_label.id === 5)
-      ).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+        0 &&
       initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
         0
     ) {
@@ -1337,11 +1327,7 @@ export const HardwareListReadyToDeploy: React.FC<
             <span className="title-remove-name">{nameCheckin}</span>
 
             {initselectedRowKeys
-              .filter(
-                (item: any) =>
-                  (item.user_can_checkout && item.status_label.id === 4) ||
-                  (item.user_can_checkout && item.status_label.id === 5)
-              )
+              .filter((item: any) => item.user_can_checkout)
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -1435,47 +1421,26 @@ export const HardwareListReadyToDeploy: React.FC<
                   />
                 </Tooltip>
 
-                {record.user_can_checkout === true &&
-                  record.status_label.id === 4 && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )}
+                {record.user_can_checkout === true && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )}
 
-                {record.user_can_checkout === true &&
-                  record.status_label.id === 5 && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )}
-
-                {record.assigned_status === 2 ? (
+                {record.user_can_checkin === true && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1491,24 +1456,6 @@ export const HardwareListReadyToDeploy: React.FC<
                   >
                     {t("hardware.label.button.checkin")}
                   </Button>
-                ) : record.assigned_status === 3 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkin(record)}
-                  >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : (
-                  ""
                 )}
               </Space>
             )}

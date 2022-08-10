@@ -98,11 +98,11 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   const [listening, setListening] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
+  const searchParam = searchParams.get("search");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -140,7 +140,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         {
           field: "search",
           operator: "eq",
-          value: search,
+          value: search ? search : searchParam,
         },
         {
           field: "filter",
@@ -1140,27 +1140,26 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                     recordItemId={record.id}
                   />
                 </Tooltip>
-                {record.user_can_checkout === true &&
-                  record.status_label.id === 4 && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )}
+                {record.user_can_checkout === true && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )}
 
-                {record.assigned_status === 2 ? (
+                {record.user_can_checkin === true && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1176,24 +1175,6 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.checkin")}
                   </Button>
-                ) : record.assigned_status === 3 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkin(record)}
-                  >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : (
-                  ""
                 )}
               </Space>
             )}

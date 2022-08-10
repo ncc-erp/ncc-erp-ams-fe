@@ -85,6 +85,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const status_id = searchParams.get("status_id");
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
+  const searchParam = searchParams.get("search");
 
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -152,7 +153,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         {
           field: "search",
           operator: "eq",
-          value: search,
+          value: search ? search : searchParam,
         },
         {
           field: "filter",
@@ -888,11 +889,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const [nameCheckin, setNameCheckin] = useState("");
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: any) =>
-          (item.user_can_checkout && item.status_label.id === 4) ||
-          (item.user_can_checkout && item.status_label.id === 5)
-      ).length > 0
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      0
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
@@ -900,11 +898,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter(
-            (item: any) =>
-              (item.user_can_checkout && item.status_label.id === 4) ||
-              (item.user_can_checkout && item.status_label.id === 5)
-          )
+          .filter((item: any) => item.user_can_checkout)
           .map((item: any) => item)
       );
     } else {
@@ -931,11 +925,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: any) =>
-          (item.user_can_checkout && item.status_label.id === 4) ||
-          (item.user_can_checkout && item.status_label.id === 5)
-      ).length > 0 &&
+      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+        0 &&
       initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
         0
     ) {
@@ -1332,11 +1323,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             <span className="title-remove-name">{nameCheckin}</span>
 
             {initselectedRowKeys
-              .filter(
-                (item: any) =>
-                  (item.user_can_checkout && item.status_label.id === 4) ||
-                  (item.user_can_checkout && item.status_label.id === 5)
-              )
+              .filter((item: any) => item.user_can_checkout)
               .map((item: any) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
@@ -1433,46 +1420,27 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                     />
                   </Tooltip>
                 )}
-                {record.user_can_checkout === true &&
-                  record.status_label.id === 4 && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )}
-                {record.user_can_checkout === true &&
-                  record.status_label.id === 5 && (
-                    <Button
-                      className="ant-btn-checkout"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                      }
-                      onClick={() => checkout(record)}
-                    >
-                      {t("hardware.label.button.checkout")}
-                    </Button>
-                  )}
 
-                {record.assigned_status === 2 ? (
+                {record.user_can_checkout === true && (
+                  <Button
+                    className="ant-btn-checkout"
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => checkout(record)}
+                  >
+                    {t("hardware.label.button.checkout")}
+                  </Button>
+                )}
+
+                {record.user_can_checkin === true && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1488,24 +1456,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.checkin")}
                   </Button>
-                ) : record.assigned_status === 3 ? (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => checkin(record)}
-                  >
-                    {t("hardware.label.button.checkin")}
-                  </Button>
-                ) : (
-                  ""
                 )}
               </Space>
             )}
