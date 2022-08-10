@@ -111,7 +111,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "asset_history",
-        title: "Ngày",
+        title: "Ngày thu hồi hoặc cấp phát",
         render: (value: IReport) => (
           value ?
             <DateField format="LLL" value={value ? value.created_at : ""} />
