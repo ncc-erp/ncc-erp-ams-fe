@@ -95,8 +95,6 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
     }
   }, [dataCheckout, form, setIsModalVisible]);
 
-  console.log(data, "data");
-  const { Title, Text } = Typography;
   return (
     <Form
       {...formProps}

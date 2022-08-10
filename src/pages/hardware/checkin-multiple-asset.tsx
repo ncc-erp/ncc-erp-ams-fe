@@ -164,7 +164,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data.map((item: any) => item.status_label.id)}
+            initialValue={Number(5)}
           >
             <Select
               onChange={(value) => {
