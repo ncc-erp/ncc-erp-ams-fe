@@ -124,8 +124,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    console.log(event, "event");
-
     mutate({
       resource: HARDWARE_API,
       values: {

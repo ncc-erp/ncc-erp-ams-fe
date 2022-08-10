@@ -37,7 +37,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const purchase_date_from1 = searchParams.get("purchase_date_from1");
   const purchase_date_to1 = searchParams.get("purchase_date_to1");
 
-  const { data, isLoading } = useCustom({
+  const { data } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
