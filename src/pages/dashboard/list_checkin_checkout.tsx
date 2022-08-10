@@ -313,7 +313,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           <div className="search-all-location">
             <Form layout="vertical" className="search-month-location">
               <Form.Item
-                label={translate("dashboard.time")}
+                label={translate("dashboard.time_checkout")}
                 name="data_CheckOut"
               >
                 <RangePicker
@@ -364,7 +364,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           </span>
           <div className="search-all-location">
             <Form layout="vertical" className="search-month-location">
-              <Form.Item label={translate("dashboard.time")} name="dataReport">
+              <Form.Item label={translate("dashboard.time_checkin")} name="dataReport">
                 <RangePicker
                   format={dateFormat}
                   onChange={handleChangePickerByMonth}

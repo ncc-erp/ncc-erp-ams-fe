@@ -76,6 +76,8 @@
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
+    "time_checkout": "Thời gian bàn giao",
+    "time_checkin": "Thời gian thu hồi",
     "assetFilter": {
       "filters": {
         "label": {

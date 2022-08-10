@@ -1,6 +1,7 @@
 import {
   DateField,
   Form,
+  Input,
   List,
   Select,
   Table,
@@ -13,7 +14,7 @@ import {
   useCustom,
   useTranslate,
 } from "@pankod/refine-core";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IReport } from "interfaces/report";
 import { LOCATION_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
@@ -32,6 +33,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("purchaseDateTo");
   const assetHistoryType = searchParams.get("assetHistoryType");
 
+  const [search, setSearch] = useState<string>("");
+
+  const { Option } = Select;
+  const { Search } = Input;
+
   const { data } = useCustom<any>({
     url: "api/v1/asset-history",
     method: "get",
@@ -43,6 +49,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         assetHistoryType: searchParams.get("assetHistoryType"),
         category_id: searchParams.get("category_id"),
       },
+      filters: [
+        {
+          field: "name",
+          operator: "eq",
+          value: search,
+        }
+      ],
     },
   });
 
@@ -156,7 +169,20 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
   };
 
-  const { Option } = Select;
+  const handleSearchByName = (value: any) => {
+    searchParams.set(
+      "search_name",
+      value ? value : ""
+    );
+    setSearchParams(searchParams);
+    setSearch(value);
+  }
+
+  useEffect(() => {
+    if (searchParams.get("search_name") && search === " ") {
+      searchParams.delete("search_name");
+    }
+  }, [search])
 
   return (
     <List title={translate("report.label.title.name")}>
@@ -216,12 +242,31 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
         </Form>
       </div>
-      <div className="sum-report">
-        <span className="name-sum-report">
-          {translate("dashboard.field.sum-report")}
-        </span>{" "}
-        : {data ? data.data.length : 0}
+      <div className="report">
+        <div className="sum-report">
+          <span className="name-sum-report">
+            {translate("dashboard.field.sum-report")}
+          </span>{" "}
+          : {data ? data.data.length : 0}
+        </div>
+        <div className="search-report">
+          <Form
+            initialValues={{
+              name:
+                searchParams.get("search_name") !== "" ? searchParams.get("search_name") : ""
+            }}
+          >
+            <Form.Item name={"name"}>
+              <Search
+                placeholder={translate("table.search")}
+                onChange={(event) => handleSearchByName(event.target.value)}
+                style={{ width: 200 }}
+              />
+            </Form.Item>
+          </Form>
+        </div>
       </div>
+
       <Table
         dataSource={data?.data}
         rowKey="id"
