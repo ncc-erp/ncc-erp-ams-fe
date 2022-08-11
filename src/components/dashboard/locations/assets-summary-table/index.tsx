@@ -258,20 +258,24 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
   ];
 
   useEffect(() => {
-    const arrNameAsset = response[0]?.categories.map(
+    const index = response.findIndex(
+      (item: any) => item?.categories?.length > 0
+    );
+    const arrNameAsset = (response[index !== -1 ? index : 0]?.categories).map(
       (item: ICategoryAsset) => item.name
     );
 
     let dataAll = [] as any;
     arrNameAsset?.forEach((nameAsset: any) => {
-      const type = {} as any;
+      let type = {} as any;
       let category = "" as ICategoryAsset | string | undefined;
       type.type = nameAsset;
+
       response.forEach((item: ILocation) => {
         category = item.categories.find(
           (c: ICategoryAsset) => c.name === nameAsset
         );
-        type["location_" + item.id] = category && category.assets_count;
+        type["rtd_location_" + item.id] = category && category.assets_count;
         type.category_id = category && category.id;
       });
 
@@ -301,7 +305,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             }
           }}
         >
-          {text}
+          {text ? text : ""}
         </Typography.Text>
       ),
     },
@@ -310,9 +314,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
   let columnTypes = response.map((item: ILocation) => {
     return {
       title: item.name,
-      dataIndex: "location_" + item.id,
-      key: "location_" + item.id,
-      render: (text: string | number, record: DataTable) => (
+      dataIndex: "rtd_location_" + item.id,
+      key: "rtd_location_" + item.id,
+      render: (text: number, record: DataTable) => (
         <Typography.Text
           strong
           type="secondary"
@@ -335,7 +339,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             }
           }}
         >
-          {text}
+          {text ? text : 0}
         </Typography.Text>
       ),
     };
