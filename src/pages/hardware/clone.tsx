@@ -42,7 +42,6 @@ type HardwareCloneProps = {
 export const HardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
   const [checked, setChecked] = useState(true);
@@ -59,7 +58,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
-    action: "clone",
+    action: "create",
   });
 
   const { setFields } = form;
@@ -127,53 +126,35 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { mutate, data: cloneData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(messageErr);
-    const formData = new FormData();
-
-    formData.append("name", event.name);
-    if (event.serial !== undefined) formData.append("serial", event.serial);
-    formData.append("model_id", event.model.toString());
-    if (event.order_number !== null)
-      formData.append("order_number", event.order_number);
-
-    formData.append("notes", event.notes);
-    formData.append("asset_tag", event.asset_tag);
-    formData.append("status_id", event.status_label.toString());
-
-    if (event.user_id !== undefined)
-      formData.append("assigned_to", event.user_id.toString());
-
-    formData.append("warranty_months", event.warranty_months);
-
-    if (event.purchase_cost !== null)
-      formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== null)
-      formData.append("purchase_date", event.purchase_date);
-
-    formData.append("rtd_location_id", event.rtd_location.toString());
-    formData.append("supplier_id", event.supplier.toString());
-
-    if (
-      typeof event.image !== "string" &&
-      event.image !== undefined &&
-      event.image !== null
-    )
-      formData.append("image", event.image);
-
-    formData.append("requestable", checked ? "1" : "0");
-
-    setPayload(formData);
+    mutate({
+      resource: HARDWARE_API,
+      values: {
+        name: event.name,
+        asset_tag: event.asset_tag,
+        serial: event.serial,
+        model_id: event.model,
+        status_id: event.status_label,
+        supplier_id: event.supplier,
+        assigned_user: event.assigned_user,
+        image: event.image,
+        notes: event.notes,
+        warranty_months: event.warranty_months,
+        purchase_date: event.purchase_date,
+        purchase_cost: event.purchase_cost,
+        order_number: event.order_number,
+        location_id: event.rtd_location,
+        rtd_location_id: event.rtd_location,
+      },
+    });
   };
 
   useEffect(() => {
-    if (payload) {
-      mutate({
-        resource: HARDWARE_API,
-        values: payload,
-      });
-      if (cloneData?.data.message) form.resetFields();
+    if (cloneData?.data.status === "success") {
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(messageErr);
     }
-  }, [payload]);
+  }, [cloneData, form, setIsModalVisible]);
 
   useEffect(() => {
     form.resetFields();
@@ -184,7 +165,11 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
 
-      { name: "notes", value: data?.notes },
+      {
+        name: "notes",
+        value:
+          data?.notes !== undefined || data?.note !== "null" ? data?.notes : "",
+      },
       { name: "asset_tag", value: "" },
 
       { name: "status_id", value: data?.status_label.id },
@@ -205,35 +190,17 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
 
-      { name: "assigned_to", value: data?.assigned_to },
       { name: "requestable", value: data?.requestable },
 
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
 
-  useEffect(() => {
-    form.resetFields();
-  }, [isModalVisible]);
-
-  useEffect(() => {
-    if (cloneData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(cloneData?.data.messages);
-    }
-  }, [cloneData]);
-
   const findLabel = (value: number): Boolean => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
+        if (item.label === EStatus.ASSIGN) {
           check = true;
           return true;
         }
@@ -380,7 +347,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.id}
           >
             <Select
               onChange={(value) => {
@@ -399,10 +365,10 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             <Form.Item
               className="tabUser"
               label={t("hardware.label.field.checkoutTo")}
-              name="assigned_to"
+              name="assigned_user"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message:
                     t("hardware.label.field.user") +
                     " " +
