@@ -30,6 +30,7 @@ import {
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   SUPPLIERS_API,
+  USERS_API,
 } from "api/baseApi";
 
 type HardwareEditProps = {
@@ -40,7 +41,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
@@ -55,8 +56,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   enum EStatus {
     PENDING = "Pending",
     BROKEN = "Broken",
+    READY_TO_DEPLOY = "Ready to deploy",
+    ASSIGN = "Assign",
   }
-
   const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "edit",
   });
@@ -111,6 +113,18 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     ],
   });
 
+  const { selectProps: userSelectProps } = useSelect<ICompany>({
+    resource: USERS_API,
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   const {
     refetch,
     data: updateData,
@@ -139,9 +153,14 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
+
     if (event.status_label !== undefined) {
       formData.append("status_id", event.status_label.toString());
     }
+    if (event.assigned_user !== undefined) {
+      formData.append("assigned_user", event.assigned_user.toString());
+    }
+
     formData.append("warranty_months", event.warranty_months);
 
     if (event.purchase_cost !== null)
@@ -241,6 +260,26 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
     setIsReadyToDeploy(findLabel(Number(value.value)));
+  };
+
+  const findLabel_Assign = (value: number): Boolean => {
+    let check = false;
+    statusLabelSelectProps.options?.forEach((item) => {
+      if (value === item.value) {
+        if (
+          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.ASSIGN
+        ) {
+          check = true;
+          return true;
+        }
+      }
+    });
+    return check;
+  };
+
+  const onChangeStatusLabel_Assign = (value: { value: string; label: string }) => {
+    setIsReadyToDeploy(findLabel_Assign(Number(value)));
   };
 
   const filterStatusLabelSelectProps = () => {
@@ -349,6 +388,59 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.rtd_location}
             </Typography.Text>
           )}
+
+        {data?.status_label.id === 5 && (
+          <>
+          <Form.Item
+            label={t("hardware.label.field.status")}
+            name="status_label"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.status") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.status_label.id}
+          >
+            <Select
+              onChange={(value) => {
+                onChangeStatusLabel_Assign(value);
+              }}
+              placeholder={t("hardware.label.placeholder.status")}
+              {...statusLabelSelectProps}
+            />
+          </Form.Item>
+          {messageErr?.status_label && (
+            <Typography.Text type="danger">
+              {messageErr.status_label}
+            </Typography.Text>
+          )}
+          {isReadyToDeploy && (
+            <Form.Item
+              className="tabUser"
+              label={t("hardware.label.field.checkoutTo")}
+              name="assigned_user"
+              rules={[
+                {
+                  required: false,
+                  message:
+                    t("hardware.label.field.user") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t("hardware.label.placeholder.user")}
+                {...userSelectProps}
+              />
+            </Form.Item>
+          )}
+          </>
+        )} 
 
           {data?.status_label.id === 1 && (
             <>
