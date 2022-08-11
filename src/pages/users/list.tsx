@@ -105,11 +105,19 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     },
     {
       dataIndex: "rtd_location",
-      title: t("user.label.field.location"),
+      title: t("user.label.field.locations"),
       render: (value: IHardwareResponse) => (
         <TagField value={value ? value.name : ""} />
       ),
       defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
+    },
+    {
+      dataIndex: "assigned_to",
+      title: t("user.label.field.name_user"),
+      render: (value: IHardwareResponse) => (
+        <TextField value={value ? value.name : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
     },
     {
       dataIndex: "assigned_status",
@@ -142,7 +150,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           }}
         />
       ),
-      defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       filters: [
         {
           text: t("hardware.label.detail.pendingAccept"),
@@ -161,22 +168,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         record.assigned_status === value,
     },
     {
-      dataIndex: "assigned_to",
-      title: t("user.label.field.name_user"),
-      render: (value: IHardwareResponse) => (
-        <TextField value={value ? value.name : ""} />
-      ),
-      defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
-    },
-    {
-      dataIndex: "last_checkout",
-      title: t("user.label.field.dateCheckout"),
-      render: (value: IHardware) => (
-        <DateField format="LLL" value={value ? value.datetime : ""} />
-      ),
-      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
-    },
-    {
       dataIndex: "purchase_date",
       title: t("user.label.field.dateBuy"),
       render: (value: IHardware) =>
@@ -188,6 +179,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       title: t("user.label.field.warranty_months"),
       render: (value: string) => <TagField value={value ? value : ""} />,
       defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
+    },
+    {
+      dataIndex: "last_checkout",
+      title: t("user.label.field.dateCheckout"),
+      render: (value: IHardware) => (
+        <DateField format="LLL" value={value ? value.datetime : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
     },
   ];
 
@@ -559,6 +558,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <Table
           {...tableProps}
           rowKey="id"
+          scroll={{ x: 1827 }}
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
@@ -567,7 +567,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             type: "checkbox",
             ...rowSelection,
           }}
-          scroll={{ x: 1810 }}
         >
           {collumns.map((col) => (
             <Table.Column

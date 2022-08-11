@@ -82,7 +82,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={value && value.type === 0 ? "Cấp phát" : "Thu hồi"}
             style={{
-              background: value.type === 0 ? "#0073b7" : "red",
+              background: value && value.type === 0 ? "#0073b7" : "red",
               color: "white",
             }}
           />
@@ -146,6 +146,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     } else searchParams.set("location", JSON.stringify(value));
     setSearchParams(searchParams);
   };
+
   const handleTypeChange = (value: {
     value: string;
     label: React.ReactNode;
@@ -156,8 +157,8 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
   };
 
-  const handleDateChange = (val: any) => {
-    const [from, to] = Array.from(val || []);
+  const handleDateChange = (value: any) => {
+    const [from, to] = Array.from(value || []);
     searchParams.set(
       "purchaseDateFrom",
       from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""

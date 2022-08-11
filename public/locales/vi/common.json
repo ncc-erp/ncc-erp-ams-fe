@@ -320,22 +320,21 @@
         "dateCheckout": "Ngày cấp phát",
         "title": "Tiêu đề",
         "email": "Email",
-        "phone": "Điện thoại",
+        "phone": "Số điện thoại",
         "username": "Tên đăng nhập",
-        "locations": "Địa phương",
+        "locations": "Chi nhánh",
         "remote": "Remote",
-        "first_name": "Họ và tên đệm",
-        "nameUser": "Tên",
+        "first_name": "Tên",
+        "last_name": "Họ",
+        "full_name": "Họ và tên",
         "address": "Địa chỉ",
         "city": "Thành phố",
-        "employee_num": "Employee Number",
         "job_title": "Tiêu đề",
         "user_manager": "Người quản lý",
         "department": "Bộ phận",
         "website": "Website",
         "state": "Tỉnh/Quận huyện",
         "country": "Nước",
-        "zip": "Zip",
         "note": "Ghi chú",
         "activated": "Cho phép đăng nhập",
         "checkbox": "Người dùng này có thể đăng nhập",
@@ -352,7 +351,11 @@
         "list_assets": "Danh sách các thiết bị",
         "dateBuy": "Ngày mua",
         "warranty_months": "Bảo hành",
-        "name_user": "Tên người dùng"
+        "name_user": "Tên người dùng",
+        "accept": "Chấp nhận",
+        "refuse": "Từ chối",
+        "user": "Người dùng",
+        "admin": "Admin"
       },
       "message": {
         "required": "bắt buộc"
@@ -375,14 +378,17 @@
         "changePass": "Đổi mật khẩu"
       },
       "placeholder": {
-        "first_name": "Họ và tên đệm",
-        "nameUser": "Tên",
+        "first_name": "Tên",
+        "last_name": "Họ",
         "username": "Tên đăng nhập",
         "email": "Email",
         "user_manager": "Lựa chọn một Người dùng",
         "department": "Chọn một phòng",
-        "locations": "Lựa chọn một Địa phương",
-        "phone": "Điện thoại"
+        "locations": "Lựa chọn một Chi nhánh",
+        "phone": "Số điện thoại",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "state": "Tỉnh/Quận huyện"
       }
     }
   },

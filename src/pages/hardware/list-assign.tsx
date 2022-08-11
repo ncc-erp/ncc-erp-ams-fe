@@ -105,7 +105,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+    useState<string[]>(localStorage.getItem('item_assign_selected') !== null ? JSON.parse
+      (localStorage.getItem('item_assign_selected') as any) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -781,6 +782,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_assign_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected])
 
   const listenForOutsideClicks = (
     listening: boolean,

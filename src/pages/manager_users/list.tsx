@@ -19,8 +19,7 @@ import { UserEdit } from "./edit";
 
 const defaultCheckedList = [
     "id",
-    "first_name",
-    "last_name",
+    "name",
     "username",
     "category",
     "email",
@@ -33,7 +32,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-    const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] = useState(false);
     const [detail, setDetail] = useState<IUserResponse>();
 
     const [collumnSelected, setColumnSelected] =
@@ -97,46 +95,21 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             },
             {
                 key: "name",
-                title: translate("user.label.field.nameUser"),
+                title: translate("user.label.field.full_name"),
                 render: (value: string) => <TextField value={value ? value : ""} />,
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "last_name",
+                title: translate("user.label.field.last_name"),
+                render: (value: string) => <TextField value={value ? value : ""} />,
+                defaultSortOrder: getDefaultSortOrder("last_name", sorter),
             },
             {
                 key: "first_name",
                 title: translate("user.label.field.first_name"),
                 render: (value: string) => <TextField value={value ? value : ""} />,
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
-            },
-            {
-                key: "last_name",
-                title: translate("user.label.field.nameUser"),
-                render: (value: string) => <TextField value={value ? value : ""} />,
-                defaultSortOrder: getDefaultSortOrder("last_name", sorter),
-            },
-            {
-                key: "jobtitle",
-                title: translate("user.label.field.title"),
-                render: (value: string) => <TextField value={value ? value : ""} />,
-                defaultSortOrder: getDefaultSortOrder("jobtitle", sorter),
-            },
-            {
-                key: "remote",
-                title: translate("user.label.field.remote"),
-                render: (value: boolean) => (
-                    <TextField
-                        value={
-                            value === false ? (
-                                <CloseOutlined color="#a94442" />
-                            ) : (
-                                <CheckOutlined />
-                            )
-                        }
-                        style={{
-                            color: value === false ? "#a94444" : "#44793f",
-                        }}
-                    />
-                ),
-                defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
             },
             {
                 key: "email",
@@ -168,14 +141,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("city", sorter),
             },
             {
-                key: "country",
-                title: translate("user.label.field.country"),
-                render: (value: string) => (
-                    <TextField value={value ? value : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("country", sorter),
-            },
-            {
                 key: "state",
                 title: translate("user.label.field.state"),
                 render: (value: string) => (
@@ -192,20 +157,29 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("username", sorter),
             },
             {
-                key: "employee_num",
-                title: translate("user.label.field.employee_num"),
-                render: (value: string) => (
-                    <TextField value={value ? value : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("employee_num", sorter),
+                key: "jobtitle",
+                title: translate("user.label.field.title"),
+                render: (value: string) => <TextField value={value ? value : ""} />,
+                defaultSortOrder: getDefaultSortOrder("jobtitle", sorter),
             },
             {
-                key: "zip",
-                title: translate("user.label.field.zip"),
-                render: (value: string) => (
-                    <TextField value={value ? value : ""} />
+                key: "remote",
+                title: translate("user.label.field.remote"),
+                render: (value: boolean) => (
+                    <TextField
+                        value={
+                            value === false ? (
+                                <CloseOutlined color="#a94442" />
+                            ) : (
+                                <CheckOutlined />
+                            )
+                        }
+                        style={{
+                            color: value === false ? "#a94444" : "#44793f",
+                        }}
+                    />
                 ),
-                defaultSortOrder: getDefaultSortOrder("zip", sorter),
+                defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
             },
             {
                 key: "department",
@@ -275,14 +249,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("licenses_count", sorter),
             },
             {
-                key: "consumables_count",
-                title: translate("user.label.field.consumables_count"),
-                render: (value: number) => (
-                    <TextField value={value ? value : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("consumables_count", sorter),
-            },
-            {
                 key: "notes",
                 title: translate("user.label.field.note"),
                 render: (value: string) => (
@@ -344,7 +310,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             permissions: {
                 admin: data?.permissions !== null ? data?.permissions.admin : "",
                 superuser: data?.permissions !== null ? data?.permissions.superuser : ""
-            }
+            },
+            password_confirmation: data?.password_confirmation
         };
 
         setDetail(dataConvert);
@@ -354,6 +321,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     useEffect(() => {
         refreshData();
     }, [isEditModalVisible]);
+
     const [loading, setLoading] = useState(false);
     const handleRefresh = () => {
         setLoading(true);
@@ -487,55 +455,65 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                     </div>
                 </div>
             </div>
-            <Table
-                {...tableProps}
-                loading={isLoading}
-                rowKey="id"
-                scroll={{ x: 1500 }}
-                pagination={{
-                    position: ["topRight", "bottomRight"],
-                    total: pageTotal ? pageTotal : 0,
-                }}>
-                {collumns
-                    .filter((collumn) => collumnSelected.includes(collumn.key))
-                    .map((col) => (
-                        <Table.Column dataIndex={col.key} {...col} sorter />
-                    ))}
-                <Table.Column<IUserResponse>
-                    title={translate("table.actions")}
-                    dataIndex="actions"
-                    render={(_, record) => (
-                        <Space>
-                            <Tooltip
-                                title={translate("user.label.tooltip.edit")}
-                                color={"#108ee9"}
-                            >
-                                <EditButton
-                                    hideText
-                                    size="small"
-                                    recordItemId={record.id}
-                                    onClick={() => edit(record)}
-                                />
-                            </Tooltip>
-                            {record.assets_count > 0 ? (
-                                <DeleteButton hideText size="small" disabled />
-                            ) : (
+            {loading ? (
+                <>
+                    <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+                        <Spin
+                            tip="Loading..."
+                            style={{ fontSize: "18px", color: "black" }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <Table
+                    {...tableProps}
+                    loading={isLoading}
+                    rowKey="id"
+                    pagination={{
+                        position: ["topRight", "bottomRight"],
+                        total: pageTotal ? pageTotal : 0,
+                    }}>
+                    {collumns
+                        .filter((collumn) => collumnSelected.includes(collumn.key))
+                        .map((col) => (
+                            <Table.Column dataIndex={col.key} {...col} sorter />
+                        ))}
+                    <Table.Column<IUserResponse>
+                        title={translate("table.actions")}
+                        dataIndex="actions"
+                        render={(_, record) => (
+                            <Space>
                                 <Tooltip
-                                    title={translate("hardware.label.tooltip.delete")}
-                                    color={"red"}
+                                    title={translate("user.label.tooltip.edit")}
+                                    color={"#108ee9"}
                                 >
-                                    <DeleteButton
-                                        resourceName={"api/v1/users"}
+                                    <EditButton
                                         hideText
                                         size="small"
                                         recordItemId={record.id}
+                                        onClick={() => edit(record)}
                                     />
                                 </Tooltip>
-                            )}
-                        </Space>
-                    )}
-                />
-            </Table>
+                                {record.assets_count > 0 ? (
+                                    <DeleteButton hideText size="small" disabled />
+                                ) : (
+                                    <Tooltip
+                                        title={translate("hardware.label.tooltip.delete")}
+                                        color={"red"}
+                                    >
+                                        <DeleteButton
+                                            resourceName={"api/v1/users"}
+                                            hideText
+                                            size="small"
+                                            recordItemId={record.id}
+                                        />
+                                    </Tooltip>
+                                )}
+                            </Space>
+                        )}
+                    />
+                </Table>
+            )}
             <MModal
                 title={translate("user.label.title.create")}
                 setIsModalVisible={setIsModalVisible}

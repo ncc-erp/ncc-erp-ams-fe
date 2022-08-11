@@ -105,7 +105,8 @@ export const HardwareListReadyToDeploy: React.FC<
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+    useState<string[]>(localStorage.getItem('item_readyToDeploy_selected') !== null ? JSON.parse
+      (localStorage.getItem('item_readyToDeploy_selected') as any) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -784,6 +785,10 @@ export const HardwareListReadyToDeploy: React.FC<
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_readyToDeploy_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected])
 
   const listenForOutsideClicks = (
     listening: boolean,
