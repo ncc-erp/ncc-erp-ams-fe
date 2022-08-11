@@ -93,7 +93,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
+      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -591,25 +592,26 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 ? value.name === t("hardware.label.field.assign")
                   ? t("hardware.label.detail.assign")
                   : value.name === t("hardware.label.field.readyToDeploy")
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : value.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""
+                    ? t("hardware.label.detail.readyToDeploy")
+                    : value.name === t("hardware.label.field.broken")
+                      ? t("hardware.label.detail.broken")
+                      : value.name === t("hardware.label.field.pending")
+                        ? t("hardware.label.detail.pending")
+                        : ""
                 : ""
             }
             style={{
               background:
-                value.name === t("hardware.label.field.assign")
+                value &&
+                  value.name === t("hardware.label.field.assign")
                   ? "#0073b7"
                   : value.name === t("hardware.label.field.readyToDeploy")
-                  ? "#00a65a"
-                  : value.name === t("hardware.label.field.broken")
-                  ? "red"
-                  : value.name === t("hardware.label.field.pending")
-                  ? "#f39c12"
-                  : "",
+                    ? "#00a65a"
+                    : value.name === t("hardware.label.field.broken")
+                      ? "red"
+                      : value.name === t("hardware.label.field.pending")
+                        ? "#f39c12"
+                        : "",
               color: "white",
             }}
           />
@@ -716,24 +718,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               value === 0
                 ? t("hardware.label.detail.noAssign")
                 : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
+                  ? t("hardware.label.detail.pendingAccept")
+                  : value === 2
+                    ? t("hardware.label.detail.accept")
+                    : value === 3
+                      ? t("hardware.label.detail.refuse")
+                      : ""
             }
             style={{
               background:
                 value === 0
                   ? "gray"
                   : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                    ? "#f39c12"
+                    : value === 2
+                      ? "#0073b7"
+                      : value === 3
+                        ? "red"
+                        : "gray",
               color: "white",
             }}
           />
@@ -761,6 +763,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected])
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -908,9 +914,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
     if (
       initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-        0 &&
+      0 &&
       initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-        0
+      0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
@@ -1020,19 +1026,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-              searchValuesLocation !== 0
+                searchValuesLocation !== 0
                 ? searchValuesLocation
                 : Number(rtd_location_id) ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1296,6 +1302,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
+
       <div className="checkout-checkin-multiple">
         <div className="sum-assets">
           <span className="name-sum-assets">
@@ -1450,8 +1457,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1468,8 +1475,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >
