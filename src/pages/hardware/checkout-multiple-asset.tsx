@@ -64,6 +64,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
         status_id: 4,
+        note: event.note !== null ? event.note : "",
       },
     });
   };
@@ -75,7 +76,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       { name: "assets", value: data?.map((item: any) => item.id) },
       { name: "assigned_asset", value: data?.assigned_asset },
       { name: "assigned_location", value: data?.assigned_location },
-      { name: "note", value: data?.note },
+      { name: "note", value: data?.note ? data?.note : "" },
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),

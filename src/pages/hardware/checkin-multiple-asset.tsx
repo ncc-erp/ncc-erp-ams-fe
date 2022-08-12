@@ -62,7 +62,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
       values: {
         assets: event.assets,
         status_id: event.status_id,
-        note: event.note,
+        note: event.note !== null ? event.note : "",
         checkin_at: event.checkin_at,
       },
     });
