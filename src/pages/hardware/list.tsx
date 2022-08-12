@@ -74,6 +74,17 @@ const defaultCheckedList = [
   "created_at",
 ];
 
+const STATUS_LABEL = {
+  PENDING: 1,
+  BROKEN: 3,
+  ASSIGN: 4,
+  READY_TO_DEPLOY: 5
+}
+
+interface ICheckboxChange {
+  key: string;
+}
+
 export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -94,7 +105,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [collumnSelected, setColumnSelected] =
     useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
-      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
+      (localStorage.getItem('item_selected') as string) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -754,7 +765,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
-  const onCheckItem = (value: any) => {
+  const onCheckItem = (value: ICheckboxChange) => {
     if (collumnSelected.includes(value.key)) {
       setColumnSelected(
         collumnSelected.filter((item: any) => item !== value.key)
@@ -878,7 +889,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkout).length >
       0
     ) {
       setSelectedCheckout(true);
@@ -887,8 +898,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkout)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkout)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckout(false);
@@ -896,7 +907,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkin).length >
       0
     ) {
       setSelectedCheckin(true);
@@ -905,17 +916,17 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       );
       setSelectdStoreCheckin(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkin)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkin)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckin(false);
       setNameCheckout("");
     }
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
+      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkout).length >
       0 &&
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
+      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkin).length >
       0
     ) {
       setSelectedCheckout(false);
@@ -932,7 +943,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: any[]
+    selectedRows: IHardwareResponse[]
   ) => {
     setSelectedRowKeys(selectedRowKeys);
   };
@@ -940,10 +951,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const onSelect = (record: any, selected: boolean) => {
     if (!selected) {
       const newSelectRow = initselectedRowKeys.filter(
-        (item: any) => item.id !== record.id
+        (item: IHardware) => item.id !== record.id
       );
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+      setSelectedRowKeys(newSelectRow.map((item: IHardware) => item.id));
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
@@ -954,7 +965,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           })
         )
       );
-      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+      setSelectedRowKeys(newselectedRowKeys.map((item: IHardware) => item.id));
     }
   };
 
@@ -964,15 +975,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     changeRows: any
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter((item: any) => item);
+      const unSelectIds = changeRows.map((item: IHardware) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter((item: IHardwareResponse) => item);
       newSelectedRows = initselectedRowKeys.filter(
         (item: any) => !unSelectIds.includes(item.id)
       );
 
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
     } else {
-      selectedRows = selectedRows.filter((item: any) => item);
+      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
       localStorage.setItem(
         "selectedRowKeys",
         JSON.stringify([...initselectedRowKeys, ...selectedRows])
@@ -982,7 +993,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    selectedRowKeys: initselectedRowKeys.map((item: IHardware) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -1317,7 +1328,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >
-            Cấp phát
+            {t("hardware.label.title.checkout")}
           </Button>
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
@@ -1344,7 +1355,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             disabled={!selectedCheckin}
             onClick={handleCheckin}
           >
-            Thu hồi
+            {t("hardware.label.title.checkin")}
           </Button>
 
           <div className={nameCheckin ? "list-checkins" : ""}>
@@ -1421,17 +1432,27 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
+
+                {record?.status_label.id !== STATUS_LABEL.ASSIGN ? (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
+                  >
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                )
+                  : (
+                    <EditButton
+                      hideText
+                      size="small"
+                      disabled
+                    />
+                  )}
                 {record.assigned_to !== null ? (
                   <DeleteButton hideText size="small" disabled />
                 ) : (
