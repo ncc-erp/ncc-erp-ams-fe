@@ -63,6 +63,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_at: event.checkout_at,
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
+        status_id: 4,
       },
     });
   };

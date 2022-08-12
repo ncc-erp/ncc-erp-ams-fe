@@ -93,6 +93,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
+    formData.append("status_id", 4 as any);
 
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
