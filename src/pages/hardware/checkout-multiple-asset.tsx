@@ -11,7 +11,6 @@ import {
   Row,
   Col,
   Typography,
-  Title,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -35,6 +34,9 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
 
   const t = useTranslate();
 
+  const NumberStatus = {
+    ASSIGN: 4,
+  };
   const { formProps, form } = useForm<IHardwareRequestMultipleCheckout>({
     action: "create",
   });
@@ -51,7 +53,6 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
     ],
   });
 
-  const number = 4;
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareRequestMultipleCheckout) => {
@@ -64,7 +65,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_at: event.checkout_at,
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
-        status_id: number,
+        status_id: NumberStatus.ASSIGN,
         note: event.note !== null ? event.note : "",
       },
     });

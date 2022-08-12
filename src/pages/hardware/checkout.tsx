@@ -32,12 +32,14 @@ type HardwareCheckoutProps = {
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
 
+  const NumberStatus = {
+    ASSIGN: 4,
+  };
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
     action: "edit",
   });
@@ -83,7 +85,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     },
   });
 
-  const number = 4;
   const onFinish = (event: IHardwareRequestCheckout) => {
     setMessageErr(messageErr);
 
@@ -94,7 +95,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
-    formData.append("status_id", number as any);
+    formData.append("status_id", NumberStatus.ASSIGN as any);
 
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
