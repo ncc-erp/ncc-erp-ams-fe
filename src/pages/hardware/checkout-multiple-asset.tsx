@@ -51,6 +51,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
     ],
   });
 
+  const number = 4;
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareRequestMultipleCheckout) => {
@@ -63,7 +64,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_at: event.checkout_at,
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
-        status_id: 4,
+        status_id: number,
         note: event.note !== null ? event.note : "",
       },
     });
