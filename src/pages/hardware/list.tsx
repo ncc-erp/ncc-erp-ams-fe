@@ -62,6 +62,7 @@ import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assest";
+import { getAssetAssignedStatusDecription, getBGAssetAssignedStatusDecription } from "untils/assests";
 
 const defaultCheckedList = [
   "id",
@@ -718,28 +719,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.condition"),
         render: (value: number) => (
           <TagField
-            value={
-              value === ASSIGNED_STATUS.NO_ASSIGN
-                ? t("hardware.label.detail.noAssign")
-                : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                  ? t("hardware.label.detail.pendingAccept")
-                  : value === ASSIGNED_STATUS.ACCEPT
-                    ? t("hardware.label.detail.accept")
-                    : value === ASSIGNED_STATUS.REFUSE
-                      ? t("hardware.label.detail.refuse")
-                      : ""
-            }
+            value={getAssetAssignedStatusDecription(value)}
             style={{
               background:
-                value === ASSIGNED_STATUS.NO_ASSIGN
-                  ? "gray"
-                  : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                    ? "#f39c12"
-                    : value === ASSIGNED_STATUS.ACCEPT
-                      ? "#0073b7"
-                      : value === ASSIGNED_STATUS.REFUSE
-                        ? "red"
-                        : "gray",
+                getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
