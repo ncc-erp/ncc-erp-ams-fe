@@ -228,7 +228,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes,
+      notes: data.notes !== undefined || data.notes !== null ? data.notes : "",
       order_number: data.order_number !== "null" ? data.order_number : "",
       location: {
         id: data?.location?.id,
@@ -331,7 +331,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes,
+      notes: data.notes !== undefined || data.notes !== null ? data.notes : "",
       order_number: data.order_number !== "null" ? data.order_number : "",
       location: {
         id: data?.location?.id,

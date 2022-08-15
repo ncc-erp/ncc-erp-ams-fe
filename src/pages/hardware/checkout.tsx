@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Tabs,
   Button,
   Row,
   Col,
@@ -20,9 +19,9 @@ import {
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import { UserOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
 import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -32,7 +31,6 @@ type HardwareCheckoutProps = {
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
@@ -88,11 +86,12 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
     const formData = new FormData();
     formData.append("name", event.name);
-    if (event.note !== undefined) {
+    if (event.note !== null) {
       formData.append("note", event.note);
     }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
+    formData.append("status_id", STATUS_LABELS.ASSIGN as any);
 
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);

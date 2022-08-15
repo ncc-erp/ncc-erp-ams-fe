@@ -23,7 +23,6 @@ import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
-// import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
   LOCATION_API,
@@ -31,6 +30,7 @@ import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
 } from "api/baseApi";
+import { EStatus, STATUS_LABELS } from "constants/assest";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -51,11 +51,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   }, [props]);
 
   const t = useTranslate();
-
-  enum EStatus {
-    PENDING = "Pending",
-    BROKEN = "Broken",
-  }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "edit",
@@ -177,7 +172,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-      { name: "notes", value: data?.notes },
+      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
       {
@@ -350,7 +345,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
 
-          {data?.status_label.id === 1 && (
+          {data?.status_label.id === STATUS_LABELS.PENDING && (
             <>
               <Form.Item
                 label={t("hardware.label.field.status")}
@@ -382,7 +377,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </>
           )}
 
-          {data?.status_label.id === 3 && (
+          {data?.status_label.id === STATUS_LABELS.BROKEN && (
             <>
               <Form.Item
                 label={t("hardware.label.field.status")}
@@ -554,17 +549,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      {/* <Checkbox
-        name="requestable"
-        style={{ marginTop: 20 }}
-        checked={checked}
-        value={data?.requestable}
-        onChange={(event: ICheckboxChange) => {
-          setChecked(event.target.checked);
-        }}
-      ></Checkbox>{" "}
-      {t("hardware.label.field.checkbox")} */}
-      <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
+
+      <Form.Item
+        label={t("hardware.label.field.loading_image")}
+        name="image"
+        initialValue={data?.image}
+      >
         {data?.image ? (
           <UploadImage
             id={"update" + data?.id}
