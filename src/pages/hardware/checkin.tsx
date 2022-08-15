@@ -26,6 +26,7 @@ import {
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
+  USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assest";
 
@@ -85,6 +86,18 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     ],
   });
 
+  const { selectProps: userSelectProps } = useSelect<ICompany>({
+    resource: USERS_API,
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   const {
     refetch,
     data: updateData,
@@ -116,6 +129,10 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (event.rtd_location !== undefined) {
       formData.append("rtd_location", event.rtd_location.toString());
     }
+    if (event.assigned_user !== undefined) {
+      formData.append("assigned_user", event.assigned_user);
+      formData.append("checkout_to_type", "user");
+    }
     setPayload(formData);
   };
 
@@ -130,7 +147,8 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
         name: "checkin_at",
         value: new Date().toISOString().substring(0, 10),
       },
-
+      { name: "assigned_user", value: data?.assigned_user },
+      { name: "assigned_location", value: data?.assigned_location.name },
       { name: "rtd_location", value: "" },
     ]);
   }, [data, form, isModalVisible, setFields]);
@@ -241,6 +259,30 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
               {...filterStatusLabelSelectProps()}
             />
           </Form.Item>
+          <Form.Item
+            className="tabUserCheckout"
+            label={t("hardware.label.field.checkinTo")}
+            name="assigned_user"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.user") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t("hardware.label.placeholder.user")}
+              {...userSelectProps}
+            />
+          </Form.Item>
+          {messageErr?.assigned_user && (
+            <Typography.Text type="danger">
+              {messageErr.assigned_user[0]}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item

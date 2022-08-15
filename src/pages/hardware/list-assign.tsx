@@ -475,6 +475,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         status_type: data?.status_label.status_type,
         status_meta: data?.status_label.status_meta,
       },
+      assigned_location: {
+        id: data?.assigned_location?.id,
+        name: data?.assigned_location?.name,
+      },
       checkin_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
@@ -485,6 +489,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       },
       note: data?.note,
       user_can_checkout: false,
+      assigned_user: data?.assigned_user,
+      checkout_to_type: data?.checkout_to_type,
+
     };
 
     setDetailCheckin(dataConvert);

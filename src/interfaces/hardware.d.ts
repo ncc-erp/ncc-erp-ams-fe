@@ -137,6 +137,14 @@ export interface IHardwareResponse {
     date: string;
     formatted: string;
   };
+  checkout_to_type: {
+    assigned_user: number;
+    assigned_asset: string;
+    assigned_location: {
+      id: number;
+      name: string;
+    };
+  };
   created_at: {
     datetime: string;
     formatted: string;
@@ -199,7 +207,11 @@ export interface IHardwareRequestMultipleCheckin {
   status_id: string;
   checkin_at: string;
   rtd_location: string;
+  assigned_user: string;
   note: string;
+  checkout_to_type: string;
+  assigned_status: number;
+  assigned_location: string;
 }
 
 export interface IHardwareResponseCheckout {
@@ -266,6 +278,8 @@ export interface IHardwareRequestCheckin {
   checkin_at: string;
   rtd_location: number;
   assigned_status: number;
+  assigned_user: string;
+  checkout_to_type: string;
 }
 
 export interface IHardwareResponseCheckin {
@@ -290,6 +304,19 @@ export interface IHardwareResponseCheckin {
   checkin_at: {
     date: string;
     formatted: string;
+  };
+  assigned_location: {
+    id: number;
+    name: string;
+  };
+  assigned_user: number;
+  checkout_to_type: {
+    assigned_user: number;
+    assigned_asset: string;
+    assigned_location: {
+      id: number;
+      name: string;
+    };
   };
   user_can_checkout: boolean;
 }

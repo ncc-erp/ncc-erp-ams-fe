@@ -466,10 +466,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
       },
+      assigned_location: {
+        id: data?.assigned_location?.id,
+        name: data?.assigned_location?.name,
+      },
       rtd_location: {
         id: data?.id,
         name: data?.name,
       },
+      assigned_user: data?.assigned_user,
+      checkout_to_type: data?.checkout_to_type,
       note: data?.note,
       user_can_checkout: false,
     };
