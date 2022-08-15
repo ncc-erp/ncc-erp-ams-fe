@@ -16,6 +16,7 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
+import { USER_API } from "api/baseApi";
 
 const defaultCheckedList = [
     "id",
@@ -35,7 +36,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     const [detail, setDetail] = useState<IUserResponse>();
 
     const [collumnSelected, setColumnSelected] =
-        useState<string[]>(defaultCheckedList);
+        useState<string[]>(localStorage.getItem('item_users_selected') !== null ? JSON.parse
+            (localStorage.getItem('item_users_selected') as any) : defaultCheckedList);
     const [isActive, setIsActive] = useState(false);
     const [hrmLoading, setHrmLoading] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
@@ -49,7 +51,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                 order: "desc",
             },
         ],
-        resource: "api/v1/users",
+        resource: USER_API,
         onSearch: (params: any) => {
             const filters: CrudFilters = [];
             const { search } = params;
@@ -333,6 +335,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
     const isLoading = tableProps.loading || hrmLoading;
+
     const onCheckItem = (value: any) => {
         if (collumnSelected.includes(value.key)) {
             setColumnSelected(
@@ -342,6 +345,10 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             setColumnSelected(collumnSelected.concat(value.key));
         }
     };
+
+    useEffect(() => {
+        localStorage.setItem("item_users_selected", JSON.stringify(collumnSelected));
+    }, [collumnSelected])
 
     const listenForOutsideClicks = (
         listening: boolean,
@@ -433,25 +440,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                                 </div>
                             </nav>
                         </div>
-                        {/* <div>
-                            <button
-                                className="menu-trigger"
-                                style={{
-                                    borderTopRightRadius: "3px",
-                                    borderBottomRightRadius: "3px",
-                                }}
-                            >
-                                <Tooltip
-                                    title={translate("user.label.tooltip.search")}
-                                    color={"#108ee9"}
-                                >
-                                    <FileSearchOutlined
-                                        onClick={handleSearch}
-                                        style={{ color: "black" }}
-                                    />
-                                </Tooltip>
-                            </button>
-                        </div> */}
                     </div>
                 </div>
             </div>
@@ -502,7 +490,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                                         color={"red"}
                                     >
                                         <DeleteButton
-                                            resourceName={"api/v1/users"}
+                                            resourceName={USER_API}
                                             hideText
                                             size="small"
                                             recordItemId={record.id}

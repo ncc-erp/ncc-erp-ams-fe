@@ -34,6 +34,7 @@ import type { ColumnsType } from "antd/es/table";
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { IUserAssets } from "interfaces/user";
+import { ASSIGNED_STATUS } from "constants/assest";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -125,27 +126,27 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       render: (value: number) => (
         <TagField
           value={
-            value === 0
+            value === ASSIGNED_STATUS.NO_ASSIGN
               ? t("hardware.label.detail.noAssign")
-              : value === 1
-              ? t("hardware.label.detail.pendingAccept")
-              : value === 2
-              ? t("hardware.label.detail.accept")
-              : value === 3
-              ? t("hardware.label.detail.refuse")
-              : ""
+              : value === ASSIGNED_STATUS.PENDING_ACCEPT
+                ? t("hardware.label.detail.pendingAccept")
+                : value === ASSIGNED_STATUS.ACCEPT
+                  ? t("hardware.label.detail.accept")
+                  : value === ASSIGNED_STATUS.REFUSE
+                    ? t("hardware.label.detail.refuse")
+                    : ""
           }
           style={{
             background:
-              value === 0
+              value === ASSIGNED_STATUS.NO_ASSIGN
                 ? "gray"
-                : value === 1
-                ? "#f39c12"
-                : value === 2
-                ? "#0073b7"
-                : value === 3
-                ? "red"
-                : "gray",
+                : value === ASSIGNED_STATUS.PENDING_ACCEPT
+                  ? "#f39c12"
+                  : value === ASSIGNED_STATUS.ACCEPT
+                    ? "#0073b7"
+                    : value === ASSIGNED_STATUS.REFUSE
+                      ? "red"
+                      : "gray",
             color: "white",
           }}
         />
@@ -153,15 +154,15 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       filters: [
         {
           text: t("hardware.label.detail.pendingAccept"),
-          value: 1,
+          value: ASSIGNED_STATUS.PENDING_ACCEPT,
         },
         {
           text: t("hardware.label.detail.accept"),
-          value: 2,
+          value: ASSIGNED_STATUS.ACCEPT,
         },
         {
           text: t("hardware.label.detail.refuse"),
-          value: 3,
+          value: ASSIGNED_STATUS.REFUSE,
         },
       ],
       onFilter: (value, record: IUserAssets) =>
@@ -248,12 +249,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   }, [window.location.reload]);
 
-  const ASSIGNED_STATUS = {
-    PENDING_ACCEPT: 1,
-    ACCEPT: 2,
-    REFUSE: 3,
-  };
-
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
@@ -278,9 +273,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(true);
-      setNameNotAcceptAndRefuse(
-        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
-      );
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
     } else {
       setSelectedNotAcceptAndRefuse(false);
       setNameNotAcceptAndRefuse("");
@@ -292,7 +285,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
-      setNameAcceptAndRefuse("Những tài sản này được phép xác nhận và từ chối");
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
       setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
           .filter(
@@ -318,10 +311,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedNotAcceptAndRefuse(false);
       setSelectedAcceptAndRefuse(false);
-      setNameNotAcceptAndRefuse(
-        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
-      );
-      setNameAcceptAndRefuse("Những tài sản này được phép xác nhận và từ chối");
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
     } else {
     }
   }, [initselectedRowKeys]);
@@ -608,8 +599,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                           isLoadingArr[record.id] === undefined
                             ? false
                             : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                              ? false
+                              : true
                         }
                       >
                         {t("hardware.label.button.accept")}
@@ -627,8 +618,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >

@@ -55,6 +55,7 @@
   "tags": {
     "clone": "Clone"
   },
+  "all": "Tất cả",
   "dashboard": {
     "title": "Thống kê",
     "field": {
@@ -154,6 +155,7 @@
         "category": "Thể loại",
         "rtd_location": "Vị trí",
         "image": "Hình ảnh",
+        "loading_image": "Tải hình",
         "condition": "Xác nhận",
         "dateCreate": "Ngày tạo",
         "manufacturer": "Nhà sản xuất",
@@ -214,6 +216,7 @@
         "list-readyToDeploy": "Sẵn sàng để cấp phát Tài sản",
         "list-pending": "Đang chờ Tài sản",
         "list-broken": "Không cho phép cấp phát Tài sản",
+        "list-waiting-confirm": "Đang chờ xác nhận",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
         "time": "Thời gian",
@@ -239,7 +242,12 @@
         "noAssign": "",
         "pendingAccept": "Đang chờ xác nhận",
         "accept": "Đã xác nhận",
-        "refuse": "Đã từ chối"
+        "refuse": "Đã từ chối",
+        "note-checkin": "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi",
+        "note-checkout": "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi",
+        "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
+        "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
+        "list-asset": "Danh sách các thiết bị"
       }
     }
   },
@@ -521,10 +529,11 @@
     "setting": "Cài đặt",
     "depreciation": "Khấu hao",
     "assets_refuse": "Thiết bị từ chối",
-    "assets-assign": "Tất cả đã cấp phát",
-    "assets-readyToDeploy": "Tất cả trong kho",
-    "assets-pending": "Tất cả bảo hành-check lại",
-    "assets-broken": "Tất cả hỏng",
+    "assets-assign": "Đã cấp phát",
+    "assets-readyToDeploy": "Trong kho",
+    "assets-pending": "Bảo hành-check lại",
+    "assets-broken": "Hỏng",
+    "assets-waiting-confirm": "Đang chờ xác nhận",
     "report": "Báo cáo",
     "asset-category-PC": "Tất cả máy tính",
     "asset-category-Monitor": "Tất cả màn hình",
@@ -535,7 +544,8 @@
     "checkin-checkout": "Cấp phát/thu hồi",
     "checkout": "Cấp phát",
     "checkin": "Thu hồi",
-    "manager_user": "Người dùng"
+    "manager_user": "Người dùng",
+    "accessory": "Phụ kiện"
   },
   "model": {
     "label": {
@@ -712,7 +722,38 @@
         "type": "Kiểu",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
-        "user": "Người dùng"
+        "user": "Người dùng",
+        "dateCheckout_And_dateCheckin": "Ngày cấp phát hoặc ngày thu hồi"
+      }
+    }
+  },
+  "accessory": {
+    "label": {
+      "field": {
+        "name": "Tên phụ kiện",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "supplier": "Nhà cung cấp",
+        "location": "Chi nhánh",
+        "total_accessory": "Số lượng",
+        "notes": "Ghi chú"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "accessory": "Phụ kiện",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
       }
     }
   }

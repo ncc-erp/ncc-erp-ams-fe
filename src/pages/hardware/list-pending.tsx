@@ -59,6 +59,7 @@ import moment from "moment";
 import { DatePicker } from "antd";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assest";
 
 const defaultCheckedList = [
   "id",
@@ -648,25 +649,25 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => (
           <TagField
             value={
-              value === 0
+              value === ASSIGNED_STATUS.NO_ASSIGN
                 ? t("hardware.label.detail.noAssign")
-                : value === 1
+                : value === ASSIGNED_STATUS.PENDING_ACCEPT
                   ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
+                  : value === ASSIGNED_STATUS.ACCEPT
                     ? t("hardware.label.detail.accept")
-                    : value === 3
+                    : value === ASSIGNED_STATUS.REFUSE
                       ? t("hardware.label.detail.refuse")
                       : ""
             }
             style={{
               background:
-                value === 0
+                value === ASSIGNED_STATUS.NO_ASSIGN
                   ? "gray"
-                  : value === 1
+                  : value === ASSIGNED_STATUS.PENDING_ACCEPT
                     ? "#f39c12"
-                    : value === 2
+                    : value === ASSIGNED_STATUS.ACCEPT
                       ? "#0073b7"
-                      : value === 3
+                      : value === ASSIGNED_STATUS.REFUSE
                         ? "red"
                         : "gray",
               color: "white",
@@ -1123,7 +1124,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                {record?.status_label.id !== 4 ? (
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
                   <Tooltip
                     title={t("hardware.label.tooltip.edit")}
                     color={"#108ee9"}

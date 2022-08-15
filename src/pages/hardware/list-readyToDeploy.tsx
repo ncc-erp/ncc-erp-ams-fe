@@ -61,6 +61,7 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assest";
 
 const defaultCheckedList = [
   "id",
@@ -688,25 +689,25 @@ export const HardwareListReadyToDeploy: React.FC<
         render: (value: number) => (
           <TagField
             value={
-              value === 0
+              value === ASSIGNED_STATUS.NO_ASSIGN
                 ? t("hardware.label.detail.noAssign")
-                : value === 1
+                : value === ASSIGNED_STATUS.PENDING_ACCEPT
                   ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
+                  : value === ASSIGNED_STATUS.ACCEPT
                     ? t("hardware.label.detail.accept")
-                    : value === 3
+                    : value === ASSIGNED_STATUS.REFUSE
                       ? t("hardware.label.detail.refuse")
                       : ""
             }
             style={{
               background:
-                value === 0
+                value === ASSIGNED_STATUS.NO_ASSIGN
                   ? "gray"
-                  : value === 1
+                  : value === ASSIGNED_STATUS.PENDING_ACCEPT
                     ? "#f39c12"
-                    : value === 2
+                    : value === ASSIGNED_STATUS.ACCEPT
                       ? "#0073b7"
-                      : value === 3
+                      : value === ASSIGNED_STATUS.REFUSE
                         ? "red"
                         : "gray",
               color: "white",
@@ -1297,7 +1298,7 @@ export const HardwareListReadyToDeploy: React.FC<
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >
-            Cấp phát
+            {t("hardware.label.title.checkout")}
           </Button>
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
@@ -1325,7 +1326,7 @@ export const HardwareListReadyToDeploy: React.FC<
             disabled={!selectedCheckin}
             onClick={handleCheckin}
           >
-            Thu hồi
+            {t("hardware.label.title.checkin")}
           </Button>
 
           <div className={nameCheckin ? "list-checkins" : ""}>
@@ -1403,7 +1404,7 @@ export const HardwareListReadyToDeploy: React.FC<
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                {record?.status_label.id !== 4 ? (
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
                   <Tooltip
                     title={t("hardware.label.tooltip.edit")}
                     color={"#108ee9"}

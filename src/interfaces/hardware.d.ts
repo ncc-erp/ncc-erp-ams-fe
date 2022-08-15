@@ -190,6 +190,7 @@ export interface IHardwareRequestMultipleCheckout {
   assigned_status: number;
   user_can_checkout: boolean;
   note: string;
+  status_id: number;
 }
 
 export interface IHardwareRequestMultipleCheckin {
@@ -265,6 +266,7 @@ export interface IHardwareRequestCheckin {
   checkin_at: string;
   rtd_location: number;
   assigned_status: number;
+  assigned_user: string;
 }
 
 export interface IHardwareResponseCheckin {

@@ -61,6 +61,7 @@ import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assest";
 
 const defaultCheckedList = [
   "id",
@@ -73,14 +74,6 @@ const defaultCheckedList = [
   "assigned_status",
   "created_at",
 ];
-
-const STATUS_LABEL = {
-  PENDING: 1,
-  BROKEN: 3,
-  ASSIGN: 4,
-  READY_TO_DEPLOY: 5
-}
-
 interface ICheckboxChange {
   key: string;
 }
@@ -239,7 +232,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes,
+      notes: data.notes !== undefined || data.notes !== null ? data.notes : "",
       order_number: data.order_number !== "null" ? data.order_number : "",
       location: {
         id: data?.location?.id,
@@ -342,7 +335,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes,
+      notes: data.notes !== undefined || data.notes !== null ? data.notes : "",
       order_number: data.order_number !== "null" ? data.order_number : "",
       location: {
         id: data?.location?.id,
@@ -726,25 +719,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => (
           <TagField
             value={
-              value === 0
+              value === ASSIGNED_STATUS.NO_ASSIGN
                 ? t("hardware.label.detail.noAssign")
-                : value === 1
+                : value === ASSIGNED_STATUS.PENDING_ACCEPT
                   ? t("hardware.label.detail.pendingAccept")
-                  : value === 2
+                  : value === ASSIGNED_STATUS.ACCEPT
                     ? t("hardware.label.detail.accept")
-                    : value === 3
+                    : value === ASSIGNED_STATUS.REFUSE
                       ? t("hardware.label.detail.refuse")
                       : ""
             }
             style={{
               background:
-                value === 0
+                value === ASSIGNED_STATUS.NO_ASSIGN
                   ? "gray"
-                  : value === 1
+                  : value === ASSIGNED_STATUS.PENDING_ACCEPT
                     ? "#f39c12"
-                    : value === 2
+                    : value === ASSIGNED_STATUS.ACCEPT
                       ? "#0073b7"
-                      : value === 3
+                      : value === ASSIGNED_STATUS.REFUSE
                         ? "red"
                         : "gray",
               color: "white",
@@ -1136,10 +1129,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               }}
             >
               <Option value={"all"}>{"Tất cả"}</Option>
-              <Option value={0}>{"Chưa checkout"}</Option>
-              <Option value={1}>{"Đang chờ xác nhận"}</Option>
-              <Option value={2}>{"Đã xác nhận"}</Option>
-              <Option value={3}>{"Đã từ chối"}</Option>
+              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>{"Chưa checkout"}</Option>
+              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>{"Đang chờ xác nhận"}</Option>
+              <Option value={ASSIGNED_STATUS.ACCEPT}>{"Đã xác nhận"}</Option>
+              <Option value={ASSIGNED_STATUS.REFUSE}>{"Đã từ chối"}</Option>
             </Select>
           </Form.Item>
         </Form>
@@ -1433,7 +1426,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record?.status_label.id !== STATUS_LABEL.ASSIGN ? (
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
                   <Tooltip
                     title={t("hardware.label.tooltip.edit")}
                     color={"#108ee9"}

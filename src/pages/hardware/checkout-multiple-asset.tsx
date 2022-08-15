@@ -11,7 +11,6 @@ import {
   Row,
   Col,
   Typography,
-  Title,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -21,6 +20,7 @@ import {
 } from "interfaces/hardware";
 import { ICompany } from "interfaces/company";
 import { USERS_API, HARDWARE_CHECKOUT_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -63,6 +63,8 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_at: event.checkout_at,
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
+        status_id: STATUS_LABELS.ASSIGN,
+        note: event.note !== null ? event.note : "",
       },
     });
   };
@@ -74,7 +76,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       { name: "assets", value: data?.map((item: any) => item.id) },
       { name: "assigned_asset", value: data?.assigned_asset },
       { name: "assigned_location", value: data?.assigned_location },
-      { name: "note", value: data?.note },
+      { name: "note", value: data?.note ? data?.note : "" },
       {
         name: "checkout_at",
         value: new Date().toISOString().substring(0, 10),
@@ -105,7 +107,10 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item label="Danh sách các thiết bị" name="assets">
+          <Form.Item
+            label={t("hardware.label.detail.list-asset")}
+            name="assets"
+          >
             {data &&
               data?.map((item: any) => (
                 <div>
