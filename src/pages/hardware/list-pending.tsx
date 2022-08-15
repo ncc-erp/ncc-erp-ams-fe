@@ -93,8 +93,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] =
-    useState<string[]>(localStorage.getItem('item_pending_selected') !== null ? JSON.parse
-      (localStorage.getItem('item_pending_selected') as any) : defaultCheckedList);
+    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
+      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -702,7 +702,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("item_pending_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
   }, [collumnSelected])
 
   const listenForOutsideClicks = (
