@@ -279,9 +279,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(true);
-      setNameNotAcceptAndRefuse(
-        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
-      );
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
     } else {
       setSelectedNotAcceptAndRefuse(false);
       setNameNotAcceptAndRefuse("");
@@ -293,7 +291,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
-      setNameAcceptAndRefuse("Những tài sản này được phép xác nhận và từ chối");
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
       setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
           .filter(
@@ -319,10 +317,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedNotAcceptAndRefuse(false);
       setSelectedAcceptAndRefuse(false);
-      setNameNotAcceptAndRefuse(
-        "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi"
-      );
-      setNameAcceptAndRefuse("Những tài sản này được phép xác nhận và từ chối");
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
     } else {
     }
   }, [initselectedRowKeys]);

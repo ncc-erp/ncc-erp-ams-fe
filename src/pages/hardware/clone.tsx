@@ -32,6 +32,7 @@ import {
   SUPPLIERS_API,
   USERS_API,
 } from "api/baseApi";
+import { EStatus } from "constants/assest";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -51,11 +52,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   useEffect(() => {
     setChecked(props.data?.requestable === "1" ? true : false);
   }, [props]);
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to Deploy",
-    ASSIGN = "Assign",
-  }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -200,7 +196,10 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (item.label === EStatus.ASSIGN) {
+        if (
+          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.ASSIGN
+        ) {
           check = true;
           return true;
         }
@@ -347,6 +346,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
+            initialValue={data?.status_label.id}
           >
             <Select
               onChange={(value) => {
@@ -498,16 +498,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      {/* <Checkbox
-        name="requestable"
-        style={{ marginTop: 20 }}
-        checked={checked}
-        value={data?.requestable}
-        onChange={(event: ICheckboxChange) => {
-          setChecked(event.target.checked);
-        }}
-      ></Checkbox>{" "}
-      {t("hardware.label.field.checkbox")} */}
+
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage

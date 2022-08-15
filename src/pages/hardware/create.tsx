@@ -37,6 +37,7 @@ import {
   SUPPLIERS_API,
   USERS_API,
 } from "api/baseApi";
+import { EStatus } from "constants/assest";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -51,11 +52,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
   const t = useTranslate();
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -173,14 +169,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
     setIsReadyToDeploy(findLabel(Number(value)));
   };
-
-  // const onCheck = (event: ICheckboxChange) => {
-  //   if (event.target.checked)
-  //     form.setFieldsValue({
-  //       requestable: 1,
-  //     });
-  //   else form.setFieldsValue({ requestable: 0 });
-  // };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -453,22 +441,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
 
-      {/* <Form.Item label="" name="requestable" valuePropName="checked">
-        <Checkbox
-          onChange={(event) => {
-            onCheck(event);
-          }}
-        >
-          {t("hardware.label.field.checkbox")}
-        </Checkbox>
-      </Form.Item>
-      {messageErr?.requestable && (
-        <Typography.Text type="danger">
-          {messageErr.requestable}
-        </Typography.Text>
-      )} */}
-
-      <Form.Item label="Tải hình" name="image">
+      <Form.Item label={t("hardware.label.field.loading_image")} name="image">
         <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>
       </Form.Item>
       {messageErr?.image && (

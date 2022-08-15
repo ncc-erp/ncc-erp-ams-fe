@@ -17,6 +17,7 @@ import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 
 import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
+import { EStatus, STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -33,10 +34,6 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
 
   const t = useTranslate();
 
-  enum EStatus {
-    PENDING = "Ready to Deploy",
-    ASSIGN = "Assign",
-  }
   const { form, formProps } = useForm<IHardwareRequestMultipleCheckin>({
     action: "create",
   });
@@ -95,7 +92,10 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN) {
+        if (
+          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.ASSIGN
+        ) {
           check = false;
           return false;
         }
@@ -125,7 +125,10 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item label="Danh sách các thiết bị" name="assets">
+          <Form.Item
+            label={t("hardware.label.detail.list-asset")}
+            name="assets"
+          >
             {data &&
               data?.map((item: any) => (
                 <div>
@@ -164,7 +167,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={Number(5)}
+            initialValue={Number(STATUS_LABELS.READY_TO_DEPLOY)}
           >
             <Select
               onChange={(value) => {

@@ -20,6 +20,7 @@ import {
 } from "interfaces/hardware";
 import { ICompany } from "interfaces/company";
 import { USERS_API, HARDWARE_CHECKOUT_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -34,9 +35,6 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
 
   const t = useTranslate();
 
-  const NumberStatus = {
-    ASSIGN: 4,
-  };
   const { formProps, form } = useForm<IHardwareRequestMultipleCheckout>({
     action: "create",
   });
@@ -65,7 +63,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_at: event.checkout_at,
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
-        status_id: NumberStatus.ASSIGN,
+        status_id: STATUS_LABELS.ASSIGN,
         note: event.note !== null ? event.note : "",
       },
     });
@@ -109,7 +107,10 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item label="Danh sách các thiết bị" name="assets">
+          <Form.Item
+            label={t("hardware.label.detail.list-asset")}
+            name="assets"
+          >
             {data &&
               data?.map((item: any) => (
                 <div>

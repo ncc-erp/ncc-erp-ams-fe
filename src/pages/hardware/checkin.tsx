@@ -27,6 +27,7 @@ import {
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
 } from "api/baseApi";
+import { EStatus, STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -41,11 +42,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckin>();
 
   const t = useTranslate();
-
-  enum EStatus {
-    PENDING = "Ready to Deploy",
-    ASSIGN = "Assign",
-  }
 
   const { form, formProps } = useForm<IHardwareRequestCheckin>({
     action: "edit",
@@ -120,7 +116,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (event.rtd_location !== undefined) {
       formData.append("rtd_location", event.rtd_location.toString());
     }
-
     setPayload(formData);
   };
 
@@ -165,7 +160,10 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN) {
+        if (
+          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.ASSIGN
+        ) {
           check = false;
           return false;
         }
@@ -233,7 +231,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={Number(5)}
+            initialValue={Number(STATUS_LABELS.READY_TO_DEPLOY)}
           >
             <Select
               onChange={(value) => {

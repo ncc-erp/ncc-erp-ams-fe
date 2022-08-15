@@ -21,6 +21,7 @@ import {
 import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assest";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -35,9 +36,6 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
 
   const t = useTranslate();
 
-  const NumberStatus = {
-    ASSIGN: 4,
-  };
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
     action: "edit",
   });
@@ -93,7 +91,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
-    formData.append("status_id", NumberStatus.ASSIGN as any);
+    formData.append("status_id", STATUS_LABELS.ASSIGN as any);
 
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
