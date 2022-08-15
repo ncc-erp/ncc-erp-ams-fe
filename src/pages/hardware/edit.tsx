@@ -31,6 +31,7 @@ import {
   SUPPLIERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assest";
+import { EStatus, STATUS_LABELS } from "constants/assest";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -174,7 +175,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" },
+      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" !== undefined ? data?.notes : "" },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
       {
