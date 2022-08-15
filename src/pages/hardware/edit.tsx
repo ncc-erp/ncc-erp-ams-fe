@@ -31,7 +31,6 @@ import {
   SUPPLIERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assest";
-import { EStatus, STATUS_LABELS } from "constants/assest";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
