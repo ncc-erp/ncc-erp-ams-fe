@@ -1,4 +1,4 @@
-import { ASSIGNED_STATUS } from "constants/assest";
+import { ASSIGNED_STATUS } from "constants/assets";
 import { IHardwareResponse } from "interfaces/hardware";
 import i18n from "../i18n";
 

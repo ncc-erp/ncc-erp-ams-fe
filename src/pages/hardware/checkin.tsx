@@ -27,7 +27,7 @@ import {
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
 } from "api/baseApi";
-import { EStatus, STATUS_LABELS } from "constants/assest";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;

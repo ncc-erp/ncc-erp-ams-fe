@@ -32,7 +32,7 @@ import {
   SUPPLIERS_API,
   USERS_API,
 } from "api/baseApi";
-import { EStatus } from "constants/assest";
+import { EStatus } from "constants/assets";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;

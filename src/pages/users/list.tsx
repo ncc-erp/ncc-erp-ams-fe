@@ -34,7 +34,7 @@ import type { ColumnsType } from "antd/es/table";
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { IUserAssets } from "interfaces/user";
-import { ASSIGNED_STATUS } from "constants/assest";
+import { ASSIGNED_STATUS } from "constants/assets";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();

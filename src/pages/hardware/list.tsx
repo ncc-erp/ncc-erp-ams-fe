@@ -61,8 +61,8 @@ import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assest";
-import { getAssetAssignedStatusDecription, getBGAssetAssignedStatusDecription } from "untils/assests";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { getAssetAssignedStatusDecription, getBGAssetAssignedStatusDecription } from "untils/assets";
 
 const defaultCheckedList = [
   "id",
