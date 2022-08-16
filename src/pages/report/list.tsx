@@ -21,6 +21,7 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
+import { TypeAssetHistory } from "constants/assets";
 
 const { RangePicker } = DatePicker;
 
@@ -54,7 +55,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "name",
           operator: "eq",
           value: search,
-        }
+        },
       ],
     },
   });
@@ -80,9 +81,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         title: translate("report.label.field.type"),
         render: (value: IReport) => (
           <TagField
-            value={value && value.type === 0 ? translate("hardware.label.title.checkout") : translate("hardware.label.title.checkin")}
+            value={
+              value && value.type === TypeAssetHistory.CHECKOUT
+                ? translate("hardware.label.title.checkout")
+                : translate("hardware.label.title.checkin")
+            }
             style={{
-              background: value && value.type === 0 ? "#0073b7" : "red",
+              background:
+                value && value.type === TypeAssetHistory.CHECKOUT
+                  ? "#0073b7"
+                  : "red",
               color: "white",
             }}
           />
@@ -94,8 +102,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IReport) => (
           <TextField
             value={
-              value &&
-                value.user
+              value && value.user
                 ? value.user.last_name + " " + value.user.first_name
                 : ""
             }
@@ -106,17 +113,20 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "asset",
         title: translate("report.label.field.note"),
         render: (value: IReport) => (
-          <TextField value={value && (value.notes !== "undefined" ? value.notes : "")} />
+          <TextField
+            value={value && (value.notes !== "undefined" ? value.notes : "")}
+          />
         ),
       },
       {
         key: "asset_history",
         title: translate("report.label.field.dateCheckout_And_dateCheckin"),
-        render: (value: IReport) => (
-          value ?
+        render: (value: IReport) =>
+          value ? (
             <DateField format="LLL" value={value ? value.created_at : ""} />
-            : ""
-        ),
+          ) : (
+            ""
+          ),
       },
     ],
     []
@@ -171,19 +181,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleSearchByName = (value: any) => {
-    searchParams.set(
-      "search_name",
-      value ? value : ""
-    );
+    searchParams.set("search_name", value ? value : "");
     setSearchParams(searchParams);
     setSearch(value);
-  }
+  };
 
   useEffect(() => {
     if (searchParams.get("search_name") && search === " ") {
       searchParams.delete("search_name");
     }
-  }, [search])
+  }, [search]);
 
   return (
     <List title={translate("report.label.title.name")}>
@@ -196,16 +203,19 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
             type: searchParams.get("assetHistoryType")
               ? Number(assetHistoryType)
               : translate("all"),
           }}
         >
-          <Form.Item label={translate("dashboard.placeholder.searchToDate")} name="purchase_date">
+          <Form.Item
+            label={translate("dashboard.placeholder.searchToDate")}
+            name="purchase_date"
+          >
             <RangePicker
               onCalendarChange={handleDateChange}
               format={dateFormat}
@@ -237,8 +247,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           >
             <Select onChange={handleTypeChange} placeholder="Loại">
               <Option value={"all"}>{translate("all")}</Option>
-              <Option value={0}>{translate("hardware.label.title.checkout")}</Option>
-              <Option value={1}>{translate("hardware.label.title.checkin")}</Option>
+              <Option value={TypeAssetHistory.CHECKOUT}>
+                {translate("hardware.label.title.checkout")}
+              </Option>
+              <Option value={TypeAssetHistory.CHECKIN}>
+                {translate("hardware.label.title.checkin")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>
@@ -254,7 +268,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <Form
             initialValues={{
               name:
-                searchParams.get("search_name") !== "" ? searchParams.get("search_name") : ""
+                searchParams.get("search_name") !== ""
+                  ? searchParams.get("search_name")
+                  : "",
             }}
           >
             <Form.Item name={"name"}>

@@ -62,7 +62,12 @@ import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
-import { getAssetAssignedStatusDecription, getAssetStatusDecription, getBGAssetAssignedStatusDecription, getBGAssetStatusDecription } from "untils/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -106,9 +111,11 @@ export const HardwareListReadyToDeploy: React.FC<
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] =
-    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
-      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as any)
+      : defaultCheckedList
+  );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -670,8 +677,7 @@ export const HardwareListReadyToDeploy: React.FC<
           <TagField
             value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                getBGAssetAssignedStatusDecription(value),
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -751,7 +757,7 @@ export const HardwareListReadyToDeploy: React.FC<
 
   useEffect(() => {
     localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
-  }, [collumnSelected])
+  }, [collumnSelected]);
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -847,9 +853,9 @@ export const HardwareListReadyToDeploy: React.FC<
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    initselectedRowKeys as React.Key[]
-  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IHardwareResponse[]
+  >(initselectedRowKeys as React.Key[]);
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -862,17 +868,16 @@ export const HardwareListReadyToDeploy: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0
     ) {
       setSelectedCheckout(true);
-      setNameCheckin(
-        t("hardware.label.detail.note-checkin")
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkout)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkout)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckout(false);
@@ -880,17 +885,16 @@ export const HardwareListReadyToDeploy: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckin(true);
-      setNameCheckout(
-        t("hardware.label.detail.note-checkout")
-      );
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
       setSelectdStoreCheckin(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkin)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkin)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckin(false);
@@ -898,30 +902,30 @@ export const HardwareListReadyToDeploy: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-      0 &&
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0 &&
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
-      setNameCheckin(
-        t("hardware.label.detail.note-checkin")
-      );
-      setNameCheckout(
-        t("hardware.label.detail.note-checkout")
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
   }, [initselectedRowKeys]);
 
-  const onSelect = (record: any, selected: boolean) => {
+  const onSelect = (record: IHardwareResponse, selected: boolean) => {
     if (!selected) {
       const newSelectRow = initselectedRowKeys.filter(
-        (item: any) => item.id !== record.id
+        (item: IHardwareResponse) => item.id !== record.id
       );
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+      setSelectedRowKeys(
+        newSelectRow.map((item: IHardwareResponse) => item.id)
+      );
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
@@ -932,24 +936,28 @@ export const HardwareListReadyToDeploy: React.FC<
           })
         )
       );
-      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+      setSelectedRowKeys(
+        newselectedRowKeys.map((item: IHardwareResponse) => item.id)
+      );
     }
   };
   const onSelectAll = (
     selected: boolean,
-    selectedRows: any,
-    changeRows: any
+    selectedRows: IHardwareResponse[],
+    changeRows: IHardwareResponse[]
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter((item: any) => item);
+      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item
+      );
       newSelectedRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
+        (item: IHardwareResponse) => !unSelectIds.includes(item.id)
       );
 
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
     } else {
-      selectedRows = selectedRows.filter((item: any) => item);
+      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
       localStorage.setItem(
         "selectedRowKeys",
         JSON.stringify([...initselectedRowKeys, ...selectedRows])
@@ -960,13 +968,15 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: any[]
+    selectedRows: IHardwareResponse[]
   ) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    selectedRowKeys: initselectedRowKeys.map(
+      (item: IHardwareResponse) => item.id
+    ),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -986,10 +996,10 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const handleRemoveCheckInCheckOutItem = (id: number) => {
     const newSelectRow = initselectedRowKeys.filter(
-      (item: any) => item.id !== id
+      (item: IHardwareResponse) => item.id !== id
     );
     localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
   };
 
   return (
@@ -1009,19 +1019,19 @@ export const HardwareListReadyToDeploy: React.FC<
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-                searchValuesLocation !== 0
+              searchValuesLocation !== 0
                 ? searchValuesLocation
                 : rtd_location_id ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -1067,9 +1077,9 @@ export const HardwareListReadyToDeploy: React.FC<
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -1266,8 +1276,8 @@ export const HardwareListReadyToDeploy: React.FC<
             <span className="title-remove-name">{nameCheckout}</span>
 
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkin)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkin)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1295,8 +1305,8 @@ export const HardwareListReadyToDeploy: React.FC<
             <span className="title-remove-name">{nameCheckin}</span>
 
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkout)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkout)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1378,14 +1388,9 @@ export const HardwareListReadyToDeploy: React.FC<
                       onClick={() => edit(record)}
                     />
                   </Tooltip>
-                )
-                  : (
-                    <EditButton
-                      hideText
-                      size="small"
-                      disabled
-                    />
-                  )}
+                ) : (
+                  <EditButton hideText size="small" disabled />
+                )}
                 <Tooltip
                   title={t("hardware.label.tooltip.delete")}
                   color={"red"}
@@ -1408,8 +1413,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1426,8 +1431,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >

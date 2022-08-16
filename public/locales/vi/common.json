@@ -248,6 +248,12 @@
         "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
         "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
         "list-asset": "Danh sách các thiết bị"
+      },
+      "option_assigned": {
+        "no-checkout": "Chưa checkout",
+        "waiting-confirm": "Đang chờ xác nhận",
+        "confirmed": "Đã xác nhận",
+        "refuse": "Đã từ chối"
       }
     }
   },

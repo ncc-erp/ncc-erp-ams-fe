@@ -60,7 +60,12 @@ import { DatePicker } from "antd";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
-import { getAssetAssignedStatusDecription, getAssetStatusDecription, getBGAssetAssignedStatusDecription, getBGAssetStatusDecription } from "untils/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -92,9 +97,11 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] =
-    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
-      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as any)
+      : defaultCheckedList
+  );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -630,8 +637,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                getBGAssetAssignedStatusDecription(value),
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -703,7 +709,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
-  }, [collumnSelected])
+  }, [collumnSelected]);
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -815,19 +821,19 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-                searchValuesLocation !== 0
+              searchValuesLocation !== 0
                 ? searchValuesLocation
                 : rtd_location_id ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -873,9 +879,9 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -1098,14 +1104,9 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                       onClick={() => edit(record)}
                     />
                   </Tooltip>
-                )
-                  : (
-                    <EditButton
-                      hideText
-                      size="small"
-                      disabled
-                    />
-                  )}
+                ) : (
+                  <EditButton hideText size="small" disabled />
+                )}
                 <Tooltip
                   title={t("hardware.label.tooltip.delete")}
                   color={"red"}
@@ -1127,8 +1128,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1145,8 +1146,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >

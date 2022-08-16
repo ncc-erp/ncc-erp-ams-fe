@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useCreate,
   HttpError,
 } from "@pankod/refine-core";
 import {
@@ -13,52 +15,45 @@ import {
   getDefaultSortOrder,
   DateField,
   Space,
-  CloneButton,
-  EditButton,
-  DeleteButton,
   TagField,
-  CreateButton,
+  Popconfirm,
   Button,
-  ShowButton,
-  Tooltip,
-  Checkbox,
+  Spin,
   Form,
   Select,
   useSelect,
+  Tooltip,
+  Checkbox,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
-import "styles/antd.less";
-import { Spin } from "antd";
-
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
-import { HardwareCreate } from "./create";
-import { HardwareEdit } from "./edit";
-import { HardwareClone } from "./clone";
-import { HardwareShow } from "./show";
 import {
-  MenuOutlined,
-  FileSearchOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
-
-import {
+  IAssetsWaiting,
+  IHardwareCreateRequest,
   IHardwareFilterVariables,
   IHardwareResponse,
-  IHardwareResponseCheckin,
-  IHardwareResponseCheckout,
 } from "interfaces/hardware";
-import { HardwareCheckout } from "./checkout";
-import { HardwareCheckin } from "./checkin";
+import { CancleAsset } from "../users/cancel";
 import { HARDWARE_API, LOCATION_API } from "api/baseApi";
-import { HardwareSearch } from "./search";
-import { ICompany } from "interfaces/company";
+import {
+  CloseOutlined,
+  SyncOutlined,
+  MenuOutlined,
+  FileSearchOutlined,
+} from "@ant-design/icons";
+import { HardwareCancelMultipleAsset } from "../users/cancel-multiple-assets";
+import {
+  ASSIGNED_STATUS,
+  defaultCheckedListWaitingConfirm,
+} from "../../constants/assets";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { ICompany } from "interfaces/company";
+import { HardwareSearch } from "./search";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -66,47 +61,27 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 
-const defaultCheckedList = [
-  "id",
-  "name",
-  "image",
-  "model",
-  "category",
-  "status_label",
-  "assigned_to",
-  "assigned_status",
-  "created_at",
-];
-
-export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
+export const HardwareListWaitingConfirm: React.FC<
+  IResourceComponentsProps
+> = () => {
   const t = useTranslate();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
-  const [detailCheckout, setDetailCheckout] =
-    useState<IHardwareResponseCheckout>();
-  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-
-  const [isLoadingArr] = useState<boolean[]>([]);
-  const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
-  const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-
-  const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
-  const [detailCheckin, setDetailCheckin] =
-    useState<IHardwareResponseCheckin>();
-  const [detailClone, setDetailClone] = useState<IHardwareResponse>();
+  const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
+  const [idConfirm, setidConfirm] = useState<number>(-1);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as any)
-      : defaultCheckedList
+      ? JSON.parse(localStorage.getItem("item_selected") as string)
+      : defaultCheckedListWaitingConfirm
   );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+  const dateFormat = "YYYY/MM/DD";
 
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");
@@ -114,8 +89,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("dateTo");
   const searchParam = searchParams.get("search");
 
+  const { RangePicker } = DatePicker;
+
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
-    IHardwareResponse,
+    any,
     HttpError,
     IHardwareFilterVariables
   >({
@@ -127,9 +104,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     ],
     initialFilter: [
       {
-        field: "status.id",
+        field: "assigned_status",
         operator: "eq",
-        value: STATUS_LABELS.BROKEN,
+        value: ASSIGNED_STATUS.PENDING_ACCEPT,
       },
     ],
     resource: HARDWARE_API,
@@ -150,7 +127,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         {
           field: "search",
           operator: "eq",
-          value: search ? search : searchParam,
+          value: search,
         },
         {
           field: "filter",
@@ -184,284 +161,18 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
             : undefined,
         }
       );
-
       return filters;
     },
   });
 
-  const edit = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
-      id: data.id,
-      name: data.name,
-      asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
-      model: {
-        id: data?.model?.id,
-        name: data?.model?.name,
-      },
-      model_number: data?.order_number,
-      status_label: {
-        id: data?.status_label.id,
-        name: data?.status_label.name,
-        status_type: data?.status_label.status_type,
-        status_meta: data?.status_label.status_meta,
-      },
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      supplier: {
-        id: data?.supplier?.id,
-        name: data?.supplier?.name,
-      },
-      notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
-      },
-      rtd_location: {
-        id: data?.rtd_location?.id,
-        name: data?.rtd_location?.name,
-      },
-      image: data?.image,
-      warranty_months: data?.warranty_months,
-      purchase_cost: data?.purchase_cost,
-      purchase_date: {
-        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
-        formatted:
-          data?.purchase_date !== null ? data?.purchase_date.formatted : "",
-      },
-      assigned_to: data?.assigned_to,
-      last_audit_date: data?.last_audit_date,
-
-      requestable: data?.requestable,
-      physical: data?.physical,
-
-      note: "",
-      expected_checkin: {
-        date: "",
-        formatted: "",
-      },
-      checkout_at: {
-        date: "",
-        formatted: "",
-      },
-      assigned_location: {
-        id: 0,
-        name: "",
-      },
-      assigned_user: 0,
-      assigned_asset: "",
-      checkout_to_type: {
-        assigned_user: 0,
-        assigned_asset: "",
-        assigned_location: {
-          id: 0,
-          name: "",
-        },
-      },
-      user_can_checkout: false,
-      assigned_status: 0,
-      checkin_at: {
-        date: "",
-        formatted: "",
-      },
-      created_at: {
-        datetime: "",
-        formatted: "",
-      },
-      updated_at: {
-        datetime: "",
-        formatted: "",
-      },
-      manufacturer: {
-        id: 0,
-        name: "",
-      },
-      checkin_counter: 0,
-      checkout_counter: 0,
-      requests_counter: 0,
-      warranty_expires: {
-        date: "",
-        formatted: "",
-      },
-      user_can_checkin: false,
-    };
-    setDetail(dataConvert);
-    setIsEditModalVisible(true);
+  const handleOpenModel = () => {
+    setIsModalVisible(!isModalVisible);
   };
-
-  const clone = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
-      id: data.id,
-      name: data.name,
-      asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
-      model: {
-        id: data?.model?.id,
-        name: data?.model?.name,
-      },
-      model_number: data?.order_number,
-      status_label: {
-        id: data?.status_label.id,
-        name: data?.status_label.name,
-        status_type: data?.status_label.status_type,
-        status_meta: data?.status_label.status_meta,
-      },
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      supplier: {
-        id: data?.supplier?.id,
-        name: data?.supplier?.name,
-      },
-      notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
-      },
-      rtd_location: {
-        id: data?.rtd_location?.id,
-        name: data?.rtd_location?.name,
-      },
-      image: data?.image,
-      warranty_months: data?.warranty_months,
-      purchase_cost: data?.purchase_cost,
-      purchase_date: {
-        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
-        formatted:
-          data?.purchase_date !== null ? data?.purchase_date.formatted : "",
-      },
-      assigned_to: data?.assigned_to,
-      last_audit_date: data?.last_audit_date,
-
-      requestable: data?.requestable,
-      physical: data?.physical,
-      user_can_checkout: data?.user_can_checkout,
-
-      note: "",
-      expected_checkin: {
-        date: "",
-        formatted: "",
-      },
-      checkout_at: {
-        date: "",
-        formatted: "",
-      },
-      assigned_location: {
-        id: 0,
-        name: "",
-      },
-      assigned_user: 0,
-      assigned_asset: "",
-      checkout_to_type: {
-        assigned_user: 0,
-        assigned_asset: "",
-        assigned_location: {
-          id: 0,
-          name: "",
-        },
-      },
-      assigned_status: 0,
-      checkin_at: {
-        date: "",
-        formatted: "",
-      },
-      created_at: {
-        datetime: "",
-        formatted: "",
-      },
-      updated_at: {
-        datetime: "",
-        formatted: "",
-      },
-      manufacturer: {
-        id: 0,
-        name: "",
-      },
-      checkin_counter: 0,
-      checkout_counter: 0,
-      requests_counter: 0,
-      warranty_expires: {
-        date: "",
-        formatted: "",
-      },
-      user_can_checkin: false,
-    };
-
-    setDetailClone(dataConvert);
-    setIsCloneModalVisible(true);
+  const handleOpenSearchModel = () => {
+    setIsSearchModalVisible(!isSearchModalVisible);
   };
-
-  const checkout = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponseCheckout = {
-      id: data.id,
-      name: data.name,
-      model: {
-        id: data?.model?.id,
-        name: data?.model?.name,
-      },
-      status_label: {
-        id: data?.status_label.id,
-        name: data?.status_label.name,
-        status_type: data?.status_label.status_type,
-        status_meta: data?.status_label.status_meta,
-      },
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      note: data.note,
-      assigned_location: {
-        id: data?.assigned_location?.id,
-        name: data?.assigned_location?.name,
-      },
-      checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
-      },
-      assigned_user: data?.assigned_user,
-      model_number: data?.model_number,
-      assigned_asset: data?.assigned_asset,
-      checkout_to_type: data?.checkout_to_type,
-      user_can_checkout: data?.user_can_checkout,
-    };
-
-    setDetailCheckout(dataConvert);
-    setIsCheckoutModalVisible(true);
-  };
-
-  const checkin = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponseCheckin = {
-      id: data.id,
-      name: data.name,
-      model: {
-        id: data?.model?.id,
-        name: data?.model?.name,
-      },
-      status_label: {
-        id: data?.status_label.id,
-        name: data?.status_label.name,
-        status_type: data?.status_label.status_type,
-        status_meta: data?.status_label.status_meta,
-      },
-      checkin_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
-      },
-      rtd_location: {
-        id: data?.id,
-        name: data?.name,
-      },
-      note: data?.note,
-      user_can_checkout: false,
-    };
-
-    setDetailCheckin(dataConvert);
-    setIsCheckinModalVisible(true);
+  const handleSearch = () => {
+    handleOpenSearchModel();
   };
 
   const collumns = useMemo(
@@ -475,7 +186,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("hardware.label.field.assetName"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -492,37 +203,31 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "asset_tag",
         title: t("hardware.label.field.propertyCard"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("asset_tag", sorter),
       },
       {
         key: "serial",
         title: t("hardware.label.field.serial"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("serial", sorter),
       },
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
+        render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "model_number",
         title: "Model No",
-        render: (value: IHardwareResponse) => (
-          <TextField value={value ? value : ""} />
-        ),
+        render: (value: IHardwareResponse) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("model_number", sorter),
       },
       {
         key: "category",
         title: t("hardware.label.field.category"),
-        render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
+        render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
       },
       {
@@ -543,7 +248,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "assigned_to",
         title: t("hardware.label.field.checkoutTo"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField strong value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
@@ -551,7 +256,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
@@ -559,7 +264,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -567,7 +272,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -575,7 +280,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -603,7 +308,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.date : ""} />
+          <DateField format="LLL" value={value && value.date} />
         ),
       },
       {
@@ -627,7 +332,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "requestable",
         title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
@@ -648,7 +353,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.datetime : ""} />
+          <DateField format="LLL" value={value && value.datetime} />
         ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
@@ -656,46 +361,288 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
-  const handleCreate = () => {
-    handleOpenModel();
+  const { mutate, isLoading: isLoadingSendRequest } =
+    useCreate<IHardwareCreateRequest>();
+
+  const cancle = (data: IHardwareResponse) => {
+    setIsCancleModalVisible(true);
+    setDetail(data);
   };
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
+  const OnAcceptRequest = (id: number, assigned_status: number) => {
+    confirmHardware(id, assigned_status);
   };
 
-  const handleSearch = () => {
-    handleOpenSearchModel();
-  };
-
-  const handleOpenSearchModel = () => {
-    setIsSearchModalVisible(!isSearchModalVisible);
+  const confirmHardware = (id: number, assigned_status: number) => {
+    mutate({
+      resource: HARDWARE_API + "/" + id + "?_method=PUT",
+      values: {
+        send_accept: id,
+        assigned_status: assigned_status,
+      },
+    });
   };
 
   const refreshData = () => {
     tableQueryResult.refetch();
   };
 
-  const show = (data: IHardwareResponse) => {
-    setIsShowModalVisible(true);
-    setDetail(data);
+  useEffect(() => {
+    let arr = [...isLoadingArr];
+    arr[idConfirm] = isLoadingSendRequest;
+    setIsLoadingArr(arr);
+    refreshData();
+  }, [isLoadingSendRequest]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCancleModalVisible]);
+
+  const initselectedRowKeys = useMemo(() => {
+    return (
+      JSON.parse(localStorage.getItem("selectedRow_AcceptRefuse") as string) ||
+      []
+    );
+  }, [localStorage.getItem("selectedRow_AcceptRefuse")]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IAssetsWaiting[]
+  >(initselectedRowKeys as React.Key[]);
+
+  useEffect(() => {
+    localStorage.removeItem("selectedRow_AcceptRefuse");
+  }, [window.location.reload]);
+
+  const [selectedRows, setSelectedRows] = useState<IAssetsWaiting[]>([]);
+  const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
+    useState(false);
+
+  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
+    useState<boolean>(true);
+  const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
+    useState<boolean>(true);
+
+  const [selectdStoreAcceptAndRefuse, setSelectedStoreAcceptAndRefuse] =
+    useState<IAssetsWaiting[]>([]);
+
+  const [nameAcceptAndRefuse, setNameAcceptAndRefuse] = useState("");
+  const [nameNotAcceptAndRefuse, setNameNotAcceptAndRefuse] = useState("");
+
+  useEffect(() => {
+    if (
+      initselectedRowKeys.filter(
+        (item: IAssetsWaiting) =>
+          item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
+          item.assigned_status === ASSIGNED_STATUS.REFUSE
+      ).length > 0
+    ) {
+      setSelectedNotAcceptAndRefuse(true);
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
+    } else {
+      setSelectedNotAcceptAndRefuse(false);
+      setNameNotAcceptAndRefuse("");
+    }
+
+    if (
+      initselectedRowKeys.filter(
+        (item: IAssetsWaiting) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+      ).length > 0
+    ) {
+      setSelectedAcceptAndRefuse(true);
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
+      setSelectedStoreAcceptAndRefuse(
+        initselectedRowKeys
+          .filter(
+            (item: IAssetsWaiting) =>
+              item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          )
+          .map((item: IAssetsWaiting) => item)
+      );
+    } else {
+      setSelectedAcceptAndRefuse(false);
+      setNameAcceptAndRefuse("");
+    }
+
+    if (
+      initselectedRowKeys.filter(
+        (item: IAssetsWaiting) =>
+          item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
+          item.assigned_status === ASSIGNED_STATUS.REFUSE
+      ).length > 0 &&
+      initselectedRowKeys.filter(
+        (item: IAssetsWaiting) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+      ).length > 0
+    ) {
+      setSelectedNotAcceptAndRefuse(false);
+      setSelectedAcceptAndRefuse(false);
+      setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
+      setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
+    } else {
+    }
+  }, [initselectedRowKeys]);
+
+  const onSelectChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: IAssetsWaiting[]
+  ) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const onSelect = (record: IAssetsWaiting, selected: boolean) => {
+    if (!selected) {
+      const newSelectRow = initselectedRowKeys.filter(
+        (item: IAssetsWaiting) => item.id !== record.id
+      );
+      localStorage.setItem(
+        "selectedRow_AcceptRefuse",
+        JSON.stringify(newSelectRow)
+      );
+      setSelectedRowKeys(newSelectRow.map((item: IAssetsWaiting) => item.id));
+    } else {
+      const newselectedRowKeys = [record, ...initselectedRowKeys];
+      localStorage.setItem(
+        "selectedRow_AcceptRefuse",
+        JSON.stringify(
+          newselectedRowKeys.filter(function (item, index) {
+            return newselectedRowKeys.findIndex((item) => item.id === index);
+          })
+        )
+      );
+      setSelectedRowKeys(
+        newselectedRowKeys.map((item: IAssetsWaiting) => item.id)
+      );
+    }
+  };
+
+  const onSelectAll = (
+    selected: boolean,
+    selectedRows: IAssetsWaiting[],
+    changeRows: IAssetsWaiting[]
+  ) => {
+    if (!selected) {
+      const unSelectIds = changeRows.map((item: IAssetsWaiting) => item.id);
+      let newSelectRows = initselectedRowKeys.filter(
+        (item: IAssetsWaiting) => item
+      );
+      newSelectRows = initselectedRowKeys.filter(
+        (item: IAssetsWaiting) => !unSelectIds.includes(item.id)
+      );
+      localStorage.setItem(
+        "selectedRow_AcceptRefuse",
+        JSON.stringify(newSelectRows)
+      );
+      setSelectedRowKeys(newSelectRows);
+    } else {
+      selectedRows = selectedRows.filter((item: IAssetsWaiting) => item);
+      localStorage.setItem(
+        "selectedRow_AcceptRefuse",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows])
+      );
+      setSelectedRowKeys(selectedRows);
+    }
+  };
+
+  const rowSelection = {
+    selectedRowKeys: initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
+    onChange: onSelectChange,
+    onSelect: onSelect,
+    onSelectAll: onSelectAll,
+    onSelectChange,
+  };
+
+  const handleRemoveItem = (id: number) => {
+    const newSelectRow = initselectedRowKeys.filter(
+      (item: IAssetsWaiting) => item.id !== id
+    );
+    localStorage.setItem(
+      "selectedRow_AcceptRefuse",
+      JSON.stringify(newSelectRow)
+    );
+    setSelectedRowKeys(newSelectRow.map((item: IAssetsWaiting) => item.id));
+  };
+
+  const handleCancel = () => {
+    setIsCancelManyAssetModalVisible(!isCancelManyAssetModalVisible);
+  };
+
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 1300);
+  };
+
+  const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
+    mutate({
+      resource: HARDWARE_API + "?_method=PUT",
+      values: {
+        assets: assets,
+        assigned_status: assigned_status,
+      },
+    });
+    handleRefresh();
+    setSelectedRowKeys([]);
+    localStorage.removeItem("selectedRow_AcceptRefuse");
   };
 
   useEffect(() => {
     refreshData();
-  }, [isEditModalVisible]);
+  }, [isCancelManyAssetModalVisible]);
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
+  const { Option } = Select;
+  const searchValuesByDateFrom = useMemo(() => {
+    return localStorage.getItem("purchase_date")?.substring(0, 10);
+  }, [localStorage.getItem("purchase_date")]);
+
+  const searchValuesByDateTo = useMemo(() => {
+    return localStorage.getItem("purchase_date")?.substring(11, 21);
+  }, [localStorage.getItem("purchase_date")]);
+
+  let searchValuesLocation = useMemo(() => {
+    return Number(localStorage.getItem("location"));
+  }, [localStorage.getItem("location")]);
 
   useEffect(() => {
-    refreshData();
-  }, [isCloneModalVisible]);
+    searchFormProps.form?.submit();
+  }, [window.location.reload]);
 
-  useEffect(() => {
-    refreshData();
-  }, [isCheckoutModalVisible]);
+  const handleChangePickerByMonth = (val: any, formatString: any) => {
+    const [from, to] = Array.from(val || []);
+    localStorage.setItem(
+      "purchase_date",
+      formatString !== undefined ? formatString : ""
+    );
+    searchParams.set(
+      "dateFrom",
+      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+    );
+    searchParams.set(
+      "dateTo",
+      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+    );
+    setSearchParams(searchParams);
 
-  useEffect(() => {
-    refreshData();
-  }, [isCheckinModalVisible]);
+    searchFormProps.form?.submit();
+  };
+
+  const { selectProps: locationSelectProps } = useSelect<ICompany>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+    optionValue: "id",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -706,7 +653,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
-
   useEffect(() => {
     localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
   }, [collumnSelected]);
@@ -732,90 +678,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     const aboutController = new AbortController();
-
     listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
-
     return function cleanup() {
       aboutController.abort();
     };
   }, []);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
-
-  const { RangePicker } = DatePicker;
-
-  const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
-
-  const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
-
-  let searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("location"));
-  }, [localStorage.getItem("location")]);
-
-  const handleChangePickerByMonth = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
-    localStorage.setItem(
-      "purchase_date",
-      formatString !== undefined ? formatString : ""
-    );
-    searchParams.set(
-      "dateFrom",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "dateTo",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    setSearchParams(searchParams);
-
-    searchFormProps.form?.submit();
-  };
-
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
-
-  const dateFormat = "YYYY/MM/DD";
-
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
-    optionLabel: "name",
-    optionValue: "id",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { Option } = Select;
   return (
-    <List
-      title={t("hardware.label.title.list-broken")}
-      pageHeaderProps={{
-        extra: (
-          <CreateButton onClick={handleCreate}>
-            {t("hardware.label.tooltip.create")}
-          </CreateButton>
-        ),
-      }}
-    >
-      <div className="search">
+    <List title={t("hardware.label.title.list-waiting-confirm")}>
+      <div className="users">
         <Form
           {...searchFormProps}
           initialValues={{
@@ -888,7 +759,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
         </Form>
-
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
@@ -959,6 +829,30 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+
+      <MModal
+        title={t("user.label.title.cancle")}
+        setIsModalVisible={setIsCancleModalVisible}
+        isModalVisible={isCancleModalVisible}
+      >
+        <CancleAsset
+          setIsModalVisible={setIsCancleModalVisible}
+          isModalVisible={isCancleModalVisible}
+          data={detail}
+        />
+      </MModal>
+      <MModal
+        title={t("user.label.title.cancle")}
+        setIsModalVisible={setIsCancelManyAssetModalVisible}
+        isModalVisible={isCancelManyAssetModalVisible}
+      >
+        <HardwareCancelMultipleAsset
+          isModalVisible={isCancelManyAssetModalVisible}
+          setIsModalVisible={setIsCancelManyAssetModalVisible}
+          data={selectdStoreAcceptAndRefuse}
+          setSelectedRowKey={setSelectedRowKeys}
+        />
+      </MModal>
       <MModal
         title={t("hardware.label.title.search_advanced")}
         setIsModalVisible={setIsSearchModalVisible}
@@ -970,75 +864,88 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           searchFormProps={searchFormProps}
         />
       </MModal>
-      <MModal
-        title={t("hardware.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
-        isModalVisible={isModalVisible}
-      >
-        <HardwareCreate
-          setIsModalVisible={setIsModalVisible}
-          isModalVisible={isModalVisible}
-        />
-      </MModal>
-      <MModal
-        title={t("hardware.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <HardwareEdit
-          isModalVisible={isEditModalVisible}
-          setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
-      <MModal
-        title={t("hardware.label.title.clone")}
-        setIsModalVisible={setIsCloneModalVisible}
-        isModalVisible={isCloneModalVisible}
-      >
-        <HardwareClone
-          isModalVisible={isCloneModalVisible}
-          setIsModalVisible={setIsCloneModalVisible}
-          data={detailClone}
-        />
-      </MModal>
-      <MModal
-        title={t("hardware.label.title.checkout")}
-        setIsModalVisible={setIsCheckoutModalVisible}
-        isModalVisible={isCheckoutModalVisible}
-      >
-        <HardwareCheckout
-          isModalVisible={isCheckoutModalVisible}
-          setIsModalVisible={setIsCheckoutModalVisible}
-          data={detailCheckout}
-        />
-      </MModal>
-      <MModal
-        title={t("hardware.label.title.detail")}
-        setIsModalVisible={setIsShowModalVisible}
-        isModalVisible={isShowModalVisible}
-      >
-        <HardwareShow
-          setIsModalVisible={setIsShowModalVisible}
-          detail={detail}
-        />
-      </MModal>{" "}
-      <MModal
-        title={t("hardware.label.title.checkin")}
-        setIsModalVisible={setIsCheckinModalVisible}
-        isModalVisible={isCheckinModalVisible}
-      >
-        <HardwareCheckin
-          isModalVisible={isCheckinModalVisible}
-          setIsModalVisible={setIsCheckinModalVisible}
-          data={detailCheckin}
-        />
-      </MModal>
-      <div className="sum-assets">
-        <span className="name-sum-assets">
-          {t("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      <div className="list-waiting-confirm">
+        <div className="sum-assets">
+          <span className="name-sum-assets">
+            {t("hardware.label.title.sum-assets")}
+          </span>{" "}
+          : {tableProps.pagination ? tableProps.pagination?.total : 0}
+        </div>
+        <div className="list-users">
+          <div className="button-list-accept-refuse">
+            <Popconfirm
+              title={t("user.label.button.accept")}
+              onConfirm={() =>
+                confirmMultipleHardware(
+                  initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
+                  ASSIGNED_STATUS.ACCEPT
+                )
+              }
+            >
+              <Button
+                type="primary"
+                disabled={!selectedAcceptAndRefuse}
+                loading={loading}
+              >
+                {t("user.label.button.accept")}
+              </Button>
+            </Popconfirm>
+            <Button
+              type="primary"
+              onClick={handleCancel}
+              disabled={!selectedAcceptAndRefuse}
+            >
+              {t("user.label.button.cancle")}
+            </Button>
+          </div>
+
+          <div
+            className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
+          >
+            <span className="title-remove-name">{nameAcceptAndRefuse}</span>
+            {initselectedRowKeys
+              .filter(
+                (item: IAssetsWaiting) =>
+                  item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+              )
+              .map((item: IHardwareResponse) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-users-accept-refuse"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+
+          <div
+            className={
+              nameNotAcceptAndRefuse ? "list-asset-waiting-confirm" : ""
+            }
+          >
+            <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
+            {initselectedRowKeys
+              .filter(
+                (item: IAssetsWaiting) =>
+                  item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
+                  item.assigned_status === ASSIGNED_STATUS.REFUSE
+              )
+              .map((item: IHardwareResponse) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-users-accept-refuse"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
       </div>
       {loading ? (
         <>
@@ -1053,11 +960,15 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         <Table
           {...tableProps}
           rowKey="id"
-          scroll={{ x: 1850 }}
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
+          }}
+          scroll={{ x: 1800 }}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
@@ -1069,75 +980,34 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                <Tooltip
-                  title={t("hardware.label.tooltip.viewDetail")}
-                  color={"#108ee9"}
-                >
-                  <ShowButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => show(record)}
-                  />
-                </Tooltip>
-
-                <Tooltip
-                  title={t("hardware.label.tooltip.clone")}
-                  color={"#108ee9"}
-                >
-                  <CloneButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => clone(record)}
-                  />
-                </Tooltip>
-                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
-                  <Tooltip
-                    title={t("hardware.label.tooltip.edit")}
-                    color={"#108ee9"}
-                  >
-                    <EditButton
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                      onClick={() => edit(record)}
-                    />
-                  </Tooltip>
-                ) : (
-                  <EditButton hideText size="small" disabled />
-                )}
-                <Tooltip
-                  title={t("hardware.label.tooltip.delete")}
-                  color={"red"}
-                >
-                  <DeleteButton
-                    resourceName={HARDWARE_API}
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                  />
-                </Tooltip>
-                {record.user_can_checkout === true && (
-                  <Button
-                    className="ant-btn-checkout"
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                  <Popconfirm
+                    title={t("hardware.label.button.accept")}
+                    onConfirm={() =>
+                      OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                     }
-                    onClick={() => checkout(record)}
                   >
-                    {t("hardware.label.button.checkout")}
-                  </Button>
+                    {isLoadingArr[record.id] !== false && (
+                      <Button
+                        className="ant-btn-accept"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                        }
+                      >
+                        {t("hardware.label.button.accept")}
+                      </Button>
+                    )}
+                  </Popconfirm>
                 )}
 
-                {record.user_can_checkin === true && (
+                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1149,9 +1019,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                         ? false
                         : true
                     }
-                    onClick={() => checkin(record)}
+                    onClick={() => cancle(record)}
                   >
-                    {t("hardware.label.button.checkin")}
+                    {t("hardware.label.button.refuse")}
                   </Button>
                 )}
               </Space>

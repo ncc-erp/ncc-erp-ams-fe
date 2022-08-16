@@ -30,3 +30,9 @@ export enum EStatus {
   READY_TO_DEPLOY = "Ready to Deploy",
   ASSIGN = "Assign",
 }
+
+export const TypeAssetHistory = {
+  CHECKOUT: 0,
+  CHECKIN: 1
+}
+

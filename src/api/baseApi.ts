@@ -42,3 +42,5 @@ export const DEPARTMENT_SELECT_LIST_API = "api/v1/departments/selectlist";
 export const ACCESSORY_API = "api/v1/accessories/accessories";
 export const USER_API = "api/v1/users";
 export const ASSET_HISTORY_API = "api/v1/asset-history";
+
+export const CONSUMABLES = "api/v1/consumables"

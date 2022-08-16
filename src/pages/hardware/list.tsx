@@ -62,7 +62,12 @@ import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
-import { getAssetAssignedStatusDecription, getAssetStatusDecription, getBGAssetAssignedStatusDecription, getBGAssetStatusDecription } from "untils/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -97,9 +102,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] =
-    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
-      (localStorage.getItem('item_selected') as string) : defaultCheckedList);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as string)
+      : defaultCheckedList
+  );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -699,8 +706,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                getBGAssetAssignedStatusDecription(value),
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -731,7 +737,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
-  }, [collumnSelected])
+  }, [collumnSelected]);
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -828,9 +834,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    initselectedRowKeys as React.Key[]
-  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IHardwareResponse[]
+  >(initselectedRowKeys as React.Key[]);
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -843,13 +849,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkout).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0
     ) {
       setSelectedCheckout(true);
-      setNameCheckin(
-        t("hardware.label.detail.note-checkin")
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
       setSelectdStoreCheckout(
         initselectedRowKeys
           .filter((item: IHardwareResponse) => item.user_can_checkout)
@@ -861,13 +866,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkin).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckin(true);
-      setNameCheckout(
-        t("hardware.label.detail.note-checkout")
-      );
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
       setSelectdStoreCheckin(
         initselectedRowKeys
           .filter((item: IHardwareResponse) => item.user_can_checkin)
@@ -878,19 +882,17 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setNameCheckout("");
     }
     if (
-      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkout).length >
-      0 &&
-      initselectedRowKeys.filter((item: IHardwareResponse) => item.user_can_checkin).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0 &&
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
-      setNameCheckin(
-        t("hardware.label.detail.note-checkin")
-      );
-      setNameCheckout(
-        t("hardware.label.detail.note-checkout")
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
   }, [initselectedRowKeys]);
@@ -925,12 +927,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectAll = (
     selected: boolean,
-    selectedRows: any,
-    changeRows: any
+    selectedRows: IHardwareResponse[],
+    changeRows: IHardwareResponse[]
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: IHardware) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter((item: IHardwareResponse) => item);
+      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item
+      );
       newSelectedRows = initselectedRowKeys.filter(
         (item: any) => !unSelectIds.includes(item.id)
       );
@@ -968,10 +972,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const handleRemoveCheckInCheckOutItem = (id: number) => {
     const newSelectRow = initselectedRowKeys.filter(
-      (item: any) => item.id !== id
+      (item: IHardwareResponse) => item.id !== id
     );
     localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
   };
 
   return (
@@ -991,19 +995,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-                searchValuesLocation !== 0
+              searchValuesLocation !== 0
                 ? searchValuesLocation
                 : Number(rtd_location_id) ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -1089,11 +1093,19 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 }
               }}
             >
-              <Option value={"all"}>{"Tất cả"}</Option>
-              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>{"Chưa checkout"}</Option>
-              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>{"Đang chờ xác nhận"}</Option>
-              <Option value={ASSIGNED_STATUS.ACCEPT}>{"Đã xác nhận"}</Option>
-              <Option value={ASSIGNED_STATUS.REFUSE}>{"Đã từ chối"}</Option>
+              <Option value={"all"}>{t("all")}</Option>
+              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>
+                {t("hardware.label.option_assigned.no-checkout")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>
+                {t("hardware.label.option_assigned.waiting-confirm")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.ACCEPT}>
+                {t("hardware.label.option_assigned.confirmed")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.REFUSE}>
+                {t("hardware.label.option_assigned.refuse")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>
@@ -1287,8 +1299,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkin)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkin)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1315,8 +1327,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkout)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkout)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1399,14 +1411,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       onClick={() => edit(record)}
                     />
                   </Tooltip>
-                )
-                  : (
-                    <EditButton
-                      hideText
-                      size="small"
-                      disabled
-                    />
-                  )}
+                ) : (
+                  <EditButton hideText size="small" disabled />
+                )}
                 {record.assigned_to !== null ? (
                   <DeleteButton hideText size="small" disabled />
                 ) : (
@@ -1432,8 +1439,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1450,8 +1457,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >

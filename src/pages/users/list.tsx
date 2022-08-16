@@ -35,6 +35,10 @@ import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getBGAssetAssignedStatusDecription,
+} from "untils/assets";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -125,28 +129,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       title: t("user.label.field.condition"),
       render: (value: number) => (
         <TagField
-          value={
-            value === ASSIGNED_STATUS.NO_ASSIGN
-              ? t("hardware.label.detail.noAssign")
-              : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                ? t("hardware.label.detail.pendingAccept")
-                : value === ASSIGNED_STATUS.ACCEPT
-                  ? t("hardware.label.detail.accept")
-                  : value === ASSIGNED_STATUS.REFUSE
-                    ? t("hardware.label.detail.refuse")
-                    : ""
-          }
+          value={getAssetAssignedStatusDecription(value)}
           style={{
-            background:
-              value === ASSIGNED_STATUS.NO_ASSIGN
-                ? "gray"
-                : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                  ? "#f39c12"
-                  : value === ASSIGNED_STATUS.ACCEPT
-                    ? "#0073b7"
-                    : value === ASSIGNED_STATUS.REFUSE
-                      ? "red"
-                      : "gray",
+            background: getBGAssetAssignedStatusDecription(value),
             color: "white",
           }}
         />
@@ -241,9 +226,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem("selectedRowKeys_AcceptRefuse")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    initselectedRowKeys as React.Key[]
-  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IUserAssets[]
+  >(initselectedRowKeys as React.Key[]);
 
   useEffect(() => {
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
@@ -267,7 +252,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     if (
       initselectedRowKeys.filter(
-        (item: any) =>
+        (item: IUserAssets) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0
@@ -281,7 +266,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
     if (
       initselectedRowKeys.filter(
-        (item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+        (item: IUserAssets) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
@@ -289,10 +275,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
           .filter(
-            (item: any) =>
+            (item: IUserAssets) =>
               item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
           )
-          .map((item: any) => item)
+          .map((item: IUserAssets) => item)
       );
     } else {
       setSelectedAcceptAndRefuse(false);
@@ -301,12 +287,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
     if (
       initselectedRowKeys.filter(
-        (item: any) =>
+        (item: IUserAssets) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0 &&
       initselectedRowKeys.filter(
-        (item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+        (item: IUserAssets) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
@@ -352,14 +339,16 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectAll = (
     selected: boolean,
-    selectedRows: any,
-    changeRows: any
+    selectedRows: IUserAssets[],
+    changeRows: IUserAssets[]
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectRows = initselectedRowKeys.filter((item: any) => item);
+      const unSelectIds = changeRows.map((item: IUserAssets) => item.id);
+      let newSelectRows = initselectedRowKeys.filter(
+        (item: IUserAssets) => item
+      );
       newSelectRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
+        (item: IUserAssets) => !unSelectIds.includes(item.id)
       );
       localStorage.setItem(
         "selectedRowKeys_AcceptRefuse",
@@ -377,7 +366,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    selectedRowKeys: initselectedRowKeys.map((item: IUserAssets) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -464,7 +453,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {initselectedRowKeys
               .filter(
-                (item: any) =>
+                (item: IUserAssets) =>
                   item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
               )
               .map((item: IHardwareResponse) => (
@@ -486,7 +475,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
             {initselectedRowKeys
               .filter(
-                (item: any) =>
+                (item: IUserAssets) =>
                   item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
                   item.assigned_status === ASSIGNED_STATUS.REFUSE
               )
@@ -599,8 +588,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                           isLoadingArr[record.id] === undefined
                             ? false
                             : isLoadingArr[record.id] === false
-                              ? false
-                              : true
+                            ? false
+                            : true
                         }
                       >
                         {t("hardware.label.button.accept")}
@@ -618,8 +607,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => cancle(record)}
                   >
