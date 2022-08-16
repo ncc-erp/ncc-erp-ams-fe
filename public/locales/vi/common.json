@@ -55,6 +55,7 @@
   "tags": {
     "clone": "Clone"
   },
+  "all": "Tất cả",
   "dashboard": {
     "title": "Thống kê",
     "field": {
@@ -247,6 +248,12 @@
         "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
         "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
         "list-asset": "Danh sách các thiết bị"
+      },
+      "option_assigned": {
+        "no-checkout": "Chưa checkout",
+        "waiting-confirm": "Đang chờ xác nhận",
+        "confirmed": "Đã xác nhận",
+        "refuse": "Đã từ chối"
       }
     }
   },
@@ -327,22 +334,21 @@
         "dateCheckout": "Ngày cấp phát",
         "title": "Tiêu đề",
         "email": "Email",
-        "phone": "Điện thoại",
+        "phone": "Số điện thoại",
         "username": "Tên đăng nhập",
-        "locations": "Địa phương",
+        "locations": "Chi nhánh",
         "remote": "Remote",
-        "first_name": "Họ và tên đệm",
-        "nameUser": "Tên",
+        "first_name": "Tên",
+        "last_name": "Họ",
+        "full_name": "Họ và tên",
         "address": "Địa chỉ",
         "city": "Thành phố",
-        "employee_num": "Employee Number",
         "job_title": "Tiêu đề",
         "user_manager": "Người quản lý",
         "department": "Bộ phận",
         "website": "Website",
         "state": "Tỉnh/Quận huyện",
         "country": "Nước",
-        "zip": "Zip",
         "note": "Ghi chú",
         "activated": "Cho phép đăng nhập",
         "checkbox": "Người dùng này có thể đăng nhập",
@@ -359,7 +365,11 @@
         "list_assets": "Danh sách các thiết bị",
         "dateBuy": "Ngày mua",
         "warranty_months": "Bảo hành",
-        "name_user": "Tên người dùng"
+        "name_user": "Tên người dùng",
+        "accept": "Chấp nhận",
+        "refuse": "Từ chối",
+        "user": "Người dùng",
+        "admin": "Admin"
       },
       "message": {
         "required": "bắt buộc"
@@ -382,14 +392,17 @@
         "changePass": "Đổi mật khẩu"
       },
       "placeholder": {
-        "first_name": "Họ và tên đệm",
-        "nameUser": "Tên",
+        "first_name": "Tên",
+        "last_name": "Họ",
         "username": "Tên đăng nhập",
         "email": "Email",
         "user_manager": "Lựa chọn một Người dùng",
         "department": "Chọn một phòng",
-        "locations": "Lựa chọn một Địa phương",
-        "phone": "Điện thoại"
+        "locations": "Lựa chọn một Chi nhánh",
+        "phone": "Số điện thoại",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "state": "Tỉnh/Quận huyện"
       }
     }
   },
@@ -537,7 +550,8 @@
     "checkin-checkout": "Cấp phát/thu hồi",
     "checkout": "Cấp phát",
     "checkin": "Thu hồi",
-    "manager_user": "Người dùng"
+    "manager_user": "Người dùng",
+    "accessory": "Phụ kiện"
   },
   "model": {
     "label": {
@@ -714,7 +728,38 @@
         "type": "Kiểu",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
-        "user": "Người dùng"
+        "user": "Người dùng",
+        "dateCheckout_And_dateCheckin": "Ngày cấp phát hoặc ngày thu hồi"
+      }
+    }
+  },
+  "accessory": {
+    "label": {
+      "field": {
+        "name": "Tên phụ kiện",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "supplier": "Nhà cung cấp",
+        "location": "Chi nhánh",
+        "total_accessory": "Số lượng",
+        "notes": "Ghi chú"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "accessory": "Phụ kiện",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
       }
     }
   }

@@ -20,7 +20,7 @@ import {
 } from "interfaces/hardware";
 import { ICompany } from "interfaces/company";
 import { USERS_API, HARDWARE_CHECKOUT_API } from "api/baseApi";
-import { STATUS_LABELS } from "constants/assest";
+import { STATUS_LABELS } from "constants/assets";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;

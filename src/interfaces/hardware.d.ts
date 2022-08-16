@@ -266,6 +266,7 @@ export interface IHardwareRequestCheckin {
   checkin_at: string;
   rtd_location: number;
   assigned_status: number;
+  assigned_user: string;
 }
 
 export interface IHardwareResponseCheckin {
@@ -312,4 +313,26 @@ export interface IHardwareFilterVariables {
 export interface IHardwareRequestMultipleCancel {
   assets: {}[];
   reason: string;
+}
+export interface IAssetsWaiting {
+  id: number;
+  asset_tag: string;
+  status_id: number;
+  model_id: number;
+  name: string;
+  image: string;
+  serial: string;
+  purchase_date: string;
+  purchase_cost: number;
+  order_number: string;
+  notes: string;
+  archived: boolean;
+  warranty_months: string;
+  depreciate: boolean;
+  supplier_id: number;
+  requestable: number;
+  rtd_location_id: number;
+  last_audit_date: string;
+  location_id: number;
+  assigned_status: number;
 }

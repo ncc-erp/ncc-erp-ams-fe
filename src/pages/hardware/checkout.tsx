@@ -21,7 +21,7 @@ import {
 import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
-import { STATUS_LABELS } from "constants/assest";
+import { STATUS_LABELS } from "constants/assets";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;

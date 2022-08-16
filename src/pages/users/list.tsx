@@ -34,6 +34,11 @@ import type { ColumnsType } from "antd/es/table";
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { IUserAssets } from "interfaces/user";
+import { ASSIGNED_STATUS } from "constants/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getBGAssetAssignedStatusDecription,
+} from "untils/assets";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -105,60 +110,11 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     },
     {
       dataIndex: "rtd_location",
-      title: t("user.label.field.location"),
+      title: t("user.label.field.locations"),
       render: (value: IHardwareResponse) => (
         <TagField value={value ? value.name : ""} />
       ),
       defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
-    },
-    {
-      dataIndex: "assigned_status",
-      title: t("user.label.field.condition"),
-      render: (value: number) => (
-        <TagField
-          value={
-            value === 0
-              ? t("hardware.label.detail.noAssign")
-              : value === 1
-              ? t("hardware.label.detail.pendingAccept")
-              : value === 2
-              ? t("hardware.label.detail.accept")
-              : value === 3
-              ? t("hardware.label.detail.refuse")
-              : ""
-          }
-          style={{
-            background:
-              value === 0
-                ? "gray"
-                : value === 1
-                ? "#f39c12"
-                : value === 2
-                ? "#0073b7"
-                : value === 3
-                ? "red"
-                : "gray",
-            color: "white",
-          }}
-        />
-      ),
-      defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
-      filters: [
-        {
-          text: t("hardware.label.detail.pendingAccept"),
-          value: 1,
-        },
-        {
-          text: t("hardware.label.detail.accept"),
-          value: 2,
-        },
-        {
-          text: t("hardware.label.detail.refuse"),
-          value: 3,
-        },
-      ],
-      onFilter: (value, record: IUserAssets) =>
-        record.assigned_status === value,
     },
     {
       dataIndex: "assigned_to",
@@ -169,12 +125,33 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
     },
     {
-      dataIndex: "last_checkout",
-      title: t("user.label.field.dateCheckout"),
-      render: (value: IHardware) => (
-        <DateField format="LLL" value={value ? value.datetime : ""} />
+      dataIndex: "assigned_status",
+      title: t("user.label.field.condition"),
+      render: (value: number) => (
+        <TagField
+          value={getAssetAssignedStatusDecription(value)}
+          style={{
+            background: getBGAssetAssignedStatusDecription(value),
+            color: "white",
+          }}
+        />
       ),
-      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
+      filters: [
+        {
+          text: t("hardware.label.detail.pendingAccept"),
+          value: ASSIGNED_STATUS.PENDING_ACCEPT,
+        },
+        {
+          text: t("hardware.label.detail.accept"),
+          value: ASSIGNED_STATUS.ACCEPT,
+        },
+        {
+          text: t("hardware.label.detail.refuse"),
+          value: ASSIGNED_STATUS.REFUSE,
+        },
+      ],
+      onFilter: (value, record: IUserAssets) =>
+        record.assigned_status === value,
     },
     {
       dataIndex: "purchase_date",
@@ -188,6 +165,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       title: t("user.label.field.warranty_months"),
       render: (value: string) => <TagField value={value ? value : ""} />,
       defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
+    },
+    {
+      dataIndex: "last_checkout",
+      title: t("user.label.field.dateCheckout"),
+      render: (value: IHardware) => (
+        <DateField format="LLL" value={value ? value.datetime : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
     },
   ];
 
@@ -241,19 +226,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem("selectedRowKeys_AcceptRefuse")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    initselectedRowKeys as React.Key[]
-  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IUserAssets[]
+  >(initselectedRowKeys as React.Key[]);
 
   useEffect(() => {
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   }, [window.location.reload]);
-
-  const ASSIGNED_STATUS = {
-    PENDING_ACCEPT: 1,
-    ACCEPT: 2,
-    REFUSE: 3,
-  };
 
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
@@ -273,7 +252,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     if (
       initselectedRowKeys.filter(
-        (item: any) =>
+        (item: IUserAssets) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0
@@ -287,7 +266,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
     if (
       initselectedRowKeys.filter(
-        (item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+        (item: IUserAssets) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
@@ -295,10 +275,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       setSelectedStoreAcceptAndRefuse(
         initselectedRowKeys
           .filter(
-            (item: any) =>
+            (item: IUserAssets) =>
               item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
           )
-          .map((item: any) => item)
+          .map((item: IUserAssets) => item)
       );
     } else {
       setSelectedAcceptAndRefuse(false);
@@ -307,12 +287,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
     if (
       initselectedRowKeys.filter(
-        (item: any) =>
+        (item: IUserAssets) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0 &&
       initselectedRowKeys.filter(
-        (item: any) => item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+        (item: IUserAssets) =>
+          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
@@ -358,14 +339,16 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const onSelectAll = (
     selected: boolean,
-    selectedRows: any,
-    changeRows: any
+    selectedRows: IUserAssets[],
+    changeRows: IUserAssets[]
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectRows = initselectedRowKeys.filter((item: any) => item);
+      const unSelectIds = changeRows.map((item: IUserAssets) => item.id);
+      let newSelectRows = initselectedRowKeys.filter(
+        (item: IUserAssets) => item
+      );
       newSelectRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
+        (item: IUserAssets) => !unSelectIds.includes(item.id)
       );
       localStorage.setItem(
         "selectedRowKeys_AcceptRefuse",
@@ -383,7 +366,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    selectedRowKeys: initselectedRowKeys.map((item: IUserAssets) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -470,7 +453,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {initselectedRowKeys
               .filter(
-                (item: any) =>
+                (item: IUserAssets) =>
                   item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
               )
               .map((item: IHardwareResponse) => (
@@ -492,7 +475,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
             {initselectedRowKeys
               .filter(
-                (item: any) =>
+                (item: IUserAssets) =>
                   item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
                   item.assigned_status === ASSIGNED_STATUS.REFUSE
               )
@@ -555,6 +538,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <Table
           {...tableProps}
           rowKey="id"
+          scroll={{ x: 1827 }}
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
@@ -563,7 +547,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             type: "checkbox",
             ...rowSelection,
           }}
-          scroll={{ x: 1810 }}
         >
           {collumns.map((col) => (
             <Table.Column

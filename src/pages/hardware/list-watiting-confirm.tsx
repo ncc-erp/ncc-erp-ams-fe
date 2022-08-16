@@ -54,6 +54,12 @@ import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { ICompany } from "interfaces/company";
 import { HardwareSearch } from "./search";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -65,10 +71,8 @@ export const HardwareListWaitingConfirm: React.FC<
   const [idConfirm, setidConfirm] = useState<number>(-1);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected_waiting_confirm") !== null
-      ? JSON.parse(
-          localStorage.getItem("item_selected_waiting_confirm") as string
-        )
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as string)
       : defaultCheckedListWaitingConfirm
   );
   const [isActive, setIsActive] = useState(false);
@@ -231,30 +235,9 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
-            value={
-              value
-                ? value.name === t("hardware.label.field.assign")
-                  ? t("hardware.label.detail.assign")
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : value.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""
-                : ""
-            }
+            value={getAssetStatusDecription(value)}
             style={{
-              background:
-                value && value.name === t("hardware.label.field.assign")
-                  ? "#0073b7"
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? "#00a65a"
-                  : value.name === t("hardware.label.field.broken")
-                  ? "red"
-                  : value.name === t("hardware.label.field.pending")
-                  ? "#f39c12"
-                  : "",
+              background: getBGAssetStatusDecription(value),
               color: "white",
             }}
           />
@@ -357,28 +340,9 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.condition"),
         render: (value: number) => (
           <TagField
-            value={
-              value === ASSIGNED_STATUS.NO_ASSIGN
-                ? t("hardware.label.detail.noAssign")
-                : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                ? t("hardware.label.detail.pendingAccept")
-                : value === ASSIGNED_STATUS.ACCEPT
-                ? t("hardware.label.detail.accept")
-                : value === ASSIGNED_STATUS.REFUSE
-                ? t("hardware.label.detail.refuse")
-                : ""
-            }
+            value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                value === ASSIGNED_STATUS.NO_ASSIGN
-                  ? "gray"
-                  : value === ASSIGNED_STATUS.PENDING_ACCEPT
-                  ? "#f39c12"
-                  : value === ASSIGNED_STATUS.ACCEPT
-                  ? "#0073b7"
-                  : value === ASSIGNED_STATUS.REFUSE
-                  ? "red"
-                  : "gray",
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -690,10 +654,7 @@ export const HardwareListWaitingConfirm: React.FC<
     }
   };
   useEffect(() => {
-    localStorage.setItem(
-      "item_selected_waiting_confirm",
-      JSON.stringify(collumnSelected)
-    );
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (
@@ -789,9 +750,9 @@ export const HardwareListWaitingConfirm: React.FC<
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}

@@ -72,6 +72,7 @@ export interface IUserResponse {
   assets_count: number;
   avatar: string;
   password: string;
+  password_confirmation: string;
   permissions: {
     admin: string;
     superuser: string;

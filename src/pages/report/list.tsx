@@ -16,11 +16,12 @@ import {
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IReport } from "interfaces/report";
-import { LOCATION_API } from "api/baseApi";
+import { ASSET_HISTORY_API, LOCATION_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
+import { TypeAssetHistory } from "constants/assets";
 
 const { RangePicker } = DatePicker;
 
@@ -39,7 +40,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const { Search } = Input;
 
   const { data } = useCustom<any>({
-    url: "api/v1/asset-history",
+    url: ASSET_HISTORY_API,
     method: "get",
     config: {
       query: {
@@ -54,7 +55,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "name",
           operator: "eq",
           value: search,
-        }
+        },
       ],
     },
   });
@@ -80,9 +81,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         title: translate("report.label.field.type"),
         render: (value: IReport) => (
           <TagField
-            value={value && value.type === 0 ? "Cấp phát" : "Thu hồi"}
+            value={
+              value && value.type === TypeAssetHistory.CHECKOUT
+                ? translate("hardware.label.title.checkout")
+                : translate("hardware.label.title.checkin")
+            }
             style={{
-              background: value.type === 0 ? "#0073b7" : "red",
+              background:
+                value && value.type === TypeAssetHistory.CHECKOUT
+                  ? "#0073b7"
+                  : "red",
               color: "white",
             }}
           />
@@ -94,8 +102,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IReport) => (
           <TextField
             value={
-              value &&
-                value.user
+              value && value.user
                 ? value.user.last_name + " " + value.user.first_name
                 : ""
             }
@@ -106,17 +113,20 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "asset",
         title: translate("report.label.field.note"),
         render: (value: IReport) => (
-          <TextField value={value && (value.notes !== "undefined" ? value.notes : "")} />
+          <TextField
+            value={value && (value.notes !== "undefined" ? value.notes : "")}
+          />
         ),
       },
       {
         key: "asset_history",
-        title: "Ngày thu hồi hoặc cấp phát",
-        render: (value: IReport) => (
-          value ?
+        title: translate("report.label.field.dateCheckout_And_dateCheckin"),
+        render: (value: IReport) =>
+          value ? (
             <DateField format="LLL" value={value ? value.created_at : ""} />
-            : ""
-        ),
+          ) : (
+            ""
+          ),
       },
     ],
     []
@@ -146,6 +156,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     } else searchParams.set("location", JSON.stringify(value));
     setSearchParams(searchParams);
   };
+
   const handleTypeChange = (value: {
     value: string;
     label: React.ReactNode;
@@ -156,8 +167,8 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
   };
 
-  const handleDateChange = (val: any) => {
-    const [from, to] = Array.from(val || []);
+  const handleDateChange = (value: any) => {
+    const [from, to] = Array.from(value || []);
     searchParams.set(
       "purchaseDateFrom",
       from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -170,19 +181,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleSearchByName = (value: any) => {
-    searchParams.set(
-      "search_name",
-      value ? value : ""
-    );
+    searchParams.set("search_name", value ? value : "");
     setSearchParams(searchParams);
     setSearch(value);
-  }
+  };
 
   useEffect(() => {
     if (searchParams.get("search_name") && search === " ") {
       searchParams.delete("search_name");
     }
-  }, [search])
+  }, [search]);
 
   return (
     <List title={translate("report.label.title.name")}>
@@ -191,20 +199,23 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           layout="vertical"
           className="search-month-location"
           initialValues={{
-            location: location_id ? Number(location_id) : "Tất cả",
+            location: location_id ? Number(location_id) : translate("all"),
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
             type: searchParams.get("assetHistoryType")
               ? Number(assetHistoryType)
-              : "Tất cả",
+              : translate("all"),
           }}
         >
-          <Form.Item label="Thời gian" name="purchase_date">
+          <Form.Item
+            label={translate("dashboard.placeholder.searchToDate")}
+            name="purchase_date"
+          >
             <RangePicker
               onCalendarChange={handleDateChange}
               format={dateFormat}
@@ -222,7 +233,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             className="search-month-location-null"
           >
             <Select onChange={handleLocationChange} placeholder="Vị trí">
-              <Option value={"all"}>{"Tất cả"}</Option>
+              <Option value={"all"}>{translate("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -235,9 +246,13 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             className="search-month-location-null"
           >
             <Select onChange={handleTypeChange} placeholder="Loại">
-              <Option value={"all"}>{"Tất cả"}</Option>
-              <Option value={0}>{"Cấp phát"}</Option>
-              <Option value={1}>{"Thu hồi"}</Option>
+              <Option value={"all"}>{translate("all")}</Option>
+              <Option value={TypeAssetHistory.CHECKOUT}>
+                {translate("hardware.label.title.checkout")}
+              </Option>
+              <Option value={TypeAssetHistory.CHECKIN}>
+                {translate("hardware.label.title.checkin")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>
@@ -253,7 +268,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <Form
             initialValues={{
               name:
-                searchParams.get("search_name") !== "" ? searchParams.get("search_name") : ""
+                searchParams.get("search_name") !== ""
+                  ? searchParams.get("search_name")
+                  : "",
             }}
           >
             <Form.Item name={"name"}>

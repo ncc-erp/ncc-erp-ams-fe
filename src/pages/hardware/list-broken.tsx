@@ -58,6 +58,13 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -89,8 +96,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as any)
+      : defaultCheckedList
+  );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -119,7 +129,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         field: "status.id",
         operator: "eq",
-        value: "3",
+        value: STATUS_LABELS.BROKEN,
       },
     ],
     resource: HARDWARE_API,
@@ -520,30 +530,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
-            value={
-              value
-                ? value.name === t("hardware.label.field.assign")
-                  ? t("hardware.label.detail.assign")
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : value.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""
-                : ""
-            }
+            value={getAssetStatusDecription(value)}
             style={{
-              background:
-                value.name === t("hardware.label.field.assign")
-                  ? "#0073b7"
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? "#00a65a"
-                  : value.name === t("hardware.label.field.broken")
-                  ? "red"
-                  : value.name === t("hardware.label.field.pending")
-                  ? "#f39c12"
-                  : "",
+              background: getBGAssetStatusDecription(value),
               color: "white",
             }}
           />
@@ -646,28 +635,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.condition"),
         render: (value: number) => (
           <TagField
-            value={
-              value === 0
-                ? t("hardware.label.detail.noAssign")
-                : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
-            }
+            value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                value === 0
-                  ? "gray"
-                  : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -736,6 +706,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected]);
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -905,9 +879,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -1118,17 +1092,21 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
+                  >
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                ) : (
+                  <EditButton hideText size="small" disabled />
+                )}
                 <Tooltip
                   title={t("hardware.label.tooltip.delete")}
                   color={"red"}

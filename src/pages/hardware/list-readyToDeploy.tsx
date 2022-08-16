@@ -61,6 +61,13 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import {
+  getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
+  getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
+} from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -104,8 +111,11 @@ export const HardwareListReadyToDeploy: React.FC<
     useState<IHardwareResponseCheckin>();
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
-  const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_selected") as any)
+      : defaultCheckedList
+  );
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -132,7 +142,7 @@ export const HardwareListReadyToDeploy: React.FC<
       {
         field: "status.id",
         operator: "eq",
-        value: "5",
+        value: STATUS_LABELS.READY_TO_DEPLOY,
       },
     ],
 
@@ -560,30 +570,9 @@ export const HardwareListReadyToDeploy: React.FC<
         title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
-            value={
-              value
-                ? value.name === t("hardware.label.field.assign")
-                  ? t("hardware.label.detail.assign")
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : value.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""
-                : ""
-            }
+            value={getAssetStatusDecription(value)}
             style={{
-              background:
-                value.name === t("hardware.label.field.assign")
-                  ? "#0073b7"
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? "#00a65a"
-                  : value.name === t("hardware.label.field.broken")
-                  ? "red"
-                  : value.name === t("hardware.label.field.pending")
-                  ? "#f39c12"
-                  : "",
+              background: getBGAssetStatusDecription(value),
               color: "white",
             }}
           />
@@ -686,28 +675,9 @@ export const HardwareListReadyToDeploy: React.FC<
         title: t("hardware.label.field.condition"),
         render: (value: number) => (
           <TagField
-            value={
-              value === 0
-                ? t("hardware.label.detail.noAssign")
-                : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
-            }
+            value={getAssetAssignedStatusDecription(value)}
             style={{
-              background:
-                value === 0
-                  ? "gray"
-                  : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+              background: getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -784,6 +754,10 @@ export const HardwareListReadyToDeploy: React.FC<
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected]);
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -879,9 +853,9 @@ export const HardwareListReadyToDeploy: React.FC<
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-    initselectedRowKeys as React.Key[]
-  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IHardwareResponse[]
+  >(initselectedRowKeys as React.Key[]);
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -894,17 +868,16 @@ export const HardwareListReadyToDeploy: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0
     ) {
       setSelectedCheckout(true);
-      setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
       setSelectdStoreCheckout(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkout)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkout)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckout(false);
@@ -912,17 +885,16 @@ export const HardwareListReadyToDeploy: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-      0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckin(true);
-      setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
-      );
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
       setSelectdStoreCheckin(
         initselectedRowKeys
-          .filter((item: any) => item.user_can_checkin)
-          .map((item: any) => item)
+          .filter((item: IHardwareResponse) => item.user_can_checkin)
+          .map((item: IHardwareResponse) => item)
       );
     } else {
       setSelectedCheckin(false);
@@ -930,30 +902,30 @@ export const HardwareListReadyToDeploy: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-        0 &&
-      initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-        0
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0 &&
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
-      setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
-      );
-      setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
-      );
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
   }, [initselectedRowKeys]);
 
-  const onSelect = (record: any, selected: boolean) => {
+  const onSelect = (record: IHardwareResponse, selected: boolean) => {
     if (!selected) {
       const newSelectRow = initselectedRowKeys.filter(
-        (item: any) => item.id !== record.id
+        (item: IHardwareResponse) => item.id !== record.id
       );
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-      setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+      setSelectedRowKeys(
+        newSelectRow.map((item: IHardwareResponse) => item.id)
+      );
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
@@ -964,24 +936,28 @@ export const HardwareListReadyToDeploy: React.FC<
           })
         )
       );
-      setSelectedRowKeys(newselectedRowKeys.map((item: any) => item.id));
+      setSelectedRowKeys(
+        newselectedRowKeys.map((item: IHardwareResponse) => item.id)
+      );
     }
   };
   const onSelectAll = (
     selected: boolean,
-    selectedRows: any,
-    changeRows: any
+    selectedRows: IHardwareResponse[],
+    changeRows: IHardwareResponse[]
   ) => {
     if (!selected) {
-      const unSelectIds = changeRows.map((item: any) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter((item: any) => item);
+      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item
+      );
       newSelectedRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
+        (item: IHardwareResponse) => !unSelectIds.includes(item.id)
       );
 
       localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
     } else {
-      selectedRows = selectedRows.filter((item: any) => item);
+      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
       localStorage.setItem(
         "selectedRowKeys",
         JSON.stringify([...initselectedRowKeys, ...selectedRows])
@@ -992,13 +968,15 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: any[]
+    selectedRows: IHardwareResponse[]
   ) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: any) => item.id),
+    selectedRowKeys: initselectedRowKeys.map(
+      (item: IHardwareResponse) => item.id
+    ),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -1018,10 +996,10 @@ export const HardwareListReadyToDeploy: React.FC<
 
   const handleRemoveCheckInCheckOutItem = (id: number) => {
     const newSelectRow = initselectedRowKeys.filter(
-      (item: any) => item.id !== id
+      (item: IHardwareResponse) => item.id !== id
     );
     localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-    setSelectedRowKeys(newSelectRow.map((item: any) => item.id));
+    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
   };
 
   return (
@@ -1099,9 +1077,9 @@ export const HardwareListReadyToDeploy: React.FC<
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -1292,14 +1270,14 @@ export const HardwareListReadyToDeploy: React.FC<
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >
-            Cấp phát
+            {t("hardware.label.title.checkout")}
           </Button>
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
 
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkin)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkin)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1320,15 +1298,15 @@ export const HardwareListReadyToDeploy: React.FC<
             disabled={!selectedCheckin}
             onClick={handleCheckin}
           >
-            Thu hồi
+            {t("hardware.label.title.checkin")}
           </Button>
 
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
 
             {initselectedRowKeys
-              .filter((item: any) => item.user_can_checkout)
-              .map((item: any) => (
+              .filter((item: IHardwareResponse) => item.user_can_checkout)
+              .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
@@ -1398,17 +1376,21 @@ export const HardwareListReadyToDeploy: React.FC<
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
+                  >
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                ) : (
+                  <EditButton hideText size="small" disabled />
+                )}
                 <Tooltip
                   title={t("hardware.label.tooltip.delete")}
                   color={"red"}
