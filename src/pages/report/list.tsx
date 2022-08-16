@@ -21,7 +21,7 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { TypeAssetHistory } from "constants/assets";
+import { dateFormat, TypeAssetHistory } from "constants/assets";
 
 const { RangePicker } = DatePicker;
 
@@ -131,8 +131,6 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     ],
     []
   );
-
-  const dateFormat = "YYYY/MM/DD";
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,

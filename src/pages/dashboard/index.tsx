@@ -15,11 +15,11 @@ import { useEffect, useState } from "react";
 import { ILocation } from "interfaces/dashboard";
 import { useSearchParams } from "react-router-dom";
 import { AllLocations } from "components/dashboard/locations/index-all-location";
+import { dateFormat } from "constants/assets";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
   const { RangePicker } = DatePicker;
-  const dateFormat = "YYYY/MM/DD";
 
   const [locationSelected, setLocationSelected] = useState<number | null>(
     99999
@@ -69,7 +69,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     },
   });
   const [nameSearch, setNameSearch] = useState(
-    "Tổng số lượng thiết bị của các văn phòng"
+    translate("dashboard.detail.title-show")
   );
 
   const handleChangeLocation = (value: any) => {
@@ -95,7 +95,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     );
     setSearchParams(searchParams);
     setNameSearch(
-      `Số lượng thiết bị của các văn phòng trong khoảng thời gian: ${searchParams.get(
+      `${translate("dashboard.detail.title-count-asset")} : ${searchParams.get(
         "purchase_date_from"
       )} đến ${searchParams.get("purchase_date_to")}`
     );
@@ -117,7 +117,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     );
     setSearchParams1(searchParams1);
     setNameSearch(
-      `Số lượng thiết bị của các văn phòng trong khoảng thời gian: ${searchParams1.get(
+      `${translate("dashboard.detail.title-count-asset")} : ${searchParams1.get(
         "purchase_date_from"
       )} đến ${searchParams1.get("purchase_date_to")}`
     );

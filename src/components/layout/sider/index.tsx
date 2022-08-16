@@ -20,6 +20,7 @@ const {
   SettingOutlined,
   BarChartOutlined,
   UsergroupAddOutlined,
+  CopyOutlined,
 } = Icons;
 
 const logo: CSSProperties = {
@@ -192,6 +193,41 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
+        {permissionsData &&
+          permissionsData.admin === "1" &&
+          menuItems
+            .filter(
+              (item) => item.name === `${translate("resource.consumables")}`
+            )
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.consumables")}` ? (
+                      <CopyOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
 
         {permissionsData &&
           permissionsData.admin === "1" &&

@@ -35,4 +35,6 @@ export const TypeAssetHistory = {
   CHECKOUT: 0,
   CHECKIN: 1
 }
+export const dateFormat = "YYYY/MM/DD";
+
 

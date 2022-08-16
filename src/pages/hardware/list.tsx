@@ -61,7 +61,7 @@ import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -814,8 +814,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const dateFormat = "YYYY/MM/DD";
-
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
     optionLabel: "name",
@@ -1053,9 +1051,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                 );
                 setSearchParams(searchParams);
               }}
-              placeholder="Tất cả"
+              placeholder={t("all")}
             >
-              <Option value={0}>{"Tất cả"}</Option>
+              <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
