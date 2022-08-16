@@ -201,6 +201,7 @@ function App() {
             route: "assets-waiting-confirm",
           },
         },
+
         {
           name: t("resource.consumables"),
           list: ConsumablesList,

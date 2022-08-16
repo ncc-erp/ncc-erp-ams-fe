@@ -55,7 +55,6 @@ const defaultCheckedList = [
 
 export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [isLoadingArr] = useState<boolean[]>([]);

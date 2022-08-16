@@ -2,6 +2,7 @@ export const GET_ME_API = "api/v1/users/me";
 
 export const DASHBOARD_API = "api/v1/dashboard";
 export const DASHBOARD_FINFAST_SETTING_API = "api/v1/dashboard/finfast-setting";
+export const DASHBOARD_REPORT_ASSET_API = "api/v1/dashboard/reportAsset"
 
 export const HARDWARE_API = "api/v1/hardware";
 export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";

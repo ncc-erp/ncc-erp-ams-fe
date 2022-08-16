@@ -103,6 +103,7 @@ p, 1, ${i18n.t("resource.manager_user")}, (list)|(create)
 p, 1, api/v1/users/*, (delete)
 p, 1, ${i18n.t("resource.manager_user")}/*, (edit)
 
+
 p, 1, ${i18n.t("resource.consumables")}, (list)|(create)
 p, 1, ${CONSUMABLE_API}/*, (delete)
 p, 1, ${i18n.t("resource.consumables")}/*, (edit)|(checkout)

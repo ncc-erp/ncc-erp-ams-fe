@@ -13,7 +13,7 @@ export interface IConsumablesRequest {
     qty: number;
     date: string;
   }
-  
+
   export interface IConsumablesResponse {
     id: number;
     name: string;

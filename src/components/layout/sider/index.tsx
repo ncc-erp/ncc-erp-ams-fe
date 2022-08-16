@@ -193,6 +193,7 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
+
         {permissionsData &&
           permissionsData.admin === "1" &&
           menuItems

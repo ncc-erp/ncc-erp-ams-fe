@@ -36,6 +36,7 @@ type ConsumablesCreateProps = {
 
 export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
   const { setIsModalVisible } = props;
+
   const [payload, setPayload] = useState<FormData>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [messageErr, setMessageErr] = useState<IConsumablesRequest>();
