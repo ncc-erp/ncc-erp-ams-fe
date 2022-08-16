@@ -3,7 +3,6 @@ import React, { useState, CSSProperties } from "react";
 
 import {
   useTranslate,
-  useTitle,
   useNavigation,
   usePermissions,
   useRouterContext,
@@ -20,7 +19,7 @@ const {
   ScheduleOutlined,
   SettingOutlined,
   BarChartOutlined,
-  UsergroupAddOutlined
+  UsergroupAddOutlined,
 } = Icons;
 
 const logo: CSSProperties = {
@@ -29,12 +28,11 @@ const logo: CSSProperties = {
   position: "relative",
   transform: "translateX(-50%)",
   marginTop: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
 };
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
@@ -57,7 +55,6 @@ export const Sider: React.FC = () => {
       breakpoint="lg"
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
     >
-      {/* {Title && <Title collapsed={collapsed} />} */}
       {permissionsData && permissionsData.admin === "0" && (
         <>
           <Link to="users">
@@ -108,7 +105,6 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-
         {permissionsData && permissionsData.admin === "1" && (
           <SubMenu
             title={
@@ -166,9 +162,11 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
-                    `${translate("resource.assets-readyToDeploy")}` ||
+                      `${translate("resource.assets-readyToDeploy")}` ||
                     item.name === `${translate("resource.assets-pending")}` ||
-                    item.name === `${translate("resource.assets-broken")}`
+                    item.name === `${translate("resource.assets-broken")}` ||
+                    item.name ===
+                      `${translate("resource.assets-waiting-confirm")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -319,10 +317,7 @@ export const Sider: React.FC = () => {
         {permissionsData &&
           permissionsData.admin === "0" &&
           menuItems
-            .filter(
-              (item) =>
-                item.name === `${translate("resource.users")}`
-            )
+            .filter((item) => item.name === `${translate("resource.users")}`)
             .map(({ icon, name, route }) => {
               const isSelected = route === selectedKey;
               return (
@@ -358,7 +353,9 @@ export const Sider: React.FC = () => {
         {permissionsData &&
           permissionsData.admin === "1" &&
           menuItems
-            .filter((item) => item.name === `${translate("resource.manager_user")}`)
+            .filter(
+              (item) => item.name === `${translate("resource.manager_user")}`
+            )
             .map(({ icon, name, route }) => {
               const isSelected = route === selectedKey;
               return (
@@ -389,6 +386,6 @@ export const Sider: React.FC = () => {
               );
             })}
       </Menu>
-    </AntdLayout.Sider >
+    </AntdLayout.Sider>
   );
 };

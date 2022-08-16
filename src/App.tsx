@@ -35,7 +35,8 @@ import { SupplierList } from "pages/supplier";
 import { DepartmentList } from "pages/department";
 import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
 import { ReportList } from "pages/report/list";
-import { Manager_UserList } from "pages/manager_users/list"
+import { Manager_UserList } from "pages/manager_users/list";
+import { HardwareListWaitingConfirm } from "pages/hardware/list-watiting-confirm";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -129,14 +130,6 @@ function App() {
             route: "assets-broken",
           },
         },
-        //TODO: Develop later
-        // {
-        //   name: t("resource.request"),
-        //   list: RequestList,
-        //   options: {
-        //     route: "create-request",
-        //   },
-        // },
         {
           name: t("resource.users"),
           list: UserList,
@@ -198,6 +191,13 @@ function App() {
           list: Manager_UserList,
           options: {
             route: "manager_user",
+          },
+        },
+        {
+          name: t("resource.assets-waiting-confirm"),
+          list: HardwareListWaitingConfirm,
+          options: {
+            route: "assets-waiting-confirm",
           },
         },
       ]}
