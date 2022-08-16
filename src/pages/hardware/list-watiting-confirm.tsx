@@ -37,11 +37,7 @@ import {
   IHardwareResponse,
 } from "interfaces/hardware";
 import { CancleAsset } from "../users/cancel";
-import {
-  HARDWARE_API,
-  HARDWARE_API_WAITING_CONFIRM,
-  LOCATION_API,
-} from "api/baseApi";
+import { HARDWARE_API, LOCATION_API } from "api/baseApi";
 import {
   CloseOutlined,
   SyncOutlined,
@@ -102,7 +98,14 @@ export const HardwareListWaitingConfirm: React.FC<
         order: "desc",
       },
     ],
-    resource: HARDWARE_API_WAITING_CONFIRM,
+    initialFilter: [
+      {
+        field: "assigned_status",
+        operator: "eq",
+        value: ASSIGNED_STATUS.PENDING_ACCEPT,
+      },
+    ],
+    resource: HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const {
