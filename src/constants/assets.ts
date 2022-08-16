@@ -11,6 +11,7 @@ export const defaultCheckedListWaitingConfirm = [
 ];
 
 export const ASSIGNED_STATUS = {
+  NO_ASSIGN: 0,
   PENDING_ACCEPT: 1,
   ACCEPT: 2,
   REFUSE: 3,
