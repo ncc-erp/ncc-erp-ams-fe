@@ -135,10 +135,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       {
         field: "status.id",
         operator: "eq",
-        value: "4",
+        value: STATUS_LABELS.ASSIGN,
       },
     ],
-    resource: `api/v1/hardware`,
+    resource: HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const {
@@ -861,7 +861,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
@@ -878,7 +878,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedCheckin(true);
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
       setSelectdStoreCheckin(
         initselectedRowKeys
@@ -899,10 +899,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
     } else {
     }

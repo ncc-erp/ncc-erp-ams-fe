@@ -122,7 +122,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         field: "status.id",
         operator: "eq",
-        value: "1",
+        value: STATUS_LABELS.PENDING,
       },
     ],
     resource: HARDWARE_API,

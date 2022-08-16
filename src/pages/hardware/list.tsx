@@ -62,7 +62,7 @@ import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
-import { getAssetAssignedStatusDecription, getBGAssetAssignedStatusDecription } from "untils/assets";
+import { getAssetAssignedStatusDecription, getAssetStatusDecription, getBGAssetAssignedStatusDecription, getBGAssetStatusDecription } from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -592,31 +592,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
-            value={
-              value
-                ? value.name === t("hardware.label.field.assign")
-                  ? t("hardware.label.detail.assign")
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                    ? t("hardware.label.detail.readyToDeploy")
-                    : value.name === t("hardware.label.field.broken")
-                      ? t("hardware.label.detail.broken")
-                      : value.name === t("hardware.label.field.pending")
-                        ? t("hardware.label.detail.pending")
-                        : ""
-                : ""
-            }
+            value={getAssetStatusDecription(value)}
             style={{
-              background:
-                value &&
-                  value.name === t("hardware.label.field.assign")
-                  ? "#0073b7"
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                    ? "#00a65a"
-                    : value.name === t("hardware.label.field.broken")
-                      ? "red"
-                      : value.name === t("hardware.label.field.pending")
-                        ? "#f39c12"
-                        : "",
+              background: getBGAssetStatusDecription(value),
               color: "white",
             }}
           />
@@ -870,7 +848,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
@@ -888,7 +866,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     ) {
       setSelectedCheckin(true);
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
       setSelectdStoreCheckin(
         initselectedRowKeys
@@ -908,10 +886,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
     } else {
     }

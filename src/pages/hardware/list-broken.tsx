@@ -122,7 +122,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         field: "status.id",
         operator: "eq",
-        value: "3",
+        value: STATUS_LABELS.BROKEN,
       },
     ],
     resource: HARDWARE_API,

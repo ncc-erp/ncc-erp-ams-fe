@@ -135,7 +135,7 @@ export const HardwareListReadyToDeploy: React.FC<
       {
         field: "status.id",
         operator: "eq",
-        value: "5",
+        value: STATUS_LABELS.READY_TO_DEPLOY,
       },
     ],
 
@@ -867,7 +867,7 @@ export const HardwareListReadyToDeploy: React.FC<
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
@@ -885,7 +885,7 @@ export const HardwareListReadyToDeploy: React.FC<
     ) {
       setSelectedCheckin(true);
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
       setSelectdStoreCheckin(
         initselectedRowKeys
@@ -906,10 +906,10 @@ export const HardwareListReadyToDeploy: React.FC<
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
     } else {
     }
