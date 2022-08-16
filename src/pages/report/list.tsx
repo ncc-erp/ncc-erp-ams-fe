@@ -16,7 +16,7 @@ import {
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IReport } from "interfaces/report";
-import { LOCATION_API } from "api/baseApi";
+import { ASSET_HISTORY_API, LOCATION_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
@@ -39,7 +39,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const { Search } = Input;
 
   const { data } = useCustom<any>({
-    url: "api/v1/asset-history",
+    url: ASSET_HISTORY_API,
     method: "get",
     config: {
       query: {
@@ -80,9 +80,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         title: translate("report.label.field.type"),
         render: (value: IReport) => (
           <TagField
-            value={value && value.type === 0 ? "Cấp phát" : "Thu hồi"}
+            value={value && value.type === 0 ? translate("hardware.label.title.checkout") : translate("hardware.label.title.checkin")}
             style={{
-              background: value.type === 0 ? "#0073b7" : "red",
+              background: value && value.type === 0 ? "#0073b7" : "red",
               color: "white",
             }}
           />
@@ -111,7 +111,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "asset_history",
-        title: "Ngày thu hồi hoặc cấp phát",
+        title: translate("report.label.field.dateCheckout_And_dateCheckin"),
         render: (value: IReport) => (
           value ?
             <DateField format="LLL" value={value ? value.created_at : ""} />
@@ -146,6 +146,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     } else searchParams.set("location", JSON.stringify(value));
     setSearchParams(searchParams);
   };
+
   const handleTypeChange = (value: {
     value: string;
     label: React.ReactNode;
@@ -156,8 +157,8 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
   };
 
-  const handleDateChange = (val: any) => {
-    const [from, to] = Array.from(val || []);
+  const handleDateChange = (value: any) => {
+    const [from, to] = Array.from(value || []);
     searchParams.set(
       "purchaseDateFrom",
       from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -191,7 +192,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           layout="vertical"
           className="search-month-location"
           initialValues={{
-            location: location_id ? Number(location_id) : "Tất cả",
+            location: location_id ? Number(location_id) : translate("all"),
             purchase_date:
               dateFromParam && dateToParam
                 ? [
@@ -201,10 +202,10 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
                 : "",
             type: searchParams.get("assetHistoryType")
               ? Number(assetHistoryType)
-              : "Tất cả",
+              : translate("all"),
           }}
         >
-          <Form.Item label="Thời gian" name="purchase_date">
+          <Form.Item label={translate("dashboard.placeholder.searchToDate")} name="purchase_date">
             <RangePicker
               onCalendarChange={handleDateChange}
               format={dateFormat}
@@ -222,7 +223,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             className="search-month-location-null"
           >
             <Select onChange={handleLocationChange} placeholder="Vị trí">
-              <Option value={"all"}>{"Tất cả"}</Option>
+              <Option value={"all"}>{translate("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
@@ -235,9 +236,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             className="search-month-location-null"
           >
             <Select onChange={handleTypeChange} placeholder="Loại">
-              <Option value={"all"}>{"Tất cả"}</Option>
-              <Option value={0}>{"Cấp phát"}</Option>
-              <Option value={1}>{"Thu hồi"}</Option>
+              <Option value={"all"}>{translate("all")}</Option>
+              <Option value={0}>{translate("hardware.label.title.checkout")}</Option>
+              <Option value={1}>{translate("hardware.label.title.checkin")}</Option>
             </Select>
           </Form.Item>
         </Form>

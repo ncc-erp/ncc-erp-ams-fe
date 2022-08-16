@@ -30,7 +30,7 @@ import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
 } from "api/baseApi";
-import { EStatus, STATUS_LABELS } from "constants/assest";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -40,7 +40,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
@@ -134,9 +134,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
+
     if (event.status_label !== undefined) {
       formData.append("status_id", event.status_label.toString());
     }
+
     formData.append("warranty_months", event.warranty_months);
 
     if (event.purchase_cost !== null)
@@ -160,7 +162,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("requestable", checked ? "1" : "0");
 
-    formData.append("_method", "PATCH");
+    formData.append("_method", "PUT");
     setPayload(formData);
   };
 
@@ -172,7 +174,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" },
+      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" !== undefined ? data?.notes : "" },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
       {
@@ -225,7 +227,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (item.label === EStatus.PENDING || item.label === EStatus.BROKEN) {
+        if (item.label === EStatus.PENDING
+          || item.label === EStatus.BROKEN
+          || item.label === EStatus.READY_TO_DEPLOY) {
           check = true;
           return true;
         }
@@ -240,7 +244,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const filterStatusLabelSelectProps = () => {
     const optionsFiltered = statusLabelSelectProps.options?.filter(
-      (item) => item.label === EStatus.PENDING || item.label === EStatus.BROKEN
+      (item) => item.label === EStatus.PENDING
+        || item.label === EStatus.BROKEN
+        || item.label === EStatus.READY_TO_DEPLOY
     );
     statusLabelSelectProps.options = optionsFiltered;
     return statusLabelSelectProps;
@@ -345,7 +351,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
 
-          {data?.status_label.id === STATUS_LABELS.PENDING && (
+          {data?.status_label.id !== STATUS_LABELS.ASSIGN && (
             <>
               <Form.Item
                 label={t("hardware.label.field.status")}
@@ -359,39 +365,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                       t("hardware.label.message.required"),
                   },
                 ]}
-                initialValue={data?.status_label.id}
-              >
-                <Select
-                  onChange={(value) => {
-                    onChangeStatusLabel(value);
-                  }}
-                  placeholder={t("hardware.label.placeholder.status")}
-                  {...filterStatusLabelSelectProps()}
-                />
-              </Form.Item>
-              {messageErr?.status_label && (
-                <Typography.Text type="danger">
-                  {messageErr.status_label}
-                </Typography.Text>
-              )}
-            </>
-          )}
-
-          {data?.status_label.id === STATUS_LABELS.BROKEN && (
-            <>
-              <Form.Item
-                label={t("hardware.label.field.status")}
-                name="status_label"
-                rules={[
-                  {
-                    required: false,
-                    message:
-                      t("hardware.label.field.status") +
-                      " " +
-                      t("hardware.label.message.required"),
-                  },
-                ]}
-                initialValue={data?.status_label.id}
+                initialValue={Number(data?.status_label.id)}
               >
                 <Select
                   onChange={(value) => {

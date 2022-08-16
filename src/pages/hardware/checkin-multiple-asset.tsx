@@ -17,7 +17,7 @@ import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 
 import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
-import { EStatus, STATUS_LABELS } from "constants/assest";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;

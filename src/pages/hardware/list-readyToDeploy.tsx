@@ -61,6 +61,8 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { getAssetAssignedStatusDecription, getAssetStatusDecription, getBGAssetAssignedStatusDecription, getBGAssetStatusDecription } from "untils/assets";
 
 const defaultCheckedList = [
   "id",
@@ -105,7 +107,8 @@ export const HardwareListReadyToDeploy: React.FC<
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] =
-    useState<string[]>(defaultCheckedList);
+    useState<string[]>(localStorage.getItem('item_selected') !== null ? JSON.parse
+      (localStorage.getItem('item_selected') as any) : defaultCheckedList);
   const [isActive, setIsActive] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
@@ -132,7 +135,7 @@ export const HardwareListReadyToDeploy: React.FC<
       {
         field: "status.id",
         operator: "eq",
-        value: "5",
+        value: STATUS_LABELS.READY_TO_DEPLOY,
       },
     ],
 
@@ -560,30 +563,9 @@ export const HardwareListReadyToDeploy: React.FC<
         title: t("hardware.label.field.status"),
         render: (value: IHardwareResponse) => (
           <TagField
-            value={
-              value
-                ? value.name === t("hardware.label.field.assign")
-                  ? t("hardware.label.detail.assign")
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? t("hardware.label.detail.readyToDeploy")
-                  : value.name === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : value.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""
-                : ""
-            }
+            value={getAssetStatusDecription(value)}
             style={{
-              background:
-                value.name === t("hardware.label.field.assign")
-                  ? "#0073b7"
-                  : value.name === t("hardware.label.field.readyToDeploy")
-                  ? "#00a65a"
-                  : value.name === t("hardware.label.field.broken")
-                  ? "red"
-                  : value.name === t("hardware.label.field.pending")
-                  ? "#f39c12"
-                  : "",
+              background: getBGAssetStatusDecription(value),
               color: "white",
             }}
           />
@@ -686,28 +668,10 @@ export const HardwareListReadyToDeploy: React.FC<
         title: t("hardware.label.field.condition"),
         render: (value: number) => (
           <TagField
-            value={
-              value === 0
-                ? t("hardware.label.detail.noAssign")
-                : value === 1
-                ? t("hardware.label.detail.pendingAccept")
-                : value === 2
-                ? t("hardware.label.detail.accept")
-                : value === 3
-                ? t("hardware.label.detail.refuse")
-                : ""
-            }
+            value={getAssetAssignedStatusDecription(value)}
             style={{
               background:
-                value === 0
-                  ? "gray"
-                  : value === 1
-                  ? "#f39c12"
-                  : value === 2
-                  ? "#0073b7"
-                  : value === 3
-                  ? "red"
-                  : "gray",
+                getBGAssetAssignedStatusDecription(value),
               color: "white",
             }}
           />
@@ -784,6 +748,10 @@ export const HardwareListReadyToDeploy: React.FC<
       setColumnSelected(collumnSelected.concat(value.key));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+  }, [collumnSelected])
 
   const listenForOutsideClicks = (
     listening: boolean,
@@ -899,7 +867,7 @@ export const HardwareListReadyToDeploy: React.FC<
     ) {
       setSelectedCheckout(true);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setSelectdStoreCheckout(
         initselectedRowKeys
@@ -917,7 +885,7 @@ export const HardwareListReadyToDeploy: React.FC<
     ) {
       setSelectedCheckin(true);
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
       setSelectdStoreCheckin(
         initselectedRowKeys
@@ -931,17 +899,17 @@ export const HardwareListReadyToDeploy: React.FC<
 
     if (
       initselectedRowKeys.filter((item: any) => item.user_can_checkout).length >
-        0 &&
+      0 &&
       initselectedRowKeys.filter((item: any) => item.user_can_checkin).length >
-        0
+      0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(
-        "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkin")
       );
       setNameCheckout(
-        "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi"
+        t("hardware.label.detail.note-checkout")
       );
     } else {
     }
@@ -1041,19 +1009,19 @@ export const HardwareListReadyToDeploy: React.FC<
           initialValues={{
             location:
               localStorage.getItem("location") !== null ??
-              searchValuesLocation !== 0
+                searchValuesLocation !== 0
                 ? searchValuesLocation
                 : rtd_location_id ?? Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1292,7 +1260,7 @@ export const HardwareListReadyToDeploy: React.FC<
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >
-            Cấp phát
+            {t("hardware.label.title.checkout")}
           </Button>
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
@@ -1320,7 +1288,7 @@ export const HardwareListReadyToDeploy: React.FC<
             disabled={!selectedCheckin}
             onClick={handleCheckin}
           >
-            Thu hồi
+            {t("hardware.label.title.checkin")}
           </Button>
 
           <div className={nameCheckin ? "list-checkins" : ""}>
@@ -1398,17 +1366,26 @@ export const HardwareListReadyToDeploy: React.FC<
                     onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("hardware.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
+                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.edit")}
+                    color={"#108ee9"}
+                  >
+                    <EditButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => edit(record)}
+                    />
+                  </Tooltip>
+                )
+                  : (
+                    <EditButton
+                      hideText
+                      size="small"
+                      disabled
+                    />
+                  )}
                 <Tooltip
                   title={t("hardware.label.tooltip.delete")}
                   color={"red"}
@@ -1431,8 +1408,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1449,8 +1426,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >

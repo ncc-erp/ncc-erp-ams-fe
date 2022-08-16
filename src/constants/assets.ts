@@ -11,6 +11,7 @@ export const defaultCheckedListWaitingConfirm = [
 ];
 
 export const ASSIGNED_STATUS = {
+  NO_ASSIGN: 0,
   PENDING_ACCEPT: 1,
   ACCEPT: 2,
   REFUSE: 3,
@@ -20,7 +21,7 @@ export const STATUS_LABELS = {
   PENDING: 1,
   BROKEN: 3,
   ASSIGN: 4,
-  READY_TO_DEPLOY: 5 
+  READY_TO_DEPLOY: 5,
 };
 
 export enum EStatus {

@@ -34,6 +34,7 @@ import type { ColumnsType } from "antd/es/table";
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { IUserAssets } from "interfaces/user";
+import { ASSIGNED_STATUS } from "constants/assets";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -105,60 +106,11 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     },
     {
       dataIndex: "rtd_location",
-      title: t("user.label.field.location"),
+      title: t("user.label.field.locations"),
       render: (value: IHardwareResponse) => (
         <TagField value={value ? value.name : ""} />
       ),
       defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
-    },
-    {
-      dataIndex: "assigned_status",
-      title: t("user.label.field.condition"),
-      render: (value: number) => (
-        <TagField
-          value={
-            value === 0
-              ? t("hardware.label.detail.noAssign")
-              : value === 1
-              ? t("hardware.label.detail.pendingAccept")
-              : value === 2
-              ? t("hardware.label.detail.accept")
-              : value === 3
-              ? t("hardware.label.detail.refuse")
-              : ""
-          }
-          style={{
-            background:
-              value === 0
-                ? "gray"
-                : value === 1
-                ? "#f39c12"
-                : value === 2
-                ? "#0073b7"
-                : value === 3
-                ? "red"
-                : "gray",
-            color: "white",
-          }}
-        />
-      ),
-      defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
-      filters: [
-        {
-          text: t("hardware.label.detail.pendingAccept"),
-          value: 1,
-        },
-        {
-          text: t("hardware.label.detail.accept"),
-          value: 2,
-        },
-        {
-          text: t("hardware.label.detail.refuse"),
-          value: 3,
-        },
-      ],
-      onFilter: (value, record: IUserAssets) =>
-        record.assigned_status === value,
     },
     {
       dataIndex: "assigned_to",
@@ -169,12 +121,52 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
     },
     {
-      dataIndex: "last_checkout",
-      title: t("user.label.field.dateCheckout"),
-      render: (value: IHardware) => (
-        <DateField format="LLL" value={value ? value.datetime : ""} />
+      dataIndex: "assigned_status",
+      title: t("user.label.field.condition"),
+      render: (value: number) => (
+        <TagField
+          value={
+            value === ASSIGNED_STATUS.NO_ASSIGN
+              ? t("hardware.label.detail.noAssign")
+              : value === ASSIGNED_STATUS.PENDING_ACCEPT
+                ? t("hardware.label.detail.pendingAccept")
+                : value === ASSIGNED_STATUS.ACCEPT
+                  ? t("hardware.label.detail.accept")
+                  : value === ASSIGNED_STATUS.REFUSE
+                    ? t("hardware.label.detail.refuse")
+                    : ""
+          }
+          style={{
+            background:
+              value === ASSIGNED_STATUS.NO_ASSIGN
+                ? "gray"
+                : value === ASSIGNED_STATUS.PENDING_ACCEPT
+                  ? "#f39c12"
+                  : value === ASSIGNED_STATUS.ACCEPT
+                    ? "#0073b7"
+                    : value === ASSIGNED_STATUS.REFUSE
+                      ? "red"
+                      : "gray",
+            color: "white",
+          }}
+        />
       ),
-      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
+      filters: [
+        {
+          text: t("hardware.label.detail.pendingAccept"),
+          value: ASSIGNED_STATUS.PENDING_ACCEPT,
+        },
+        {
+          text: t("hardware.label.detail.accept"),
+          value: ASSIGNED_STATUS.ACCEPT,
+        },
+        {
+          text: t("hardware.label.detail.refuse"),
+          value: ASSIGNED_STATUS.REFUSE,
+        },
+      ],
+      onFilter: (value, record: IUserAssets) =>
+        record.assigned_status === value,
     },
     {
       dataIndex: "purchase_date",
@@ -188,6 +180,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       title: t("user.label.field.warranty_months"),
       render: (value: string) => <TagField value={value ? value : ""} />,
       defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
+    },
+    {
+      dataIndex: "last_checkout",
+      title: t("user.label.field.dateCheckout"),
+      render: (value: IHardware) => (
+        <DateField format="LLL" value={value ? value.datetime : ""} />
+      ),
+      defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
     },
   ];
 
@@ -248,12 +248,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   }, [window.location.reload]);
-
-  const ASSIGNED_STATUS = {
-    PENDING_ACCEPT: 1,
-    ACCEPT: 2,
-    REFUSE: 3,
-  };
 
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
@@ -555,6 +549,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <Table
           {...tableProps}
           rowKey="id"
+          scroll={{ x: 1827 }}
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
@@ -563,7 +558,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             type: "checkbox",
             ...rowSelection,
           }}
-          scroll={{ x: 1810 }}
         >
           {collumns.map((col) => (
             <Table.Column
@@ -605,8 +599,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                           isLoadingArr[record.id] === undefined
                             ? false
                             : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                              ? false
+                              : true
                         }
                       >
                         {t("hardware.label.button.accept")}
@@ -624,8 +618,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >

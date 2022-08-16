@@ -266,6 +266,7 @@ export interface IHardwareRequestCheckin {
   checkin_at: string;
   rtd_location: number;
   assigned_status: number;
+  assigned_user: string;
 }
 
 export interface IHardwareResponseCheckin {
