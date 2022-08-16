@@ -21,7 +21,7 @@ export const STATUS_LABELS = {
   PENDING: 1,
   BROKEN: 3,
   ASSIGN: 4,
-  READY_TO_DEPLOY: 5 
+  READY_TO_DEPLOY: 5,
 };
 
 export enum EStatus {
