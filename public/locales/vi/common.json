@@ -807,7 +807,8 @@
         "notes": "Ghi chú",
         "order_number": "Số đơn đặt hàng",
         "start-date": "Ngày bắt đầu",
-        "end-date": "Ngày kết thúc"
+        "end-date": "Ngày kết thúc",
+        "checkoutTo": "Cấp phát đến"
       },
       "message": {
         "required": "bắt buộc"
@@ -821,7 +822,8 @@
         "consumables": "Văn phòng phẩm",
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
-        "date": "Thời gian"
+        "date": "Thời gian",
+        "checkout":"Cấp phát"
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -838,7 +840,9 @@
         "manufacturer": "Nhà sản xuất",
         "location": "Chi nhánh",
         "total_consumables": "Số lượng",
-        "notes": "Ghi chú"
+        "notes": "Ghi chú",
+        "user":"Lựa chọn một người dùng"
+
       }
     }
   }
