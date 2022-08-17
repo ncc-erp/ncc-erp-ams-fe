@@ -747,24 +747,50 @@
         "supplier": "Nhà cung cấp",
         "location": "Chi nhánh",
         "total_accessory": "Số lượng",
-        "notes": "Ghi chú"
+        "notes": "Ghi chú",
+        "order_number": "Số đơn đặt hàng",
+        "purchase_cost": "Chi phí mua hàng",
+        "manufacturer": "Nhà sản xuất",
+        "vnd": "VND",
+        "checkoutTo": "Cấp phát đến",
+        "user": "Lựa chọn một người dùng",
+        "image": "Hình ảnh",
+        "start-date": "Ngày bắt đầu", 
+        "end-date": "Ngày kết thúc"
       },
       "message": {
         "required": "bắt buộc"
       },
       "button": {
         "create": "Thêm mới",
-        "update": "Chỉnh sửa"
+        "update": "Chỉnh sửa",
+        "checkout": "Cấp phát"
+      },
+      "placeholder": {
+        "name": "Tên phụ kiện",
+        "category": "Chọn một danh mục",
+        "purchase_date": "Ngày mua",
+        "supplier": "Lựa chọn một Nhà cung cấp",
+        "manufacturer": "Lựa chọn một Nhà sản xuất",
+        "location": "Lựa chọn một Chi nhánh",
+        "total_accessory": "Số lượng",
+        "notes": "Ghi chú",
+        "user": "Lựa chọn một người dùng"
       },
       "title": {
         "accessory": "Phụ kiện",
         "create": "Tạo mới",
-        "edit": "Chỉnh sửa"
+        "edit": "Chỉnh sửa",
+        "checkout": "Cấp phát",
+        "time": "Thời gian"
       },
       "tooltip": {
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
-        "delete": "Xoá"
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
       }
     }
   },

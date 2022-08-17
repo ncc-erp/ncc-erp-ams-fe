@@ -63,7 +63,7 @@ export interface IConsumablesRequest {
     checkout_to_type: string;
     assigned_to: string;
     user_can_checkout: boolean;
-    category_id: number;
+    category: number;
   }
   
   export interface IConsumablesResponseCheckout {

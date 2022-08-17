@@ -1,4 +1,5 @@
 import {
+  ACCESSORY_API,
   CATEGORIES_API,
   CONSUMABLE_API,
   DEPRECIATIONS_API,
@@ -107,6 +108,10 @@ p, 1, ${i18n.t("resource.manager_user")}/*, (edit)
 p, 1, ${i18n.t("resource.consumables")}, (list)|(create)
 p, 1, ${CONSUMABLE_API}/*, (delete)
 p, 1, ${i18n.t("resource.consumables")}/*, (edit)|(checkout)
+
+p, 1, ${i18n.t("resource.accessory")}, (list)|(create)
+p, 1, ${ACCESSORY_API}/*, (delete)
+p, 1, ${i18n.t("resource.accessory")}/*, (edit)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

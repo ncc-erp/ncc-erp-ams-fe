@@ -6,6 +6,7 @@ import {
   useNavigation,
   usePermissions,
   useRouterContext,
+  useTitle,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
@@ -22,6 +23,7 @@ const {
   BarChartOutlined,
   UsergroupAddOutlined,
   CopyOutlined,
+  InsertRowBelowOutlined,
 } = Icons;
 
 const logo: CSSProperties = {
@@ -35,6 +37,7 @@ const logo: CSSProperties = {
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
@@ -194,6 +197,42 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
+
+        {permissionsData &&
+          permissionsData.admin === EPermissions.ADMIN &&
+          menuItems
+            .filter(
+              (item) => item.name === `${translate("resource.accessory")}`
+            )
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.accessory")}` ? (
+                      <InsertRowBelowOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
 
         {permissionsData &&
           permissionsData.admin === EPermissions.ADMIN &&
