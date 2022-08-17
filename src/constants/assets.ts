@@ -33,10 +33,12 @@ export enum EStatus {
 
 export const TypeAssetHistory = {
   CHECKOUT: 0,
-  CHECKIN: 1,
-};
+  CHECKIN: 1
+}
+export const dateFormat = "YYYY/MM/DD";
 
-export const IPermissions = {
-  ADMIN: "1",
-  USER: "0",
-};
+export enum EPermissions {
+  ADMIN =  "1",
+  USER = "0"
+}
+

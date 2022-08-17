@@ -37,7 +37,8 @@ import { ListCheckin_Checkout } from "pages/dashboard/list_checkin_checkout";
 import { ReportList } from "pages/report/list";
 import { Manager_UserList } from "pages/manager_users/list";
 import { HardwareListWaitingConfirm } from "pages/hardware/list-watiting-confirm";
-import { AccessoryList } from "pages/accessory";
+import { ConsumablesList } from "pages/consumables";
+import { AccessoryList } from "pages/accessory/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -199,6 +200,14 @@ function App() {
           list: HardwareListWaitingConfirm,
           options: {
             route: "assets-waiting-confirm",
+          },
+        },
+
+        {
+          name: t("resource.consumables"),
+          list: ConsumablesList,
+          options: {
+            route: "consumables",
           },
         },
         {

@@ -58,7 +58,7 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -787,8 +787,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     searchFormProps.form?.submit();
   }, [window.location.reload]);
-
-  const dateFormat = "YYYY/MM/DD";
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,

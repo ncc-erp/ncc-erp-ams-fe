@@ -91,6 +91,10 @@
     "placeholder": {
       "select-category": "Tất cả",
       "searchToDate": "Thời gian"
+    },
+    "detail": {
+    "title-show" : "Tổng số lượng thiết bị của các văn phòng",
+    "title-count-asset": "Số lượng thiết bị của các văn phòng trong khoảng thời gian"
     }
   },
   "posts": {
@@ -551,7 +555,8 @@
     "checkout": "Cấp phát",
     "checkin": "Thu hồi",
     "manager_user": "Người dùng",
-    "accessory": "Phụ kiện"
+    "accessory": "Phụ kiện",
+    "consumables": "Văn phòng phẩm"
   },
   "model": {
     "label": {
@@ -786,6 +791,54 @@
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
         "refresh": "Refresh"
+      }
+    }
+  },
+  "consumables": {
+    "label": {
+      "field": {
+        "name": "Tên",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "insurance": "Bảo hành",
+        "manufacturer": "Nhà sản xuất",
+        "location": "Chi nhánh",
+        "total_consumables": "Số lượng",
+        "notes": "Ghi chú",
+        "order_number": "Số đơn đặt hàng",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "checkout": "Cấp phát"
+      },
+      "title": {
+        "consumables": "Văn phòng phẩm",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "date": "Thời gian"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "refresh": "Refresh"
+      },
+      "placeholder": {
+        "name": "Tên",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "insurance": "Bảo hành",
+        "manufacturer": "Nhà sản xuất",
+        "location": "Chi nhánh",
+        "total_consumables": "Số lượng",
+        "notes": "Ghi chú"
       }
     }
   }

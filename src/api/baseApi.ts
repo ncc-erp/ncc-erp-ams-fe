@@ -2,6 +2,7 @@ export const GET_ME_API = "api/v1/users/me";
 
 export const DASHBOARD_API = "api/v1/dashboard";
 export const DASHBOARD_FINFAST_SETTING_API = "api/v1/dashboard/finfast-setting";
+export const DASHBOARD_REPORT_ASSET_API = "api/v1/dashboard/reportAsset"
 
 export const HARDWARE_API = "api/v1/hardware";
 export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";
@@ -43,7 +44,10 @@ export const DEPARTMENT_SELECT_LIST_API = "api/v1/departments/selectlist";
 export const ACCESSORY_API = "api/v1/accessories/accessories";
 export const USER_API = "api/v1/users";
 export const ASSET_HISTORY_API = "api/v1/asset-history";
-
-export const CONSUMABLES = "api/v1/consumables";
 export const ACCESSORY_CATEGORIES_API =
   "api/v1/categories/accessory/selectlist";
+
+export const CONSUMABLE_API = "api/v1/consumables";
+export const CONSUMABLE_CATEGORIES_API = "api/v1/categories/consumable/selectlist";
+
+

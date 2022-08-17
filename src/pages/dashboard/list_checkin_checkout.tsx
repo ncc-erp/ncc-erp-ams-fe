@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
 import { Col, Form, List, Row, Table } from "@pankod/refine-antd";
 import {
@@ -14,6 +15,8 @@ import {
 } from "./asset-summary-piechar";
 import { IReport } from "interfaces/report";
 import "styles/antd.less";
+import { dateFormat } from "constants/assets";
+import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 
 export interface IReportAsset {
   id: number;
@@ -27,7 +30,6 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     "",
     "",
   ]);
-  const dateFormat = "YYYY/MM/DD";
 
   const [searchParams, setSearchParams] = useSearchParams();
   const dateFrom = searchParams.get("from");
@@ -41,7 +43,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
 
   const { data: dataCheckIn, refetch: refetchCheckIn } = useCustom<any>({
-    url: `api/v1/dashboard/reportAsset`,
+    url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
       query: {
@@ -52,7 +54,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   });
 
   const { data: dataCheckOut, refetch: refetchCheckOut } = useCustom<any>({
-    url: `api/v1/dashboard/reportAsset`,
+    url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
       query: {
@@ -211,8 +213,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             data_CheckOut[0] && data_CheckOut[1]
               ? list(
-                `report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-              )
+                  `report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
+                )
               : list(`report?category_id=${record.id}&assetHistoryType=0`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
@@ -234,11 +236,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               data_CheckOut[0] && data_CheckOut[1]
                 ? list(
-                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-                )
+                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
+                  )
                 : list(
-                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`
-                );
+                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`
+                  );
             }}
           >
             {text}
@@ -260,8 +262,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dataReport[0] && dataReport[1]
               ? list(
-                `report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-              )
+                  `report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
+                )
               : list(`report?category_id=${record.id}&assetHistoryType=1`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
@@ -283,11 +285,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dataReport[0] && dataReport[1]
                 ? list(
-                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-                )
+                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
+                  )
                 : list(
-                  `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`
-                );
+                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`
+                  );
             }}
           >
             {text}
@@ -345,7 +347,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                       columns={columnsCheckOut}
                       pagination={
                         (dataCheckOut?.data.payload.categories || []).length <=
-                          6
+                        6
                           ? false
                           : { pageSize: 6 }
                       }
@@ -364,7 +366,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           </span>
           <div className="search-all-location">
             <Form layout="vertical" className="search-month-location">
-              <Form.Item label={translate("dashboard.time_checkin")} name="dataReport">
+              <Form.Item
+                label={translate("dashboard.time_checkin")}
+                name="dataReport"
+              >
                 <RangePicker
                   format={dateFormat}
                   onChange={handleChangePickerByMonth}
