@@ -475,13 +475,15 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         status_type: data?.status_label.status_type,
         status_meta: data?.status_label.status_meta,
       },
-      assigned_location: {
-        id: data?.assigned_location?.id,
-        name: data?.assigned_location?.name,
-      },
       checkin_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
+      },
+      assigned_to: {
+        id: data?.assigned_to.id,
+        username: data?.assigned_to.username,
+        last_name: data?.assigned_to.last_name,
+        first_name: data?.assigned_to.first_name,
       },
       rtd_location: {
         id: data?.id,
@@ -489,9 +491,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       },
       note: data?.note,
       user_can_checkout: false,
-      assigned_user: data?.assigned_user,
-      checkout_to_type: data?.checkout_to_type,
-
     };
 
     setDetailCheckin(dataConvert);

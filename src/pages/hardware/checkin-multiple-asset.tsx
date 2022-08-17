@@ -10,13 +10,12 @@ import {
   Col,
   Select,
   useSelect,
-  Typography,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 
-import { HARDWARE_CHECKIN_API, STATUS_LABELS_API, USERS_API } from "api/baseApi";
+import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { EStatus, STATUS_LABELS } from "constants/assest";
 
@@ -52,18 +51,6 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
   });
   const { setFields } = form;
 
-  const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
   const { mutate, data: dataCheckin, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareRequestMultipleCheckin) => {
@@ -73,10 +60,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
         assets: event.assets,
         status_id: event.status_id,
         note: event.note !== null ? event.note : "",
-        assigned_location: event.assigned_location,
         checkin_at: event.checkin_at,
-        assigned_user: event.assigned_user,
-        checkout_to_type: "user",
       },
     });
   };
@@ -193,29 +177,6 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
               {...filterStatusLabelSelectProps()}
             />
           </Form.Item>
-          <Form.Item
-            label={t("hardware.label.field.checkinTo")}
-            name="assigned_user"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.user") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("hardware.label.placeholder.user")}
-              {...userSelectProps}
-            />
-          </Form.Item>
-          {messageErr?.assigned_user && (
-            <Typography.Text type="danger">
-              {messageErr.assigned_user[0]}
-            </Typography.Text>
-          )}
         </Col>
       </Row>
 

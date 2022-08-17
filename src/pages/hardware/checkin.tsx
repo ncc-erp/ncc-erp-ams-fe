@@ -86,17 +86,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     ],
   });
 
-  const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
 
   const {
     refetch,
@@ -129,10 +118,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (event.rtd_location !== undefined) {
       formData.append("rtd_location", event.rtd_location.toString());
     }
-    if (event.assigned_user !== undefined) {
-      formData.append("assigned_user", event.assigned_user);
-      formData.append("checkout_to_type", "user");
-    }
     setPayload(formData);
   };
 
@@ -147,8 +132,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
         name: "checkin_at",
         value: new Date().toISOString().substring(0, 10),
       },
-      { name: "assigned_user", value: data?.assigned_user },
-      { name: "assigned_location", value: data?.assigned_location.name },
+      { name: "assigned_to", value: data?.assigned_to },
       { name: "rtd_location", value: "" },
     ]);
   }, [data, form, isModalVisible, setFields]);
@@ -260,7 +244,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
             />
           </Form.Item>
           <Form.Item
-            className="tabUserCheckout"
             label={t("hardware.label.field.checkinTo")}
             name="assigned_user"
             rules={[
@@ -272,17 +255,10 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
+            initialValue={data?.assigned_to.last_name + " " + data?.assigned_to.first_name + ' ('+ data?.assigned_to.username+')'}
           >
-            <Select
-              placeholder={t("hardware.label.placeholder.user")}
-              {...userSelectProps}
-            />
+            <Input disabled={true}/>
           </Form.Item>
-          {messageErr?.assigned_user && (
-            <Typography.Text type="danger">
-              {messageErr.assigned_user[0]}
-            </Typography.Text>
-          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
