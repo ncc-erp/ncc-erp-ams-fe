@@ -19,6 +19,7 @@ export const COMPANIES_SELECT_LIST_API = "api/v1/companies/selectlist";
 
 export const USERS_API = "api/v1/users/selectlist";
 export const SUPPLIERS_API = "api/v1/suppliers";
+export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
 export const STATUS_LABELS_API = "api/v1/statuslabels";
 export const ASSIGN_HARDWARE_API = "api/v1/hardware/assign";
 
@@ -43,4 +44,6 @@ export const ACCESSORY_API = "api/v1/accessories/accessories";
 export const USER_API = "api/v1/users";
 export const ASSET_HISTORY_API = "api/v1/asset-history";
 
-export const CONSUMABLES = "api/v1/consumables"
+export const CONSUMABLES = "api/v1/consumables";
+export const ACCESSORY_CATEGORIES_API =
+  "api/v1/categories/accessory/selectlist";

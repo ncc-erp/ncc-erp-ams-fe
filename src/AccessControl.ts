@@ -1,4 +1,5 @@
 import {
+  ACCESSORY_API,
   CATEGORIES_API,
   DEPRECIATIONS_API,
   HARDWARE_API,
@@ -101,6 +102,10 @@ p, 1, ${i18n.t("resource.checkout")}, (list)
 p, 1, ${i18n.t("resource.manager_user")}, (list)|(create)
 p, 1, api/v1/users/*, (delete)
 p, 1, ${i18n.t("resource.manager_user")}/*, (edit)
+
+p, 1, ${i18n.t("resource.accessory")}, (list)|(create)
+p, 1, ${ACCESSORY_API}/*, (delete)
+p, 1, ${i18n.t("resource.accessory")}/*, (edit)
 `;
 
 export const adapter = new MemoryAdapter(permissions);
