@@ -39,6 +39,7 @@ import { Manager_UserList } from "pages/manager_users/list";
 import { HardwareListWaitingConfirm } from "pages/hardware/list-watiting-confirm";
 import { ConsumablesList } from "pages/consumables";
 import { AccessoryList } from "pages/accessory/list";
+import { AccessoryDetails } from "pages/accessory/details";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -215,6 +216,13 @@ function App() {
           list: AccessoryList,
           options: {
             route: "accessory",
+          },
+        },
+        {
+          name: t("resource.accessory_details"),
+          list: AccessoryDetails,
+          options: {
+            route: "accessory_details",
           },
         },
       ]}
