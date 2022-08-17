@@ -33,17 +33,14 @@ import {
   IConsumablesFilterVariables,
   IConsumablesRequest,
   IConsumablesResponse,
-  IConsumablesResponseCheckout,
 } from "interfaces/consumables";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesCreate } from "./create";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
-import { ConsumablesEdit } from "./edit";
 
 const defaultCheckedList = [
   "id",
@@ -60,13 +57,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [detail, setDetail] = useState<IConsumablesResponse>();
-
-  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-  const [detailCheckout, setDetailCheckout] =
-    useState<IConsumablesResponseCheckout>();
-
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
@@ -193,61 +183,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
-  const edit = (data: IConsumablesResponse) => {
-    const dataConvert: IConsumablesResponse = {
-      id: data.id,
-      name: data.name,
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      manufacturer: {
-        id: data?.manufacturer?.id,
-        name: data?.manufacturer?.name,
-      },
-      notes: data.notes,
-      location: {
-        id: data?.location?.id,
-        name: data?.location?.name,
-      },
-      purchase_date: {
-        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
-        formatted:
-          data?.purchase_date !== null ? data?.purchase_date.formatted : "",
-      },
-      total_consumables: data?.total_consumables,
-      purchase_cost: data ? data?.purchase_cost : 0,
-      image: data ? data?.image : "",
-      order_number: data ? data?.order_number : 0,
-      qty: data ? data.qty : 0,
-      user_can_checkout: data?.user_can_checkout,
-      assigned_to: data?.assigned_to,
-    };
-    setDetail(dataConvert);
-    setIsEditModalVisible(true);
-  };
-
-  const checkout = (data: IConsumablesResponse) => {
-    const dataConvert: IConsumablesResponseCheckout = {
-      id: data.id,
-      name: data.name,
-      category: {
-        id: data?.category?.id,
-        name: data?.category?.name,
-      },
-      note: data.notes,
-      checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
-      },
-      assigned_to: data?.assigned_to,
-      user_can_checkout: data?.user_can_checkout,
-    };
-
-    setDetailCheckout(dataConvert);
-    setIsCheckoutModalVisible(true);
-  };
-
   const refreshData = () => {
     tableQueryResult.refetch();
   };
@@ -259,14 +194,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
-
-  useEffect(() => {
-    refreshData();
-  }, [isEditModalVisible]);
-
-  useEffect(() => {
-    refreshData();
-  }, [isCheckoutModalVisible]);
 
   useEffect(() => {
     searchFormProps.form?.submit();
@@ -518,12 +445,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                   title={translate("consumables.label.tooltip.edit")}
                   color={"#108ee9"}
                 >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
+                  <EditButton hideText size="small" recordItemId={record.id} />
                 </Tooltip>
                 <DeleteButton
                   resourceName={CONSUMABLE_API}
@@ -545,7 +467,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                         ? false
                         : true
                     }
-                    onClick={() => checkout(record)}
                   >
                     {translate("consumables.label.button.checkout")}
                   </Button>
@@ -567,28 +488,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         <ConsumablesCreate
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
-        />
-      </MModal>
-      <MModal
-        title={translate("consumables.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <ConsumablesEdit
-          isModalVisible={isEditModalVisible}
-          setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
-      <MModal
-        title={translate("consumables.label.title.checkout")}
-        setIsModalVisible={setIsCheckoutModalVisible}
-        isModalVisible={isCheckoutModalVisible}
-      >
-        <ConsumablesCheckout
-          isModalVisible={isCheckoutModalVisible}
-          setIsModalVisible={setIsCheckoutModalVisible}
-          data={detailCheckout}
         />
       </MModal>
     </List>
