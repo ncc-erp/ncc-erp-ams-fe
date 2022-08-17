@@ -62,7 +62,7 @@ import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -803,8 +803,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("location"));
-  }, [localStorage.getItem("location")]);
+    return Number(localStorage.getItem("rtd_location_id"));
+  }, [localStorage.getItem("rtd_location_id")]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     const [from, to] = Array.from(val || []);
@@ -996,6 +996,32 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
   };
 
+  const handleChangeLocation = (value: number) => {
+    if (value === 0) {
+      searchParams.delete("rtd_location_id");
+      localStorage.setItem(
+        "rtd_location_id",
+        searchFormProps.form?.getFieldsValue()?.location !== undefined
+          ? searchFormProps.form?.getFieldsValue()?.location
+          : ""
+      );
+      searchFormProps.form?.submit();
+    } else {
+      localStorage.setItem(
+        "rtd_location_id",
+        searchFormProps.form?.getFieldsValue()?.location !== undefined
+          ? searchFormProps.form?.getFieldsValue()?.location
+          : ""
+      );
+      searchFormProps.form?.submit();
+      searchParams.set(
+        "rtd_location_id",
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
+      );
+    }
+    setSearchParams(searchParams);
+  };
+
   return (
     <List
       title={t("hardware.label.title.list-assign")}
@@ -1012,10 +1038,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           {...searchFormProps}
           initialValues={{
             location:
-              localStorage.getItem("location") !== null ??
+              localStorage.getItem("rtd_location_id") ??
               searchValuesLocation !== 0
                 ? searchValuesLocation
-                : rtd_location_id ?? Number(rtd_location_id),
+                : Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
@@ -1054,25 +1080,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                 : "search-month-location-null"
             }
           >
-            <Select
-              onChange={() => {
-                localStorage.setItem(
-                  "location",
-                  searchFormProps.form?.getFieldsValue()?.location !== undefined
-                    ? searchFormProps.form?.getFieldsValue()?.location
-                    : ""
-                );
-                searchFormProps.form?.submit();
-                searchParams.set(
-                  "location",
-                  JSON.stringify(
-                    searchFormProps.form?.getFieldsValue()?.location
-                  )
-                );
-                setSearchParams(searchParams);
-              }}
-              placeholder={t("all")}
-            >
+            <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>

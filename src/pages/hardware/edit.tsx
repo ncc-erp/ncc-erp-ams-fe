@@ -174,7 +174,15 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-      { name: "notes", value: data?.notes !== undefined ? data?.notes : "" !== undefined ? data?.notes : "" },
+      {
+        name: "notes",
+        value:
+          data?.notes !== undefined
+            ? data?.notes
+            : "" !== undefined
+            ? data?.notes
+            : "",
+      },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
       {
@@ -227,9 +235,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (item.label === EStatus.PENDING
-          || item.label === EStatus.BROKEN
-          || item.label === EStatus.READY_TO_DEPLOY) {
+        if (
+          item.label === EStatus.PENDING ||
+          item.label === EStatus.BROKEN ||
+          item.label === EStatus.READY_TO_DEPLOY
+        ) {
           check = true;
           return true;
         }
@@ -244,9 +254,10 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const filterStatusLabelSelectProps = () => {
     const optionsFiltered = statusLabelSelectProps.options?.filter(
-      (item) => item.label === EStatus.PENDING
-        || item.label === EStatus.BROKEN
-        || item.label === EStatus.READY_TO_DEPLOY
+      (item) =>
+        item.label === EStatus.PENDING ||
+        item.label === EStatus.BROKEN ||
+        item.label === EStatus.READY_TO_DEPLOY
     );
     statusLabelSelectProps.options = optionsFiltered;
     return statusLabelSelectProps;

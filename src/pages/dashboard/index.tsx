@@ -48,7 +48,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
         purchase_date_to: purchase_date_to
           ? purchase_date_to
           : dataDashboard[1],
-        location: searchParams.get("location"),
+        location: searchParams.get("rtd_location_id"),
       },
     },
   });
@@ -64,7 +64,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
         purchase_date_to: purchase_date_to1
           ? purchase_date_to1
           : dataDashboard[1],
-        location: searchParams.get("location"),
+        location: searchParams.get("rtd_location_id"),
       },
     },
   });
@@ -73,7 +73,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   );
 
   const handleChangeLocation = (value: any) => {
-    localStorage.setItem("location", value !== undefined ? value : "");
+    localStorage.setItem("rtd_location_id", value !== undefined ? value : "");
     setLocationSelected(value);
     searchParams.set("rtd_location_id", JSON.stringify(value));
     setSearchParams(searchParams);
@@ -125,7 +125,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.removeItem("purchase_date");
-    localStorage.removeItem("location");
+    localStorage.removeItem("rtd_location_id");
     localStorage.removeItem("search");
   }, [window.location.reload]);
 

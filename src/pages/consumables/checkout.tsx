@@ -20,13 +20,13 @@ import {
   IConsumablesResponseCheckout,
 } from "interfaces/consumables";
 
-type consumablesCheckoutProps = {
+type ConsumablesCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: IConsumablesResponseCheckout | undefined;
 };
 
-export const ConsumablesCheckout = (props: consumablesCheckoutProps) => {
+export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<any>();
   const [messageErr, setMessageErr] = useState<IConsumablesRequestCheckout>();
@@ -191,7 +191,6 @@ export const ConsumablesCheckout = (props: consumablesCheckoutProps) => {
               t("consumables.label.message.required"),
           },
         ]}
-        // initialValue={data?.note}
       >
         <Input.TextArea value={data?.note} />
       </Form.Item>
