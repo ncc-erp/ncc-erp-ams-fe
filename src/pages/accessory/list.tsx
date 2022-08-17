@@ -299,10 +299,6 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     const { RangePicker } = DatePicker;
     const { Option } = Select;
 
-    let searchValuesLocation = useMemo(() => {
-        return Number(localStorage.getItem("location"));
-    }, [localStorage.getItem("location")]);
-
     const { selectProps: locationSelectProps } = useSelect<ILocation>({
         resource: LOCATION_API,
         optionLabel: "name",
@@ -316,28 +312,34 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         ],
     });
 
-    const searchValuesByDateFrom = useMemo(() => {
-        return localStorage.getItem("purchase_date")?.substring(0, 10);
-    }, [localStorage.getItem("purchase_date")]);
+    const handleLocationChange = (value: {
+        value: string;
+        label: React.ReactNode;
+    }) => {
+        if (JSON.stringify(value) === JSON.stringify(0)) {
+            searchParams.delete("location_id");
+        } else searchParams.set("location_id", JSON.stringify(value));
+        setSearchParams(searchParams);
 
-    const searchValuesByDateTo = useMemo(() => {
-        return localStorage.getItem("purchase_date")?.substring(11, 21);
-    }, [localStorage.getItem("purchase_date")]);
+        searchFormProps.form?.submit();
+    };
 
-    const handleChangePickerByMonth = (val: any, formatString: any) => {
+    const handleDateChange = (val: any, formatString: any) => {
         const [from, to] = Array.from(val || []);
-        localStorage.setItem(
-            "purchase_date",
-            formatString !== undefined ? formatString : ""
-        );
-        searchParams.set(
-            "dateFrom",
-            from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-        );
-        searchParams.set(
-            "dateTo",
-            to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-        );
+
+        if (val !== null) {
+            searchParams.set(
+                "dateFrom",
+                from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+            );
+            searchParams.set(
+                "dateTo",
+                to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+            );
+        } else {
+            searchParams.delete("dateFrom");
+            searchParams.delete("dateTo");
+        }
         setSearchParams(searchParams);
 
         searchFormProps.form?.submit();
@@ -364,21 +366,13 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                 <Form
                     {...searchFormProps}
                     initialValues={{
-                        location:
-                            localStorage.getItem("location") !== null ??
-                                searchValuesLocation !== 0
-                                ? searchValuesLocation
-                                : Number(location_id) ?? Number(location_id),
+                        location: location_id ? Number(location_id) : 0,
                         purchase_date:
-                            localStorage.getItem("purchase_date") !== null
-                                ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
-                                    ? [
-                                        moment(searchValuesByDateFrom),
-                                        moment(searchValuesByDateTo),
-                                    ]
-                                    : dateFromParam && dateToParam
-                                        ? [moment(dateFromParam), moment(dateToParam)]
-                                        : ""
+                            dateFromParam && dateToParam
+                                ? [
+                                    moment(dateFromParam, "YYYY/MM/DD"),
+                                    moment(dateToParam, "YYYY/MM/DD"),
+                                ]
                                 : "",
                     }}
                     layout="vertical"
@@ -390,42 +384,21 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                         name="purchase_date"
                     >
                         <RangePicker
-                            onChange={handleChangePickerByMonth}
                             format="YYYY/MM/DD"
                             placeholder={[
                                 `${translate("accessory.label.field.start-date")}`,
                                 `${translate("accessory.label.field.end-date")}`,
                             ]}
+                            onCalendarChange={handleDateChange}
                         />
                     </Form.Item>
                     <Form.Item
                         label={translate("accessory.label.field.location")}
                         name="location"
-                        className={
-                            searchValuesLocation !== 0
-                                ? "search-month-location-null"
-                                : "search-month-location-null"
-                        }
+                        className="search-month-location-null"
+                        initialValue={0}
                     >
-                        <Select
-                            onChange={() => {
-                                localStorage.setItem(
-                                    "location",
-                                    searchFormProps.form?.getFieldsValue()?.location !== undefined
-                                        ? searchFormProps.form?.getFieldsValue()?.location
-                                        : ""
-                                );
-                                searchFormProps.form?.submit();
-                                searchParams.set(
-                                    "location",
-                                    JSON.stringify(
-                                        searchFormProps.form?.getFieldsValue()?.location
-                                    )
-                                );
-                                setSearchParams(searchParams);
-                            }}
-                            placeholder={translate("all")}
-                        >
+                        <Select onChange={handleLocationChange} placeholder="Vị trí">
                             <Option value={0}>{translate("all")}</Option>
                             {locationSelectProps.options?.map((item: any) => (
                                 <Option value={item.value}>{item.label}</Option>

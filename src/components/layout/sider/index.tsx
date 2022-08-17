@@ -11,6 +11,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
+import { IPermissions } from "constants/assets";
 
 const {
   RightOutlined,
@@ -59,7 +60,7 @@ export const Sider: React.FC = () => {
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
     >
       {/* {Title && <Title collapsed={collapsed} />} */}
-      {permissionsData && permissionsData.admin === "0" && (
+      {permissionsData && permissionsData.admin === IPermissions.USER && (
         <>
           <Link to="users">
             {collapsed ? (
@@ -79,7 +80,7 @@ export const Sider: React.FC = () => {
         </>
       )}
 
-      {permissionsData && permissionsData.admin === "1" && (
+      {permissionsData && permissionsData.admin === IPermissions.ADMIN && (
         <>
           <Link to="dashboard">
             {collapsed ? (
@@ -110,7 +111,7 @@ export const Sider: React.FC = () => {
         }}
       >
 
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === IPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -151,7 +152,7 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === IPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -198,7 +199,7 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && permissionsData.admin === "1" &&
+        {permissionsData && permissionsData.admin === IPermissions.ADMIN &&
           menuItems
             .filter((item) => item.name === `${translate("resource.accessory")}`)
             .map(({ icon, name, route }) => {
@@ -232,7 +233,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === IPermissions.ADMIN &&
           menuItems
             .filter(
               (item) =>
@@ -273,7 +274,7 @@ export const Sider: React.FC = () => {
               );
             })}
 
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === IPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -319,7 +320,7 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === IPermissions.ADMIN &&
           menuItems
             .filter((item) => item.name === `${translate("resource.report")}`)
             .map(({ icon, name, route }) => {
@@ -353,7 +354,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === "0" &&
+          permissionsData.admin === IPermissions.ADMIN &&
           menuItems
             .filter(
               (item) =>
@@ -392,7 +393,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === IPermissions.ADMIN &&
           menuItems
             .filter(
               (item) => item.name === `${translate("resource.manager_user")}`
