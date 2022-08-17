@@ -37,4 +37,9 @@ export const TypeAssetHistory = {
 }
 export const dateFormat = "YYYY/MM/DD";
 
+export const IPermissions = {
+  ADMIN: "1",
+  USER: "0"
+}
+
 

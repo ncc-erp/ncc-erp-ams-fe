@@ -4,7 +4,6 @@ import {
   Checkbox,
   CreateButton,
   DateField,
-  DatePicker,
   DeleteButton,
   EditButton,
   Form,
@@ -20,6 +19,7 @@ import {
   useSelect,
   useTable,
 } from "@pankod/refine-antd";
+import { DatePicker } from "antd";
 import {
   CrudFilters,
   HttpError,
@@ -33,14 +33,17 @@ import {
   IConsumablesFilterVariables,
   IConsumablesRequest,
   IConsumablesResponse,
+  IConsumablesResponseCheckout,
 } from "interfaces/consumables";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesCreate } from "./create";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
+import { ConsumablesEdit } from "./edit";
 
 const defaultCheckedList = [
   "id",
@@ -55,7 +58,14 @@ const defaultCheckedList = [
 
 export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [detail, setDetail] = useState<IConsumablesResponse>();
+
+  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
+  const [detailCheckout, setDetailCheckout] =
+    useState<IConsumablesResponseCheckout>();
 
   const [isLoadingArr] = useState<boolean[]>([]);
 
@@ -183,6 +193,61 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
+  const edit = (data: IConsumablesResponse) => {
+    const dataConvert: IConsumablesResponse = {
+      id: data.id,
+      name: data.name,
+      category: {
+        id: data?.category?.id,
+        name: data?.category?.name,
+      },
+      manufacturer: {
+        id: data?.manufacturer?.id,
+        name: data?.manufacturer?.name,
+      },
+      notes: data.notes,
+      location: {
+        id: data?.location?.id,
+        name: data?.location?.name,
+      },
+      purchase_date: {
+        date: data?.purchase_date !== null ? data?.purchase_date.date : "",
+        formatted:
+          data?.purchase_date !== null ? data?.purchase_date.formatted : "",
+      },
+      total_consumables: data?.total_consumables,
+      purchase_cost: data ? data?.purchase_cost : 0,
+      image: data ? data?.image : "",
+      order_number: data ? data?.order_number : 0,
+      qty: data ? data.qty : 0,
+      user_can_checkout: data?.user_can_checkout,
+      assigned_to: data?.assigned_to,
+    };
+    setDetail(dataConvert);
+    setIsEditModalVisible(true);
+  };
+
+  const checkout = (data: IConsumablesResponse) => {
+    const dataConvert: IConsumablesResponseCheckout = {
+      id: data.id,
+      name: data.name,
+      category: {
+        id: data?.category?.id,
+        name: data?.category?.name,
+      },
+      note: data.notes,
+      checkout_at: {
+        date: new Date().toISOString().substring(0, 10),
+        formatted: new Date().toDateString(),
+      },
+      assigned_to: data?.assigned_to,
+      user_can_checkout: data?.user_can_checkout,
+    };
+
+    setDetailCheckout(dataConvert);
+    setIsCheckoutModalVisible(true);
+  };
+
   const refreshData = () => {
     tableQueryResult.refetch();
   };
@@ -194,6 +259,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    refreshData();
+  }, [isEditModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutModalVisible]);
 
   useEffect(() => {
     searchFormProps.form?.submit();
@@ -270,33 +343,35 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const { Option } = Select;
   const { RangePicker } = DatePicker;
 
-  let searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("location_id"));
-  }, [localStorage.getItem("location_id")]);
-  const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
-
-  const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
-
-  const handleChangePickerByMonth = (val: any, formatString: any) => {
+  const handleChangePickerByMonth = (val: any) => {
     const [from, to] = Array.from(val || []);
-    localStorage.setItem(
-      "purchase_date",
-      formatString !== undefined ? formatString : ""
-    );
-    searchParams.set(
-      "dateFrom",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "dateTo",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
+
+    if (val !== null) {
+      searchParams.set(
+        "dateFrom",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "dateTo",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParams.delete("dateFrom");
+      searchParams.delete("dateTo");
+    }
     setSearchParams(searchParams);
 
+    searchFormProps.form?.submit();
+  };
+
+  const handleLocationChange = (value: {
+    value: string;
+    label: React.ReactNode;
+  }) => {
+    if (JSON.stringify(value) === JSON.stringify(0)) {
+      searchParams.delete("location_id");
+    } else searchParams.set("location_id", JSON.stringify(value));
+    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -315,21 +390,13 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            location:
-              localStorage.getItem("location_id") !== null ??
-              searchValuesLocation !== 0
-                ? searchValuesLocation
-                : Number(location_id) ?? Number(location_id),
+            location: location_id ? Number(location_id) : 0,
             purchase_date:
-              localStorage.getItem("purchase_date") !== null
-                ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
-                  ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
-                  : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+              dateFromParam && dateToParam
+                ? [
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -341,40 +408,22 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             name="purchase_date"
           >
             <RangePicker
-              onChange={handleChangePickerByMonth}
               format={dateFormat}
               placeholder={[
                 `${translate("consumables.label.field.start-date")}`,
                 `${translate("consumables.label.field.end-date")}`,
               ]}
+              onCalendarChange={handleChangePickerByMonth}
             />
           </Form.Item>
           <Form.Item
             label={translate("consumables.label.field.location")}
-            name="location"
-            className={
-              searchValuesLocation !== 0
-                ? "search-month-location-null"
-                : "search-month-location-null"
-            }
+            name="location_id"
+            className="search-month-location-null"
+            initialValue={0}
           >
             <Select
-              onChange={() => {
-                localStorage.setItem(
-                  "location",
-                  searchFormProps.form?.getFieldsValue()?.location !== undefined
-                    ? searchFormProps.form?.getFieldsValue()?.location
-                    : ""
-                );
-                searchFormProps.form?.submit();
-                searchParams.set(
-                  "location",
-                  JSON.stringify(
-                    searchFormProps.form?.getFieldsValue()?.location
-                  )
-                );
-                setSearchParams(searchParams);
-              }}
+              onChange={handleLocationChange}
               placeholder={translate("all")}
             >
               <Option value={0}>{translate("all")}</Option>
@@ -469,7 +518,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                   title={translate("consumables.label.tooltip.edit")}
                   color={"#108ee9"}
                 >
-                  <EditButton hideText size="small" recordItemId={record.id} />
+                  <EditButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => edit(record)}
+                  />
                 </Tooltip>
                 <DeleteButton
                   resourceName={CONSUMABLE_API}
@@ -478,7 +532,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                   recordItemId={record.id}
                 />
 
-                {record.user_can_checkout === true && (
+                {record.user_can_checkout === true ? (
                   <Button
                     className="ant-btn-checkout"
                     type="primary"
@@ -491,7 +545,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                         ? false
                         : true
                     }
+                    onClick={() => checkout(record)}
                   >
+                    {translate("consumables.label.button.checkout")}
+                  </Button>
+                ) : (
+                  <Button type="primary" shape="round" size="small" disabled>
                     {translate("consumables.label.button.checkout")}
                   </Button>
                 )}
@@ -508,6 +567,28 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         <ConsumablesCreate
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
+        />
+      </MModal>
+      <MModal
+        title={translate("consumables.label.title.edit")}
+        setIsModalVisible={setIsEditModalVisible}
+        isModalVisible={isEditModalVisible}
+      >
+        <ConsumablesEdit
+          isModalVisible={isEditModalVisible}
+          setIsModalVisible={setIsEditModalVisible}
+          data={detail}
+        />
+      </MModal>
+      <MModal
+        title={translate("consumables.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutModalVisible}
+        isModalVisible={isCheckoutModalVisible}
+      >
+        <ConsumablesCheckout
+          isModalVisible={isCheckoutModalVisible}
+          setIsModalVisible={setIsCheckoutModalVisible}
+          data={detailCheckout}
         />
       </MModal>
     </List>
