@@ -21,7 +21,7 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { dateFormat, TypeAssetHistory } from "constants/assets";
+import { ActionType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { TableAction } from "components/elements/tables/TableAction";
 
 const { RangePicker } = DatePicker;
@@ -40,63 +40,58 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   const { Option } = Select;
 
-  const { tableProps, searchFormProps } =
-    useTable<IReportResponse>({
-      initialSorter: [
-        {
-          field: "id",
-          order: "desc",
-        },
-      ],
-      resource: ASSET_HISTORY_API,
-      onSearch: (params: any) => {
-        const filters: CrudFilters = [];
-        let { search, location_id, date_from, date_to, action_type } = params;
-        filters.push(
-          {
-            field: "search",
-            operator: "eq",
-            value: searchParam,
-          },
-          {
-            field: "location_id",
-            operator: "eq",
-            value: location,
-          },
-          {
-            field: "date_from",
-            operator: "eq",
-            value: dateFromParam,
-          },
-          {
-            field: "date_to",
-            operator: "eq",
-            value: dateToParam,
-          },
-          {
-            field: "action_type",
-            operator: "eq",
-            value: assetHistoryType?.split("\"").join(""),
-          }
-        );
-        return filters;
+  const { tableProps, searchFormProps } = useTable<IReportResponse>({
+    initialSorter: [
+      {
+        field: "id",
+        order: "desc",
       },
-    });
+    ],
+    resource: ASSET_HISTORY_API,
+    onSearch: (params: any) => {
+      const filters: CrudFilters = [];
+      let { search, location_id, date_from, date_to, action_type } = params;
+      filters.push(
+        {
+          field: "search",
+          operator: "eq",
+          value: searchParam,
+        },
+        {
+          field: "location_id",
+          operator: "eq",
+          value: location,
+        },
+        {
+          field: "date_from",
+          operator: "eq",
+          value: dateFromParam,
+        },
+        {
+          field: "date_to",
+          operator: "eq",
+          value: dateToParam,
+        },
+        {
+          field: "action_type",
+          operator: "eq",
+          value: assetHistoryType?.split('"').join(""),
+        }
+      );
+      return filters;
+    },
+  });
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   function getActionTypeValue(type: string) {
-    if (type === TypeAssetHistory.CHECKOUT) {
-      return translate("hardware.label.title.checkout");
-    } else if (type === TypeAssetHistory.CHECKIN) {
-      return translate("hardware.label.title.checkin");
-    } else if (type === TypeAssetHistory.CREATE_RESPONSE) {
-      return translate("hardware.label.title.create");
-    } else if (type === TypeAssetHistory.EDIT) {
-      return translate("hardware.label.title.edit");
-    } else if (type === TypeAssetHistory.DELETE) {
-      return translate("hardware.label.title.delete");
-    }
+    let action_key = null;
+    Object.entries(ActionType).forEach(([key, value]) => {
+      if (type === key) {
+        action_key = value;
+      }
+    });
+    return action_key;
   }
 
   function getColorActionType(type: string) {
@@ -295,21 +290,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           >
             <Select onChange={handleTypeChange} placeholder="Loại">
               <Option value={"all"}>{translate("all")}</Option>
-              <Option value={TypeAssetHistory.CHECKOUT}>
-                {translate("hardware.label.title.checkout")}
-              </Option>
-              <Option value={TypeAssetHistory.CHECKIN}>
-                {translate("hardware.label.title.checkin")}
-              </Option>
-              <Option value={TypeAssetHistory.CREATE}>
-                {translate("hardware.label.title.create")}
-              </Option>
-              <Option value={TypeAssetHistory.EDIT}>
-                {translate("hardware.label.title.edit")}
-              </Option>
-              <Option value={TypeAssetHistory.DELETE}>
-                {translate("hardware.label.title.delete")}
-              </Option>
+              {Object.entries(ActionType).map(([key, value]) => {
+                if (key !== "create new") {
+                  return <Option value={key}>{value}</Option>;
+                }
+              })}
             </Select>
           </Form.Item>
         </Form>
