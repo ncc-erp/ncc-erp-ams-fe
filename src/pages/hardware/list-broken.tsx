@@ -811,14 +811,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       searchParams.delete("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ??
-          searchFormProps.form?.getFieldsValue()?.location
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
         "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ??
-          searchFormProps.form?.getFieldsValue()?.location
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       searchParams.set(
         "rtd_location_id",
