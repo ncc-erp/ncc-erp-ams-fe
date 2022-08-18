@@ -154,10 +154,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
+        if (item.label === EStatus.ASSIGN) {
           check = true;
           return true;
         }
