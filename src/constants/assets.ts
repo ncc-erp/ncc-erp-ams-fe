@@ -34,17 +34,13 @@ export enum EStatus {
 export const TypeAssetHistory = {
   CHECKOUT: 'checkout',
   CHECKIN: 'checkin from',
-  EDIT: 'update',
-  DELETE: 'delete',
-  CREATE: 'create',
-  CREATE_RESPONSE: 'create new'
 }
 
 export const ActionType = {
-  checkout: "Cấp phát",
+  "checkout": "Cấp phát",
   "checkin from": "Thu hồi",
-  update: "Chỉnh sửa",
-  delete: "Xóa",
+  "update": "Chỉnh sửa",
+  "delete": "Xóa",
   "create new": "Tạo mới",
   "create": "Tạo mới",
 };

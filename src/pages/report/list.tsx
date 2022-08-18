@@ -85,13 +85,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   function getActionTypeValue(type: string) {
-    let action_key = null;
-    Object.entries(ActionType).forEach(([key, value]) => {
-      if (type === key) {
-        action_key = value;
-      }
-    });
-    return action_key;
+    return (ActionType as any)[type];
   }
 
   function getColorActionType(type: string) {
