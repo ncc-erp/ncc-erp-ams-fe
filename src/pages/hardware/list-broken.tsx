@@ -194,7 +194,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
@@ -215,7 +215,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         name: data?.supplier?.name,
       },
       notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
+      order_number: data.order_number ?? "",
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -297,7 +297,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
@@ -318,7 +318,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         name: data?.supplier?.name,
       },
       notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
+      order_number: data.order_number ?? "",
       location: {
         id: data?.location?.id,
         name: data?.location?.name,

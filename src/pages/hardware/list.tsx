@@ -220,7 +220,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
@@ -323,7 +323,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
