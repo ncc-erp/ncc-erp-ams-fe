@@ -613,21 +613,30 @@ export const HardwareListWaitingConfirm: React.FC<
   }, [window.location.reload]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
-    localStorage.setItem(
-      "purchase_date",
-      formatString !== undefined ? formatString : ""
-    );
-    searchParams.set(
-      "dateFrom",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "dateTo",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    setSearchParams(searchParams);
+    if (val !== null) {
+      const [from, to] = Array.from(val || []);
+      localStorage.setItem(
+        "purchase_date",
+        formatString !== undefined ? formatString : ""
+      );
+      searchParams.set(
+        "dateFrom",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "dateTo",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParams.delete("dateFrom");
+      searchParams.delete("dateTo");
+      localStorage.setItem(
+        "purchase_date",
+        formatString !== undefined ? formatString : ""
+      );
+    }
 
+    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
