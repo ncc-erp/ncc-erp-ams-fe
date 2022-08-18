@@ -8,20 +8,22 @@ import {
   TagField,
   TextField,
   useSelect,
+  useTable,
 } from "@pankod/refine-antd";
 import {
+  CrudFilters,
   IResourceComponentsProps,
-  useCustom,
   useTranslate,
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
-import { IReport } from "interfaces/report";
+import { IReport, IReportResponse } from "interfaces/report";
 import { ASSET_HISTORY_API, LOCATION_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { TypeAssetHistory } from "constants/assets";
+import { TableAction } from "components/elements/tables/TableAction";
 
 const { RangePicker } = DatePicker;
 
@@ -29,105 +31,157 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const location_id = searchParams.get("location");
-  const dateFromParam = searchParams.get("purchaseDateFrom");
-  const dateToParam = searchParams.get("purchaseDateTo");
-  const assetHistoryType = searchParams.get("assetHistoryType");
+  const location = searchParams.get("location_id");
+  const dateFromParam = searchParams.get("date_from");
+  const dateToParam = searchParams.get("date_to");
+  const assetHistoryType = searchParams.get("action_type");
+  const searchParam = searchParams.get("search");
 
   const [search, setSearch] = useState<string>("");
 
   const { Option } = Select;
-  const { Search } = Input;
 
-  const { data } = useCustom<any>({
-    url: ASSET_HISTORY_API,
-    method: "get",
-    config: {
-      query: {
-        location: searchParams.get("location"),
-        purchaseDateFrom: searchParams.get("purchaseDateFrom"),
-        purchaseDateTo: searchParams.get("purchaseDateTo"),
-        assetHistoryType: searchParams.get("assetHistoryType"),
-        category_id: searchParams.get("category_id"),
-      },
-      filters: [
+  const { tableProps, searchFormProps } =
+    useTable<IReportResponse>({
+      initialSorter: [
         {
-          field: "name",
-          operator: "eq",
-          value: search,
+          field: "id",
+          order: "desc",
         },
       ],
-    },
-  });
+      resource: ASSET_HISTORY_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        let { search, location_id, date_from, date_to, action_type } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: searchParam,
+          },
+          {
+            field: "location_id",
+            operator: "eq",
+            value: location,
+          },
+          {
+            field: "date_from",
+            operator: "eq",
+            value: dateFromParam,
+          },
+          {
+            field: "date_to",
+            operator: "eq",
+            value: dateToParam,
+          },
+          {
+            field: "action_type",
+            operator: "eq",
+            value: assetHistoryType?.split("\"").join(""),
+          }
+        );
+        return filters;
+      },
+    });
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
+  function getActionTypeValue(type: string) {
+    if (type === TypeAssetHistory.CHECKOUT) {
+      return translate("hardware.label.title.checkout");
+    } else if (type === TypeAssetHistory.CHECKIN) {
+      return translate("hardware.label.title.checkin");
+    } else if (type === TypeAssetHistory.CREATE_RESPONSE) {
+      return translate("hardware.label.title.create");
+    } else if (type === TypeAssetHistory.EDIT) {
+      return translate("hardware.label.title.edit");
+    } else if (type === TypeAssetHistory.DELETE) {
+      return translate("hardware.label.title.delete");
+    }
+  }
+
+  function getColorActionType(type: string) {
+    if (type === TypeAssetHistory.CHECKOUT) {
+      return "#0073b7";
+    } else if (type === TypeAssetHistory.CHECKIN) {
+      return "red";
+    } else {
+      return "gray";
+    }
+  }
 
   const collumns = useMemo(
     () => [
       {
-        key: "asset",
-        title: translate("report.label.field.name"),
+        key: "id",
+        title: translate("report.label.field.id"),
+        render: (value: IReport) => <TextField value={value ? value : ""} />,
+      },
+      {
+        key: "item",
+        title: translate("report.label.field.asset"),
         render: (value: IReport) => (
           <TextField value={value ? value.name : ""} />
         ),
       },
       {
-        key: "asset",
-        title: translate("report.label.field.propertyCard"),
+        key: "item",
+        title: translate("report.label.field.assetType"),
         render: (value: IReport) => (
-          <TextField value={value ? value.asset_tag : ""} />
+          <TextField value={value ? value.type : ""} />
         ),
       },
       {
-        key: "asset_history",
-        title: translate("report.label.field.type"),
+        key: "admin",
+        title: translate("report.label.field.manager"),
         render: (value: IReport) => (
+          <TextField value={value ? value.name : ""} />
+        ),
+      },
+      {
+        key: "target",
+        title: translate("report.label.field.user"),
+        render: (value: IReport) => (
+          <TextField value={value ? value.name : ""} />
+        ),
+      },
+      {
+        key: "action_type",
+        title: translate("report.label.field.type"),
+        render: (type: string) => (
           <TagField
-            value={
-              value && value.type === TypeAssetHistory.CHECKOUT
-                ? translate("hardware.label.title.checkout")
-                : translate("hardware.label.title.checkin")
-            }
+            value={getActionTypeValue(type)}
             style={{
-              background:
-                value && value.type === TypeAssetHistory.CHECKOUT
-                  ? "#0073b7"
-                  : "red",
+              background: getColorActionType(type),
               color: "white",
             }}
           />
         ),
       },
       {
-        key: "asset_history",
-        title: translate("report.label.field.user"),
-        render: (value: IReport) => (
-          <TextField
-            value={
-              value && value.user
-                ? value.user.last_name + " " + value.user.first_name
-                : ""
-            }
-          />
-        ),
-      },
-      {
-        key: "asset",
-        title: translate("report.label.field.note"),
-        render: (value: IReport) => (
-          <TextField
-            value={value && (value.notes !== "undefined" ? value.notes : "")}
-          />
-        ),
-      },
-      {
-        key: "asset_history",
+        key: "created_at",
         title: translate("report.label.field.dateCheckout_And_dateCheckin"),
         render: (value: IReport) =>
           value ? (
-            <DateField format="LLL" value={value ? value.created_at : ""} />
+            <DateField format="LLL" value={value ? value.datetime : ""} />
           ) : (
             ""
           ),
       },
+      {
+        key: "note",
+        title: translate("report.label.field.note"),
+        render: (value: string) => (
+          <TextField value={value && value !== "undefined" ? value : ""} />
+        ),
+      },
+      // {
+      //   key: "log_meta",
+      //   title: translate("report.label.field.logMeta"),
+      //   render: (value: IReport) => (
+      //     <TextField value={value && value.checkin_counter ? JSON.stringify(value.checkin_counter ) : ""} />
+      //   ),
+      // },
     ],
     []
   );
@@ -152,8 +206,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify("all")) {
-      searchParams.delete("location");
-    } else searchParams.set("location", JSON.stringify(value));
+      searchParams.delete("location_id");
+    } else searchParams.set("location_id", JSON.stringify(value));
+    searchFormProps.form?.submit();
     setSearchParams(searchParams);
   };
 
@@ -162,33 +217,29 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify("all")) {
-      searchParams.delete("assetHistoryType");
-    } else searchParams.set("assetHistoryType", JSON.stringify(value));
+      searchParams.delete("action_type");
+    } else searchParams.set("action_type", JSON.stringify(value));
+    searchFormProps.form?.submit();
     setSearchParams(searchParams);
   };
 
   const handleDateChange = (value: any) => {
     const [from, to] = Array.from(value || []);
     searchParams.set(
-      "purchaseDateFrom",
+      "date_from",
       from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
     );
     searchParams.set(
-      "purchaseDateTo",
+      "date_to",
       to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
     );
+    searchFormProps.form?.submit();
     setSearchParams(searchParams);
-  };
-
-  const handleSearchByName = (value: any) => {
-    searchParams.set("search_name", value ? value : "");
-    setSearchParams(searchParams);
-    setSearch(value);
   };
 
   useEffect(() => {
-    if (searchParams.get("search_name") && search === " ") {
-      searchParams.delete("search_name");
+    if (searchParams.get("search") && search === " ") {
+      searchParams.delete("search");
     }
   }, [search]);
 
@@ -199,22 +250,22 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           layout="vertical"
           className="search-month-location"
           initialValues={{
-            location: location_id ? Number(location_id) : translate("all"),
-            purchase_date:
+            location: location ? Number(location) : translate("all"),
+            created_at:
               dateFromParam && dateToParam
                 ? [
                     moment(dateFromParam, dateFormat),
                     moment(dateToParam, dateFormat),
                   ]
                 : "",
-            type: searchParams.get("assetHistoryType")
+            type: searchParams.get("action_type")
               ? Number(assetHistoryType)
               : translate("all"),
           }}
         >
           <Form.Item
             label={translate("dashboard.placeholder.searchToDate")}
-            name="purchase_date"
+            name="created_at"
           >
             <RangePicker
               onCalendarChange={handleDateChange}
@@ -227,7 +278,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
 
           <Form.Item
-            label="Vị trí"
+            label={translate("hardware.label.title.location")}
             name="location"
             initialValue={"all"}
             className="search-month-location-null"
@@ -253,6 +304,15 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               <Option value={TypeAssetHistory.CHECKIN}>
                 {translate("hardware.label.title.checkin")}
               </Option>
+              <Option value={TypeAssetHistory.CREATE}>
+                {translate("hardware.label.title.create")}
+              </Option>
+              <Option value={TypeAssetHistory.EDIT}>
+                {translate("hardware.label.title.edit")}
+              </Option>
+              <Option value={TypeAssetHistory.DELETE}>
+                {translate("hardware.label.title.delete")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>
@@ -262,33 +322,20 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <span className="name-sum-report">
             {translate("dashboard.field.sum-report")}
           </span>{" "}
-          : {data ? data.data.length : 0}
+          : {tableProps.pagination ? tableProps.pagination?.total : 0}
         </div>
         <div className="search-report">
-          <Form
-            initialValues={{
-              name:
-                searchParams.get("search_name") !== ""
-                  ? searchParams.get("search_name")
-                  : "",
-            }}
-          >
-            <Form.Item name={"name"}>
-              <Search
-                placeholder={translate("table.search")}
-                onChange={(event) => handleSearchByName(event.target.value)}
-                style={{ width: 200 }}
-              />
-            </Form.Item>
-          </Form>
+          <TableAction searchFormProps={searchFormProps} />
         </div>
       </div>
-
       <Table
-        dataSource={data?.data}
+        {...tableProps}
         rowKey="id"
-        scroll={{ x: 1400 }}
-        pagination={data?.data.length <= 10 ? false : { pageSize: 10 }}
+        scroll={{ x: 1850 }}
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
       >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} sorter />

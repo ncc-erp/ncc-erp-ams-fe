@@ -207,6 +207,7 @@
         "asset": "Tất cả tài sản",
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
+        "delete": "Xóa",
         "clone": "Clone",
         "checkout": "Cấp phát",
         "checkin": "Thu hồi",
@@ -714,22 +715,26 @@
       "field": {
         "id": "ID",
         "name": "Tên tài sản",
+        "asset": "Tài sản",
         "image": "Hình ảnh",
         "propertyCard": "Thẻ tài sản",
         "serial": "Số Sê-ri",
         "dateBuy": "Ngày mua",
         "orderNumber": "Mã đơn hàng",
         "note": "Mô tả",
+        "logMeta": "Thay đổi chi tiết",
         "dateCreate": "Ngày tạo",
         "dateCheckout": "Ngày cấp phát",
         "dateCheckin": "Ngày thu hồi",
         "dateStart": "Ngày bắt đầu",
         "dateEnd": "Ngày kết thúc",
-        "type": "Kiểu",
+        "assetType": "Loại",
+        "type": "Kiểu hoạt động",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
+        "manager": "Quản lý",
         "user": "Người dùng",
-        "dateCheckout_And_dateCheckin": "Ngày cấp phát hoặc ngày thu hồi"
+        "dateCheckout_And_dateCheckin": "Ngày hoạt động"
       }
     }
   },

@@ -32,7 +32,11 @@ export enum EStatus {
 }
 
 export const TypeAssetHistory = {
-  CHECKOUT: 0,
-  CHECKIN: 1
+  CHECKOUT: 'checkout',
+  CHECKIN: 'checkin from',
+  EDIT: 'update',
+  DELETE: 'delete',
+  CREATE: 'create',
+  CREATE_RESPONSE: 'create new'
 }
 
