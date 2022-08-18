@@ -1057,10 +1057,15 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
