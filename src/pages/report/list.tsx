@@ -12,6 +12,7 @@ import {
 import {
   CrudFilters,
   IResourceComponentsProps,
+  useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
@@ -28,6 +29,8 @@ const { RangePicker } = DatePicker;
 
 export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+  const { list } = useNavigation();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const location = searchParams.get("location_id");
@@ -98,6 +101,15 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     }
   }
 
+  function onClickNameReport(name: string) {
+    return list(
+      `assets?search=${name.substring(
+        name.indexOf("(") + 1,
+        name.indexOf(")")
+      )}`
+    );
+  }
+
   const collumns = useMemo(
     () => [
       {
@@ -109,7 +121,10 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "item",
         title: translate("report.label.field.asset"),
         render: (value: IReport) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField
+            onClick={() => onClickNameReport(value.name)}
+            value={value ? value.name : ""}
+          />
         ),
       },
       {
