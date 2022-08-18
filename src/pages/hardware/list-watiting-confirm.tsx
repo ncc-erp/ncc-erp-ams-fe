@@ -725,11 +725,9 @@ export const HardwareListWaitingConfirm: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location:
-              localStorage.getItem("rtd_location_id") ??
-              searchValuesLocation !== 0
-                ? searchValuesLocation
-                : Number(rtd_location_id),
+            location: localStorage.getItem("rtd_location_id")
+              ? searchValuesLocation
+              : Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
