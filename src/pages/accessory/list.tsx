@@ -1,5 +1,5 @@
 import { Button, Checkbox, CreateButton, DateField, DeleteButton, EditButton, Form, getDefaultSortOrder, List, Select, Space, Spin, Table, TagField, TextField, Tooltip, useSelect, useTable } from "@pankod/refine-antd";
-import { CrudFilters, HttpError, IResourceComponentsProps, useTranslate } from "@pankod/refine-core";
+import { CrudFilters, HttpError, IResourceComponentsProps, useNavigation, useTranslate } from "@pankod/refine-core";
 import { ACCESSORY_API, LOCATION_API } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
@@ -101,6 +101,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         },
     });
 
+    const { list } = useNavigation();
+
     const collumns = useMemo(
         () => [
             {
@@ -112,7 +114,14 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "name",
                 title: translate("accessory.label.field.name"),
-                render: (value: string) => <TextField value={value ? value : ""} />,
+                render: (value: string, record: any) => (
+                    <TextField value={value ? value : ""} onClick={() => {
+                        record.id && list(`accessory_details?id=${record.id}&name=${record.name}`)
+                    }}
+                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+                    >
+                    </TextField>
+                ),
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
             },
             {
@@ -206,7 +215,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             qty: data ? data.qty : 0,
             user_can_checkout: data?.user_can_checkout,
             assigned_to: data?.assigned_to,
-            remaining_qty: 0
+            remaining_qty: 0,
+            checkin_date: data?.checkin_date,
+            assigned_pivot_id: data?.assigned_pivot_id
         };
         setDetail(dataConvert);
         setIsEditModalVisible(true);
@@ -244,6 +255,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     useEffect(() => {
         refreshData();
     }, [isEditModalVisible]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckoutModalVisible]);
 
     const onCheckItem = (value: { key: string }) => {
         if (collumnSelected.includes(value.key)) {
