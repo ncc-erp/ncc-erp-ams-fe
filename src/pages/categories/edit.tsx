@@ -1,18 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
-import {
-  Form,
-  Input,
-  useForm,
-  Checkbox,
-  Button,
-  Typography,
-} from "@pankod/refine-antd";
+import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { UploadImage } from "components/elements/uploadImage";
-import { ICheckboxChange } from "interfaces";
 import { ICategoryRequest, ICategoryResponse } from "interfaces/categories";
 import { CATEGORIES_API } from "api/baseApi";
 
@@ -27,15 +19,6 @@ export const CategoryEdit = (props: CategoryEditProps) => {
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<ICategoryRequest>();
-  const [checkedRequireAccept, setCheckedRequireAccept] = useState(true);
-  const [checkedEmail, setCheckedEmail] = useState(true);
-
-  useEffect(() => {
-    setCheckedRequireAccept(
-      props.data?.require_acceptance === true ? true : false
-    );
-    setCheckedEmail(props.data?.checkin_email === true ? true : false);
-  }, [props]);
 
   const t = useTranslate();
 
@@ -68,9 +51,6 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     formData.append("category_type", event.category_type.toString());
     formData.append("eula_text", event.eula_text);
 
-    formData.append("require_acceptance", checkedRequireAccept ? "1" : "0");
-    formData.append("checkin_email", checkedEmail ? "1" : "0");
-
     if (
       typeof event.image !== "string" &&
       event.image !== null &&
@@ -90,10 +70,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
       { name: "category_type", value: data?.category_type },
       { name: "eula_text", value: data?.eula },
 
-      { name: "require_acceptance", value: data?.require_acceptance },
-      { name: "checkin_email", value: data?.checkin_email },
       { name: "use_default_eula", value: data?.use_default_eula },
-
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
@@ -193,33 +170,12 @@ export const CategoryEdit = (props: CategoryEditProps) => {
       >
         <Input.TextArea value={data?.eula} />
       </Form.Item>
-      {/* <Form.Item label="" valuePropName="checkedRequireAccept">
-        <Checkbox
-          name="require_acceptance"
-          style={{ marginTop: 20 }}
-          checked={checkedRequireAccept}
-          value={data?.require_acceptance}
-          onChange={(event: ICheckboxChange) => {
-            setCheckedRequireAccept(event.target.checked);
-          }}
-        ></Checkbox>
-        {"  "}
-        {t("category.label.field.accept")}
-      </Form.Item> */}
-      {/* <Form.Item label="" valuePropName="checkedEmail">
-        <Checkbox
-          name="checkin_email"
-          style={{ marginTop: 20 }}
-          checked={checkedEmail}
-          value={data?.checkin_email}
-          onChange={(event: ICheckboxChange) => {
-            setCheckedEmail(event.target.checked);
-          }}
-        ></Checkbox>
-        {"  "}
-        {t("category.label.field.sendMail")}
-      </Form.Item> */}
-      <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
+
+      <Form.Item
+        label={t("category.label.field.image")}
+        name="image"
+        initialValue={data?.image}
+      >
         {data?.image ? (
           <UploadImage
             id={"update" + data?.id}

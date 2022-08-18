@@ -194,7 +194,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
@@ -215,7 +215,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         name: data?.supplier?.name,
       },
       notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
+      order_number: data.order_number ?? "",
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -297,7 +297,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
-      serial: data.serial !== "undefined" ? data.serial : "",
+      serial: data.serial ?? "",
       model: {
         id: data?.model?.id,
         name: data?.model?.name,
@@ -318,7 +318,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         name: data?.supplier?.name,
       },
       notes: data.notes,
-      order_number: data.order_number !== "null" ? data.order_number : "",
+      order_number: data.order_number ?? "",
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
@@ -762,25 +762,28 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   }, [localStorage.getItem("purchase_date")]);
 
   let searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("location"));
-  }, [localStorage.getItem("location")]);
+    return Number(localStorage.getItem("rtd_location_id"));
+  }, [localStorage.getItem("rtd_location_id")]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
-    localStorage.setItem(
-      "purchase_date",
-      formatString !== undefined ? formatString : ""
-    );
-    searchParams.set(
-      "dateFrom",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "dateTo",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    setSearchParams(searchParams);
+    if (val !== null) {
+      const [from, to] = Array.from(val || []);
+      localStorage.setItem("purchase_date", formatString ?? "");
+      searchParams.set(
+        "dateFrom",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "dateTo",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParams.delete("dateFrom");
+      searchParams.delete("dateTo");
+      localStorage.setItem("purchase_date", formatString ?? "");
+    }
 
+    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -802,6 +805,29 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   });
 
   const { Option } = Select;
+
+  const handleChangeLocation = (value: number) => {
+    if (value === 0) {
+      searchParams.delete("rtd_location_id");
+      localStorage.setItem(
+        "rtd_location_id",
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
+      );
+    } else {
+      localStorage.setItem(
+        "rtd_location_id",
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
+      );
+      searchParams.set(
+        "rtd_location_id",
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
+      );
+    }
+
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+
   return (
     <List
       title={t("hardware.label.title.list-broken")}
@@ -817,11 +843,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         <Form
           {...searchFormProps}
           initialValues={{
-            location:
-              localStorage.getItem("location") !== null ??
-              searchValuesLocation !== 0
-                ? searchValuesLocation
-                : rtd_location_id ?? Number(rtd_location_id),
+            location: localStorage.getItem("rtd_location_id")
+              ? searchValuesLocation
+              : Number(rtd_location_id),
             purchase_date:
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
@@ -860,25 +884,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 : "search-month-location-null"
             }
           >
-            <Select
-              onChange={() => {
-                localStorage.setItem(
-                  "location",
-                  searchFormProps.form?.getFieldsValue()?.location !== undefined
-                    ? searchFormProps.form?.getFieldsValue()?.location
-                    : ""
-                );
-                searchFormProps.form?.submit();
-                searchParams.set(
-                  "location",
-                  JSON.stringify(
-                    searchFormProps.form?.getFieldsValue()?.location
-                  )
-                );
-                setSearchParams(searchParams);
-              }}
-              placeholder={t("all")}
-            >
+            <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>

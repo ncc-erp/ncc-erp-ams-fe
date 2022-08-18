@@ -374,7 +374,10 @@
         "accept": "Chấp nhận",
         "refuse": "Từ chối",
         "user": "Người dùng",
-        "admin": "Admin"
+        "admin": "Admin",
+        "information": "Thông tin",
+        "download_picter": "Tải hình",
+        "permission": "Phân quyền"
       },
       "message": {
         "required": "bắt buộc"
@@ -444,6 +447,11 @@
         "assetCount": "Số lượng",
         "sendEmail": "Gửi email",
         "accept": "Chấp nhận"
+      },
+      "options": {
+        "accessory":"Phụ kiện",
+        "asset": "Thiết bị",
+        "consumable": "Văn phòng phẩm"
       }
     }
   },
@@ -845,11 +853,11 @@
       },
       "placeholder": {
         "name": "Tên",
-        "category": "Danh mục",
+        "category": "Lựa chọn một danh mục",
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
-        "manufacturer": "Nhà sản xuất",
-        "location": "Chi nhánh",
+        "manufacturer": "Lựa chọn nhà sản xuất",
+        "location": "Lựa chọn một chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
         "user":"Lựa chọn một người dùng"
