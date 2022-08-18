@@ -176,12 +176,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "order_number", value: data?.order_number },
       {
         name: "notes",
-        value:
-          data?.notes !== undefined
-            ? data?.notes
-            : "" !== undefined
-            ? data?.notes
-            : "",
+        value: data?.notes ?? data?.notes,
       },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },

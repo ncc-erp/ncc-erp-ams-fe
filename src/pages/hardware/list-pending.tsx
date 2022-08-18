@@ -768,10 +768,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      localStorage.setItem(
-        "purchase_date",
-        formatString !== undefined ? formatString : ""
-      );
+      localStorage.setItem("purchase_date", formatString ?? formatString);
       searchParams.set(
         "dateFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -783,10 +780,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
     } else {
       searchParams.delete("dateFrom");
       searchParams.delete("dateTo");
-      localStorage.setItem(
-        "purchase_date",
-        formatString !== undefined ? formatString : ""
-      );
+      localStorage.setItem("purchase_date", formatString ?? formatString);
     }
 
     setSearchParams(searchParams);
@@ -816,16 +810,14 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       searchParams.delete("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
-        searchFormProps.form?.getFieldsValue()?.location !== undefined
-          ? searchFormProps.form?.getFieldsValue()?.location
-          : ""
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ??
+          searchFormProps.form?.getFieldsValue()?.location
       );
     } else {
       localStorage.setItem(
         "rtd_location_id",
-        searchFormProps.form?.getFieldsValue()?.location !== undefined
-          ? searchFormProps.form?.getFieldsValue()?.location
-          : ""
+        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ??
+          searchFormProps.form?.getFieldsValue()?.location
       );
       searchParams.set(
         "rtd_location_id",
