@@ -39,4 +39,10 @@ export const TypeAssetHistory = {
   CREATE: 'create',
   CREATE_RESPONSE: 'create new'
 }
+export const dateFormat = "YYYY/MM/DD";
+
+export enum EPermissions {
+  ADMIN =  "1",
+  USER = "0"
+}
 

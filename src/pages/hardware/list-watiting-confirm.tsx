@@ -47,6 +47,7 @@ import {
 import { HardwareCancelMultipleAsset } from "../users/cancel-multiple-assets";
 import {
   ASSIGNED_STATUS,
+  dateFormat,
   defaultCheckedListWaitingConfirm,
 } from "../../constants/assets";
 import moment from "moment";
@@ -81,7 +82,6 @@ export const HardwareListWaitingConfirm: React.FC<
   const [listening, setListening] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-  const dateFormat = "YYYY/MM/DD";
 
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");

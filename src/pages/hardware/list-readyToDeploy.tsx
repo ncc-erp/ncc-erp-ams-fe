@@ -61,7 +61,7 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -831,8 +831,6 @@ export const HardwareListReadyToDeploy: React.FC<
 
     searchFormProps.form?.submit();
   };
-
-  const dateFormat = "YYYY/MM/DD";
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,

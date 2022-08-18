@@ -62,7 +62,7 @@ import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, STATUS_LABELS } from "constants/assets";
+import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -828,8 +828,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     searchFormProps.form?.submit();
   }, [window.location.reload]);
-
-  const dateFormat = "YYYY/MM/DD";
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,

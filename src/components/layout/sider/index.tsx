@@ -6,10 +6,12 @@ import {
   useNavigation,
   usePermissions,
   useRouterContext,
+  useTitle,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
+import { EPermissions } from "constants/assets";
 
 const {
   RightOutlined,
@@ -20,6 +22,8 @@ const {
   SettingOutlined,
   BarChartOutlined,
   UsergroupAddOutlined,
+  CopyOutlined,
+  InsertRowBelowOutlined,
 } = Icons;
 
 const logo: CSSProperties = {
@@ -33,6 +37,7 @@ const logo: CSSProperties = {
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();
@@ -55,7 +60,7 @@ export const Sider: React.FC = () => {
       breakpoint="lg"
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
     >
-      {permissionsData && permissionsData.admin === "0" && (
+      {permissionsData && permissionsData.admin === EPermissions.USER && (
         <>
           <Link to="users">
             {collapsed ? (
@@ -75,7 +80,7 @@ export const Sider: React.FC = () => {
         </>
       )}
 
-      {permissionsData && permissionsData.admin === "1" && (
+      {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
         <>
           <Link to="dashboard">
             {collapsed ? (
@@ -105,7 +110,7 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -146,7 +151,7 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -194,7 +199,79 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === EPermissions.ADMIN &&
+          menuItems
+            .filter(
+              (item) => item.name === `${translate("resource.accessory")}`
+            )
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.accessory")}` ? (
+                      <InsertRowBelowOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
+
+        {permissionsData &&
+          permissionsData.admin === EPermissions.ADMIN &&
+          menuItems
+            .filter(
+              (item) => item.name === `${translate("resource.consumables")}`
+            )
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.consumables")}` ? (
+                      <CopyOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
+
+        {permissionsData &&
+          permissionsData.admin === EPermissions.ADMIN &&
           menuItems
             .filter(
               (item) =>
@@ -235,7 +312,7 @@ export const Sider: React.FC = () => {
               );
             })}
 
-        {permissionsData && permissionsData.admin === "1" && (
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
           <SubMenu
             title={
               <span>
@@ -281,7 +358,7 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === EPermissions.ADMIN &&
           menuItems
             .filter((item) => item.name === `${translate("resource.report")}`)
             .map(({ icon, name, route }) => {
@@ -315,7 +392,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === "0" &&
+          permissionsData.admin === EPermissions.USER &&
           menuItems
             .filter((item) => item.name === `${translate("resource.users")}`)
             .map(({ icon, name, route }) => {
@@ -351,7 +428,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === "1" &&
+          permissionsData.admin === EPermissions.ADMIN &&
           menuItems
             .filter(
               (item) => item.name === `${translate("resource.manager_user")}`
