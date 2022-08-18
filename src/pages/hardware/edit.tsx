@@ -126,32 +126,20 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
-    if (event.serial !== undefined) formData.append("serial", event.serial);
+    formData.append("serial", event.serial ?? "");
     formData.append("model_id", event.model.toString());
-
-    if (event.order_number !== null)
-      formData.append("order_number", event.order_number);
+    formData.append("order_number", event.order_number ?? "");
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-
-    if (event.status_label !== undefined) {
-      formData.append("status_id", event.status_label.toString());
-    }
-
+    formData.append("status_id", event.status_label.toString() ?? "");
     formData.append("warranty_months", event.warranty_months);
 
-    if (event.purchase_cost !== null)
-      formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== null)
-      formData.append("purchase_date", event.purchase_date);
-
+    formData.append("purchase_cost", event.purchase_cost ?? "");
+    formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
-
     formData.append("location_id", event.rtd_location.toString());
-
-    if (event.supplier !== undefined)
-      formData.append("supplier_id", event.supplier.toString());
+    formData.append("supplier_id", event.supplier.toString() ?? "");
 
     if (
       typeof event.image !== "string" &&
@@ -159,8 +147,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       event.image !== null
     )
       formData.append("image", event.image);
-
-    formData.append("requestable", checked ? "1" : "0");
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -176,7 +162,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "order_number", value: data?.order_number },
       {
         name: "notes",
-        value: data?.notes ?? data?.notes,
+        value: data?.notes ?? "",
       },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
@@ -191,8 +177,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
       {
         name: "purchase_date",
-        value:
-          data?.purchase_date.date !== null ? data?.purchase_date.date : "",
+        value: data?.purchase_date.date ?? "",
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
