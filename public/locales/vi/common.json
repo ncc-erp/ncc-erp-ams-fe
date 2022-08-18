@@ -559,7 +559,8 @@
     "checkin": "Thu hồi",
     "manager_user": "Người dùng",
     "accessory": "Phụ kiện",
-    "consumables": "Văn phòng phẩm"
+    "consumables": "Văn phòng phẩm",
+    "accessory_details": "Chi tiết phụ kiện"
   },
   "model": {
     "label": {
@@ -759,7 +760,10 @@
         "user": "Lựa chọn một người dùng",
         "image": "Hình ảnh",
         "start-date": "Ngày bắt đầu", 
-        "end-date": "Ngày kết thúc"
+        "end-date": "Ngày kết thúc",
+        "users": "Người dùng",
+        "checkout_date": "Ngày cấp phát",
+        "checkin_date": "Ngày thu hồi"
       },
       "message": {
         "required": "bắt buộc"
@@ -767,7 +771,8 @@
       "button": {
         "create": "Thêm mới",
         "update": "Chỉnh sửa",
-        "checkout": "Cấp phát"
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi"
       },
       "placeholder": {
         "name": "Tên phụ kiện",
@@ -785,6 +790,7 @@
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
         "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
         "time": "Thời gian"
       },
       "tooltip": {

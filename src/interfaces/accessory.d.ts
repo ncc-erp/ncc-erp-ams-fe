@@ -1,3 +1,8 @@
+export interface IAccesory {
+  id: number;
+  name: string;
+  datetime: string;
+}
 export interface IAccesstoryRequest {
   id: number;
   name: string;
@@ -47,6 +52,8 @@ export interface IAccesstoryResponse {
   user_can_checkout: boolean;
   assigned_to: number;
   remaining_qty: number;
+  checkin_date: string;
+  assigned_pivot_id: number;
 }
 
 export interface IAccessoryRequestCheckout {
@@ -84,4 +91,20 @@ export interface IAccessoryFilterVariables {
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
   assigned_status: string;
+}
+
+export interface IAccessoryRequestCheckin {
+  id: number;
+  name: string;
+  checkout_notes: string;
+  last_checkout: string;
+  note: string;
+}
+
+export interface IAccessoryResponseCheckin {
+  id: number;
+  name: string;
+  note: string;
+  checkin_date: string;
+  assigned_pivot_id: id;
 }

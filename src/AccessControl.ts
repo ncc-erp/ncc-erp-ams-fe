@@ -112,6 +112,8 @@ p, 1, ${i18n.t("resource.consumables")}/*, (edit)|(checkout)
 p, 1, ${i18n.t("resource.accessory")}, (list)|(create)
 p, 1, ${ACCESSORY_API}/*, (delete)
 p, 1, ${i18n.t("resource.accessory")}/*, (edit)
+
+p, 1, ${i18n.t("resource.accessory_details")}, (list) 
 `;
 
 export const adapter = new MemoryAdapter(permissions);
