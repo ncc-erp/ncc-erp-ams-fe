@@ -820,7 +820,6 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           ? searchFormProps.form?.getFieldsValue()?.location
           : ""
       );
-      searchFormProps.form?.submit();
     } else {
       localStorage.setItem(
         "rtd_location_id",
@@ -828,13 +827,14 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           ? searchFormProps.form?.getFieldsValue()?.location
           : ""
       );
-      searchFormProps.form?.submit();
       searchParams.set(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
       );
     }
+
     setSearchParams(searchParams);
+    searchFormProps.form?.submit();
   };
 
   return (
