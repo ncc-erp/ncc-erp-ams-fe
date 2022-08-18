@@ -19,7 +19,7 @@ import {
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
-import { CloseOutlined, CheckOutlined, SyncOutlined } from "@ant-design/icons";
+import { SyncOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
 import { IHardware } from "interfaces";
@@ -30,6 +30,12 @@ import { CategoryCreate } from "./create";
 import { CategoryEdit } from "./edit";
 import { ICategoryResponse } from "interfaces/categories";
 import { CATEGORIES_API } from "api/baseApi";
+
+export enum ECategory {
+  ACCESSORY = "Accessory",
+  ASSET = "Asset",
+  CONSUMABLE = "Consumable",
+}
 
 export const CategoryList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -105,7 +111,21 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "category_type",
         title: t("category.label.table.category"),
-        render: (value: string) => <TagField value={value ? value : ""} />,
+        render: (value: string) => (
+          <TagField
+            value={
+              value
+                ? value === ECategory.ACCESSORY
+                  ? t("category.label.options.accessory")
+                  : value === ECategory.ASSET
+                  ? t("category.label.options.asset")
+                  : value === ECategory.CONSUMABLE
+                  ? t("category.label.options.consumable")
+                  : ""
+                : ""
+            }
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("category_type", sorter),
       },
       {
@@ -114,44 +134,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
       },
-      // {
-      //   key: "checkin_email",
-      //   title: t("category.label.table.sendEmail"),
-      //   render: (value: boolean) => (
-      //     <TextField
-      //       value={
-      //         value === false ? (
-      //           <CloseOutlined color="#a94442" />
-      //         ) : (
-      //           <CheckOutlined />
-      //         )
-      //       }
-      //       style={{
-      //         color: value === false ? "#a94444" : "#44793f",
-      //       }}
-      //     />
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("checkin_email", sorter),
-      // },
-      // {
-      //   key: "require_acceptance",
-      //   title: t("category.label.table.accept"),
-      //   render: (value: boolean) => (
-      //     <TextField
-      //       value={
-      //         value === false ? (
-      //           <CloseOutlined color="#a94442" />
-      //         ) : (
-      //           <CheckOutlined />
-      //         )
-      //       }
-      //       style={{
-      //         color: value === false ? "#a94444" : "#44793f",
-      //       }}
-      //     />
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("require_acceptance", sorter),
-      // },
     ],
     []
   );

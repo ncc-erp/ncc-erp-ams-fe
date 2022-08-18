@@ -6,7 +6,6 @@ import {
   Input,
   Select,
   useForm,
-  Checkbox,
   Button,
   Typography,
 } from "@pankod/refine-antd";
@@ -19,7 +18,6 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import { UploadImage } from "components/elements/uploadImage";
 
 import "../../styles/hardware.less";
-import { ICheckboxChange } from "interfaces";
 import { ICategoryRequest } from "interfaces/categories";
 import { CATEGORIES_API } from "api/baseApi";
 
@@ -51,23 +49,10 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
     formData.append("category_type", event.category_type.toString());
     formData.append("eula_text", event.eula_text);
 
-    if (event.require_acceptance !== undefined) {
-      formData.append("require_acceptance", '0');
-      // formData.append(
-      //   "require_acceptance",
-      //   event.require_acceptance.toString()
-      // );
-    }
-    if (event.checkin_email !== undefined) {
-      formData.append("checkin_email", '0');
-      // formData.append("checkin_email", event.checkin_email.toString());
-    }
     if (event.use_default_eula !== undefined) {
       formData.append("use_default_eula", event.use_default_eula.toString());
     }
-    if (event.image !== null && event.image !== undefined) {
-      formData.append("image", event.image);
-    }
+    formData.append("image", event.image ?? event.image);
 
     setPayload(formData);
     form.resetFields();
@@ -93,22 +78,6 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
       setMessageErr(createData?.data.messages);
     }
   }, [createData]);
-
-  const OnCheckRequireAccept = (event: ICheckboxChange) => {
-    if (event.target.checked)
-      form.setFieldsValue({
-        require_acceptance: 1,
-      });
-    else form.setFieldsValue({ require_acceptance: 0 });
-  };
-
-  const onCheckEmail = (event: ICheckboxChange) => {
-    if (event.target.checked)
-      form.setFieldsValue({
-        checkin_email: 1,
-      });
-    else form.setFieldsValue({ checkin_email: 0 });
-  };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -160,24 +129,16 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
           placeholder={t("category.label.field.category")}
           options={[
             {
-              label: "Accessory",
+              label: t("category.label.options.accessory"),
               value: "accessory",
             },
             {
-              label: "Asset",
+              label: t("category.label.options.asset"),
               value: "asset",
             },
             {
-              label: "Consumable",
+              label: t("category.label.options.consumable"),
               value: "consumable",
-            },
-            {
-              label: "Component",
-              value: "component",
-            },
-            {
-              label: "License",
-              value: "license",
             },
           ]}
         />
@@ -204,26 +165,6 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
           }
         />
       </Form.Item>
-
-      {/* <Form.Item label="" name="require_acceptance" valuePropName="checked">
-        <Checkbox
-          onChange={(event) => {
-            OnCheckRequireAccept(event);
-          }}
-        >
-          {t("category.label.field.accept")}
-        </Checkbox>
-      </Form.Item> */}
-
-      {/* <Form.Item label="" name="checkin_email" valuePropName="checked">
-        <Checkbox
-          onChange={(event) => {
-            onCheckEmail(event);
-          }}
-        >
-          {t("category.label.field.sendMail")}
-        </Checkbox>
-      </Form.Item> */}
 
       <Form.Item label={t("category.label.field.image")} name="image">
         <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>

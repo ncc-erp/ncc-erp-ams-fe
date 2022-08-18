@@ -446,6 +446,11 @@
         "assetCount": "Số lượng",
         "sendEmail": "Gửi email",
         "accept": "Chấp nhận"
+      },
+      "options": {
+        "accessory":"Phụ kiện",
+        "asset": "Thiết bị",
+        "consumable": "Văn phòng phẩm"
       }
     }
   },
