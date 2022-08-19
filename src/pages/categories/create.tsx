@@ -47,14 +47,13 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
 
     formData.append("name", event.name);
     formData.append("category_type", event.category_type.toString());
-    formData.append("eula_text", event.eula_text);
-
-    formData.append(
-      "use_default_eula",
-      event.use_default_eula.toString() ?? ""
-    );
-
-    formData.append("image", event.image ?? "");
+    formData.append("eula_text", event.eula_text ?? "");
+    if (event.use_default_eula !== undefined) {
+      formData.append("use_default_eula", event.use_default_eula.toString());
+    }
+    if (event.image !== null && event.image !== undefined) {
+      formData.append("image", event.image);
+    }
 
     setPayload(formData);
     form.resetFields();
