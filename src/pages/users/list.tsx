@@ -542,6 +542,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
+            showSizeChanger: true,
           }}
           rowSelection={{
             type: "checkbox",

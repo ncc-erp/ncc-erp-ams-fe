@@ -965,10 +965,15 @@ export const HardwareListWaitingConfirm: React.FC<
         <Table
           {...tableProps}
           rowKey="id"
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
           rowSelection={{
             type: "checkbox",
             ...rowSelection,

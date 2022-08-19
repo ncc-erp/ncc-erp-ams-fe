@@ -1,3 +1,8 @@
+export interface IConsumables {
+  id: number;
+  name: string;
+  datetime: string;
+}
 export interface IConsumablesRequest {
     id: number;
     name: string;

@@ -566,7 +566,8 @@
     "manager_user": "Người dùng",
     "accessory": "Phụ kiện",
     "consumables": "Văn phòng phẩm",
-    "accessory_details": "Chi tiết phụ kiện"
+    "accessory_details": "Chi tiết phụ kiện",
+    "consumable_details": "Chi tiết văn phòng phẩm"
   },
   "model": {
     "label": {
@@ -827,7 +828,10 @@
         "order_number": "Số đơn đặt hàng",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
-        "checkoutTo": "Cấp phát đến"
+        "checkoutTo": "Cấp phát đến",
+        "users": "Người dùng",
+        "admin": "Admin",
+        "checkout_date": "Ngày cấp phát"
       },
       "message": {
         "required": "bắt buộc"

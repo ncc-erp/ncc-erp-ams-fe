@@ -24,6 +24,7 @@ import {
   CrudFilters,
   HttpError,
   IResourceComponentsProps,
+  useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
 import { CONSUMABLE_API, LOCATION_API } from "api/baseApi";
@@ -44,6 +45,7 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
 import { ConsumablesEdit } from "./edit";
+import "styles/antd.less";
 
 const defaultCheckedList = [
   "id",
@@ -133,6 +135,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
+  const { list } = useNavigation();
+
   const collumns = useMemo(
     () => [
       {
@@ -144,7 +148,16 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: translate("consumables.label.field.name"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string, record: any) => (
+          <TextField
+            value={value ? value : ""}
+            onClick={() => {
+              record.id &&
+                list(`consumable_details?id=${record.id}&name=${record.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -496,13 +509,19 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
+          className="list-table"
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1220 }}
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
