@@ -49,7 +49,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
 
     formData.append("name", event.name);
     formData.append("category_type", event.category_type.toString());
-    formData.append("eula_text", event.eula_text);
+    formData.append("eula_text", event.eula_text ?? "");
 
     if (
       typeof event.image !== "string" &&
