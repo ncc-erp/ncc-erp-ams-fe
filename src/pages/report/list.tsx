@@ -122,6 +122,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         title: translate("report.label.field.asset"),
         render: (value: IReport) => (
           <TextField
+            style={{"cursor": "pointer"}}
             onClick={() => onClickNameReport(value.name)}
             value={value ? value.name : ""}
           />
