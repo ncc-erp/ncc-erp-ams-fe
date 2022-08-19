@@ -1340,6 +1340,7 @@ export const HardwareListReadyToDeploy: React.FC<
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
+            showSizeChanger: true,
           }}
           rowSelection={{
             type: "checkbox",

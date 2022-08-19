@@ -70,7 +70,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       category_type: data?.category_type,
-      eula: data?.eula,
+      eula: data?.eula ?? "",
       image: data?.image,
 
       require_acceptance: data?.require_acceptance,

@@ -40,6 +40,7 @@ import { HardwareListWaitingConfirm } from "pages/hardware/list-watiting-confirm
 import { ConsumablesList } from "pages/consumables";
 import { AccessoryList } from "pages/accessory/list";
 import { AccessoryDetails } from "pages/accessory/details";
+import { ConsumableDetails } from "pages/consumables/details";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -223,6 +224,13 @@ function App() {
           list: AccessoryDetails,
           options: {
             route: "accessory_details",
+          },
+        },
+        {
+          name: t("resource.consumable_details"),
+          list: ConsumableDetails,
+          options: {
+            route: "consumable_details",
           },
         },
       ]}
