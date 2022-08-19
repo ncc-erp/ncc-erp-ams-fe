@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
-import { Col, Form, List, Row, Table } from "@pankod/refine-antd";
+import { Col, Form, List, Row, Spin, Table } from "@pankod/refine-antd";
 import {
   IResourceComponentsProps,
   useCustom,
@@ -42,7 +42,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
 
-  const { data: dataCheckIn, refetch: refetchCheckIn } = useCustom<any>({
+  const {
+    data: dataCheckIn,
+    refetch: refetchCheckIn,
+    isLoading: isLoadingCheckin,
+  } = useCustom<any>({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
@@ -53,7 +57,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  const { data: dataCheckOut, refetch: refetchCheckOut } = useCustom<any>({
+  const {
+    data: dataCheckOut,
+    refetch: refetchCheckOut,
+    isLoading: isLoadingCheckout,
+  } = useCustom<any>({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
@@ -332,29 +340,35 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           <div style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
               <Col sm={24} md={24}>
-                <Row gutter={16}>
-                  <Col sm={10} md={10}>
-                    <AssetsSummaryPieChartCheckOut
-                      assets_statistic={
-                        dataReportCheckOut ? dataReportCheckOut : ""
-                      }
-                    />
-                  </Col>
-                  <Col sm={24} md={14}>
-                    <Table
-                      key="id"
-                      dataSource={dataReportCheckOut}
-                      columns={columnsCheckOut}
-                      pagination={
-                        (dataCheckOut?.data.payload.categories || []).length <=
-                        6
-                          ? false
-                          : { pageSize: 6 }
-                      }
-                      scroll={{ x: 320 }}
-                    />
-                  </Col>
-                </Row>
+                {isLoadingCheckout ? (
+                  <Row gutter={16} className="dashboard-loading">
+                    <Spin tip="Loading..." className="spin-center" />
+                  </Row>
+                ) : (
+                  <Row gutter={16}>
+                    <Col sm={10} md={10}>
+                      <AssetsSummaryPieChartCheckOut
+                        assets_statistic={
+                          dataReportCheckOut ? dataReportCheckOut : ""
+                        }
+                      />
+                    </Col>
+                    <Col sm={24} md={14}>
+                      <Table
+                        key="id"
+                        dataSource={dataReportCheckOut}
+                        columns={columnsCheckOut}
+                        pagination={
+                          (dataCheckOut?.data.payload.categories || []).length <= 
+                          6
+                            ? false
+                            : { pageSize: 6 }
+                        }
+                        scroll={{ x: 320 }}
+                      />
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
           </div>
@@ -384,28 +398,34 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           <div style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
               <Col sm={24} md={24}>
-                <Row gutter={16}>
-                  <Col sm={24} md={10}>
-                    <AssetsSummaryPieChartCheckIn
-                      assets_statistic={
-                        dataReportCheckIn ? dataReportCheckIn : ""
-                      }
-                    />
-                  </Col>
-                  <Col sm={24} md={14}>
-                    <Table
-                      key="id"
-                      dataSource={dataReportCheckIn}
-                      columns={columnsCheckIn}
-                      pagination={
-                        (dataCheckIn?.data.payload.categories || []).length <= 6
-                          ? false
-                          : { pageSize: 6 }
-                      }
-                      scroll={{ x: 320 }}
-                    />
-                  </Col>
-                </Row>
+                {isLoadingCheckin ? (
+                  <Row gutter={16} className="dashboard-loading">
+                    <Spin tip="Loading..." className="spin-center" />
+                  </Row>
+                ) : (
+                  <Row gutter={16}>
+                    <Col sm={24} md={10}>
+                      <AssetsSummaryPieChartCheckIn
+                        assets_statistic={
+                          dataReportCheckIn ? dataReportCheckIn : ""
+                        }
+                      />
+                    </Col>
+                    <Col sm={24} md={14}>
+                      <Table
+                        key="id"
+                        dataSource={dataReportCheckIn}
+                        columns={columnsCheckIn}
+                        pagination={
+                          (dataCheckIn?.data.payload.categories || []).length <= 6
+                            ? false
+                            : { pageSize: 6 }
+                        }
+                        scroll={{ x: 320 }}
+                      />
+                    </Col>
+                  </Row>
+                )}
               </Col>
             </Row>
           </div>
