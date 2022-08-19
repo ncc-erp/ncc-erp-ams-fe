@@ -129,10 +129,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("category_type", sorter),
       },
       {
-        key: "assets_count",
+        key: "item_count",
         title: t("category.label.table.assetCount"),
         render: (value: number) => <TagField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
+        defaultSortOrder: getDefaultSortOrder("item_count", sorter),
       },
     ],
     []
@@ -162,6 +162,8 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       setLoading(false);
     }, 300);
   };
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -228,7 +230,20 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </>
       ) : (
-        <Table {...tableProps} rowKey="id">
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+        >
           {collumns.map((col) => (
             <Table.Column dataIndex={col.key} {...col} sorter />
           ))}

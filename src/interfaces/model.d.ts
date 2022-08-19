@@ -8,13 +8,8 @@ export interface IModelRequest {
   name: string;
   manufacturer: string;
   category: number;
-  model_number: string;
-  depreciation: string;
-  eol: string;
-  fieldset: string;
   notes: string;
   requestable: number;
-  image: string;
   assets_count: number;
 }
 
@@ -29,14 +24,6 @@ export interface IModelResponse {
     id: number;
     name: string;
   };
-  depreciation: {
-    id: number;
-    name: string;
-  };
-  image: string;
-  eol: string;
-  fieldset: string;
-  model_number: string;
   notes: string;
   requestable: boolean;
   assets_count: number;

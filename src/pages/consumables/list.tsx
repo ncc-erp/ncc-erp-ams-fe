@@ -196,6 +196,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
       },
       {
+        key: "qty",
+        title: translate("consumables.label.field.qty"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("qty", sorter),
+      },
+      {
         key: "notes",
         title: translate("consumables.label.field.notes"),
         render: (value: string) => <TextField value={value ? value : ""} />,
@@ -509,7 +515,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-          className="list-table"
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1220 }}

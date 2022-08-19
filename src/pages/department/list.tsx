@@ -134,6 +134,8 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
     }, 300);
   };
 
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <List
       title={t("department.label.title.department")}
@@ -198,7 +200,20 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </>
       ) : (
-        <Table {...tableProps} rowKey="id">
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+        >
           {collumns.map((col) => (
             <Table.Column dataIndex={col.key} {...col} sorter />
           ))}
