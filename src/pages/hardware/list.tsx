@@ -155,7 +155,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "search",
           operator: "eq",
-          value: search ? search : searchParam,
+          value: searchParam,
         },
         {
           field: "filter",
