@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Row, Col, Select, Form, List } from "@pankod/refine-antd";
+import { Row, Col, Select, Form, List, Spin } from "@pankod/refine-antd";
 import { DatePicker } from "antd";
 import "styles/antd.less";
 import { Locations } from "components/dashboard/locations";
@@ -37,7 +37,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const purchase_date_from1 = searchParams.get("purchase_date_from1");
   const purchase_date_to1 = searchParams.get("purchase_date_to1");
 
-  const { data } = useCustom({
+  const { data, isLoading: isLoadingData } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
@@ -53,7 +53,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  const { data: data1 } = useCustom({
+  const { data: data1, isLoading: isLoadingData1 } = useCustom({
     url: DASHBOARD_API,
     method: "get",
     config: {
@@ -156,11 +156,17 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
           </div>
 
           <Row gutter={[12, 12]}>
-            {(data?.data.payload || []).map(
-              (item: ILocation, index: number) => (
-                <Col key={index} sm={24} md={24}>
-                  <Locations location={item} data={data}></Locations>
-                </Col>
+            {isLoadingData ? (
+              <Col sm={24} md={24} className="dashboard-loading">
+                <Spin tip="Loading..." className="spin-center" />
+              </Col>
+            ) : (
+              (data?.data.payload || []).map(
+                (item: ILocation, index: number) => (
+                  <Col key={index} sm={24} md={24}>
+                    <Locations location={item} data={data}></Locations>
+                  </Col>
+                )
               )
             )}
           </Row>
@@ -213,16 +219,22 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
           </div>
 
           <Row gutter={[12, 12]}>
-            {(data1?.data.payload || [])
-              .filter(
-                (item: ILocation) =>
-                  locationSelected === null || item.id === locationSelected
-              )
-              .map((item: ILocation, index: number) => (
-                <Col key={index} sm={24} md={24}>
-                  <AllLocations location={item}></AllLocations>
-                </Col>
-              ))}
+            {isLoadingData1 ? (
+              <Col sm={24} md={24} className="dashboard-loading">
+                <Spin tip="Loading..." className="spin-center" />
+              </Col>
+            ) : (
+              (data1?.data.payload || [])
+                .filter(
+                  (item: ILocation) =>
+                    locationSelected === null || item.id === locationSelected
+                )
+                .map((item: ILocation, index: number) => (
+                  <Col key={index} sm={24} md={24}>
+                    <AllLocations location={item}></AllLocations>
+                  </Col>
+                ))
+            )}
           </Row>
         </section>
       </List>
