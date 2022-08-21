@@ -107,22 +107,17 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
       title={nameAccessary + " " + translate("accessory.label.title.accessory")}
     >
       <Table
-        className="list-table"
         {...tableProps}
         rowKey="id"
-        pagination={
-          (pageTotal as number) > 10
-            ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-            : false
-        }
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
       >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
+        {collumns
+          .map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
         <Table.Column<IAccesstoryResponse>
           title={translate("table.actions")}
           dataIndex="actions"
@@ -136,8 +131,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
                   isLoadingArr[record.id] === undefined
                     ? false
                     : isLoadingArr[record.id] === false
-                    ? false
-                    : true
+                      ? false
+                      : true
                 }
                 onClick={() => checkin(record)}
               >

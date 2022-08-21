@@ -35,6 +35,83 @@ export interface IUserCreateRequest {
   permissions: {
     admin: string;
     superuser: string;
+    import: string;
+    "reports.view": string;
+
+    "assets.view": string;
+    "assets.create": string;
+    "assets.edit": string;
+    "assets.delete": string;
+    "assets.checkout": string;
+    "assets.checkin": string;
+    "assets.audit": string;
+    "assets.view.requestable": string;
+
+    "accessories.view": string;
+    "accessories.create": string;
+    "accessories.edit": string;
+    "accessories.delete": string;
+    "accessories.checkout": string;
+    "accessories.checkin": string;
+
+    "consumables.view": string;
+    "consumables.create": string;
+    "consumables.edit": string;
+    "consumables.delete": string;
+    "consumables.checkout": string;
+
+    "licenses.view": string;
+    "licenses.create": string;
+    "licenses.edit": string;
+    "licenses.delete": string;
+    "licenses.checkout": string;
+    "licenses.keys": string;
+    "licenses.files": string;
+
+    "users.view": string;
+    "users.create": string;
+    "users.edit": string;
+    "users.delete": string;
+
+    "models.view": string;
+    "models.create": string;
+    "models.edit": string;
+    "models.delete": string;
+
+    "categories.view": string;
+    "categories.create": string;
+    "categories.edit": string;
+    "categories.delete": string;
+
+    "departments.view": string;
+    "departments.create": string;
+    "departments.edit": string;
+    "departments.delete": string;
+
+    "statuslabels.view": string;
+    "statuslabels.create": string;
+    "statuslabels.edit": string;
+    "statuslabels.delete": string;
+
+    "customfields.view": string;
+    "customfields.create": string;
+    "customfields.edit": string;
+    "customfields.delete": string;
+
+    "suppliers.view": string;
+    "suppliers.create": string;
+    "suppliers.edit": string;
+    "suppliers.delete": string;
+
+    "manufacturers.view": string;
+    "manufacturers.create": string;
+    "manufacturers.edit": string;
+    "manufacturers.delete": string;
+
+    "locations.view": string;
+    "locations.create": string;
+    "locations.edit": string;
+    "locations.delete": string;
   };
   password_confirmation: string;
 }
@@ -76,6 +153,83 @@ export interface IUserResponse {
   permissions: {
     admin: string;
     superuser: string;
+    import: string;
+    "reports.view": string;
+
+    "assets.view": string;
+    "assets.create": string;
+    "assets.edit": string;
+    "assets.delete": string;
+    "assets.checkout": string;
+    "assets.checkin": string;
+    "assets.audit": string;
+    "assets.view.requestable": string;
+
+    "accessories.view": string;
+    "accessories.create": string;
+    "accessories.edit": string;
+    "accessories.delete": string;
+    "accessories.checkout": string;
+    "accessories.checkin": string;
+
+    "consumables.view": string;
+    "consumables.create": string;
+    "consumables.edit": string;
+    "consumables.delete": string;
+    "consumables.checkout": string;
+
+    "licenses.view": string;
+    "licenses.create": string;
+    "licenses.edit": string;
+    "licenses.delete": string;
+    "licenses.checkout": string;
+    "licenses.keys": string;
+    "licenses.files": string;
+
+    "users.view": string;
+    "users.create": string;
+    "users.edit": string;
+    "users.delete": string;
+
+    "models.view": string;
+    "models.create": string;
+    "models.edit": string;
+    "models.delete": string;
+
+    "categories.view": string;
+    "categories.create": string;
+    "categories.edit": string;
+    "categories.delete": string;
+
+    "departments.view": string;
+    "departments.create": string;
+    "departments.edit": string;
+    "departments.delete": string;
+
+    "statuslabels.view": string;
+    "statuslabels.create": string;
+    "statuslabels.edit": string;
+    "statuslabels.delete": string;
+
+    "customfields.view": string;
+    "customfields.create": string;
+    "customfields.edit": string;
+    "customfields.delete": string;
+
+    "suppliers.view": string;
+    "suppliers.create": string;
+    "suppliers.edit": string;
+    "suppliers.delete": string;
+
+    "manufacturers.view": string;
+    "manufacturers.create": string;
+    "manufacturers.edit": string;
+    "manufacturers.delete": string;
+
+    "locations.view": string;
+    "locations.create": string;
+    "locations.edit": string;
+    "locations.delete": string;
   };
 }
 
