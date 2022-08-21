@@ -505,9 +505,22 @@ export const UserEdit = (props: UserCreateProps) => {
             }}
         >
             <Tabs defaultActiveKey="1">
-                <TabPane tab={t("user.label.title.information")} key="1">
+                <TabPane tab={t("user.label.field.information")} key="1">
                     <Row gutter={16}>
                         <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label={t("user.label.field.last_name")}
+                                name="last_name"
+                                initialValue={data?.last_name}
+                            >
+                                <Input placeholder={t("user.label.placeholder.last_name")} />
+                            </Form.Item>
+                            {messageErr?.last_name && (
+                                <Typography.Text type="danger">
+                                    {messageErr.last_name[0]}
+                                </Typography.Text>
+                            )}
+
                             <Form.Item
                                 label={t("user.label.field.first_name")}
                                 name="first_name"
@@ -518,18 +531,6 @@ export const UserEdit = (props: UserCreateProps) => {
                             {messageErr?.first_name && (
                                 <Typography.Text type="danger">
                                     {messageErr.first_name[0]}
-                                </Typography.Text>
-                            )}
-                            <Form.Item
-                                label={t("user.label.field.nameUser")}
-                                name="last_name"
-                                initialValue={data?.last_name}
-                            >
-                                <Input placeholder={t("user.label.placeholder.nameUser")} />
-                            </Form.Item>
-                            {messageErr?.last_name && (
-                                <Typography.Text type="danger">
-                                    {messageErr.last_name[0]}
                                 </Typography.Text>
                             )}
 
@@ -554,7 +555,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                     required: false
                                 }]}
                             >
-                                <Input type="password" />
+                                <Input type="password" minLength={10} />
                             </Form.Item>
                             {messageErr?.password && (
                                 <Typography.Text type="danger">
@@ -569,7 +570,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                     required: false
                                 }]}
                             >
-                                <Input type="password" />
+                                <Input type="password" minLength={10} />
                             </Form.Item>
                             {messageErr?.password_confirmation && (
                                 <Typography.Text type="danger">
@@ -721,7 +722,7 @@ export const UserEdit = (props: UserCreateProps) => {
                         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
                     )}
 
-                    <Form.Item label="Tải hình" name="avatar" initialValue={data?.avatar}>
+                    <Form.Item label={t("user.label.field.download_picter")} name="avatar" initialValue={data?.avatar}>
                         {data?.avatar ? (
                             <UploadImage
                                 id={"update" + data?.id}
@@ -743,7 +744,7 @@ export const UserEdit = (props: UserCreateProps) => {
                         </Button>
                     </div>
                 </TabPane>
-                <TabPane tab={t("user.label.title.permission")} key="2">
+                <TabPane tab={t("user.label.field.permission")} key="2">
                     <div className="title_permission">
                         <Form.Item
                             label=""

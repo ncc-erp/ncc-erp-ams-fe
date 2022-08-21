@@ -29,6 +29,7 @@ import {
     DEPARTMENT_SELECT_LIST_API,
     LOCATION_API,
     USERS_API,
+    USER_API,
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import { ICheckboxChange } from "interfaces";
@@ -349,15 +350,15 @@ export const UserCreate = (props: UserCreateProps) => {
     const onCheckRemote = (event: ICheckboxChange) => {
         if (event.target.checked)
             form.setFieldsValue({
-                remote: 1
+                remote: EPermissions.ADMIN
             });
-        else form.setFieldsValue({ remote: 0 });
+        else form.setFieldsValue({ remote: EPermissions.USER });
     };
 
     useEffect(() => {
         if (payload) {
             mutate({
-                resource: "api/v1/users",
+                resource: USER_API,
                 values: payload,
             });
             if (createData?.data.message) form.resetFields();
@@ -392,9 +393,21 @@ export const UserCreate = (props: UserCreateProps) => {
             }}
         >
             <Tabs defaultActiveKey="1">
-                <TabPane tab={t("user.label.title.information")} key="1">
+                <TabPane tab={t("user.label.field.information")} key="1">
                     <Row gutter={16}>
                         <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label={t("user.label.field.last_name")}
+                                name="last_name"
+                            >
+                                <Input placeholder={t("user.label.placeholder.last_name")} />
+                            </Form.Item>
+                            {messageErr?.last_name && (
+                                <Typography.Text type="danger">
+                                    {messageErr.last_name[0]}
+                                </Typography.Text>
+                            )}
+
                             <Form.Item
                                 label={t("user.label.field.first_name")}
                                 name="first_name"
@@ -415,26 +428,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                     {messageErr.first_name[0]}
                                 </Typography.Text>
                             )}
-                            <Form.Item
-                                label={t("user.label.field.last_name")}
-                                name="last_name"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            t("user.label.field.last_name") +
-                                            " " +
-                                            t("user.label.message.required"),
-                                    },
-                                ]}
-                            >
-                                <Input placeholder={t("user.label.placeholder.last_name")} />
-                            </Form.Item>
-                            {messageErr?.last_name && (
-                                <Typography.Text type="danger">
-                                    {messageErr.last_name[0]}
-                                </Typography.Text>
-                            )}
+
                             <Form.Item
                                 label={t("user.label.field.username")}
                                 name="username"
@@ -451,7 +445,9 @@ export const UserCreate = (props: UserCreateProps) => {
                                 <Input placeholder={t("user.label.placeholder.username")} />
                             </Form.Item>
                             {messageErr?.username && (
-                                <Typography.Text type="danger">{messageErr.username}</Typography.Text>
+                                <Typography.Text type="danger">
+                                    {messageErr.username}
+                                </Typography.Text>
                             )}
 
                             <Form.Item
@@ -467,7 +463,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                     },
                                 ]}
                             >
-                                <Input type="password" />
+                                <Input type="password" minLength={10} />
                             </Form.Item>
                             {messageErr?.password && (
                                 <Typography.Text type="danger">
@@ -488,7 +484,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                     },
                                 ]}
                             >
-                                <Input type="password" />
+                                <Input type="password" minLength={10} />
                             </Form.Item>
                             {messageErr?.password_confirmation && (
                                 <Typography.Text type="danger">
@@ -500,8 +496,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                 label={t("user.label.field.email")}
                                 name="email"
                             >
-                                <Input
-                                    placeholder={t("user.label.placeholder.email")}
+                                <Input placeholder={t("user.label.placeholder.email")}
                                 />
                             </Form.Item>
                             {messageErr?.email && (
@@ -595,8 +590,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                 label={t("user.label.field.address")}
                                 name="address"
                             >
-                                <Input
-                                />
+                                <Input placeholder={t("user.label.placeholder.address")} />
                             </Form.Item>
                             {messageErr?.address && (
                                 <Typography.Text type="danger">
@@ -645,14 +639,22 @@ export const UserCreate = (props: UserCreateProps) => {
                         />
                     </Form.Item>
                     {messageErr?.notes && (
-                        <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+                        <Typography.Text type="danger">
+                            {messageErr.notes[0]}
+                        </Typography.Text>
                     )}
 
-                    <Form.Item label="Tải hình" name="avatar">
-                        <UploadImage id={"create"} file={file} setFile={setFile}></UploadImage>
+                    <Form.Item label={t("user.label.field.download_picter")} name="avatar">
+                        <UploadImage
+                            id={"create"}
+                            file={file}
+                            setFile={setFile}
+                        ></UploadImage>
                     </Form.Item>
                     {messageErr?.avatar && (
-                        <Typography.Text type="danger">{messageErr.avatar[0]}</Typography.Text>
+                        <Typography.Text type="danger">
+                            {messageErr.avatar[0]}
+                        </Typography.Text>
                     )}
                     <div className="submit">
                         <Button type="primary" htmlType="submit" loading={isLoading}>
@@ -660,7 +662,7 @@ export const UserCreate = (props: UserCreateProps) => {
                         </Button>
                     </div>
                 </TabPane>
-                <TabPane tab={t("user.label.title.permission")} key="2">
+                <TabPane tab={t("user.label.field.permission")} key="2">
                     <div className="title_permission">
                         <Form.Item name="permissions">
                             <div>

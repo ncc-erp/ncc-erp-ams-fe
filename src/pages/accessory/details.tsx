@@ -107,17 +107,22 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
       title={nameAccessary + " " + translate("accessory.label.title.accessory")}
     >
       <Table
+        className="list-table"
         {...tableProps}
         rowKey="id"
-        pagination={{
-          position: ["topRight", "bottomRight"],
-          total: pageTotal ? pageTotal : 0,
-        }}
+        pagination={
+          (pageTotal as number) > 10
+            ? {
+              position: ["topRight", "bottomRight"],
+              total: pageTotal ? pageTotal : 0,
+              showSizeChanger: true,
+            }
+            : false
+        }
       >
-        {collumns
-          .map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} sorter />
+        ))}
         <Table.Column<IAccesstoryResponse>
           title={translate("table.actions")}
           dataIndex="actions"

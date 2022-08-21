@@ -348,8 +348,7 @@
         "custom_fields": "Trường khách hàng",
         "supplier": "Nhà cung cấp",
         "manufacturers": "Nhà sản xuất",
-        "location": "Chi nhánh",
-        "information": "Thông tin"
+        "location": "Chi nhánh"
       },
       "field": {
         "notes": "Mô tả",
