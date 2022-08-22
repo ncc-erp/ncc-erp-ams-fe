@@ -229,7 +229,7 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
             name="location"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.location") +
                   " " +

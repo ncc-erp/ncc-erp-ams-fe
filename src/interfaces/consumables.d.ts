@@ -13,10 +13,11 @@ export interface IConsumablesRequest {
     total_consumables: number;
     notes: string;
     order_number: string;
-    purchase_cost: number;
     image: string;
     qty: number;
     date: string;
+    purchase_cost: string;
+    supplier: string;
   }
   export interface IConsumablesResponse {
     id: number;
@@ -30,6 +31,10 @@ export interface IConsumablesRequest {
       formatted: string;
     };
     manufacturer: {
+      id: number;
+      name: string;
+    };
+    supplier: {
       id: number;
       name: string;
     };
