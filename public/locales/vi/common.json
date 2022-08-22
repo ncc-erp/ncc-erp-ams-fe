@@ -164,6 +164,7 @@
         "dateCreate": "Ngày tạo",
         "manufacturer": "Nhà sản xuất",
         "purchase_date": "Ngày mua",
+        "purchase_cost": "Chi phí mua hàng",
         "eol": "EOL",
         "warranty_expires": "Hết hạn",
         "checkout_counter": "Thu hồi tài sản",
@@ -827,6 +828,7 @@
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
         "manufacturer": "Nhà sản xuất",
+        "supplier": "Nhà cung cấp",
         "location": "Chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
@@ -837,7 +839,9 @@
         "users": "Người dùng",
         "admin": "Admin",
         "checkout_date": "Ngày cấp phát",
-        "qty": "Tổng số"
+        "qty": "Tổng số",
+        "purchase_cost":"Chi phí mua hàng",
+        "vnd": "VND"
       },
       "message": {
         "required": "bắt buộc"
@@ -867,10 +871,12 @@
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
         "manufacturer": "Lựa chọn nhà sản xuất",
+        "supplier": "Lựa chọn nhà cung cấp",
         "location": "Lựa chọn một chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
-        "user":"Lựa chọn một người dùng"
+        "user":"Lựa chọn một người dùng",
+        "purchase_cost":"Chi phí mua hàng"
 
       }
     }

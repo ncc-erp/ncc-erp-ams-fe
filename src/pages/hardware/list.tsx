@@ -657,6 +657,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
+        key: "purchase_cost",
+        title: t("hardware.label.field.purchase_cost"),
+        render: (value: number) => <TextField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
+      },
+      {
         key: "order_number",
         title: t("hardware.label.field.orderNumber"),
         render: (value: string) => <TextField value={value ? value : ""} />,

@@ -23,11 +23,11 @@ import {
   CONSUMABLE_API,
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
-  MANUFACTURERS_SELECT_LIST_API,
+  SUPPLIERS_SELECT_LIST_API,
 } from "api/baseApi";
 import { IConsumablesRequest } from "interfaces/consumables";
 import { ILocation } from "interfaces/dashboard";
-import { IManufactures } from "interfaces/manufacturers";
+import { ISupplier } from "interfaces/supplier";
 
 type ConsumablesCreateProps = {
   isModalVisible: boolean;
@@ -71,8 +71,8 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
     ],
   });
 
-  const { selectProps: manufacturesSelectProps } = useSelect<IManufactures>({
-    resource: MANUFACTURERS_SELECT_LIST_API,
+  const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
+    resource: SUPPLIERS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -102,6 +102,12 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
     if (event.manufacturer !== undefined)
       formData.append("manufacturer_id", event.manufacturer);
     if (event.notes !== undefined) formData.append("notes", event.notes);
+
+    if (event.supplier !== undefined)
+      formData.append("supplier_id", event.supplier);
+    if (event.purchase_cost !== undefined) {
+      formData.append("purchase_cost", event.purchase_cost.toString());
+    }
 
     setPayload(formData);
   };
@@ -160,7 +166,7 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
             name="location"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("consumables.label.field.location") +
                   " " +
@@ -180,26 +186,41 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
           )}
 
           <Form.Item
-            label={t("consumables.label.field.manufacturer")}
-            name="manufacturer"
+            label={t("consumables.label.field.supplier")}
+            name="supplier"
             rules={[
               {
                 required: false,
                 message:
-                  t("consumables.label.field.manufacturer") +
+                  t("consumables.label.field.supplier") +
                   " " +
                   t("consumables.label.message.required"),
               },
             ]}
           >
             <Select
-              placeholder={t("consumables.label.placeholder.manufacturer")}
-              {...manufacturesSelectProps}
+              placeholder={t("consumables.label.placeholder.supplier")}
+              {...supplierSelectProps}
             />
           </Form.Item>
-          {messageErr?.manufacturer && (
+          {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.manufacturer}
+              {messageErr.supplier}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("consumables.label.field.purchase_cost")}
+            name="purchase_cost"
+          >
+            <Input
+              type="number"
+              addonAfter={t("consumables.label.field.vnd")}
+              placeholder={t("consumables.label.placeholder.purchase_cost")}
+            />
+          </Form.Item>
+          {messageErr?.purchase_cost && (
+            <Typography.Text type="danger">
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>
