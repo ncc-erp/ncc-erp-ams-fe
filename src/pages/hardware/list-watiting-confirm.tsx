@@ -61,6 +61,7 @@ import {
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
+import "styles/request.less";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -891,6 +892,7 @@ export const HardwareListWaitingConfirm: React.FC<
                 type="primary"
                 disabled={!selectedAcceptAndRefuse}
                 loading={loading}
+                className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
               >
                 {t("user.label.button.accept")}
               </Button>
@@ -963,6 +965,7 @@ export const HardwareListWaitingConfirm: React.FC<
         </>
       ) : (
         <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           pagination={

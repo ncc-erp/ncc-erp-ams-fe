@@ -1269,7 +1269,7 @@ export const HardwareListReadyToDeploy: React.FC<
         <div className="checkout-multiple-asset">
           <Button
             type="primary"
-            className="btn-select-checkout"
+            className="btn-select-checkout ant-btn-checkout"
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >
@@ -1334,6 +1334,7 @@ export const HardwareListReadyToDeploy: React.FC<
         </>
       ) : (
         <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}

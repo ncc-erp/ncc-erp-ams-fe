@@ -18,7 +18,6 @@ export interface IConsumablesRequest {
     qty: number;
     date: string;
   }
-
   export interface IConsumablesResponse {
     id: number;
     name: string;
@@ -70,7 +69,6 @@ export interface IConsumablesRequest {
     user_can_checkout: boolean;
     category: number;
   }
-  
   export interface IConsumablesResponseCheckout {
     id: number;
     name: string;

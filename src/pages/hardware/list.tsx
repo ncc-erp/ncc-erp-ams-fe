@@ -1285,7 +1285,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         <div className="checkout-multiple-asset">
           <Button
             type="primary"
-            className="btn-select-checkout"
+            className="btn-select-checkout ant-btn-checkout"
             onClick={handleCheckout}
             disabled={!selectedCheckout}
           >

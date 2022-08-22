@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -22,12 +21,7 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { ICheckboxChange } from "interfaces";
-import {
-  DEPARTMENT_SELECT_LIST_API,
-  LOCATION_API,
-  USERS_API,
-} from "api/baseApi";
+import { LOCATION_API, USERS_API } from "api/baseApi";
 import { IUser, IUserCreateRequest, IUserResponse } from "interfaces/user";
 import "styles/antd.less";
 import { EPermissions } from "constants/assets";
@@ -75,18 +69,6 @@ export const UserEdit = (props: UserCreateProps) => {
   });
 
   const { setFields } = form;
-
-  const { selectProps: departmentSelectProps } = useSelect<ICompany>({
-    resource: DEPARTMENT_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
 
   const { selectProps: userSelectProps } = useSelect<IUser>({
     resource: USERS_API,
@@ -349,7 +331,8 @@ export const UserEdit = (props: UserCreateProps) => {
                   {messageErr.email}
                 </Typography.Text>
               )}
-
+            </Col>
+            <Col className="gutter-row" span={12}>
               <Form.Item
                 label={t("user.label.field.user_manager")}
                 name="manager"
@@ -365,33 +348,7 @@ export const UserEdit = (props: UserCreateProps) => {
                   {messageErr.manager}
                 </Typography.Text>
               )}
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label={t("user.label.field.department")}
-                name="department"
-                initialValue={data?.department.id}
-              >
-                <Select
-                  {...departmentSelectProps}
-                  placeholder={t("user.label.placeholder.department")}
-                />
-              </Form.Item>
-              {messageErr?.department && (
-                <Typography.Text type="danger">
-                  {messageErr.department}
-                </Typography.Text>
-              )}
-              <Checkbox
-                name="remote"
-                style={{ marginTop: 20, marginBottom: "1.8rem" }}
-                checked={checkedRemote}
-                value={data?.remote}
-                onChange={(event: ICheckboxChange) => {
-                  setCheckedRemote(event.target.checked);
-                }}
-              ></Checkbox>{" "}
-              {t("user.label.field.remote_checkbox")}
+
               <Form.Item
                 label={t("user.label.field.locations")}
                 name="location"

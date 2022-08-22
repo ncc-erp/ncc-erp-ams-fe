@@ -231,6 +231,22 @@ export const LocationEdit = (props: LocationEditProps) => {
           >
             <Input placeholder={t("location.label.field.zip")} />
           </Form.Item>
+          <Form.Item
+            label={t("location.label.field.city")}
+            name="city"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("location.label.field.city") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+            initialValue={data?.city}
+          >
+            <Input placeholder={t("location.label.field.city")} />
+          </Form.Item>
         </Col>
 
         <Col className="gutter-row" span={12}>
@@ -281,22 +297,6 @@ export const LocationEdit = (props: LocationEditProps) => {
             initialValue={data?.state}
           >
             <Input placeholder={t("location.label.field.state")} />
-          </Form.Item>
-          <Form.Item
-            label={t("location.label.field.city")}
-            name="city"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("location.label.field.city") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.city}
-          >
-            <Input placeholder={t("location.label.field.city")} />
           </Form.Item>
         </Col>
       </Row>

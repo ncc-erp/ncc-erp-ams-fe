@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -25,14 +24,8 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import {
-  DEPARTMENT_SELECT_LIST_API,
-  LOCATION_API,
-  USERS_API,
-  USER_API,
-} from "api/baseApi";
+import { LOCATION_API, USERS_API, USER_API } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
-import { ICheckboxChange } from "interfaces";
 import { EPermissions } from "constants/assets";
 
 type UserCreateProps = {
@@ -66,18 +59,6 @@ export const UserCreate = (props: UserCreateProps) => {
 
   const { formProps, form } = useForm<IUserCreateRequest>({
     action: "create",
-  });
-
-  const { selectProps: departmentSelectProps } = useSelect<ICompany>({
-    resource: DEPARTMENT_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: userSelectProps } = useSelect<IUser>({
@@ -164,14 +145,6 @@ export const UserCreate = (props: UserCreateProps) => {
 
     setPayload(formData);
     form.resetFields();
-  };
-
-  const onCheckRemote = (event: ICheckboxChange) => {
-    if (event.target.checked)
-      form.setFieldsValue({
-        remote: EPermissions.ADMIN,
-      });
-    else form.setFieldsValue({ remote: EPermissions.USER });
   };
 
   useEffect(() => {
@@ -280,7 +253,11 @@ export const UserCreate = (props: UserCreateProps) => {
                   },
                 ]}
               >
-                <Input type="password" minLength={10} />
+                <Input
+                  type="password"
+                  placeholder="●●●●●●●●●●"
+                  minLength={10}
+                />
               </Form.Item>
               {messageErr?.password && (
                 <Typography.Text type="danger">
@@ -301,7 +278,11 @@ export const UserCreate = (props: UserCreateProps) => {
                   },
                 ]}
               >
-                <Input type="password" minLength={10} />
+                <Input
+                  type="password"
+                  placeholder="●●●●●●●●●●"
+                  minLength={10}
+                />
               </Form.Item>
               {messageErr?.password_confirmation && (
                 <Typography.Text type="danger">
@@ -317,7 +298,8 @@ export const UserCreate = (props: UserCreateProps) => {
                   {messageErr.email}
                 </Typography.Text>
               )}
-
+            </Col>
+            <Col className="gutter-row" span={12}>
               <Form.Item
                 label={t("user.label.field.user_manager")}
                 name="manager"
@@ -330,42 +312,6 @@ export const UserCreate = (props: UserCreateProps) => {
               {messageErr?.manager && (
                 <Typography.Text type="danger">
                   {messageErr.manager}
-                </Typography.Text>
-              )}
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label={t("user.label.field.department")}
-                name="department"
-              >
-                <Select
-                  {...departmentSelectProps}
-                  placeholder={t("user.label.placeholder.department")}
-                />
-              </Form.Item>
-              {messageErr?.department && (
-                <Typography.Text type="danger">
-                  {messageErr.department}
-                </Typography.Text>
-              )}
-
-              <Form.Item
-                label=""
-                name="remote"
-                valuePropName="checked"
-                style={{ marginBottom: "2.4rem" }}
-              >
-                <Checkbox
-                  onChange={(event) => {
-                    onCheckRemote(event);
-                  }}
-                >
-                  {t("user.label.field.remote_checkbox")}
-                </Checkbox>
-              </Form.Item>
-              {messageErr?.remote && (
-                <Typography.Text type="danger">
-                  {messageErr.remote}
                 </Typography.Text>
               )}
 
