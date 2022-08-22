@@ -39,6 +39,7 @@ import {
   getAssetAssignedStatusDecription,
   getBGAssetAssignedStatusDecription,
 } from "untils/assets";
+import "styles/request.less";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -434,6 +435,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 type="primary"
                 disabled={!selectedAcceptAndRefuse}
                 loading={loading}
+                className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
               >
                 {t("user.label.button.accept")}
               </Button>
@@ -538,7 +540,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <Table
           {...tableProps}
           rowKey="id"
-          scroll={{ x: 1827 }}
           pagination={{
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
@@ -548,6 +549,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             type: "checkbox",
             ...rowSelection,
           }}
+          scroll={{ x: 1900 }}
         >
           {collumns.map((col) => (
             <Table.Column

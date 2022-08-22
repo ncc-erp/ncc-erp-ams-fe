@@ -57,3 +57,140 @@ export const AccessType = {
   refuse: "-1",
   can: "0",
 };
+
+export const Permission = {
+  user: "user",
+  admin: "admin",
+  import: "import",
+  reports_view: "reports.view",
+  assets: [
+    "view",
+    "create",
+    "edit",
+    "delete",
+    "checkout",
+    "checkin",
+    "audit",
+    "view_requestable",
+  ],
+  accessories: ["view", "create", "edit", "delete", "checkout", "checkin"],
+  consumables: ["view", "create", "edit", "delete", "checkout"],
+  licenses: ["view", "create", "edit", "delete", "checkout", "keys", "files"],
+  users: ["view", "create", "edit", "delete"],
+  models: ["view", "create", "edit", "delete"],
+  categories: ["view", "create", "edit", "delete"],
+  departments: ["view", "create", "edit", "delete"],
+  statuslabels: ["view", "create", "edit", "delete"],
+  customfields: ["view", "create", "edit", "delete"],
+  suppliers: ["view", "create", "edit", "delete"],
+  manufacturers: ["view", "create", "edit", "delete"],
+  locations: ["view", "create", "edit", "delete"],
+};
+
+export const actions = {
+  import: EPermissions.USER,
+  reports_view: EPermissions.USER,
+  assets: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+    checkout: EPermissions.USER,
+    checkin: EPermissions.USER,
+    audit: EPermissions.USER,
+    view_requestable: EPermissions.USER,
+  },
+  accessories: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+    checkout: EPermissions.USER,
+    checkin: EPermissions.USER,
+  },
+  consumables: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+    checkout: EPermissions.USER,
+  },
+  licenses: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+    checkout: EPermissions.USER,
+    keys: EPermissions.USER,
+    files: EPermissions.USER,
+  },
+  users: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  models: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  categories: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  departments: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  statuslabels: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  customfields: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  suppliers: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  manufacturers: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+  locations: {
+    view: EPermissions.USER,
+    create: EPermissions.USER,
+    edit: EPermissions.USER,
+    delete: EPermissions.USER,
+  },
+};
+
+export const optionsPermissions = [
+  {
+    label: "",
+    value: AccessType.allow,
+  },
+  {
+    label: "",
+    value: AccessType.refuse,
+  },
+  {
+    label: "",
+    value: AccessType.can,
+  },
+];

@@ -52,7 +52,7 @@ const defaultCheckedList = [
   "name",
   "category",
   "purchase_date",
-  "manufacturer",
+  "supplier",
   "location",
   "qty",
   "notes",
@@ -177,6 +177,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
       {
+        key: "supplier",
+        title: translate("consumables.label.field.supplier"),
+        render: (value: IConsumablesRequest) => (
+          <TagField value={value ? value.name : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
+      },
+      {
         key: "location",
         title: translate("consumables.label.field.location"),
         render: (value: IConsumablesRequest) => (
@@ -194,6 +202,18 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             ""
           ),
         defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
+      },
+      {
+        key: "qty",
+        title: translate("consumables.label.field.total_consumables"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("qty", sorter),
+      },
+      {
+        key: "purchase_cost",
+        title: translate("consumables.label.field.purchase_cost"),
+        render: (value: number) => <TextField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
         key: "notes",
@@ -216,6 +236,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       manufacturer: {
         id: data?.manufacturer?.id,
         name: data?.manufacturer?.name,
+      },
+      supplier: {
+        id: data?.supplier?.id,
+        name: data?.supplier?.name,
       },
       notes: data.notes,
       location: {
@@ -509,7 +533,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-          className="list-table"
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1220 }}

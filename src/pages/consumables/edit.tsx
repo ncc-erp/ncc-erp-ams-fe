@@ -23,14 +23,14 @@ import {
   CONSUMABLE_API,
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
-  MANUFACTURERS_SELECT_LIST_API,
+  SUPPLIERS_SELECT_LIST_API,
 } from "api/baseApi";
 import {
   IConsumablesRequest,
   IConsumablesResponse,
 } from "interfaces/consumables";
 import { ILocation } from "interfaces/dashboard";
-import { IManufactures } from "interfaces/manufacturers";
+import { ISupplier } from "interfaces/supplier";
 
 type ConsumablesEditProps = {
   isModalVisible: boolean;
@@ -74,8 +74,8 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     ],
   });
 
-  const { selectProps: manufacturesSelectProps } = useSelect<IManufactures>({
-    resource: MANUFACTURERS_SELECT_LIST_API,
+  const { selectProps: supplierSelectProps } = useSelect<ISupplier>({
+    resource: SUPPLIERS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -116,7 +116,12 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     }
     if (event.manufacturer !== undefined)
       formData.append("manufacturer_id", event.manufacturer);
-    if (event.notes !== undefined) formData.append("notes", event.notes);
+    if (event.notes !== undefined) formData.append("notes", event.notes ?? "");
+
+    if (event.supplier !== undefined) {
+      formData.append("supplier_id", event.supplier);
+    }
+    formData.append("purchase_cost", event.purchase_cost ?? "");
 
     formData.append("_method", "PATCH");
     setPayload(formData);
@@ -131,12 +136,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       { name: "location_id", value: data?.location.id },
       {
         name: "notes",
-        value:
-          data?.notes !== undefined
-            ? data?.notes
-            : "" !== undefined
-            ? data?.notes
-            : "",
+        value: data?.notes ?? "",
       },
 
       {
@@ -146,6 +146,12 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       },
       { name: "qty", value: data?.qty },
       { name: "manufacturer_id", value: data?.manufacturer.id },
+      { name: "supplier_id", value: data?.supplier.id },
+      {
+        name: "purchase_cost",
+        value:
+          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+      },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -229,27 +235,59 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
           )}
 
           <Form.Item
-            label={t("consumables.label.field.manufacturer")}
-            name="manufacturer"
+            label={t("consumables.label.field.supplier")}
+            name="supplier"
             rules={[
               {
                 required: false,
                 message:
-                  t("consumables.label.field.manufacturer") +
+                  t("consumables.label.field.supplier") +
                   " " +
                   t("consumables.label.message.required"),
               },
             ]}
-            initialValue={data?.manufacturer.id}
+            initialValue={data?.supplier.id}
           >
             <Select
-              placeholder={t("consumables.label.placeholder.manufacturer")}
-              {...manufacturesSelectProps}
+              placeholder={t("consumables.label.placeholder.supplier")}
+              {...supplierSelectProps}
             />
           </Form.Item>
-          {messageErr?.manufacturer && (
+          {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.manufacturer}
+              {messageErr.supplier}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("consumables.label.field.purchase_cost")}
+            name="purchase_cost"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("consumables.label.field.supplier") +
+                  " " +
+                  t("consumables.label.message.required"),
+              },
+            ]}
+            initialValue={
+              data?.purchase_cost &&
+              data?.purchase_cost.toString().split(",")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("consumables.label.field.vnd")}
+              value={
+                data?.purchase_cost &&
+                data?.purchase_cost.toString().split(",")[0]
+              }
+            />
+          </Form.Item>
+          {messageErr?.purchase_cost && (
+            <Typography.Text type="danger">
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>

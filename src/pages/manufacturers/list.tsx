@@ -108,6 +108,18 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
       },
+      {
+        key: "accessories_count",
+        title: t("manufactures.label.field.accessoriesCount"),
+        render: (value: number) => <TagField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("accessories_count", sorter),
+      },
+      {
+        key: "consumables_count",
+        title: t("manufactures.label.field.consumableCount"),
+        render: (value: number) => <TagField value={value} />,
+        defaultSortOrder: getDefaultSortOrder("consumables_count", sorter),
+      },
 
       {
         key: "created_at",
@@ -145,6 +157,8 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
       setLoading(false);
     }, 300);
   };
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -210,7 +224,21 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </>
       ) : (
-        <Table {...tableProps} rowKey="id">
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+          scroll={{ x: 1100 }}
+        >
           {collumns.map((col) => (
             <Table.Column dataIndex={col.key} {...col} sorter />
           ))}

@@ -1054,6 +1054,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}

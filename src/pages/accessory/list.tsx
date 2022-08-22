@@ -215,6 +215,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("qty", sorter),
       },
       {
+        key: "purchase_cost",
+        title: translate("accessory.label.field.purchase_cost"),
+        render: (value: number) => <TextField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
+      },
+      {
         key: "notes",
         title: translate("accessory.label.field.notes"),
         render: (value: string) => <TextField value={value ? value : ""} />,
@@ -529,10 +535,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-          className="list-table"
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
-          scroll={{ x: 1220 }}
+          scroll={{ x: 1290 }}
           pagination={
             (pageTotal as number) > 10
               ? {

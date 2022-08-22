@@ -7,7 +7,6 @@ import {
     Select,
     useSelect,
     useForm,
-    Checkbox,
     Button,
     Row,
     Col,
@@ -26,14 +25,13 @@ import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
 import {
-    DEPARTMENT_SELECT_LIST_API,
     LOCATION_API,
     USERS_API,
     USER_API,
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import { ICheckboxChange } from "interfaces";
-import { AccessType, EPermissions } from "constants/assets";
+import { actions, EPermissions, Permission, optionsPermissions } from "constants/assets";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -41,115 +39,6 @@ type UserCreateProps = {
 };
 
 const { TabPane } = Tabs;
-
-const options = [
-    {
-        label: "",
-        value: AccessType.allow,
-    },
-    {
-        label: "",
-        value: AccessType.refuse,
-    },
-    {
-        label: "",
-        value: AccessType.can,
-    },
-];
-
-const actions = {
-    import: EPermissions.USER,
-    reports_view: EPermissions.USER,
-
-    assets: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER,
-        checkout: EPermissions.USER,
-        checkin: EPermissions.USER,
-        audit: EPermissions.USER,
-        view_requestable: EPermissions.USER
-    },
-    accessories: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER,
-        checkout: EPermissions.USER,
-        checkin: EPermissions.USER
-    },
-    consumables: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER,
-        checkout: EPermissions.USER
-    },
-    licenses: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER,
-        checkout: EPermissions.USER,
-        keys: EPermissions.USER,
-        files: EPermissions.USER
-    },
-    users: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    models: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    categories: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    departments: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    statuslabels: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    customfields: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    suppliers: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    manufacturers: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    },
-    locations: {
-        view: EPermissions.USER,
-        create: EPermissions.USER,
-        edit: EPermissions.USER,
-        delete: EPermissions.USER
-    }
-}
 
 export const UserCreate = (props: UserCreateProps) => {
     const { setIsModalVisible } = props;
@@ -167,18 +56,6 @@ export const UserCreate = (props: UserCreateProps) => {
 
     const { formProps, form } = useForm<IUserCreateRequest>({
         action: "create",
-    });
-
-    const { selectProps: departmentSelectProps } = useSelect<ICompany>({
-        resource: DEPARTMENT_SELECT_LIST_API,
-        optionLabel: "text",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
     });
 
     const { selectProps: userSelectProps } = useSelect<IUser>({
@@ -223,9 +100,6 @@ export const UserCreate = (props: UserCreateProps) => {
         if (event.manager !== undefined) {
             formData.append("manager_id", event.manager.toString());
         }
-        if (event.department !== undefined) {
-            formData.append("department_id", event.department.toString());
-        }
         if (event.location !== undefined) {
             formData.append("location_id", event.location.toString());
         }
@@ -249,9 +123,6 @@ export const UserCreate = (props: UserCreateProps) => {
             formData.append("image", event.avatar);
         }
 
-        if (event.remote !== undefined) {
-            formData.append("remote", event.remote.toString());
-        }
         formData.append("activated", "true");
         formData.append("ldap_import", "true");
         formData.append("two_factor_activated", "false");
@@ -272,7 +143,7 @@ export const UserCreate = (props: UserCreateProps) => {
                 "assets.checkin": permissionActions.assets.checkin,
                 "assets.checkout": permissionActions.assets.checkout,
                 "assets.audit": permissionActions.assets.audit,
-                "assets.view.requestable": permissionActions.assets.view_requestable,
+                "assets.view.requestable": permissionActions.assets["view_requestable"],
 
                 "accessories.view": permissionActions.accessories.view,
                 "accessories.create": permissionActions.accessories.create,
@@ -340,6 +211,7 @@ export const UserCreate = (props: UserCreateProps) => {
                 "locations.edit": permissionActions.locations.edit,
                 "locations.delete": permissionActions.locations.delete,
             });
+
             formData.append("permissions", permissions);
         }
 
@@ -504,7 +376,8 @@ export const UserCreate = (props: UserCreateProps) => {
                                     {messageErr.email}
                                 </Typography.Text>
                             )}
-
+                        </Col>
+                        <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label={t("user.label.field.user_manager")}
                                 name="manager"
@@ -517,42 +390,6 @@ export const UserCreate = (props: UserCreateProps) => {
                             {messageErr?.manager && (
                                 <Typography.Text type="danger">
                                     {messageErr.manager}
-                                </Typography.Text>
-                            )}
-                        </Col>
-                        <Col className="gutter-row" span={12}>
-                            <Form.Item
-                                label={t("user.label.field.department")}
-                                name="department"
-                            >
-                                <Select
-                                    {...departmentSelectProps}
-                                    placeholder={t("user.label.placeholder.department")}
-                                />
-                            </Form.Item>
-                            {messageErr?.department && (
-                                <Typography.Text type="danger">
-                                    {messageErr.department}
-                                </Typography.Text>
-                            )}
-
-                            <Form.Item
-                                label=""
-                                name="remote"
-                                valuePropName="checked"
-                                style={{ marginBottom: "2.4rem" }}
-                            >
-                                <Checkbox
-                                    onChange={(event) => {
-                                        onCheckRemote(event);
-                                    }}
-                                >
-                                    {t("user.label.field.remote_checkbox")}
-                                </Checkbox>
-                            </Form.Item>
-                            {messageErr?.remote && (
-                                <Typography.Text type="danger">
-                                    {messageErr.remote}
                                 </Typography.Text>
                             )}
 
@@ -674,6 +511,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={7}>
                                             <div style={style}>{t("user.label.title.permission")}</div>
@@ -699,21 +537,19 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div style={style}>{t("user.label.title.name_user")}</div>
                                         </Col>
                                         <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionsSuperUser(event.target.value)}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    marginTop: "0.5rem"
-                                                }}
-                                            />
+                                            <Form.Item name="superuser">
+                                                <Radio.Group
+                                                    options={optionsPermissions}
+                                                    onChange={event => setPermissionsSuperUser(event.target.value)}
+                                                    className="radio-actions"
+                                                />
+                                            </Form.Item>
                                         </Col>
                                     </Row>
                                 </div>
@@ -727,21 +563,19 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div style={style}>{t("user.label.title.admin")}</div>
                                         </Col>
                                         <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionsAdmin(event.target.value)}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    marginTop: "0.5rem"
-                                                }}
-                                            />
+                                            <Form.Item name="admin">
+                                                <Radio.Group
+                                                    options={optionsPermissions}
+                                                    onChange={event => setPermissionsAdmin(event.target.value)}
+                                                    className="radio-actions"
+                                                />
+                                            </Form.Item>
                                         </Col>
                                     </Row>
                                 </div>
@@ -755,23 +589,22 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div style={style}>{t("user.label.title.import_csv")}</div>
                                         </Col>
                                         <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    import: event.target.value
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
+                                            <Form.Item name="import">
+                                                <Radio.Group
+                                                    options={optionsPermissions}
+                                                    onChange={event => setPermissionActions(prevState => ({
+                                                        ...prevState,
+                                                        import: event.target.value
+                                                    }))}
+                                                    className="radio-actions"
+                                                />
+                                            </Form.Item>
                                         </Col>
                                     </Row>
                                 </div>
@@ -785,23 +618,22 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div style={style}>{t("user.label.title.report_view")}</div>
                                         </Col>
                                         <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    reports_view: event.target.value
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
+                                            <Form.Item name="reports.view">
+                                                <Radio.Group
+                                                    options={optionsPermissions}
+                                                    onChange={event => setPermissionActions(prevState => ({
+                                                        ...prevState,
+                                                        reports_view: event.target.value
+                                                    }))}
+                                                    className="radio-actions"
+                                                />
+                                            </Form.Item>
                                         </Col>
                                     </Row>
                                 </div>
@@ -815,13 +647,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div style={style}>{t("user.label.title.asset")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -829,223 +661,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkout")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        checkout: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkin")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        checkin: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.audit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        audit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view_requestable_assets")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    assets: {
-                                                        ...prevState.assets,
-                                                        view_requestable: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.assets || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`assets.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                assets: {
+                                                                    ...prevState.assets,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1058,12 +697,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.accessory")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1071,167 +711,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkout")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        checkout: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkin")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    accessories: {
-                                                        ...prevState.accessories,
-                                                        checkin: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.accessories || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`accessories.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                accessories: {
+                                                                    ...prevState.accessories,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1244,12 +747,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.consumables")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1257,139 +761,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    consumables: {
-                                                        ...prevState.consumables,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    consumables: {
-                                                        ...prevState.consumables,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    consumables: {
-                                                        ...prevState.consumables,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    consumables: {
-                                                        ...prevState.consumables,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkout")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    consumables: {
-                                                        ...prevState.consumables,
-                                                        checkout: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.consumables || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`consumables.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                consumables: {
+                                                                    ...prevState.consumables,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1402,12 +797,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.licenses")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1415,195 +811,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.checkout")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        checkout: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.keys_licenses")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        keys: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.files_licenses")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    licenses: {
-                                                        ...prevState.licenses,
-                                                        files: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.licenses || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`licenses.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                licenses: {
+                                                                    ...prevState.licenses,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1616,12 +847,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.name_user")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1629,111 +861,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    users: {
-                                                        ...prevState.users,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    users: {
-                                                        ...prevState.users,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    users: {
-                                                        ...prevState.users,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    users: {
-                                                        ...prevState.users,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.users || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`users.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                users: {
+                                                                    ...prevState.users,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1746,12 +897,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.model")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1759,111 +911,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    models: {
-                                                        ...prevState.models,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    models: {
-                                                        ...prevState.models,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    models: {
-                                                        ...prevState.models,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    models: {
-                                                        ...prevState.models,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.models || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`models.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                models: {
+                                                                    ...prevState.models,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -1876,12 +947,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.categories")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -1889,111 +961,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    categories: {
-                                                        ...prevState.categories,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    categories: {
-                                                        ...prevState.categories,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    categories: {
-                                                        ...prevState.categories,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    categories: {
-                                                        ...prevState.categories,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.categories || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`categories.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                categories: {
+                                                                    ...prevState.categories,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2006,12 +997,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.department")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2019,111 +1011,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    departments: {
-                                                        ...prevState.departments,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    departments: {
-                                                        ...prevState.departments,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    departments: {
-                                                        ...prevState.departments,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    departments: {
-                                                        ...prevState.departments,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.departments || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`departments.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                departments: {
+                                                                    ...prevState.departments,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2136,12 +1047,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.status_label")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2149,111 +1061,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    statuslabels: {
-                                                        ...prevState.statuslabels,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    statuslabels: {
-                                                        ...prevState.statuslabels,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    statuslabels: {
-                                                        ...prevState.statuslabels,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    statuslabels: {
-                                                        ...prevState.statuslabels,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.statuslabels || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`statuslabels.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                statuslabels: {
+                                                                    ...prevState.statuslabels,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2266,12 +1097,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.custom_fields")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2279,111 +1111,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    customfields: {
-                                                        ...prevState.customfields,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    customfields: {
-                                                        ...prevState.customfields,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    customfields: {
-                                                        ...prevState.customfields,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    customfields: {
-                                                        ...prevState.customfields,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.customfields || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`customfields.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                customfields: {
+                                                                    ...prevState.customfields,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2396,12 +1147,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.supplier")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2409,111 +1161,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    suppliers: {
-                                                        ...prevState.suppliers,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    suppliers: {
-                                                        ...prevState.suppliers,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    suppliers: {
-                                                        ...prevState.suppliers,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    suppliers: {
-                                                        ...prevState.suppliers,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.suppliers || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`suppliers.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                suppliers: {
+                                                                    ...prevState.suppliers,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2526,12 +1197,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.manufacturers")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2539,111 +1211,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    manufacturers: {
-                                                        ...prevState.manufacturers,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    manufacturers: {
-                                                        ...prevState.manufacturers,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    manufacturers: {
-                                                        ...prevState.manufacturers,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    manufacturers: {
-                                                        ...prevState.manufacturers,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.manufacturers || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`manufacturers.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                manufacturers: {
+                                                                    ...prevState.manufacturers,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
 
@@ -2656,12 +1247,13 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
+                                        className="title-row"
                                     >
                                         <Col className="gutter-row" span={6}>
                                             <div>{t("user.label.title.location")}</div>
                                         </Col>
                                     </Row>
-                                    <hr style={{ width: "60rem" }} />
+                                    <hr className="hr-row" />
                                     <Row
                                         gutter={{
                                             xs: 8,
@@ -2669,111 +1261,30 @@ export const UserCreate = (props: UserCreateProps) => {
                                             md: 24,
                                             lg: 32
                                         }}
-                                        style={{ marginTop: "1rem" }}
+                                        className="actions-row"
                                     >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    locations: {
-                                                        ...prevState.locations,
-                                                        view: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.create")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    locations: {
-                                                        ...prevState.locations,
-                                                        create: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.edit")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    locations: {
-                                                        ...prevState.locations,
-                                                        edit: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.delete")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Radio.Group
-                                                options={options}
-                                                onChange={event => setPermissionActions(prevState => ({
-                                                    ...prevState,
-                                                    locations: {
-                                                        ...prevState.locations,
-                                                        delete: event.target.value
-                                                    }
-                                                }))}
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            />
-                                        </Col>
+                                        {(Permission.locations || []).map((item: any) => (
+                                            <>
+                                                <Col className="gutter-row" span={6}>
+                                                    <div>{t(`user.label.title.${item}`)}</div>
+                                                </Col>
+                                                <Col className="gutter-row" span={17}>
+                                                    <Form.Item name={`locations.${item}`}>
+                                                        <Radio.Group
+                                                            options={optionsPermissions}
+                                                            onChange={event => setPermissionActions(prevState => ({
+                                                                ...prevState,
+                                                                locations: {
+                                                                    ...prevState.locations,
+                                                                    [`${item}`]: event.target.value
+                                                                }
+                                                            }))}
+                                                            className="radio-actions"
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </>
+                                        ))}
                                     </Row>
                                 </div>
                             </div>
@@ -2785,7 +1296,7 @@ export const UserCreate = (props: UserCreateProps) => {
                         </Button>
                     </div>
                 </TabPane>
-            </Tabs>
+            </Tabs >
         </Form >
     );
 };

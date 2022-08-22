@@ -14,10 +14,10 @@ export interface IAccesstoryRequest {
   total_accessory: number;
   notes: string;
   order_number: string;
-  purchase_cost: number;
   image: string;
   qty: number;
   date: string;
+  purchase_cost: string;
 }
 
 export interface IAccesstoryResponse {

@@ -144,7 +144,7 @@ export const ModelCreate = (props: ModelCreateProps) => {
           },
         ]}
       >
-        <Input />
+        <Input placeholder={t("model.label.placeholder.name")} />
       </Form.Item>
       {messageErr?.name && (
         <Typography.Text type="danger">{messageErr.name[0]}</Typography.Text>

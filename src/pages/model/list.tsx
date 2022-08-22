@@ -69,16 +69,27 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
+        key: "manufacturer",
+        title: t("model.label.field.manufacturer"),
+        render: (value: IModelResponse) => (
+          <TagField value={value ? value.name : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
+      },
+      {
+        key: "category",
+        title: t("model.label.field.category"),
+        render: (value: IModelResponse) => (
+          <TagField value={value ? value.name : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("category", sorter),
+      },
+
+      {
         key: "assets_count",
         title: t("model.label.field.assets"),
         render: (value: number) => <TagField value={value} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
-      },
-      {
-        key: "eol",
-        title: t("model.label.field.eol"),
-        render: (value: string) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("eol", sorter),
       },
     ],
     []
@@ -104,17 +115,9 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         id: data?.category.id,
         name: data?.category.name,
       },
-      eol: data.eol,
-      image: data?.image,
-      model_number: data?.model_number,
       notes: data?.notes,
       requestable: data?.requestable,
       assets_count: data?.assets_count,
-      depreciation: {
-        id: data.depreciation !== null ? data.depreciation.id : 0,
-        name: data.depreciation !== null ? data.depreciation.name : "",
-      },
-      fieldset: data?.fieldset,
     };
 
     setDetail(dataConvert);
@@ -133,17 +136,9 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         id: data?.category.id,
         name: data?.category.name,
       },
-      eol: data.eol,
-      image: data?.image,
-      model_number: data?.model_number,
       notes: data?.notes,
       requestable: data?.requestable,
       assets_count: data?.assets_count,
-      depreciation: {
-        id: data.depreciation !== null ? data.depreciation.id : 0,
-        name: data.depreciation !== null ? data.depreciation.name : "",
-      },
-      fieldset: data?.fieldset,
     };
 
     setDetailClone(dataConvert);

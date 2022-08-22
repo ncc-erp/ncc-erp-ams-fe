@@ -118,12 +118,17 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
       },
-
       {
         key: "assigned_assets_count",
         title: t("location.label.field.assetAssign"),
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assigned_assets_count", sorter),
+      },
+      {
+        key: "users_count",
+        title: t("location.label.field.users_count"),
+        render: (value: number) => <TagField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("users_count", sorter),
       },
       {
         key: "created_at",
@@ -161,6 +166,8 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       setLoading(false);
     }, 300);
   };
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -226,7 +233,21 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </>
       ) : (
-        <Table {...tableProps} rowKey="id">
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+          scroll={{ x: 1100 }}
+        >
           {collumns.map((col) => (
             <Table.Column dataIndex={col.key} {...col} sorter />
           ))}
