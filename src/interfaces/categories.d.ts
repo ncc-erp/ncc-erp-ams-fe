@@ -15,6 +15,7 @@ export interface ICategoryResponse {
     use_default_eula: boolean;
     image: string;
     assets_count: number;
+    item_count: number;
 }
 export interface ICategoryRequest {
     id: number;

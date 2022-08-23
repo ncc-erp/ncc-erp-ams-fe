@@ -302,8 +302,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       manufacturer: {
-        id: 0,
-        name: "",
+        id: data?.manufacturer.id,
+        name: data?.manufacturer.name,
       },
       checkin_counter: 0,
       checkout_counter: 0,
@@ -405,8 +405,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       manufacturer: {
-        id: 0,
-        name: "",
+        id: data?.manufacturer.id,
+        name: data?.manufacturer.name,
       },
       checkin_counter: 0,
       checkout_counter: 0,
