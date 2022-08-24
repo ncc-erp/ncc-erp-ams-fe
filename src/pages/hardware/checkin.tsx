@@ -26,6 +26,7 @@ import {
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
+  USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 
@@ -85,6 +86,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     ],
   });
 
+
   const {
     refetch,
     data: updateData,
@@ -130,7 +132,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
         name: "checkin_at",
         value: new Date().toISOString().substring(0, 10),
       },
-
+      { name: "assigned_to", value: data?.assigned_to },
       { name: "rtd_location", value: "" },
     ]);
   }, [data, form, isModalVisible, setFields]);
@@ -240,6 +242,22 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
               placeholder={t("hardware.label.placeholder.status")}
               {...filterStatusLabelSelectProps()}
             />
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.checkinTo")}
+            name="assigned_user"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.user") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.assigned_to.last_name + " " + data?.assigned_to.first_name + ' ('+ data?.assigned_to.username+')'}
+          >
+            <Input disabled={true}/>
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={12}>

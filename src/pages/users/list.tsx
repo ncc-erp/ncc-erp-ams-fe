@@ -37,7 +37,9 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
 
@@ -124,6 +126,20 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <TextField value={value ? value.name : ""} />
       ),
       defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
+    },
+    {
+      key: "status_label",
+      title: t("user.label.field.status"),
+      render: (value: IHardwareResponse) => (
+        <TagField
+          value={getAssetStatusDecription(value)}
+          style={{
+            background: getBGAssetStatusDecription(value),
+            color: "white",
+          }}
+        />
+      ),
+      defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
     },
     {
       dataIndex: "assigned_status",

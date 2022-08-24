@@ -102,6 +102,8 @@ export interface IHardwareResponse {
     id: number;
     name: string;
     username: string;
+    last_name: string;
+    first_name: string;
   };
   last_audit_date: string;
   requestable: string;
@@ -267,6 +269,7 @@ export interface IHardwareRequestCheckin {
   rtd_location: number;
   assigned_status: number;
   assigned_user: string;
+  assigned_to :string;
 }
 
 export interface IHardwareResponseCheckin {
@@ -287,7 +290,12 @@ export interface IHardwareResponseCheckin {
     id: number;
     name: string;
   };
-
+  assigned_to: {
+    id: number;
+    username: string;
+    last_name: string;
+    first_name: string;
+  };
   checkin_at: {
     date: string;
     formatted: string;

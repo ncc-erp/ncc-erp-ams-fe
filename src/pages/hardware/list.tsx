@@ -302,8 +302,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       manufacturer: {
-        id: 0,
-        name: "",
+        id: data?.manufacturer.id,
+        name: data?.manufacturer.name,
       },
       checkin_counter: 0,
       checkout_counter: 0,
@@ -405,8 +405,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       manufacturer: {
-        id: 0,
-        name: "",
+        id: data?.manufacturer.id,
+        name: data?.manufacturer.name,
       },
       checkin_counter: 0,
       checkout_counter: 0,
@@ -477,6 +477,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       checkin_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
+      },
+      assigned_to: {
+        id: data?.assigned_to.id,
+        username: data?.assigned_to.username,
+        last_name: data?.assigned_to.last_name,
+        first_name: data?.assigned_to.first_name,
       },
       rtd_location: {
         id: data?.id,

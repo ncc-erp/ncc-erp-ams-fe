@@ -132,14 +132,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     formData.append("notes", event.notes);
     formData.append("asset_tag", event.asset_tag);
-    formData.append("status_id", event.status_label.toString() ?? "");
+    if (event.status_label !== undefined) {
+      formData.append("status_id", event.status_label.toString());
+    }
     formData.append("warranty_months", event.warranty_months);
 
     formData.append("purchase_cost", event.purchase_cost ?? "");
     formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("location_id", event.rtd_location.toString());
-    formData.append("supplier_id", event.supplier.toString() ?? "");
+
+    if (event.supplier !== undefined) {
+      formData.append("supplier_id", event.supplier.toString());
+    }
 
     if (
       typeof event.image !== "string" &&
