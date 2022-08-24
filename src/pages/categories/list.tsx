@@ -77,6 +77,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       checkin_email: data?.checkin_email,
       use_default_eula: data?.use_default_eula,
       assets_count: data?.assets_count,
+      item_count: data?.item_count,
     };
 
     setDetail(dataConvert);
@@ -263,7 +264,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => edit(record)}
                   />
                 </Tooltip>
-                {record.assets_count > 0 ? (
+                {record.item_count > 0 ? (
                   <DeleteButton hideText size="small" disabled />
                 ) : (
                   <Tooltip
