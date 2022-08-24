@@ -62,7 +62,7 @@ import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { dateFormat, STATUS_LABELS } from "constants/assets";
+import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -205,6 +205,11 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           field: "status_id",
           operator: "eq",
           value: status_id,
+        },
+        {
+          field: "assigned_status",
+          operator: "eq",
+          value: searchParams.get("assigned_status"),
         }
       );
 
@@ -1078,6 +1083,49 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label={t("hardware.label.title.confirmStatus")}
+            name="assigned_status"
+            className={"search-month-location-null"}
+          >
+            <Select
+              defaultValue={"all"}
+              onChange={() => {
+                if (
+                  searchFormProps.form?.getFieldsValue()?.assigned_status ===
+                  "all"
+                ) {
+                  searchParams.delete("assigned_status");
+                  setSearchParams(searchParams);
+                  searchFormProps.form?.submit();
+                } else {
+                  searchFormProps.form?.submit();
+                  searchParams.set(
+                    "assigned_status",
+                    JSON.stringify(
+                      searchFormProps.form?.getFieldsValue()?.assigned_status
+                    )
+                  );
+                  setSearchParams(searchParams);
+                }
+              }}
+            >
+              <Option value={"all"}>{t("all")}</Option>
+              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>
+                {t("hardware.label.option_assigned.no-checkout")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>
+                {t("hardware.label.option_assigned.waiting-confirm")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.ACCEPT}>
+                {t("hardware.label.option_assigned.confirmed")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.REFUSE}>
+                {t("hardware.label.option_assigned.refuse")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>
