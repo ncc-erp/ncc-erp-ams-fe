@@ -14,7 +14,8 @@ export const AssetsSummaryPieChartCheckOut = (props: AssetsSummaryPieChartProps)
     const { assets_statistic } = props;
 
     const translate = useTranslate();
-    const data = assets_statistic;
+    const size = 6;
+    const data = assets_statistic.slice(0, size);
 
     const config = {
         appendPadding: 10,
@@ -61,7 +62,8 @@ export const AssetsSummaryPieChartCheckIn = (props: AssetsSummaryPieChartProps) 
     const { assets_statistic } = props;
 
     const translate = useTranslate();
-    const data = assets_statistic;
+    const size = 6;
+    const data = assets_statistic.slice(0, size);
 
     const config = {
         appendPadding: 10,
