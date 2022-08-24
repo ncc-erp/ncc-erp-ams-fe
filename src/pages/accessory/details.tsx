@@ -113,10 +113,10 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
         pagination={
           (pageTotal as number) > 10
             ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+              position: ["topRight", "bottomRight"],
+              total: pageTotal ? pageTotal : 0,
+              showSizeChanger: true,
+            }
             : false
         }
       >
@@ -136,8 +136,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
                   isLoadingArr[record.id] === undefined
                     ? false
                     : isLoadingArr[record.id] === false
-                    ? false
-                    : true
+                      ? false
+                      : true
                 }
                 onClick={() => checkin(record)}
               >

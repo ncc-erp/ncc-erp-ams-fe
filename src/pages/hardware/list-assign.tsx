@@ -494,6 +494,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
       },
+      assigned_to: {
+        id: data?.assigned_to.id,
+        username: data?.assigned_to.username,
+        last_name: data?.assigned_to.last_name,
+        first_name: data?.assigned_to.first_name,
+      },
       rtd_location: {
         id: data?.id,
         name: data?.name,

@@ -453,6 +453,12 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         status_type: data?.status_label.status_type,
         status_meta: data?.status_label.status_meta,
       },
+      assigned_to: {
+        id: data?.assigned_to.id,
+        username: data?.assigned_to.username,
+        last_name: data?.assigned_to.last_name,
+        first_name: data?.assigned_to.first_name,
+      },
       checkin_at: {
         date: new Date().toISOString().substring(0, 10),
         formatted: new Date().toDateString(),
