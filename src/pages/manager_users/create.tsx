@@ -30,8 +30,7 @@ import {
     USER_API,
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
-import { ICheckboxChange } from "interfaces";
-import { actions, EPermissions, Permission, optionsPermissions } from "constants/assets";
+import { Permission, optionsPermissions } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -42,17 +41,28 @@ const { TabPane } = Tabs;
 
 export const UserCreate = (props: UserCreateProps) => {
     const { setIsModalVisible } = props;
+    const t = useTranslate();
+
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
     const [payload, setPayload] = useState<FormData>();
     const [file, setFile] = useState<File>();
     const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
 
-    const [permissionsAdmin, setPermissionsAdmin] = useState(0);
-    const [permissionsSuperUser, setPermissionsSuperUser] = useState(0);
+    const [permissionActions, setPermissionActions] = useState<any>(Permission);
 
-    const [permissionActions, setPermissionActions] = useState(actions);
+    const permissionData: any = {};
+    Object.keys(permissionActions).forEach((categoryName: string) => {
+        const parentPermission: any = permissionActions[`${categoryName}`];
+        if (parentPermission.children && parentPermission.children.length > 0) {
+            parentPermission.children.forEach((childrenPermission: any) => {
+                permissionData[`${parentPermission.name}.${childrenPermission.name}`.toLowerCase()] = childrenPermission.default;
+            });
+        } else {
+            permissionData[`${parentPermission.name}`] = parentPermission.default;
+        }
+    })
 
-    const t = useTranslate();
+    const [permissionOfUser, setPermissionOfUser] = useState(permissionData);
 
     const { formProps, form } = useForm<IUserCreateRequest>({
         action: "create",
@@ -89,11 +99,13 @@ export const UserCreate = (props: UserCreateProps) => {
         const formData = new FormData();
 
         formData.append("first_name", event.first_name);
-        formData.append("last_name", event.last_name);
         formData.append("username", event.username);
         formData.append("password", event.password);
         formData.append("password_confirmation", event.password_confirmation);
 
+        if (event.last_name !== undefined) {
+            formData.append("last_name", event.last_name);
+        }
         if (event.email !== undefined) {
             formData.append("email", event.email);
         }
@@ -125,106 +137,14 @@ export const UserCreate = (props: UserCreateProps) => {
 
         formData.append("activated", "true");
         formData.append("ldap_import", "true");
-        formData.append("two_factor_activated", "false");
-        formData.append("two_factor_enrolled", "false");
-
-        if (event.permissions !== null) {
-            const permissions = JSON.stringify({
-                admin: permissionsAdmin,
-                superuser: permissionsSuperUser,
-
-                "import": permissionActions.import,
-                "reports.view": permissionActions.reports_view,
-
-                "assets.view": permissionActions.assets.view,
-                "assets.create": permissionActions.assets.create,
-                "assets.edit": permissionActions.assets.edit,
-                "assets.delete": permissionActions.assets.delete,
-                "assets.checkin": permissionActions.assets.checkin,
-                "assets.checkout": permissionActions.assets.checkout,
-                "assets.audit": permissionActions.assets.audit,
-                "assets.view.requestable": permissionActions.assets["view_requestable"],
-
-                "accessories.view": permissionActions.accessories.view,
-                "accessories.create": permissionActions.accessories.create,
-                "accessories.edit": permissionActions.accessories.edit,
-                "accessories.delete": permissionActions.accessories.delete,
-                "accessories.checkin": permissionActions.accessories.checkin,
-                "accessories.checkout": permissionActions.accessories.checkout,
-
-                "consumables.view": permissionActions.consumables.view,
-                "consumables.create": permissionActions.consumables.create,
-                "consumables.edit": permissionActions.consumables.edit,
-                "consumables.delete": permissionActions.consumables.delete,
-                "consumables.checkout": permissionActions.consumables.checkout,
-
-                "licenses.view": permissionActions.licenses.view,
-                "licenses.create": permissionActions.licenses.create,
-                "licenses.edit": permissionActions.licenses.edit,
-                "licenses.delete": permissionActions.licenses.delete,
-                "licenses.checkout": permissionActions.licenses.checkout,
-                "licenses.keys": permissionActions.licenses.keys,
-                "licenses.files": permissionActions.licenses.files,
-
-                "users.view": permissionActions.users.view,
-                "users.create": permissionActions.users.create,
-                "users.edit": permissionActions.users.edit,
-                "users.delete": permissionActions.users.delete,
-
-                "models.view": permissionActions.models.view,
-                "models.create": permissionActions.models.create,
-                "models.edit": permissionActions.models.edit,
-                "models.delete": permissionActions.models.delete,
-
-                "categories.view": permissionActions.categories.view,
-                "categories.create": permissionActions.categories.create,
-                "categories.edit": permissionActions.categories.edit,
-                "categories.delete": permissionActions.categories.delete,
-
-                "departments.view": permissionActions.departments.view,
-                "departments.create": permissionActions.departments.create,
-                "departments.edit": permissionActions.departments.edit,
-                "departments.delete": permissionActions.departments.delete,
-
-                "statuslabels.view": permissionActions.statuslabels.view,
-                "statuslabels.create": permissionActions.statuslabels.create,
-                "statuslabels.edit": permissionActions.statuslabels.edit,
-                "statuslabels.delete": permissionActions.statuslabels.delete,
-
-                "customfields.view": permissionActions.customfields.view,
-                "customfields.create": permissionActions.customfields.create,
-                "customfields.edit": permissionActions.customfields.edit,
-                "customfields.delete": permissionActions.customfields.delete,
-
-                "suppliers.view": permissionActions.suppliers.view,
-                "suppliers.create": permissionActions.suppliers.create,
-                "suppliers.edit": permissionActions.suppliers.edit,
-                "suppliers.delete": permissionActions.suppliers.delete,
-
-                "manufacturers.view": permissionActions.manufacturers.view,
-                "manufacturers.create": permissionActions.manufacturers.create,
-                "manufacturers.edit": permissionActions.manufacturers.edit,
-                "manufacturers.delete": permissionActions.manufacturers.delete,
-
-                "locations.view": permissionActions.locations.view,
-                "locations.create": permissionActions.locations.create,
-                "locations.edit": permissionActions.locations.edit,
-                "locations.delete": permissionActions.locations.delete,
-            });
-
-            formData.append("permissions", permissions);
+        // formData.append("two_factor_activated", "false");
+        // formData.append("two_factor_enrolled", "false");
+        if (event.permissions !== undefined) {
+            formData.append("permissions", JSON.stringify(permissionOfUser));
         }
 
         setPayload(formData);
         form.resetFields();
-    };
-
-    const onCheckRemote = (event: ICheckboxChange) => {
-        if (event.target.checked)
-            form.setFieldsValue({
-                remote: EPermissions.ADMIN
-            });
-        else form.setFieldsValue({ remote: EPermissions.USER });
     };
 
     useEffect(() => {
@@ -528,765 +448,78 @@ export const UserCreate = (props: UserCreateProps) => {
                                     </Row>
                                 </div>
 
-                                {/* Super User */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div style={style}>{t("user.label.title.name_user")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Form.Item name="superuser">
-                                                <Radio.Group
-                                                    options={optionsPermissions}
-                                                    onChange={event => setPermissionsSuperUser(event.target.value)}
-                                                    className="radio-actions"
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                </div>
-
-                                {/* Admin */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div style={style}>{t("user.label.title.admin")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Form.Item name="admin">
-                                                <Radio.Group
-                                                    options={optionsPermissions}
-                                                    onChange={event => setPermissionsAdmin(event.target.value)}
-                                                    className="radio-actions"
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                </div>
-
-                                {/* CSV Import */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div style={style}>{t("user.label.title.import_csv")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Form.Item name="import">
-                                                <Radio.Group
-                                                    options={optionsPermissions}
-                                                    onChange={event => setPermissionActions(prevState => ({
-                                                        ...prevState,
-                                                        import: event.target.value
-                                                    }))}
-                                                    className="radio-actions"
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                </div>
-
-                                {/* Reports: View */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div style={style}>{t("user.label.title.report_view")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={17}>
-                                            <Form.Item name="reports.view">
-                                                <Radio.Group
-                                                    options={optionsPermissions}
-                                                    onChange={event => setPermissionActions(prevState => ({
-                                                        ...prevState,
-                                                        reports_view: event.target.value
-                                                    }))}
-                                                    className="radio-actions"
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-                                </div>
-
-                                {/* Assets */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div style={style}>{t("user.label.title.asset")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.assets || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
+                                {Object.values(Permission).map((key, index) => (
+                                    <div className="list-permission">
+                                        <Row
+                                            gutter={{
+                                                xs: 8,
+                                                sm: 16,
+                                                md: 24,
+                                                lg: 32
+                                            }}
+                                            className="title-row"
+                                        >
+                                            <Col className="gutter-row" span={6}>
+                                                <div>{t(`user.label.title.${key.name}`)}</div>
+                                            </Col>
+                                            {index < 4 &&
                                                 <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`assets.${item}`}>
+                                                    <Form.Item name={`${key.name}`}>
                                                         <Radio.Group
                                                             options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                assets: {
-                                                                    ...prevState.assets,
-                                                                    [`${item}`]: event.target.value
+                                                            onChange={event => setPermissionOfUser((prevState: any) => {
+                                                                return {
+                                                                    ...prevState,
+                                                                    [key.name]: event.target.value
                                                                 }
-                                                            }))}
+                                                            })}
                                                             className="radio-actions"
+                                                            name={key.name}
                                                         />
                                                     </Form.Item>
                                                 </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
+                                            }
+                                        </Row>
 
-                                {/* Accessory */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.accessory")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.accessories || []).map((item: any) => (
+                                        {key?.children && key?.children.length > 0 && <hr className="hr-row" />}
+                                        {key?.children && key?.children.length > 0 && key?.children?.map((item: any) =>
+                                        (
                                             <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`accessories.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                accessories: {
-                                                                    ...prevState.accessories,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
+                                                <Row
+                                                    gutter={{
+                                                        xs: 8,
+                                                        sm: 16,
+                                                        md: 24,
+                                                        lg: 32
+                                                    }}
+                                                    className="actions-row"
+                                                >
+                                                    <Col className="gutter-row" span={6}>
+                                                        {item.code === 'view.requestable' ?
+                                                            <div>{t(`user.label.title.view_requestable`)}</div>
+                                                            :
+                                                            <div>{t(`user.label.title.${item.code}`)}</div>
+                                                        }
+                                                    </Col>
+                                                    <Col className="gutter-row" span={17}>
+                                                        <Form.Item name={`${key.name}.${item.code}`}>
+                                                            <Radio.Group
+                                                                options={optionsPermissions}
+                                                                onChange={event => setPermissionOfUser((prevState: any) => {
+                                                                    return {
+                                                                        ...prevState,
+                                                                        [`${key.name}.${item.code}`]: event.target.value
+                                                                    }
+                                                                })}
+                                                                className="radio-actions"
+                                                            />
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
                                             </>
                                         ))}
-                                    </Row>
-                                </div>
-
-                                {/* Consumables */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.consumables")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.consumables || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`consumables.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                consumables: {
-                                                                    ...prevState.consumables,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Licenses */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.licenses")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.licenses || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`licenses.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                licenses: {
-                                                                    ...prevState.licenses,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Users */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.name_user")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.users || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`users.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                users: {
-                                                                    ...prevState.users,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Models */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.model")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.models || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`models.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                models: {
-                                                                    ...prevState.models,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Categories */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.categories")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.categories || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`categories.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                categories: {
-                                                                    ...prevState.categories,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Departments */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.department")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.departments || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`departments.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                departments: {
-                                                                    ...prevState.departments,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Statuslabels */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.status_label")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.statuslabels || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`statuslabels.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                statuslabels: {
-                                                                    ...prevState.statuslabels,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Customfields */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.custom_fields")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.customfields || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`customfields.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                customfields: {
-                                                                    ...prevState.customfields,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Suppliers */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.supplier")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.suppliers || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`suppliers.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                suppliers: {
-                                                                    ...prevState.suppliers,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Manufacturers */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.manufacturers")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.manufacturers || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`manufacturers.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                manufacturers: {
-                                                                    ...prevState.manufacturers,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
-
-                                {/* Locations */}
-                                <div className="list-permission">
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="title-row"
-                                    >
-                                        <Col className="gutter-row" span={6}>
-                                            <div>{t("user.label.title.location")}</div>
-                                        </Col>
-                                    </Row>
-                                    <hr className="hr-row" />
-                                    <Row
-                                        gutter={{
-                                            xs: 8,
-                                            sm: 16,
-                                            md: 24,
-                                            lg: 32
-                                        }}
-                                        className="actions-row"
-                                    >
-                                        {(Permission.locations || []).map((item: any) => (
-                                            <>
-                                                <Col className="gutter-row" span={6}>
-                                                    <div>{t(`user.label.title.${item}`)}</div>
-                                                </Col>
-                                                <Col className="gutter-row" span={17}>
-                                                    <Form.Item name={`locations.${item}`}>
-                                                        <Radio.Group
-                                                            options={optionsPermissions}
-                                                            onChange={event => setPermissionActions(prevState => ({
-                                                                ...prevState,
-                                                                locations: {
-                                                                    ...prevState.locations,
-                                                                    [`${item}`]: event.target.value
-                                                                }
-                                                            }))}
-                                                            className="radio-actions"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
-                                        ))}
-                                    </Row>
-                                </div>
+                                    </div>
+                                ))}
                             </div>
                         </Form.Item>
                     </div>
