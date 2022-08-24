@@ -267,8 +267,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     tableQueryResult.refetch();
   };
 
-  const edit = (data: IUserResponse) => {
-    const dataConvert: IUserResponse = {
+  const edit = (data: any) => {
+    const dataConvert: any = {
       id: data.id,
       first_name: data.first_name,
       last_name: data.last_name,
@@ -302,12 +302,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       assets_count: data?.assets_count,
       name: data?.name,
       password: data?.password,
-      permissions: {
-        admin: data?.permissions !== null ? data?.permissions.admin : "",
-        superuser:
-          data?.permissions !== null ? data?.permissions.superuser : "",
-      },
       password_confirmation: data?.password_confirmation,
+      permissions: data?.permissions !== null ? data?.permissions : ""
     };
 
     setDetail(dataConvert);

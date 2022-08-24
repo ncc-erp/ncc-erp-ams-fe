@@ -165,7 +165,6 @@
         "dateCreate": "Ngày tạo",
         "manufacturer": "Nhà sản xuất",
         "purchase_date": "Ngày mua",
-        "purchase_cost": "Chi phí mua hàng",
         "eol": "EOL",
         "warranty_expires": "Hết hạn",
         "checkout_counter": "Thu hồi tài sản",
@@ -324,7 +323,39 @@
         "clone": "Clone",
         "create": "Tạo mới",
         "name_user": "Người dùng",
-        "changePassword": "Thay đổi mật khẩu"
+        "changePassword": "Thay đổi mật khẩu",
+        "permission": "Phân quyền",
+        "grant": "Cho phép",
+        "refuse": "Từ chối",
+        "inheritance": "Kế thừa",
+        "admin": "Admin",
+        "import_csv": "Nhập CSV",
+        "asset": "Thiết bị",
+        "view": "Xem",
+        "delete": "Xoá",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "audit": "Kiểm tra",
+        "view_requestable": "Xem thiết bị được yêu cầu",
+        "accessory": "Phụ kiện",
+        "consumables": "Văn phòng phẩm",
+        "licenses": "Bản quyền",
+        "keys": "Xem mã bản quyền",
+        "files": "Xem và sửa tập tin bản quyền",
+        "models": "Kiểu tài sản",
+        "categories": "Danh mục",
+        "departments": "Phòng ban",
+        "statuslabels": "Trạng thái",
+        "customfields": "Trường khách hàng",
+        "suppliers": "Nhà cung cấp",
+        "manufacturers": "Nhà sản xuất",
+        "locations": "Chi nhánh",
+        "superuser": "Người dùng",
+        "assets": "Thiết bị",
+        "import": "Nhập CSV",
+        "reports.view": "Báo cáo",
+        "accessories": "Phụ kiện",
+        "users": "Người dùng"
       },
       "field": {
         "notes": "Mô tả",
@@ -476,10 +507,8 @@
         "email": "Hỗ trợ Email",
         "image": "Tải hình",
         "imageTable": "Hình ảnh",
-        "assetCount": "Tài sản",
-        "dateCreate": "Ngày tạo",
-        "accessoriesCount": "Phụ kiện",
-        "consumableCount" : "Văn phòng phẩm"
+        "assetCount": "Số lượng",
+        "dateCreate": "Ngày tạo"
       },
       "placeholder": {
         "url": "https://",
@@ -517,7 +546,7 @@
         "zip": "Zip",
         "image": "Tải hình",
         "imageTable": "Hình ảnh",
-        "assetCount": "Tài sản",
+        "assetCount": "Số lượng",
         "assetAssign": "Assets Assigned",
         "dateCreate": "Ngày tạo",
         "users_count": "Thành viên"
@@ -596,8 +625,7 @@
       },
       "placeholder": {
         "manufacturer": "Lựa chọn một chi nhánh",
-        "category": "Chọn một danh mục",
-        "name": "Tên kiểu tài sản"
+        "category": "Chọn một danh mục"
       },
       "message": {
         "required": "bắt buộc"
@@ -780,8 +808,7 @@
         "end-date": "Ngày kết thúc",
         "users": "Người dùng",
         "checkout_date": "Ngày cấp phát",
-        "checkin_date": "Ngày thu hồi",
-        "cost":"Chi phí mua hàng"
+        "checkin_date": "Ngày thu hồi"
       },
       "message": {
         "required": "bắt buộc"
@@ -801,8 +828,7 @@
         "location": "Lựa chọn một Chi nhánh",
         "total_accessory": "Số lượng",
         "notes": "Ghi chú",
-        "user": "Lựa chọn một người dùng",
-        "cost": "Chi phí mua hàng"
+        "user": "Lựa chọn một người dùng"
       },
       "title": {
         "accessory": "Phụ kiện",
@@ -830,7 +856,6 @@
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
         "manufacturer": "Nhà sản xuất",
-        "supplier": "Nhà cung cấp",
         "location": "Chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
@@ -840,10 +865,7 @@
         "checkoutTo": "Cấp phát đến",
         "users": "Người dùng",
         "admin": "Admin",
-        "checkout_date": "Ngày cấp phát",
-        "qty": "Tổng số",
-        "purchase_cost":"Chi phí mua hàng",
-        "vnd": "VND"
+        "checkout_date": "Ngày cấp phát"
       },
       "message": {
         "required": "bắt buộc"
@@ -873,12 +895,10 @@
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
         "manufacturer": "Lựa chọn nhà sản xuất",
-        "supplier": "Lựa chọn nhà cung cấp",
         "location": "Lựa chọn một chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
-        "user":"Lựa chọn một người dùng",
-        "purchase_cost":"Chi phí mua hàng"
+        "user":"Lựa chọn một người dùng"
 
       }
     }

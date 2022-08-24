@@ -32,23 +32,17 @@ export enum EStatus {
 }
 
 export const TypeAssetHistory = {
-  CHECKOUT: 'checkout',
-  CHECKIN: 'checkin from',
-}
+  CHECKOUT: "checkout",
+  CHECKIN: "checkin from",
+};
 
 export const ActionType = {
-  "checkout": "Cấp phát",
+  checkout: "Cấp phát",
   "checkin from": "Thu hồi",
-  "update": "Chỉnh sửa",
-  "delete": "Xóa",
+  update: "Chỉnh sửa",
+  delete: "Xóa",
   "create new": "Tạo mới",
-  "create": "Tạo mới",
+  create: "Tạo mới",
 };
 
 export const dateFormat = "YYYY/MM/DD";
-
-export enum EPermissions {
-  ADMIN =  "1",
-  USER = "0"
-}
-

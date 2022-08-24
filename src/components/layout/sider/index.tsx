@@ -11,7 +11,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
-import { EPermissions } from "constants/assets";
+import { EPermissions } from "constants/permissions";
 
 const {
   RightOutlined,
@@ -167,11 +167,11 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
-                      `${translate("resource.assets-readyToDeploy")}` ||
+                    `${translate("resource.assets-readyToDeploy")}` ||
                     item.name === `${translate("resource.assets-pending")}` ||
                     item.name === `${translate("resource.assets-broken")}` ||
                     item.name ===
-                      `${translate("resource.assets-waiting-confirm")}`
+                    `${translate("resource.assets-waiting-confirm")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
