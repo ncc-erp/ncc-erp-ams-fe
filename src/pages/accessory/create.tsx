@@ -106,6 +106,7 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
     if (event.purchase_cost !== undefined) {
       formData.append("purchase_cost", event.purchase_cost.toString());
     }
+    formData.append("warranty_months", event.warranty_months);
 
     setPayload(formData);
   };
@@ -278,6 +279,31 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
           {messageErr?.total_accessory && (
             <Typography.Text type="danger">
               {messageErr.total_accessory}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("accessory.label.field.insurance")}
+            name="warranty_months"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("accessory.label.field.insurance") +
+                  " " +
+                  t("accessory.label.message.required"),
+              },
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("accessory.label.field.month")}
+              placeholder={t("accessory.label.placeholder.insurance")}
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
         </Col>

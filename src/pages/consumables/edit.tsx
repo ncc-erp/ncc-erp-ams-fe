@@ -122,6 +122,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       formData.append("supplier_id", event.supplier);
     }
     formData.append("purchase_cost", event.purchase_cost ?? "");
+    formData.append("warranty_months", event.warranty_months);
 
     formData.append("_method", "PATCH");
     setPayload(formData);
@@ -151,6 +152,10 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
         name: "purchase_cost",
         value:
           data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+      },
+      {
+        name: "warranty_months",
+        value: data?.warranty_months,
       },
     ]);
   }, [data, form, isModalVisible]);
@@ -352,6 +357,32 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
           {messageErr?.total_consumables && (
             <Typography.Text type="danger">
               {messageErr.total_consumables}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("consumables.label.field.insurance")}
+            name="warranty_months"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("consumables.label.field.insurance") +
+                  " " +
+                  t("consumables.label.message.required"),
+              },
+            ]}
+            initialValue={data?.warranty_months}
+          >
+            <Input
+              type="number"
+              addonAfter={t("consumables.label.field.month")}
+              value={data?.warranty_months}
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
         </Col>

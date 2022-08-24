@@ -83,8 +83,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location_id = searchParams.get("location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
+  const dateFromParam = searchParams.get("date_from ");
+  const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
@@ -116,14 +116,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         },
 
         {
-          field: "dateFrom",
+          field: "date_from",
           operator: "eq",
           value: purchase_date
             ? purchase_date[0].toISOString().substring(0, 10)
             : undefined,
         },
         {
-          field: "dateTo",
+          field: "date_to",
           operator: "eq",
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
@@ -175,6 +175,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           <TagField value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
+      },
+      {
+        key: "warranty_months",
+        title: translate("consumables.label.field.insurance"),
+        render: (value: IConsumablesRequest) => (
+          <TagField value={value ? value : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
       },
       {
         key: "supplier",
@@ -258,6 +266,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       qty: data ? data.qty : 0,
       user_can_checkout: data?.user_can_checkout,
       assigned_to: data?.assigned_to,
+      warranty_months: data?.warranty_months,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -384,16 +393,16 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
     if (val !== null) {
       searchParams.set(
-        "dateFrom",
+        "date_from",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
       );
       searchParams.set(
-        "dateTo",
+        "date_to",
         to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
       );
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      searchParams.delete("date_from");
+      searchParams.delete("date_to");
     }
     setSearchParams(searchParams);
 
