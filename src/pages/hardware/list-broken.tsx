@@ -58,7 +58,7 @@ import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { dateFormat, STATUS_LABELS } from "constants/assets";
+import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -182,6 +182,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "assigned_status",
+          operator: "eq",
+          value: searchParams.get("assigned_status"),
         }
       );
 
@@ -420,8 +425,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         name: data?.assigned_location?.name,
       },
       checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+        formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       assigned_user: data?.assigned_user,
       model_number: data?.model_number,
@@ -449,8 +454,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         status_meta: data?.status_label.status_meta,
       },
       checkin_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+        formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       assigned_to: {
         id: data?.assigned_to.id,
@@ -588,9 +593,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.date : ""} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.date : ""} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
@@ -608,9 +616,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.date : ""} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.date : ""} />
+          ) : (
+            ""
+          ),
       },
       {
         key: "notes",
@@ -653,9 +664,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.datetime : ""} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.datetime : ""} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
@@ -895,6 +909,48 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value}>{item.label}</Option>
               ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.title.confirmStatus")}
+            name="assigned_status"
+            className={"search-month-location-null"}
+          >
+            <Select
+              defaultValue={"all"}
+              onChange={() => {
+                if (
+                  searchFormProps.form?.getFieldsValue()?.assigned_status ===
+                  "all"
+                ) {
+                  searchParams.delete("assigned_status");
+                  setSearchParams(searchParams);
+                  searchFormProps.form?.submit();
+                } else {
+                  searchFormProps.form?.submit();
+                  searchParams.set(
+                    "assigned_status",
+                    JSON.stringify(
+                      searchFormProps.form?.getFieldsValue()?.assigned_status
+                    )
+                  );
+                  setSearchParams(searchParams);
+                }
+              }}
+            >
+              <Option value={"all"}>{t("all")}</Option>
+              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>
+                {t("hardware.label.option_assigned.no-checkout")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>
+                {t("hardware.label.option_assigned.waiting-confirm")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.ACCEPT}>
+                {t("hardware.label.option_assigned.confirmed")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.REFUSE}>
+                {t("hardware.label.option_assigned.refuse")}
+              </Option>
             </Select>
           </Form.Item>
         </Form>

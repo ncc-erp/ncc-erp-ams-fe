@@ -220,12 +220,6 @@ export const HardwareListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
-        key: "model_number",
-        title: "Model No",
-        render: (value: IHardwareResponse) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("model_number", sorter),
-      },
-      {
         key: "category",
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
@@ -288,9 +282,12 @@ export const HardwareListWaitingConfirm: React.FC<
       {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.date : ""} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.date : ""} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
@@ -308,33 +305,14 @@ export const HardwareListWaitingConfirm: React.FC<
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value && value.date} />
-        ),
+        render: (value: IHardware) =>
+          value ? <DateField format="LLL" value={value && value.date} /> : "",
       },
       {
         key: "notes",
         title: t("hardware.label.field.note"),
         render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
-      },
-      {
-        key: "checkout_counter",
-        title: t("hardware.label.field.checkout_counter"),
-        render: (value: number) => <TextField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
-      },
-      {
-        key: "checkin_counter",
-        title: t("hardware.label.field.checkin_counter"),
-        render: (value: number) => <TextField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
-      },
-      {
-        key: "requestable",
-        title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
         key: "assigned_status",
@@ -351,11 +329,25 @@ export const HardwareListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       },
       {
+        key: "last_checkout",
+        title: t("hardware.label.field.dateCheckout"),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.datetime : ""} />
+          ) : (
+            ""
+          ),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
+      },
+      {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value && value.datetime} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value && value.datetime} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],

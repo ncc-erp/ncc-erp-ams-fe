@@ -128,20 +128,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
     },
     {
-      key: "status_label",
-      title: t("user.label.field.status"),
-      render: (value: IHardwareResponse) => (
-        <TagField
-          value={getAssetStatusDecription(value)}
-          style={{
-            background: getBGAssetStatusDecription(value),
-            color: "white",
-          }}
-        />
-      ),
-      defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-    },
-    {
       dataIndex: "assigned_status",
       title: t("user.label.field.condition"),
       render: (value: number) => (
@@ -186,9 +172,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     {
       dataIndex: "last_checkout",
       title: t("user.label.field.dateCheckout"),
-      render: (value: IHardware) => (
-        <DateField format="LLL" value={value ? value.datetime : ""} />
-      ),
+      render: (value: IHardware) =>
+        value ? (
+          <DateField format="LLL" value={value ? value.datetime : ""} />
+        ) : (
+          ""
+        ),
       defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
     },
   ];
@@ -456,6 +445,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 {t("user.label.button.accept")}
               </Button>
             </Popconfirm>
+
             <Button
               type="primary"
               onClick={handleCancel}
@@ -590,6 +580,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     onClick={() => show(record)}
                   />
                 </Tooltip>
+
                 {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Popconfirm
                     title={t("hardware.label.button.accept")}
