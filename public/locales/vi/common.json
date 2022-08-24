@@ -422,7 +422,10 @@
         "synchronized": "Đồng bộ",
         "update": "Chỉnh sửa",
         "changePass": "Đổi mật khẩu",
-        "accept": "Xác nhận"
+        "accept": "Xác nhận",
+        "accept_checkout": "Xác nhận cấp pháp trong trường hợp cấp phát",
+        "refuse_checkin": "Xác nhận thu hồi trong trường hợp thu hồi"
+
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -808,10 +811,14 @@
         "end-date": "Ngày kết thúc",
         "users": "Người dùng",
         "checkout_date": "Ngày cấp phát",
-        "checkin_date": "Ngày thu hồi"
+        "checkin_date": "Ngày thu hồi",
+        "cost":"Chi phí mua hàng",
+        "insurance": "Bảo hành",
+        "month": "Tháng"
       },
       "message": {
         "required": "bắt buộc"
+
       },
       "button": {
         "create": "Thêm mới",
@@ -828,7 +835,9 @@
         "location": "Lựa chọn một Chi nhánh",
         "total_accessory": "Số lượng",
         "notes": "Ghi chú",
-        "user": "Lựa chọn một người dùng"
+        "user": "Lựa chọn một người dùng",
+        "cost": "Chi phí mua hàng",
+        "insurance": "Bảo hành"
       },
       "title": {
         "accessory": "Phụ kiện",
@@ -865,7 +874,12 @@
         "checkoutTo": "Cấp phát đến",
         "users": "Người dùng",
         "admin": "Admin",
-        "checkout_date": "Ngày cấp phát"
+        "checkout_date": "Ngày cấp phát",
+        "qty": "Tổng số",
+        "purchase_cost":"Chi phí mua hàng",
+        "vnd": "VND",
+        "month": "Tháng",
+        "supplier": "Nhà cung cấp"
       },
       "message": {
         "required": "bắt buộc"
@@ -898,7 +912,9 @@
         "location": "Lựa chọn một chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
-        "user":"Lựa chọn một người dùng"
+        "user":"Lựa chọn một người dùng",
+        "supplier": "Lựa chọn nhà cung cấp",
+        "purchase_cost":"Chi phí mua hàng"
 
       }
     }

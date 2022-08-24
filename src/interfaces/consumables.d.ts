@@ -18,6 +18,7 @@ export interface IConsumablesRequest {
     date: string;
     purchase_cost: string;
     supplier: string;
+    warranty_months: string;
   }
   export interface IConsumablesResponse {
     id: number;
@@ -50,6 +51,7 @@ export interface IConsumablesRequest {
     qty: number;
     user_can_checkout: boolean;
     assigned_to: number;
+    warranty_months: string;
   }
   
   export interface IConsumablesRequestCheckout {

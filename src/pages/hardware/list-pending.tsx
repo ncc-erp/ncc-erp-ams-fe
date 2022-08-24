@@ -425,8 +425,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         name: data?.assigned_location?.name,
       },
       checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+        formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       assigned_user: data?.assigned_user,
       model_number: data?.model_number,
@@ -460,8 +460,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         first_name: data?.assigned_to.first_name,
       },
       checkin_at: {
-        date: new Date().toISOString().substring(0, 10),
-        formatted: new Date().toDateString(),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+        formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       rtd_location: {
         id: data?.id,
@@ -593,9 +593,12 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_date",
         title: t("hardware.label.field.dateBuy"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value ? value.date : ""} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value ? value.date : ""} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
       },
       {
@@ -613,9 +616,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value && value.date} />
-        ),
+        render: (value: IHardware) =>
+          value ? <DateField format="LLL" value={value && value.date} /> : "",
       },
       {
         key: "notes",
@@ -658,9 +660,12 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       {
         key: "created_at",
         title: t("hardware.label.field.dateCreate"),
-        render: (value: IHardware) => (
-          <DateField format="LLL" value={value && value.datetime} />
-        ),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value && value.datetime} />
+          ) : (
+            ""
+          ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],

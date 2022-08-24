@@ -18,6 +18,7 @@ export interface IAccesstoryRequest {
   qty: number;
   date: string;
   purchase_cost: string;
+  warranty_months: string;
 }
 
 export interface IAccesstoryResponse {
@@ -54,6 +55,7 @@ export interface IAccesstoryResponse {
   remaining_qty: number;
   checkin_date: string;
   assigned_pivot_id: number;
+  warranty_months: string;
 }
 
 export interface IAccessoryRequestCheckout {
