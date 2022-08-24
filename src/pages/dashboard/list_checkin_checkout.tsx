@@ -15,7 +15,7 @@ import {
 } from "./asset-summary-piechar";
 import { IReport } from "interfaces/report";
 import "styles/antd.less";
-import { dateFormat } from "constants/assets";
+import { dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 
 export interface IReportAsset {
@@ -119,7 +119,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     var assetNames = (dataCheckIn?.data.payload.assets_statistic || []).map(
-      (item: IReport) => item.name
+      (item: any) => item.category_name
     );
     var assetArr: string[] = [];
     assetArr = assetNames.filter(function (item: string) {
@@ -145,9 +145,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     );
 
     (dataCheckIn?.data.payload.assets_statistic || []).forEach(
-      (items: IReport) => {
+      (items: any) => {
         dataSource.forEach((item: any) => {
-          if (item.type === items.name) {
+          if (item.type === items.category_name) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.rtd_location_id}`) {
                 item[key] = item[key] + Number(items.checkin);
@@ -166,7 +166,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     var assetNames = (dataCheckOut?.data.payload.assets_statistic || []).map(
-      (item: IReport) => item.name
+      (item: any) => item.category_name
     );
     var assetArr: string[] = [];
     assetArr = assetNames.filter(function (item: string) {
@@ -192,9 +192,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     );
 
     (dataCheckOut?.data.payload.assets_statistic || []).forEach(
-      (items: IReport) => {
+      (items: any) => {
         dataSource.forEach((item: any) => {
-          if (item.type === items.name) {
+          if (item.type === items.category_name) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.rtd_location_id}`) {
                 item[key] = item[key] + Number(items.checkout);
@@ -221,9 +221,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             data_CheckOut[0] && data_CheckOut[1]
               ? list(
-                  `report?category_id=${record.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-                )
-              : list(`report?category_id=${record.id}&assetHistoryType=0`);
+                `report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+              )
+              : list(`report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKOUT}`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -244,11 +244,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               data_CheckOut[0] && data_CheckOut[1]
                 ? list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0&purchaseDateFrom=${data_CheckOut[0]}&purchaseDateTo=${data_CheckOut[1]}`
-                  )
+                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+                )
                 : list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=0`
-                  );
+                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                );
             }}
           >
             {text}
@@ -270,9 +270,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dataReport[0] && dataReport[1]
               ? list(
-                  `report?category_id=${record.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-                )
-              : list(`report?category_id=${record.id}&assetHistoryType=1`);
+                `report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+              )
+              : list(`report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKIN}`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -293,11 +293,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dataReport[0] && dataReport[1]
                 ? list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1&purchaseDateFrom=${dataReport[0]}&purchaseDateTo=${dataReport[1]}`
-                  )
+                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+                )
                 : list(
-                    `report?category_id=${record.id}&location=${item.id}&assetHistoryType=1`
-                  );
+                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                );
             }}
           >
             {text}
@@ -358,13 +358,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        pagination={
-                          (dataCheckOut?.data.payload.categories || []).length <= 
-                          6
-                            ? false
-                            : { pageSize: 6 }
-                        }
+                        // pagination={
+                        //   (dataCheckOut?.data.payload.categories || []).length <= 
+                        //   6
+                        //     ? false
+                        //     : { pageSize: 6 }
+                        // }
                         scroll={{ x: 320 }}
+                        pagination={false}
+                        className="list-table-dashboad"
                       />
                     </Col>
                   </Row>
@@ -416,12 +418,14 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        pagination={
-                          (dataCheckIn?.data.payload.categories || []).length <= 6
-                            ? false
-                            : { pageSize: 6 }
-                        }
+                        // pagination={
+                        //   (dataCheckIn?.data.payload.categories || []).length <= 6
+                        //     ? false
+                        //     : { pageSize: 6 }
+                        // }
                         scroll={{ x: 320 }}
+                        pagination={false}
+                        className="list-table-dashboad"
                       />
                     </Col>
                   </Row>

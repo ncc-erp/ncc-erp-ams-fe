@@ -863,7 +863,10 @@
         "checkoutTo": "Cấp phát đến",
         "users": "Người dùng",
         "admin": "Admin",
-        "checkout_date": "Ngày cấp phát"
+        "checkout_date": "Ngày cấp phát",
+        "supplier": "Nhà cung cấp",
+        "purchase_cost": "Chi phí mua hàng",
+        "vnd": "VND"
       },
       "message": {
         "required": "bắt buộc"
@@ -896,8 +899,9 @@
         "location": "Lựa chọn một chi nhánh",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
-        "user":"Lựa chọn một người dùng"
-
+        "user":"Lựa chọn một người dùng",
+        "supplier": "Nhà cung cấp",
+        "purchase_cost": "Chi phí mua hàng"
       }
     }
   }

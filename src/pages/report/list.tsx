@@ -38,6 +38,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("date_to");
   const assetHistoryType = searchParams.get("action_type");
   const searchParam = searchParams.get("search");
+  const category_id = searchParams.get("category_id");
 
   const [search, setSearch] = useState<string>("");
 
@@ -79,6 +80,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "action_type",
           operator: "eq",
           value: assetHistoryType?.split('"').join(""),
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
         }
       );
       return filters;
@@ -250,12 +256,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             created_at:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, dateFormat),
-                    moment(dateToParam, dateFormat),
-                  ]
+                  moment(dateFromParam, dateFormat),
+                  moment(dateToParam, dateFormat),
+                ]
                 : "",
             type: searchParams.get("action_type")
-              ? Number(assetHistoryType)
+              ? assetHistoryType
               : translate("all"),
           }}
         >
