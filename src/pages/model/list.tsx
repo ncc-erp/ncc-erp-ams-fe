@@ -237,7 +237,7 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>

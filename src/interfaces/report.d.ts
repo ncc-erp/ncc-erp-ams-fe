@@ -23,6 +23,7 @@ export interface IReport {
   };
   datetime: string;
   checkin_counter: object;
+  category_type: string;
 }
 
 export interface IReportResponse {
@@ -34,18 +35,18 @@ export interface IReportResponse {
     id: number;
     name: string;
     type: string;
-  }
+  };
   admin: {
     id: number;
     name: string;
     first_name: string;
     last_name: string;
-  }
+  };
   target: {
     id: number;
     name: string;
     type: string;
-  }
+  };
   created_at: {
     datetime: string;
     formatted: string;

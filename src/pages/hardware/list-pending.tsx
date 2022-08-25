@@ -595,7 +595,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
@@ -865,12 +865,12 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1105,7 +1105,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -1119,10 +1119,10 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
@@ -1195,8 +1195,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1213,8 +1213,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >

@@ -180,7 +180,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         title: translate("accessory.label.field.purchase_date"),
         render: (value: IAccesstoryRequest) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
@@ -442,9 +442,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, "YYYY/MM/DD"),
-                    moment(dateToParam, "YYYY/MM/DD"),
-                  ]
+                  moment(dateFromParam, "YYYY/MM/DD"),
+                  moment(dateToParam, "YYYY/MM/DD"),
+                ]
                 : "",
           }}
           layout="vertical"
@@ -534,7 +534,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${translate("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -548,10 +548,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
@@ -603,8 +603,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >

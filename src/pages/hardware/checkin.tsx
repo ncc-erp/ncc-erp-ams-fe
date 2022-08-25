@@ -29,6 +29,7 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -113,7 +114,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (event.status_label !== undefined) {
       formData.append("status_id", event.status_label);
     }
-    formData.append("checkin_at", new Date().toISOString().substring(0, 10));
+    formData.append("checkin_at", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
     formData.append("model_id", event.model.toString());
     if (event.rtd_location !== undefined) {
       formData.append("rtd_location", event.rtd_location.toString());
@@ -130,7 +131,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
       { name: "status_id", value: data?.status_label.id },
       {
         name: "checkin_at",
-        value: new Date().toISOString().substring(0, 10),
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "rtd_location", value: "" },
@@ -255,9 +256,9 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.assigned_to.last_name + " " + data?.assigned_to.first_name + ' ('+ data?.assigned_to.username+')'}
+            initialValue={data?.assigned_to.last_name + " " + data?.assigned_to.first_name + ' (' + data?.assigned_to.username + ')'}
           >
-            <Input disabled={true}/>
+            <Input disabled={true} />
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={12}>
@@ -290,9 +291,9 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={new Date().toISOString().substring(0, 10)}
+            initialValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
           >
-            <Input type="date" />
+            <Input type="datetime-local" />
           </Form.Item>
         </Col>
       </Row>

@@ -3,6 +3,7 @@
 import {
   Button,
   Checkbox,
+  Col,
   CreateButton,
   DeleteButton,
   EditButton,
@@ -39,7 +40,6 @@ const defaultCheckedList = [
   "category",
   "email",
   "phone",
-  "remote",
 ];
 
 export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
@@ -56,6 +56,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
   );
   const [isActive, setIsActive] = useState(false);
   const [hrmLoading, setHrmLoading] = useState(false);
+  const [refLoading, setRefLoading] = useState(false);
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
@@ -170,25 +171,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         title: translate("user.label.field.title"),
         render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("jobtitle", sorter),
-      },
-      {
-        key: "remote",
-        title: translate("user.label.field.remote"),
-        render: (value: boolean) => (
-          <TextField
-            value={
-              value === false ? (
-                <CloseOutlined color="#a94442" />
-              ) : (
-                <CheckOutlined />
-              )
-            }
-            style={{
-              color: value === false ? "#a94444" : "#44793f",
-            }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
       },
       {
         key: "department",
@@ -314,17 +296,17 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const [loading, setLoading] = useState(false);
   const handleRefresh = () => {
-    setLoading(true);
+    setRefLoading(true);
     setTimeout(() => {
       refreshData();
-      setLoading(false);
-    }, 300);
+      setRefLoading(false);
+    }, 1000);
   };
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
   const isLoading = tableProps.loading || hrmLoading;
+  const refreshLoading = tableProps.loading || refLoading;
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -440,14 +422,11 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      {loading ? (
+      {refreshLoading ? (
         <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip="Loading..."
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
+          <Col sm={24} md={24} className="dashboard-loading">
+            <Spin tip={`${translate("loading")}...`} className="spin-center" />
+          </Col>
         </>
       ) : (
         <Table

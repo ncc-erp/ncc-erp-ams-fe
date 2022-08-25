@@ -284,7 +284,7 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
@@ -715,12 +715,12 @@ export const HardwareListWaitingConfirm: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -950,7 +950,7 @@ export const HardwareListWaitingConfirm: React.FC<
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -963,10 +963,10 @@ export const HardwareListWaitingConfirm: React.FC<
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
           rowSelection={{
@@ -1002,8 +1002,8 @@ export const HardwareListWaitingConfirm: React.FC<
                           isLoadingArr[record.id] === undefined
                             ? false
                             : isLoadingArr[record.id] === false
-                            ? false
-                            : true
+                              ? false
+                              : true
                         }
                       >
                         {t("hardware.label.button.accept")}
@@ -1021,8 +1021,8 @@ export const HardwareListWaitingConfirm: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >

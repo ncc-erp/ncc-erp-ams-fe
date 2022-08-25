@@ -39,6 +39,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const assetHistoryType = searchParams.get("action_type");
   const searchParam = searchParams.get("search");
   const category_id = searchParams.get("category_id");
+  const category_type = searchParams.get("category_type");
 
   const [search, setSearch] = useState<string>("");
 
@@ -85,7 +86,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category_id,
-        }
+        },
+        // {
+        //   field: "category_type",
+        //   operator: "eq",
+        //   value: category_type,
+        // }
       );
       return filters;
     },
@@ -226,17 +232,23 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleDateChange = (value: any) => {
-    const [from, to] = Array.from(value || []);
-    searchParams.set(
-      "date_from",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "date_to",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    searchFormProps.form?.submit();
+    if (value !== null) {
+      const [from, to] = Array.from(value || []);
+      searchParams.set(
+        "date_from",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "date_to",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParams.delete("date_from");
+      searchParams.delete("date_to");
+    }
+
     setSearchParams(searchParams);
+    searchFormProps.form?.submit();
   };
 
   useEffect(() => {
