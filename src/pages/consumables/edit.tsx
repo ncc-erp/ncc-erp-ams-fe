@@ -365,7 +365,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
             name="warranty_months"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("consumables.label.field.insurance") +
                   " " +

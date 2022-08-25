@@ -352,7 +352,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="warranty_months"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("accessory.label.field.insurance") +
                   " " +
