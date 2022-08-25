@@ -150,8 +150,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       { name: "supplier_id", value: data?.supplier.id },
       {
         name: "purchase_cost",
-        value:
-          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+        value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
       },
       {
         name: "warranty_months",
