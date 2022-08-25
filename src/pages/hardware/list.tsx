@@ -659,7 +659,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
@@ -1359,7 +1359,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>

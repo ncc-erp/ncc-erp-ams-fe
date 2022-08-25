@@ -635,7 +635,7 @@ export const HardwareListReadyToDeploy: React.FC<
         title: t("hardware.label.field.dateBuy"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
@@ -1067,12 +1067,12 @@ export const HardwareListReadyToDeploy: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1389,7 +1389,7 @@ export const HardwareListReadyToDeploy: React.FC<
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -1480,8 +1480,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1498,8 +1498,8 @@ export const HardwareListReadyToDeploy: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >

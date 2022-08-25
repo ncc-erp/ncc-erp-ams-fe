@@ -218,7 +218,7 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -231,10 +231,10 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
           scroll={{ x: 1100 }}

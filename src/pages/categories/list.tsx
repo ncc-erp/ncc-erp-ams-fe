@@ -119,10 +119,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 ? value === ECategory.ACCESSORY
                   ? t("category.label.options.accessory")
                   : value === ECategory.ASSET
-                  ? t("category.label.options.asset")
-                  : value === ECategory.CONSUMABLE
-                  ? t("category.label.options.consumable")
-                  : ""
+                    ? t("category.label.options.asset")
+                    : value === ECategory.CONSUMABLE
+                      ? t("category.label.options.consumable")
+                      : ""
                 : ""
             }
           />
@@ -225,7 +225,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
-              tip="Loading..."
+              tip={`${t("loading")}...`}
               style={{ fontSize: "18px", color: "black" }}
             />
           </div>
@@ -238,10 +238,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
