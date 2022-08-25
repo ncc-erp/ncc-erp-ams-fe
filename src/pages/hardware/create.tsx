@@ -131,7 +131,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         supplier_id: event.supplier,
         assigned_user: event.assigned_user,
         image: event.image,
-        notes: event.notes,
+        notes: event.notes ?? "",
         warranty_months: event.warranty_months,
         purchase_date: event.purchase_date,
         purchase_cost: event.purchase_cost,

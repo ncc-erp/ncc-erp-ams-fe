@@ -122,6 +122,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       formData.append("notes", event.notes);
     }
     formData.append("purchase_cost", event.purchase_cost ?? "");
+    formData.append("warranty_months", event.warranty_months);
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -141,11 +142,14 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       { name: "qty", value: data?.qty },
       {
         name: "purchase_cost",
-        value:
-          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+        value: data?.purchase_cost,
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "notes", value: data?.notes },
+      {
+        name: "warranty_months",
+        value: data?.warranty_months,
+      },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -265,18 +269,12 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
                   t("accessory.label.message.required"),
               },
             ]}
-            initialValue={
-              data?.purchase_cost &&
-              data?.purchase_cost.toString().split(",")[0]
-            }
+            initialValue={data?.purchase_cost}
           >
             <Input
               type="number"
               addonAfter={t("accessory.label.field.vnd")}
-              value={
-                data?.purchase_cost &&
-                data?.purchase_cost.toString().split(",")[0]
-              }
+              value={data?.purchase_cost}
             />
           </Form.Item>
           {messageErr?.purchase_cost && (
@@ -346,6 +344,32 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
           {messageErr?.total_accessory && (
             <Typography.Text type="danger">
               {messageErr.total_accessory}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("accessory.label.field.insurance")}
+            name="warranty_months"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("accessory.label.field.insurance") +
+                  " " +
+                  t("accessory.label.message.required"),
+              },
+            ]}
+            initialValue={data?.warranty_months}
+          >
+            <Input
+              type="number"
+              addonAfter={t("accessory.label.field.month")}
+              value={data?.warranty_months}
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
         </Col>
