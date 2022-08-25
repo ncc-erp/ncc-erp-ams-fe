@@ -18,6 +18,7 @@ import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -72,7 +73,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
       { name: "note", value: data?.note },
       {
         name: "checkin_at",
-        value: new Date().toISOString().substring(0, 10),
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "rtd_location", value: data?.rtd_location },
     ]);
@@ -151,9 +152,9 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={new Date().toISOString().substring(0, 10)}
+            initialValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
           >
-            <Input type="date" />
+            <Input type="datetime-local" />
           </Form.Item>
           <Form.Item
             label={t("hardware.label.field.status")}

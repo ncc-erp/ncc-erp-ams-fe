@@ -22,6 +22,7 @@ import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -109,7 +110,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       { name: "note", value: data?.note },
       {
         name: "checkout_at",
-        value: new Date().toISOString().substring(0, 10),
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "assigned_user", value: data?.assigned_user },
       { name: "assigned_location", value: data?.assigned_location.name },
@@ -232,9 +233,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={new Date().toISOString().substring(0, 10)}
+            initialValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
           >
-            <Input type="date" />
+            <Input type="datetime-local" />
           </Form.Item>
           {messageErr?.checkout_at && (
             <Typography.Text type="danger">

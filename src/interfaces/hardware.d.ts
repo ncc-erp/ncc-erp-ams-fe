@@ -269,7 +269,7 @@ export interface IHardwareRequestCheckin {
   rtd_location: number;
   assigned_status: number;
   assigned_user: string;
-  assigned_to :string;
+  assigned_to: string;
 }
 
 export interface IHardwareResponseCheckin {

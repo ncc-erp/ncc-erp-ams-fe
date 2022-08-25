@@ -207,8 +207,9 @@
         "checkin": "Thu hồi",
         "accept": "Xác nhận",
         "refuse": "Từ chối",
-        "search": "Tìm kiếm"
-       
+        "search": "Tìm kiếm",
+        "accept_checkout": "Xác nhận cấp phát",
+        "accept_checkin": "Xác nhận thu hồi"
       },
       "title": {
         "asset": "Tất cả tài sản",

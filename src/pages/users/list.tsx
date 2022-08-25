@@ -564,7 +564,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               sorter
             />
           ))}
-          <Table.Column<IHardwareResponse>
+          <Table.Column<any>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (
@@ -581,32 +581,62 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
-                  <Popconfirm
-                    title={t("hardware.label.button.accept")}
-                    onConfirm={() =>
-                      OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
-                    }
-                  >
-                    {isLoadingArr[record.id] !== false && (
-                      <Button
-                        className="ant-btn-accept"
-                        type="primary"
-                        shape="round"
-                        size="small"
-                        loading={
-                          isLoadingArr[record.id] === undefined
-                            ? false
-                            : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                        }
-                      >
-                        {t("hardware.label.button.accept")}
-                      </Button>
-                    )}
-                  </Popconfirm>
-                )}
+                {record.assigned_to.id !== null &&
+                  record.assigned_to.id !== record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkout")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkout")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
+
+                {record.assigned_to.id !== null &&
+                  record.assigned_to.id === record.withdraw_from && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkin")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkin")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
 
                 {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Button
