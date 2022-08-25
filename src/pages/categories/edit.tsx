@@ -68,7 +68,10 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "category_type", value: data?.category_type },
-      { name: "eula_text", value: data?.eula },
+      {
+        name: "eula_text",
+        value: data?.eula ?? "",
+      },
 
       { name: "use_default_eula", value: data?.use_default_eula },
       { name: "image", value: data?.image },

@@ -18,6 +18,7 @@ import {
   DeleteButton,
   CreateButton,
   TagField,
+  Row,
 } from "@pankod/refine-antd";
 import { Spin } from "antd";
 
@@ -159,15 +160,6 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCloneModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   return (
     <List
       title={t("model.label.title.model")}
@@ -181,25 +173,6 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("model.label.title.create")}
@@ -233,74 +206,58 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           data={detailClone}
         />
       </MModal>
-      {loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip="Loading..."
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          {...tableProps}
-          rowKey="id"
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
-          <Table.Column<IModelResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
+
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+        }}
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} sorter />
+        ))}
+        <Table.Column<IModelResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip title={t("model.label.tooltip.clone")} color={"#108ee9"}>
+                <CloneButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => clone(record)}
+                />
+              </Tooltip>
+              <Tooltip title={t("model.label.tooltip.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.assets_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
                 <Tooltip
-                  title={t("model.label.tooltip.clone")}
-                  color={"#108ee9"}
+                  title={t("model.label.tooltip.delete")}
+                  color={"#d73925"}
                 >
-                  <CloneButton
+                  <DeleteButton
+                    resourceName={MODELS_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("model.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                {record.assets_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("model.label.tooltip.delete")}
-                    color={"#d73925"}
-                  >
-                    <DeleteButton
-                      resourceName={MODELS_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };

@@ -70,7 +70,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       category_type: data?.category_type,
-      eula: data?.eula ?? "",
+      eula:
+        typeof data?.eula === "string"
+          ? data?.eula.split(">")[1].split("<")[0]
+          : "",
       image: data?.image,
 
       require_acceptance: data?.require_acceptance,
@@ -155,15 +158,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
@@ -180,25 +174,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("category.label.title.create")}
@@ -221,69 +196,53 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      {loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip="Loading..."
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
-              : false
-          }
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
-          ))}
-          <Table.Column<ICategoryResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("category.label.field.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
+
+      <Table
+        className={(pageTotal as number) <= 10 ? "list-table" : ""}
+        {...tableProps}
+        rowKey="id"
+        pagination={
+          (pageTotal as number) > 10
+            ? {
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
+            : false
+        }
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} sorter />
+        ))}
+        <Table.Column<ICategoryResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip title={t("category.label.field.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.item_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
+                <Tooltip title={t("category.label.field.delete")} color={"red"}>
+                  <DeleteButton
+                    resourceName={CATEGORIES_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-                {record.item_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("category.label.field.delete")}
-                    color={"red"}
-                  >
-                    <DeleteButton
-                      resourceName={CATEGORIES_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };

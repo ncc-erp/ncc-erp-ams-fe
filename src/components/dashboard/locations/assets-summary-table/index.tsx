@@ -351,7 +351,8 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     <Table
       columns={id === 99999 ? columnSum : columns}
       dataSource={id === 99999 ? dataAllLocation : dataCategory}
-      pagination={categories.length <= 6 ? false : { pageSize: 6 }}
+      pagination={false}
+      className="list-table-dashboard"
     />
   );
 };

@@ -208,6 +208,7 @@
         "accept": "Xác nhận",
         "refuse": "Từ chối",
         "search": "Tìm kiếm"
+       
       },
       "title": {
         "asset": "Tất cả tài sản",
@@ -510,7 +511,9 @@
         "email": "Hỗ trợ Email",
         "image": "Tải hình",
         "imageTable": "Hình ảnh",
-        "assetCount": "Số lượng",
+        "assetCount": "Thiết bị",
+        "accessoriesCount": "Phụ kiện",
+        "consumableCount": "Văn phòng phẩm",
         "dateCreate": "Ngày tạo"
       },
       "placeholder": {
@@ -876,7 +879,7 @@
         "admin": "Admin",
         "checkout_date": "Ngày cấp phát",
         "qty": "Tổng số",
-        "purchase_cost":"Chi phí mua hàng",
+        "purchase_cost": "Chi phí mua hàng",
         "vnd": "VND",
         "month": "Tháng",
         "supplier": "Nhà cung cấp"
