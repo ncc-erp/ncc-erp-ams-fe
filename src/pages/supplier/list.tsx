@@ -18,7 +18,6 @@ import {
   TagField,
 } from "@pankod/refine-antd";
 import { Spin } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -75,21 +74,7 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         title: t("supplier.label.field.address"),
         render: (value: ISupplier) => <TextField value={value} />,
       },
-      // {
-      //     key: "contact",
-      //     title: t("supplier.label.field.contact"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
-      // {
-      //     key: "email",
-      //     title: t("supplier.label.field.email"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
-      // {
-      //     key: "phone",
-      //     title: t("supplier.label.field.phone"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
+
       {
         key: "assets_count",
         title: t("supplier.label.field.assets"),
@@ -181,58 +166,69 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
 
-      <Table
-        className={(pageTotal as number) <= 10 ? "list-table" : ""}
-        {...tableProps}
-        rowKey="id"
-        pagination={
-          (pageTotal as number) > 10
-            ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-            : false
-        }
-      >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-        <Table.Column<ISupplierRequest>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("supplier.label.tooltip.edit")}
-                color={"#108ee9"}
-              >
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.assets_count > 0 ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {tableProps.loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip={`${t("loading")}...`}
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+        >
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
+          <Table.Column<ISupplierRequest>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("supplier.label.tooltip.delete")}
-                  color={"#d73925"}
+                  title={t("supplier.label.tooltip.edit")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={SUPPLIERS_API}
+                  <EditButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                {record.assets_count > 0 ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("supplier.label.tooltip.delete")}
+                    color={"#d73925"}
+                  >
+                    <DeleteButton
+                      resourceName={SUPPLIERS_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };

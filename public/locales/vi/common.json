@@ -632,7 +632,8 @@
       },
       "placeholder": {
         "manufacturer": "Lựa chọn một chi nhánh",
-        "category": "Chọn một danh mục"
+        "category": "Chọn một danh mục",
+        "name": "Tên kiểu tài sản"
       },
       "message": {
         "required": "bắt buộc"

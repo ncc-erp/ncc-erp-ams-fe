@@ -149,6 +149,7 @@ export const UserEdit = (props: UserCreateProps) => {
         if (event.avatar !== undefined && event.avatar !== null && typeof (event.avatar) !== "string") {
             formData.append("image", event.avatar);
         }
+        formData.append("activated", "true");
 
         formData.append("permissions", JSON.stringify(permissionOfUser));
 

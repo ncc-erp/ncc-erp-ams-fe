@@ -142,7 +142,8 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       { name: "qty", value: data?.qty },
       {
         name: "purchase_cost",
-        value: data?.purchase_cost,
+        value:
+          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "notes", value: data?.notes },
@@ -269,12 +270,18 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
                   t("accessory.label.message.required"),
               },
             ]}
-            initialValue={data?.purchase_cost}
+            initialValue={
+              data?.purchase_cost &&
+              data?.purchase_cost.toString().split(",")[0]
+            }
           >
             <Input
               type="number"
               addonAfter={t("accessory.label.field.vnd")}
-              value={data?.purchase_cost}
+              value={
+                data?.purchase_cost &&
+                data?.purchase_cost.toString().split(",")[0]
+              }
             />
           </Form.Item>
           {messageErr?.purchase_cost && (

@@ -92,28 +92,38 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   }, [dateFromCheckOut, dateFromCheckOut]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
-    searchParams.set(
-      "from",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "to",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
+    if (val !== null) {
+      const [from, to] = Array.from(val || []);
+      searchParams.set(
+        "from",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParams.set(
+        "to",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParams.delete("from");
+      searchParams.delete("to");
+    }
     setSearchParams(searchParams);
   };
 
   const handleChangePickerByMonthCheckOut = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
-    searchParamsCheckOut.set(
-      "from",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParamsCheckOut.set(
-      "to",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
+    if (val !== null) {
+      const [from, to] = Array.from(val || []);
+      searchParamsCheckOut.set(
+        "from",
+        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+      );
+      searchParamsCheckOut.set(
+        "to",
+        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+      );
+    } else {
+      searchParamsCheckOut.delete("from");
+      searchParamsCheckOut.delete("to");
+    }
     setSearchParamsCheckOut(searchParamsCheckOut);
   };
 
@@ -130,7 +140,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     var iteLocationKey: any = [];
     let dataSource = (dataCheckIn?.data.payload.categories || []).map(
       (category: IReport) => {
-        var iteDataSource = { type: category.name, id: category.id };
+        var iteDataSource = { type: category.name, id: category.id, category_type: category.category_type };
         var iteLocation = {};
         for (let i of dataCheckIn?.data.payload.locations) {
           iteLocation = {
@@ -177,7 +187,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     var iteLocationKey: any = [];
     let dataSource = (dataCheckOut?.data.payload.categories || []).map(
       (category: IReport) => {
-        var iteDataSource = { type: category.name, id: category.id };
+        var iteDataSource = { type: category.name, id: category.id, category_type: category.category_type };
         var iteLocation = {};
         for (let i of dataCheckOut?.data.payload.locations) {
           iteLocation = {
@@ -213,7 +223,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   var columnsCheckOut = [
     {
-      title: "Thiết bị cấp phát",
+      title: translate("report.label.title.nameReportCheckOut"),
       dataIndex: "type",
       key: "type",
       render: (text: string, record: IReport) => (
@@ -221,9 +231,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             data_CheckOut[0] && data_CheckOut[1]
               ? list(
-                `report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
               )
-              : list(`report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKOUT}`);
+              : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -244,10 +254,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               data_CheckOut[0] && data_CheckOut[1]
                 ? list(
-                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
                 )
                 : list(
-                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
                 );
             }}
           >
@@ -262,7 +272,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   var columnsCheckIn = [
     {
-      title: "Thiết bị thu hồi",
+      title: translate("report.label.title.nameReportCheckIn"),
       dataIndex: "type",
       key: "type",
       render: (text: string, record: IReport) => (
@@ -270,9 +280,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dataReport[0] && dataReport[1]
               ? list(
-                `report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
               )
-              : list(`report?category_id=${record.id}&action_type=${TypeAssetHistory.CHECKIN}`);
+              : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`);
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -293,10 +303,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dataReport[0] && dataReport[1]
                 ? list(
-                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
                 )
                 : list(
-                  `report?category_id=${record.id}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
                 );
             }}
           >
@@ -342,7 +352,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               <Col sm={24} md={24}>
                 {isLoadingCheckout ? (
                   <Row gutter={16} className="dashboard-loading">
-                    <Spin tip="Loading..." className="spin-center" />
+                    <Spin tip={`${translate("loading")}...`} className="spin-center" />
                   </Row>
                 ) : (
                   <Row gutter={16}>
@@ -402,7 +412,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               <Col sm={24} md={24}>
                 {isLoadingCheckin ? (
                   <Row gutter={16} className="dashboard-loading">
-                    <Spin tip="Loading..." className="spin-center" />
+                    <Spin tip={`${translate("loading")}...`} className="spin-center" />
                   </Row>
                 ) : (
                   <Row gutter={16}>

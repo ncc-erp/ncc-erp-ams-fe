@@ -25,7 +25,6 @@ import { DEPARTMENT_API } from "api/baseApi";
 import { IDepartment, IDepartmentResponse } from "interfaces/department";
 import { DepartmentEdit } from "./edit";
 import { Spin } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 
 export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -162,59 +161,69 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-
-      <Table
-        className={(pageTotal as number) <= 10 ? "list-table" : ""}
-        {...tableProps}
-        rowKey="id"
-        pagination={
-          (pageTotal as number) > 10
-            ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-            : false
-        }
-      >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-        <Table.Column<IDepartmentResponse>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("department.label.tooltip.edit")}
-                color={"#108ee9"}
-              >
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.users_count > 0 ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {tableProps.loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip={`${t("loading")}...`}
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+        >
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
+          <Table.Column<IDepartmentResponse>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("department.label.tooltip.delete")}
-                  color={"#d73925"}
+                  title={t("department.label.tooltip.edit")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={DEPARTMENT_API}
+                  <EditButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                {record.users_count > 0 ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("department.label.tooltip.delete")}
+                    color={"#d73925"}
+                  >
+                    <DeleteButton
+                      resourceName={DEPARTMENT_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };

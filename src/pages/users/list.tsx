@@ -20,6 +20,7 @@ import {
   Button,
   Tooltip,
   Spin,
+  Col,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import { IHardware } from "interfaces";
@@ -37,9 +38,7 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
-  getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
 
@@ -160,7 +159,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       dataIndex: "purchase_date",
       title: t("user.label.field.dateBuy"),
       render: (value: IHardware) =>
-        value ? <DateField format="LLL" value={value ? value.date : ""} /> : "",
+        value ? <DateField format="LL" value={value ? value.date : ""} /> : "",
       defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
     },
     {
@@ -394,15 +393,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setIsCancelManyAssetModalVisible(!isCancelManyAssetModalVisible);
   };
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 1300);
-  };
-
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
     mutate({
       resource: HARDWARE_API + "?_method=PUT",
@@ -411,7 +401,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         assigned_status: assigned_status,
       },
     });
-    handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   };
@@ -425,7 +414,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={t("user.label.title.name")}>
       <div className="users">
-        <div className="list-users">
+        <div
+          className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
+        >
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
@@ -439,7 +430,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               <Button
                 type="primary"
                 disabled={!selectedAcceptAndRefuse}
-                loading={loading}
+                loading={isLoadingSendRequest}
                 className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
               >
                 {t("user.label.button.accept")}
@@ -533,14 +524,11 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
-      {loading ? (
+      {tableProps.loading ? (
         <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip="Loading..."
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
+          <Col sm={24} md={24} className="dashboard-loading">
+            <Spin tip={`${t("loading")}...`} className="spin-center" />
+          </Col>
         </>
       ) : (
         <Table

@@ -18,7 +18,6 @@ import {
   DeleteButton,
   CreateButton,
   TagField,
-  Row,
 } from "@pankod/refine-antd";
 import { Spin } from "antd";
 
@@ -30,7 +29,6 @@ import { IModelResponse } from "interfaces/model";
 import { ModelEdit } from "./edit";
 import { ModelClone } from "./clone";
 import { MODELS_API } from "api/baseApi";
-import { SyncOutlined } from "@ant-design/icons";
 
 export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -207,57 +205,74 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
 
-      <Table
-        {...tableProps}
-        rowKey="id"
-        pagination={{
-          position: ["topRight", "bottomRight"],
-          total: pageTotal ? pageTotal : 0,
-        }}
-      >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-        <Table.Column<IModelResponse>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip title={t("model.label.tooltip.clone")} color={"#108ee9"}>
-                <CloneButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => clone(record)}
-                />
-              </Tooltip>
-              <Tooltip title={t("model.label.tooltip.edit")} color={"#108ee9"}>
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.assets_count > 0 ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {tableProps.loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip={`${t("loading")}...`}
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          {...tableProps}
+          rowKey="id"
+          pagination={{
+            position: ["topRight", "bottomRight"],
+            total: pageTotal ? pageTotal : 0,
+          }}
+        >
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
+          <Table.Column<IModelResponse>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("model.label.tooltip.delete")}
-                  color={"#d73925"}
+                  title={t("model.label.tooltip.clone")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={MODELS_API}
+                  <CloneButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => clone(record)}
                   />
                 </Tooltip>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                <Tooltip
+                  title={t("model.label.tooltip.edit")}
+                  color={"#108ee9"}
+                >
+                  <EditButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => edit(record)}
+                  />
+                </Tooltip>
+                {record.assets_count > 0 ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("model.label.tooltip.delete")}
+                    color={"#d73925"}
+                  >
+                    <DeleteButton
+                      resourceName={MODELS_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };

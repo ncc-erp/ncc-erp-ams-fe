@@ -21,7 +21,6 @@ import {
 import { Image } from "antd";
 import "styles/antd.less";
 import { Spin } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -186,60 +185,70 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-
-      <Table
-        className={(pageTotal as number) <= 10 ? "list-table" : ""}
-        {...tableProps}
-        rowKey="id"
-        pagination={
-          (pageTotal as number) > 10
-            ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-            : false
-        }
-        scroll={{ x: 1100 }}
-      >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-        <Table.Column<IManufacturesResponse>
-          title={t("table.actions")}
-          dataIndex="actions"
-          render={(_, record) => (
-            <Space>
-              <Tooltip
-                title={t("manufactures.label.field.edit")}
-                color={"#108ee9"}
-              >
-                <EditButton
-                  hideText
-                  size="small"
-                  recordItemId={record.id}
-                  onClick={() => edit(record)}
-                />
-              </Tooltip>
-              {record.assets_count > 0 ? (
-                <DeleteButton hideText size="small" disabled />
-              ) : (
+      {tableProps.loading ? (
+        <>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip={`${t("loading")}...`}
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
+        </>
+      ) : (
+        <Table
+          className={(pageTotal as number) <= 10 ? "list-table" : ""}
+          {...tableProps}
+          rowKey="id"
+          pagination={
+            (pageTotal as number) > 10
+              ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+              : false
+          }
+          scroll={{ x: 1100 }}
+        >
+          {collumns.map((col) => (
+            <Table.Column dataIndex={col.key} {...col} sorter />
+          ))}
+          <Table.Column<IManufacturesResponse>
+            title={t("table.actions")}
+            dataIndex="actions"
+            render={(_, record) => (
+              <Space>
                 <Tooltip
-                  title={t("manufactures.label.field.delete")}
-                  color={"red"}
+                  title={t("manufactures.label.field.edit")}
+                  color={"#108ee9"}
                 >
-                  <DeleteButton
-                    resourceName={MANUFACTURES_API}
+                  <EditButton
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+                {record.assets_count > 0 ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("manufactures.label.field.delete")}
+                    color={"red"}
+                  >
+                    <DeleteButton
+                      resourceName={MANUFACTURES_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+              </Space>
+            )}
+          />
+        </Table>
+      )}
     </List>
   );
 };
