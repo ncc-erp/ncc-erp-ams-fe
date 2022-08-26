@@ -569,8 +569,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_to.id !== null &&
-                  record.assigned_to.id !== record.withdraw_from &&
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id !== record.withdraw_from &&
                   record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
@@ -598,8 +598,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     </Popconfirm>
                   )}
 
-                {record.assigned_to.id !== null &&
-                  record.assigned_to.id === record.withdraw_from && (
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id === record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>

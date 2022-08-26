@@ -985,8 +985,8 @@ export const HardwareListWaitingConfirm: React.FC<
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_to.id !== null &&
-                  record.assigned_to.id !== record.withdraw_from &&
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id !== record.withdraw_from &&
                   record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
@@ -1014,8 +1014,9 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_to.id !== null &&
-                  record.assigned_to.id === record.withdraw_from && (
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id === record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
