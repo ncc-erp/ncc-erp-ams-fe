@@ -47,7 +47,7 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import {
   MenuOutlined,
@@ -519,7 +519,7 @@ export const HardwareListReadyToDeploy: React.FC<
   };
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "api/v1/categories",
+    resource: CATEGORIES_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

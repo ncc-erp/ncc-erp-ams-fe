@@ -53,7 +53,7 @@ import {
 
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import moment from "moment";
 import { DatePicker } from "antd";
@@ -479,7 +479,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   };
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "api/v1/categories",
+    resource: CATEGORIES_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

@@ -37,7 +37,7 @@ import {
   IHardwareResponse,
 } from "interfaces/hardware";
 import { CancleAsset } from "../users/cancel";
-import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
 import {
   CloseOutlined,
   SyncOutlined,
@@ -178,7 +178,7 @@ export const HardwareListWaitingConfirm: React.FC<
   };
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: "api/v1/categories",
+    resource: CATEGORIES_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
