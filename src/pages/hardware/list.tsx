@@ -313,6 +313,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       user_can_checkin: false,
+      withdraw_from: data?.withdraw_from,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -416,6 +417,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       user_can_checkin: false,
+      withdraw_from: data?.withdraw_from,
     };
 
     setDetailClone(dataConvert);

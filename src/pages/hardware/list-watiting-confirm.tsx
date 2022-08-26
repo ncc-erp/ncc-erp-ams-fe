@@ -980,7 +980,7 @@ export const HardwareListWaitingConfirm: React.FC<
             .map((col) => (
               <Table.Column dataIndex={col.key} {...col} sorter />
             ))}
-          <Table.Column<any>
+          <Table.Column<IHardwareResponse>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (

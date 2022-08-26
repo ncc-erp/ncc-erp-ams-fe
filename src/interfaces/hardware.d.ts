@@ -154,6 +154,7 @@ export interface IHardwareResponse {
   checkin_counter: number;
   checkout_counter: number;
   requests_counter: number;
+  withdraw_from: number;
 }
 
 export interface IDefaultValue {

@@ -329,6 +329,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       user_can_checkin: false,
+      withdraw_from: data?.withdraw_from,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -432,6 +433,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       user_can_checkin: false,
+      withdraw_from: data?.withdraw_from,
     };
 
     setDetailClone(dataConvert);
@@ -1063,12 +1065,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -1475,8 +1477,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1493,8 +1495,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
