@@ -62,6 +62,7 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
+import { ICategory } from "interfaces/categories";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -176,6 +177,23 @@ export const HardwareListWaitingConfirm: React.FC<
     handleOpenSearchModel();
   };
 
+  const { selectProps: categorySelectProps } = useSelect<ICategory>({
+    resource: "api/v1/categories",
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -224,6 +242,10 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "status_label",
@@ -351,7 +373,7 @@ export const HardwareListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const { mutate, isLoading: isLoadingSendRequest } =
@@ -978,7 +1000,7 @@ export const HardwareListWaitingConfirm: React.FC<
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}

@@ -68,6 +68,7 @@ import {
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
+import { ICategory } from "interfaces/categories";
 
 const defaultCheckedList = [
   "id",
@@ -547,6 +548,23 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCheckinManyAssetModalVisible]);
 
+  const { selectProps: categorySelectProps } = useSelect<ICategory>({
+    resource: "api/v1/categories",
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -601,6 +619,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "status_label",
@@ -741,7 +763,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const onCheckItem = (value: ICheckboxChange) => {
@@ -1383,7 +1405,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}
