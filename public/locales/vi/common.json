@@ -207,7 +207,9 @@
         "checkin": "Thu hồi",
         "accept": "Xác nhận",
         "refuse": "Từ chối",
-        "search": "Tìm kiếm"
+        "search": "Tìm kiếm",
+        "accept_checkout": "Xác nhận cấp phát",
+        "accept_checkin": "Xác nhận thu hồi"
       },
       "title": {
         "asset": "Tất cả tài sản",
@@ -510,7 +512,9 @@
         "email": "Hỗ trợ Email",
         "image": "Tải hình",
         "imageTable": "Hình ảnh",
-        "assetCount": "Số lượng",
+        "assetCount": "Thiết bị",
+        "accessoriesCount": "Phụ kiện",
+        "consumableCount": "Văn phòng phẩm",
         "dateCreate": "Ngày tạo"
       },
       "placeholder": {
@@ -628,7 +632,8 @@
       },
       "placeholder": {
         "manufacturer": "Lựa chọn một chi nhánh",
-        "category": "Chọn một danh mục"
+        "category": "Chọn một danh mục",
+        "name": "Tên kiểu tài sản"
       },
       "message": {
         "required": "bắt buộc"
@@ -876,7 +881,7 @@
         "admin": "Admin",
         "checkout_date": "Ngày cấp phát",
         "qty": "Tổng số",
-        "purchase_cost":"Chi phí mua hàng",
+        "purchase_cost": "Chi phí mua hàng",
         "vnd": "VND",
         "month": "Tháng",
         "supplier": "Nhà cung cấp"

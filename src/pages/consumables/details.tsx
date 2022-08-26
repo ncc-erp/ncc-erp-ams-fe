@@ -48,16 +48,11 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "name",
         title: translate("consumables.label.field.users"),
         render: (value: string) => (
-          <TextField
-            value={
-              value
-                .substring(42)
-                .substring(0, value.substring(42).length - 4) ?? ""
-            }
-          />
+          <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
+
       {
         key: "created_at",
         title: translate("consumables.label.field.checkout_date"),
@@ -73,13 +68,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "admin",
         title: translate("consumables.label.field.admin"),
         render: (value: string) => (
-          <TextField
-            value={
-              value
-                .substring(42)
-                .substring(0, value.substring(42).length - 4) ?? ""
-            }
-          />
+          <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("admin", sorter),
       },

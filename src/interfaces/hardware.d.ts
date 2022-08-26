@@ -154,6 +154,7 @@ export interface IHardwareResponse {
   checkin_counter: number;
   checkout_counter: number;
   requests_counter: number;
+  withdraw_from: number;
 }
 
 export interface IDefaultValue {
@@ -269,7 +270,7 @@ export interface IHardwareRequestCheckin {
   rtd_location: number;
   assigned_status: number;
   assigned_user: string;
-  assigned_to :string;
+  assigned_to: string;
 }
 
 export interface IHardwareResponseCheckin {

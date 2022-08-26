@@ -73,7 +73,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
       { name: "note", value: data?.note },
       {
         name: "checkin_at",
-        value: moment(new Date()).format("YYYY-MM-DDTHH:mm")
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "rtd_location", value: data?.rtd_location },
     ]);

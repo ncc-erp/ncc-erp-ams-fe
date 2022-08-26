@@ -18,7 +18,6 @@ import {
   TagField,
 } from "@pankod/refine-antd";
 import { Spin } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -75,21 +74,7 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         title: t("supplier.label.field.address"),
         render: (value: ISupplier) => <TextField value={value} />,
       },
-      // {
-      //     key: "contact",
-      //     title: t("supplier.label.field.contact"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
-      // {
-      //     key: "email",
-      //     title: t("supplier.label.field.email"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
-      // {
-      //     key: "phone",
-      //     title: t("supplier.label.field.phone"),
-      //     render: (value: ISupplier) => <TextField value={value} />,
-      // },
+
       {
         key: "assets_count",
         title: t("supplier.label.field.assets"),
@@ -143,15 +128,6 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
@@ -167,25 +143,6 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("supplier.label.title.create")}
@@ -209,7 +166,7 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
 
-      {loading ? (
+      {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
@@ -226,10 +183,10 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >

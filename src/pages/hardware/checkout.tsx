@@ -10,7 +10,7 @@ import {
   Button,
   Row,
   Col,
-  Typography
+  Typography,
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -110,7 +110,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       { name: "note", value: data?.note },
       {
         name: "checkout_at",
-        value: moment(new Date()).format("YYYY-MM-DDTHH:mm")
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "assigned_user", value: data?.assigned_user },
       { name: "assigned_location", value: data?.assigned_location.name },

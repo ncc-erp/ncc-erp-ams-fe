@@ -303,7 +303,8 @@ export const AssetsSummaryTableAllLocation = (
     <Table
       columns={columns}
       dataSource={dataCategory}
-      pagination={categories.length <= 6 ? false : { pageSize: 6 }}
+      pagination={false}
+      className="list-table-dashboard"
     />
   );
 };

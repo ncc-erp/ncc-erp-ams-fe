@@ -87,7 +87,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     ],
   });
 
-
   const {
     refetch,
     data: updateData,
@@ -114,10 +113,16 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     if (event.status_label !== undefined) {
       formData.append("status_id", event.status_label);
     }
-    formData.append("checkin_at", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
+    formData.append(
+      "checkin_at",
+      moment(new Date()).format("YYYY-MM-DDTHH:mm")
+    );
     formData.append("model_id", event.model.toString());
     if (event.rtd_location !== undefined) {
       formData.append("rtd_location", event.rtd_location.toString());
+    }
+    if (event.assigned_to !== null) {
+      formData.append("assigned_user", event.assigned_to);
     }
     setPayload(formData);
   };
@@ -133,7 +138,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
         name: "checkin_at",
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
-      { name: "assigned_to", value: data?.assigned_to },
+      { name: "assigned_user", value: data?.assigned_to },
       { name: "rtd_location", value: "" },
     ]);
   }, [data, form, isModalVisible, setFields]);
@@ -256,7 +261,14 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.assigned_to.last_name + " " + data?.assigned_to.first_name + ' (' + data?.assigned_to.username + ')'}
+            initialValue={
+              data?.assigned_to.last_name +
+              " " +
+              data?.assigned_to.first_name +
+              " (" +
+              data?.assigned_to.username +
+              ")"
+            }
           >
             <Input disabled={true} />
           </Form.Item>
@@ -274,7 +286,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.name}
+            initialValue={data?.name ? data?.name : ""}
           >
             <Input />
           </Form.Item>

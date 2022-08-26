@@ -29,7 +29,6 @@ import { IModelResponse } from "interfaces/model";
 import { ModelEdit } from "./edit";
 import { ModelClone } from "./clone";
 import { MODELS_API } from "api/baseApi";
-import { SyncOutlined } from "@ant-design/icons";
 
 export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -159,15 +158,6 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isCloneModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   return (
     <List
       title={t("model.label.title.model")}
@@ -181,25 +171,6 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("model.label.title.create")}
@@ -233,7 +204,8 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           data={detailClone}
         />
       </MModal>
-      {loading ? (
+
+      {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin

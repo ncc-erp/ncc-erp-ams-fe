@@ -25,7 +25,6 @@ import { DEPARTMENT_API } from "api/baseApi";
 import { IDepartment, IDepartmentResponse } from "interfaces/department";
 import { DepartmentEdit } from "./edit";
 import { Spin } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 
 export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -125,15 +124,6 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
@@ -149,25 +139,6 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("department.label.title.create")}
@@ -190,7 +161,7 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      {loading ? (
+      {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
@@ -207,10 +178,10 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >

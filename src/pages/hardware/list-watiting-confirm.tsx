@@ -715,12 +715,12 @@ export const HardwareListWaitingConfirm: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
+                  ? [moment(dateFromParam), moment(dateToParam)]
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -963,10 +963,10 @@ export const HardwareListWaitingConfirm: React.FC<
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
           rowSelection={{
@@ -985,32 +985,63 @@ export const HardwareListWaitingConfirm: React.FC<
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
-                  <Popconfirm
-                    title={t("hardware.label.button.accept")}
-                    onConfirm={() =>
-                      OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
-                    }
-                  >
-                    {isLoadingArr[record.id] !== false && (
-                      <Button
-                        className="ant-btn-accept"
-                        type="primary"
-                        shape="round"
-                        size="small"
-                        loading={
-                          isLoadingArr[record.id] === undefined
-                            ? false
-                            : isLoadingArr[record.id] === false
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id !== record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkout")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
                               ? false
                               : true
-                        }
-                      >
-                        {t("hardware.label.button.accept")}
-                      </Button>
-                    )}
-                  </Popconfirm>
-                )}
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkout")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
+
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id === record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkin")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkin")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
 
                 {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Button
@@ -1021,8 +1052,8 @@ export const HardwareListWaitingConfirm: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => cancle(record)}
                   >

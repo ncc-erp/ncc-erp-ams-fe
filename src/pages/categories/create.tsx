@@ -47,7 +47,10 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
 
     formData.append("name", event.name);
     formData.append("category_type", event.category_type.toString());
-    formData.append("eula_text", event.eula_text ?? "");
+    if (event.eula_text !== undefined) {
+      formData.append("eula_text", event.eula_text);
+    }
+
     if (event.use_default_eula !== undefined) {
       formData.append("use_default_eula", event.use_default_eula.toString());
     }
@@ -130,12 +133,12 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
           placeholder={t("category.label.field.category")}
           options={[
             {
-              label: t("category.label.options.accessory"),
-              value: "accessory",
-            },
-            {
               label: t("category.label.options.asset"),
               value: "asset",
+            },
+            {
+              label: t("category.label.options.accessory"),
+              value: "accessory",
             },
             {
               label: t("category.label.options.consumable"),

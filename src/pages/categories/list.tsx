@@ -70,7 +70,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       category_type: data?.category_type,
-      eula: data?.eula ?? "",
+      eula:
+        typeof data?.eula === "string"
+          ? data?.eula.split(">")[1].split("<")[0]
+          : "",
       image: data?.image,
 
       require_acceptance: data?.require_acceptance,
@@ -119,10 +122,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 ? value === ECategory.ACCESSORY
                   ? t("category.label.options.accessory")
                   : value === ECategory.ASSET
-                    ? t("category.label.options.asset")
-                    : value === ECategory.CONSUMABLE
-                      ? t("category.label.options.consumable")
-                      : ""
+                  ? t("category.label.options.asset")
+                  : value === ECategory.CONSUMABLE
+                  ? t("category.label.options.consumable")
+                  : ""
                 : ""
             }
           />
@@ -155,15 +158,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const [loading, setLoading] = useState(false);
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      refreshData();
-      setLoading(false);
-    }, 300);
-  };
-
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
@@ -180,25 +174,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div>
-          <button
-            className="menu-trigger"
-            style={{
-              borderTopLeftRadius: "3px",
-              borderBottomLeftRadius: "3px",
-            }}
-          >
-            <Tooltip
-              title={t("hardware.label.tooltip.refresh")}
-              color={"#108ee9"}
-            >
-              <SyncOutlined
-                onClick={handleRefresh}
-                style={{ color: "black" }}
-              />
-            </Tooltip>
-          </button>
-        </div>
       </div>
       <MModal
         title={t("category.label.title.create")}
@@ -221,7 +196,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      {loading ? (
+      {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
@@ -238,10 +213,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >

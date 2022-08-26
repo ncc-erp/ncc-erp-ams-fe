@@ -142,7 +142,8 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       { name: "qty", value: data?.qty },
       {
         name: "purchase_cost",
-        value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+        value:
+          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "notes", value: data?.notes },
@@ -358,7 +359,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="warranty_months"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("accessory.label.field.insurance") +
                   " " +

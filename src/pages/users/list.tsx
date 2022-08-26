@@ -38,7 +38,7 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
-  getBGAssetAssignedStatusDecription
+  getBGAssetAssignedStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
 
@@ -159,7 +159,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       dataIndex: "purchase_date",
       title: t("user.label.field.dateBuy"),
       render: (value: IHardware) =>
-        value ? <DateField format="LL" value={value ? (value.date) : ""} /> : "",
+        value ? <DateField format="LL" value={value ? value.date : ""} /> : "",
       defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
     },
     {
@@ -414,7 +414,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={t("user.label.title.name")}>
       <div className="users">
-        <div className={pageTotal == 0 ? "list-users-noTotalPage" : "list-users"}>
+        <div
+          className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
+        >
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
@@ -550,7 +552,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               sorter
             />
           ))}
-          <Table.Column<IHardwareResponse>
+          <Table.Column<any>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (
@@ -567,32 +569,63 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
-                  <Popconfirm
-                    title={t("hardware.label.button.accept")}
-                    onConfirm={() =>
-                      OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
-                    }
-                  >
-                    {isLoadingArr[record.id] !== false && (
-                      <Button
-                        className="ant-btn-accept"
-                        type="primary"
-                        shape="round"
-                        size="small"
-                        loading={
-                          isLoadingArr[record.id] === undefined
-                            ? false
-                            : isLoadingArr[record.id] === false
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id !== record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkout")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
                               ? false
                               : true
-                        }
-                      >
-                        {t("hardware.label.button.accept")}
-                      </Button>
-                    )}
-                  </Popconfirm>
-                )}
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkout")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
+
+                {record.assigned_to?.id !== null &&
+                  record.assigned_to?.id === record.withdraw_from &&
+                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                    <Popconfirm
+                      title={t("hardware.label.button.accept_checkin")}
+                      onConfirm={() =>
+                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                      }
+                    >
+                      {isLoadingArr[record.id] !== false && (
+                        <Button
+                          className="ant-btn-accept"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                          }
+                        >
+                          {t("hardware.label.button.accept_checkin")}
+                        </Button>
+                      )}
+                    </Popconfirm>
+                  )}
 
                 {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
                   <Button
@@ -603,8 +636,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => cancle(record)}
                   >

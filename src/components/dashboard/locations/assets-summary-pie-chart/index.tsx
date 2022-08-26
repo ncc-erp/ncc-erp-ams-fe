@@ -10,8 +10,8 @@ type AssetsSummaryPieChartProps = {
 
 export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const { categories, name, count } = props;
-
-  const data = categories;
+  const size = 6;
+  const data = categories.slice(0, size);
 
   const config: PieConfig = {
     appendPadding: 10,
@@ -73,7 +73,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           whiteSpace: "pre-wrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          fontSize: '25px',
+          fontSize: "25px",
         },
         content: `${name} ${count}`,
       },
