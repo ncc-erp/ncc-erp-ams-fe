@@ -56,3 +56,19 @@ export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
       : value.name === i18n.t("hardware.label.field.checkin")
       ? "red"
       : "";
+
+export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
+      value?.status_label?.name === i18n.t("hardware.label.field.assign")
+        ? i18n.t("hardware.label.detail.assign")
+        : value?.status_label?.name === i18n.t("hardware.label.field.readyToDeploy")
+        ? i18n.t("hardware.label.detail.readyToDeploy")
+        : value?.status_label?.name === i18n.t("hardware.label.field.broken")
+        ? i18n.t("hardware.label.detail.broken")
+        : value?.status_label?.name === i18n.t("hardware.label.field.pending")
+        ? i18n.t("hardware.label.detail.pending")
+        : value?.status_label?.name === i18n.t("hardware.label.field.checkin")
+        ? i18n.t("hardware.label.detail.checkin")
+        : "";
+
+
+
