@@ -123,22 +123,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           text: t("hardware.label.detail.refuse"),
           value: ASSIGNED_STATUS.REFUSE,
         },
-        // {
-        //   text: t("hardware.label.detail.acceptCheckout"),
-        //   value: ASSIGNED_STATUS.ACCEPT_CHECKOUT,
-        // },
-        // {
-        //   text: t("hardware.label.detail.acceptCheckin"),
-        //   value: ASSIGNED_STATUS.ACCEPT_CHECKIN,
-        // },
-        // {
-        //   text: t("hardware.label.detail.rejectCheckout"),
-        //   value: ASSIGNED_STATUS.REJECT_CHECKOUT,
-        // },
-        // {
-        //   text: t("hardware.label.detail.rejectCheckin"),
-        //   value: ASSIGNED_STATUS.REJECT_CHECKIN,
-        // },
       ],
       onFilter: (value, record: IUserAssets) =>
         record.assigned_status === value,
