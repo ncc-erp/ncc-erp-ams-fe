@@ -20,7 +20,6 @@ import {
   Button,
   Tooltip,
   Spin,
-  Col,
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import { IHardware } from "interfaces";
@@ -38,7 +37,9 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
+  getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
+  getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
 
@@ -72,35 +73,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const collumns: ColumnsType<IUserAssets> = [
     {
-      dataIndex: "id",
-      title: "ID",
-      render: (value: IHardware) => <TextField value={value ? value : ""} />,
-      defaultSortOrder: getDefaultSortOrder("id", sorter),
-    },
-    {
       dataIndex: "name",
       title: t("user.label.field.name"),
       render: (value: IHardware) => <TextField value={value ? value : ""} />,
       defaultSortOrder: getDefaultSortOrder("name", sorter),
-    },
-    {
-      dataIndex: "image",
-      title: t("user.label.field.image"),
-      render: (value: string) => {
-        return value ? (
-          <Image width={80} alt="" height={"auto"} src={value} />
-        ) : (
-          ""
-        );
-      },
-    },
-    {
-      dataIndex: "model",
-      title: t("user.label.field.model"),
-      render: (value: IHardwareResponse) => (
-        <TagField value={value ? value.name : ""} />
-      ),
-      defaultSortOrder: getDefaultSortOrder("model.name", sorter),
     },
     {
       dataIndex: "category",
@@ -119,14 +95,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
     },
     {
-      dataIndex: "assigned_to",
-      title: t("user.label.field.name_user"),
-      render: (value: IHardwareResponse) => (
-        <TextField value={value ? value.name : ""} />
-      ),
-      defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
-    },
-    {
       dataIndex: "assigned_status",
       title: t("user.label.field.condition"),
       render: (value: number) => (
@@ -140,8 +108,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ),
       filters: [
         {
-          text: t("hardware.label.detail.pendingAccept"),
-          value: ASSIGNED_STATUS.PENDING_ACCEPT,
+          text: t("hardware.label.detail.waitingAcceptCheckout"),
+          value: ASSIGNED_STATUS.WAITING_CHECKOUT,
+        },
+        {
+          text: t("hardware.label.detail.waitingAcceptCheckin"),
+          value: ASSIGNED_STATUS.WAITING_CHECKIN,
         },
         {
           text: t("hardware.label.detail.accept"),
@@ -151,6 +123,22 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           text: t("hardware.label.detail.refuse"),
           value: ASSIGNED_STATUS.REFUSE,
         },
+        // {
+        //   text: t("hardware.label.detail.acceptCheckout"),
+        //   value: ASSIGNED_STATUS.ACCEPT_CHECKOUT,
+        // },
+        // {
+        //   text: t("hardware.label.detail.acceptCheckin"),
+        //   value: ASSIGNED_STATUS.ACCEPT_CHECKIN,
+        // },
+        // {
+        //   text: t("hardware.label.detail.rejectCheckout"),
+        //   value: ASSIGNED_STATUS.REJECT_CHECKOUT,
+        // },
+        // {
+        //   text: t("hardware.label.detail.rejectCheckin"),
+        //   value: ASSIGNED_STATUS.REJECT_CHECKIN,
+        // },
       ],
       onFilter: (value, record: IUserAssets) =>
         record.assigned_status === value,
@@ -159,7 +147,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       dataIndex: "purchase_date",
       title: t("user.label.field.dateBuy"),
       render: (value: IHardware) =>
-        value ? <DateField format="LL" value={value ? value.date : ""} /> : "",
+        value ? <DateField format="LLL" value={value ? value.date : ""} /> : "",
       defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
     },
     {
@@ -272,7 +260,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     if (
       initselectedRowKeys.filter(
         (item: IUserAssets) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
@@ -281,7 +270,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         initselectedRowKeys
           .filter(
             (item: IUserAssets) =>
-              item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
           )
           .map((item: IUserAssets) => item)
       );
@@ -298,7 +288,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
       ).length > 0 &&
       initselectedRowKeys.filter(
         (item: IUserAssets) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
@@ -393,6 +384,15 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setIsCancelManyAssetModalVisible(!isCancelManyAssetModalVisible);
   };
 
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 1300);
+  };
+
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
     mutate({
       resource: HARDWARE_API + "?_method=PUT",
@@ -401,6 +401,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         assigned_status: assigned_status,
       },
     });
+    handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   };
@@ -414,9 +415,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={t("user.label.title.name")}>
       <div className="users">
-        <div
-          className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
-        >
+        <div className="list-users">
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
@@ -430,7 +429,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               <Button
                 type="primary"
                 disabled={!selectedAcceptAndRefuse}
-                loading={isLoadingSendRequest}
+                loading={loading}
                 className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
               >
                 {t("user.label.button.accept")}
@@ -453,7 +452,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             {initselectedRowKeys
               .filter(
                 (item: IUserAssets) =>
-                  item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -524,11 +524,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
-      {tableProps.loading ? (
+      {loading ? (
         <>
-          <Col sm={24} md={24} className="dashboard-loading">
-            <Spin tip={`${t("loading")}...`} className="spin-center" />
-          </Col>
+          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+            <Spin
+              tip="Loading..."
+              style={{ fontSize: "18px", color: "black" }}
+            />
+          </div>
         </>
       ) : (
         <Table
@@ -569,9 +572,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id !== record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id !== record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -598,9 +601,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     </Popconfirm>
                   )}
 
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id === record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id === record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -627,7 +630,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     </Popconfirm>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_status ===
+                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
                   <Button
                     type="primary"
                     shape="round"
@@ -641,7 +645,25 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     }
                     onClick={() => cancle(record)}
                   >
-                    {t("hardware.label.button.refuse")}
+                    {t("hardware.label.button.rejectCheckout")}
+                  </Button>
+                )}
+
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => cancle(record)}
+                  >
+                    {t("hardware.label.button.rejectCheckin")}
                   </Button>
                 )}
               </Space>

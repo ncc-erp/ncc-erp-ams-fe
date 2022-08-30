@@ -20,6 +20,7 @@ import {
   CATEGORIES_API,
   MODELS_API,
 } from "api/baseApi";
+import { requestable } from "constants/assets";
 
 type ModelEditProps = {
   isModalVisible: boolean;
@@ -96,7 +97,10 @@ export const ModelEdit = (props: ModelEditProps) => {
       formData.append("category_id", event.category.toString());
 
     formData.append("notes", event.notes);
-    formData.append("requestable", checked ? "1" : "0");
+    formData.append(
+      "requestable",
+      checked ? requestable.REQUIRED : requestable.REFUSE
+    );
 
     formData.append("_method", "PATCH");
     setPayload(formData);

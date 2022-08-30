@@ -86,7 +86,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category_id,
-        },
+        }
         // {
         //   field: "category_type",
         //   operator: "eq",
@@ -185,13 +185,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <TextField value={value && value !== "undefined" ? value : ""} />
         ),
       },
-      // {
-      //   key: "log_meta",
-      //   title: translate("report.label.field.logMeta"),
-      //   render: (value: IReport) => (
-      //     <TextField value={value && value.checkin_counter ? JSON.stringify(value.checkin_counter ) : ""} />
-      //   ),
-      // },
+   
     ],
     []
   );
@@ -268,9 +262,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             created_at:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
             type: searchParams.get("action_type")
               ? assetHistoryType
@@ -306,11 +300,14 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
 
           <Form.Item
-            label="Loại"
+            label={translate("report.label.field.type")}
             name="type"
             className="search-month-location-null"
           >
-            <Select onChange={handleTypeChange} placeholder="Loại">
+            <Select
+              onChange={handleTypeChange}
+              placeholder={translate("report.label.field.type")}
+            >
               <Option value={"all"}>{translate("all")}</Option>
               {Object.entries(ActionType).map(([key, value]) => {
                 if (key !== "create new") {

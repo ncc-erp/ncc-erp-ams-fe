@@ -1098,7 +1098,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -1106,7 +1108,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           <Form.Item
             label={t("hardware.label.title.confirmStatus")}
             name="assigned_status"
-            className={"search-month-location-null"}
+            className="select-assigned-status"
           >
             <Select
               defaultValue={"all"}
@@ -1131,11 +1133,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               }}
             >
               <Option value={"all"}>{t("all")}</Option>
-              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>
+              <Option value={ASSIGNED_STATUS.DEFAULT}>
                 {t("hardware.label.option_assigned.no-checkout")}
               </Option>
-              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>
-                {t("hardware.label.option_assigned.waiting-confirm")}
+              <Option value={ASSIGNED_STATUS.WAITING_CHECKOUT}>
+                {t("hardware.label.option_assigned.waiting-confirm-checkout")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.WAITING_CHECKIN}>
+                {t("hardware.label.option_assigned.waiting-confirm-checkin")}
               </Option>
               <Option value={ASSIGNED_STATUS.ACCEPT}>
                 {t("hardware.label.option_assigned.confirmed")}

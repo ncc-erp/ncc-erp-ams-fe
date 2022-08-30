@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -44,11 +43,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
-  const [checked, setChecked] = useState(true);
-
-  useEffect(() => {
-    setChecked(props.data?.requestable === "1" ? true : false);
-  }, [props]);
 
   const t = useTranslate();
 
@@ -187,7 +181,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
-      { name: "requestable", value: data?.requestable },
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);

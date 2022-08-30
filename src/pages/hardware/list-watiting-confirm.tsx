@@ -108,7 +108,7 @@ export const HardwareListWaitingConfirm: React.FC<
       {
         field: "assigned_status",
         operator: "eq",
-        value: ASSIGNED_STATUS.PENDING_ACCEPT,
+        value: ASSIGNED_STATUS.WAITING_CHECKOUT,
       },
     ],
     resource: HARDWARE_API,
@@ -461,7 +461,8 @@ export const HardwareListWaitingConfirm: React.FC<
     if (
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
@@ -470,7 +471,8 @@ export const HardwareListWaitingConfirm: React.FC<
         initselectedRowKeys
           .filter(
             (item: IAssetsWaiting) =>
-              item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
           )
           .map((item: IAssetsWaiting) => item)
       );
@@ -487,7 +489,8 @@ export const HardwareListWaitingConfirm: React.FC<
       ).length > 0 &&
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
@@ -774,7 +777,9 @@ export const HardwareListWaitingConfirm: React.FC<
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -927,7 +932,8 @@ export const HardwareListWaitingConfirm: React.FC<
             {initselectedRowKeys
               .filter(
                 (item: IAssetsWaiting) =>
-                  item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -1007,9 +1013,9 @@ export const HardwareListWaitingConfirm: React.FC<
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id !== record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id !== record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -1036,9 +1042,9 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id === record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id === record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -1065,7 +1071,8 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_status ===
+                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1079,7 +1086,25 @@ export const HardwareListWaitingConfirm: React.FC<
                     }
                     onClick={() => cancle(record)}
                   >
-                    {t("hardware.label.button.refuse")}
+                    {t("hardware.label.button.rejectCheckout")}
+                  </Button>
+                )}
+
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => cancle(record)}
+                  >
+                    {t("hardware.label.button.rejectCheckin")}
                   </Button>
                 )}
               </Space>
