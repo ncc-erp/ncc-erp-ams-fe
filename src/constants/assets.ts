@@ -24,7 +24,6 @@ export const STATUS_LABELS = {
   BROKEN: 3,
   ASSIGN: 4,
   READY_TO_DEPLOY: 5,
-  CHECKIN: 6
 };
 
 export enum EStatus {

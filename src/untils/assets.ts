@@ -40,8 +40,6 @@ export const getAssetStatusDecription = (value: IHardwareResponse) =>
       ? i18n.t("hardware.label.detail.broken")
       : value.name === i18n.t("hardware.label.field.pending")
       ? i18n.t("hardware.label.detail.pending")
-      : value.name === i18n.t("hardware.label.field.checkin")
-      ? i18n.t("hardware.label.detail.checkin")
       : "";
   
 export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
@@ -53,8 +51,6 @@ export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
       ? "red"
       : value.name === i18n.t("hardware.label.field.pending")
       ? "#f39c12"
-      : value.name === i18n.t("hardware.label.field.checkin")
-      ? "red"
       : "";
 
 export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
@@ -66,8 +62,6 @@ export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
         ? i18n.t("hardware.label.detail.broken")
         : value?.status_label?.name === i18n.t("hardware.label.field.pending")
         ? i18n.t("hardware.label.detail.pending")
-        : value?.status_label?.name === i18n.t("hardware.label.field.checkin")
-        ? i18n.t("hardware.label.detail.checkin")
         : "";
 
 

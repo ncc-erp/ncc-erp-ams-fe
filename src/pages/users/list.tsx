@@ -399,7 +399,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   return (
     <List title={t("user.label.title.name")}>
       <div className="users">
-        <div className="list-users">
+        <div
+          className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
+        >
           <div className="button-user-accept-refuse">
             <Popconfirm
               title={t("user.label.button.accept")}
