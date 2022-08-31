@@ -8,6 +8,7 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import "../../styles/hardware.less";
 import { IHardwareResponse, IHardwareUpdateRequest } from "interfaces/hardware";
 import { HARDWARE_API } from "api/baseApi";
+import { ASSIGNED_STATUS } from "constants/assets";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -45,7 +46,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     const formData = new FormData();
 
     formData.append("reason", event.reason);
-    formData.append("assigned_status", "3");
+    formData.append("assigned_status", ASSIGNED_STATUS.REFUSE.toString());
 
     formData.append("_method", "PATCH");
     setPayload(formData);

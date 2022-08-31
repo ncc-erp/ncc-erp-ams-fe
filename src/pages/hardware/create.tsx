@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -28,7 +27,6 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
   LOCATION_API,

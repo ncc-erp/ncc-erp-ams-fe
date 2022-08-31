@@ -1,6 +1,7 @@
 import { useTranslate } from "@pankod/refine-core";
 import { Typography, Tag } from "@pankod/refine-antd";
 import { IHardwareResponse } from "interfaces/hardware";
+import { getDetailAssetStatus } from "untils/assets";
 
 const { Title, Text } = Typography;
 
@@ -23,17 +24,7 @@ export const UserShow = (props: UserShowProps) => {
       <Text>{detail?.category?.name}</Text>
       <Title level={5}>{t("user.label.field.status")}</Title>
       <Text>
-        <Tag>
-          {detail?.status_label?.name === t("hardware.label.field.assign")
-            ? t("hardware.label.detail.assign")
-            : detail?.status_label?.name === t("hardware.label.field.readyToDeploy")
-              ? t("hardware.label.detail.readyToDeploy")
-              : detail?.status_label?.name === t("hardware.label.field.broken")
-                ? t("hardware.label.detail.broken")
-                : detail?.status_label?.name === t("hardware.label.field.pending")
-                  ? t("hardware.label.detail.pending")
-                  : ""}
-        </Tag>
+        <Tag>{getDetailAssetStatus(detail)}</Tag>
       </Text>
       <Title level={5}>{t("user.label.field.location")}</Title>
       <Text>{detail?.rtd_location?.name}</Text>

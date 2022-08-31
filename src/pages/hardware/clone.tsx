@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -23,7 +22,6 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-import { ICheckboxChange } from "interfaces";
 import {
   HARDWARE_API,
   LOCATION_API,
@@ -45,13 +43,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
-  const [checked, setChecked] = useState(true);
 
   const t = useTranslate();
-
-  useEffect(() => {
-    setChecked(props.data?.requestable === "1" ? true : false);
-  }, [props]);
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -185,9 +178,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
-
-      { name: "requestable", value: data?.requestable },
-
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);

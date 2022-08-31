@@ -174,6 +174,7 @@
         "readyToDeploy": "Ready to Deploy",
         "broken": "Broken",
         "pending": "Pending",
+        "checkin": "Checkin",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận"
@@ -209,7 +210,9 @@
         "refuse": "Từ chối",
         "search": "Tìm kiếm",
         "accept_checkout": "Xác nhận cấp phát",
-        "accept_checkin": "Xác nhận thu hồi"
+        "accept_checkin": "Xác nhận thu hồi",
+        "rejectCheckout": "Từ chối cấp phát",
+        "rejectCheckin": "Từ chối thu hồi"
       },
       "title": {
         "asset": "Tất cả tài sản",
@@ -248,8 +251,10 @@
         "readyToDeploy": "Trong kho",
         "broken": "Hỏng",
         "pending": "Check lại-Bảo hành",
-        "noAssign": "",
-        "pendingAccept": "Đang chờ xác nhận",
+        "default": "",
+        "pendingAccept": "Chờ xác nhận",
+        "waitingAcceptCheckout": "Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin": "Chờ xác nhận thu hồi",
         "accept": "Đã xác nhận",
         "refuse": "Đã từ chối",
         "note-checkin": "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi",
@@ -262,7 +267,9 @@
         "no-checkout": "Chưa checkout",
         "waiting-confirm": "Đang chờ xác nhận",
         "confirmed": "Đã xác nhận",
-        "refuse": "Đã từ chối"
+        "refuse": "Đã từ chối",
+        "waiting-confirm-checkout": "Chờ xác nhận cấp phát",
+        "waiting-confirm-checkin": "Chờ xác nhận thu hồi"
       }
     }
   },
@@ -424,9 +431,8 @@
         "synchronized": "Đồng bộ",
         "update": "Chỉnh sửa",
         "changePass": "Đổi mật khẩu",
-        "accept": "Xác nhận",
-        "accept_checkout": "Xác nhận cấp pháp trong trường hợp cấp phát",
-        "refuse_checkin": "Xác nhận thu hồi trong trường hợp thu hồi"
+        "accept": "Xác nhận"
+        
 
       },
       "tooltip": {

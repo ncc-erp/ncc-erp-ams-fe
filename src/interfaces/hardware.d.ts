@@ -322,6 +322,7 @@ export interface IHardwareFilterVariables {
 export interface IHardwareRequestMultipleCancel {
   assets: {}[];
   reason: string;
+  assigned_status: number;
 }
 export interface IAssetsWaiting {
   id: number;
