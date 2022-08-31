@@ -216,51 +216,30 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
         </div>
 
         <div className="table-details-access-cons">
-          <Table
-            className="list-table"
-            {...tableDetails}
-            pagination={false}
-            scroll={{ x: 530 }}
-          >
-            {collumnsDetails.map((col) => (
-              <Table.Column dataIndex={col.key} {...col} />
-            ))}
-            <Table.Column<IAccesstoryResponse>
-              dataIndex="actions"
-              render={(_, record) => (
-                <>
-                  <Space>
-                    {/* <Tooltip
-                      title={translate("accessory.label.tooltip.detail")}
-                      color={"#108ee9"}
-                    >
-                      <ShowButton
-                        hideText
-                        size="small"
-                        recordItemId={record.id}
-                        onClick={() => show(record)}
-                      />
-                    </Tooltip> */}
-                    <Button
-                      className="ant-btn-detail"
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      onClick={() => show(record)}
-                    >
-                      {translate("accessory.label.button.detail")}
-                    </Button>
-
-                    {record.user_can_checkout === true && (
+          <div className="list-user-checkout">
+            <Table
+              className="list-table"
+              {...tableDetails}
+              pagination={false}
+            >
+              {collumnsDetails.map((col) => (
+                <Table.Column dataIndex={col.key} {...col} />
+              ))}
+            </Table>
+          </div>
+          <div className="details-checkout">
+            <Table
+              className="list-table"
+              {...tableDetails}
+              pagination={false}
+            >
+              <Table.Column<IAccesstoryResponse>
+                dataIndex="actions"
+                render={(_, record) => (
+                  <>
+                    <Space>
                       <Button
-                        className="ant-btn-checkout"
+                        className="ant-btn-detail"
                         type="primary"
                         shape="round"
                         size="small"
@@ -271,28 +250,47 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
                               ? false
                               : true
                         }
-                        onClick={() => checkout(record)}
+                        onClick={() => show(record)}
                       >
-                        {translate("accessory.label.button.checkout")}
+                        {translate("accessory.label.button.detail")}
                       </Button>
-                    )}
 
-                    {record.user_can_checkout === false && (
-                      <Button
-                        className="ant-btn-checkout"
-                        type="primary"
-                        shape="round"
-                        size="small"
-                        disabled
-                      >
-                        {translate("accessory.label.button.checkout")}
-                      </Button>
-                    )}
-                  </Space>
-                </>
-              )}
-            />
-          </Table>
+                      {record.user_can_checkout === true && (
+                        <Button
+                          className="ant-btn-checkout"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                                ? false
+                                : true
+                          }
+                          onClick={() => checkout(record)}
+                        >
+                          {translate("accessory.label.button.checkout")}
+                        </Button>
+                      )}
+
+                      {record.user_can_checkout === false && (
+                        <Button
+                          className="ant-btn-checkout"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          disabled
+                        >
+                          {translate("accessory.label.button.checkout")}
+                        </Button>
+                      )}
+                    </Space>
+                  </>
+                )}
+              />
+            </Table>
+          </div>
         </div>
       </div>
       <MModal
