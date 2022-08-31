@@ -80,6 +80,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const [listening, setListening] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const category_id = searchParams.get("category_id");
   const location_id = searchParams.get("location_id");
   const dateFromParam = searchParams.get("date_from");
   const dateToParam = searchParams.get("date_to");
@@ -99,7 +100,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     resource: ACCESSORY_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      let { search, location, purchase_date } = params;
+      let { search, location, purchase_date, category } = params;
       filters.push(
         {
           field: "search",
@@ -124,7 +125,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
-        }
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category ? category : category_id,
+        },
       );
 
       return filters;
@@ -149,7 +155,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             value={value ? value : ""}
             onClick={() => {
               record.id &&
-                list(`accessory_details?id=${record.id}&name=${record.name}`);
+                list(`accessory_details?id=${record.id}&name=${record.name}
+                &category_id=${record.category.id}`);
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           ></TextField>
@@ -271,7 +278,21 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       remaining_qty: 0,
       checkin_date: data?.checkin_date,
       assigned_pivot_id: data?.assigned_pivot_id,
-      warranty_months: data?.warranty_months
+      warranty_months: data?.warranty_months,
+      username: "",
+      last_checkout: {
+        datetime: "",
+        formatted: "",
+      },
+      checkout_notes: "",
+      created_at: {
+        datetime: "",
+        formatted: ""
+      },
+      updated_at: {
+        datetime: "",
+        formatted: ""
+      }
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -544,7 +565,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
-          scroll={{ x: 1290 }}
+          scroll={{ x: 1090 }}
           pagination={
             (pageTotal as number) > 10
               ? {

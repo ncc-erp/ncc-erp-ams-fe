@@ -180,6 +180,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
               <Form.Item
                 label={translate("dashboard.field.search-location")}
                 name="location"
+                initialValue={99999}
               >
                 <Select
                   allowClear
@@ -189,7 +190,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                       : translate("dashboard.placeholder.select-category")
                   }
                   onChange={handleChangeLocation}
-                  defaultValue={99999}
+                  // defaultValue={99999}
                   className="selected-location"
                 >
                   {(data?.data.payload || []).map((item: ILocation) => (

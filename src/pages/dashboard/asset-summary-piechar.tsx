@@ -1,10 +1,7 @@
 import { Pie } from "@ant-design/plots";
 import { useTranslate } from "@pankod/refine-core";
-
-export interface IAssetHistory {
-    count: number;
-    type: string;
-}
+import { IAssetHistory } from "interfaces/dashboard";
+import { useEffect, useState } from "react";
 
 type AssetsSummaryPieChartProps = {
     assets_statistic: IAssetHistory[];
@@ -14,8 +11,17 @@ export const AssetsSummaryPieChartCheckOut = (props: AssetsSummaryPieChartProps)
     const { assets_statistic } = props;
 
     const translate = useTranslate();
-    const size = 6;
-    const data = assets_statistic.slice(0, size);
+    const data = assets_statistic;
+
+    const [dataCheckOutActive, setDataCheckOutActive] = useState({});
+
+    useEffect(() => {
+        let dataClone = { ...dataCheckOutActive }
+        for (var i = 0; i < data.length; i++) {
+            dataClone = { ...dataClone, [data[i].type]: data[i].count > 0 ? true : false }
+        }
+        setDataCheckOutActive(dataClone)
+    }, [data])
 
     const config = {
         appendPadding: 10,
@@ -33,6 +39,9 @@ export const AssetsSummaryPieChartCheckOut = (props: AssetsSummaryPieChartProps)
                 textAlign: 'center',
                 fontSize: 12,
             },
+        },
+        legend: {
+            selected: dataCheckOutActive
         },
         interactions: [
             {
@@ -62,8 +71,17 @@ export const AssetsSummaryPieChartCheckIn = (props: AssetsSummaryPieChartProps) 
     const { assets_statistic } = props;
 
     const translate = useTranslate();
-    const size = 6;
-    const data = assets_statistic.slice(0, size);
+    const data = assets_statistic;
+
+    const [dataCheckInActive, setDataCheckInActive] = useState({});
+
+    useEffect(() => {
+        let dataClone = { ...dataCheckInActive }
+        for (var i = 0; i < data.length; i++) {
+            dataClone = { ...dataClone, [data[i].type]: data[i].count > 0 ? true : false }
+        }
+        setDataCheckInActive(dataClone)
+    }, [data])
 
     const config = {
         appendPadding: 10,
@@ -81,6 +99,9 @@ export const AssetsSummaryPieChartCheckIn = (props: AssetsSummaryPieChartProps) 
                 textAlign: 'center',
                 fontSize: 12,
             },
+        },
+        legend: {
+            selected: dataCheckInActive
         },
         interactions: [
             {

@@ -425,3 +425,8 @@ export const optionsPermissions = [
     value: AccessType.can,
   },
 ];
+
+export const defaultValue = {
+  active: "1",
+  inactive: "0",
+};

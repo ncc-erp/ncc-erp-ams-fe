@@ -31,7 +31,7 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
-import { USER_API } from "api/baseApi";
+import { SYNC_USER_API, USER_API } from "api/baseApi";
 
 const defaultCheckedList = [
   "id",
@@ -86,7 +86,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     setHrmLoading(true);
     custom &&
       custom({
-        url: `api/v1/users/sync-list-user`,
+        url: SYNC_USER_API,
         method: "get",
       }).then((x) => {
         setHrmLoading(false);
@@ -301,12 +301,11 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     setTimeout(() => {
       refreshData();
       setRefLoading(false);
-    }, 1000);
+    }, 300);
   };
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
   const isLoading = tableProps.loading || hrmLoading;
-  const refreshLoading = tableProps.loading || refLoading;
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -422,7 +421,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      {refreshLoading ? (
+      {refLoading ? (
         <>
           <Col sm={24} md={24} className="dashboard-loading">
             <Spin tip={`${translate("loading")}...`} className="spin-center" />

@@ -25,43 +25,35 @@ export interface IReportAsset {
 
 export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-  const [dataReport, setDataReport] = useState<[string, string]>(["", ""]);
-  const [data_CheckOut, setData_CheckOut] = useState<[string, string]>([
-    "",
-    "",
-  ]);
+  const { list } = useNavigation();
+  const { RangePicker } = DatePicker;
+
+  const [data_CheckIn, setData_CheckIn] = useState<[string, string]>(["", ""]);
+  const [data_CheckOut, setData_CheckOut] = useState<[string, string]>(["", ""]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const dateFrom = searchParams.get("from");
-  const dateTo = searchParams.get("to");
+  const dateFromCheckIn = searchParams.get("from_CheckIn");
+  const dateToCheckIn = searchParams.get("to_CheckIn");
 
   const [searchParamsCheckOut, setSearchParamsCheckOut] = useSearchParams();
-  const dateFromCheckOut = searchParams.get("from");
-  const dateToCheckOut = searchParams.get("to");
+  const dateFromCheckOut = searchParams.get("from_CheckOut");
+  const dateToCheckOut = searchParams.get("to_CheckOut");
 
   const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
 
-  const {
-    data: dataCheckIn,
-    refetch: refetchCheckIn,
-    isLoading: isLoadingCheckin,
-  } = useCustom<any>({
+  const { data: dataCheckIn, refetch: refetchCheckIn, isLoading: isLoadingCheckin } = useCustom({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
       query: {
-        from: dateFrom ? dateFrom : dataReport[0],
-        to: dateTo ? dateTo : dataReport[1],
+        from: dateFromCheckIn ? dateFromCheckIn : data_CheckIn[0],
+        to: dateToCheckIn ? dateToCheckIn : data_CheckIn[1],
       },
     },
   });
 
-  const {
-    data: dataCheckOut,
-    refetch: refetchCheckOut,
-    isLoading: isLoadingCheckout,
-  } = useCustom<any>({
+  const { data: dataCheckOut, refetch: refetchCheckOut, isLoading: isLoadingCheckout } = useCustom({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
@@ -72,16 +64,13 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  const { list } = useNavigation();
-  const { RangePicker } = DatePicker;
-
   useEffect(() => {
-    setDataReport([
-      dateFrom !== null ? dateFrom : "",
-      dateTo !== null ? dateTo : "",
+    setData_CheckIn([
+      dateFromCheckIn !== null ? dateFromCheckIn : "",
+      dateToCheckIn !== null ? dateToCheckIn : "",
     ]);
     refetchCheckIn();
-  }, [dateFrom, dateTo]);
+  }, [dateFromCheckIn, dateToCheckIn]);
 
   useEffect(() => {
     setData_CheckOut([
@@ -91,20 +80,20 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     refetchCheckOut();
   }, [dateFromCheckOut, dateFromCheckOut]);
 
-  const handleChangePickerByMonth = (val: any, formatString: any) => {
+  const handleChangePickerByMonthCheckIn = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       searchParams.set(
-        "from",
+        "from_CheckIn",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
       );
       searchParams.set(
-        "to",
+        "to_CheckIn",
         to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
       );
     } else {
-      searchParams.delete("from");
-      searchParams.delete("to");
+      searchParams.delete("from_CheckIn");
+      searchParams.delete("to_CheckIn");
     }
     setSearchParams(searchParams);
   };
@@ -113,16 +102,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       searchParamsCheckOut.set(
-        "from",
+        "from_CheckOut",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
       );
       searchParamsCheckOut.set(
-        "to",
+        "to_CheckOut",
         to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
       );
     } else {
-      searchParamsCheckOut.delete("from");
-      searchParamsCheckOut.delete("to");
+      searchParamsCheckOut.delete("from_CheckOut");
+      searchParamsCheckOut.delete("to_CheckOut");
     }
     setSearchParamsCheckOut(searchParamsCheckOut);
   };
@@ -136,7 +125,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       return assetArr.includes(item) ? "" : assetArr.push(item);
     });
 
-    var dataResponseCheckInt: any = [];
+    var dataResponseCheckIn: any = [];
     var iteLocationKey: any = [];
     let dataSource = (dataCheckIn?.data.payload.categories || []).map(
       (category: IReport) => {
@@ -169,9 +158,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
-    dataResponseCheckInt = dataSource;
+    dataResponseCheckIn = dataSource;
 
-    setDataReportCheckIn(dataResponseCheckInt);
+    setDataReportCheckIn(dataResponseCheckIn);
   }, [dataCheckIn?.data.payload.assets_statistic || []]);
 
   useEffect(() => {
@@ -229,9 +218,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
-            data_CheckOut[0] && data_CheckOut[1]
+            dateFromCheckOut && dateToCheckOut
               ? list(
-                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
               )
               : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`);
           }}
@@ -252,9 +241,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         render: (text: string, record: IReport) => (
           <a
             onClick={() => {
-              data_CheckOut[0] && data_CheckOut[1]
+              dateFromCheckOut && dateToCheckOut
                 ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${data_CheckOut[0]}&date_to=${data_CheckOut[1]}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
                 )
                 : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
@@ -278,9 +267,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
-            dataReport[0] && dataReport[1]
+            dateFromCheckIn && dateToCheckIn
               ? list(
-                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
               )
               : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`);
           }}
@@ -301,9 +290,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         render: (text: string, record: IReport) => (
           <a
             onClick={() => {
-              dataReport[0] && dataReport[1]
+              dateFromCheckIn && dateToCheckIn
                 ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dataReport[0]}&date_to=${dataReport[1]}`
+                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
                 )
                 : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
@@ -368,12 +357,6 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        // pagination={
-                        //   (dataCheckOut?.data.payload.categories || []).length <= 
-                        //   6
-                        //     ? false
-                        //     : { pageSize: 6 }
-                        // }
                         scroll={{ x: 320 }}
                         pagination={false}
                         className="list-table-dashboad"
@@ -394,11 +377,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             <Form layout="vertical" className="search-month-location">
               <Form.Item
                 label={translate("dashboard.time_checkin")}
-                name="dataReport"
+                name="data_CheckIn"
               >
                 <RangePicker
                   format={dateFormat}
-                  onChange={handleChangePickerByMonth}
+                  onChange={handleChangePickerByMonthCheckIn}
                   placeholder={[
                     `${translate("report.label.field.dateStart")}`,
                     `${translate("report.label.field.dateEnd")}`,
@@ -428,11 +411,6 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        // pagination={
-                        //   (dataCheckIn?.data.payload.categories || []).length <= 6
-                        //     ? false
-                        //     : { pageSize: 6 }
-                        // }
                         scroll={{ x: 320 }}
                         pagination={false}
                         className="list-table-dashboad"

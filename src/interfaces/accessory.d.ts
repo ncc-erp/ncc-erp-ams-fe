@@ -56,6 +56,20 @@ export interface IAccesstoryResponse {
   checkin_date: string;
   assigned_pivot_id: number;
   warranty_months: string;
+  username: string;
+  last_checkout: {
+    datetime: string;
+    formatted: string;
+  };
+  checkout_notes: string;
+  created_at: {
+    datetime: string;
+    formatted: string;
+  };
+  updated_at: {
+    datetime: string;
+    formatted: string;
+  };
 }
 
 export interface IAccessoryRequestCheckout {
@@ -93,6 +107,7 @@ export interface IAccessoryFilterVariables {
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
   assigned_status: string;
+  category: string;
 }
 
 export interface IAccessoryRequestCheckin {

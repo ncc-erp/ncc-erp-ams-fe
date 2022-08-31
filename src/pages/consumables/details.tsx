@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Button,
   DateField,
-  getDefaultSortOrder,
   List,
+  Space,
   Table,
   TextField,
   Typography,
@@ -11,24 +12,42 @@ import {
 import {
   HttpError,
   IResourceComponentsProps,
+  useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
+import { MModal } from "components/Modal/MModal";
 import {
   IConsumables,
   IConsumablesFilterVariables,
+  IConsumablesRequest,
   IConsumablesResponse,
+  IConsumablesResponseCheckout,
 } from "interfaces/consumables";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
+import { ConsumablesCheckout } from "./checkout";
+import { ConsumablesShow } from "./show";
 
 export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+  const { Title } = Typography;
+  const { list } = useNavigation();
+
+  const [isLoadingArr] = useState<boolean[]>([]);
+
+  const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+  const [detailShow, setDetailShow] = useState<IConsumablesResponse>();
+
+  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
+  const [detailCheckout, setDetailCheckout] = useState<IConsumablesResponseCheckout>();
 
   const [searchParams] = useSearchParams();
   const nameConsumable = searchParams.get("name");
+  const category_id = searchParams.get("category_id");
+  const consumable_id = searchParams.get("id");
 
-  const { tableProps, sorter } = useTable<
+  const { tableProps, tableQueryResult } = useTable<
     IConsumablesResponse,
     HttpError,
     IConsumablesFilterVariables
@@ -42,6 +61,12 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
     resource: `api/v1/consumables/view/${searchParams.get("id")}/users`,
   });
 
+  const { tableProps: tableDetails, tableQueryResult: tableDetailsQueryResult } = useTable<
+    IConsumablesFilterVariables
+  >({
+    resource: `api/v1/consumables?category_id=${category_id}&consumable_id=${consumable_id}`,
+  });
+
   const collumns = useMemo(
     () => [
       {
@@ -49,8 +74,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         title: translate("consumables.label.field.users"),
         render: (value: string) => (
           <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("name", sorter),
+        )
       },
 
       {
@@ -61,24 +85,75 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
             <DateField format="LLL" value={value ? value.datetime : ""} />
           ) : (
             ""
-          ),
-        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+          )
       },
       {
         key: "admin",
         title: translate("consumables.label.field.admin"),
         render: (value: string) => (
           <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("admin", sorter),
+        )
       },
     ],
     []
   );
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+  const collumnsDetails = useMemo(
+    () => [
+      {
+        key: "category",
+        title: translate("consumables.label.field.category"),
+        render: (value: IConsumablesRequest) => (
+          <TextField value={value ? value.name : ""}
+            onClick={() => list(`consumables?category_id=${value.id}`)}
+            style={{ cursor: "pointer", color: "#3c8dbc" }} />
+        ),
+      },
+      {
+        key: "remaining",
+        title: translate("consumables.label.field.remaining"),
+        render: (value: number) => <TextField value={value ? value : 0} />,
+      },
+    ],
+    []
+  );
 
-  const { Title } = Typography;
+  const checkout = (data: IConsumablesResponse) => {
+    const dataConvert: IConsumablesResponseCheckout = {
+      id: data.id,
+      name: data.name,
+      category: {
+        id: data?.category?.id,
+        name: data?.category?.name,
+      },
+      note: data.notes,
+      checkout_at: {
+        date: new Date().toISOString().substring(0, 10),
+        formatted: new Date().toDateString(),
+      },
+      assigned_to: data?.assigned_to,
+      user_can_checkout: data?.user_can_checkout,
+    };
+
+    setDetailCheckout(dataConvert);
+    setIsCheckoutModalVisible(true);
+  };
+
+  const show = (data: IConsumablesResponse) => {
+    setIsShowModalVisible(true);
+    setDetailShow(data);
+  };
+
+  const refreshData = () => {
+    tableQueryResult.refetch();
+    tableDetailsQueryResult.refetch();
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutModalVisible]);
+
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
     <List
@@ -86,25 +161,138 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         nameConsumable + " " + translate("consumables.label.title.consumables")
       }
     >
-      <Title level={5}>{nameConsumable}</Title>
-      <Table
-        className="list-table"
-        {...tableProps}
-        rowKey="id"
-        pagination={
-          (pageTotal as number) > 10
-            ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-            : false
-        }
+      <div className="list-access-cons">
+        <div className="table-checkouted-access-cons">
+          <Title level={5} className="box-header">{nameConsumable}</Title>
+          <Table
+            className="list-table"
+            {...tableProps}
+            rowKey="id"
+            pagination={
+              (pageTotal as number) > 10
+                ? {
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
+                : false
+            }
+          >
+            {collumns.map((col) => (
+              <Table.Column dataIndex={col.key} {...col} />
+            ))}
+            {/* <Table.Column<IConsumablesResponse>
+              title={translate("table.actions")}
+              dataIndex="actions"
+              render={(_, record) => (
+                <Space>
+                  <Tooltip
+                    title={translate("accessory.label.tooltip.detail")}
+                    color={"#108ee9"}
+                  >
+                    <ShowButton
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                      onClick={() => show(record)}
+                    />
+                  </Tooltip>
+                </Space>
+              )}
+            /> */}
+          </Table>
+        </div>
+        <div className="table-details-access-cons" style={{ marginTop: "2.7rem" }}>
+          <Table
+            className="box-header"
+            {...tableDetails}
+            pagination={false}
+            scroll={{ x: 570 }}
+          >
+            {collumnsDetails.map((col) => (
+              <Table.Column dataIndex={col.key} {...col} />
+            ))}
+            <Table.Column<IConsumablesResponse>
+              dataIndex="actions"
+              render={(_, record) => (
+                <>
+                  <Space>
+                    <Button
+                      className="ant-btn-detail"
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => show(record)}
+                    >
+                      {translate("consumables.label.button.detail")}
+                    </Button>
+
+                    {record.user_can_checkout === true && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        loading={
+                          isLoadingArr[record.id] === undefined
+                            ? false
+                            : isLoadingArr[record.id] === false
+                              ? false
+                              : true
+                        }
+                        onClick={() => checkout(record)}
+                      >
+                        {translate("consumables.label.button.checkout")}
+                      </Button>
+                    )}
+
+                    {record.user_can_checkout === false && (
+                      <Button
+                        className="ant-btn-checkout"
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        disabled
+                      >
+                        {translate("consumables.label.button.checkout")}
+                      </Button>
+                    )}
+                  </Space>
+
+                </>
+              )}
+            />
+          </Table>
+        </div>
+      </div>
+      <MModal
+        title={translate("consumables.label.title.detail")}
+        setIsModalVisible={setIsShowModalVisible}
+        isModalVisible={isShowModalVisible}
       >
-        {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
-        ))}
-      </Table>
-    </List>
+        <ConsumablesShow
+          setIsModalVisible={setIsShowModalVisible}
+          detail={detailShow}
+        />
+      </MModal>
+      <MModal
+        title={translate("consumables.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutModalVisible}
+        isModalVisible={isCheckoutModalVisible}
+      >
+        <ConsumablesCheckout
+          isModalVisible={isCheckoutModalVisible}
+          setIsModalVisible={setIsCheckoutModalVisible}
+          data={detailCheckout}
+        />
+      </MModal>
+    </List >
   );
 };

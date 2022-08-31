@@ -27,7 +27,7 @@ import {
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
-import { Permission, optionsPermissions } from "constants/permissions";
+import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -219,8 +219,8 @@ export const UserEdit = (props: UserCreateProps) => {
                 onFinish(event);
             }}
         >
-            <Tabs defaultActiveKey="1">
-                <TabPane tab={t("user.label.field.information")} key="1">
+            <Tabs defaultActiveKey={defaultValue.active}>
+                <TabPane tab={t("user.label.field.information")} key={defaultValue.active}>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
@@ -432,7 +432,7 @@ export const UserEdit = (props: UserCreateProps) => {
                         </Button>
                     </div>
                 </TabPane>
-                <TabPane tab={t("user.label.field.permission")} key="2">
+                <TabPane tab={t("user.label.field.permission")} key={defaultValue.inactive}>
                     <div className="title_permission">
                         <Form.Item
                             name="permissions"

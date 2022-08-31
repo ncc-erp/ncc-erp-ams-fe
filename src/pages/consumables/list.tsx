@@ -86,6 +86,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("date_from ");
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
+  const category_id = searchParams.get("category_id");
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -101,7 +102,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     resource: CONSUMABLE_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];
-      let { search, location, purchase_date } = params;
+      let { search, location, purchase_date, category } = params;
       filters.push(
         {
           field: "search",
@@ -128,7 +129,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[1].toISOString().substring(0, 10)
             : undefined,
-        }
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category ? category : category_id,
+        },
       );
 
       return filters;
@@ -153,7 +159,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             value={value ? value : ""}
             onClick={() => {
               record.id &&
-                list(`consumable_details?id=${record.id}&name=${record.name}`);
+                list(`consumable_details?id=${record.id}&name=${record.name}
+                &category_id=${record.category.id}`);
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
@@ -267,6 +274,15 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       user_can_checkout: data?.user_can_checkout,
       assigned_to: data?.assigned_to,
       warranty_months: data?.warranty_months,
+      created_at: {
+        datetime: "",
+        formatted: ""
+      },
+      updated_at: {
+        datetime: "",
+        formatted: ""
+      },
+      remaining: 0
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -545,7 +561,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
-          scroll={{ x: 1220 }}
+          scroll={{ x: 1200 }}
           pagination={
             (pageTotal as number) > 10
               ? {
