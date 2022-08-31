@@ -118,6 +118,7 @@ export const Sider: React.FC = () => {
                 <span>{translate("resource.dashboard")}</span>
               </span>
             }
+            key={"dashboard"}
           >
             {menuItems &&
               menuItems
@@ -159,6 +160,7 @@ export const Sider: React.FC = () => {
                 <span>{translate("resource.asset")}</span>
               </span>
             }
+            key={"asset"}
           >
             {menuItems &&
               menuItems
@@ -320,6 +322,7 @@ export const Sider: React.FC = () => {
                 <span>{translate("resource.setting")}</span>
               </span>
             }
+            key={"setting"}
           >
             {menuItems &&
               menuItems

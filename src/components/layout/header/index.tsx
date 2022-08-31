@@ -16,8 +16,11 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
+import { useState } from "react";
+import dataProvider from "providers/dataProvider";
+import { SYNC_USER_API } from "api/baseApi";
 
-const { LogoutOutlined } = Icons;
+const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
 
@@ -29,6 +32,7 @@ export const Header: React.FC = () => {
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
   const { push } = useNavigation();
+  const [hrmLoading, setHrmLoading] = useState(false);
 
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
     ? process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -38,6 +42,18 @@ export const Header: React.FC = () => {
     clientId,
     cookiePolicy: "single_host_origin",
   });
+
+  const syncHrm = () => {
+    const { custom } = dataProvider;
+    setHrmLoading(true);
+    custom &&
+      custom({
+        url: SYNC_USER_API,
+        method: "get",
+      }).then((x) => {
+        setHrmLoading(false);
+      });
+  };
 
   const logoutAccount = () => {
     signOutGoogle();
@@ -75,10 +91,18 @@ export const Header: React.FC = () => {
       }}
     >
       <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
-      <Button type="link" onClick={() => {
+      <Button
+        type="link"
+        loading={hrmLoading}
+        onClick={syncHrm}
+      >
+        <SyncOutlined />
+      </Button>
+
+      {/* <Button type="link" onClick={() => {
         logoutAccount()
       }}>
-      </Button>
+      </Button> */}
       <Button
         type="link"
         onClick={() => {
