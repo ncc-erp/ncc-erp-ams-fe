@@ -37,7 +37,7 @@ import {
   IHardwareResponse,
 } from "interfaces/hardware";
 import { CancleAsset } from "../users/cancel";
-import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
 import {
   CloseOutlined,
   SyncOutlined,
@@ -62,6 +62,7 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
+import { ICategory } from "interfaces/categories";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -107,7 +108,7 @@ export const HardwareListWaitingConfirm: React.FC<
       {
         field: "assigned_status",
         operator: "eq",
-        value: ASSIGNED_STATUS.PENDING_ACCEPT,
+        value: ASSIGNED_STATUS.WAITING_CHECKOUT,
       },
     ],
     resource: HARDWARE_API,
@@ -176,6 +177,23 @@ export const HardwareListWaitingConfirm: React.FC<
     handleOpenSearchModel();
   };
 
+  const { selectProps: categorySelectProps } = useSelect<ICategory>({
+    resource: CATEGORIES_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -224,6 +242,10 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "status_label",
@@ -351,7 +373,7 @@ export const HardwareListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const { mutate, isLoading: isLoadingSendRequest } =
@@ -439,7 +461,8 @@ export const HardwareListWaitingConfirm: React.FC<
     if (
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedAcceptAndRefuse(true);
@@ -448,7 +471,8 @@ export const HardwareListWaitingConfirm: React.FC<
         initselectedRowKeys
           .filter(
             (item: IAssetsWaiting) =>
-              item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+              item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
           )
           .map((item: IAssetsWaiting) => item)
       );
@@ -465,7 +489,8 @@ export const HardwareListWaitingConfirm: React.FC<
       ).length > 0 &&
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
-          item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+          item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
       ).length > 0
     ) {
       setSelectedNotAcceptAndRefuse(false);
@@ -752,7 +777,9 @@ export const HardwareListWaitingConfirm: React.FC<
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -905,7 +932,8 @@ export const HardwareListWaitingConfirm: React.FC<
             {initselectedRowKeys
               .filter(
                 (item: IAssetsWaiting) =>
-                  item.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -978,16 +1006,16 @@ export const HardwareListWaitingConfirm: React.FC<
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id !== record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id !== record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -1014,9 +1042,9 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_to?.id !== null &&
-                  record.assigned_to?.id === record.withdraw_from &&
-                  record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_to.id === record.withdraw_from &&
+                  record.assigned_status ===
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -1043,7 +1071,8 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.PENDING_ACCEPT && (
+                {record.assigned_status ===
+                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
                   <Button
                     type="primary"
                     shape="round"
@@ -1057,7 +1086,25 @@ export const HardwareListWaitingConfirm: React.FC<
                     }
                     onClick={() => cancle(record)}
                   >
-                    {t("hardware.label.button.refuse")}
+                    {t("hardware.label.button.rejectCheckout")}
+                  </Button>
+                )}
+
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
+                        ? false
+                        : true
+                    }
+                    onClick={() => cancle(record)}
+                  >
+                    {t("hardware.label.button.rejectCheckin")}
                   </Button>
                 )}
               </Space>

@@ -47,7 +47,7 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { HARDWARE_API, LOCATION_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import {
   MenuOutlined,
@@ -68,6 +68,7 @@ import {
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
+import { ICategory } from "interfaces/categories";
 
 const defaultCheckedList = [
   "id",
@@ -517,6 +518,23 @@ export const HardwareListReadyToDeploy: React.FC<
     setIsCheckinModalVisible(true);
   };
 
+  const { selectProps: categorySelectProps } = useSelect<ICategory>({
+    resource: CATEGORIES_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -577,6 +595,10 @@ export const HardwareListReadyToDeploy: React.FC<
           <TagField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "status_label",
@@ -715,7 +737,7 @@ export const HardwareListReadyToDeploy: React.FC<
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const handleCreate = () => {
@@ -1106,14 +1128,16 @@ export const HardwareListReadyToDeploy: React.FC<
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
           <Form.Item
             label={t("hardware.label.title.confirmStatus")}
             name="assigned_status"
-            className={"search-month-location-null"}
+            className="select-assigned-status"
           >
             <Select
               defaultValue={"all"}
@@ -1138,11 +1162,14 @@ export const HardwareListReadyToDeploy: React.FC<
               }}
             >
               <Option value={"all"}>{t("all")}</Option>
-              <Option value={ASSIGNED_STATUS.NO_ASSIGN}>
+              <Option value={ASSIGNED_STATUS.DEFAULT}>
                 {t("hardware.label.option_assigned.no-checkout")}
               </Option>
-              <Option value={ASSIGNED_STATUS.PENDING_ACCEPT}>
-                {t("hardware.label.option_assigned.waiting-confirm")}
+              <Option value={ASSIGNED_STATUS.WAITING_CHECKOUT}>
+                {t("hardware.label.option_assigned.waiting-confirm-checkout")}
+              </Option>
+              <Option value={ASSIGNED_STATUS.WAITING_CHECKIN}>
+                {t("hardware.label.option_assigned.waiting-confirm-checkin")}
               </Option>
               <Option value={ASSIGNED_STATUS.ACCEPT}>
                 {t("hardware.label.option_assigned.confirmed")}
@@ -1415,7 +1442,7 @@ export const HardwareListReadyToDeploy: React.FC<
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}

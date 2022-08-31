@@ -4,6 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
+import { getDetailAssetStatus } from "untils/assets";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -23,20 +24,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col>
           <Text>
-            <Tag>
-              {detail?.status_label?.name === t("hardware.label.field.assign")
-                ? t("hardware.label.detail.assign")
-                : detail?.status_label?.name ===
-                  t("hardware.label.field.readyToDeploy")
-                ? t("hardware.label.detail.readyToDeploy")
-                : detail?.status_label?.name ===
-                  t("hardware.label.field.broken")
-                ? t("hardware.label.detail.broken")
-                : detail?.status_label?.name ===
-                  t("hardware.label.field.pending")
-                ? t("hardware.label.detail.pending")
-                : ""}
-            </Tag>
+            <Tag>{getDetailAssetStatus(detail)}</Tag>
             {detail?.assigned_to ? (
               <>
                 <UserOutlined />{" "}

@@ -19,6 +19,7 @@ import {
   CATEGORIES_API,
   MODELS_API,
 } from "api/baseApi";
+import { requestable } from "constants/assets";
 
 type ModelCloneProps = {
   isModalVisible: boolean;
@@ -81,7 +82,10 @@ export const ModelClone = (props: ModelCloneProps) => {
     if (event.category !== undefined)
       formData.append("category_id", event.category.toString());
     formData.append("notes", event.notes);
-    formData.append("requestable", checked ? "1" : "0");
+    formData.append(
+      "requestable",
+      checked ? requestable.REQUIRED : requestable.REFUSE
+    );
 
     setPayload(formData);
   };
