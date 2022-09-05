@@ -1,6 +1,7 @@
 import { Pie, PieConfig } from "@ant-design/plots";
 import { renderToString } from "react-dom/server";
 import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
+import { useEffect, useState } from "react";
 
 type AssetsSummaryPieChartProps = {
   name: string;
@@ -10,8 +11,16 @@ type AssetsSummaryPieChartProps = {
 
 export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const { categories, name, count } = props;
-  const size = 6;
-  const data = categories.slice(0, size);
+  const data = categories;
+  const [dataActive, setDataActive] = useState({});
+
+  useEffect(() => {
+    let dataClone = { ...dataActive }
+    for (var i = 0; i < data.length; i++) {
+      dataClone = { ...dataClone, [data[i].name]: data[i].assets_count > 0 ? true : false }
+    }
+    setDataActive(dataClone)
+  }, [])
 
   const config: PieConfig = {
     appendPadding: 10,
@@ -27,8 +36,11 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       content: "{value}",
       style: {
         textAlign: "center",
-        fontSize: 14,
+        fontSize: 14
       },
+    },
+    legend: {
+      selected: dataActive
     },
     tooltip: {
       customContent: (title, data) => {

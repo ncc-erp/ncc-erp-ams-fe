@@ -75,3 +75,10 @@ export interface IFilters {
   to?: string;
   entyType?: number[];
 }
+
+export interface IAssetHistory {
+  category_type: string;
+  count: number;
+  id: string;
+  type: string;
+}

@@ -825,7 +825,14 @@
         "checkin_date": "Ngày thu hồi",
         "cost":"Chi phí mua hàng",
         "insurance": "Bảo hành",
-        "month": "Tháng"
+        "month": "Tháng",
+        "remaining_qty": "Số lượng phụ kiện còn lại",
+        "first_name": "Tên người dùng",
+        "username": "Tên đăng nhập",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "warranty_expires": "Hết hạn",
+        "qty": "Số lượng phụ kiện được cấp phát"
       },
       "message": {
         "required": "bắt buộc"
@@ -835,7 +842,8 @@
         "create": "Thêm mới",
         "update": "Chỉnh sửa",
         "checkout": "Cấp phát",
-        "checkin": "Thu hồi"
+        "checkin": "Thu hồi",
+        "detail": "Chi tiết"
       },
       "placeholder": {
         "name": "Tên phụ kiện",
@@ -856,7 +864,8 @@
         "edit": "Chỉnh sửa",
         "checkout": "Cấp phát",
         "checkin": "Thu hồi",
-        "time": "Thời gian"
+        "time": "Thời gian",
+        "detail": "Chi tiết phụ kiện"
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -864,14 +873,15 @@
         "delete": "Xoá",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "detail": "Xem chi tiết"
       }
     }
   },
   "consumables": {
     "label": {
       "field": {
-        "name": "Tên",
+        "name": "Tên văn phòng phẩm",
         "category": "Danh mục",
         "purchase_date": "Ngày mua",
         "insurance": "Bảo hành",
@@ -886,11 +896,16 @@
         "users": "Người dùng",
         "admin": "Admin",
         "checkout_date": "Ngày cấp phát",
-        "qty": "Tổng số",
         "purchase_cost": "Chi phí mua hàng",
         "vnd": "VND",
         "month": "Tháng",
-        "supplier": "Nhà cung cấp"
+        "supplier": "Nhà cung cấp",
+        "remaining": "Số lượng vật phẩm phụ còn lại",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "warranty_expires": "Hết hạn",
+        "qty": "Số lượng vật phẩm phụ được cấp phát",
+        "user":"Lựa chọn một người dùng"
       },
       "message": {
         "required": "bắt buộc"
@@ -898,21 +913,24 @@
       "button": {
         "create": "Thêm mới",
         "update": "Chỉnh sửa",
-        "checkout": "Cấp phát"
+        "checkout": "Cấp phát",
+        "detail": "Chi tiết"
       },
       "title": {
         "consumables": "Văn phòng phẩm",
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
         "date": "Thời gian",
-        "checkout":"Cấp phát"
+        "checkout":"Cấp phát",
+        "detail": "Chi tiết văn phòng phẩm"
       },
       "tooltip": {
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
         "columns": "Danh sách các cột",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "detail": "Xem chi tiết"
       },
       "placeholder": {
         "name": "Tên",

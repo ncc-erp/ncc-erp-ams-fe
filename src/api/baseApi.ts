@@ -50,4 +50,6 @@ export const ACCESSORY_CATEGORIES_API =
 export const CONSUMABLE_API = "api/v1/consumables";
 export const CONSUMABLE_CATEGORIES_API = "api/v1/categories/consumable/selectlist";
 
+export const SYNC_USER_API = "api/v1/users/sync-list-user";
+
 
