@@ -251,7 +251,7 @@
         "readyToDeploy": "Trong kho",
         "broken": "Hỏng",
         "pending": "Check lại-Bảo hành",
-        "default": "",
+        "default": "Chưa checkout",
         "pendingAccept": "Chờ xác nhận",
         "waitingAcceptCheckout": "Chờ xác nhận cấp phát",
         "waitingAcceptCheckin": "Chờ xác nhận thu hồi",

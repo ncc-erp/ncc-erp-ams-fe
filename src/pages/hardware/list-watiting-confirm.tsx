@@ -37,7 +37,12 @@ import {
   IHardwareResponse,
 } from "interfaces/hardware";
 import { CancleAsset } from "../users/cancel";
-import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
+import {
+  CATEGORIES_API,
+  HARDWARE_API,
+  LOCATION_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
 import {
   CloseOutlined,
   SyncOutlined,
@@ -63,6 +68,7 @@ import {
 } from "untils/assets";
 import "styles/request.less";
 import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -194,6 +200,23 @@ export const HardwareListWaitingConfirm: React.FC<
     value: item.value,
   }));
 
+  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
+    resource: STATUS_LABELS_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -260,6 +283,10 @@ export const HardwareListWaitingConfirm: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+        filters: filterStatus_Label,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.status_label.id === value;
+        },
       },
       {
         key: "assigned_to",
@@ -349,6 +376,18 @@ export const HardwareListWaitingConfirm: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+        filters: [
+          {
+            text: t("hardware.label.detail.waitingAcceptCheckout"),
+            value: ASSIGNED_STATUS.WAITING_CHECKOUT,
+          },
+          {
+            text: t("hardware.label.detail.waitingAcceptCheckin"),
+            value: ASSIGNED_STATUS.WAITING_CHECKIN,
+          },
+        ],
+        onFilter: (value: number, record: IHardwareResponse) =>
+          record.assigned_status === value
       },
       {
         key: "last_checkout",
@@ -1013,7 +1052,8 @@ export const HardwareListWaitingConfirm: React.FC<
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_to.id !== record.withdraw_from &&
+                {record.assigned_to.id !== null &&
+                  record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
@@ -1042,7 +1082,8 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_to.id === record.withdraw_from &&
+                {record.assigned_to.id !== null &&
+                  record.assigned_to.id === record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm

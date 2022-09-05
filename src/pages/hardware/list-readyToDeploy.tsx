@@ -47,7 +47,12 @@ import {
 } from "interfaces/hardware";
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
-import { CATEGORIES_API, HARDWARE_API, LOCATION_API } from "api/baseApi";
+import {
+  CATEGORIES_API,
+  HARDWARE_API,
+  LOCATION_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
 import { HardwareSearch } from "./search";
 import {
   MenuOutlined,
@@ -61,14 +66,16 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
+  filterAssignedStatus,
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 
 const defaultCheckedList = [
   "id",
@@ -535,6 +542,23 @@ export const HardwareListReadyToDeploy: React.FC<
     value: item.value,
   }));
 
+  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
+    resource: STATUS_LABELS_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const collumns = useMemo(
     () => [
       {
@@ -613,6 +637,10 @@ export const HardwareListReadyToDeploy: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
+        filters: filterStatus_Label,
+        onFilter: (value: number, record: IHardwareResponse) => {
+          return record.status_label.id === value;
+        },
       },
       {
         key: "assigned_to",
@@ -724,6 +752,9 @@ export const HardwareListReadyToDeploy: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+        filters: filterAssignedStatus,
+        onFilter: (value: number, record: IHardwareResponse) =>
+          record.assigned_status === value,
       },
       {
         key: "created_at",
@@ -1132,51 +1163,6 @@ export const HardwareListReadyToDeploy: React.FC<
                   {item.label}
                 </Option>
               ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label={t("hardware.label.title.confirmStatus")}
-            name="assigned_status"
-            className="select-assigned-status"
-          >
-            <Select
-              defaultValue={"all"}
-              onChange={() => {
-                if (
-                  searchFormProps.form?.getFieldsValue()?.assigned_status ===
-                  "all"
-                ) {
-                  searchParams.delete("assigned_status");
-                  setSearchParams(searchParams);
-                  searchFormProps.form?.submit();
-                } else {
-                  searchFormProps.form?.submit();
-                  searchParams.set(
-                    "assigned_status",
-                    JSON.stringify(
-                      searchFormProps.form?.getFieldsValue()?.assigned_status
-                    )
-                  );
-                  setSearchParams(searchParams);
-                }
-              }}
-            >
-              <Option value={"all"}>{t("all")}</Option>
-              <Option value={ASSIGNED_STATUS.DEFAULT}>
-                {t("hardware.label.option_assigned.no-checkout")}
-              </Option>
-              <Option value={ASSIGNED_STATUS.WAITING_CHECKOUT}>
-                {t("hardware.label.option_assigned.waiting-confirm-checkout")}
-              </Option>
-              <Option value={ASSIGNED_STATUS.WAITING_CHECKIN}>
-                {t("hardware.label.option_assigned.waiting-confirm-checkin")}
-              </Option>
-              <Option value={ASSIGNED_STATUS.ACCEPT}>
-                {t("hardware.label.option_assigned.confirmed")}
-              </Option>
-              <Option value={ASSIGNED_STATUS.REFUSE}>
-                {t("hardware.label.option_assigned.refuse")}
-              </Option>
             </Select>
           </Form.Item>
         </Form>
