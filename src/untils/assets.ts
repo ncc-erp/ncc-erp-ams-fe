@@ -64,5 +64,28 @@ export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
         ? i18n.t("hardware.label.detail.pending")
         : "";
 
+export const filterAssignedStatus = [
+  {
+    text: i18n.t("hardware.label.detail.default"),
+    value: ASSIGNED_STATUS.DEFAULT,
+  },
+  {
+    text: i18n.t("hardware.label.detail.waitingAcceptCheckout"),
+    value: ASSIGNED_STATUS.WAITING_CHECKOUT,
+  },
+  {
+    text: i18n.t("hardware.label.detail.waitingAcceptCheckin"),
+    value: ASSIGNED_STATUS.WAITING_CHECKIN,
+  },
+  {
+    text: i18n.t("hardware.label.detail.accept"),
+    value: ASSIGNED_STATUS.ACCEPT,
+  },
+  {
+    text: i18n.t("hardware.label.detail.refuse"),
+    value: ASSIGNED_STATUS.REFUSE,
+  },
+]
+
 
 
