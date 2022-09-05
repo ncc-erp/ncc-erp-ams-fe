@@ -75,6 +75,7 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 
 const defaultCheckedList = [
   "id",
@@ -571,7 +572,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     value: item.value,
   }));
 
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
+  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [

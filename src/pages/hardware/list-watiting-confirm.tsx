@@ -68,6 +68,7 @@ import {
 } from "untils/assets";
 import "styles/request.less";
 import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -199,7 +200,7 @@ export const HardwareListWaitingConfirm: React.FC<
     value: item.value,
   }));
 
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
+  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [

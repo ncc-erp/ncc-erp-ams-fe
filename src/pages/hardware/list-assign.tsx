@@ -67,7 +67,7 @@ import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { ASSIGNED_STATUS, dateFormat, STATUS_LABELS } from "constants/assets";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   filterAssignedStatus,
   getAssetAssignedStatusDecription,
@@ -76,6 +76,7 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 
 const defaultCheckedList = [
   "id",
@@ -538,7 +539,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     value: item.value,
   }));
 
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
+  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
