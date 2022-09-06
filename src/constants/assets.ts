@@ -53,3 +53,10 @@ export const requestable = {
   REQUIRED : "1",
   REFUSE: "0"
 }
+
+export const CategoryType = {
+  ASSET: "asset",
+  CONSUMABLE : "consumable",
+  ACCESSORY: "accessory"
+}
+

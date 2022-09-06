@@ -10,7 +10,11 @@ type LocationProps = {
 
 export const AllLocations = (props: LocationProps) => {
   const { location } = props;
-
+  const items_count =
+    location.assets_count +
+    location.accessories_count +
+    location.consumables_count;
+    
   return (
     <div className="locationContainer">
       <Row gutter={16}>
@@ -18,7 +22,7 @@ export const AllLocations = (props: LocationProps) => {
           <AssetsSummaryPieChart
             categories={location.categories}
             name={location.name}
-            count={location.assets_count}
+            count={items_count}
           ></AssetsSummaryPieChart>
         </Col>
         <Col className="gutter-row assets-summary-table" sm={24} md={14}>

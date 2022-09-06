@@ -2,31 +2,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
-import { ICategoryAsset, ILocation } from "interfaces/dashboard";
+import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
 import { useNavigation, useTranslate } from "@pankod/refine-core";
 import { useSearchParams } from "react-router-dom";
+import { CategoryType, EStatus } from "constants/assets";
 
 type AssetsSummaryTableProps = {
   id: number;
   categories: ICategoryAsset[];
   data: any;
-};
-
-enum Status {
-  "PENDING" = "Pending",
-  "BROKEN" = "Broken",
-  "ASSIGN" = "Assign",
-  "READY_TO_DEPLOY" = "Ready to deploy",
-}
-
-type DataTable = {
-  name: string;
-  pending: string;
-  broken: string;
-  assign: string;
-  ready_to_deploy: string;
-  category_id: number;
-  rtd_location_id: number;
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
@@ -58,27 +42,30 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       let assign = "";
       let ready_to_deploy = "";
       let assets_count = category.assets_count;
+      let consumables_count = category.consumables_count;
+      let accessories_count = category.accessories_count;
+      let category_type = category.category_type;
 
       category.status_labels.forEach((status_label) => {
-        if (status_label.name === Status.ASSIGN) {
+        if (status_label.name === EStatus.ASSIGN) {
           assign = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.BROKEN) {
+        if (status_label.name === EStatus.BROKEN) {
           broken = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.PENDING) {
+        if (status_label.name === EStatus.PENDING) {
           pending = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.READY_TO_DEPLOY) {
+        if (status_label.name === EStatus.READY_TO_DEPLOY) {
           ready_to_deploy = calculation(
             status_label.assets_count,
             category.assets_count
@@ -95,6 +82,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         assign: assign,
         ready_to_deploy: ready_to_deploy,
         assets_count: assets_count,
+        consumables_count: consumables_count,
+        category_type: category_type,
+        accessories_count: accessories_count,
       };
     });
 
@@ -275,8 +265,16 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         category = item.categories.find(
           (c: ICategoryAsset) => c.name === nameAsset
         );
-        type["rtd_location_" + item.id] = category && category.assets_count;
+        type["rtd_location_" + item.id] =
+          category && category.category_type === CategoryType.ASSET
+            ? category.assets_count
+            : category?.category_type === CategoryType.CONSUMABLE
+            ? category?.consumables_count
+            : category?.category_type === CategoryType.ACCESSORY
+            ? category.accessories_count
+            : 0;
         type.category_id = category && category.id;
+        type.category_type = category && category.category_type;
       });
 
       dataAll.push(type);
@@ -297,7 +295,25 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              dateFrom && dateTo
+              record.category_type === CategoryType.ASSET
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFrom && dateTo
+                  ? list(
+                      `consumables?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`consumables?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFrom && dateTo
+                  ? list(
+                      `accessory?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`accessory?category_id=${record.category_id}`)
+                : dateFrom && dateTo
                 ? list(
                     `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                   )
@@ -323,18 +339,48 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           className="field-category"
           onClick={() => {
             {
-              dateFrom && dateTo
-                ? item.id !== 99999
+              record.category_type === CategoryType.ASSET
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                    : list(
+                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                  : item.id !== 99999
                   ? list(
-                      `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      `assets?rtd_location_id=${item.id}&category_id=${record.category_id}`
                     )
-                  : list(
-                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                  : list(`assets?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `consumables?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `consumables?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                  : item.id !== 99999
+                  ? list(
+                      `consumables?location_id=${item.id}&category_id=${record.category_id}`
                     )
-                : item.id !== 99999
-                ? list(
-                    `assets?rtd_location_id=${item.id}&category_id=${record.category_id}`
-                  )
+                  : list(`consumables?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `accessory?location_id=${item.id}&category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `accessory?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                  : item.id !== 99999
+                  ? list(
+                      `accessory?location_id=${item.id}&category_id=${record.category_id}`
+                    )
+                  : list(`accessory?category_id=${record.category_id}`)
                 : list(`assets?category_id=${record.category_id}`);
             }
           }}

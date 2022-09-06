@@ -158,7 +158,10 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
           <Row gutter={[12, 12]}>
             {isLoadingData ? (
               <Col sm={24} md={24} className="dashboard-loading">
-                <Spin tip={`${translate("loading")}...`} className="spin-center" />
+                <Spin
+                  tip={`${translate("loading")}...`}
+                  className="spin-center"
+                />
               </Col>
             ) : (
               (data?.data.payload || []).map(
@@ -222,7 +225,10 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
           <Row gutter={[12, 12]}>
             {isLoadingData1 ? (
               <Col sm={24} md={24} className="dashboard-loading">
-                <Spin tip={`${translate("loading")}...`} className="spin-center" />
+                <Spin
+                  tip={`${translate("loading")}...`}
+                  className="spin-center"
+                />
               </Col>
             ) : (
               (data1?.data.payload || [])

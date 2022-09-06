@@ -20,7 +20,7 @@ export const Locations = (props: LocationProps) => {
             <AssetsSummaryPieChart
               categories={location.categories}
               name={location.name}
-              count={location.assets_count}
+              count={location.items_count}
             ></AssetsSummaryPieChart>
           )}
         </Col>

@@ -4,30 +4,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
-import { ICategoryAsset, ILocation } from "interfaces/dashboard";
+import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
 import { useNavigation, useTranslate } from "@pankod/refine-core";
 import { useSearchParams } from "react-router-dom";
+import { CategoryType, EStatus } from "constants/assets";
 
 type AssetsSummaryTableAllLocation = {
   id: number;
   categories: ICategoryAsset[];
-};
-
-enum Status {
-  "PENDING" = "Pending",
-  "BROKEN" = "Broken",
-  "ASSIGN" = "Assign",
-  "READY_TO_DEPLOY" = "Ready to Deploy",
-}
-
-type DataTable = {
-  name: string;
-  pending: string;
-  broken: string;
-  assign: string;
-  ready_to_deploy: string;
-  category_id: number;
-  rtd_location_id: number;
 };
 
 export const AssetsSummaryTableAllLocation = (
@@ -60,27 +44,28 @@ export const AssetsSummaryTableAllLocation = (
       let assign = "";
       let ready_to_deploy = "";
       let assets_count = category.assets_count;
+      let category_type = category.category_type;
 
       category.status_labels.forEach((status_label) => {
-        if (status_label.name === Status.ASSIGN) {
+        if (status_label.name === EStatus.ASSIGN) {
           assign = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.BROKEN) {
+        if (status_label.name === EStatus.BROKEN) {
           broken = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.PENDING) {
+        if (status_label.name === EStatus.PENDING) {
           pending = calculation(
             status_label.assets_count,
             category.assets_count
           );
         }
-        if (status_label.name === Status.READY_TO_DEPLOY) {
+        if (status_label.name === EStatus.READY_TO_DEPLOY) {
           ready_to_deploy = calculation(
             status_label.assets_count,
             category.assets_count
@@ -97,6 +82,7 @@ export const AssetsSummaryTableAllLocation = (
         assign: assign,
         ready_to_deploy: ready_to_deploy,
         assets_count: assets_count,
+        category_type: category_type,
       };
     });
 
@@ -299,10 +285,14 @@ export const AssetsSummaryTableAllLocation = (
     setSearchParams(searchParams);
   }, [dateFrom, dateTo]);
 
+  const dataCategoryByStatus = dataCategory.filter(
+    (item: any) => item.category_type === CategoryType.ASSET
+  );
+
   return (
     <Table
       columns={columns}
-      dataSource={dataCategory}
+      dataSource={dataCategoryByStatus}
       pagination={false}
       className="list-table-dashboard"
     />
