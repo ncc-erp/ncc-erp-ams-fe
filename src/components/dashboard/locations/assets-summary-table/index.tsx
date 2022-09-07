@@ -315,7 +315,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                   : list(`accessory?category_id=${record.category_id}`)
                 : dateFrom && dateTo
                 ? list(
-                    `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    `assets?category_id=${record.category_id}&date_from=${dateFrom}&dateTo=${dateTo}`
                   )
                 : list(`assets?category_id=${record.category_id}`);
             }
@@ -357,7 +357,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                 ? dateFrom && dateTo
                   ? item.id !== 99999
                     ? list(
-                        `consumables?location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&date_to=${dateTo}`
+                        `consumables?location_id=${item.id}&category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
                     : list(
                         `consumables?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
