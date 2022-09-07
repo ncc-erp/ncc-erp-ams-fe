@@ -2,6 +2,7 @@ import { Pie, PieConfig } from "@ant-design/plots";
 import { renderToString } from "react-dom/server";
 import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
+import { CategoryType } from "constants/assets";
 
 type AssetsSummaryPieChartProps = {
   name: string;
@@ -15,18 +16,39 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const [dataActive, setDataActive] = useState({});
 
   useEffect(() => {
-    let dataClone = { ...dataActive }
+    let dataClone = { ...dataActive };
     for (var i = 0; i < data.length; i++) {
-      dataClone = { ...dataClone, [data[i].name]: data[i].assets_count > 0 ? true : false }
+      dataClone = {
+        ...dataClone,
+        [data[i].name]: data[i].assets_count > 0 ? true : false,
+      };
     }
-    setDataActive(dataClone)
-  }, [])
+    setDataActive(dataClone);
+  }, []);
+
+  let dataPie = data.map((item: any) => {
+    if (item.category_type === CategoryType.CONSUMABLE) {
+      return {
+        label: item.name,
+        value: item.consumables_count,
+      };
+    } else if (item.category_type === CategoryType.ACCESSORY) {
+      return {
+        label: item.name,
+        value: item.accessories_count,
+      };
+    }
+    return {
+      label: item.name,
+      value: item.assets_count,
+    };
+  });
 
   const config: PieConfig = {
     appendPadding: 10,
-    data,
-    angleField: "assets_count",
-    colorField: "name",
+    data: dataPie,
+    angleField: "value",
+    colorField: "label",
     color: ["#3c8dbc", "#00a65a", "#dd4b39", "#f39c12", "#00c0ef", "#605ca8"],
     radius: 1,
     innerRadius: 0.6,
@@ -36,11 +58,11 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       content: "{value}",
       style: {
         textAlign: "center",
-        fontSize: 14
+        fontSize: 14,
       },
     },
     legend: {
-      selected: dataActive
+      selected: dataActive,
     },
     tooltip: {
       customContent: (title, data) => {
