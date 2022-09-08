@@ -83,7 +83,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location_id = searchParams.get("location_id");
-  const dateFromParam = searchParams.get("date_from ");
+  const dateFromParam = searchParams.get("date_from");
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
   const category_id = searchParams.get("category_id");
@@ -134,7 +134,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category ? category : category_id,
-        },
+        }
       );
 
       return filters;
@@ -276,13 +276,13 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       warranty_months: data?.warranty_months,
       created_at: {
         datetime: "",
-        formatted: ""
+        formatted: "",
       },
       updated_at: {
         datetime: "",
-        formatted: ""
+        formatted: "",
       },
-      remaining: 0
+      remaining: 0,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -456,9 +456,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -546,6 +546,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+      <div className="sum-items">
+        <span className="name-sum-assets">
+          {translate("hardware.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
 
       {loading ? (
         <>
@@ -565,10 +571,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
@@ -610,8 +616,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >

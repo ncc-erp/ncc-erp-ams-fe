@@ -43,6 +43,7 @@ export const AssetsSummaryTableAllLocation = (
       let broken = "";
       let assign = "";
       let ready_to_deploy = "";
+      let type = 0;
       let assets_count = category.assets_count;
       let category_type = category.category_type;
 
@@ -72,6 +73,13 @@ export const AssetsSummaryTableAllLocation = (
           );
         }
       });
+      if (category.category_type === CategoryType.CONSUMABLE) {
+        type = category.consumables_count;
+      } else if (category.category_type === CategoryType.ACCESSORY) {
+        type = category.accessories_count;
+      } else if (category.category_type === CategoryType.ASSET) {
+        type = category.assets_count;
+      }
 
       return {
         rtd_location_id: id,
@@ -83,6 +91,7 @@ export const AssetsSummaryTableAllLocation = (
         ready_to_deploy: ready_to_deploy,
         assets_count: assets_count,
         category_type: category_type,
+        type: type,
       };
     });
 
@@ -101,16 +110,48 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.rtd_location_id === 99999
-                ? dateFrom && dateTo
+              record.category_type === CategoryType.ASSET
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                    : list(`assets?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
                   ? list(
-                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(`assets?category_id=${record.category_id}`)
-                : dateFrom && dateTo
-                ? list(
-                    `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                  )
+                  : list(
+                      `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
+                    )
+                : record.category_type === CategoryType.CONSUMABLE
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `consumables?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`consumables?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `consumables?location_id=${rtd_location_id}&category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `consumables?location_id=${rtd_location_id}&category_id=${record.category_id}`
+                    )
+                : record.category_type === CategoryType.ACCESSORY
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `accessory?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`accessory?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `accessory?location_id=${rtd_location_id}&category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `accessory?location_id=${rtd_location_id}&category_id=${record.category_id}`
+                    )
                 : list(
                     `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
                   );
@@ -250,8 +291,8 @@ export const AssetsSummaryTableAllLocation = (
 
     {
       title: `${t("dashboard.field.sum")}`,
-      dataIndex: "assets_count",
-      key: "assets_count",
+      dataIndex: "type",
+      key: "type",
       render: (text: number, record: DataTable) => (
         <Typography.Text
           strong
@@ -259,19 +300,49 @@ export const AssetsSummaryTableAllLocation = (
           className="field-category"
           onClick={() => {
             {
-              record.rtd_location_id === 99999
-                ? dateFrom && dateTo
+              record.category_type === CategoryType.ASSET
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                    : list(`assets?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
                   ? list(
-                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(`assets?category_id=${record.category_id}`)
-                : dateFrom && dateTo
-                ? list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                  )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}`
-                  );
+                  : list(
+                      `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}`
+                    )
+                : record.category_type === CategoryType.CONSUMABLE
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `consumables?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`consumables?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `consumables?category_id=${record.category_id}&location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `consumables?category_id=${record.category_id}&location_id=${record.rtd_location_id}`
+                    )
+                : record.category_type === CategoryType.ACCESSORY
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `accessory?category_id=${record.category_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`accessory?category_id=${record.category_id}`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `accessory?category_id=${record.category_id}&location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `accessory?category_id=${record.category_id}&location_id=${record.rtd_location_id}`
+                    )
+                : list(`assets?category_id=${record.category_id}`);
             }
           }}
         >
@@ -285,14 +356,10 @@ export const AssetsSummaryTableAllLocation = (
     setSearchParams(searchParams);
   }, [dateFrom, dateTo]);
 
-  const dataCategoryByStatus = dataCategory.filter(
-    (item: any) => item.category_type === CategoryType.ASSET
-  );
-
   return (
     <Table
       columns={columns}
-      dataSource={dataCategoryByStatus}
+      dataSource={dataCategory}
       pagination={false}
       className="list-table-dashboard"
     />

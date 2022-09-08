@@ -130,7 +130,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category ? category : category_id,
-        },
+        }
       );
 
       return filters;
@@ -196,7 +196,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "warranty_months",
         title: translate("accessory.label.field.insurance"),
-        render: (value: IAccesstoryRequest) => <TagField value={value ? value : ""} />,
+        render: (value: IAccesstoryRequest) => (
+          <TagField value={value ? value : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
       },
       {
@@ -262,7 +264,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       },
       purchase_date: {
         date: data?.purchase_date !== null ? data?.purchase_date.date : "",
-        formatted: data?.purchase_date !== null ? data?.purchase_date.formatted : "",
+        formatted:
+          data?.purchase_date !== null ? data?.purchase_date.formatted : "",
       },
       total_accessory: data?.total_accessory,
       manufacturer: {
@@ -287,12 +290,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       checkout_notes: "",
       created_at: {
         datetime: "",
-        formatted: ""
+        formatted: "",
       },
       updated_at: {
         datetime: "",
-        formatted: ""
-      }
+        formatted: "",
+      },
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -433,8 +436,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       searchParams.delete("date_from");
       searchParams.delete("date_to");
     }
-    setSearchParams(searchParams);
 
+    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -463,9 +466,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, "YYYY/MM/DD"),
-                  moment(dateToParam, "YYYY/MM/DD"),
-                ]
+                    moment(dateFromParam, "YYYY/MM/DD"),
+                    moment(dateToParam, "YYYY/MM/DD"),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -550,6 +553,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+      <div className="sum-items">
+        <span className="name-sum-assets">
+          {translate("hardware.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
 
       {loading ? (
         <>
@@ -569,10 +578,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
@@ -624,8 +633,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
