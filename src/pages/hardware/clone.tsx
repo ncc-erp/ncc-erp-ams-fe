@@ -42,7 +42,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [file, setFile] = useState<File>();
-  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
+  const [payload, setPayload] = useState<FormData>();
+  const [messageErr, setMessageErr] = useState<any>(null);
 
   const t = useTranslate();
 
@@ -115,35 +116,51 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   const { mutate, data: cloneData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    mutate({
-      resource: HARDWARE_API,
-      values: {
-        name: event.name,
-        asset_tag: event.asset_tag,
-        serial: event.serial,
-        model_id: event.model,
-        status_id: event.status_label,
-        supplier_id: event.supplier,
-        assigned_user: event.assigned_user,
-        image: event.image,
-        notes: event.notes,
-        warranty_months: event.warranty_months,
-        purchase_date: event.purchase_date,
-        purchase_cost: event.purchase_cost,
-        order_number: event.order_number,
-        location_id: event.rtd_location,
-        rtd_location_id: event.rtd_location,
-      },
-    });
+    setMessageErr(null);
+    const formData = new FormData();
+
+    formData.append("name", event.name);
+    if (event.serial !== undefined) formData.append("serial", event.serial);
+    formData.append("model_id", event.model.toString());
+    if (event.order_number !== null)
+      formData.append("order_number", event.order_number);
+
+    formData.append("notes", event.notes);
+    formData.append("asset_tag", event.asset_tag);
+    formData.append("status_id", event.status_label.toString());
+
+    if (event.assigned_user !== undefined)
+      formData.append("assigned_user", event.assigned_user.toString());
+
+    formData.append("warranty_months", event.warranty_months);
+
+    if (event.purchase_cost !== null)
+      formData.append("purchase_cost", event.purchase_cost);
+    if (event.purchase_date !== null)
+      formData.append("purchase_date", event.purchase_date);
+
+    formData.append("rtd_location_id", event.rtd_location.toString());
+    formData.append("supplier_id", event.supplier.toString());
+
+    if (
+      typeof event.image !== "string" &&
+      event.image !== null &&
+      event.image !== undefined
+    )
+      formData.append("image", event.image);
+
+    setPayload(formData);
   };
 
   useEffect(() => {
-    if (cloneData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
+    if (payload) {
+      mutate({
+        resource: HARDWARE_API,
+        values: payload,
+      });
+      if (cloneData?.data.message) form.resetFields();
     }
-  }, [cloneData, form, setIsModalVisible]);
+  }, [payload]);
 
   useEffect(() => {
     form.resetFields();
@@ -178,9 +195,22 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
-      { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [isModalVisible]);
+
+  useEffect(() => {
+    if (cloneData?.data.status === "success") {
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+    } else {
+      setMessageErr(cloneData?.data.messages);
+    }
+  }, [cloneData]);
 
   const findLabel = (value: number): Boolean => {
     let check = false;

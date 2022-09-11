@@ -15,7 +15,7 @@ import {
 } from "./asset-summary-piechar";
 import { IReport } from "interfaces/report";
 import "styles/antd.less";
-import { dateFormat, TypeAssetHistory } from "constants/assets";
+import { CategoryType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 
 export interface IReportAsset {
@@ -29,7 +29,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
 
   const [data_CheckIn, setData_CheckIn] = useState<[string, string]>(["", ""]);
-  const [data_CheckOut, setData_CheckOut] = useState<[string, string]>(["", ""]);
+  const [data_CheckOut, setData_CheckOut] = useState<[string, string]>([
+    "",
+    "",
+  ]);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const dateFromCheckIn = searchParams.get("from_CheckIn");
@@ -42,7 +45,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
 
-  const { data: dataCheckIn, refetch: refetchCheckIn, isLoading: isLoadingCheckin } = useCustom({
+  const {
+    data: dataCheckIn,
+    refetch: refetchCheckIn,
+    isLoading: isLoadingCheckin,
+  } = useCustom({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
@@ -53,7 +60,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  const { data: dataCheckOut, refetch: refetchCheckOut, isLoading: isLoadingCheckout } = useCustom({
+  const {
+    data: dataCheckOut,
+    refetch: refetchCheckOut,
+    isLoading: isLoadingCheckout,
+  } = useCustom({
     url: DASHBOARD_REPORT_ASSET_API,
     method: "get",
     config: {
@@ -129,7 +140,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     var iteLocationKey: any = [];
     let dataSource = (dataCheckIn?.data.payload.categories || []).map(
       (category: IReport) => {
-        var iteDataSource = { type: category.name, id: category.id, category_type: category.category_type };
+        var iteDataSource = {
+          type: category.name,
+          id: category.id,
+          category_type: category.category_type,
+        };
         var iteLocation = {};
         for (let i of dataCheckIn?.data.payload.locations) {
           iteLocation = {
@@ -143,12 +158,32 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       }
     );
 
-    (dataCheckIn?.data.payload.assets_statistic || []).forEach(
+    (dataCheckIn?.data.payload.assets_statistic || []).forEach((items: any) => {
+      dataSource.forEach((item: any) => {
+        if (
+          item.type === items.category_name &&
+          item.category_type === CategoryType.ASSET
+        ) {
+          for (const key of iteLocationKey) {
+            if (key === `location_${items.rtd_location_id}`) {
+              item[key] = item[key] + Number(items.checkin);
+              item[`count`] += Number(items.checkin);
+              break;
+            }
+          }
+        }
+      });
+    });
+
+    (dataCheckIn?.data.payload.accessories_statistic || []).forEach(
       (items: any) => {
         dataSource.forEach((item: any) => {
-          if (item.type === items.category_name) {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.ACCESSORY
+          ) {
             for (const key of iteLocationKey) {
-              if (key === `location_${items.rtd_location_id}`) {
+              if (key === `location_${items.location_id}`) {
                 item[key] = item[key] + Number(items.checkin);
                 item[`count`] += Number(items.checkin);
                 break;
@@ -158,25 +193,72 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
+
+    (dataCheckIn?.data.payload.consumables_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.CONSUMABLE
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                item[key] = item[key] + Number(items.checkin);
+                item[`count`] += Number(items.checkin);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
     dataResponseCheckIn = dataSource;
 
     setDataReportCheckIn(dataResponseCheckIn);
-  }, [dataCheckIn?.data.payload.assets_statistic || []]);
+  }, [
+    dataCheckIn?.data.payload.assets_statistic || [],
+    dataCheckIn?.data.payload.accessories_statistic || [],
+    dataCheckIn?.data.payload.consumables_statistic || [],
+  ]);
 
   useEffect(() => {
-    var assetNames = (dataCheckOut?.data.payload.assets_statistic || []).map(
+    let assetNames = (dataCheckOut?.data.payload.assets_statistic || []).map(
       (item: any) => item.category_name
     );
-    var assetArr: string[] = [];
+
+    let consumableNames = (
+      dataCheckOut?.data.payload.assets_statistic || []
+    ).map((item: any) => item.category_name);
+
+    let accessoryNames = (
+      dataCheckOut?.data.payload.accessories_statistic || []
+    ).map((item: any) => item.category_name);
+
+    let assetArr: string[] = [];
     assetArr = assetNames.filter(function (item: string) {
       return assetArr.includes(item) ? "" : assetArr.push(item);
     });
 
-    var dataResponseCheckOut: any = [];
-    var iteLocationKey: any = [];
+    let accessoryArr: string[] = [];
+    accessoryArr = accessoryNames.filter(function (item: string) {
+      return accessoryArr.includes(item) ? "" : accessoryArr.push(item);
+    });
+
+    let consumableArr: string[] = [];
+    consumableArr = consumableNames.filter(function (item: string) {
+      return consumableArr.includes(item) ? "" : consumableArr.push(item);
+    });
+
+    let dataResponseCheckOut: any = [];
+    let iteLocationKey: any = [];
     let dataSource = (dataCheckOut?.data.payload.categories || []).map(
       (category: IReport) => {
-        var iteDataSource = { type: category.name, id: category.id, category_type: category.category_type };
+        var iteDataSource = {
+          type: category.name,
+          id: category.id,
+          category_type: category.category_type,
+        };
         var iteLocation = {};
         for (let i of dataCheckOut?.data.payload.locations) {
           iteLocation = {
@@ -193,7 +275,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     (dataCheckOut?.data.payload.assets_statistic || []).forEach(
       (items: any) => {
         dataSource.forEach((item: any) => {
-          if (item.type === items.category_name) {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.ASSET
+          ) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.rtd_location_id}`) {
                 item[key] = item[key] + Number(items.checkout);
@@ -205,10 +290,53 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
+
+    (dataCheckOut?.data.payload.accessories_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.ACCESSORY
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                item[key] = item[key] + Number(items.checkout);
+                item[`count`] += Number(items.checkout);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
+    (dataCheckOut?.data.payload.consumables_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.CONSUMABLE
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                item[key] = item[key] + Number(items.checkout);
+                item[`count`] += Number(items.checkout);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
     dataResponseCheckOut = dataSource;
 
     setDataReportCheckOut(dataResponseCheckOut);
-  }, [dataCheckOut?.data.payload.assets_statistic || []]);
+  }, [
+    dataCheckOut?.data.payload.assets_statistic || [],
+    dataCheckOut?.data.payload.accessories_statistic || [],
+    dataCheckOut?.data.payload.consumables_statistic || [],
+  ]);
 
   var columnsCheckOut = [
     {
@@ -220,9 +348,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dateFromCheckOut && dateToCheckOut
               ? list(
-                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-              )
-              : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`);
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                )
+              : list(
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                );
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -243,11 +373,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dateFromCheckOut && dateToCheckOut
                 ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                )
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
                 : list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                );
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  );
             }}
           >
             {text}
@@ -269,9 +399,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           onClick={() => {
             dateFromCheckIn && dateToCheckIn
               ? list(
-                `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-              )
-              : list(`report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`);
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                )
+              : list(
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                );
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -292,11 +424,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               dateFromCheckIn && dateToCheckIn
                 ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                )
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
                 : list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                );
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                  );
             }}
           >
             {text}
@@ -341,7 +473,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               <Col sm={24} md={24}>
                 {isLoadingCheckout ? (
                   <Row gutter={16} className="dashboard-loading">
-                    <Spin tip={`${translate("loading")}...`} className="spin-center" />
+                    <Spin
+                      tip={`${translate("loading")}...`}
+                      className="spin-center"
+                    />
                   </Row>
                 ) : (
                   <Row gutter={16}>
@@ -395,7 +530,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               <Col sm={24} md={24}>
                 {isLoadingCheckin ? (
                   <Row gutter={16} className="dashboard-loading">
-                    <Spin tip={`${translate("loading")}...`} className="spin-center" />
+                    <Spin
+                      tip={`${translate("loading")}...`}
+                      className="spin-center"
+                    />
                   </Row>
                 ) : (
                   <Row gutter={16}>

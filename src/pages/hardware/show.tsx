@@ -204,6 +204,14 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Text>{detail && detail?.requests_counter}</Text>
         </Col>
       </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={4}>
+          <Title level={5}>{t("hardware.label.field.purchase_cost")}</Title>
+        </Col>
+        <Col span={18}>
+          <Text>{detail?.purchase_cost && detail?.purchase_cost}</Text>
+        </Col>
+      </Row>
     </>
   );
 };

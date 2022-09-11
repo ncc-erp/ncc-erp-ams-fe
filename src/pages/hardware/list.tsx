@@ -328,7 +328,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const clone = (data: IHardwareResponse) => {
-    const dataConvert: IHardwareResponse = {
+    const dataConvert: any = {
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
@@ -362,7 +362,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.rtd_location?.id,
         name: data?.rtd_location?.name,
       },
-      image: data?.image,
+
       warranty_months: data?.warranty_months,
       purchase_cost: data?.purchase_cost,
       purchase_date: {
@@ -1100,7 +1100,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       moment(searchValuesByDateTo),
                     ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
+                  ? [
+                      moment(dateFromParam, dateFormat),
+                      moment(dateToParam, dateFormat),
+                    ]
                   : ""
                 : "",
           }}
@@ -1135,8 +1138,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
-
-         
         </Form>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
