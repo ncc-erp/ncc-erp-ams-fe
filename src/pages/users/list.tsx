@@ -532,7 +532,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             type: "checkbox",
             ...rowSelection,
           }}
-          scroll={{ x: 1900 }}
+          // scroll={{ x: 1550 }}
         >
           {collumns.map((col) => (
             <Table.Column
