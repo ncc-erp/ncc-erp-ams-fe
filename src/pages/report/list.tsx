@@ -86,12 +86,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category_id,
+        },
+        {
+          field: "category_type",
+          operator: "eq",
+          value: category_type,
         }
-        // {
-        //   field: "category_type",
-        //   operator: "eq",
-        //   value: category_type,
-        // }
       );
       return filters;
     },
@@ -332,7 +332,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
       <Table
         {...tableProps}
         rowKey="id"
-        scroll={{ x: 1850 }}
+        scroll={{ x: 1100 }}
         pagination={{
           position: ["topRight", "bottomRight"],
           total: pageTotal ? pageTotal : 0,

@@ -52,6 +52,7 @@ export interface IReportResponse {
     formatted: string;
   };
   log_meta: object;
+  category_type: string;
 }
 
 export interface responseCheckIn {
