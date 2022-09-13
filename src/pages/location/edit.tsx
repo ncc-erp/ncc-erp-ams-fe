@@ -236,7 +236,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="city"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("location.label.field.city") +
                   " " +
@@ -271,7 +271,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="address"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("location.label.field.address") +
                   " " +
@@ -287,7 +287,7 @@ export const LocationEdit = (props: LocationEditProps) => {
             name="state"
             rules={[
               {
-                required: true,
+                required: false,
                 message:
                   t("location.label.field.state") +
                   " " +

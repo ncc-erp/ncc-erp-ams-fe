@@ -112,9 +112,14 @@ export const HardwareListWaitingConfirm: React.FC<
     ],
     initialFilter: [
       {
-        field: "assigned_status",
+        field: "WAITING_CHECKOUT",
         operator: "eq",
         value: ASSIGNED_STATUS.WAITING_CHECKOUT,
+      },
+      {
+        field: "WAITING_CHECKIN",
+        operator: "eq",
+        value: ASSIGNED_STATUS.WAITING_CHECKIN,
       },
     ],
     resource: HARDWARE_API,
