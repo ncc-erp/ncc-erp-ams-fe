@@ -5,6 +5,7 @@ import {
   useLogout,
   useNavigation,
   useTranslate,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -19,6 +20,7 @@ import { useGoogleLogout } from "react-google-login";
 import { useState } from "react";
 import dataProvider from "providers/dataProvider";
 import { SYNC_USER_API } from "api/baseApi";
+import { EPermissions } from "constants/permissions";
 
 const { LogoutOutlined, SyncOutlined } = Icons;
 
@@ -78,6 +80,7 @@ export const Header: React.FC = () => {
   );
 
   const { data: userIdentity } = useGetIdentity<string>();
+  const { data: permissionsData } = usePermissions();
 
   return (
     <AntdLayout.Header
@@ -91,13 +94,15 @@ export const Header: React.FC = () => {
       }}
     >
       <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
-      <Button
-        type="link"
-        loading={hrmLoading}
-        onClick={syncHrm}
-      >
-        <SyncOutlined />
-      </Button>
+      {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+        <Button
+          type="link"
+          loading={hrmLoading}
+          onClick={syncHrm}
+        >
+          <SyncOutlined />
+        </Button>
+      )}
 
       {/* <Button type="link" onClick={() => {
         logoutAccount()
