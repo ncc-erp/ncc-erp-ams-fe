@@ -11,7 +11,7 @@ type AssetsSummaryPieChartProps = {
 };
 
 export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
-  const { categories, name, count } = props;
+  const { categories, name } = props;
   const data = categories;
   const [dataActive, setDataActive] = useState({});
 
@@ -109,10 +109,21 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           textOverflow: "ellipsis",
           fontSize: "25px",
         },
-        content: `${name} ${count}`,
+        customHtml: (container, view, datum, dataPieChart) => {
+          const { width } = container.getBoundingClientRect();
+          const text = datum ? `${name} ${datum.value}` : dataPieChart ? `${name} ${dataPieChart.reduce((r, d) => r + d.value, 0)}` : `${name} 0`;
+          return renderStatistic(width, text, {
+            fontSize: 32,
+          });
+        },
       },
     },
   };
 
   return <Pie {...config} />;
 };
+
+function renderStatistic(width: number, text: string, arg2: { fontSize: number; }): string {
+  return text;
+}
+
