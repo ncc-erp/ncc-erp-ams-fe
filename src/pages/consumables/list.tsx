@@ -457,7 +457,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       }}
     >
       <MModal
-        title={translate("accessory.label.title.detail")}
+        title={translate("consumables.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
