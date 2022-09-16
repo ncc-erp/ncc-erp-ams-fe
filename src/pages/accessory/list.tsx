@@ -9,6 +9,7 @@ import {
   getDefaultSortOrder,
   List,
   Select,
+  ShowButton,
   Space,
   Spin,
   Table,
@@ -44,6 +45,7 @@ import { Image, DatePicker } from "antd";
 import { ILocation } from "interfaces/dashboard";
 import moment from "moment";
 import "styles/antd.less";
+import { AccessoryShow } from "./show";
 
 const defaultCheckedList = [
   "id",
@@ -60,6 +62,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isShowModalVisible, setIsShowModalVisible] = useState(false);
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IAccesstoryResponse>();
@@ -447,6 +450,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
+  const show = (data: IAccesstoryResponse) => {
+    setIsShowModalVisible(true);
+    setDetail(data);
+  };
+
   return (
     <List
       title={translate("accessory.label.title.accessory")}
@@ -458,6 +466,16 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         ),
       }}
     >
+      <MModal
+        title={translate("accessory.label.title.detail")}
+        setIsModalVisible={setIsShowModalVisible}
+        isModalVisible={isShowModalVisible}
+      >
+        <AccessoryShow
+          setIsModalVisible={setIsShowModalVisible}
+          detail={detail}
+        />
+      </MModal>
       <div className="search">
         <Form
           {...searchFormProps}
@@ -595,6 +613,17 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             dataIndex="actions"
             render={(_, record) => (
               <Space>
+                <Tooltip
+                  title={translate("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
+                >
+                  <ShowButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => show(record)}
+                  />
+                </Tooltip>
                 <Tooltip
                   title={translate("accessory.label.tooltip.edit")}
                   color={"#108ee9"}
