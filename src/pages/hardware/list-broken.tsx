@@ -181,14 +181,14 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           field: "dateFrom",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[0].toISOString().substring(0, 10)
+            ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
+            ? purchase_date[1].format().substring(0, 10)
             : undefined,
         },
         {

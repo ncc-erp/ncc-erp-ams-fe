@@ -73,7 +73,9 @@
       "end-date": "Ngày kết thúc",
       "sum-assets": "Tổng số lượng thiết bị của các văn phòng",
       "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng",
-      "sum-report": "Số lượng"
+      "sum-report": "Số lượng",
+      "typeConsumable": "Văn phòng phẩm",
+      "typeAccessory": "Phụ kiện"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
