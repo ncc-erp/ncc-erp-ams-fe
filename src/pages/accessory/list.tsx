@@ -119,14 +119,14 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           field: "date_from",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[0].toISOString().substring(0, 10)
+            ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "date_to",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
+            ? purchase_date[1].format().substring(0, 10)
             : undefined,
         },
         {

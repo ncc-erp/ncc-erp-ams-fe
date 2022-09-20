@@ -123,14 +123,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           field: "date_from",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[0].toISOString().substring(0, 10)
+            ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "date_to",
           operator: "eq",
           value: purchase_date
-            ? purchase_date[1].toISOString().substring(0, 10)
+            ? purchase_date[1].format().substring(0, 10)
             : undefined,
         },
         {
@@ -301,7 +301,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       },
       note: data.notes,
       checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: new Date().toDateString(),
       },
       assigned_to: data?.assigned_to,

@@ -23,6 +23,7 @@ import {
   IConsumablesResponse,
   IConsumablesResponseCheckout,
 } from "interfaces/consumables";
+import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
@@ -128,7 +129,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
       },
       note: data.notes,
       checkout_at: {
-        date: new Date().toISOString().substring(0, 10),
+        date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: new Date().toDateString(),
       },
       assigned_to: data?.assigned_to,

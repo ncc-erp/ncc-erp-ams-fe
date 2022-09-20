@@ -16,6 +16,7 @@ import {
     IAccessoryRequestCheckin,
     IAccessoryResponseCheckin
 } from "interfaces/accessory";
+import moment from "moment";
 
 type AccessoryCheckinProps = {
     isModalVisible: boolean;
@@ -60,7 +61,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
         if (event.note !== null) {
             formData.append("note", event.note);
         }
-        formData.append("checkin_date", new Date().toISOString().substring(0, 10));
+        formData.append("checkin_date", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
 
         setPayload(formData);
     };
@@ -69,7 +70,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
         form.resetFields();
         setFields([
             { name: "item_name", value: name !== null ? name : "" },
-            { name: "checkin_date", value: new Date().toISOString().substring(0, 10) },
+            { name: "checkin_date", value: moment(new Date()).format("YYYY-MM-DDTHH:mm") },
             { name: "note", value: data?.note },
         ]);
     }, [data, form, isModalVisible, setFields]);
@@ -140,9 +141,10 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
                                     t("accessory.label.message.required"),
                             },
                         ]}
-                        initialValue={new Date().toISOString().substring(0, 10)}
+                        initialValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
                     >
-                        <Input type="date" />
+                    <Input type="datetime-local" />
+
                     </Form.Item>
                 </Col>
             </Row>
