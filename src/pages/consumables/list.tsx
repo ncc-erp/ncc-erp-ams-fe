@@ -10,6 +10,7 @@ import {
   getDefaultSortOrder,
   List,
   Select,
+  ShowButton,
   Space,
   Spin,
   Table,
@@ -46,6 +47,7 @@ import moment from "moment";
 import { dateFormat } from "constants/assets";
 import { ConsumablesEdit } from "./edit";
 import "styles/antd.less";
+import { ConsumablesShow } from "./show";
 
 const defaultCheckedList = [
   "id",
@@ -62,6 +64,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IConsumablesResponse>();
 
@@ -437,6 +440,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   };
 
+  const show = (data: IConsumablesResponse) => {
+    setIsShowModalVisible(true);
+    setDetail(data);
+  };
+
   return (
     <List
       title={translate("consumables.label.title.consumables")}
@@ -448,6 +456,16 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         ),
       }}
     >
+      <MModal
+        title={translate("consumables.label.title.detail")}
+        setIsModalVisible={setIsShowModalVisible}
+        isModalVisible={isShowModalVisible}
+      >
+        <ConsumablesShow
+          setIsModalVisible={setIsShowModalVisible}
+          detail={detail}
+        />
+      </MModal>
       <div className="search">
         <Form
           {...searchFormProps}
@@ -588,6 +606,17 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             dataIndex="actions"
             render={(_, record) => (
               <Space>
+                <Tooltip
+                  title={translate("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
+                >
+                  <ShowButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => show(record)}
+                  />
+                </Tooltip>
                 <Tooltip
                   title={translate("consumables.label.tooltip.edit")}
                   color={"#108ee9"}
