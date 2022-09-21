@@ -136,6 +136,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       return assetArr.includes(item) ? "" : assetArr.push(item);
     });
 
+    let sumConsumable = {
+      type: translate("dashboard.field.typeConsumable"),
+      category_type: CategoryType.CONSUMABLE,
+    } as any;
+
+    let sumAccessory = {
+      type: translate("dashboard.field.typeAccessory"),
+      category_type: CategoryType.ACCESSORY,
+    } as any;
+
     var dataResponseCheckIn: any = [];
     var iteLocationKey: any = [];
     let dataSource = (dataCheckIn?.data.payload.categories || []).map(
@@ -184,8 +194,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           ) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.location_id}`) {
-                item[key] = item[key] + Number(items.checkin);
-                item[`count`] += Number(items.checkin);
+                sumAccessory[`location_${items.location_id}`] =
+                  sumAccessory[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkin) +
+                      sumAccessory[`location_${items.location_id}`]
+                    : Number(items.checkin);
+                sumAccessory[`count`] =
+                  sumAccessory[`count`] !== undefined
+                    ? Number(items.checkin) + sumAccessory[`count`]
+                    : Number(items.checkin);
                 break;
               }
             }
@@ -203,8 +220,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           ) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.location_id}`) {
-                item[key] = item[key] + Number(items.checkin);
-                item[`count`] += Number(items.checkin);
+                sumConsumable[`location_${items.location_id}`] =
+                  sumConsumable[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkin) +
+                      sumConsumable[`location_${items.location_id}`]
+                    : Number(items.checkin);
+                sumConsumable[`count`] =
+                  sumConsumable[`count`] !== undefined
+                    ? Number(items.checkin) + sumConsumable[`count`]
+                    : Number(items.checkin);
                 break;
               }
             }
@@ -214,8 +238,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     );
 
     dataResponseCheckIn = dataSource;
+    dataResponseCheckIn = dataResponseCheckIn.filter(
+      (item: any) => item.category_type === CategoryType.ASSET
+    );
 
-    setDataReportCheckIn(dataResponseCheckIn);
+    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable]);
   }, [
     dataCheckIn?.data.payload.assets_statistic || [],
     dataCheckIn?.data.payload.accessories_statistic || [],
@@ -234,6 +261,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     let accessoryNames = (
       dataCheckOut?.data.payload.accessories_statistic || []
     ).map((item: any) => item.category_name);
+
+    let sumConsumable = {
+      type: translate("dashboard.field.typeConsumable"),
+      category_type: CategoryType.CONSUMABLE,
+    } as any;
+
+    let sumAccessory = {
+      type: translate("dashboard.field.typeAccessory"),
+      category_type: CategoryType.ACCESSORY,
+    } as any;
 
     let assetArr: string[] = [];
     assetArr = assetNames.filter(function (item: string) {
@@ -300,8 +337,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           ) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.location_id}`) {
-                item[key] = item[key] + Number(items.checkout);
-                item[`count`] += Number(items.checkout);
+                sumAccessory[`location_${items.location_id}`] =
+                  sumAccessory[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkout) +
+                      sumAccessory[`location_${items.location_id}`]
+                    : Number(items.checkout);
+                sumAccessory[`count`] =
+                  sumAccessory[`count`] !== undefined
+                    ? Number(items.checkout) + sumAccessory[`count`]
+                    : Number(items.checkout);
                 break;
               }
             }
@@ -319,8 +363,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
           ) {
             for (const key of iteLocationKey) {
               if (key === `location_${items.location_id}`) {
-                item[key] = item[key] + Number(items.checkout);
-                item[`count`] += Number(items.checkout);
+                sumConsumable[`location_${items.location_id}`] =
+                  sumConsumable[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkout) +
+                      sumConsumable[`location_${items.location_id}`]
+                    : Number(items.checkout);
+                sumConsumable[`count`] =
+                  sumConsumable[`count`] !== undefined
+                    ? Number(items.checkout) + sumConsumable[`count`]
+                    : Number(items.checkout);
                 break;
               }
             }
@@ -330,8 +381,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     );
 
     dataResponseCheckOut = dataSource;
+    dataResponseCheckOut = dataResponseCheckOut.filter(
+      (item: any) => item.category_type === CategoryType.ASSET
+    );
 
-    setDataReportCheckOut(dataResponseCheckOut);
+    setDataReportCheckOut([
+      ...dataResponseCheckOut,
+      sumAccessory,
+      sumConsumable,
+    ]);
   }, [
     dataCheckOut?.data.payload.assets_statistic || [],
     dataCheckOut?.data.payload.accessories_statistic || [],
@@ -346,10 +404,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
-            dateFromCheckOut && dateToCheckOut
-              ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                )
+            record.category_type === CategoryType.ASSET
+              ? dateFromCheckOut && dateToCheckOut
+                ? list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
+                : list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  )
+              : record.category_type === CategoryType.CONSUMABLE
+              ? dateFromCheckOut && dateToCheckOut
+                ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
+                : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  )
+              : record.category_type === CategoryType.ACCESSORY
+              ? dateFromCheckOut && dateToCheckOut
+                ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
+                : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  )
               : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
                 );
@@ -371,10 +449,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         render: (text: string, record: IReport) => (
           <a
             onClick={() => {
-              dateFromCheckOut && dateToCheckOut
-                ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
+              record.category_type === CategoryType.ASSET
+                ? dateFromCheckOut && dateToCheckOut
+                  ? list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                  : list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFromCheckOut && dateToCheckOut
+                  ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                  : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFromCheckOut && dateToCheckOut
+                  ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                  : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
                 : list(
                     `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
                   );
@@ -397,10 +495,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
-            dateFromCheckIn && dateToCheckIn
-              ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                )
+            record.category_type === CategoryType.ASSET
+              ? dateFromCheckIn && dateToCheckIn
+                ? list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
+                : list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  )
+              : record.category_type === CategoryType.CONSUMABLE
+              ? dateFromCheckIn && dateToCheckIn
+                ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
+                : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  )
+              : record.category_type === CategoryType.ACCESSORY
+              ? dateFromCheckIn && dateToCheckIn
+                ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
+                : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  )
               : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
                 );
@@ -422,10 +540,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         render: (text: string, record: IReport) => (
           <a
             onClick={() => {
-              dateFromCheckIn && dateToCheckIn
-                ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
+              record.category_type === CategoryType.ASSET
+                ? dateFromCheckIn && dateToCheckIn
+                  ? list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                  : list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFromCheckIn && dateToCheckIn
+                  ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                  : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFromCheckIn && dateToCheckIn
+                  ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                  : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
                 : list(
                     `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
                   );
@@ -492,7 +630,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        scroll={{ x: 320 }}
+                        scroll={{ x: 320, y: 320 }}
                         pagination={false}
                         className="list-table-dashboad"
                       />
@@ -549,7 +687,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        scroll={{ x: 320 }}
+                        scroll={{ x: 320, y: 320 }}
                         pagination={false}
                         className="list-table-dashboad"
                       />
