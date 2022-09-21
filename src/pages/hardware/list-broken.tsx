@@ -611,7 +611,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
       {
-        key: "location",
+        key: "rtd_location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
           <TextField value={value ? value.name : ""} />

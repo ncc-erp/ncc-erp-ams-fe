@@ -367,7 +367,8 @@
         "import": "Nhập CSV",
         "reports.view": "Báo cáo",
         "accessories": "Phụ kiện",
-        "users": "Người dùng"
+        "users": "Người dùng",
+        "sum-assets": "Tổng số tài sản"
       },
       "field": {
         "notes": "Mô tả",

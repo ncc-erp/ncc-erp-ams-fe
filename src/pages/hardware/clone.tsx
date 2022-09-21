@@ -140,6 +140,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
+    formData.append("location_id", event.rtd_location.toString());
+
     formData.append("supplier_id", event.supplier.toString());
 
     if (
@@ -170,7 +172,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       { name: "serial", value: "" },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-
       {
         name: "notes",
         value:
@@ -178,7 +179,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
       { name: "asset_tag", value: "" },
 
-      { name: "status_id", value: data?.status_label.id },
+      { name: "status_id", value: data?.status_label.id }, 
       {
         name: "warranty_months",
         value: data?.warranty_months && data.warranty_months.split(" ")[0],
