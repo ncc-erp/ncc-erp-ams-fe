@@ -251,7 +251,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
           </Form.Item>
           <Form.Item
             label={t("hardware.label.field.checkinTo")}
-            name="assigned_user"
+            name="assigned_to"
             rules={[
               {
                 required: true,
@@ -262,11 +262,11 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
               },
             ]}
             initialValue={
-              data?.assigned_to.last_name +
+              data?.assigned_to?.last_name +
               " " +
-              data?.assigned_to.first_name +
+              data?.assigned_to?.first_name +
               " (" +
-              data?.assigned_to.username +
+              data?.assigned_to?.username +
               ")"
             }
           >
