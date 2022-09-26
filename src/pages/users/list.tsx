@@ -178,6 +178,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         assigned_status: assigned_status,
       },
     });
+    handleRefresh();
   };
 
   const refreshData = () => {
@@ -374,7 +375,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     setTimeout(() => {
       refreshData();
       setLoading(false);
-    }, 1300);
+    }, 2000);
   };
 
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
@@ -510,6 +511,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
+      
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
