@@ -88,7 +88,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     const formData = new FormData();
     formData.append("name", event.name);
     if (event.note !== null) {
-      formData.append("note", event.note);
+      formData.append("note", event.note ?? "");
     }
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());

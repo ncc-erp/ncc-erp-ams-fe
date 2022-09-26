@@ -59,7 +59,9 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("supplier.label.field.name"),
-        render: (value: ISupplier) => <TextField value={value} />,
+        render: (value: ISupplier) => (
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {

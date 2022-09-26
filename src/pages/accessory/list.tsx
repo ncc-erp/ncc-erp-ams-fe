@@ -46,6 +46,7 @@ import { ILocation } from "interfaces/dashboard";
 import moment from "moment";
 import "styles/antd.less";
 import { AccessoryShow } from "./show";
+import React from "react";
 
 const defaultCheckedList = [
   "id",
@@ -208,7 +209,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: translate("accessory.label.field.supplier"),
         render: (value: IAccesstoryRequest) => (
-          <TagField value={value ? value.name : ""} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -241,7 +242,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "notes",
         title: translate("accessory.label.field.notes"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => (
+          <div dangerouslySetInnerHTML={{__html: `${value ? value : ""}`}} />
+        ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],

@@ -59,7 +59,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
         const formData = new FormData();
         formData.append("item_name", name !== null ? name : "");
         if (event.note !== null) {
-            formData.append("note", event.note);
+            formData.append("note", event.note ?? "");
         }
         formData.append("checkin_date", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
 

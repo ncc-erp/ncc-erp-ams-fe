@@ -125,7 +125,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
 
-    formData.append("notes", event.notes);
+    formData.append("notes", event.notes ?? "");
     formData.append("asset_tag", event.asset_tag);
     formData.append("status_id", event.status_label.toString());
 

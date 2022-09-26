@@ -74,7 +74,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "name",
         title: translate("consumables.label.field.users"),
         render: (value: string) => (
-          <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
+          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />
         )
       },
 
@@ -92,7 +92,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "admin",
         title: translate("consumables.label.field.admin"),
         render: (value: string) => (
-          <TextField value={value.split(">")[1].split("<")[0] ?? ""} />
+          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />
         )
       },
     ],

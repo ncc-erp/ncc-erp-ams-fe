@@ -182,10 +182,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "note",
         title: translate("report.label.field.note"),
         render: (value: string) => (
-          <TextField value={value && value !== "undefined" ? value : ""} />
+          <div dangerouslySetInnerHTML={{__html: `${value && value !== "undefined" ? value : ""}` }} />
         ),
       },
-   
     ],
     []
   );

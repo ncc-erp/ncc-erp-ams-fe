@@ -153,8 +153,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
-    formData.append("notes", event.notes);
-
+    formData.append("notes", event.notes ?? "");
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
