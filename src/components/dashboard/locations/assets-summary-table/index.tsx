@@ -25,7 +25,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
   const dateFrom = searchParams.get("purchase_date_from");
   const dateTo = searchParams.get("purchase_date_to");
 
-  const response = data?.data.payload || [];  
+  const response = data?.data.payload || [];
 
   useEffect(() => {
     const index = response.findIndex(
@@ -68,11 +68,9 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
             sumAccessory["rtd_location_" + item.id] !== undefined
               ? category?.accessories_count +
                 sumAccessory["rtd_location_" + item.id]
-              : 
-              category?.accessories_count;
+              : category?.accessories_count;
         } else {
-          type["rtd_location_" + item.id] =
-            category && category.assets_count;
+          type["rtd_location_" + item.id] = category && category.assets_count;
           type.category_id = category && category.id;
           type.category_type = category && category.category_type;
         }
@@ -197,6 +195,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       dataSource={id === 99999 ? dataAllLocation : []}
       pagination={false}
       className="list-table-dashboard"
+      scroll={{ x: 320, y: 320 }}
     />
   );
 };
