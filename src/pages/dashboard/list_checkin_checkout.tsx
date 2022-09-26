@@ -630,9 +630,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        scroll={{ x: 320, y: 320 }}
+                        scroll={{ x: 'calc(900px + 50%)', y: 400 }}
                         pagination={false}
-                        className="list-table-dashboad"
                       />
                     </Col>
                   </Row>
@@ -687,9 +686,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        scroll={{ x: 320, y: 320 }}
+                        scroll={{ x: 'calc(900px + 50%)', y: 400 }}
                         pagination={false}
-                        className="list-table-dashboad"
                       />
                     </Col>
                   </Row>
