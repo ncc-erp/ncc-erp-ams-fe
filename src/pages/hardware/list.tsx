@@ -76,6 +76,7 @@ import {
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
+import React from "react";
 
 const defaultCheckedList = [
   "id",
@@ -223,6 +224,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
+
+
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
       id: data.id,
@@ -352,7 +355,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes ?? "",
+      notes: React.createElement("div", { dangerouslySetInnerHTML: { __html: `<span>${data?.notes ? data?.notes : ""}</span>` } }),
       order_number: data.order_number ?? "",
       location: {
         id: data?.location?.id,
@@ -675,7 +678,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
       {
-        key: "location",
+        key: "rtd_location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
           <TextField value={value && value.name} />
@@ -1073,7 +1076,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
 
   return (
     <List

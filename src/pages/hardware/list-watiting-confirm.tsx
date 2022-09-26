@@ -302,7 +302,7 @@ export const HardwareListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
       {
-        key: "location",
+        key: "rtd_location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
           <TextField value={value && value.name} />
@@ -392,7 +392,7 @@ export const HardwareListWaitingConfirm: React.FC<
           },
         ],
         onFilter: (value: number, record: IHardwareResponse) =>
-          record.assigned_status === value
+          record.assigned_status === value,
       },
       {
         key: "last_checkout",
@@ -1057,7 +1057,8 @@ export const HardwareListWaitingConfirm: React.FC<
             dataIndex="actions"
             render={(_, record) => (
               <Space>
-                {record.assigned_to && record.assigned_to.id !== null &&
+                {record.assigned_to &&
+                  record.assigned_to.id !== null &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKOUT && (
@@ -1087,7 +1088,8 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_to && record.assigned_to.id !== null &&
+                {record.assigned_to &&
+                  record.assigned_to.id !== null &&
                   record.assigned_to.id === record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKIN && (

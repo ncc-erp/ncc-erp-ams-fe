@@ -5,6 +5,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
 import { getDetailAssetStatus } from "untils/assets";
+import React from "react";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -15,7 +16,6 @@ type HardwareShowProps = {
 export const HardwareShow = (props: HardwareShowProps) => {
   const { detail } = props;
   const t = useTranslate();
-
   return (
     <>
       <Row gutter={16}>
@@ -125,9 +125,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.field.notes")}</Title>
         </Col>
         <Col span={18}>
-          <Text>
-            {detail?.notes ? <MarkdownField value={detail?.notes} /> : ""}
-          </Text>
+        <Text>{React.createElement("div", { dangerouslySetInnerHTML: { __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` } })}</Text>
         </Col>
       </Row>
       <Row gutter={16}>

@@ -399,6 +399,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List title={t("user.label.title.name")}>
+      <div className="sum-assets">
+        <span className="name-sum-assets">
+          {t("user.label.title.sum-assets")}
+        </span>{" "}
+        : {tableProps.pagination ? tableProps.pagination?.total : 0}
+      </div>
       <div className="users">
         <div
           className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
@@ -511,7 +517,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
-      
+
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

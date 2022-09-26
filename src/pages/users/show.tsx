@@ -2,6 +2,7 @@ import { useTranslate } from "@pankod/refine-core";
 import { Typography, Tag } from "@pankod/refine-antd";
 import { IHardwareResponse } from "interfaces/hardware";
 import { getDetailAssetStatus } from "untils/assets";
+import React from "react";
 
 const { Title, Text } = Typography;
 
@@ -31,7 +32,7 @@ export const UserShow = (props: UserShowProps) => {
       <Title level={5}>{t("user.label.field.insurance")}</Title>
       <Text>{detail?.warranty_months}</Text>
       <Title level={5}>{t("user.label.field.notes")}</Title>
-      <Text>{detail?.notes}</Text>
+      <Text>{React.createElement("div", { dangerouslySetInnerHTML: { __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` } })}</Text>
     </>
   );
 };
