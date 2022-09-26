@@ -99,9 +99,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         <Col span={18}>
           {detail?.supplier ? (
             <>
-              <Text className="show-asset">
-                {detail?.supplier ? detail?.supplier.name : ""}
-              </Text>
+              <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.supplier ? detail?.supplier.name : ""}</span>` }} />
             </>
           ) : (
             ""
@@ -125,7 +123,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.field.notes")}</Title>
         </Col>
         <Col span={18}>
-        <Text>{React.createElement("div", { dangerouslySetInnerHTML: { __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` } })}</Text>
+        <div dangerouslySetInnerHTML={{ __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` }} />
         </Col>
       </Row>
       <Row gutter={16}>
