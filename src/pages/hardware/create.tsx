@@ -32,7 +32,7 @@ import {
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  SUPPLIERS_API,
+  SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
 import { EStatus } from "constants/assets";
@@ -105,8 +105,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: SUPPLIERS_API,
-    optionLabel: "name",
+    resource: SUPPLIERS_SELECT_LIST_API,
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",

@@ -27,7 +27,7 @@ import {
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  SUPPLIERS_API,
+  SUPPLIERS_SELECT_LIST_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 
@@ -89,8 +89,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: SUPPLIERS_API,
-    optionLabel: "name",
+    resource: SUPPLIERS_SELECT_LIST_API,
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -120,8 +120,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
+    if (event.model !== undefined) {
+      formData.append("model_id", event.model.toString());
+
+    }
     formData.append("serial", event.serial ?? "");
-    formData.append("model_id", event.model.toString());
     formData.append("order_number", event.order_number ?? "");
 
     formData.append("notes", event.notes ?? "");
