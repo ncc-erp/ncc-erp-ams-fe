@@ -651,7 +651,7 @@ export const HardwareListReadyToDeploy: React.FC<
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
       {
-        key: "rtd_location",
+        key: "location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
           <TextField value={value && value.name} />
