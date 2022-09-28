@@ -175,7 +175,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {
         name: "notes",
         value:
-          data?.notes !== undefined || data?.note !== "null" ? data?.notes : "",
+          data?.notes ? data?.notes : "",
       },
       { name: "asset_tag", value: "" },
 
