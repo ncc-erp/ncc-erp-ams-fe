@@ -263,7 +263,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         id: data?.supplier?.id,
         name: data?.supplier?.name,
       },
-      notes: data.notes,
+      notes: data?.notes,
       location: {
         id: data?.location?.id,
         name: data?.location?.name,
