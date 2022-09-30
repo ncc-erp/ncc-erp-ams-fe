@@ -70,7 +70,7 @@ export const AccessoryCheckout = (props: AccessoryCheckoutProps) => {
             "name": event.name,
             "category_id": event.category,
             "assigned_to": event.assigned_to,
-            "note": event.note
+            "note": event.note ?? ""
         }
         setPayload(checkout);
     };

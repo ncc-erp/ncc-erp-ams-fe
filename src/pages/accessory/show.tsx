@@ -77,9 +77,7 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
         <Col span={18}>
           {detail?.supplier ? (
             <>
-              <Text className="show-asset">
-                {detail?.supplier ? detail?.supplier.name : ""}
-              </Text>
+            <div dangerouslySetInnerHTML={{__html: `${detail?.supplier ? detail?.supplier.name : ""}`}}></div>
             </>
           ) : (
             ""
@@ -126,9 +124,7 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
           <Title level={5}>{translate("accessory.label.field.notes")}</Title>
         </Col>
         <Col span={18}>
-          <Text>
-            {detail?.notes ? <MarkdownField value={detail?.notes} /> : ""}
-          </Text>
+          <div dangerouslySetInnerHTML={{__html: `${detail?.notes ? detail?.notes : ""}`}} />
         </Col>
       </Row>
       <Row gutter={16}>

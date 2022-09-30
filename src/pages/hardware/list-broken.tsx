@@ -611,7 +611,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
       {
-        key: "rtd_location",
+        key: "location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
           <TextField value={value ? value.name : ""} />
@@ -638,7 +638,8 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -678,7 +679,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "notes",
         title: t("hardware.label.field.note"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => (
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
+        ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
       {

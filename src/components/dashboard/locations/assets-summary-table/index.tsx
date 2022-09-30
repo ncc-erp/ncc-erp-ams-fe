@@ -194,8 +194,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       columns={id === 99999 ? columnSum : []}
       dataSource={id === 99999 ? dataAllLocation : []}
       pagination={false}
-      className="list-table-dashboard"
-      scroll={{ x: 320, y: 320 }}
+      scroll={{ x: 'calc(900px + 50%)', y: 400 }}
     />
   );
 };

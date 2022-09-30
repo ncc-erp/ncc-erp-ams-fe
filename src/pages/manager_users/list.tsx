@@ -230,7 +230,9 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "notes",
         title: translate("user.label.field.note"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => (
+          <div dangerouslySetInnerHTML={{__html: `${value ? value : ""}`}} />
+        ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
@@ -285,7 +287,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       name: data?.name,
       password: data?.password,
       password_confirmation: data?.password_confirmation,
-      permissions: data?.permissions !== null ? data?.permissions : ""
+      permissions: data?.permissions !== null ? data?.permissions : "",
     };
 
     setDetail(dataConvert);

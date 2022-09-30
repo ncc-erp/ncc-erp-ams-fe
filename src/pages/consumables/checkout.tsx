@@ -73,7 +73,7 @@ export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
       name: event.name,
       category_id: event.category,
       assigned_to: event.assigned_to,
-      note: event.note,
+      note: event.note ?? "",
     };
     setPayload(checkout);
   };

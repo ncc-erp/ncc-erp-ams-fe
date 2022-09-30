@@ -584,8 +584,8 @@ export const AssetsSummaryTableAllLocation = (
       columns={columns}
       dataSource={dataCategory}
       pagination={false}
-      className="list-table-dashboard"
-      scroll={{ x: 320, y: 320 }}
+      scroll={{ x: 'calc(400px + 50%)', y: 400 }}
+
     />
   );
 };

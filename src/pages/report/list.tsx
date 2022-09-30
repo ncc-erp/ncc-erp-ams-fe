@@ -134,7 +134,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         title: translate("report.label.field.asset"),
         render: (value: IReport) => (
           <TextField
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
             onClick={() => onClickNameReport(value.name)}
             value={value ? value.name : ""}
           />
@@ -147,7 +147,6 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           <TextField value={value ? value.type : ""} />
         ),
       },
-
       {
         key: "target",
         title: translate("report.label.field.user"),
@@ -182,10 +181,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "note",
         title: translate("report.label.field.note"),
         render: (value: string) => (
-          <TextField value={value && value !== "undefined" ? value : ""} />
+          <div dangerouslySetInnerHTML={{__html: `${value && value !== "undefined" ? value : ""}` }} />
         ),
       },
-   
     ],
     []
   );

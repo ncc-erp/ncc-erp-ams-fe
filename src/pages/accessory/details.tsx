@@ -90,7 +90,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_notes",
         title: translate("accessory.label.field.notes"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => 
+          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />,
       },
     ],
     []

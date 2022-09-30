@@ -903,11 +903,11 @@
         "vnd": "VND",
         "month": "Tháng",
         "supplier": "Nhà cung cấp",
-        "remaining": "Số lượng vật phẩm phụ còn lại",
+        "remaining": "Số lượng văn phòng phẩm còn lại",
         "created_at": "Đã tạo lúc",
         "updated_at": "Cập nhật tại",
         "warranty_expires": "Hết hạn",
-        "qty": "Số lượng vật phẩm phụ được cấp phát",
+        "qty": "Số lượng văn phòng phẩm được cấp phát",
         "user":"Lựa chọn một người dùng"
       },
       "message": {

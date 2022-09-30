@@ -108,7 +108,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     const formData = new FormData();
     formData.append("name", event.name);
     if (event.note !== null) {
-      formData.append("note", event.note);
+      formData.append("note", event.note ?? "");
     }
     if (event.status_label !== undefined) {
       formData.append("status_id", event.status_label);

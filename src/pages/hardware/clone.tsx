@@ -27,7 +27,7 @@ import {
   LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  SUPPLIERS_API,
+  SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
 import { EStatus } from "constants/assets";
@@ -90,8 +90,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: SUPPLIERS_API,
-    optionLabel: "name",
+    resource:   SUPPLIERS_SELECT_LIST_API,
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -125,7 +125,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
 
-    formData.append("notes", event.notes);
+    formData.append("notes", event.notes ?? "");
     formData.append("asset_tag", event.asset_tag);
     formData.append("status_id", event.status_label.toString());
 
@@ -170,12 +170,12 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: "" },
-      { name: "model_id", value: data?.model.id },
+      { name: "model_id", value: data?.model.name },
       { name: "order_number", value: data?.order_number },
       {
         name: "notes",
         value:
-          data?.notes !== undefined || data?.note !== "null" ? data?.notes : "",
+          data?.notes ? data?.notes : "",
       },
       { name: "asset_tag", value: "" },
 
