@@ -24,7 +24,7 @@ export const AssetsSummaryPieChartCheckOut = (
       dataClone = {
         ...dataClone,
         [data[i].type]:
-          data[i].count > 0 && data[i].category_type === CategoryType.ASSET
+        data.slice(0, 6)[i] && data.slice(0, 6)[i].count > 0 && data.slice(0, 6)[i].category_type === CategoryType.ASSET
             ? true
             : false,
       };
@@ -92,7 +92,7 @@ export const AssetsSummaryPieChartCheckIn = (
       dataClone = {
         ...dataClone,
         [data[i].type]:
-          data[i].count > 0 && data[i].category_type === CategoryType.ASSET
+        data.slice(0, 6)[i] && data.slice(0, 6)[i].count > 0 && data.slice(0, 6)[i].category_type === CategoryType.ASSET
             ? true
             : false,
       };

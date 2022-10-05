@@ -18,14 +18,14 @@ export const AllLocations = (props: LocationProps) => {
   return (
     <div className="locationContainer">
       <Row gutter={16}>
-        <Col className="gutter-row assets-summary-pie-chart" sm={24} md={10}>
+        <Col className="gutter-row assets-summary-pie-chart" sm={24} md={7}>
           <AssetsSummaryPieChart
             categories={location.categories}
             name={location.name}
             count={items_count}
           ></AssetsSummaryPieChart>
         </Col>
-        <Col className="gutter-row assets-summary-table" sm={24} md={14}>
+        <Col className="gutter-row assets-summary-table" sm={24} md={17}>
           <AssetsSummaryTableAllLocation
             id={location.id}
             categories={location.categories}

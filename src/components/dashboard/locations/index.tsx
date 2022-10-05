@@ -15,7 +15,7 @@ export const Locations = (props: LocationProps) => {
   return (
     <div className="locationContainer">
       <Row gutter={16}>
-        <Col className="gutter-row assets-summary-pie-chart" sm={24} md={10}>
+        <Col className="gutter-row assets-summary-pie-chart" sm={24} md={7}>
           {location.id === 99999 && (
             <AssetsSummaryPieChart
               categories={location.categories}
@@ -24,7 +24,7 @@ export const Locations = (props: LocationProps) => {
             ></AssetsSummaryPieChart>
           )}
         </Col>
-        <Col className="gutter-row assets-summary-table" sm={24} md={14}>
+        <Col className="gutter-row assets-summary-table" sm={24} md={17}>
           {location.id === 99999 && (
             <AssetsSummaryTable
               id={location.id}

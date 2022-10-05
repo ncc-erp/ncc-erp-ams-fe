@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
-import { Col, Form, List, Row, Spin, Table } from "@pankod/refine-antd";
+import { Col, Form, List, Row, Spin, Table, Typography } from "@pankod/refine-antd";
 import {
   IResourceComponentsProps,
   useCustom,
@@ -447,7 +447,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         dataIndex: "location_" + item.id,
         key: "location_" + item.id,
         render: (text: string, record: IReport) => (
-          <a
+          <Typography.Text
+          strong
+          type="secondary"
+            className="field-category"
             onClick={() => {
               record.category_type === CategoryType.ASSET
                 ? dateFromCheckOut && dateToCheckOut
@@ -479,7 +482,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             }}
           >
             {text}
-          </a>
+          </Typography.Text>
         ),
       };
     }
@@ -538,7 +541,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         dataIndex: "location_" + item.id,
         key: "location_" + item.id,
         render: (text: string, record: IReport) => (
-          <a
+          <Typography.Text
+            strong
+            type="secondary"
+            className="field-category"
             onClick={() => {
               record.category_type === CategoryType.ASSET
                 ? dateFromCheckIn && dateToCheckIn
@@ -570,7 +576,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             }}
           >
             {text}
-          </a>
+          </Typography.Text>
         ),
       };
     }
@@ -618,19 +624,19 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={10} md={10}>
+                    <Col sm={10} md={7}>
                       <AssetsSummaryPieChartCheckOut
                         assets_statistic={
                           dataReportCheckOut ? dataReportCheckOut : ""
                         }
                       />
                     </Col>
-                    <Col sm={24} md={14}>
+                    <Col sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        scroll={{ x: 'calc(900px + 50%)', y: 400 }}
+                        scroll={{ x: 'calc(500px + 50%)', y: 400 }}
                         pagination={false}
                       />
                     </Col>
@@ -674,19 +680,19 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={24} md={10}>
+                    <Col sm={24} md={7}>
                       <AssetsSummaryPieChartCheckIn
                         assets_statistic={
                           dataReportCheckIn ? dataReportCheckIn : ""
                         }
                       />
                     </Col>
-                    <Col sm={24} md={14}>
+                    <Col sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        scroll={{ x: 'calc(900px + 50%)', y: 400 }}
+                        scroll={{ x: 'calc(500px + 50%)', y: 400 }}
                         pagination={false}
                       />
                     </Col>

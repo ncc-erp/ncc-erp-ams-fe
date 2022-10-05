@@ -136,7 +136,6 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       key: "rtd_location_" + item.id,
       render: (text: number, record: DataTable) => (
         <Typography.Text
-          strong
           type="secondary"
           className="field-category"
           onClick={() => {
@@ -194,7 +193,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       columns={id === 99999 ? columnSum : []}
       dataSource={id === 99999 ? dataAllLocation : []}
       pagination={false}
-      scroll={{ x: 'calc(900px + 50%)', y: 400 }}
+      scroll={{ x: 'calc(500px + 50%)', y: 400 }}
     />
   );
 };
