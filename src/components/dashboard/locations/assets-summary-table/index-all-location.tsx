@@ -183,6 +183,7 @@ export const AssetsSummaryTableAllLocation = (
     ]);
   }, [categories]);
 
+  
   const columns = [
     {
       title: `${t("dashboard.field.name")}`,
