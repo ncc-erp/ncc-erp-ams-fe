@@ -332,7 +332,7 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.category")}` ||
                     item.name === `${translate("resource.manufactures")}` ||
                     item.name === `${translate("resource.suppliers")}` ||
-                    item.name === `${translate("resource.department")}` ||
+                    // item.name === `${translate("resource.department")}` ||
                     item.name === `${translate("resource.location")}`
                 )
                 .map(({ icon, name, route }) => {

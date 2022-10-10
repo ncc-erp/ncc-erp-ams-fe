@@ -17,7 +17,6 @@ export interface ILocationResponse {
     address: string;
     city: string;
     state: string;
-    zip: string;
     country: string;
     currency: number;
     image: string;
@@ -34,7 +33,6 @@ export interface ILocationRequest {
     address: string;
     city: string;
     state: string;
-    zip: string;
     country: string;
     currency: number;
     image: string;

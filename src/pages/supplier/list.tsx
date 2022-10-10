@@ -104,17 +104,8 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       address: data.address,
-      city: data.city,
-      state: data.state,
-      country: data.country,
-      zip: data.zip,
       contact: data.contact,
       phone: data.phone,
-      fax: data.fax,
-      email: data.email,
-      url: data.url,
-      notes: data.notes !== "null" ? data.notes : "",
-      image: data.image,
       assets_count: data.assets_count,
     };
 

@@ -1,6 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
-import { Col, Form, List, Row, Spin, Table, Typography } from "@pankod/refine-antd";
+import {
+  Col,
+  Form,
+  List,
+  Row,
+  Spin,
+  Table,
+  Typography,
+} from "@pankod/refine-antd";
 import {
   IResourceComponentsProps,
   useCustom,
@@ -448,8 +456,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         key: "location_" + item.id,
         render: (text: string, record: IReport) => (
           <Typography.Text
-          strong
-          type="secondary"
+            strong
+            type="secondary"
             className="field-category"
             onClick={() => {
               record.category_type === CategoryType.ASSET
@@ -586,6 +594,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.removeItem("purchase_date");
+    localStorage.removeItem("rtd_location_id");
+    localStorage.removeItem("search");
   }, [window.location.reload]);
 
   return (
@@ -636,7 +646,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckOut}
                         columns={columnsCheckOut}
-                        scroll={{ x: 'calc(500px + 50%)', y: 400 }}
+                        scroll={{ x: "calc(500px + 50%)", y: 400 }}
                         pagination={false}
                       />
                     </Col>
@@ -692,7 +702,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                         key="id"
                         dataSource={dataReportCheckIn}
                         columns={columnsCheckIn}
-                        scroll={{ x: 'calc(500px + 50%)', y: 400 }}
+                        scroll={{ x: "calc(500px + 50%)", y: 400 }}
                         pagination={false}
                       />
                     </Col>

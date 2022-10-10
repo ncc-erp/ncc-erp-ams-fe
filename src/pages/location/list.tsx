@@ -76,7 +76,6 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       address: data?.address,
       city: data?.city,
       state: data?.state,
-      zip: data?.zip,
       country: data.country,
       currency: data?.currency,
       assets_count: data?.assets_count,
