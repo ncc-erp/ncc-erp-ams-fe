@@ -129,6 +129,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     },
   ];
 
+  
   let columnTypes = response.map((item: ILocation) => {
     return {
       title: item.name,

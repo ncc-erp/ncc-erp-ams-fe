@@ -87,9 +87,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
     if (event.state !== undefined) {
       formData.append("state", event.state);
     }
-    if (event.zip !== undefined) {
-      formData.append("zip", event.zip);
-    }
 
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
@@ -175,21 +172,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
               {...userSelectProps}
             />
           </Form.Item>
-          <Form.Item
-            label={t("location.label.field.zip")}
-            name="zip"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.zip") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-          >
-            <Input placeholder={t("location.label.field.zip")} />
-          </Form.Item>
+         
           <Form.Item
             label={t("location.label.field.city")}
             name="city"

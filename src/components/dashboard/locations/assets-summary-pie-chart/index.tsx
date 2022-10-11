@@ -50,6 +50,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
         [t("dashboard.field.typeAccessory")]: sumAccessory ? false : true,
       };
     }
+    
     setDataActive(dataClone);
   }, []);
 

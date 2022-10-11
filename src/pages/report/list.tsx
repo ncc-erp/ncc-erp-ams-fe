@@ -65,7 +65,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "location_id",
           operator: "eq",
-          value: location,
+          value: location_id ? location_id : location,
         },
         {
           field: "date_from",

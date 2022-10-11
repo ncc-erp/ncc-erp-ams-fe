@@ -66,7 +66,7 @@ import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { dateFormat, STATUS_LABELS } from "constants/assets";
+import { dateFormat } from "constants/assets";
 import {
   filterAssignedStatus,
   getAssetAssignedStatusDecription,
@@ -632,12 +632,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.propertyType"),
         render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
-      },
-      {
-        key: "model_number",
-        title: "Model No",
-        render: (value: IHardwareResponse) => <TextField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("model_number", sorter),
       },
       {
         key: "category",
@@ -1434,21 +1428,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record?.status_label.id !== STATUS_LABELS.ASSIGN ? (
-                  <Tooltip
-                    title={t("hardware.label.tooltip.edit")}
-                    color={"#108ee9"}
-                  >
-                    <EditButton
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                      onClick={() => edit(record)}
-                    />
-                  </Tooltip>
-                ) : (
-                  <EditButton hideText size="small" disabled />
-                )}
+                <Tooltip
+                  title={t("hardware.label.tooltip.edit")}
+                  color={"#108ee9"}
+                >
+                  <EditButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => edit(record)}
+                  />
+                </Tooltip>
+
                 {record.assigned_to !== null ? (
                   <DeleteButton hideText size="small" disabled />
                 ) : (
@@ -1464,6 +1455,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     />
                   </Tooltip>
                 )}
+
                 {record.user_can_checkout === true && (
                   <Button
                     className="ant-btn-checkout"

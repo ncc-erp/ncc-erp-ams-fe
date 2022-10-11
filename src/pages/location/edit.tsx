@@ -103,9 +103,6 @@ export const LocationEdit = (props: LocationEditProps) => {
     if (event.state !== null) {
       formData.append("state", event.state);
     }
-    if (event.zip !== null) {
-      formData.append("zip", event.zip);
-    }
     if (
       typeof event.image !== "string" &&
       event.image !== null &&
@@ -128,8 +125,6 @@ export const LocationEdit = (props: LocationEditProps) => {
       { name: "address", value: data?.address },
       { name: "city", value: data?.city },
       { name: "state", value: data?.state },
-      { name: "zip", value: data?.zip },
-
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
@@ -215,22 +210,7 @@ export const LocationEdit = (props: LocationEditProps) => {
               {...userSelectProps}
             />
           </Form.Item>
-          <Form.Item
-            label={t("location.label.field.zip")}
-            name="zip"
-            rules={[
-              {
-                required: false,
-                message:
-                  t("location.label.field.zip") +
-                  " " +
-                  t("location.label.message.required"),
-              },
-            ]}
-            initialValue={data?.zip}
-          >
-            <Input placeholder={t("location.label.field.zip")} />
-          </Form.Item>
+          
           <Form.Item
             label={t("location.label.field.city")}
             name="city"

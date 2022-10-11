@@ -198,7 +198,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: translate("consumables.label.field.supplier"),
         render: (value: IConsumablesRequest) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -237,7 +239,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         key: "notes",
         title: translate("consumables.label.field.notes"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{__html: `${value ? value : ""}`}} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
