@@ -2,9 +2,9 @@ import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
 import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
+import { parseJwt } from "untils/assets";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
-export const STORE_PERMISSION = "permissions";
 
 export const authProvider: AuthProvider = {
   getToken: () => {
@@ -12,7 +12,7 @@ export const authProvider: AuthProvider = {
   },
   login: async ({ username, password, tokenId, profileObj, tokenObj }) => {
     const { post } = dataProvider;
-    const url = tokenId ? "api/v1/auth/google" : "oauth/token";
+    const url = tokenId ? "api/v1/auth/google" : "api/v1/auth/login";
     const payload = tokenId
       ? {
           token_id: tokenId,
@@ -31,11 +31,7 @@ export const authProvider: AuthProvider = {
       payload: payload,
     });
     localStorage.setItem(TOKEN_KEY, data.data.access_token);
-    const permissionRes = await UserAPI.getAll(GET_ME_API);
-    localStorage.setItem(
-      STORE_PERMISSION,
-      JSON.stringify(permissionRes.data.permissions)
-    );
+
     if (tokenId) {
       return Promise.resolve("/users");
     }
@@ -43,7 +39,6 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(STORE_PERMISSION);
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
@@ -61,15 +56,26 @@ export const authProvider: AuthProvider = {
       "username",
       JSON.stringify(permissionRes.data.username)
     );
-
     const token = localStorage.getItem("username");
     if (token) {
       return Promise.resolve(token);
     }
     return Promise.reject();
   },
-  getPermissions: () => {
-    const permissions = localStorage.getItem(STORE_PERMISSION);
+  getPermissions: function() {
+    const scopes = parseJwt(localStorage.getItem(TOKEN_KEY))?.scopes;
+    
+    let permissions = {} as any;
+    scopes?.forEach((item: any) =>{
+      permissions[item] = "1";
+    })
+    if(!permissions['admin']){
+      permissions['admin'] = '0';
+    }
+    permissions = JSON.stringify(permissions);
     return Promise.resolve(JSON.parse(permissions as string));
   },
+
 };
+
+
