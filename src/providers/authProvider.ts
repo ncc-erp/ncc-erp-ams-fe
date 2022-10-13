@@ -5,7 +5,6 @@ import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "untils/assets";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
-export const STORE_PERMISSION = "permissions";
 
 export const authProvider: AuthProvider = {
   getToken: () => {
@@ -40,7 +39,6 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(STORE_PERMISSION);
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
@@ -72,10 +70,9 @@ export const authProvider: AuthProvider = {
       permissions[item] = "1";
     })
     if(!permissions['admin']){
-      permissions['admin'] = '0'
+      permissions['admin'] = '0';
     }
     permissions = JSON.stringify(permissions);
-    
     return Promise.resolve(JSON.parse(permissions as string));
   },
 
