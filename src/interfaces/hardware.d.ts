@@ -317,6 +317,7 @@ export interface IHardwareFilterVariables {
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
   assigned_status: string;
+  category: string;
 }
 
 export interface IHardwareRequestMultipleCancel {

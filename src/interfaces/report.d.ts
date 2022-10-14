@@ -24,6 +24,7 @@ export interface IReport {
   datetime: string;
   checkin_counter: object;
   category_type: string;
+  action_type: string;
 }
 
 export interface IReportResponse {

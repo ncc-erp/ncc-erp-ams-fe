@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
@@ -159,6 +160,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         status_label,
         purchase_date,
         assigned_to,
+        category,
       } = params;
       filters.push(
         {
@@ -206,7 +208,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "category_id",
           operator: "eq",
-          value: category_id,
+          value: category ? category : category_id,
         },
         {
           field: "status_id",
@@ -601,7 +603,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("hardware.label.field.assetName"),
-        render: (value: string) => <TextField value={value} />,
+        render: (value: string, record: any) => (
+          <TextField
+            value={value}
+            onClick={() => show(record)}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -636,7 +644,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "category",
         title: t("hardware.label.field.category"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => <TextField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
         filters: filterCategory,
         onFilter: (value: number, record: IHardwareResponse) => {

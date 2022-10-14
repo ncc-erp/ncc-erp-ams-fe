@@ -48,7 +48,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
-    formData.append("category_type", event.category_type.toString());
+    formData.append("category_type", event.category_type);
     formData.append("eula_text", event.eula_text ?? "");
 
     if (
