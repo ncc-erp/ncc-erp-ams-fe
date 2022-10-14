@@ -602,14 +602,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
-        key: "model_number",
-        title: "Model No",
-        render: (value: IHardwareResponse) => (
-          <TextField value={value ? value : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("model_number", sorter),
-      },
-      {
         key: "category",
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => (
@@ -643,7 +635,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         key: "assigned_to",
         title: t("hardware.label.field.checkoutTo"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField strong value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to.name", sorter),
       },
