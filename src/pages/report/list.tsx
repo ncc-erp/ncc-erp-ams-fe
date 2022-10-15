@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import {
   DateField,
   Form,
@@ -22,7 +23,12 @@ import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { ActionType, dateFormat, TypeAssetHistory } from "constants/assets";
+import {
+  ActionType,
+  CategoryType,
+  dateFormat,
+  TypeAssetHistory,
+} from "constants/assets";
 import { TableAction } from "components/elements/tables/TableAction";
 
 const { RangePicker } = DatePicker;
@@ -70,12 +76,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "date_from",
           operator: "eq",
-          value: dateFromParam,
+          value: date_from ? date_from : dateFromParam,
         },
         {
           field: "date_to",
           operator: "eq",
-          value: dateToParam,
+          value: date_to ? date_to : dateToParam,
         },
         {
           field: "action_type",
@@ -113,14 +119,22 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     }
   }
 
-  function onClickNameReport(name: string) {
+  const onClickAssetReport = (name: string) => {
     return list(
       `assets?search=${name.substring(
         name.indexOf("(") + 1,
         name.indexOf(")")
       )}`
     );
-  }
+  };
+
+  const onClickAccessoryReport = (name: string) => {
+    return list(`accessory?search=${name}`);
+  };
+
+  const onClickConsumableReport = (name: string) => {
+    return list(`consumables?search=${name}`);
+  };
 
   const collumns = useMemo(
     () => [
@@ -132,11 +146,21 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "item",
         title: translate("report.label.field.asset"),
-        render: (value: IReport) => (
+        render: (value: IReport, record: any) => (
           <TextField
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-            onClick={() => onClickNameReport(value.name)}
             value={value ? value.name : ""}
+            onClick={() => {
+              {
+                record.item.type === CategoryType.ASSET
+                  ? onClickAssetReport(value.name)
+                  : record.item.type === CategoryType.CONSUMABLE
+                  ? onClickConsumableReport(value.name)
+                  : record.item.type === CategoryType.ACCESSORY
+                  ? onClickAccessoryReport(value.name)
+                  : onClickAssetReport(value.name);
+              }
+            }}
           />
         ),
       },
@@ -181,7 +205,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         key: "note",
         title: translate("report.label.field.note"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{__html: `${value && value !== "undefined" ? value : ""}` }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `${value && value !== "undefined" ? value : ""}`,
+            }}
+          />
         ),
       },
     ],
@@ -337,7 +365,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         }}
       >
         {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...col} sorter />
+          <Table.Column dataIndex={col.key} {...(col as any)} sorter />
         ))}
       </Table>
     </List>
