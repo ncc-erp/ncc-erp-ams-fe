@@ -46,7 +46,7 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
-    formData.append("category_type", event.category_type.toString());
+    formData.append("category_type", event.category_type);
     if (event.eula_text !== undefined) {
       formData.append("eula_text", event.eula_text);
     }

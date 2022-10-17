@@ -6,7 +6,6 @@ import {
   useNavigation,
   usePermissions,
   useRouterContext,
-  useTitle,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
@@ -37,7 +36,6 @@ const logo: CSSProperties = {
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const Title = useTitle();
   const translate = useTranslate();
   const { menuItems, selectedKey } = useMenu();
   const { push } = useNavigation();

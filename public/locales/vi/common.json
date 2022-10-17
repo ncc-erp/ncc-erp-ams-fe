@@ -219,10 +219,10 @@
       },
       "title": {
         "asset": "Tất cả tài sản",
-        "create": "Tạo mới",
-        "edit": "Chỉnh sửa",
+        "create": "Tạo tài sản",
+        "edit": "Cập nhật tài sản",
         "delete": "Xóa",
-        "clone": "Clone",
+        "clone": "Clone tài sản",
         "checkout": "Cấp phát",
         "checkin": "Thu hồi",
         "detail": "Chi tiết tài sản",
@@ -331,9 +331,9 @@
         "detail": "Chi tiết tài sản của tôi",
         "cancle": "Từ chối",
         "search_advanced": "Tìm kiếm nâng cao",
-        "edit": "Chỉnh sửa",
+        "edit": "Cập nhật người dùng",
         "clone": "Clone",
-        "create": "Tạo mới",
+        "create": "Tạo người dùng",
         "name_user": "Người dùng",
         "changePassword": "Thay đổi mật khẩu",
         "permission": "Phân quyền",
@@ -465,7 +465,7 @@
     "label": {
       "title": {
         "create": "Tạo danh mục",
-        "edit": "Chỉnh sửa danh mục",
+        "edit": "Cập nhật danh mục",
         "nameTitle": "Danh mục"
       },
       "field": {
@@ -545,7 +545,7 @@
     "label": {
       "title": {
         "create": "Tạo văn phòng",
-        "edit": "Chỉnh sửa văn phòng",
+        "edit": "Cập nhật văn phòng",
         "nameTitle": "Văn phòng"
       },
       "field": {
@@ -651,12 +651,12 @@
       },
       "title": {
         "model": "Kiểu tài sản",
-        "create": "Tạo mới",
-        "edit": "Chỉnh sửa",
-        "clone": "Clone"
+        "create": "Tạo kiểu tài sản",
+        "edit": "Cập nhật kiểu tài sản",
+        "clone": "Clone kiểu tài sản"
       },
       "tooltip": {
-        "create": "Tạo mới",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "clone": "Clone",
         "delete": "Xoá"
@@ -697,7 +697,7 @@
         "assets": "Tài sản"
       },
       "tooltip": {
-        "create": "Tạo mới",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá"
       }
@@ -858,15 +858,15 @@
       },
       "title": {
         "accessory": "Phụ kiện",
-        "create": "Tạo mới",
-        "edit": "Chỉnh sửa",
+        "create": "Tạo phụ kiện",
+        "edit": "Cập nhật phụ kiện",
         "checkout": "Cấp phát",
         "checkin": "Thu hồi",
         "time": "Thời gian",
         "detail": "Chi tiết phụ kiện"
       },
       "tooltip": {
-        "create": "Tạo mới",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
         "columns": "Danh sách các cột",
@@ -916,14 +916,14 @@
       },
       "title": {
         "consumables": "Văn phòng phẩm",
-        "create": "Tạo mới",
-        "edit": "Chỉnh sửa",
+        "create": "Tạo văn phòng phẩm",
+        "edit": "Cập nhật văn phòng phẩm",
         "date": "Thời gian",
         "checkout": "Cấp phát",
         "detail": "Chi tiết văn phòng phẩm"
       },
       "tooltip": {
-        "create": "Tạo mới",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
         "columns": "Danh sách các cột",

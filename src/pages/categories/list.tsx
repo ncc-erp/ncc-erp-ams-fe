@@ -1,3 +1,5 @@
+/* eslint-disable no-lone-blocks */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
@@ -20,7 +22,6 @@ import {
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
-import { SyncOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
 import { IHardware } from "interfaces";
@@ -31,6 +32,7 @@ import { CategoryCreate } from "./create";
 import { CategoryEdit } from "./edit";
 import { ICategoryRequest, ICategoryResponse } from "interfaces/categories";
 import { CATEGORIES_API } from "api/baseApi";
+import { useSearchParams } from "react-router-dom";
 
 export enum ECategory {
   ACCESSORY = "Accessory",
@@ -45,6 +47,9 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ICategoryResponse>();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category_id = searchParams.get("category_id");
+
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<ICategoryResponse>({
       initialSorter: [
@@ -57,11 +62,18 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category_id,
+          }
+        );
         return filters;
       },
     });
@@ -100,7 +112,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("category.label.table.nameAsset"),
-        render: (value: string, record: any) => (
+        render: (value: string, record: ICategoryRequest) => (
           <TextField
             value={value ? value : ""}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}

@@ -20,7 +20,7 @@ export interface ICategoryResponse {
 export interface ICategoryRequest {
     id: number;
     name: string;
-    category_type: number;
+    category_type: string;
     require_acceptance: boolean;
     checkin_email : boolean;
     eula_text: string;
