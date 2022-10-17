@@ -4,6 +4,7 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   HttpError,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -134,6 +135,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
   const searchParam = searchParams.get("search");
+  const model_id = searchParams.get("model_id");
+  const manufacturer_id = searchParams.get('manufacturer_id');
+  const supplier_id = searchParams.get('supplier_id');
+
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -217,7 +222,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           field: "assigned_status",
           operator: "eq",
           value: searchParams.get("assigned_status"),
-        }
+        },
+        {
+          field: "model_id",
+          operator: "eq",
+          value: model_id,
+        },
+        {
+          field: "manufacturer_id",
+          operator: "eq",
+          value: manufacturer_id,
+        },
+        {
+          field: "supplier_id",
+          operator: "eq",
+          value: supplier_id,
+        },
       );
 
       return filters;
@@ -590,6 +610,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     value: item.value,
   }));
 
+  const { list } = useNavigation();
+
+
   const collumns = useMemo(
     () => [
       {
@@ -630,7 +653,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) =>
+          <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
@@ -1095,15 +1119,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [
+                    ? [
                       moment(dateFromParam, dateFormat),
                       moment(dateToParam, dateFormat),
                     ]
-                  : ""
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1466,8 +1490,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1484,8 +1508,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >

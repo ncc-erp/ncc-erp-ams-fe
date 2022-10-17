@@ -41,6 +41,9 @@ import { ConsumablesList } from "pages/consumables";
 import { AccessoryList } from "pages/accessory/list";
 import { AccessoryDetails } from "pages/accessory/details";
 import { ConsumableDetails } from "pages/consumables/details";
+import { SupplierDetails } from "pages/supplier/details";
+import { LocationDetails } from "pages/location/details";
+import { ManufacturesDetails } from "pages/manufacturers/details";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -231,6 +234,27 @@ function App() {
           list: ConsumableDetails,
           options: {
             route: "consumable_details",
+          },
+        },
+        {
+          name: t("resource.supplier_details"),
+          list: SupplierDetails,
+          options: {
+            route: "supplier_details",
+          },
+        },
+        {
+          name: t("resource.location_details"),
+          list: LocationDetails,
+          options: {
+            route: "location_details",
+          },
+        },
+        {
+          name: t("resource.manufactures_details"),
+          list: ManufacturesDetails,
+          options: {
+            route: "manufactures_details",
           },
         },
       ]}

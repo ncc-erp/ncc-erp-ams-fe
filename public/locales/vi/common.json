@@ -1,6 +1,6 @@
 {
-  "lang":{
-    "vi":"Vietnamese"
+  "lang": {
+    "vi": "Vietnamese"
   },
   "pages": {
     "login": {
@@ -95,8 +95,8 @@
       "searchToDate": "Thời gian"
     },
     "detail": {
-    "title-show" : "Tổng số lượng thiết bị của các văn phòng",
-    "title-count-asset": "Số lượng thiết bị của các văn phòng trong khoảng thời gian"
+      "title-show": "Tổng số lượng thiết bị của các văn phòng",
+      "title-count-asset": "Số lượng thiết bị của các văn phòng trong khoảng thời gian"
     }
   },
   "posts": {
@@ -436,8 +436,6 @@
         "update": "Chỉnh sửa",
         "changePass": "Đổi mật khẩu",
         "accept": "Xác nhận"
-        
-
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -498,7 +496,7 @@
         "accept": "Chấp nhận"
       },
       "options": {
-        "accessory":"Phụ kiện",
+        "accessory": "Phụ kiện",
         "asset": "Thiết bị",
         "consumable": "Văn phòng phẩm"
       }
@@ -508,8 +506,11 @@
     "label": {
       "title": {
         "create": "Tạo kho",
-        "edit": "Chỉnh sửa kho",
-        "nameTitle": "Kho"
+        "edit": "Cập nhật kho",
+        "nameTitle": "Kho",
+        "asset": "Tài sản",
+        "accessories": "Phụ kiện",
+        "consumables": "Văn phòng phẩm"
       },
       "field": {
         "create": "Thêm mới",
@@ -617,7 +618,8 @@
     "accessory": "Phụ kiện",
     "consumables": "Văn phòng phẩm",
     "accessory_details": "Chi tiết phụ kiện",
-    "consumable_details": "Chi tiết văn phòng phẩm"
+    "consumable_details": "Chi tiết văn phòng phẩm",
+    "supplier_details": "Chi tiết nhà cung cấp"
   },
   "model": {
     "label": {
@@ -689,8 +691,10 @@
       },
       "title": {
         "supplier": "Nhà cung cấp",
-        "create": "Tạo mới",
-        "edit": "Chỉnh sửa"
+        "create": "Tạo nhà cung cấp",
+        "edit": "Cập nhật nhà cung cấp",
+        "note": "Xem nhà cung cấp",
+        "assets": "Tài sản"
       },
       "tooltip": {
         "create": "Tạo mới",
@@ -813,12 +817,12 @@
         "checkoutTo": "Cấp phát đến",
         "user": "Lựa chọn một người dùng",
         "image": "Hình ảnh",
-        "start-date": "Ngày bắt đầu", 
+        "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "users": "Người dùng",
         "checkout_date": "Ngày cấp phát",
         "checkin_date": "Ngày thu hồi",
-        "cost":"Chi phí mua hàng",
+        "cost": "Chi phí mua hàng",
         "insurance": "Bảo hành",
         "month": "Tháng",
         "remaining_qty": "Số lượng phụ kiện còn lại",
@@ -899,7 +903,7 @@
         "updated_at": "Cập nhật tại",
         "warranty_expires": "Hết hạn",
         "qty": "Số lượng văn phòng phẩm được cấp phát",
-        "user":"Lựa chọn một người dùng"
+        "user": "Lựa chọn một người dùng"
       },
       "message": {
         "required": "bắt buộc"
@@ -915,7 +919,7 @@
         "create": "Tạo mới",
         "edit": "Chỉnh sửa",
         "date": "Thời gian",
-        "checkout":"Cấp phát",
+        "checkout": "Cấp phát",
         "detail": "Chi tiết văn phòng phẩm"
       },
       "tooltip": {
@@ -935,9 +939,9 @@
         "location": "Lựa chọn một văn phòng",
         "total_consumables": "Số lượng",
         "notes": "Ghi chú",
-        "user":"Lựa chọn một người dùng",
+        "user": "Lựa chọn một người dùng",
         "supplier": "Lựa chọn nhà cung cấp",
-        "purchase_cost":"Chi phí mua hàng"
+        "purchase_cost": "Chi phí mua hàng"
       }
     }
   }

@@ -90,6 +90,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
   const category_id = searchParams.get("category_id");
+  const manufacturer_id = searchParams.get('manufacturer_id');
+  const supplier_id = searchParams.get('supplier_id');
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -137,7 +139,17 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category ? category : category_id,
-        }
+        },
+        {
+          field: "manufacturer_id",
+          operator: "eq",
+          value: manufacturer_id,
+        },
+        {
+          field: "supplier_id",
+          operator: "eq",
+          value: supplier_id,
+        },
       );
 
       return filters;
@@ -478,9 +490,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, dateFormat),
-                    moment(dateToParam, dateFormat),
-                  ]
+                  moment(dateFromParam, dateFormat),
+                  moment(dateToParam, dateFormat),
+                ]
                 : "",
           }}
           layout="vertical"
@@ -593,10 +605,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
@@ -649,8 +661,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >

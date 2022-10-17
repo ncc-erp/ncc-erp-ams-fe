@@ -248,10 +248,10 @@ export interface IHardwareResponseCheckout {
 
 export interface IHardwareList {
   data:
-    | {
-        data: IHardwareCreateRequest;
-      }
-    | undefined;
+  | {
+    data: IHardwareCreateRequest;
+  }
+  | undefined;
   refetch: Function;
 }
 
@@ -317,6 +317,7 @@ export interface IHardwareFilterVariables {
   purchase_date: [Dayjs, Dayjs];
   assigned_to: string;
   assigned_status: string;
+  category: string;
 }
 
 export interface IHardwareRequestMultipleCancel {

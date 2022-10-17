@@ -3,6 +3,7 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -30,6 +31,7 @@ import { LocationCreate } from "./create";
 import { LocationEdit } from "./edit";
 import { LOCATION_API } from "api/baseApi";
 import { Spin } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 export const LocationList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -37,6 +39,9 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ILocationResponse>();
+
+  const [searchParams] = useSearchParams();
+  const location_id = searchParams.get("location_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<ILocationResponse>({
@@ -50,11 +55,18 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "location_id",
+            operator: "eq",
+            value: location_id,
+          }
+        );
         return filters;
       },
     });
@@ -84,6 +96,8 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
     setIsEditModalVisible(true);
   };
 
+  const { list } = useNavigation();
+
   const collumns = useMemo(
     () => [
       {
@@ -95,7 +109,12 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("location.label.field.name"),
-        render: (value: IHardware) => <TextField value={value ? value : ""} />,
+        render: (value: IHardware, record: any) => <TextField value={value ? value : ""}
+          onClick={() => {
+            record.id &&
+              list(`location_details?id=${record.id}&name=${record.name}`);
+          }}
+          style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -210,10 +229,10 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
           scroll={{ x: 1100 }}

@@ -3,6 +3,7 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -28,7 +29,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { CategoryCreate } from "./create";
 import { CategoryEdit } from "./edit";
-import { ICategoryResponse } from "interfaces/categories";
+import { ICategoryRequest, ICategoryResponse } from "interfaces/categories";
 import { CATEGORIES_API } from "api/baseApi";
 
 export enum ECategory {
@@ -86,6 +87,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     setDetail(dataConvert);
     setIsEditModalVisible(true);
   };
+  const { list } = useNavigation();
 
   const collumns = useMemo(
     () => [
@@ -98,7 +100,24 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("category.label.table.nameAsset"),
-        render: (value: IHardware) => <TextField value={value ? value : ""} />,
+        render: (value: string, record: any) => (
+          <TextField
+            value={value ? value : ""}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+            onClick={() => {
+              {
+                record.category_type === "Asset"
+                  ? list(`assets?category_id=${record.id}`)
+                  : record.category_type === "Consumable"
+                    ? list(`consumables?category_id=${record.id}`)
+                    : record.category_type === "Accessory"
+                      ? list(`accessory?category_id=${record.id}`)
+                      : list(`assets?category_id=${record.id}`);
+              }
+            }}
+          />
+        ),
+
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -122,10 +141,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 ? value === ECategory.ACCESSORY
                   ? t("category.label.options.accessory")
                   : value === ECategory.ASSET
-                  ? t("category.label.options.asset")
-                  : value === ECategory.CONSUMABLE
-                  ? t("category.label.options.consumable")
-                  : ""
+                    ? t("category.label.options.asset")
+                    : value === ECategory.CONSUMABLE
+                      ? t("category.label.options.consumable")
+                      : ""
                 : ""
             }
           />
@@ -213,10 +232,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
