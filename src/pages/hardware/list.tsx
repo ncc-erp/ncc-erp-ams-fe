@@ -713,7 +713,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name} />
+          <TextField
+            value={value && value.name}
+            onClick={() => {
+              list(`location_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -721,7 +726,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name} />
+          <TextField value={value && value.name}
+            onClick={() => {
+              list(`manufactures_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -731,20 +740,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardwareResponse) => (
           <div
             dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+            onClick={() => {
+              list(`supplier_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
       {
         key: "purchase_date",
-        title: t("hardware.label.field.dateBuy"),
+        title: t("hardware.label.field.dateAdd"),
         render: (value: IHardware) =>
           value ? (
             <DateField format="LL" value={value ? value.date : ""} />
           ) : (
             ""
           ),
-        defaultSortOrder: getDefaultSortOrder("warranty_expires.date", sorter),
+        defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
       },
       {
         key: "purchase_cost",
@@ -768,7 +781,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "warranty_expires",
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) =>
-          value ? <DateField format="LLL" value={value && value.date} /> : "",
+          value ? <DateField format="LL" value={value && value.date} /> : "",
       },
       {
         key: "notes",
@@ -814,16 +827,21 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           record.assigned_status === value,
       },
       {
-        key: "created_at",
-        title: t("hardware.label.field.dateCreate"),
-        render: (value: IHardware) =>
-          value ? (
-            <DateField format="LLL" value={value && value.datetime} />
-          ) : (
-            ""
-          ),
+        key: "last_checkout",
+        title: t("hardware.label.field.dateCheckout"),
+        render: (value: IHardware) => (value &&
+          <DateField format="LL" value={value ? value.datetime : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
+      // {
+      //   key: "last_checkout",
+      //   title: "Het bao hanh",
+      //   render: (value: IHardware) => (value &&
+      //     <>Thiết bị còn <DateField format="LLL" value={value ? value.datetime : ""} /> ngày bảo hành </>
+      //   ),
+      //   defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+      // },
     ],
     [filterCategory]
   );

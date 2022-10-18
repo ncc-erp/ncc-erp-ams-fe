@@ -155,10 +155,10 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
                 record.item.type === CategoryType.ASSET
                   ? onClickAssetReport(value.name)
                   : record.item.type === CategoryType.CONSUMABLE
-                  ? onClickConsumableReport(value.name)
-                  : record.item.type === CategoryType.ACCESSORY
-                  ? onClickAccessoryReport(value.name)
-                  : onClickAssetReport(value.name);
+                    ? onClickConsumableReport(value.name)
+                    : record.item.type === CategoryType.ACCESSORY
+                      ? onClickAccessoryReport(value.name)
+                      : onClickAssetReport(value.name);
               }
             }}
           />
@@ -192,7 +192,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         ),
       },
       {
-        key: "created_at",
+        key: "next_audit_date",
         title: translate("report.label.field.dateCheckout_And_dateCheckin"),
         render: (value: IReport) =>
           value ? (
@@ -288,9 +288,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             created_at:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, dateFormat),
-                    moment(dateToParam, dateFormat),
-                  ]
+                  moment(dateFromParam, dateFormat),
+                  moment(dateToParam, dateFormat),
+                ]
                 : "",
             type: searchParams.get("action_type")
               ? assetHistoryType

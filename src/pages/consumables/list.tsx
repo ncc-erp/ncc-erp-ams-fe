@@ -194,7 +194,13 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         key: "manufacturer",
         title: translate("consumables.label.field.manufacturer"),
         render: (value: IConsumablesRequest) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField
+            value={value ? value.name : ""}
+            onClick={() => {
+              value &&
+                list(`manufactures_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -212,6 +218,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IConsumablesRequest) => (
           <div
             dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
+            onClick={() => {
+              list(`supplier_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
@@ -220,7 +230,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         key: "location",
         title: translate("consumables.label.field.location"),
         render: (value: IConsumablesRequest) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField
+            value={value ? value.name : ""}
+            onClick={() => {
+              list(`location_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },

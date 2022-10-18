@@ -50,6 +50,7 @@ import {
     SyncOutlined,
 } from "@ant-design/icons";
 import { SupplierDetailsAccessory } from "./detailAccessory";
+import { SupplierDetailsConsumable } from "./detailConsumable";
 
 
 const defaultCheckedList = [
@@ -103,6 +104,7 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
 
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
+    const status_id = searchParams.get("status_id");
     const rtd_location_id = searchParams.get("rtd_location_id");
     const searchParam = searchParams.get("search");
     const supplier_id = searchParams.get('id');
@@ -177,6 +179,11 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
                     field: "supplier_id",
                     operator: "eq",
                     value: supplier_id,
+                },
+                {
+                    field: "status_id",
+                    operator: "eq",
+                    value: status_id,
                 },
             );
 
@@ -1058,6 +1065,7 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
             </List >
 
             <SupplierDetailsAccessory />
+            <SupplierDetailsConsumable />
 
         </>
     );

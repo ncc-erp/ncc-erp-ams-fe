@@ -77,8 +77,8 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
         useState<IConsumablesResponseCheckout>();
 
     const [collumnSelected, setColumnSelected] = useState<string[]>(
-        localStorage.getItem("item_accessory_selected") !== null
-            ? JSON.parse(localStorage.getItem("item_accessory_selected") as string)
+        localStorage.getItem("item_consumable_selected") !== null
+            ? JSON.parse(localStorage.getItem("item_consumable_selected") as string)
             : defaultCheckedList
     );
 

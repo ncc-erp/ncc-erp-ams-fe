@@ -400,7 +400,7 @@ export const ManufacturesDetailsAccessory: React.FC<IResourceComponentsProps> = 
     return (
 
         <List
-            title={translate("accessory.label.title.accessory")}
+            title=""
         >
             <div className="all">
                 <TableAction searchFormProps={searchFormProps} />

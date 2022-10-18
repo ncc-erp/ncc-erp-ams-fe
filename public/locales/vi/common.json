@@ -145,7 +145,7 @@
         "asset": "Tài sản",
         "location": "Địa phương",
         "assetName": "Tên tài sản",
-        "dateBuy": "Ngày mua",
+        "dateAdd": "Ngày nhập",
         "supplier": "Nhà cung cấp",
         "orderNumber": "Mã đơn hàng",
         "cost": "Chi phí mua hàng",
@@ -168,7 +168,7 @@
         "manufacturer": "Kho",
         "purchase_date": "Ngày mua",
         "eol": "EOL",
-        "warranty_expires": "Hết hạn",
+        "warranty_expires": "Ngày hết hạn",
         "checkout_counter": "Thu hồi tài sản",
         "checkin_counter": "Đăng kí tài sản",
         "requestable": "Yêu cầu",
@@ -604,6 +604,7 @@
     "assets-pending": "Bảo hành-check lại",
     "assets-broken": "Hỏng",
     "assets-waiting-confirm": "Đang chờ xác nhận",
+    "assets-expires": "Sắp hết hạn",
     "report": "Báo cáo",
     "asset-category-PC": "Tất cả máy tính",
     "asset-category-Monitor": "Tất cả màn hình",
@@ -796,7 +797,7 @@
         "end-date": "Ngày kết thúc",
         "manager": "Quản lý",
         "user": "Người dùng",
-        "dateCheckout_And_dateCheckin": "Ngày hoạt động"
+        "dateCheckout_And_dateCheckin": "Ngày nhập"
       }
     }
   },

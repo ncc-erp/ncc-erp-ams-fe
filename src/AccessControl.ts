@@ -56,6 +56,10 @@ p, 1, ${i18n.t("resource.assets-broken")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets-broken")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.assets-expires")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-expires")}/*, (edit)|(show)|(clone)|(checkout)
+
 p, 1, ${i18n.t("resource.request")}, (list)|(create)
 p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 

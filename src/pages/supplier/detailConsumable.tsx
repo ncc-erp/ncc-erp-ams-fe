@@ -53,7 +53,7 @@ const defaultCheckedList = [
     "notes",
 ];
 
-export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> = () => {
+export const SupplierDetailsConsumable: React.FC<IResourceComponentsProps> = () => {
     const translate = useTranslate();
     const { list } = useNavigation();
     const [isLoadingArr] = useState<boolean[]>([]);
@@ -81,7 +81,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
     const searchParam = searchParams.get("search");
-    const manufacturer_id = searchParams.get('id');
+    const supplier_id = searchParams.get('id');
 
     const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
         IConsumablesResponse,
@@ -94,7 +94,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 order: "desc",
             },
         ],
-        resource: `${CONSUMABLE_API}?manufacturer_id=${manufacturer_id}`,
+        resource: `${CONSUMABLE_API}?supplier_id=${supplier_id}`,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let { search, category } = params;
@@ -110,9 +110,9 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     value: category ? category : category_id,
                 },
                 {
-                    field: "manufacturer_id",
+                    field: "supplier_id",
                     operator: "eq",
-                    value: manufacturer_id,
+                    value: supplier_id,
                 },
             );
 
@@ -132,15 +132,10 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
             {
                 key: "name",
                 title: translate("consumables.label.field.name"),
-                render: (value: string, record: any) => (
+                render: (value: string) => (
                     <TextField
                         value={value ? value : ""}
-                        onClick={() => {
-                            record.id &&
-                                list(`consumable_details?id=${record.id}&name=${record.name}
-                    &category_id=${record.category.id}`);
-                        }}
-                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
@@ -387,7 +382,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     return (
 
         <List
-            title=""
+            title="Van phong pham"
         >
             <div className="all">
                 <TableAction searchFormProps={searchFormProps} />

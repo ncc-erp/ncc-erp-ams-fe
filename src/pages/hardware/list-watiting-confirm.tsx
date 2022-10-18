@@ -336,7 +336,7 @@ export const HardwareListWaitingConfirm: React.FC<
       },
       {
         key: "purchase_date",
-        title: t("hardware.label.field.dateBuy"),
+        title: t("hardware.label.field.dateAdd"),
         render: (value: IHardware) =>
           value ? (
             <DateField format="LL" value={value ? value.date : ""} />
@@ -787,12 +787,12 @@ export const HardwareListWaitingConfirm: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1038,10 +1038,10 @@ export const HardwareListWaitingConfirm: React.FC<
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
           rowSelection={{
@@ -1064,7 +1064,7 @@ export const HardwareListWaitingConfirm: React.FC<
                   record.assigned_to.id !== null &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
-                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -1081,8 +1081,8 @@ export const HardwareListWaitingConfirm: React.FC<
                             isLoadingArr[record.id] === undefined
                               ? false
                               : isLoadingArr[record.id] === false
-                              ? false
-                              : true
+                                ? false
+                                : true
                           }
                         >
                           {t("hardware.label.button.accept_checkout")}
@@ -1095,7 +1095,7 @@ export const HardwareListWaitingConfirm: React.FC<
                   record.assigned_to.id !== null &&
                   record.assigned_to.id === record.withdraw_from &&
                   record.assigned_status ===
-                    ASSIGNED_STATUS.WAITING_CHECKIN && (
+                  ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -1112,8 +1112,8 @@ export const HardwareListWaitingConfirm: React.FC<
                             isLoadingArr[record.id] === undefined
                               ? false
                               : isLoadingArr[record.id] === false
-                              ? false
-                              : true
+                                ? false
+                                : true
                           }
                         >
                           {t("hardware.label.button.accept_checkin")}
@@ -1124,22 +1124,22 @@ export const HardwareListWaitingConfirm: React.FC<
 
                 {record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => cancle(record)}
-                  >
-                    {t("hardware.label.button.rejectCheckout")}
-                  </Button>
-                )}
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
+                          ? false
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => cancle(record)}
+                    >
+                      {t("hardware.label.button.rejectCheckout")}
+                    </Button>
+                  )}
 
                 {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
                   <Button
@@ -1150,8 +1150,8 @@ export const HardwareListWaitingConfirm: React.FC<
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >

@@ -222,7 +222,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: translate("accessory.label.field.supplier"),
         render: (value: IAccesstoryRequest) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
+            onClick={() => {
+              list(`supplier_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -230,7 +234,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "location",
         title: translate("accessory.label.field.location"),
         render: (value: IAccesstoryRequest) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField
+            value={value ? value.name : ""}
+            onClick={() => {
+              list(`location_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },

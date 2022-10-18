@@ -171,7 +171,9 @@ export const Sider: React.FC = () => {
                     item.name === `${translate("resource.assets-pending")}` ||
                     item.name === `${translate("resource.assets-broken")}` ||
                     item.name ===
-                    `${translate("resource.assets-waiting-confirm")}`
+                    `${translate("resource.assets-waiting-confirm")}` ||
+                    item.name ===
+                    `${translate("resource.assets-expires")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;

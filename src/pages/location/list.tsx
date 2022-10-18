@@ -109,12 +109,14 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("location.label.field.name"),
-        render: (value: IHardware, record: any) => <TextField value={value ? value : ""}
-          onClick={() => {
-            record.id &&
-              list(`location_details?id=${record.id}&name=${record.name}`);
-          }}
-          style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
+        render: (value: IHardware, record: any) =>
+          <TextField
+            value={value ? value : ""}
+            onClick={() => {
+              record.id &&
+                list(`location_details?id=${record.id}&name=${record.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {

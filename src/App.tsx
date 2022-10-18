@@ -44,6 +44,7 @@ import { ConsumableDetails } from "pages/consumables/details";
 import { SupplierDetails } from "pages/supplier/details";
 import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
+import { HardwareListExpiration } from "pages/hardware/list-expiration";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -255,6 +256,13 @@ function App() {
           list: ManufacturesDetails,
           options: {
             route: "manufactures_details",
+          },
+        },
+        {
+          name: t("resource.assets-expires"),
+          list: HardwareListExpiration,
+          options: {
+            route: "assets-expires",
           },
         },
       ]}

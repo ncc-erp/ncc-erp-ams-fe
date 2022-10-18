@@ -166,6 +166,11 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                     operator: "eq",
                     value: manufacturer_id,
                 },
+                {
+                    field: "status_id",
+                    operator: "eq",
+                    value: status_id,
+                },
             );
 
             return filters;
@@ -234,10 +239,6 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                 title: translate("hardware.label.field.category"),
                 render: (value: IHardwareResponse) => <TextField value={value.name} />,
                 defaultSortOrder: getDefaultSortOrder("category.name", sorter),
-                // filters: filterCategory,
-                // onFilter: (value: number, record: IHardwareResponse) => {
-                //     return record.category.id === value;
-                // },
             },
             {
                 key: "status_label",
@@ -252,10 +253,6 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
-                // filters: filterStatus_Label,
-                // onFilter: (value: number, record: IHardwareResponse) => {
-                //     return record.status_label.id === value;
-                // },
             },
             {
                 key: "assigned_to",
@@ -778,7 +775,7 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
 
             <Tabs defaultActiveKey={defaultValue.active}>
                 <TabPane tab={translate("manufactures.label.title.asset")} key={defaultValue.active}>
-                    <List title={translate("manufactures.label.title.asset")}>
+                    <List title="">
                         <div className="all">
                             <TableAction searchFormProps={searchFormProps} />
                             <div className="other_function">
