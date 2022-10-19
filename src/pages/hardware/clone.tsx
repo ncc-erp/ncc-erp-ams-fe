@@ -90,7 +90,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource:   SUPPLIERS_SELECT_LIST_API,
+    resource: SUPPLIERS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -179,7 +179,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
       { name: "asset_tag", value: "" },
 
-      { name: "status_id", value: data?.status_label.id }, 
+      { name: "status_id", value: data?.status_label.id },
       {
         name: "warranty_months",
         value: data?.warranty_months && data.warranty_months.split(" ")[0],
@@ -427,7 +427,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.dateBuy")}
+            label={t("hardware.label.field.dateAdd")}
             name="purchase_date"
             initialValue={
               data?.purchase_date.date !== null ? data?.purchase_date.date : ""

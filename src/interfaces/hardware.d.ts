@@ -248,10 +248,10 @@ export interface IHardwareResponseCheckout {
 
 export interface IHardwareList {
   data:
-    | {
-        data: IHardwareCreateRequest;
-      }
-    | undefined;
+  | {
+    data: IHardwareCreateRequest;
+  }
+  | undefined;
   refetch: Function;
 }
 

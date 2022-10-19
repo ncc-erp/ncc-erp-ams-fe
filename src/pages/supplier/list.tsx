@@ -4,6 +4,7 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -54,13 +55,21 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
       },
     });
 
+  const { list } = useNavigation();
+
   const collumns = useMemo(
     () => [
       {
         key: "name",
         title: t("supplier.label.field.name"),
-        render: (value: ISupplier) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
+        render: (value: ISupplier, record: any) => (
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }}
+            onClick={() => {
+              record.id &&
+                list(`supplier_details?id=${record.id}&name=${record.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
@@ -176,10 +185,10 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >

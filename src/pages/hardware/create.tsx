@@ -384,7 +384,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.dateBuy")}
+            label={t("hardware.label.field.dateAdd")}
             name="purchase_date"
           >
             <Input type="date" />

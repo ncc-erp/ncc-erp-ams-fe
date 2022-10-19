@@ -56,6 +56,10 @@ p, 1, ${i18n.t("resource.assets-broken")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets-broken")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.assets-expires")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-expires")}/*, (edit)|(show)|(clone)|(checkout)
+
 p, 1, ${i18n.t("resource.request")}, (list)|(create)
 p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
@@ -69,10 +73,14 @@ p, 1, ${i18n.t("resource.category")}/*, (edit)
 p, 1, ${i18n.t("resource.manufactures")}, (list)|(create)
 p, 1, ${MANUFACTURES_API}/*, (delete)
 p, 1, ${i18n.t("resource.manufactures")}/*, (edit)
+p, 1, ${i18n.t("resource.manufactures_details")}, (list) 
+p, 1, ${i18n.t("resource.manufactures_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 p, 1, ${i18n.t("resource.location")}, (list)|(create)
 p, 1, ${LOCATION_API}/*, (delete)
 p, 1, ${i18n.t("resource.location")}/*, (edit)
+p, 1, ${i18n.t("resource.location_details")}, (list) 
+p, 1, ${i18n.t("resource.location_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
@@ -84,6 +92,9 @@ p, 1, ${i18n.t("resource.model")}/*, (edit)
 p, 1, ${i18n.t("resource.suppliers")}, (list)|(create)
 p, 1, ${SUPPLIERS_API}/*, (delete)
 p, 1, ${i18n.t("resource.suppliers")}/*, (edit)
+p, 1, ${i18n.t("resource.supplier_details")}, (list) 
+p, 1, ${i18n.t("resource.supplier_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
+
 
 p, 1, ${i18n.t("resource.department")}, (list)|(create)
 p, 1, ${DEPARTMENT_API}/*, (delete)

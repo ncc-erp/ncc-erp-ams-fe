@@ -3,6 +3,7 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -30,6 +31,7 @@ import { ManufacturesCreate } from "./create";
 import { ManufacturesEdit } from "./edit";
 import { IManufacturesResponse } from "interfaces/manufacturers";
 import { MANUFACTURES_API } from "api/baseApi";
+import { useSearchParams } from "react-router-dom";
 
 export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -37,6 +39,8 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IManufacturesResponse>();
+  const [searchParams] = useSearchParams();
+  const manufacturer_id = searchParams.get('manufacturer_id');
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IManufacturesResponse>({
@@ -50,11 +54,18 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: 'manufacturer_id',
+            operator: 'eq',
+            value: manufacturer_id
+          }
+        );
         return filters;
       },
     });
@@ -75,6 +86,8 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
     setIsEditModalVisible(true);
   };
 
+  const { list } = useNavigation();
+
   const collumns = useMemo(
     () => [
       {
@@ -86,7 +99,14 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("manufactures.label.field.name"),
-        render: (value: IHardware) => <TextField value={value ? value : ""} />,
+        render: (value: IHardware, record: IManufacturesResponse) =>
+          <TextField
+            value={value ? value : ""}
+            onClick={() => {
+              record.id &&
+                list(`manufactures_details?id=${record.id}&name=${record.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -202,10 +222,10 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
           scroll={{ x: 1100 }}

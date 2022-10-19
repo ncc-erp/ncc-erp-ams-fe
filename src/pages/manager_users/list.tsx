@@ -32,6 +32,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
 import { SYNC_USER_API, USER_API } from "api/baseApi";
+import { useSearchParams } from "react-router-dom";
 
 const defaultCheckedList = [
   "id",
@@ -61,6 +62,9 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const location_id = searchParams.get("location_id");
+
   const { tableProps, sorter, tableQueryResult, searchFormProps } = useTable({
     initialSorter: [
       {
@@ -72,11 +76,18 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const { search } = params;
-      filters.push({
-        field: "search",
-        operator: "eq",
-        value: search,
-      });
+      filters.push(
+        {
+          field: "search",
+          operator: "eq",
+          value: search,
+        },
+        {
+          field: "location_id",
+          operator: "eq",
+          value: location_id,
+        }
+      );
       return filters;
     },
   });
@@ -181,7 +192,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "location",
         title: translate("user.label.field.locations"),
-        render: (value: IUser) => <TextField value={value ? value.name : ""} />,
+        render: (value: IUser) =>
+          <TextField value={value ? value.name : ""} />,
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
@@ -231,13 +243,16 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         key: "notes",
         title: translate("user.label.field.note"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{__html: `${value ? value : ""}`}} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
     []
   );
+
+  console.log(tableProps, "?tableProps");
+
 
   const handleCreate = () => {
     handleOpenModel();

@@ -5,6 +5,7 @@ import {
   useTranslate,
   IResourceComponentsProps,
   CrudFilters,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -29,6 +30,7 @@ import { IModelResponse } from "interfaces/model";
 import { ModelEdit } from "./edit";
 import { ModelClone } from "./clone";
 import { MODELS_API } from "api/baseApi";
+import { useSearchParams } from "react-router-dom";
 
 export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -37,6 +39,9 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const [detail, setDetail] = useState<IModelResponse>();
   const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
   const [detailClone, setDetailClone] = useState<IModelResponse>();
+
+  const [searchParms] = useSearchParams();
+  const model_id = searchParms.get('model_id');
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IModel>({
@@ -50,21 +55,37 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search } = params;
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "model_id",
+            operator: "eq",
+            value: model_id
+          });
         return filters;
       },
     });
+
+  const { list } = useNavigation();
+
 
   const collumns = useMemo(
     () => [
       {
         key: "name",
         title: t("model.label.field.name"),
-        render: (value: IModel) => <TextField value={value} />,
+        render: (value: IModel, record: IModelResponse) =>
+          <TextField value={value}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+            onClick={() => {
+              {
+                list(`assets?model_id=${record.id}`)
+              }
+            }} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {

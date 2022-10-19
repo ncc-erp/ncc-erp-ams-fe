@@ -89,6 +89,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("date_from");
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
+  const supplier_id = searchParams.get('supplier_id');
+  const manufacturer_id = searchParams.get('manufacturer_id');
+
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IAccesstoryResponse,
@@ -134,7 +137,17 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           field: "category_id",
           operator: "eq",
           value: category ? category : category_id,
-        }
+        },
+        {
+          field: "supplier_id",
+          operator: "eq",
+          value: supplier_id,
+        },
+        {
+          field: "manufacturer_id",
+          operator: "eq",
+          value: manufacturer_id,
+        },
       );
 
       return filters;
@@ -209,7 +222,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: translate("accessory.label.field.supplier"),
         render: (value: IAccesstoryRequest) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
+            onClick={() => {
+              list(`supplier_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -217,7 +234,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "location",
         title: translate("accessory.label.field.location"),
         render: (value: IAccesstoryRequest) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField
+            value={value ? value.name : ""}
+            onClick={() => {
+              list(`location_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
@@ -243,7 +265,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "notes",
         title: translate("accessory.label.field.notes"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{__html: `${value ? value : ""}`}} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
@@ -487,9 +509,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                    moment(dateFromParam, "YYYY/MM/DD"),
-                    moment(dateToParam, "YYYY/MM/DD"),
-                  ]
+                  moment(dateFromParam, "YYYY/MM/DD"),
+                  moment(dateToParam, "YYYY/MM/DD"),
+                ]
                 : "",
           }}
           layout="vertical"
@@ -599,10 +621,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >
@@ -665,8 +687,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >

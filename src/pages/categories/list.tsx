@@ -99,7 +99,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     setDetail(dataConvert);
     setIsEditModalVisible(true);
   };
-
   const { list } = useNavigation();
 
   const collumns = useMemo(
@@ -120,12 +119,12 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               {
                 record.category_type === "Asset"
-                  ? list(`assets?search=${value}`)
+                  ? list(`assets?category_id=${record.id}`)
                   : record.category_type === "Consumable"
-                  ? list(`consumables?search=${value}`)
-                  : record.category_type === "Accessory"
-                  ? list(`accessory?search=${value}`)
-                  : list(`assets?search=${value}`);
+                    ? list(`consumables?category_id=${record.id}`)
+                    : record.category_type === "Accessory"
+                      ? list(`accessory?category_id=${record.id}`)
+                      : list(`assets?category_id=${record.id}`);
               }
             }}
           />
@@ -154,10 +153,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 ? value === ECategory.ACCESSORY
                   ? t("category.label.options.accessory")
                   : value === ECategory.ASSET
-                  ? t("category.label.options.asset")
-                  : value === ECategory.CONSUMABLE
-                  ? t("category.label.options.consumable")
-                  : ""
+                    ? t("category.label.options.asset")
+                    : value === ECategory.CONSUMABLE
+                      ? t("category.label.options.consumable")
+                      : ""
                 : ""
             }
           />
@@ -245,10 +244,10 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
               : false
           }
         >

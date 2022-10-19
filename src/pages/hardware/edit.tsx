@@ -429,7 +429,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           )}
 
           <Form.Item
-            label={t("hardware.label.field.dateBuy")}
+            label={t("hardware.label.field.dateAdd")}
             name="purchase_date"
             initialValue={
               data?.purchase_date.date !== null ? data?.purchase_date.date : ""

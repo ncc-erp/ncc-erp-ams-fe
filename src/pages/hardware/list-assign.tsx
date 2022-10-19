@@ -4,6 +4,7 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   HttpError,
+  useNavigation,
 } from "@pankod/refine-core";
 import {
   List,
@@ -556,6 +557,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     value: item.value,
   }));
 
+  const { list } = useNavigation();
+
   const collumns = useMemo(
     () => [
       {
@@ -650,31 +653,46 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name} />
+        render: (value: IHardwareResponse, record: any) =>
+        (
+          <TextField
+            value={value && value.name}
+            onClick={() => {
+              list(`location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
       {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
-        render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name} />
+        render: (value: IHardwareResponse, record: IHardwareResponse) => (
+          <TextField
+            value={value && value.name}
+            onClick={() => {
+              list(`manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
       {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
-        render: (value: IHardwareResponse) => (
+        render: (value: IHardwareResponse, record: IHardwareResponse) => (
           <div dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+            onClick={() => {
+              list(`supplier_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
       {
         key: "purchase_date",
-        title: t("hardware.label.field.dateBuy"),
+        title: t("hardware.label.field.dateAdd"),
         render: (value: IHardware) =>
           value ? (
             <DateField format="LL" value={value ? value.date : ""} />
@@ -1113,12 +1131,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                      moment(searchValuesByDateFrom),
-                      moment(searchValuesByDateTo),
-                    ]
+                    moment(searchValuesByDateFrom),
+                    moment(searchValuesByDateTo),
+                  ]
                   : dateFromParam && dateToParam
-                  ? [moment(dateFromParam), moment(dateToParam)]
-                  : ""
+                    ? [moment(dateFromParam), moment(dateToParam)]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1484,8 +1502,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1502,8 +1520,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >
