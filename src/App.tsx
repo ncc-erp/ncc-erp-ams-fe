@@ -65,8 +65,25 @@ function App() {
       accessControlProvider={{
         can: async ({ resource, action, params }) => {
           let role = await authProvider.getPermissions();
-
           const enforcer = await newEnforcer(model, adapter);
+
+          if (role.branchadmin == 1) {
+            if(action === "show"){
+              const can = await enforcer.enforce(
+                'branchadmin',
+                `${resource}/${params.id}`,
+                action
+              );
+              return Promise.resolve({ can });
+            }else{
+              const can = await enforcer.enforce(
+                'branchadmin',
+                `${resource}`,
+                action,
+              );
+              return Promise.resolve({ can });
+            }
+          }
           if (action === "delete" || action === "edit" || action === "show") {
             const can = await enforcer.enforce(
               role.admin,
@@ -75,7 +92,6 @@ function App() {
             );
             return Promise.resolve({ can });
           }
-
           if (action === "field") {
             const can = await enforcer.enforce(
               role.admin,

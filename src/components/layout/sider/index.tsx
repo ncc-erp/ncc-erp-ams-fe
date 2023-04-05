@@ -10,7 +10,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
-import { EPermissions } from "constants/permissions";
+import { EPermissions, BPermissions } from "constants/permissions";
 
 const {
   RightOutlined,
@@ -124,6 +124,55 @@ export const Sider: React.FC = () => {
                   (item) =>
                     item.name === `${translate("resource.dashboard")}` ||
                     item.name === `${translate("resource.checkin-checkout")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
+        {permissionsData && permissionsData.branchadmin === BPermissions.BRANCNHADMIN &&(
+          <SubMenu
+            title={
+              <span>
+                <SettingOutlined />
+                <span>{translate("resource.asset")}</span>
+              </span>
+            }
+            key={"asset"}
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                  item.name === `${translate("resource.assets")}` ||
+                  item.name === `${translate("resource.assets-assign")}` ||
+                  item.name ===
+                  `${translate("resource.assets-readyToDeploy")}` ||
+                  item.name === `${translate("resource.assets-pending")}` ||
+                  item.name === `${translate("resource.assets-broken")}` ||
+                  item.name ===
+                  `${translate("resource.assets-waiting-confirm")}` ||
+                  item.name ===
+                  `${translate("resource.assets-expires")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;

@@ -69,6 +69,10 @@ import {
 import "styles/request.less";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
+import {
+  usePermissions
+} from "@pankod/refine-core";
+import { BPermissions } from "constants/permissions";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -177,6 +181,8 @@ export const HardwareListWaitingConfirm: React.FC<
       return filters;
     },
   });
+
+  const { data: permissionsData } = usePermissions();
 
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
@@ -496,7 +502,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0
+      ).length > 0 && permissionsData.branchadmin !== BPermissions.BRANCNHADMIN 
     ) {
       setSelectedNotAcceptAndRefuse(true);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
@@ -510,7 +516,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-      ).length > 0
+      ).length > 0 && permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN 
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
@@ -976,11 +982,11 @@ export const HardwareListWaitingConfirm: React.FC<
             className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
-            {initselectedRowKeys
+            {permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN && initselectedRowKeys
               .filter(
                 (item: IAssetsWaiting) =>
                   item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN 
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -1062,6 +1068,7 @@ export const HardwareListWaitingConfirm: React.FC<
               <Space>
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
+                  permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
@@ -1094,6 +1101,7 @@ export const HardwareListWaitingConfirm: React.FC<
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
                   record.assigned_to.id === record.withdraw_from &&
+                  permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
@@ -1123,7 +1131,8 @@ export const HardwareListWaitingConfirm: React.FC<
                   )}
 
                 {record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                  ASSIGNED_STATUS.WAITING_CHECKOUT &&
+                  permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN && (
                     <Button
                       type="primary"
                       shape="round"
@@ -1141,7 +1150,8 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Button>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && 
+                permissionsData?.branchadmin !== BPermissions.BRANCNHADMIN &&(
                   <Button
                     type="primary"
                     shape="round"

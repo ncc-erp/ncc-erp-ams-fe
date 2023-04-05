@@ -3,6 +3,10 @@ export enum EPermissions {
   USER = "0",
 }
 
+export enum BPermissions {
+  BRANCNHADMIN = "1",
+}
+
 export const AccessType = {
   allow: "1",
   refuse: "-1",
@@ -19,6 +23,12 @@ export const Permission = {
   admin: {
     code: "admin",
     name: "admin",
+    default: 0,
+    children: [],
+  },
+  brandadmin:{
+    code: "branchadmin",
+    name: "branchadmin",
     default: 0,
     children: [],
   },

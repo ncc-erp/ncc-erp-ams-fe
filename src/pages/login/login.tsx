@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Row,
   Col,
@@ -14,6 +14,7 @@ import {
 import { Icons } from "@pankod/refine-antd";
 
 import { useLogin, useNavigation, useTranslate } from "@pankod/refine-core";
+import { gapi } from 'gapi-script';
 
 import {
   layoutStyles,
@@ -65,12 +66,29 @@ export const LoginPage: React.FC = () => {
 
   const { signIn } = useGoogleLogin({
     onSuccess: (response) => {
+      
       loginGoogle(response as GoogleLoginResponse);
+    },
+    onFailure: (response) => {
+      console.log(response);
+      
+
     },
     clientId,
     isSignedIn: false,
     cookiePolicy: "single_host_origin",
   });
+
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: 'email',
+      });
+    }
+    gapi.load('client:auth2', start);
+  }, []);
 
   return (
     <Layout style={layoutStyles}>
