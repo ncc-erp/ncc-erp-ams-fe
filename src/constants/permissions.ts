@@ -3,10 +3,6 @@ export enum EPermissions {
   USER = "0",
 }
 
-export enum BPermissions {
-  BRANCNHADMIN = "1",
-}
-
 export const AccessType = {
   allow: "1",
   refuse: "-1",

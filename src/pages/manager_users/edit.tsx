@@ -29,7 +29,6 @@ import {
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
 import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
-import { log } from "console";
 
 type UserCreateProps = {
     isModalVisible: boolean;

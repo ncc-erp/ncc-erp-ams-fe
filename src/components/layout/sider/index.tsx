@@ -10,7 +10,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
-import { EPermissions, BPermissions } from "constants/permissions";
+import { EPermissions} from "constants/permissions";
 
 const {
   RightOutlined,
@@ -149,7 +149,7 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
-        {permissionsData && permissionsData.branchadmin === BPermissions.BRANCNHADMIN &&(
+        {permissionsData && permissionsData.branchadmin === "1" &&(
           <SubMenu
             title={
               <span>
