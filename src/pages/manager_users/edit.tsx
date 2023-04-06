@@ -62,7 +62,6 @@ export const UserEdit = (props: UserCreateProps) => {
     useEffect(() => {
         setPermissionOfUser(data?.permissions);
     }, [data]);
-    console.log(permissionOfUser);
     
 
     const [checkedList, setCheckedList] = useState<any[]>([]);
@@ -90,7 +89,6 @@ export const UserEdit = (props: UserCreateProps) => {
             }
         });
     };
-    console.log(locationSelected);
     
 
     const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);

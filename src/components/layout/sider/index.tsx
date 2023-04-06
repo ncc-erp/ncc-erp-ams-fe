@@ -10,7 +10,7 @@ import {
 import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
-import { EPermissions} from "constants/permissions";
+import { EPermissions } from "constants/permissions";
 
 const {
   RightOutlined,

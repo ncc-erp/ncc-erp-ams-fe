@@ -112,7 +112,6 @@ export const UserCreate = (props: UserCreateProps) => {
         });
 
     };
-    console.log(locationSelected);
 
     const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
     
