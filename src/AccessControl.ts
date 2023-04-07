@@ -129,31 +129,31 @@ p, 1, ${i18n.t("resource.accessory_details")}, (list)
 p, 1, ${i18n.t("resource.accessory_details")}/*, (show)
 
 
-p, branchadmin, ${i18n.t("resource.assets")}, (list)
-p, branchadmin, ${i18n.t("resource.assets")}/*, (show)
+p, 2, ${i18n.t("resource.assets")}, (list)
+p, 2, ${i18n.t("resource.assets")}/*, (show)
 
-p, branchadmin, ${i18n.t("resource.users")}, list
-p, branchadmin, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 2, ${i18n.t("resource.users")}, list
+p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 
-p, branchadmin, ${i18n.t("resource.assets-assign")}, (list)
-p, branchadmin, ${i18n.t("resource.assets-assign")}/*,(show)
+p, 2, ${i18n.t("resource.assets-assign")}, (list)
+p, 2, ${i18n.t("resource.assets-assign")}/*,(show)
 
-p, branchadmin, ${i18n.t("resource.assets-readyToDeploy")}, (list)
-p, branchadmin, ${i18n.t(
+p, 2, ${i18n.t("resource.assets-readyToDeploy")}, (list)
+p, 2, ${i18n.t(
   "resource.assets-readyToDeploy"
 )}/*, (show)
 
-p, branchadmin, ${i18n.t("resource.assets-waiting-confirm")}, list
-p, branchadmin, ${i18n.t("resource.assets-waiting-confirm")}/*, (show)
+p, 2, ${i18n.t("resource.assets-waiting-confirm")}, list
+p, 2, ${i18n.t("resource.assets-waiting-confirm")}/*, (show)
 
-p, branchadmin, ${i18n.t("resource.assets-pending")}, (list)
-p, branchadmin, ${i18n.t("resource.assets-pending")}/*, (show)
+p, 2, ${i18n.t("resource.assets-pending")}, (list)
+p, 2, ${i18n.t("resource.assets-pending")}/*, (show)
 
-p, branchadmin, ${i18n.t("resource.assets-broken")}, (list)
-p, branchadmin, ${i18n.t("resource.assets-broken")}/*,(show)
+p, 2, ${i18n.t("resource.assets-broken")}, (list)
+p, 2, ${i18n.t("resource.assets-broken")}/*,(show)
 
-p, branchadmin, ${i18n.t("resource.assets-expires")}, (list)
-p, branchadmin, ${i18n.t("resource.assets-expires")}/*,(show)
+p, 2, ${i18n.t("resource.assets-expires")}, (list)
+p, 2, ${i18n.t("resource.assets-expires")}/*,(show)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

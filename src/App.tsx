@@ -45,6 +45,7 @@ import { SupplierDetails } from "pages/supplier/details";
 import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
 import { HardwareListExpiration } from "pages/hardware/list-expiration";
+import { EPermissions } from "constants/permissions";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -67,17 +68,17 @@ function App() {
           let role = await authProvider.getPermissions();
           const enforcer = await newEnforcer(model, adapter);
 
-          if (role.branchadmin == 1) {
+          if (role.branchadmin == EPermissions.BRANCHADMIN) {
             if(action === "show"){
               const can = await enforcer.enforce(
-                'branchadmin',
+                role.branchadmin,
                 `${resource}/${params.id}`,
                 action
               );
               return Promise.resolve({ can });
             }else{
               const can = await enforcer.enforce(
-                'branchadmin',
+                role.branchadmin,
                 `${resource}`,
                 action,
               );

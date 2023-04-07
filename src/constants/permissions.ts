@@ -1,6 +1,7 @@
 export enum EPermissions {
   ADMIN = "1",
   USER = "0",
+  BRANCHADMIN = "2",
 }
 
 export const AccessType = {
