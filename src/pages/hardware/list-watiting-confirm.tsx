@@ -6,6 +6,7 @@ import {
   CrudFilters,
   useCreate,
   HttpError,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -28,7 +29,7 @@ import {
 import { Image } from "antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import {
   IAssetsWaiting,
@@ -69,7 +70,7 @@ import {
 import "styles/request.less";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
-import { PermissionsContext } from "context/global/PermissionsContext";
+import { EPermissions } from "constants/permissions";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -80,7 +81,18 @@ export const HardwareListWaitingConfirm: React.FC<
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
 
-  const isAdmin = useContext(PermissionsContext);
+  const { data: permissionsData } = usePermissions();
+  
+  const [ isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    if(permissionsData.admin === EPermissions.ADMIN){
+      setIsAdmin(true);
+    }else{
+      setIsAdmin(false);
+    }
+  }, [permissionsData])
+  
   
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null

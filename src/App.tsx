@@ -46,7 +46,6 @@ import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
 import { HardwareListExpiration } from "pages/hardware/list-expiration";
 import { EPermissions } from "constants/permissions";
-import { PermissionsProvider } from "context/global/PermissionsContext";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -58,7 +57,6 @@ function App() {
   };
 
   return (
-    <PermissionsProvider>
     <Refine
       routerProvider={routerProvider}
       notificationProvider={notificationProvider}
@@ -294,7 +292,6 @@ function App() {
       OffLayoutArea={OffLayoutArea}
       i18nProvider={i18nProvider}
     />
-    </PermissionsProvider>
   );
 }
 

@@ -11,7 +11,6 @@ import { AntdLayout, Menu, Grid, Icons, useMenu } from "@pankod/refine-antd";
 import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 import "../../../styles/antd.less";
 import { EPermissions } from "constants/permissions";
-import { PermissionsContext } from "context/global/PermissionsContext";
 
 const {
   RightOutlined,
@@ -47,8 +46,6 @@ export const Sider: React.FC = () => {
   const { data: permissionsData } = usePermissions();
 
   const SubMenu = Menu.SubMenu;
-  
-  const isAdmin = useContext(PermissionsContext);
 
   const { Link } = useRouterContext();
 
@@ -152,7 +149,7 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
-        {permissionsData && ( isAdmin || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
+        {permissionsData && ( permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
           <SubMenu
             title={
               <span>
