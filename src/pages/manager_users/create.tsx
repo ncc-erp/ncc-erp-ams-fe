@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslate, useCreate } from "@pankod/refine-core";
 import {
     Form,
@@ -31,7 +31,7 @@ import {
     USER_API,
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
-import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
+import { Permission, optionsPermissions, defaultValue, AccessType } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -100,8 +100,8 @@ export const UserCreate = (props: UserCreateProps) => {
 
     const [locationSelected, setSelectedLocation] = useState<any[]>([]);
 
-    const handleCheckboxChange = (e: any, location: any) => {
-        const { checked } = e.target;
+    const handleCheckboxChange = (event: any, location: any) => {
+        const { checked } = event.target;
         
         setSelectedLocation((prevValues) => {
             if (checked) {
@@ -505,10 +505,10 @@ export const UserCreate = (props: UserCreateProps) => {
                                                                         [key.name]: event.target.value
                                                                     };
                                                                 });
-                                                                if (event.target.value === '1' && key.name == 'branchadmin') {
+                                                                if (event.target.value === AccessType.allow && key.name == Permission.branchadmin.name) {
                                                                     setShowCheckboxList(true);
                                                                 }
-                                                                if (event.target.value !== '1' && key.name == 'branchadmin') {
+                                                                if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
                                                                     setShowCheckboxList(false);
                                                                     setSelectedLocation([])
                                                                 }
@@ -539,9 +539,8 @@ export const UserCreate = (props: UserCreateProps) => {
                                                             <div className="checkbox-container">
                                                                     {locationOptions.map((location) => (
                                                                         <Checkbox key={location.value}
-                                                                            onChange={(e) => handleCheckboxChange(e,location.value)}
+                                                                            onChange={(event) => handleCheckboxChange(event, location.value)}
                                                                             className="checkbox"
-                                                                            style={{ marginLeft: 0, width: '30%' }}
                                                                             >
                                                                             {location.label}
                                                                         </Checkbox>

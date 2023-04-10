@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslate, useCustom } from "@pankod/refine-core";
 import {
     Form,
@@ -28,7 +28,7 @@ import {
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
-import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
+import { Permission, optionsPermissions, defaultValue, AccessType } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -64,8 +64,6 @@ export const UserEdit = (props: UserCreateProps) => {
     }, [data]);
     
 
-    const [checkedList, setCheckedList] = useState<any[]>([]);
-
     const [showCheckboxList, setShowCheckboxList] = useState(false);
 
     const [locationSelected, setSelectedLocation] = useState<any[]>(data?.manager_location);
@@ -74,8 +72,8 @@ export const UserEdit = (props: UserCreateProps) => {
         setSelectedLocation(data?.manager_location);
     }, [data]);
 
-    const handleCheckboxChange = (e: any, location: any) => {
-        const { checked } = e.target;
+    const handleCheckboxChange = (event: any, location: any) => {
+        const { checked } = event.target;
 
         setSelectedLocation((prevValues) => {
             if (checked) {
@@ -97,14 +95,16 @@ export const UserEdit = (props: UserCreateProps) => {
         setIsCheckboxSelected(locationSelected.length > 0);
     }, [locationSelected]);
 
+    const [checkedList, setCheckboxSelected] = useState<any[]>([]);
+
     useEffect(() => {
-        if (data?.permissions['branchadmin'] === "1") {
+        if (data?.permissions['branchadmin'] === AccessType.allow) {
             setShowCheckboxList(true);
-            setCheckedList(data?.manager_location);
+            setCheckboxSelected(data?.manager_location);
         }
         else{
             setShowCheckboxList(false);
-            setCheckedList([]);
+            setCheckboxSelected([]);
         }
     }, [data]);
 
@@ -546,14 +546,14 @@ export const UserEdit = (props: UserCreateProps) => {
                                                                         }
                                                                     })
                                                                     
-                                                                    if (event.target.value === '1' && key.name == 'branchadmin') {
+                                                                    if (event.target.value ===  AccessType.allow && key.name ==  Permission.branchadmin.name) {
                                                                         setShowCheckboxList(true);
                                                                     }
-                                                                    if (event.target.value !== '1' && key.name == 'branchadmin') {
+                                                                    if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
                                                                         setShowCheckboxList(false);
                                                                     }
                                                                 }}
-                                                                value={permissionOfUser[key.name]?.toString() ?? '0'}
+                                                                defaultValue={permissionOfUser[key.name]?.toString() ?? '0'}
                                                                 className="radio-actions"
                                                             />
                                                         </Form.Item>
@@ -576,14 +576,12 @@ export const UserEdit = (props: UserCreateProps) => {
                                                         </Col>
                                                         <Col span={17} offset={5} >
                                                             <Form.Item name={`locationIds.${key.name}`}>
-
                                                                 <div className="checkbox-container">
                                                                     {locationOptions.map((location) => (
                                                                         <Checkbox key={location.value}
                                                                             defaultChecked={checkedList.includes(location.value)}
-                                                                            onChange={(e) =>handleCheckboxChange(e,location.value)}
+                                                                            onChange={(event) =>handleCheckboxChange(event, location.value)}
                                                                             className="checkbox"
-                                                                            style={{ marginLeft: 0, width: '30%' }}
                                                                         >
                                                                             {location.label}
                                                                         </Checkbox>

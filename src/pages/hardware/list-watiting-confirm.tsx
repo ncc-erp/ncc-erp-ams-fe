@@ -502,7 +502,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 && permissionsData?.branchadmin !== EPermissions.BRANCHADMIN
+      ).length > 0 && permissionsData?.admin === EPermissions.ADMIN
     ) {
       setSelectedNotAcceptAndRefuse(true);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
@@ -516,7 +516,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-      ).length > 0 && permissionsData?.branchadmin !== EPermissions.BRANCHADMIN
+      ).length > 0 && permissionsData?.admin === EPermissions.ADMIN
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
@@ -539,7 +539,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 &&
+      ).length > 0 && permissionsData?.admin === EPermissions.ADMIN &&
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -982,7 +982,7 @@ export const HardwareListWaitingConfirm: React.FC<
             className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
-            {permissionsData?.branchadmin !== EPermissions.BRANCHADMIN && initselectedRowKeys
+            {permissionsData?.admin === EPermissions.ADMIN && initselectedRowKeys
               .filter(
                 (item: IAssetsWaiting) =>
                   item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -1068,7 +1068,7 @@ export const HardwareListWaitingConfirm: React.FC<
               <Space>
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
-                  permissionsData?.branchadmin !== EPermissions.BRANCHADMIN &&
+                  permissionsData?.admin === EPermissions.ADMIN &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
@@ -1101,7 +1101,7 @@ export const HardwareListWaitingConfirm: React.FC<
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
                   record.assigned_to.id === record.withdraw_from &&
-                  permissionsData?.branchadmin !==  EPermissions.BRANCHADMIN &&
+                  permissionsData?.admin ===  EPermissions.ADMIN &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
@@ -1132,7 +1132,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
                 {record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT &&
-                  permissionsData?.branchadmin !== EPermissions.BRANCHADMIN && (
+                  permissionsData?.admin === EPermissions.ADMIN && (
                     <Button
                       type="primary"
                       shape="round"
@@ -1151,7 +1151,7 @@ export const HardwareListWaitingConfirm: React.FC<
                   )}
 
                 {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && 
-                permissionsData?.branchadmin !== EPermissions.BRANCHADMIN &&(
+                permissionsData?.admin === EPermissions.ADMIN &&(
                   <Button
                     type="primary"
                     shape="round"

@@ -23,7 +23,7 @@ export const Permission = {
     default: 0,
     children: [],
   },
-  brandadmin:{
+  branchadmin:{
     code: "branchadmin",
     name: "branchadmin",
     default: 0,
