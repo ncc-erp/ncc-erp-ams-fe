@@ -276,6 +276,71 @@
       }
     }
   },
+  "software":{
+    "label": {
+      "title":{
+        "all_software": "Tất cả phần mềm",
+        "time": "Thời gian",
+        "location": "Văn phòng",
+        "sum-assets": "Số lượng",
+        "checkout":"Cấp phát",
+        "create": "Tạo phần mềm",
+        "clone": "Clone phần mềm",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "edit": "Cập nhật phần mềm",
+        "detail":"Chi tiết phần mềm",
+        "dateCreate": "Ngày tạo",
+        "updateAt": "Ngày cập nhật",
+        "info": "Thông tin",
+        "key": "Danh sách key"
+      },
+      "field": {
+        "nameCompany": "Công ty",
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "user": "Người dùng",
+        "softwareName": "Tên phần mềm",
+        "dateAdd": "Ngày nhập",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "category":"Thể loại",
+        "manufacturer": "Nhà sản xuất",
+        "software_tag": "Thẻ phần mềm",
+        "total_licenses": "Số lượng key",
+        "version": "Phiên bản",
+        "notes":"Ghi chú",
+        "keyName": "Tên key",
+        "purchase_date":"Ngày mua",
+        "expiration_date": "Ngày hết hạn",
+        "purchase_cost":"Chi phí"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "message":{
+        "required":"bắt buộc"
+      },
+      "placeholder":{
+        "manufacturer":"Lựa chọn nhà sản xuất",
+        "softwareName": "Tên phần mềm",
+        "software_tag": "Thẻ phần mềm",
+        "category": "Lựa chọn thể loại",
+        "version": "Phiên bản"
+      },
+      "button":{
+        "search":"Tìm kiếm",
+        "create":"Thêm mới"
+      }
+    }
+  },
   "request": {
     "label": {
       "field": {
@@ -587,6 +652,8 @@
     "dashboard": "Thống kê",
     "asset": "Thiết bị",
     "assets": "Tất cả",
+    "software": "Phần mềm",
+    "softwares": "Tất cả phần mềm",
     "request": "Tạo request",
     "users": "Tài sản của tôi",
     "category": "Danh mục",

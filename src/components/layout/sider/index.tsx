@@ -200,6 +200,47 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+          <SubMenu
+            title={
+              <span>
+                <SettingOutlined />
+                <span>{translate("resource.software")}</span>
+              </span>
+            }
+            key={"software"}
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.softwares")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
+
         {permissionsData &&
           permissionsData.admin === EPermissions.ADMIN &&
           menuItems

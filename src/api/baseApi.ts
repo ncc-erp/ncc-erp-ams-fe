@@ -9,6 +9,8 @@ export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";
 export const HARDWARE_CHECKOUT_API = "api/v1/hardware/checkout";
 export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
 
+export const SOFTWARE_API = "api/v1/software";
+
 export const MODELS_API = "api/v1/models";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
 

@@ -12,6 +12,9 @@ import {
   HardwareListReadyToDeploy,
 } from "pages/hardware";
 import {
+  SoftwareList,
+} from "pages/software/list";
+import {
   Title,
   Header,
   Sider,
@@ -136,6 +139,13 @@ function App() {
           list: HardwareListBroken,
           options: {
             route: "assets-broken",
+          },
+        },
+        {
+          name: t("resource.softwares"),
+          list: SoftwareList,
+          options: {
+            route: "softwares",
           },
         },
         {
