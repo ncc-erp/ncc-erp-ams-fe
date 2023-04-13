@@ -147,7 +147,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                 defaultSortOrder: getDefaultSortOrder("seats", sorter),
             },
             {
-                key: "freeSeats",
+                key: "free_seats_count",
                 title: "Free Seats",
                 render: (value: number) => <TextField value={value} />,
                 defaultSortOrder: getDefaultSortOrder("freeSeats", sorter),

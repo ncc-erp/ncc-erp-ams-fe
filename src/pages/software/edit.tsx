@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCreate, useCustom, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
 import { IModelSoftware, ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
 import { useEffect, useState } from "react";
@@ -17,21 +17,62 @@ type SoftwareEditProps = {
 
 export const SoftwareEdit = (props: SoftwareEditProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
-
     const t = useTranslate();
-
     const [messageErr, setMessageErr] = useState<ISoftwareCreateRequest>();
-
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+    const [payload, setPayload] = useState<FormData>();
+
+    const { form, formProps } = useForm<ISoftwareCreateRequest>({
+        action: "edit",
+    });
+
+    const { setFields } = form;
+
+    const { selectProps: modelManufactureSelectProps } = useSelect<IModel>({
+        resource: MANUFACTURES_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+
+    });
+
+    const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
+        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],        
+    });
+
+    const {
+        refetch,
+        data: updateData,
+        isLoading,
+    } = useCustom({
+        url: SOFTWARE_API + "/" + data?.id,
+        method: "post",
+        config: {
+            payload: payload,
+        },
+        queryOptions: {
+            enabled: false,
+        },
+    });
 
     const onFinish = (event: ISoftwareCreateRequest) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
-        if (event.name !== undefined) {
-            formData.append("name", event.name);
-        }
-
+        formData.append("name", event.name);
         formData.append("software_tag", event.software_tag);
         formData.append("manufacturer_id", event.manufacturer_id.toString());
         formData.append("category_id", event.category_id.toString());
@@ -39,11 +80,8 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
         formData.append("version", event.version);
         formData.append("_method", "PUT");
         setPayload(formData);
+        form.resetFields();
     };
-    const { formProps, form } = useForm<ISoftwareCreateRequest>({
-        action: "edit",
-    });
-    const { setFields } = form;
 
     useEffect(() => {
         form.resetFields();
@@ -61,22 +99,6 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
         form.resetFields();
     }, [isModalVisible]);
 
-    const [payload, setPayload] = useState<FormData>();
-
-    const {
-        refetch,
-        data: updateData,
-        isLoading,
-    } = useCustom({
-        url: SOFTWARE_API + "/" + data?.id,
-        method: "post",
-        config: {
-            payload: payload,
-        },
-        queryOptions: {
-            enabled: false,
-        },
-    });
     useEffect(() => {
         if (payload) {
             refetch();
@@ -85,6 +107,7 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
             }
         }
     }, [payload]);
+    
     useEffect(() => {
         if (updateData?.data.status === "success") {
             form.resetFields();
@@ -94,32 +117,7 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
             setMessageErr(updateData?.data.messages);
         }
     }, [updateData]);
-
-    const { selectProps: modelManufactureSelectProps } = useSelect<IModel>({
-        resource: MANUFACTURES_API,
-        optionLabel: "name",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-
-    });
-
-    const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
-        resource: CATEGORIES_API,
-        optionLabel: "name",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
-
+    
     return (
         <Form
             {...formProps}
@@ -257,6 +255,7 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                             t("hardware.label.message.required"),
                     },
                 ]}
+                initialValue={data?.notes}
             >
                 <ReactMde
                     selectedTab={selectedTab}
@@ -271,9 +270,9 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
             )}
             <div className="submit">
                 <Button type="primary" htmlType="submit" loading={isLoading}>
-                    {t("software.label.button.create")}
+                    {t("software.label.button.edit")}
                 </Button>
             </div>
         </Form>
-    )
-}
+    );
+};

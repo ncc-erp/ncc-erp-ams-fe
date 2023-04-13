@@ -65,6 +65,9 @@ p, 1, ${i18n.t("resource.softwares")}, (list)|(create)
 p, 1, ${SOFTWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.softwares")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.licenses")}, (list)|(create)
+p, 1, ${i18n.t("resource.licenses")}/*, (edit)|(show)|(checkout)
+
 p, 1, ${i18n.t("resource.request")}, (list)|(create)
 p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 

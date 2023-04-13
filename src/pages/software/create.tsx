@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { CATEGORIES_API, CATEGORIES_SELECT_LIST_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
 import { ISoftwareCreateRequest } from "interfaces/software";
 import { useEffect, useState } from "react";
@@ -77,15 +77,15 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
     });
 
     const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
-        resource: CATEGORIES_API,
-        optionLabel: "name",
+        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
+        optionLabel: "text",
         onSearch: (value) => [
             {
                 field: "search",
                 operator: "containss",
                 value,
             },
-        ],
+        ],        
     });
 
     return (

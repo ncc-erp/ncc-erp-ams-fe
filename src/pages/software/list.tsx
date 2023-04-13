@@ -42,7 +42,7 @@ import {
 import { dateFormat } from "constants/assets";
 import {
     CATEGORIES_API,
-    LOCATION_API,
+    CATEGORIES_SELECT_SOFTWARE_LIST_API,
     SOFTWARE_API,
     STATUS_LABELS_API,
 } from "api/baseApi";
@@ -59,6 +59,7 @@ import { SoftwareSearch } from "./search";
 import { SoftwareClone } from "./clone";
 import { SoftwareEdit } from "./edit";
 import { SoftwareShow } from "./show";
+import { SoftwareCheckout } from "./checkout";
 
 const defaultCheckedList = [
     "id",
@@ -77,22 +78,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const { RangePicker } = DatePicker;
     const { Option } = Select;
 
-    const initselectedRowKeys = useMemo(() => {
-        return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
-    }, [localStorage.getItem("selectedRowKeys")]);
-
-    const { selectProps: locationSelectProps } = useSelect<ICompany>({
-        resource: LOCATION_API,
-        optionLabel: "name",
-        optionValue: "id",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
 
@@ -154,74 +139,9 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState<
-        React.Key[] | ISoftwareResponse[]
-    >(initselectedRowKeys as React.Key[]);
-
-    const onSelectChange = (
-        selectedRowKeys: React.Key[],
-        selectedRows: ISoftwareResponse[]
-    ) => {
-        setSelectedRowKeys(selectedRowKeys);
-    };
-
-    const onSelect = (record: any, selected: boolean) => {
-        if (!selected) {
-            const newSelectRow = initselectedRowKeys.filter(
-                (item: ISoftware) => item.id !== record.id
-            );
-            localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-            setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
-        } else {
-            const newselectedRowKeys = [record, ...initselectedRowKeys];
-            localStorage.setItem(
-                "selectedRowKeys",
-                JSON.stringify(
-                    newselectedRowKeys.filter(function (item, index) {
-                        return newselectedRowKeys.findIndex((item) => item.id === index);
-                    })
-                )
-            );
-            setSelectedRowKeys(newselectedRowKeys.map((item: ISoftware) => item.id));
-        }
-    };
-
-    const onSelectAll = (
-        selected: boolean,
-        selectedRows: ISoftwareResponse[],
-        changeRows: ISoftwareResponse[]
-    ) => {
-        if (!selected) {
-            const unSelectIds = changeRows.map((item: ISoftwareResponse) => item.id);
-            let newSelectedRows = initselectedRowKeys.filter(
-                (item: ISoftwareResponse) => item
-            );
-            newSelectedRows = initselectedRowKeys.filter(
-                (item: any) => !unSelectIds.includes(item.id)
-            );
-
-            localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
-        } else {
-            selectedRows = selectedRows.filter((item: ISoftwareResponse) => item);
-            localStorage.setItem(
-                "selectedRowKeys",
-                JSON.stringify([...initselectedRowKeys, ...selectedRows])
-            );
-            setSelectedRowKeys(selectedRows);
-        }
-    };
-
-    const rowSelection = {
-        selectedRowKeys: initselectedRowKeys.map((item: ISoftware) => item.id),
-        onChange: onSelectChange,
-        onSelect: onSelect,
-        onSelectAll: onSelectAll,
-        onSelectChange,
-    };
-
-    const { selectProps: categorySelectProps } = useSelect<ICategory>({
-        resource: CATEGORIES_API,
-        optionLabel: "name",
+    const { selectProps: categorySelectProps } = useSelect<ISoftware>({
+        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
+        optionLabel: "text",
         onSearch: (value) => [
             {
                 field: "search",
@@ -235,6 +155,8 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         text: item.label,
         value: item.value,
     }));
+
+    const { list } = useNavigation();
 
     const collumns = useMemo(
         () => [
@@ -251,6 +173,9 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     <TextField
                         value={value}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+                        onClick={() => {
+                            list(`licenses?id=${record.id}&name=${value}`);
+                        }}
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
@@ -264,6 +189,17 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("software_tag", sorter),
+            },
+            {
+                key: "version",
+                title: t("software.label.field.version"),
+                render: (value: string, record: any) => (
+                    <TextField
+                        value={value}
+                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("version", sorter),
             },
             {
                 key: "total_licenses",
@@ -290,9 +226,9 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 title: t("software.label.field.manufacturer"),
                 render: (value: ISoftwareResponse) => (
                     <TextField value={value && value.name}
-                        // onClick={() => {
-                        //   list(`manufactures_details?id=${value.id}&name=${value.name}`);
-                        // }}
+                        onClick={() => {
+                            list(`manufactures_details?id=${value.id}&name=${value.name}`);
+                        }}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
@@ -302,7 +238,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 title: t("software.label.field.dateAdd"),
                 render: (value: ISoftware) =>
                     value ? (
-                        <DateField format="LL" value={value ? value.date : ""} />
+                        <DateField format="LL" value={value ? value.datetime : ""} />
                     ) : (
                         ""
                     ),
@@ -318,8 +254,8 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const onClickDropDown = () => setIsActive(!isActive);
 
     const [collumnSelected, setColumnSelected] = useState<string[]>(
-        localStorage.getItem("item_selected") !== null
-            ? JSON.parse(localStorage.getItem("item_selected") as string)
+        localStorage.getItem("item_software_selected") !== null
+            ? JSON.parse(localStorage.getItem("item_software_selected") as string)
             : defaultCheckedList
     );
     const onCheckItem = (value: ICheckboxChange) => {
@@ -333,7 +269,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
-        localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+        localStorage.setItem("item_software_selected", JSON.stringify(collumnSelected));
     }, [collumnSelected]);
 
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
@@ -357,6 +293,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     };
 
     const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+
     const [detailClone, setDetailClone] = useState<ISoftwareResponse>();
     const clone = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
@@ -389,7 +326,8 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             deleted_at: {
                 datetime: "",
                 formatted: ""
-            }
+            },
+            user_can_checkout: false
         };
 
         setDetailClone(dataConvert);
@@ -397,7 +335,13 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     };
 
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
+    useEffect(() => {
+        refreshData();
+    }, [isEditModalVisible]);
+
     const [detailEdit, setDetailEdit] = useState<ISoftwareResponse>();
+
     const edit = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
             id: data.id,
@@ -418,6 +362,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 name: data?.category.name
             },
             version: data.version,
+            user_can_checkout: false,
             created_at: {
                 datetime: "",
                 formatted: ""
@@ -441,8 +386,102 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setDetailEdit(data);
     };
 
-    const [isCheckoutManyKeyModalVisible, setIsCheckoutManyKeyModalVisible] =
-    useState(false);
+    const initselectedRowKeys = useMemo(() => {
+        return JSON.parse(localStorage.getItem("selectedSoftwareRowKeys") as string) || [];
+    }, [localStorage.getItem("selectedSoftwareRowKeys")]);
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<
+        React.Key[] | ISoftwareResponse[]
+    >(initselectedRowKeys as React.Key[]);
+
+    const onSelectChange = (
+        selectedRowKeys: React.Key[],
+        selectedRows: ISoftwareResponse[]
+    ) => {
+        setSelectedRowKeys(selectedRowKeys);
+    };
+
+    const onSelect = (record: any, selected: boolean) => {
+        if (!selected) {
+            const newSelectRow = initselectedRowKeys.filter(
+                (item: ISoftware) => item.id !== record.id
+            );
+            localStorage.setItem("selectedSoftwareRowKeys", JSON.stringify(newSelectRow));
+            setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
+        } else {
+            const newselectedRowKeys = [record, ...initselectedRowKeys];
+            localStorage.setItem(
+                "selectedSoftwareRowKeys",
+                JSON.stringify(
+                    newselectedRowKeys.filter(function (item, index) {
+                        return newselectedRowKeys.findIndex((item) => item.id === index);
+                    })
+                )
+            );
+            setSelectedRowKeys(newselectedRowKeys.map((item: ISoftware) => item.id));
+        }
+    };
+
+    const onSelectAll = (
+        selected: boolean,
+        selectedRows: ISoftwareResponse[],
+        changeRows: ISoftwareResponse[]
+    ) => {
+        if (!selected) {
+            const unSelectIds = changeRows.map((item: ISoftwareResponse) => item.id);
+            let newSelectedRows = initselectedRowKeys.filter(
+                (item: ISoftwareResponse) => item
+            );
+            newSelectedRows = initselectedRowKeys.filter(
+                (item: any) => !unSelectIds.includes(item.id)
+            );
+
+            localStorage.setItem("selectedSoftwareRowKeys", JSON.stringify(newSelectedRows));
+        } else {
+            selectedRows = selectedRows.filter((item: ISoftwareResponse) => item);
+            localStorage.setItem(
+                "selectedSoftwareRowKeys",
+                JSON.stringify([...initselectedRowKeys, ...selectedRows])
+            );
+            setSelectedRowKeys(selectedRows);
+        }
+    };
+
+    const rowSelection = {
+        selectedRowKeys: initselectedRowKeys.map((item: ISoftware) => item.id),
+        onChange: onSelectChange,
+        onSelect: onSelect,
+        onSelectAll: onSelectAll,
+        onSelectChange,
+    };
+
+    const [ isCheckoutManySoftwareModalVisible, setIsCheckoutManySoftwareModalVisible ] = useState(false);
+
+    const handleCheckout = () => {
+        setIsCheckoutManySoftwareModalVisible(!isCheckoutManySoftwareModalVisible);
+    };
+
+    const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+    const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (
+            initselectedRowKeys.filter(
+                (item: ISoftwareResponse) => item.user_can_checkout
+            ).length > 0
+        ) {
+            setSelectedCheckout(true);
+            setSelectdStoreCheckout(
+                initselectedRowKeys
+                  .filter((item: ISoftwareResponse) => item.user_can_checkout)
+                  .map((item: ISoftwareResponse) => item)
+              );
+        } else {
+            setSelectedCheckout(false);
+        }
+    }, [initselectedRowKeys]);
+
+
 
     return (
         <List
@@ -470,20 +509,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                                 `${t("software.label.field.end-date")}`,
                             ]}
                         />
-                    </Form.Item>
-                    <Form.Item
-                        label={t("software.label.title.location")}
-                        name="location"
-                        className={"search-month-location-null"}
-                    >
-                        <Select placeholder={t("all")}>
-                            <Option value={0}>{t("all")}</Option>
-                            {locationSelectProps.options?.map((item: any) => (
-                                <Option value={item.value} key={item.value}>
-                                    {item.label}
-                                </Option>
-                            ))}
-                        </Select>
                     </Form.Item>
                 </Form>
                 <div className="all">
@@ -611,18 +636,18 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
-            {/* <MModal
+            <MModal
                 title={t("hardware.label.title.checkout")}
-                setIsModalVisible={setIsCheckoutManyKeyModalVisible}
-                isModalVisible={isCheckoutManyKeyModalVisible}
+                setIsModalVisible={setIsCheckoutManySoftwareModalVisible}
+                isModalVisible={isCheckoutManySoftwareModalVisible}
             >
-                <SoftwareCheckoutMultipleKey
-                    isModalVisible={isCheckoutManyKeyModalVisible}
-                    setIsModalVisible={setIsCheckoutManyKeyModalVisible}
+                <SoftwareCheckout
+                    isModalVisible={isCheckoutManySoftwareModalVisible}
+                    setIsModalVisible={setIsCheckoutManySoftwareModalVisible}
                     data={selectdStoreCheckout}
                     setSelectedRowKeys={setSelectedRowKeys}
                 />
-            </MModal> */}
+            </MModal>
 
             <div className="checkout-checkin-multiple">
                 <div className="sum-assets">
@@ -635,27 +660,11 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     <Button
                         type="primary"
                         className="btn-select-checkout ant-btn-checkout"
-                        // onClick={handleCheckout}
-                        // disabled={!selectedCheckout}
+                        onClick={handleCheckout}
+                        disabled={!selectedCheckout}
                     >
                         {t("hardware.label.title.checkout")}
                     </Button>
-                    {/* <div className={nameCheckout ? "list-checkouts" : ""}>
-                        <span className="title-remove-name">{nameCheckout}</span>
-                        {initselectedRowKeys
-                            // .filter((item: ISoftwareResponse) => item.user_can_checkin)
-                            .map((item: ISoftwareResponse) => (
-                                <span className="list-checkin" key={item.id}>
-                                    <span className="name-checkin">{item.asset_tag}</span>
-                                    <span
-                                        className="delete-checkin-checkout"
-                                        onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
-                                    >
-                                        <CloseOutlined />
-                                    </span>
-                                </span>
-                            ))}
-                    </div> */}
                 </div>
             </div>
             {loading ? (

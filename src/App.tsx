@@ -48,6 +48,7 @@ import { SupplierDetails } from "pages/supplier/details";
 import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
 import { HardwareListExpiration } from "pages/hardware/list-expiration";
+import { LicensesList } from "pages/licenses/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -146,6 +147,13 @@ function App() {
           list: SoftwareList,
           options: {
             route: "softwares",
+          },
+        },
+        {
+          name: t("resource.licenses"),
+          list: LicensesList,
+          options: {
+            route: "licenses",
           },
         },
         {

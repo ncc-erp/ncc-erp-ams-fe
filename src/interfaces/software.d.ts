@@ -26,6 +26,7 @@ export interface ISoftwareResponse {
     name: string;
   };
   version: string;
+  user_can_checkout: boolean;
   created_at: {
     datetime: string;
     formatted: string;
@@ -66,7 +67,7 @@ export interface IModelSoftware {
 
 export interface ISoftwareLicensesResponse {
   id: number;
-  license: string;
+  licenses: string;
   seats: string;
   freeSeats: number;
   software: {
@@ -100,4 +101,17 @@ export interface ISoftwareLicensesResponse {
 
 export interface ISoftwareLicensesFilterVariables {
   search: string;
+  licenses: string;
+  seats: string;
+  freeSeats: number;
+  software: string;
+  purchase_cost: string;
+  purchase_cost_numeric: string;
+}
+
+export interface ISoftwareRequestMultipleCheckout {
+  softwares: {}[];
+  assigned_user: string;
+  checkout_at: string,
+  notes: string
 }

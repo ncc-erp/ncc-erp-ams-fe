@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
 import { IModelSoftware, ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
 import { useEffect, useState } from "react";
@@ -95,7 +95,7 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
     });
 
     const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
-        resource: CATEGORIES_API,
+        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
         optionLabel: "name",
         onSearch: (value) => [
             {

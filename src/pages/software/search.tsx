@@ -4,7 +4,7 @@ import { Form, Input, Button, FormProps, useSelect, Select } from "@pankod/refin
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { IModel } from "interfaces/model";
-import { CATEGORIES_API, MANUFACTURES_API } from "api/baseApi";
+import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API } from "api/baseApi";
 import { ICategoryResponse } from "interfaces/categories";
 
 type SoftwareSearchProps = {
@@ -30,18 +30,18 @@ export const SoftwareSearch = (props: SoftwareSearchProps) => {
         ],
     });
     
-    const { selectProps: modelCategorySelectProps } = useSelect<ICategoryResponse>({
-        resource: CATEGORIES_API,
-        optionLabel: "name",
-        optionValue: "name",
+    const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
+        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
+        optionLabel: "text",
         onSearch: (value) => [
             {
                 field: "search",
                 operator: "containss",
                 value,
             },
-        ],
+        ],        
     });
+
 
     return (
         <Form
@@ -78,10 +78,6 @@ export const SoftwareSearch = (props: SoftwareSearchProps) => {
                 <Select placeholder={t("software.label.placeholder.category")}
                     {...modelCategorySelectProps}
                 />
-            </Form.Item>
-
-            <Form.Item label={t("software.label.field.propertyType")} name="model">
-                <Input placeholder={t("software.label.placeholder.propertyType")} />
             </Form.Item>
 
             <Form.Item>
