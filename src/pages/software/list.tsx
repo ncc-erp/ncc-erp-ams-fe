@@ -41,19 +41,14 @@ import {
 } from "interfaces/software";
 import { dateFormat } from "constants/assets";
 import {
-    CATEGORIES_API,
     CATEGORIES_SELECT_SOFTWARE_LIST_API,
     SOFTWARE_API,
-    STATUS_LABELS_API,
 } from "api/baseApi";
 import { Spin } from "antd";
-import { ICompany } from "interfaces/company";
 import { DatePicker } from "antd";
 import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
-import { IHardwareFilterVariables } from "interfaces/hardware";
-import { ICategory } from "interfaces";
 import { SoftwareCreate } from "./create";
 import { SoftwareSearch } from "./search";
 import { SoftwareClone } from "./clone";
@@ -65,6 +60,7 @@ const defaultCheckedList = [
     "id",
     "name",
     "category",
+    "total_licenses",
     "version",
     "created_at",
 ];
@@ -184,9 +180,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "software_tag",
                 title: t("software.label.field.software_tag"),
                 render: (value: string, record: any) => (
-                    <TextField
-                        value={value}
-                    />
+                    <TextField value={value}/>
                 ),
                 defaultSortOrder: getDefaultSortOrder("software_tag", sorter),
             },
@@ -194,10 +188,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "version",
                 title: t("software.label.field.version"),
                 render: (value: string, record: any) => (
-                    <TextField
-                        value={value}
-                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-                    />
+                    <TextField value={value}/>
                 ),
                 defaultSortOrder: getDefaultSortOrder("version", sorter),
             },
@@ -205,9 +196,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "total_licenses",
                 title: t("software.label.field.total_licenses"),
                 render: (value: string, record: any) => (
-                    <TextField
-                        value={value}
-                    />
+                    <TextField value={value}/>
                 ),
                 defaultSortOrder: getDefaultSortOrder("total_licenses", sorter),
             },
@@ -747,42 +736,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                                         recordItemId={record.id}
                                     />
                                 </Tooltip>
-                                {/* {record.user_can_checkout === true && (
-                                    <Button
-                                        className="ant-btn-checkout"
-                                        type="primary"
-                                        shape="round"
-                                        size="small"
-                                        loading={
-                                            isLoadingArr[record.id] === undefined
-                                                ? false
-                                                : isLoadingArr[record.id] === false
-                                                    ? false
-                                                    : true
-                                        }
-                                        onClick={() => checkout(record)}
-                                    >
-                                        {t("hardware.label.button.checkout")}
-                                    </Button>
-                                )} */}
-
-                                {/* {record.user_can_checkin === true && (
-                                    <Button
-                                        type="primary"
-                                        shape="round"
-                                        size="small"
-                                        loading={
-                                            isLoadingArr[record.id] === undefined
-                                                ? false
-                                                : isLoadingArr[record.id] === false
-                                                    ? false
-                                                    : true
-                                        }
-                                        onClick={() => checkin(record)}
-                                    >
-                                        {t("hardware.label.button.checkin")}
-                                    </Button>
-                                )} */}
                             </Space>
                         )}
                     />

@@ -55,71 +55,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
         },
     });
 
-    const initselectedRowKeys = useMemo(() => {
-        return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
-    }, [localStorage.getItem("selectedRowKeys")]);
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
-    // const [selectedRowKeys, setSelectedRowKeys] = useState<
-    //     React.Key[] | ISoftwareLicensesResponse[]
-    // >(initselectedRowKeys as React.Key[]);
-    // const onSelectChange = (
-    //     selectedRowKeys: React.Key[],
-    //     selectedRows: ISoftwareResponse[]
-    // ) => {
-    //     setSelectedRowKeys(selectedRowKeys);
-    // };
-    
-    // const onSelect = (record: any, selected: boolean) => {
-    //     if (!selected) {
-    //         const newSelectRow = initselectedRowKeys.filter(
-    //             (item: ISoftware) => item.id !== record.id
-    //         );
-    //         localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-    //         setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
-    //     } else {
-    //         const newselectedRowKeys = [record, ...initselectedRowKeys];
-    //         localStorage.setItem(
-    //             "selectedRowKeys",
-    //             JSON.stringify(
-    //                 newselectedRowKeys.filter(function (item, index) {
-    //                     return newselectedRowKeys.findIndex((item) => item.id === index);
-    //                 })
-    //             )
-    //         );
-    //         setSelectedRowKeys(newselectedRowKeys.map((item: ISoftware) => item.id));
-    //     }
-    // };
-    // const onSelectAll = (
-    //     selected: boolean,
-    //     selectedRows: ISoftwareLicensesResponse[],
-    //     changeRows: ISoftwareLicensesResponse[]
-    // ) => {
-    //     if (!selected) {
-    //         const unSelectIds = changeRows.map((item: ISoftwareLicensesResponse) => item.id);
-    //         let newSelectedRows = initselectedRowKeys.filter(
-    //             (item: ISoftwareLicensesResponse) => item
-    //         );
-    //         newSelectedRows = initselectedRowKeys.filter(
-    //             (item: any) => !unSelectIds.includes(item.id)
-    //         );
-
-    //         localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
-    //     } else {
-    //         selectedRows = selectedRows.filter((item: ISoftwareLicensesResponse) => item);
-    //         localStorage.setItem(
-    //             "selectedRowKeys",
-    //             JSON.stringify([...initselectedRowKeys, ...selectedRows])
-    //         );
-    //         setSelectedRowKeys(selectedRows);
-    //     }
-    // };
-    // const rowSelection = {
-    //     selectedRowKeys: initselectedRowKeys.map((item: ISoftware) => item.id),
-    //     onChange: onSelectChange,
-    //     onSelect: onSelect,
-    //     onSelectAll: onSelectAll,
-    //     onSelectChange,
-    // };
 
     const collumns = useMemo(
         () => [
@@ -142,13 +78,13 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
             },
             {
                 key: "seats",
-                title: "Seats",
+                title: t("software.label.field.total_licenses"),
                 render: (value: number) => <TextField value={value} />,
                 defaultSortOrder: getDefaultSortOrder("seats", sorter),
             },
             {
                 key: "free_seats_count",
-                title: "Free Seats",
+                title: t("software.label.field.free_seats_count"),
                 render: (value: number) => <TextField value={value} />,
                 defaultSortOrder: getDefaultSortOrder("freeSeats", sorter),
             },
@@ -295,101 +231,9 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                             }}
                         >
                             {collumns
-                                // .filter((collumn) => collumnSelected.includes(collumn.key))
                                 .map((col) => (
                                     <Table.Column dataIndex={col.key} {...(col as any)} sorter />
                                 ))}
-                            <Table.Column<ISoftwareResponse>
-                                title={t("table.actions")}
-                                dataIndex="actions"
-                                render={(_, record) => (
-                                    <Space>
-                                        <Tooltip
-                                            title={t("software.label.tooltip.viewDetail")}
-                                            color={"#108ee9"}
-                                        >
-                                            <ShowButton
-                                                hideText
-                                                size="small"
-                                                recordItemId={record.id}
-                                                // onClick={() => show(record)}
-                                            />
-                                        </Tooltip>
-
-                                        <Tooltip
-                                            title={t("software.label.tooltip.clone")}
-                                            color={"#108ee9"}
-                                        >
-                                            <CloneButton
-                                                hideText
-                                                size="small"
-                                                recordItemId={record.id}
-                                                // onClick={() => clone(record)}
-                                            />
-                                        </Tooltip>
-
-                                        <Tooltip
-                                            title={t("software.label.tooltip.edit")}
-                                            color={"#108ee9"}
-                                        >
-                                            <EditButton
-                                                hideText
-                                                size="small"
-                                                recordItemId={record.id}
-                                                // onClick={() => edit(record)}
-                                            />
-                                        </Tooltip>
-
-                                        <Tooltip
-                                            title={t("software.label.tooltip.delete")}
-                                            color={"red"}
-                                        >
-                                            <DeleteButton
-                                                resourceName={SOFTWARE_API}
-                                                hideText
-                                                size="small"
-                                                recordItemId={record.id}
-                                            />
-                                        </Tooltip>
-                                        {/* {record.user_can_checkout === true && (
-                                    <Button
-                                        className="ant-btn-checkout"
-                                        type="primary"
-                                        shape="round"
-                                        size="small"
-                                        loading={
-                                            isLoadingArr[record.id] === undefined
-                                                ? false
-                                                : isLoadingArr[record.id] === false
-                                                    ? false
-                                                    : true
-                                        }
-                                        onClick={() => checkout(record)}
-                                    >
-                                        {t("hardware.label.button.checkout")}
-                                    </Button>
-                                )} */}
-
-                                        {/* {record.user_can_checkin === true && (
-                                    <Button
-                                        type="primary"
-                                        shape="round"
-                                        size="small"
-                                        loading={
-                                            isLoadingArr[record.id] === undefined
-                                                ? false
-                                                : isLoadingArr[record.id] === false
-                                                    ? false
-                                                    : true
-                                        }
-                                        onClick={() => checkin(record)}
-                                    >
-                                        {t("hardware.label.button.checkin")}
-                                    </Button>
-                                )} */}
-                                    </Space>
-                                )}
-                            />
                         </Table>
                     )}
                 </TabPane>

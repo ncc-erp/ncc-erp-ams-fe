@@ -284,11 +284,10 @@
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
         "checkout":"Cấp phát",
-        "create": "Tạo phần mềm",
-        "clone": "Clone phần mềm",
+        "create": "Tạo Key",
         "search_advanced": "Tìm kiếm nâng cao",
-        "edit": "Cập nhật phần mềm",
-        "detail":"Chi tiết phần mềm",
+        "edit": "Cập nhật Key",
+        "detail":"Chi tiết Key",
         "dateCreate": "Ngày tạo",
         "updateAt": "Ngày cập nhật",
         "info": "Thông tin",
@@ -306,8 +305,7 @@
         "checkoutTo": "Cấp phát đến",
         "checkinTo": "Thu hồi từ",
         "user": "Người dùng",
-
-        "dateAdd": "Ngày nhập",
+        "dateAdd": "Ngày mua",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "category":"Thể loại",
@@ -316,8 +314,8 @@
         "total_licenses": "Số lượng key",
         "version": "Phiên bản",
         "notes":"Ghi chú",
-        "keyName": "Tên key"
-
+        "keyName": "Tên key",
+        "dateCheckout": "Ngày cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -337,12 +335,17 @@
         "softwareName": "Tên phần mềm",
         "software_tag": "Thẻ phần mềm",
         "category": "Lựa chọn thể loại",
-        "version": "Phiên bản"
+        "version": "Phiên bản",
+        "user":"Lựa chọn một người dùng",
+        "licenses": "Key",
+        "seats": "Tổng số lượng",
+        "purchase_cost":"Chi phí"
       },
       "button":{
         "search":"Tìm kiếm",
         "create":"Thêm mới",
-        "edit": "Chỉnh sửa"
+        "edit": "Chỉnh sửa",
+        "checkout":"Cấp phát"
       }
     }
   },
@@ -378,6 +381,7 @@
         "manufacturer": "Nhà sản xuất",
         "software_tag": "Thẻ phần mềm",
         "total_licenses": "Số lượng key",
+        "free_seats_count": "Số lượng còn",
         "version": "Phiên bản",
         "notes":"Ghi chú",
         "keyName": "Tên key",
@@ -728,7 +732,7 @@
     "assets": "Tất cả",
     "software": "Phần mềm",
     "softwares": "Tất cả phần mềm",
-    "licenses": "Giấy phép",
+    "licenses": "Key",
     "request": "Tạo request",
     "users": "Tài sản của tôi",
     "category": "Danh mục",

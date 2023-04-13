@@ -115,3 +115,15 @@ export interface ISoftwareRequestMultipleCheckout {
   checkout_at: string,
   notes: string
 }
+
+export interface ILicensesRequestCheckout {
+  id: number,
+  licenses: string
+  assigned_user: string;
+  software: string;
+  checkout_at: {
+    datetime: string;
+    formatted: string;
+  };
+  notes: string
+}

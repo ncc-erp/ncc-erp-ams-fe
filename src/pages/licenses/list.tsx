@@ -35,6 +35,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import {
+    ILicensesRequestCheckout,
     ISoftware,
     ISoftwareLicensesFilterVariables,
     ISoftwareLicensesResponse,
@@ -42,6 +43,7 @@ import {
 import { dateFormat } from "constants/assets";
 import {
     CATEGORIES_SELECT_SOFTWARE_LIST_API,
+    LICENSES_API,
     SOFTWARE_API,
 } from "api/baseApi";
 import { Spin } from "antd";
@@ -49,6 +51,9 @@ import { DatePicker } from "antd";
 import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
+import { LicensesCheckout } from "./checkout";
+import moment from "moment";
+import { LicensesCreate } from "./create";
 
 
 const defaultCheckedList = [
@@ -68,11 +73,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
     const { Title } = Typography;
     const { RangePicker } = DatePicker;
-
-    const initselectedRowKeys = useMemo(() => {
-        return JSON.parse(localStorage.getItem("selectedLicensesRowKeys") as string) || [];
-    }, [localStorage.getItem("selectedLicensesRowKeys")]);
-    console.log(initselectedRowKeys);
 
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -137,23 +137,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     };
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
-
-    const { selectProps: categorySelectProps } = useSelect<ISoftware>({
-        resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
-        optionLabel: "text",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
-
-    const filterCategory = categorySelectProps?.options?.map((item) => ({
-        text: item.label,
-        value: item.value,
-    }));
 
     const collumns = useMemo(
         () => [
@@ -252,8 +235,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
             setColumnSelected(collumnSelected.concat(value.key));
         }
     };
-    console.log(collumnSelected);
-
 
     useEffect(() => {
         localStorage.setItem("item_licenses_selected", JSON.stringify(collumnSelected));
@@ -278,46 +259,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     const handleCreate = () => {
         handleOpenModel();
     };
-
-    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
-    const [detailClone, setDetailClone] = useState<ISoftwareLicensesResponse>();
-    // const clone = (data: ISoftwareLicensesResponse) => {
-    //     const dataConvert: ISoftwareLicensesResponse = {
-    //         id: data.id,
-    //         name: data.name,
-    //         software_tag: data.software_tag,
-    //         total_licenses: data.total_licenses,
-    //         user: {
-    //             id: data?.user.id,
-    //             name: data?.user.name
-    //         },
-    //         manufacturer: {
-    //             id: data?.manufacturer.id,
-    //             name: data?.manufacturer.name
-    //         },
-    //         notes: data?.notes,
-    //         category: {
-    //             id: data?.category.id,
-    //             name: data?.category.name
-    //         },
-    //         version: data.version,
-    //         created_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         },
-    //         updated_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         },
-    //         deleted_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         }
-    //     };
-
-    //     setDetailClone(dataConvert);
-    //     setIsCloneModalVisible(true);
-    // };
 
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
@@ -370,8 +311,28 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     //     setDetailEdit(data);
     // };
 
-    const [isCheckoutManyKeyModalVisible, setIsCheckoutManyKeyModalVisible] =
-        useState(false);
+    const [detailCheckout, setDetailCheckout] = useState<ILicensesRequestCheckout>();
+    const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
+    const checkout = (data: ISoftwareLicensesResponse) => {
+        const dataConvert: ILicensesRequestCheckout = {
+            id: data?.id,
+            licenses: data?.licenses,
+            software: data?.software.name,
+            checkout_at: {
+                datetime: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+                formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+            },
+            assigned_user: "",
+            notes: ""
+        };
+
+        setDetailCheckout(dataConvert);
+        setIsCheckoutModalVisible(true);
+    };
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckoutModalVisible])
 
     return (
         <>
@@ -470,38 +431,17 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                     </div>
                 </div>
 
-                {/* <MModal
-        title={t("software.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
-        isModalVisible={isModalVisible}
-    >
-        <SoftwareCreate
-            setIsModalVisible={setIsModalVisible}
-            isModalVisible={isModalVisible}
-        />
-    </MModal>
-    <MModal
-        title={t("software.label.title.clone")}
-        setIsModalVisible={setIsCloneModalVisible}
-        isModalVisible={isCloneModalVisible}
-    >
-        <SoftwareClone
-            isModalVisible={isCloneModalVisible}
-            setIsModalVisible={setIsCloneModalVisible}
-            data={detailClone}
-        />
-    </MModal>
-    <MModal
-        title={t("software.label.title.search_advanced")}
-        setIsModalVisible={setIsSearchModalVisible}
-        isModalVisible={isSearchModalVisible}
-    >
-        <SoftwareSearch
-            isModalVisible={isSearchModalVisible}
-            setIsModalVisible={setIsSearchModalVisible}
-            searchFormProps={searchFormProps}
-        />
-    </MModal>
+                <MModal
+                    title={t("licenses.label.title.create")}
+                    setIsModalVisible={setIsModalVisible}
+                    isModalVisible={isModalVisible}
+                >
+                    <LicensesCreate
+                        setIsModalVisible={setIsModalVisible}
+                        isModalVisible={isModalVisible}
+                    />
+                </MModal>
+                {/* 
     <MModal
         title={t("software.label.title.edit")}
         setIsModalVisible={setIsEditModalVisible}
@@ -524,18 +464,17 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         />
     </MModal> */}
 
-                {/* <MModal
-        title={t("hardware.label.title.checkout")}
-        setIsModalVisible={setIsCheckoutManyKeyModalVisible}
-        isModalVisible={isCheckoutManyKeyModalVisible}
-    >
-        <SoftwareCheckoutMultipleKey
-            isModalVisible={isCheckoutManyKeyModalVisible}
-            setIsModalVisible={setIsCheckoutManyKeyModalVisible}
-            data={selectdStoreCheckout}
-            setSelectedRowKeys={setSelectedRowKeys}
-        />
-    </MModal> */}
+                <MModal
+                    title={t("hardware.label.title.checkout")}
+                    setIsModalVisible={setIsCheckoutModalVisible}
+                    isModalVisible={isCheckoutModalVisible}
+                >
+                    <LicensesCheckout
+                        isModalVisible={isCheckoutModalVisible}
+                        setIsModalVisible={setIsCheckoutModalVisible}
+                        data={detailCheckout}
+                    />
+                </MModal>
 
                 <div className="checkout-checkin-multiple">
                     <div className="sum-assets">
@@ -543,30 +482,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                             {t("software.label.title.sum-assets")}
                         </span>{" "}
                         : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                    </div>
-                    <div className="checkout-multiple-asset">
-                        <Button
-                            type="primary"
-                            className="btn-select-checkout ant-btn-checkout"
-                        >
-                            {t("hardware.label.title.checkout")}
-                        </Button>
-                        {/* <div className={nameCheckout ? "list-checkouts" : ""}>
-        <span className="title-remove-name">{nameCheckout}</span>
-        {initselectedRowKeys
-            // .filter((item: ISoftwareResponse) => item.user_can_checkin)
-            .map((item: ISoftwareResponse) => (
-                <span className="list-checkin" key={item.id}>
-                    <span className="name-checkin">{item.asset_tag}</span>
-                    <span
-                        className="delete-checkin-checkout"
-                        onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
-                    >
-                        <CloseOutlined />
-                    </span>
-                </span>
-            ))}
-    </div> */}
                     </div>
                 </div>
                 {loading ? (
@@ -606,17 +521,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                             size="small"
                                             recordItemId={record.id} />
                                     </Tooltip>
-
-                                    <Tooltip
-                                        title={t("software.label.tooltip.clone")}
-                                        color={"#108ee9"}
-                                    >
-                                        <CloneButton
-                                            hideText
-                                            size="small"
-                                            recordItemId={record.id} />
-                                    </Tooltip>
-
                                     <Tooltip
                                         title={t("software.label.tooltip.edit")}
                                         color={"#108ee9"}
@@ -632,47 +536,22 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                         color={"red"}
                                     >
                                         <DeleteButton
-                                            resourceName={SOFTWARE_API}
+                                            resourceName={LICENSES_API}
                                             hideText
                                             size="small"
                                             recordItemId={record.id} />
                                     </Tooltip>
-                                    {/* {record.user_can_checkout === true && (
-                            <Button
-                                className="ant-btn-checkout"
-                                type="primary"
-                                shape="round"
-                                size="small"
-                                loading={
-                                    isLoadingArr[record.id] === undefined
-                                        ? false
-                                        : isLoadingArr[record.id] === false
-                                            ? false
-                                            : true
-                                }
-                                onClick={() => checkout(record)}
-                            >
-                                {t("hardware.label.button.checkout")}
-                            </Button>
-                        )} */}
-
-                                    {/* {record.user_can_checkin === true && (
-                            <Button
-                                type="primary"
-                                shape="round"
-                                size="small"
-                                loading={
-                                    isLoadingArr[record.id] === undefined
-                                        ? false
-                                        : isLoadingArr[record.id] === false
-                                            ? false
-                                            : true
-                                }
-                                onClick={() => checkin(record)}
-                            >
-                                {t("hardware.label.button.checkin")}
-                            </Button>
-                        )} */}
+                                    {record.user_can_checkout === true && (
+                                        <Button
+                                            className="ant-btn-checkout"
+                                            type="primary"
+                                            shape="round"
+                                            size="small"
+                                            onClick={() => checkout(record)}
+                                        >
+                                            {t("software.label.button.checkout")}
+                                        </Button>
+                                    )}
                                 </Space>
                             )} />
                     </Table>
