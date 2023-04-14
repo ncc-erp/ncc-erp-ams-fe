@@ -256,6 +256,10 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible(!isModalVisible);
     };
 
+    useEffect(() => {
+        refreshData();
+    }, [isModalVisible]);
+
     const handleCreate = () => {
         handleOpenModel();
     };

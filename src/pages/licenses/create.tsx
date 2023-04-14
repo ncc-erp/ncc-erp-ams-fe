@@ -23,13 +23,11 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
     const software_name = searchParams.get('name');
     const [messageErr, setMessageErr] = useState<ISoftwareCreateRequest>();
 
-    const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-
     const onFinish = (event: ISoftwareLicensesResponse) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
-        formData.append("software_id", "3");
+        formData.append("software_id", software_id ? software_id : "");
         formData.append("licenses", event.licenses.toString());
         formData.append("seats", event.seats.toString());
         formData.append("purchase_date", event.purchase_date.toString() );
