@@ -201,6 +201,14 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("total_licenses", sorter),
             },
             {
+                key: "checkout_count",
+                title: t("software.label.field.checkout_count"),
+                render: (value: string, record: any) => (
+                    <TextField value={value}/>
+                ),
+                defaultSortOrder: getDefaultSortOrder("checkou_count", sorter),
+            },
+            {
                 key: "category",
                 title: t("software.label.field.category"),
                 render: (value: ISoftwareResponse) => <TextField value={value.name} />,
@@ -289,6 +297,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             id: data.id,
             name: data.name,
             software_tag: data.software_tag,
+            checkout_count: data.checkout_count,
             total_licenses: data.total_licenses,
             user: {
                 id: data?.user.id,
@@ -335,6 +344,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         const dataConvert: ISoftwareResponse = {
             id: data.id,
             name: data.name,
+            checkout_count: data.checkout_count,
             software_tag: data.software_tag,
             total_licenses: data.total_licenses,
             user: {

@@ -5,6 +5,7 @@ export interface ISoftware {
   id: string;
   datetime: string;
   date: string;
+  name: string;
 }
 
 export interface ISoftwareResponse {
@@ -12,6 +13,7 @@ export interface ISoftwareResponse {
   name: string;
   software_tag: string;
   total_licenses: number;
+  checkout_count: number;
   user: {
     id: number;
     name: string;
@@ -75,11 +77,11 @@ export interface ISoftwareLicensesResponse {
     name: string;
   };
   purchase_date: {
-    datetime: string;
+    date: string;
     formatted: string;
   };
   expiration_date: {
-    datetime: string;
+    date: string;
     formatted: string;
   };
   purchase_cost: string;
@@ -126,4 +128,33 @@ export interface ILicensesRequestCheckout {
     formatted: string;
   };
   notes: string
+}
+
+export interface ILicensesRequestEdit {
+  id: number,
+  licenses: string
+  seats: string;
+  software: {
+    id: number;
+    name: string;
+  };
+  purchase_date: {
+    date: string;
+    formatted: string;
+  };
+  expiration_date: {
+    date: string;
+    formatted: string;
+  };
+  purchase_cost: string;
+}
+
+export interface ILicensesReponse {
+  id: number,
+  licenses: string
+  seats: string;
+  software: string
+  purchase_date: string
+  expiration_date: string
+  purchase_cost: string;
 }

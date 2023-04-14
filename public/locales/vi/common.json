@@ -388,7 +388,8 @@
         "purchase_date":"Ngày mua",
         "expiration_date": "Ngày hết hạn",
         "purchase_cost":"Chi phí",
-        "dateCheckout": "Ngày cấp phát"
+        "dateCheckout": "Ngày cấp phát",
+        "checkout_count": "Số key đã cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",

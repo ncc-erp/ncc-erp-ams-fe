@@ -36,6 +36,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import {
     ILicensesRequestCheckout,
+    ILicensesRequestEdit,
     ISoftware,
     ISoftwareLicensesFilterVariables,
     ISoftwareLicensesResponse,
@@ -54,6 +55,7 @@ import { useSearchParams } from "react-router-dom";
 import { LicensesCheckout } from "./checkout";
 import moment from "moment";
 import { LicensesCreate } from "./create";
+import { LicensesEdit } from "./edit";
 
 
 const defaultCheckedList = [
@@ -157,9 +159,9 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "software",
                 title: t("licenses.label.field.software"),
-                render: (value: string, record: any) => (
+                render: (value: ISoftware, record: any) => (
                     <TextField
-                        value={record.software.name}
+                        value={value?.name}
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("software", sorter),
@@ -270,44 +272,21 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         refreshData();
     }, [isEditModalVisible]);
 
-    const [detailEdit, setDetailEdit] = useState<ISoftwareLicensesResponse>();
+    const [detailEdit, setDetailEdit] = useState<ILicensesRequestEdit>();
 
-    // const edit = (data: ISoftwareResponse) => {
-    //     const dataConvert: ISoftwareResponse = {
-    //         id: data.id,
-    //         name: data.name,
-    //         software_tag: data.software_tag,
-    //         total_licenses: data.total_licenses,
-    //         user: {
-    //             id: data?.user.id,
-    //             name: data?.user.name
-    //         },
-    //         manufacturer: {
-    //             id: data?.manufacturer.id,
-    //             name: data?.manufacturer.name
-    //         },
-    //         notes: data?.notes,
-    //         category: {
-    //             id: data?.category.id,
-    //             name: data?.category.name
-    //         },
-    //         version: data.version,
-    //         created_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         },
-    //         updated_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         },
-    //         deleted_at: {
-    //             datetime: "",
-    //             formatted: ""
-    //         }
-    //     };
-    //     setDetailEdit(dataConvert);
-    //     setIsEditModalVisible(true);
-    // };
+    const edit = (data: ISoftwareLicensesResponse) => {
+        const dataConvert: ILicensesRequestEdit = {
+            id: data.id,
+            licenses: data.licenses,
+            software: data.software,
+            seats: data.seats,
+            purchase_date: data.purchase_date,
+            expiration_date: data.expiration_date,
+            purchase_cost: data.purchase_cost,
+        };
+        setDetailEdit(dataConvert);
+        setIsEditModalVisible(true);
+    };
 
     // const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     // const show = (data: ISoftwareResponse) => {
@@ -445,18 +424,19 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                         isModalVisible={isModalVisible}
                     />
                 </MModal>
+
+                <MModal
+                    title={t("licenses.label.title.edit")}
+                    setIsModalVisible={setIsEditModalVisible}
+                    isModalVisible={isEditModalVisible}
+                >
+                    <LicensesEdit
+                        isModalVisible={isEditModalVisible}
+                        setIsModalVisible={setIsEditModalVisible}
+                        data={detailEdit}
+                    />
+                </MModal>
                 {/* 
-    <MModal
-        title={t("software.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-    >
-        <SoftwareEdit
-            isModalVisible={isEditModalVisible}
-            setIsModalVisible={setIsEditModalVisible}
-            data={detailEdit}
-        />
-    </MModal>
     <MModal
         title={t("software.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
@@ -532,7 +512,8 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                         <EditButton
                                             hideText
                                             size="small"
-                                            recordItemId={record.id} />
+                                            recordItemId={record.id}
+                                            onClick={() => edit(record)} />
                                     </Tooltip>
 
                                     <Tooltip

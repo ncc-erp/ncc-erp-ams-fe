@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect }
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import { CATEGORIES_API, CATEGORIES_SELECT_LIST_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, LICENSES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
-import { ILicensesRequestCheckout, ISoftwareCreateRequest, ISoftwareLicensesResponse } from "interfaces/software";
+import { ILicensesReponse, ILicensesRequestCheckout, ISoftwareCreateRequest, ISoftwareLicensesResponse } from "interfaces/software";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
@@ -21,7 +21,7 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const software_id = searchParams.get('id');
     const software_name = searchParams.get('name');
-    const [messageErr, setMessageErr] = useState<ISoftwareCreateRequest>();
+    const [messageErr, setMessageErr] = useState<ILicensesReponse>();
 
     const onFinish = (event: ISoftwareLicensesResponse) => {
         setMessageErr(messageErr);
@@ -89,9 +89,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     >
                         <Input placeholder={t("software.label.placeholder.softwareName")} disabled={true} />
                     </Form.Item>
-                    {messageErr?.name && (
+                    {messageErr?.software && (
                         <Typography.Text type="danger">
-                            {messageErr.name[0]}
+                            {messageErr.software[0]}
                         </Typography.Text>
                     )}
 
@@ -110,9 +110,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     >
                         <Input placeholder={t("licenses.label.placeholder.licenses")} />
                     </Form.Item>
-                    {messageErr?.software_tag && (
+                    {messageErr?.licenses && (
                         <Typography.Text type="danger">
-                            {messageErr.software_tag[0]}
+                            {messageErr.licenses[0]}
                         </Typography.Text>
                     )}
 
@@ -131,9 +131,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     >
                         <Input type="number" placeholder={t("licenses.label.placeholder.seats")} />
                     </Form.Item>
-                    {messageErr?.version && (
+                    {messageErr?.seats && (
                         <Typography.Text type="danger">
-                            {messageErr.version[0]}
+                            {messageErr.seats[0]}
                         </Typography.Text>
                     )}
                 </Col>
@@ -153,9 +153,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     >
                         <Input type="date" />
                     </Form.Item>
-                    {messageErr?.manufacturer_id && (
+                    {messageErr?.purchase_date && (
                         <Typography.Text type="danger">
-                            {messageErr.manufacturer_id[0]}
+                            {messageErr.purchase_date[0]}
                         </Typography.Text>
                     )}
 
@@ -174,9 +174,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     >
                         <Input type="date" />
                     </Form.Item>
-                    {messageErr?.manufacturer_id && (
+                    {messageErr?.expiration_date && (
                         <Typography.Text type="danger">
-                            {messageErr.manufacturer_id[0]}
+                            {messageErr.expiration_date[0]}
                         </Typography.Text>
                     )}
 
@@ -197,9 +197,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                             addonAfter={t("hardware.label.field.usd")}
                             placeholder={t("licenses.label.placeholder.purchase_cost")} />
                     </Form.Item>
-                    {messageErr?.version && (
+                    {messageErr?.purchase_cost && (
                         <Typography.Text type="danger">
-                            {messageErr.version[0]}
+                            {messageErr.purchase_cost[0]}
                         </Typography.Text>
                     )}
                 </Col>

@@ -155,6 +155,26 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                     </Row>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
+                            <Title level={5}>{t("software.label.field.total_licenses")}</Title>
+                        </Col>
+                        <Col span={18}>
+                            <Text className="show-asset">
+                                {detail && detail?.total_licenses}
+                            </Text>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col className="gutter-row" span={4}>
+                            <Title level={5}>{t("software.label.field.checkout_count")}</Title>
+                        </Col>
+                        <Col span={18}>
+                            <Text className="show-asset">
+                                {detail && detail?.checkout_count}
+                            </Text>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col className="gutter-row" span={4}>
                             <Title level={5}>{t("software.label.field.version")}</Title>
                         </Col>
                         <Col span={18}>
