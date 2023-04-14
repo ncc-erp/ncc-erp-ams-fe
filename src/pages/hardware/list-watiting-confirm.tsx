@@ -6,6 +6,7 @@ import {
   CrudFilters,
   useCreate,
   HttpError,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -69,6 +70,7 @@ import {
 import "styles/request.less";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
+import { EPermissions } from "constants/permissions";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -79,6 +81,19 @@ export const HardwareListWaitingConfirm: React.FC<
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
 
+  const { data: permissionsData } = usePermissions();
+  
+  const [ isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    if(permissionsData.admin === EPermissions.ADMIN){
+      setIsAdmin(true);
+    }else{
+      setIsAdmin(false);
+    }
+  }, [permissionsData])
+  
+  
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
       ? JSON.parse(localStorage.getItem("item_selected") as string)
@@ -177,6 +192,7 @@ export const HardwareListWaitingConfirm: React.FC<
       return filters;
     },
   });
+
 
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
@@ -496,7 +512,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0
+      ).length > 0 && isAdmin
     ) {
       setSelectedNotAcceptAndRefuse(true);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
@@ -510,7 +526,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-      ).length > 0
+      ).length > 0 && isAdmin
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
@@ -533,7 +549,7 @@ export const HardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 &&
+      ).length > 0 && isAdmin &&
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -976,11 +992,11 @@ export const HardwareListWaitingConfirm: React.FC<
             className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
-            {initselectedRowKeys
+            {isAdmin && initselectedRowKeys
               .filter(
                 (item: IAssetsWaiting) =>
                   item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN 
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -1062,6 +1078,7 @@ export const HardwareListWaitingConfirm: React.FC<
               <Space>
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
+                  isAdmin &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
@@ -1094,6 +1111,7 @@ export const HardwareListWaitingConfirm: React.FC<
                 {record.assigned_to &&
                   record.assigned_to.id !== null &&
                   record.assigned_to.id === record.withdraw_from &&
+                  isAdmin &&
                   record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
@@ -1123,7 +1141,8 @@ export const HardwareListWaitingConfirm: React.FC<
                   )}
 
                 {record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                  ASSIGNED_STATUS.WAITING_CHECKOUT &&
+                  isAdmin && (
                     <Button
                       type="primary"
                       shape="round"
@@ -1141,7 +1160,7 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Button>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && isAdmin &&(
                   <Button
                     type="primary"
                     shape="round"

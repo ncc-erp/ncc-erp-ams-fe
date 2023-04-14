@@ -11,6 +11,7 @@ import {
     Row,
     Col,
     Typography,
+    Checkbox,
 } from "@pankod/refine-antd";
 
 import { Tabs, Radio } from "antd";
@@ -27,7 +28,7 @@ import {
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
-import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
+import { Permission, optionsPermissions, defaultValue, AccessType } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -56,7 +57,56 @@ export const UserEdit = (props: UserCreateProps) => {
         data.permissions = {};
     }
 
-    const [permissionOfUser, setPermissionOfUser] = useState(data?.permissions);
+    const [permissionOfUser, setPermissionOfUser] = useState(data?.permissions);  
+
+    useEffect(() => {
+        setPermissionOfUser(data?.permissions);
+    }, [data]);
+    
+
+    const [showCheckboxList, setShowCheckboxList] = useState(false);
+
+    const [locationSelected, setSelectedLocation] = useState<any[]>(data?.manager_location);
+
+    useEffect(() => {
+        setSelectedLocation(data?.manager_location);
+    }, [data]);
+
+    const handleCheckboxChange = (event: any, location: any) => {
+        const { checked } = event.target;
+
+        setSelectedLocation((prevValues) => {
+            if (checked) {
+                if (prevValues.includes(location)) {
+                    return prevValues;
+                } else {
+                    return [...prevValues, location];
+                }
+            } else {
+                return prevValues.filter((prevValue) => prevValue !== location);
+            }
+        });
+    };
+    
+
+    const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
+
+    useEffect(() => {
+        setIsCheckboxSelected(locationSelected.length > 0);
+    }, [locationSelected]);
+
+    const [checkedList, setCheckboxSelected] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (data?.permissions['branchadmin'] === AccessType.allow) {
+            setShowCheckboxList(true);
+            setCheckboxSelected(data?.manager_location);
+        }
+        else{
+            setShowCheckboxList(false);
+            setCheckboxSelected([]);
+        }
+    }, [data]);
 
     const { form, formProps } = useForm<IUserCreateRequest>({
         action: "edit",
@@ -87,6 +137,8 @@ export const UserEdit = (props: UserCreateProps) => {
             },
         ],
     });
+
+    const locationOptions = locationSelectProps?.options ?? [];
 
     const {
         refetch,
@@ -152,6 +204,8 @@ export const UserEdit = (props: UserCreateProps) => {
         formData.append("activated", "true");
 
         formData.append("permissions", JSON.stringify(permissionOfUser));
+
+        formData.append("manager_location", JSON.stringify(locationSelected));
 
         formData.append("_method", "PUT");
         setPayload(formData);
@@ -479,17 +533,26 @@ export const UserEdit = (props: UserCreateProps) => {
                                                 <Col className="gutter-row" span={6}>
                                                     <div>{t(`user.label.title.${key.name}`)}</div>
                                                 </Col>
-                                                {index < 4 &&
+                                                {index < 5 &&
                                                     <Col className="gutter-row" span={17}>
-                                                        <Form.Item name={`${key.name}`} initialValue={permissionOfUser[key.name]?.toString() ?? '0'}>
+                                                        <Form.Item name={`${key.name}`} initialValue={data?.permissions[key.name]?.toString() ?? '0'}>
                                                             <Radio.Group
                                                                 options={optionsPermissions}
-                                                                onChange={event => setPermissionOfUser((prevState: any) => {
-                                                                    return {
-                                                                        ...prevState,
-                                                                        [key.name]: event.target.value
+                                                                onChange={(event) => {
+                                                                    setPermissionOfUser((prevState: any) => {                                                                        
+                                                                        return {
+                                                                            ...prevState,
+                                                                            [key.name]: event.target.value
+                                                                        }
+                                                                    })
+                                                                    
+                                                                    if (event.target.value ===  AccessType.allow && key.name ==  Permission.branchadmin.name) {
+                                                                        setShowCheckboxList(true);
                                                                     }
-                                                                })}
+                                                                    if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                        setShowCheckboxList(false);
+                                                                    }
+                                                                }}
                                                                 defaultValue={permissionOfUser[key.name]?.toString() ?? '0'}
                                                                 className="radio-actions"
                                                             />
@@ -497,6 +560,38 @@ export const UserEdit = (props: UserCreateProps) => {
                                                     </Col>
                                                 }
                                             </Row>
+                                            {showCheckboxList && index == 2 && (
+                                                <div className="list-permission">
+                                                    <Row
+                                                        gutter={{
+                                                            xs: 8,
+                                                            sm: 16,
+                                                            md: 24,
+                                                            lg: 32
+                                                        }}
+                                                        className="title-row"
+                                                    >
+                                                        <Col className="gutter-row" span={6}>
+                                                            <div>{t(`user.label.title.choose_branchadmin`)}</div>
+                                                        </Col>
+                                                        <Col span={17} offset={5} >
+                                                            <Form.Item name={`locationIds.${key.name}`}>
+                                                                <div className="checkbox-container">
+                                                                    {locationOptions.map((location) => (
+                                                                        <Checkbox key={location.value}
+                                                                            defaultChecked={checkedList.includes(location.value)}
+                                                                            onChange={(event) =>handleCheckboxChange(event, location.value)}
+                                                                            className="checkbox"
+                                                                        >
+                                                                            {location.label}
+                                                                        </Checkbox>
+                                                                    ))}
+                                                                </div>
+                                                            </Form.Item>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            )}
 
                                             {key?.children && key?.children.length > 0 && <hr className="hr-row" />}
                                             {key?.children && key?.children.length > 0 && key?.children?.map((item: any) =>
@@ -519,7 +614,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                                             }
                                                         </Col>
                                                         <Col className="gutter-row" span={17}>
-                                                            <Form.Item name={`${key.name}.${item.code}`} initialValue={permissionOfUser[`${key.name}.${item.code}`]?.toString() ?? '0'}>
+                                                            <Form.Item name={`${key.name}.${item.code}`} initialValue={data?.permissions[`${key.name}.${item.code}`]?.toString() ?? '0'}>
                                                                 <Radio.Group
                                                                     options={optionsPermissions}
                                                                     onChange={event => setPermissionOfUser((prevState: any) => {
@@ -528,7 +623,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                                                             [`${key.name}.${item.code}`]: event.target.value
                                                                         }
                                                                     })}
-                                                                    defaultValue={permissionOfUser[`${key.name}.${item.code}`]?.toString() ?? '0'}
+                                                                    defaultValue={data?.permissions[`${key.name}.${item.code}`]?.toString() ?? '0'}
                                                                     className="radio-actions"
                                                                 />
                                                             </Form.Item>
@@ -542,7 +637,7 @@ export const UserEdit = (props: UserCreateProps) => {
                         </Form.Item>
                     </div>
                     <div className="submit">
-                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                        <Button type="primary" htmlType="submit" disabled={!isCheckboxSelected && showCheckboxList} loading={isLoading}>
                             {t("user.label.button.update")}
                         </Button>
                     </div>

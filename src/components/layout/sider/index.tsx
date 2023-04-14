@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, CSSProperties } from "react";
+import React, { useState, CSSProperties, useContext } from "react";
 
 import {
   useTranslate,
@@ -149,8 +149,7 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
-
-        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+        {permissionsData && ( permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
           <SubMenu
             title={
               <span>

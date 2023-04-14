@@ -32,6 +32,7 @@ export interface IUserCreateRequest {
   two_factor_enrolled: boolean;
   assets_count: number;
   password: string;
+  manager_location: array;
   permissions: {
     admin: string;
     superuser: string;
@@ -150,6 +151,7 @@ export interface IUserResponse {
   avatar: string;
   password: string;
   password_confirmation: string;
+  manager_location: array;
   permissions: {
     admin: string;
     superuser: string;

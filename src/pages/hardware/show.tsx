@@ -58,7 +58,15 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col span={18}>
           <Text className="show-asset">
-            {detail && detail?.manufacturer.name}
+            {detail?.manufacturer ? (
+            <>
+            <Text className="show-asset">
+              {detail && detail?.manufacturer.name}
+            </Text>
+            </>
+          ) : (
+            ""
+          )}
           </Text>
         </Col>
       </Row>

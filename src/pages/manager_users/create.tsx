@@ -12,6 +12,7 @@ import {
     Col,
     Typography,
     Radio,
+    Checkbox,
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -30,7 +31,7 @@ import {
     USER_API,
 } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
-import { Permission, optionsPermissions, defaultValue } from "constants/permissions";
+import { Permission, optionsPermissions, defaultValue, AccessType } from "constants/permissions";
 
 type UserCreateProps = {
     isModalVisible: boolean;
@@ -92,6 +93,32 @@ export const UserCreate = (props: UserCreateProps) => {
         ],
     });
 
+
+    const [showCheckboxList, setShowCheckboxList] = useState(false);
+
+    const locationOptions = locationSelectProps?.options ?? [];
+
+    const [locationSelected, setSelectedLocation] = useState<any[]>([]);
+
+    const handleCheckboxChange = (event: any, location: any) => {
+        const { checked } = event.target;
+        
+        setSelectedLocation((prevValues) => {
+            if (checked) {
+                return [...prevValues, location];
+            } else {
+                return prevValues.filter((prevValue) => prevValue !== location);
+            }
+        });
+
+    };
+
+    const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
+    
+    useEffect(() => {
+        setIsCheckboxSelected(locationSelected.length > 0);
+    }, [locationSelected]);
+
     const { mutate, data: createData, isLoading } = useCreate();
 
     const onFinish = (event: IUserCreateRequest) => {
@@ -143,8 +170,12 @@ export const UserCreate = (props: UserCreateProps) => {
             formData.append("permissions", JSON.stringify(permissionOfUser));
         }
 
+        formData.append("manager_location", JSON.stringify(locationSelected));
+
         setPayload(formData);
         form.resetFields();
+        setSelectedLocation([]);
+        setShowCheckboxList(false);
     };
 
     useEffect(() => {
@@ -175,7 +206,7 @@ export const UserCreate = (props: UserCreateProps) => {
     }, [file]);
 
     const style: React.CSSProperties = { padding: '6px 0' };
-
+    const [showCheckboxes, setShowCheckboxes] = useState(false);
     return (
         <Form
             {...formProps}
@@ -462,17 +493,26 @@ export const UserCreate = (props: UserCreateProps) => {
                                             <Col className="gutter-row" span={6}>
                                                 <div>{t(`user.label.title.${key.name}`)}</div>
                                             </Col>
-                                            {index < 4 &&
+                                            {index < 5 &&
                                                 <Col className="gutter-row" span={17}>
                                                     <Form.Item name={`${key.name}`}>
                                                         <Radio.Group
                                                             options={optionsPermissions}
-                                                            onChange={event => setPermissionOfUser((prevState: any) => {
-                                                                return {
-                                                                    ...prevState,
-                                                                    [key.name]: event.target.value
+                                                            onChange={(event) => {
+                                                                setPermissionOfUser((prevState: any) => {
+                                                                    return {
+                                                                        ...prevState,
+                                                                        [key.name]: event.target.value
+                                                                    };
+                                                                });
+                                                                if (event.target.value === AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                    setShowCheckboxList(true);
                                                                 }
-                                                            })}
+                                                                if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                    setShowCheckboxList(false);
+                                                                    setSelectedLocation([])
+                                                                }
+                                                            }}
                                                             className="radio-actions"
                                                             name={key.name}
                                                         />
@@ -480,6 +520,37 @@ export const UserCreate = (props: UserCreateProps) => {
                                                 </Col>
                                             }
                                         </Row>
+                                        {showCheckboxList && index == 2 && (
+                                            <div className="list-permission">
+                                                <Row
+                                                    gutter={{
+                                                        xs: 8,
+                                                        sm: 16,
+                                                        md: 24,
+                                                        lg: 32
+                                                    }}
+                                                    className="title-row"
+                                                >
+                                                    <Col className="gutter-row" span={6}>
+                                                        <div>{t(`user.label.title.choose_branchadmin`)}</div>
+                                                    </Col>
+                                                    <Col span={17} offset={5} >
+                                                        <Form.Item name={`locationIds.${key.name}`}>
+                                                            <div className="checkbox-container">
+                                                                    {locationOptions.map((location) => (
+                                                                        <Checkbox key={location.value}
+                                                                            onChange={(event) => handleCheckboxChange(event, location.value)}
+                                                                            className="checkbox"
+                                                                            >
+                                                                            {location.label}
+                                                                        </Checkbox>
+                                                                    ))}
+                                                            </div>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        )}
 
                                         {key?.children && key?.children.length > 0 && <hr className="hr-row" />}
                                         {key?.children && key?.children.length > 0 && key?.children?.map((item: any) =>
@@ -524,7 +595,7 @@ export const UserCreate = (props: UserCreateProps) => {
                         </Form.Item>
                     </div>
                     <div className="submit">
-                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                        <Button type="primary" disabled={!isCheckboxSelected && showCheckboxList} htmlType="submit" loading={isLoading}>
                             {t("user.label.button.create")}
                         </Button>
                     </div>
