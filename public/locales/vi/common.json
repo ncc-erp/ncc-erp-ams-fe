@@ -291,7 +291,8 @@
         "dateCreate": "Ngày tạo",
         "updateAt": "Ngày cập nhật",
         "info": "Thông tin",
-        "key": "Danh sách key"
+        "key": "Danh sách key",
+        "users":"Người dùng đã cấp phát"
       },
       "field": {
         "licenses": "Key",
@@ -304,7 +305,7 @@
         "status": "Trạng thái",
         "checkoutTo": "Cấp phát đến",
         "checkinTo": "Thu hồi từ",
-        "user": "Người dùng",
+        "user": "Tên",
         "dateAdd": "Ngày mua",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
@@ -315,7 +316,10 @@
         "version": "Phiên bản",
         "notes":"Ghi chú",
         "keyName": "Tên key",
-        "dateCheckout": "Ngày cấp phát"
+        "dateCheckout": "Ngày cấp phát",
+        "created_at":"Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "allocated_seats_count": "Đã cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -339,7 +343,9 @@
         "user":"Lựa chọn một người dùng",
         "licenses": "Key",
         "seats": "Tổng số lượng",
-        "purchase_cost":"Chi phí"
+        "purchase_cost":"Chi phí",
+        "purchase_date":"Ngày mua",
+        "expiration_date":"Ngày hết hạn"
       },
       "button":{
         "search":"Tìm kiếm",

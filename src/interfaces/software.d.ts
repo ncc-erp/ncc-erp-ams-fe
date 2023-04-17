@@ -58,6 +58,7 @@ export interface ISoftwareFilterVariables {
   software_tag: string;
   category: string;
   manufacturer: string;
+  created_at: [Dayjs, Dayjs];
 }
 
 export interface IModelSoftware {
@@ -72,6 +73,7 @@ export interface ISoftwareLicensesResponse {
   licenses: string;
   seats: string;
   freeSeats: number;
+  allocated_seats_count: number;
   software: {
     id: number;
     name: string;
@@ -105,15 +107,16 @@ export interface ISoftwareLicensesFilterVariables {
   search: string;
   licenses: string;
   seats: string;
-  freeSeats: number;
   software: string;
   purchase_cost: string;
   purchase_cost_numeric: string;
+  purchase_date: string;
+  expiration_date: string;
 }
 
 export interface ISoftwareRequestMultipleCheckout {
   softwares: {}[];
-  assigned_user: string;
+  assigned_users: [];
   checkout_at: string,
   notes: string
 }
@@ -134,6 +137,7 @@ export interface ILicensesRequestEdit {
   id: number,
   licenses: string
   seats: string;
+  allocated_seats_count: number;
   software: {
     id: number;
     name: string;
@@ -147,6 +151,14 @@ export interface ILicensesRequestEdit {
     formatted: string;
   };
   purchase_cost: string;
+  created_at: {
+    datetime: string;
+    formatted: string;
+  };
+  updated_at: {
+    datetime: string;
+    formatted: string;
+  }
 }
 
 export interface ILicensesReponse {
@@ -158,3 +170,16 @@ export interface ILicensesReponse {
   expiration_date: string
   purchase_cost: string;
 }
+
+export interface ILicensesUsersReponse {
+  id: number,
+  license_active: {
+    id: number,
+    name: string
+  };
+  assigned_user: {
+    id: number,
+    name: string,
+  };
+}
+

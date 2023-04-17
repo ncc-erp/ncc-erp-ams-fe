@@ -1,8 +1,7 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCustom, useTranslate } from "@pankod/refine-core";
-import { LICENSES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
-import { IModel } from "interfaces/model";
-import { ILicensesReponse, ILicensesRequestEdit, IModelSoftware, ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
+import { LICENSES_API } from "api/baseApi";
+import { ILicensesReponse, ILicensesRequestEdit } from "interfaces/software";
 import { useEffect, useState } from "react";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
@@ -18,7 +17,7 @@ export const LicensesEdit = (props: LicensesEditProps) => {
     const t = useTranslate();
     const [messageErr, setMessageErr] = useState<ILicensesReponse>();
     const [payload, setPayload] = useState<FormData>();
-    
+
     const { form, formProps } = useForm<ILicensesRequestEdit>({
         action: "edit",
     });

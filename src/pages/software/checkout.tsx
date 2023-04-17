@@ -53,13 +53,13 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
 
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
-  const onFinish = (event: ISoftwareRequestMultipleCheckout) => {
+  const onFinish = (event: ISoftwareRequestMultipleCheckout) => {  
     mutate({
       resource: SOFTWARE_CHECKOUT_API,
       values: {
         softwares: event.softwares,
         checkout_at: event.checkout_at,
-        assigned_user: event.assigned_user,
+        assigned_users: event.assigned_users,
         notes: event.notes !== null ? event.notes : "",
       },
     });
@@ -75,7 +75,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
         name: "checkout_at",
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
-      { name: "assigned_user", value: data?.assigned_user },
+      { name: "assigned_users", value: data?.assigned_users },
     ]);
   }, [data, form, isModalVisible, setFields]);
 
@@ -115,7 +115,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
         <Col className="gutter-row" span={12}>
           <Form.Item
             label={t("software.label.field.checkoutTo")}
-            name="assigned_user"
+            name="assigned_users"
             rules={[
               {
                 required: true,
@@ -128,12 +128,13 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
           >
             <Select
               placeholder={t("software.label.placeholder.user")}
+              mode="multiple"
               {...userSelectProps}
             />
           </Form.Item>
-          {messageErr?.assigned_user && (
+          {messageErr?.assigned_users && (
             <Typography.Text type="danger">
-              {messageErr.assigned_user[0]}
+              {messageErr.assigned_users}
             </Typography.Text>
           )}
           <Form.Item
@@ -152,11 +153,11 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
           >
             <Input type="datetime-local" />
           </Form.Item>
-          {/* {messageErr?.checkout_at && (
+          {messageErr?.checkout_at && (
             <Typography.Text type="danger">
               {messageErr.checkout_at[0]}
             </Typography.Text>
-          )} */}
+          )}
         </Col>
       </Row>
 

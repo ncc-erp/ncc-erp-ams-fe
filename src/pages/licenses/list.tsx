@@ -3,7 +3,6 @@ import {
     IResourceComponentsProps,
     CrudFilters,
     HttpError,
-    useNavigation,
 } from "@pankod/refine-core";
 import {
     List,
@@ -13,7 +12,6 @@ import {
     getDefaultSortOrder,
     DateField,
     Space,
-    CloneButton,
     EditButton,
     DeleteButton,
     CreateButton,
@@ -22,15 +20,12 @@ import {
     Tooltip,
     Checkbox,
     Form,
-    Select,
-    useSelect,
     Typography,
 } from "@pankod/refine-antd";
 import {
     MenuOutlined,
     FileSearchOutlined,
     SyncOutlined,
-    CloseOutlined,
 } from "@ant-design/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
@@ -43,7 +38,6 @@ import {
 } from "interfaces/software";
 import { dateFormat } from "constants/assets";
 import {
-    CATEGORIES_SELECT_SOFTWARE_LIST_API,
     LICENSES_API,
     SOFTWARE_API,
 } from "api/baseApi";
@@ -56,7 +50,8 @@ import { LicensesCheckout } from "./checkout";
 import moment from "moment";
 import { LicensesCreate } from "./create";
 import { LicensesEdit } from "./edit";
-
+import { LicensesShow } from "./show";
+import { LicensesSearch } from "./search";
 
 const defaultCheckedList = [
     "id",
@@ -64,7 +59,8 @@ const defaultCheckedList = [
     "software",
     "purchase_date",
     "expiration_date",
-    "purchase_cost"
+    "purchase_cost",
+    "free_seats_count"
 ];
 
 interface ICheckboxChange {
@@ -99,9 +95,9 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
             let {
                 search,
                 licenses,
-                seats,
-                freeSeats,
-                software
+                purchase_cost,
+                purchase_date,
+                expiration_date
             } = params;
             filters.push(
                 {
@@ -114,9 +110,9 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                     operator: "eq",
                     value: JSON.stringify({
                         licenses,
-                        seats,
-                        freeSeats,
-                        software
+                        purchase_cost,
+                        purchase_date,
+                        expiration_date
                     }),
                 },
             );
@@ -280,19 +276,22 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
             licenses: data.licenses,
             software: data.software,
             seats: data.seats,
+            allocated_seats_count: data.allocated_seats_count,
             purchase_date: data.purchase_date,
             expiration_date: data.expiration_date,
             purchase_cost: data.purchase_cost,
+            created_at: data.created_at,
+            updated_at: data.updated_at
         };
         setDetailEdit(dataConvert);
         setIsEditModalVisible(true);
     };
 
-    // const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-    // const show = (data: ISoftwareResponse) => {
-    //     setIsShowModalVisible(true);
-    //     setDetailEdit(data);
-    // };
+    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+    const show = (data: ILicensesRequestEdit) => {
+        setIsShowModalVisible(true);
+        setDetailEdit(data);
+    };
 
     const [detailCheckout, setDetailCheckout] = useState<ILicensesRequestCheckout>();
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
@@ -436,17 +435,17 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                         data={detailEdit}
                     />
                 </MModal>
-                {/* 
-    <MModal
-        title={t("software.label.title.detail")}
-        setIsModalVisible={setIsShowModalVisible}
-        isModalVisible={isShowModalVisible}
-    >
-        <SoftwareShow
-            setIsModalVisible={setIsShowModalVisible}
-            detail={detailEdit}
-        />
-    </MModal> */}
+
+                <MModal
+                    title={t("licenses.label.title.detail")}
+                    setIsModalVisible={setIsShowModalVisible}
+                    isModalVisible={isShowModalVisible}
+                >
+                    <LicensesShow
+                        setIsModalVisible={setIsShowModalVisible}
+                        detail={detailEdit}
+                    />
+                </MModal>
 
                 <MModal
                     title={t("hardware.label.title.checkout")}
@@ -457,6 +456,18 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                         isModalVisible={isCheckoutModalVisible}
                         setIsModalVisible={setIsCheckoutModalVisible}
                         data={detailCheckout}
+                    />
+                </MModal>
+
+                <MModal
+                    title={t("hardware.label.title.search_advanced")}
+                    setIsModalVisible={setIsSearchModalVisible}
+                    isModalVisible={isSearchModalVisible}
+                >
+                    <LicensesSearch
+                        isModalVisible={isSearchModalVisible}
+                        setIsModalVisible={setIsSearchModalVisible}
+                        searchFormProps={searchFormProps}
                     />
                 </MModal>
 
@@ -503,7 +514,8 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                         <ShowButton
                                             hideText
                                             size="small"
-                                            recordItemId={record.id} />
+                                            recordItemId={record.id}
+                                            onClick={() => show(record)} />
                                     </Tooltip>
                                     <Tooltip
                                         title={t("software.label.tooltip.edit")}
@@ -524,8 +536,10 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                             resourceName={LICENSES_API}
                                             hideText
                                             size="small"
-                                            recordItemId={record.id} />
+                                            recordItemId={record.id} 
+                                            onSuccess={() => refreshData() } />
                                     </Tooltip>
+
                                     {record.user_can_checkout === true && (
                                         <Button
                                             className="ant-btn-checkout"

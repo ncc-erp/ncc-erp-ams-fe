@@ -4,8 +4,7 @@ import { Form, Input, Button, FormProps, useSelect, Select } from "@pankod/refin
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { IModel } from "interfaces/model";
-import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API } from "api/baseApi";
-import { ICategoryResponse } from "interfaces/categories";
+import { CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API } from "api/baseApi";
 
 type SoftwareSearchProps = {
     isModalVisible: boolean;

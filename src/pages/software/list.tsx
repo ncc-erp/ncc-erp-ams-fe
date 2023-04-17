@@ -16,7 +16,6 @@ import {
     CloneButton,
     EditButton,
     DeleteButton,
-    TagField,
     CreateButton,
     Button,
     ShowButton,
@@ -30,7 +29,6 @@ import {
     MenuOutlined,
     FileSearchOutlined,
     SyncOutlined,
-    CloseOutlined,
 } from "@ant-design/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
@@ -42,6 +40,7 @@ import {
 import { dateFormat } from "constants/assets";
 import {
     CATEGORIES_SELECT_SOFTWARE_LIST_API,
+    MANUFACTURES_API,
     SOFTWARE_API,
 } from "api/baseApi";
 import { Spin } from "antd";
@@ -55,6 +54,7 @@ import { SoftwareClone } from "./clone";
 import { SoftwareEdit } from "./edit";
 import { SoftwareShow } from "./show";
 import { SoftwareCheckout } from "./checkout";
+import moment from "moment";
 
 const defaultCheckedList = [
     "id",
@@ -71,11 +71,52 @@ interface ICheckboxChange {
 
 export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
+    const { list } = useNavigation();
     const { RangePicker } = DatePicker;
-    const { Option } = Select;
-
+    const [loading, setLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
+    const menuRef = useRef(null);
+    const [isActive, setIsActive] = useState(false);
+    const onClickDropDown = () => setIsActive(!isActive);
+    const [listening, setListening] = useState(false);
+    const listenForOutsideClicks = (
+        listening: boolean,
+        setListening: (arg0: boolean) => void,
+        menuRef: { current: any },
+        setIsActive: (arg0: boolean) => void
+      ) => {
+        if (listening) return;
+        if (!menuRef.current) return;
+        setListening(true);
+        [`click`, `touchstart`].forEach((type) => {
+          document.addEventListener(`click`, (event) => {
+            const current = menuRef.current;
+            const node = event.target;
+            if (current && current.contains(node)) return;
+            setIsActive(false);
+          });
+        });
+      };
+    useEffect(() => {
+        const aboutController = new AbortController();
+        listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+        return function cleanup() {
+          aboutController.abort();
+        };
+      }, []);
+    const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+    const [detailClone, setDetailClone] = useState<ISoftwareResponse>();
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [detailEdit, setDetailEdit] = useState<ISoftwareResponse>();
+    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+    const [isCheckoutManySoftwareModalVisible, setIsCheckoutManySoftwareModalVisible] = useState(false);
+    const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+    const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+    const dateFromParam = searchParams.get("dateFrom");
+    const dateToParam = searchParams.get("dateTo");
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
         ISoftwareResponse,
@@ -96,7 +137,8 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 name,
                 software_tag,
                 category,
-                manufacturer
+                manufacturer,
+                created_at
             } = params;
             filters.push(
                 {
@@ -114,24 +156,24 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                         manufacturer
                     }),
                 },
+                {
+                    field: "dateFrom",
+                    operator: "eq",
+                    value: created_at
+                      ? created_at[0].format().substring(0, 10)
+                      : undefined,
+                  },
+                  {
+                    field: "dateTo",
+                    operator: "eq",
+                    value: created_at
+                      ? created_at[1].format().substring(0, 10)
+                      : undefined,
+                  },
             );
             return filters;
         },
     });
-
-    const refreshData = () => {
-        tableQueryResult.refetch();
-    };
-
-    const [loading, setLoading] = useState(false);
-
-    const handleRefresh = () => {
-        setLoading(true);
-        setTimeout(() => {
-            refreshData();
-            setLoading(false);
-        }, 300);
-    };
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
@@ -152,7 +194,33 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         value: item.value,
     }));
 
-    const { list } = useNavigation();
+    const { selectProps: manufacturesSelectProps } = useSelect<ISoftware>({
+        resource: MANUFACTURES_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
+
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
+    const handleRefresh = () => {
+        setLoading(true);
+        setTimeout(() => {
+            refreshData();
+            setLoading(false);
+        }, 300);
+    };
+
 
     const collumns = useMemo(
         () => [
@@ -180,7 +248,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "software_tag",
                 title: t("software.label.field.software_tag"),
                 render: (value: string, record: any) => (
-                    <TextField value={value}/>
+                    <TextField value={value} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("software_tag", sorter),
             },
@@ -188,7 +256,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "version",
                 title: t("software.label.field.version"),
                 render: (value: string, record: any) => (
-                    <TextField value={value}/>
+                    <TextField value={value} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("version", sorter),
             },
@@ -196,7 +264,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "total_licenses",
                 title: t("software.label.field.total_licenses"),
                 render: (value: string, record: any) => (
-                    <TextField value={value}/>
+                    <TextField value={value} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("total_licenses", sorter),
             },
@@ -204,7 +272,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 key: "checkout_count",
                 title: t("software.label.field.checkout_count"),
                 render: (value: string, record: any) => (
-                    <TextField value={value}/>
+                    <TextField value={value} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("checkou_count", sorter),
             },
@@ -228,6 +296,10 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                         }}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
                 ),
+                onFilter: (value: number, record: ISoftwareResponse) => {
+                    return record.manufacturer.id === value;
+                },
+                filters: filterManufactures,
                 defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
             },
             {
@@ -244,11 +316,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         ],
         [filterCategory]
     )
-
-    const menuRef = useRef(null);
-
-    const [isActive, setIsActive] = useState(false);
-    const onClickDropDown = () => setIsActive(!isActive);
 
     const [collumnSelected, setColumnSelected] = useState<string[]>(
         localStorage.getItem("item_software_selected") !== null
@@ -269,8 +336,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         localStorage.setItem("item_software_selected", JSON.stringify(collumnSelected));
     }, [collumnSelected]);
 
-    const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-
     const handleSearch = () => {
         handleOpenSearchModel();
     };
@@ -279,8 +344,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setIsSearchModalVisible(!isSearchModalVisible);
     };
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
     const handleOpenModel = () => {
         setIsModalVisible(!isModalVisible);
     };
@@ -288,10 +351,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const handleCreate = () => {
         handleOpenModel();
     };
-
-    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
-
-    const [detailClone, setDetailClone] = useState<ISoftwareResponse>();
     const clone = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
             id: data.id,
@@ -332,13 +391,9 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setIsCloneModalVisible(true);
     };
 
-    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
     useEffect(() => {
         refreshData();
     }, [isEditModalVisible]);
-
-    const [detailEdit, setDetailEdit] = useState<ISoftwareResponse>();
 
     const edit = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
@@ -379,7 +434,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setIsEditModalVisible(true);
     };
 
-    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     const show = (data: ISoftwareResponse) => {
         setIsShowModalVisible(true);
         setDetailEdit(data);
@@ -388,6 +442,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const initselectedRowKeys = useMemo(() => {
         return JSON.parse(localStorage.getItem("selectedSoftwareRowKeys") as string) || [];
     }, [localStorage.getItem("selectedSoftwareRowKeys")]);
+
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<
         React.Key[] | ISoftwareResponse[]
@@ -408,7 +463,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             localStorage.setItem("selectedSoftwareRowKeys", JSON.stringify(newSelectRow));
             setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
         } else {
-            const newselectedRowKeys = [record, ...initselectedRowKeys];
+            const newselectedRowKeys = [record, ...initselectedRowKeys];        
             localStorage.setItem(
                 "selectedSoftwareRowKeys",
                 JSON.stringify(
@@ -454,14 +509,34 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         onSelectChange,
     };
 
-    const [ isCheckoutManySoftwareModalVisible, setIsCheckoutManySoftwareModalVisible ] = useState(false);
-
     const handleCheckout = () => {
         setIsCheckoutManySoftwareModalVisible(!isCheckoutManySoftwareModalVisible);
     };
 
-    const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
-    const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+    const handleDateChange = (val: any, formatString: any) => {
+        if (val !== null) {
+            const [from, to] = Array.from(val || []);
+            localStorage.setItem("purchase_date", formatString ?? "");
+            searchParams.set(
+                "dateFrom",
+                from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+            );
+            searchParams.set(
+                "dateTo",
+                to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+            );
+        } else {
+            searchParams.delete("dateFrom");
+            searchParams.delete("dateTo");
+        }
+
+        setSearchParams(searchParams);
+        searchFormProps.form?.submit();
+    };
+
+    useEffect(() => {
+        searchFormProps.form?.submit();
+    }, [window.location.reload]);
 
     useEffect(() => {
         if (
@@ -472,15 +547,13 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             setSelectedCheckout(true);
             setSelectdStoreCheckout(
                 initselectedRowKeys
-                  .filter((item: ISoftwareResponse) => item.user_can_checkout)
-                  .map((item: ISoftwareResponse) => item)
-              );
+                    .filter((item: ISoftwareResponse) => item.user_can_checkout)
+                    .map((item: ISoftwareResponse) => item)
+            );
         } else {
             setSelectedCheckout(false);
         }
     }, [initselectedRowKeys]);
-
-
 
     return (
         <List
@@ -494,12 +567,23 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             }}>
             <div className="search">
                 <Form
+                    {...searchFormProps}
+                    initialValues={{
+                        created_at:
+                            dateFromParam && dateToParam
+                                ? [
+                                    moment(dateFromParam, "YYYY/MM/DD"),
+                                    moment(dateToParam, "YYYY/MM/DD"),
+                                ]
+                                : "",
+                    }}
                     layout="vertical"
                     className="search-month-location"
+                    onValuesChange={() => searchFormProps.form?.submit()}
                 >
                     <Form.Item
                         label={t("software.label.title.time")}
-                        name="purchase_date"
+                        name="created_at"
                     >
                         <RangePicker
                             format={dateFormat}
@@ -507,6 +591,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                                 `${t("software.label.field.start-date")}`,
                                 `${t("software.label.field.end-date")}`,
                             ]}
+                            onCalendarChange={handleDateChange}
                         />
                     </Form.Item>
                 </Form>
@@ -634,7 +719,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     detail={detailEdit}
                 />
             </MModal>
-
             <MModal
                 title={t("hardware.label.title.checkout")}
                 setIsModalVisible={setIsCheckoutManySoftwareModalVisible}

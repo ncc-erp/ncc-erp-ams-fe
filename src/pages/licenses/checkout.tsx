@@ -18,7 +18,7 @@ import {
     ISoftwareRequestMultipleCheckout,
 } from "interfaces/software"
 
-import { USERS_API, SOFTWARE_CHECKOUT_API, LICENSES_API } from "api/baseApi";
+import { USERS_API, LICENSES_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 
@@ -54,10 +54,10 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
 
     const onFinish = (event: ISoftwareRequestMultipleCheckout) => {
         mutate({
-            resource: LICENSES_API + "/" + data.id + "/checkout",
+            resource: LICENSES_API + data.id + "/checkout",
             values: {
                 checkout_at: event.checkout_at,
-                assigned_user: event.assigned_user,
+                assigned_users: event.assigned_users,
                 notes: event.notes !== null ? event.notes : "",
             },
         });
@@ -131,7 +131,7 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
                 <Col className="gutter-row" span={12}>
                     <Form.Item
                         label={t("licenses.label.field.checkoutTo")}
-                        name="assigned_user"
+                        name="assigned_users"
                         rules={[
                             {
                                 required: true,
@@ -143,13 +143,14 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
                         ]}
                     >
                         <Select
+                            mode="multiple"
                             placeholder={t("licenses.label.placeholder.user")}
                             {...userSelectProps}
                         />
                     </Form.Item>
-                    {messageErr?.assigned_user && (
+                    {messageErr?.assigned_users && (
                         <Typography.Text type="danger">
-                            {messageErr.assigned_user[0]}
+                            {messageErr.assigned_users}
                         </Typography.Text>
                     )}
                     <Form.Item
