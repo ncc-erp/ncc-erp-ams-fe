@@ -319,7 +319,9 @@
         "dateCheckout": "Ngày cấp phát",
         "created_at":"Đã tạo lúc",
         "updated_at": "Cập nhật tại",
-        "allocated_seats_count": "Đã cấp phát"
+        "allocated_seats_count": "Đã cấp phát",
+        "location": "Văn phòng",
+        "department": "Bộ phận"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -660,7 +662,8 @@
         "nameTitle": "Kho",
         "asset": "Tài sản",
         "accessories": "Phụ kiện",
-        "consumables": "Văn phòng phẩm"
+        "consumables": "Văn phòng phẩm",
+        "softwares": "Phần mềm"
       },
       "field": {
         "create": "Thêm mới",
@@ -738,7 +741,7 @@
     "asset": "Thiết bị",
     "assets": "Tất cả",
     "software": "Phần mềm",
-    "softwares": "Tất cả phần mềm",
+    "softwares": "Phần mềm",
     "licenses": "Key",
     "request": "Tạo request",
     "users": "Tài sản của tôi",

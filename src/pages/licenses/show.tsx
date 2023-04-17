@@ -1,9 +1,9 @@
 import { CrudFilters, HttpError, useTranslate } from "@pankod/refine-core";
 import { Typography, Tag, Row, Col, Tabs, Table, useTable, Spin, TextField, getDefaultSortOrder, DateField, Space, Tooltip, ShowButton, CloneButton, EditButton, DeleteButton } from "@pankod/refine-antd";
 import "styles/hardware.less";
-import { ILicensesRequestEdit, ILicensesUsersReponse } from "interfaces/software";
+import { ILicensesRequestEdit, ILicensesUsersReponse, IModelSoftware } from "interfaces/software";
 import { defaultValue } from "constants/permissions";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LICENSES_CHECKOUT_USER_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
 const { Title, Text } = Typography;
@@ -11,10 +11,11 @@ const { Title, Text } = Typography;
 type SoftwareShowProps = {
     setIsModalVisible: (data: boolean) => void;
     detail: ILicensesRequestEdit | undefined;
+    isModalVisible: boolean
 };
 
 export const LicensesShow = (props: SoftwareShowProps) => {
-    const { detail } = props;
+    const { detail, isModalVisible } = props;
     const t = useTranslate();
     const { TabPane } = Tabs;
 
@@ -57,7 +58,7 @@ export const LicensesShow = (props: SoftwareShowProps) => {
                         value={record.assigned_user.id}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("assigned_user.id", sorter),
+                defaultSortOrder: getDefaultSortOrder("id", sorter),
             },
             {
                 key: "name",
@@ -67,11 +68,50 @@ export const LicensesShow = (props: SoftwareShowProps) => {
                         value={record.assigned_user.name}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("assigned_user.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("name", sorter),
             },
+            {
+                key: "checkout_at",
+                title: t("licenses.label.field.dateCheckout"),
+                render: (value: IModelSoftware, record: any) => (
+                    <TextField
+                        value={value.datetime}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("department.name", sorter),
+            },
+            {
+                key: "assigned_user",
+                title: t("licenses.label.field.location"),
+                render: (value: any, record: any) => (
+                    <TextField
+                        value={value.department.location.name}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+            },
+            {
+                key: "assigned_user",
+                title: t("licenses.label.field.department"),
+                render: (value: any, record: any) => (
+                    <TextField
+                        value={value.department.name}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+            },
+            
         ],
         []
     )
+
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
+
+    useEffect(() => {
+        refreshData();
+    }, [isModalVisible])
 
     return (
         <>

@@ -110,7 +110,7 @@ export interface ISoftwareLicensesFilterVariables {
   software: string;
   purchase_cost: string;
   purchase_cost_numeric: string;
-  purchase_date: string;
+  purchase_date: [Dayjs, Dayjs];
   expiration_date: string;
 }
 

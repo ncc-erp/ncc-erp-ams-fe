@@ -31,7 +31,7 @@ export const LicensesSearch = (props: LicensesSearchProps) =>
             <Input type="number" placeholder={t("licenses.label.placeholder.purchase_cost")} />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
             label={t("licenses.label.field.purchase_date")}
             name="purchase_date"
         >
@@ -43,7 +43,7 @@ export const LicensesSearch = (props: LicensesSearchProps) =>
             name="expiration_date"
         >
             <Input type="date" placeholder={t("licenses.label.placeholder.expiration_date")} />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item>
             <Button htmlType="submit" type="primary" className="search-advanced">

@@ -60,7 +60,7 @@ const defaultCheckedList = [
     "purchase_date",
     "expiration_date",
     "purchase_cost",
-    "free_seats_count"
+    "allocated_seats_count"
 ];
 
 interface ICheckboxChange {
@@ -77,6 +77,8 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     const searchParam = searchParams.get("search");
     const software_id = searchParams.get('id');
     const software_name = searchParams.get('name');
+    const dateFromParam = searchParams.get("dateFrom");
+    const dateToParam = searchParams.get("dateTo");
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
         ISoftwareLicensesResponse,
@@ -97,7 +99,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                 licenses,
                 purchase_cost,
                 purchase_date,
-                expiration_date
             } = params;
             filters.push(
                 {
@@ -111,9 +112,21 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                     value: JSON.stringify({
                         licenses,
                         purchase_cost,
-                        purchase_date,
-                        expiration_date
                     }),
+                },
+                {
+                    field: "dateFrom",
+                    operator: "eq",
+                    value: purchase_date
+                        ? purchase_date[0].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "dateTo",
+                    operator: "eq",
+                    value: purchase_date
+                        ? purchase_date[1].format().substring(0, 10)
+                        : undefined,
                 },
             );
             return filters;
@@ -171,19 +184,19 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("seats", sorter),
             },
             {
-                key: "free_seats_count",
-                title: t("licenses.label.field.free_seats_count"),
+                key: "allocated_seats_count",
+                title: t("licenses.label.field.allocated_seats_count"),
                 render: (value: string, record: any) => (
                     <TextField value={value} />
                 ),
-                defaultSortOrder: getDefaultSortOrder("free_seats_count", sorter),
+                defaultSortOrder: getDefaultSortOrder("allocated_seats_count", sorter),
             },
             {
                 key: "purchase_date",
                 title: t("licenses.label.field.dateAdd"),
                 render: (value: ISoftware) =>
                     value ? (
-                        <DateField format="LL" value={value ? value.datetime : ""} />
+                        <DateField format="LL" value={value ? value.date : ""} />
                     ) : (
                         ""
                     ),
@@ -194,7 +207,7 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                 title: t("licenses.label.field.expiration_date"),
                 render: (value: ISoftware) =>
                     value ? (
-                        <DateField format="LL" value={value ? value.datetime : ""} />
+                        <DateField format="LL" value={value ? value.date : ""} />
                     ) : (
                         ""
                     ),
@@ -316,6 +329,30 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         refreshData();
     }, [isCheckoutModalVisible])
 
+    const handleDateChange = (val: any, formatString: any) => {
+        if (val !== null) {
+            const [from, to] = Array.from(val || []);
+            searchParams.set(
+                "dateFrom",
+                from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+            );
+            searchParams.set(
+                "dateTo",
+                to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+            );
+        } else {
+            searchParams.delete("dateFrom");
+            searchParams.delete("dateTo");
+        }
+
+        setSearchParams(searchParams);
+        searchFormProps.form?.submit();
+    }
+
+    useEffect(() => {
+        searchFormProps.form?.submit();
+    }, [window.location.reload]);
+
     return (
         <>
             <Title level={3}>{t("licenses.label.title.licenses")} - {software_name}</Title>
@@ -329,8 +366,19 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                 }}>
                 <div className="search">
                     <Form
+                        {...searchFormProps}
                         layout="vertical"
                         className="search-month-location"
+                        initialValues={{
+                            purchase_date:
+                                dateFromParam && dateToParam
+                                    ? [
+                                        moment(dateFromParam, "YYYY/MM/DD"),
+                                        moment(dateToParam, "YYYY/MM/DD"),
+                                    ]
+                                    : "",
+                        }}
+                        onValuesChange={() => searchFormProps.form?.submit()}
                     >
                         <Form.Item
                             label={t("software.label.title.time")}
@@ -341,7 +389,8 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                 placeholder={[
                                     `${t("software.label.field.start-date")}`,
                                     `${t("software.label.field.end-date")}`,
-                                ]} />
+                                ]}
+                                onCalendarChange={handleDateChange} />
                         </Form.Item>
                     </Form>
                     <div className="all">
@@ -443,6 +492,7 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                 >
                     <LicensesShow
                         setIsModalVisible={setIsShowModalVisible}
+                        isModalVisible={isShowModalVisible}
                         detail={detailEdit}
                     />
                 </MModal>
@@ -536,8 +586,8 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                                             resourceName={LICENSES_API}
                                             hideText
                                             size="small"
-                                            recordItemId={record.id} 
-                                            onSuccess={() => refreshData() } />
+                                            recordItemId={record.id}
+                                            onSuccess={() => refreshData()} />
                                     </Tooltip>
 
                                     {record.user_can_checkout === true && (

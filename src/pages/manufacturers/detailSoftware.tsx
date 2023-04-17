@@ -48,13 +48,13 @@ import { DatePicker } from "antd";
 import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
-import { SoftwareCreate } from "./create";
-import { SoftwareSearch } from "./search";
-import { SoftwareClone } from "./clone";
-import { SoftwareEdit } from "./edit";
-import { SoftwareShow } from "./show";
-import { SoftwareCheckout } from "./checkout";
 import moment from "moment";
+import { SoftwareCreate } from "pages/software/create";
+import { SoftwareClone } from "pages/software/clone";
+import { SoftwareSearch } from "pages/software/search";
+import { SoftwareEdit } from "pages/software/edit";
+import { SoftwareShow } from "pages/software/show";
+import { SoftwareCheckout } from "pages/software/checkout";
 
 const defaultCheckedList = [
     "id",
@@ -69,13 +69,14 @@ interface ICheckboxChange {
     key: string;
 }
 
-export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
+export const ManufacturesDetailsSoftware: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
     const { list } = useNavigation();
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
+    const manufacturer_id = searchParams.get("id");
     const menuRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
@@ -85,26 +86,26 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setListening: (arg0: boolean) => void,
         menuRef: { current: any },
         setIsActive: (arg0: boolean) => void
-      ) => {
+    ) => {
         if (listening) return;
         if (!menuRef.current) return;
         setListening(true);
         [`click`, `touchstart`].forEach((type) => {
-          document.addEventListener(`click`, (event) => {
-            const current = menuRef.current;
-            const node = event.target;
-            if (current && current.contains(node)) return;
-            setIsActive(false);
-          });
+            document.addEventListener(`click`, (event) => {
+                const current = menuRef.current;
+                const node = event.target;
+                if (current && current.contains(node)) return;
+                setIsActive(false);
+            });
         });
-      };
+    };
     useEffect(() => {
         const aboutController = new AbortController();
         listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
         return function cleanup() {
-          aboutController.abort();
+            aboutController.abort();
         };
-      }, []);
+    }, []);
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
@@ -115,9 +116,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const [isCheckoutManySoftwareModalVisible, setIsCheckoutManySoftwareModalVisible] = useState(false);
     const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
     const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
-    const dateFromParam = searchParams.get("dateFrom");
-    const dateToParam = searchParams.get("dateTo");
-
     const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
         ISoftwareResponse,
         HttpError,
@@ -138,7 +136,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 software_tag,
                 category,
                 manufacturer,
-                created_at
             } = params;
             filters.push(
                 {
@@ -156,20 +153,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                         manufacturer
                     }),
                 },
-                {
-                    field: "dateFrom",
-                    operator: "eq",
-                    value: created_at
-                      ? created_at[0].format().substring(0, 10)
-                      : undefined,
-                  },
-                  {
-                    field: "dateTo",
-                    operator: "eq",
-                    value: created_at
-                      ? created_at[1].format().substring(0, 10)
-                      : undefined,
-                  },
             );
             return filters;
         },
@@ -190,22 +173,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     });
 
     const filterCategory = categorySelectProps?.options?.map((item) => ({
-        text: item.label,
-        value: item.value,
-    }));
-
-    const { selectProps: manufacturesSelectProps } = useSelect<ISoftware>({
-        resource: MANUFACTURES_API,
-        optionLabel: "name",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
-    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
         text: item.label,
         value: item.value,
     }));
@@ -291,15 +258,8 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 title: t("software.label.field.manufacturer"),
                 render: (value: ISoftwareResponse) => (
                     <TextField value={value && value.name}
-                        onClick={() => {
-                            list(`manufactures_details?id=${value.id}&name=${value.name}`);
-                        }}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
                 ),
-                onFilter: (value: number, record: ISoftwareResponse) => {
-                    return record.manufacturer.id === value;
-                },
-                filters: filterManufactures,
                 defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
             },
             {
@@ -463,12 +423,12 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             localStorage.setItem("selectedSoftwareRowKeys", JSON.stringify(newSelectRow));
             setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
         } else {
-            const newselectedRowKeys = [record, ...initselectedRowKeys];        
+            const newselectedRowKeys = [record, ...initselectedRowKeys];
             localStorage.setItem(
                 "selectedSoftwareRowKeys",
                 JSON.stringify(
                     newselectedRowKeys.filter(function (item, index) {
-                        return newselectedRowKeys;
+                        return newselectedRowKeys.findIndex((item) => item.id === index);
                     })
                 )
             );
@@ -514,34 +474,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
-        refreshData();
-    }, [isCheckoutManySoftwareModalVisible])
-
-    const handleDateChange = (val: any, formatString: any) => {
-        if (val !== null) {
-            const [from, to] = Array.from(val || []);
-            searchParams.set(
-                "dateFrom",
-                from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-            );
-            searchParams.set(
-                "dateTo",
-                to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-            );
-        } else {
-            searchParams.delete("dateFrom");
-            searchParams.delete("dateTo");
-        }
-
-        setSearchParams(searchParams);
-        searchFormProps.form?.submit();
-    };
-
-    useEffect(() => {
-        searchFormProps.form?.submit();
-    }, [window.location.reload]);
-
-    useEffect(() => {
         if (
             initselectedRowKeys.filter(
                 (item: ISoftwareResponse) => item.user_can_checkout
@@ -559,112 +491,73 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     }, [initselectedRowKeys]);
 
     return (
-        <List
-            title={t("software.label.title.all_software")}
-            pageHeaderProps={{
-                extra: (
-                    <CreateButton onClick={handleCreate}>
-                        {t("software.label.tooltip.create")}
-                    </CreateButton>
-                ),
-            }}>
-            <div className="search">
-                <Form
-                    {...searchFormProps}
-                    initialValues={{
-                        created_at:
-                            dateFromParam && dateToParam
-                                ? [
-                                    moment(dateFromParam, "YYYY/MM/DD"),
-                                    moment(dateToParam, "YYYY/MM/DD"),
-                                ]
-                                : "",
-                    }}
-                    layout="vertical"
-                    className="search-month-location"
-                    onValuesChange={() => searchFormProps.form?.submit()}
-                >
-                    <Form.Item
-                        label={t("software.label.title.time")}
-                        name="created_at"
-                    >
-                        <RangePicker
-                            format={dateFormat}
-                            placeholder={[
-                                `${t("software.label.field.start-date")}`,
-                                `${t("software.label.field.end-date")}`,
-                            ]}
-                            onCalendarChange={handleDateChange}
-                        />
-                    </Form.Item>
-                </Form>
-                <div className="all">
-                    <TableAction searchFormProps={searchFormProps} />
-                    <div className="other_function">
-                        <div className="menu-container" ref={menuRef}>
-                            <div>
-                                <button
-                                    className="menu-trigger"
-                                    style={{
-                                        borderTopLeftRadius: "3px",
-                                        borderBottomLeftRadius: "3px",
-                                    }}
-                                >
-                                    <Tooltip
-                                        title={t("hardware.label.tooltip.refresh")}
-                                        color={"#108ee9"}
-                                    >
-                                        <SyncOutlined
-                                            onClick={handleRefresh}
-                                            style={{ color: "black" }}
-                                        />
-                                    </Tooltip>
-                                </button>
-                            </div>
-                            <div>
-                                <button onClick={onClickDropDown} className="menu-trigger">
-                                    <Tooltip
-                                        title={t("hardware.label.tooltip.columns")}
-                                        color={"#108ee9"}
-                                    >
-                                        <MenuOutlined style={{ color: "black" }} />
-                                    </Tooltip>
-                                </button>
-                            </div>
-                            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
-                                <div className="menu-dropdown">
-                                    {collumns.map((item) => (
-                                        <Checkbox
-                                            className="checkbox"
-                                            key={item.key}
-                                            onChange={() => onCheckItem(item)}
-                                            checked={collumnSelected.includes(item.key)}
-                                        >
-                                            {item.title}
-                                        </Checkbox>
-                                    ))}
-                                </div>
-                            </nav>
-                        </div>
+        <List title="">
+            <div className="all">
+                <TableAction searchFormProps={searchFormProps} />
+                <div className="other_function">
+                    <div className="menu-container" ref={menuRef}>
                         <div>
                             <button
                                 className="menu-trigger"
                                 style={{
-                                    borderTopRightRadius: "3px",
-                                    borderBottomRightRadius: "3px",
+                                    borderTopLeftRadius: "3px",
+                                    borderBottomLeftRadius: "3px",
                                 }}
                             >
                                 <Tooltip
-                                    title={t("hardware.label.tooltip.search")}
+                                    title={t("hardware.label.tooltip.refresh")}
                                     color={"#108ee9"}
                                 >
-                                    <FileSearchOutlined
-                                        onClick={handleSearch}
+                                    <SyncOutlined
+                                        onClick={handleRefresh}
                                         style={{ color: "black" }}
                                     />
                                 </Tooltip>
                             </button>
                         </div>
+                        <div>
+                            <button onClick={onClickDropDown} className="menu-trigger">
+                                <Tooltip
+                                    title={t("hardware.label.tooltip.columns")}
+                                    color={"#108ee9"}
+                                >
+                                    <MenuOutlined style={{ color: "black" }} />
+                                </Tooltip>
+                            </button>
+                        </div>
+                        <nav className={`menu ${isActive ? "active" : "inactive"}`}>
+                            <div className="menu-dropdown">
+                                {collumns.map((item) => (
+                                    <Checkbox
+                                        className="checkbox"
+                                        key={item.key}
+                                        onChange={() => onCheckItem(item)}
+                                        checked={collumnSelected.includes(item.key)}
+                                    >
+                                        {item.title}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                        </nav>
+                    </div>
+                    <div>
+                        <button
+                            className="menu-trigger"
+                            style={{
+                                borderTopRightRadius: "3px",
+                                borderBottomRightRadius: "3px",
+                            }}
+                        >
+                            <Tooltip
+                                title={t("hardware.label.tooltip.search")}
+                                color={"#108ee9"}
+                            >
+                                <FileSearchOutlined
+                                    onClick={handleSearch}
+                                    style={{ color: "black" }}
+                                />
+                            </Tooltip>
+                        </button>
                     </div>
                 </div>
             </div>
