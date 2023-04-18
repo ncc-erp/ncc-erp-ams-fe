@@ -18,8 +18,9 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
     const { setIsModalVisible } = props;
     const t = useTranslate();
     const [messageErr, setMessageErr] = useState<ISoftwareCreateRequest>();
-
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+    const { mutate, data: createData, isLoading } = useCreate();
+    const [payload, setPayload] = useState<FormData>();
 
     const onFinish = (event: ISoftwareCreateRequest) => {
         setMessageErr(messageErr);
@@ -38,12 +39,10 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
         form.resetFields();
     };
 
-
     const { formProps, form } = useForm<ISoftwareCreateRequest>({
         action: "create",
     });
-    const { mutate, data: createData, isLoading } = useCreate();
-    const [payload, setPayload] = useState<FormData>();
+
     useEffect(() => {
         if (payload) {
             mutate({
@@ -85,7 +84,7 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                 operator: "containss",
                 value,
             },
-        ],        
+        ],
     });
 
     return (

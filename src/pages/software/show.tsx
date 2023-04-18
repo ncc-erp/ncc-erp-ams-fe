@@ -135,8 +135,8 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
 
     return (
         <>
-            <Tabs defaultActiveKey={defaultValue.active}>
-                <TabPane tab={t("software.label.title.info")} key={defaultValue.active}>
+            {/* <Tabs defaultActiveKey={defaultValue.active}>
+                <TabPane tab={t("software.label.title.info")} key={defaultValue.active}> */}
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
                             <Title level={5}>{t("software.label.field.softwareName")}</Title>
@@ -229,8 +229,8 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                             <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
                         </Col>
                     </Row>
-                </TabPane>
-                <TabPane tab={t("software.label.title.key")}>
+                {/* </TabPane> */}
+                {/* <TabPane tab={t("software.label.title.key")}>
                     {loading ? (
                         <>
                             <div style={{ paddingTop: "15rem", textAlign: "center" }}>
@@ -256,8 +256,8 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                                 ))}
                         </Table>
                     )}
-                </TabPane>
-            </Tabs>
+                </TabPane> */}
+            {/* </Tabs> */}
         </>
     );
 };

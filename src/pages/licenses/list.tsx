@@ -71,6 +71,17 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
     const { Title } = Typography;
     const { RangePicker } = DatePicker;
+    const [loading, setLoading] = useState(false);
+    const menuRef = useRef(null);
+    const [isActive, setIsActive] = useState(false);
+    const onClickDropDown = () => setIsActive(!isActive);
+    const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [detailEdit, setDetailEdit] = useState<ILicensesRequestEdit>();
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+    const [detailCheckout, setDetailCheckout] = useState<ILicensesRequestCheckout>();
+    const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
 
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -133,11 +144,11 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         },
     });
 
+    const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
     const refreshData = () => {
         tableQueryResult.refetch();
     };
-
-    const [loading, setLoading] = useState(false);
 
     const handleRefresh = () => {
         setLoading(true);
@@ -146,8 +157,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
             setLoading(false);
         }, 300);
     };
-
-    const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
     const collumns = useMemo(
         () => [
@@ -227,11 +236,6 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         []
     )
 
-    const menuRef = useRef(null);
-
-    const [isActive, setIsActive] = useState(false);
-    const onClickDropDown = () => setIsActive(!isActive);
-
     const [collumnSelected, setColumnSelected] = useState<string[]>(
         localStorage.getItem("item_licenses_selected") !== null
             ? JSON.parse(localStorage.getItem("item_licenses_selected") as string)
@@ -250,18 +254,19 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     useEffect(() => {
         localStorage.setItem("item_licenses_selected", JSON.stringify(collumnSelected));
     }, [collumnSelected]);
-
-    const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+   
 
     const handleSearch = () => {
         handleOpenSearchModel();
     };
 
+    const handleCreate = () => {
+        handleOpenModel();
+    };
+
     const handleOpenSearchModel = () => {
         setIsSearchModalVisible(!isSearchModalVisible);
     };
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleOpenModel = () => {
         setIsModalVisible(!isModalVisible);
@@ -269,19 +274,11 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
 
     useEffect(() => {
         refreshData();
-    }, [isModalVisible]);
-
-    const handleCreate = () => {
-        handleOpenModel();
-    };
-
-    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    }, [isModalVisible]);  
 
     useEffect(() => {
         refreshData();
     }, [isEditModalVisible]);
-
-    const [detailEdit, setDetailEdit] = useState<ILicensesRequestEdit>();
 
     const edit = (data: ISoftwareLicensesResponse) => {
         const dataConvert: ILicensesRequestEdit = {
@@ -300,14 +297,11 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
         setIsEditModalVisible(true);
     };
 
-    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     const show = (data: ILicensesRequestEdit) => {
         setIsShowModalVisible(true);
         setDetailEdit(data);
     };
 
-    const [detailCheckout, setDetailCheckout] = useState<ILicensesRequestCheckout>();
-    const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const checkout = (data: ISoftwareLicensesResponse) => {
         const dataConvert: ILicensesRequestCheckout = {
             id: data?.id,

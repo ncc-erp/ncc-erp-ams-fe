@@ -127,7 +127,7 @@ export const ManufacturesDetailsSoftware: React.FC<IResourceComponentsProps> = (
                 order: "desc",
             },
         ],
-        resource: SOFTWARE_API,
+        resource: `${SOFTWARE_API}?manufacturer_id=${manufacturer_id}`,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let {
