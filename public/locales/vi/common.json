@@ -426,7 +426,8 @@
         "admin": "Admin",
         "information": "Thông tin",
         "download_picter": "Tải hình",
-        "permission": "Phân quyền"
+        "permission": "Phân quyền",
+        "role": "Vai trò"
       },
       "message": {
         "required": "bắt buộc"
