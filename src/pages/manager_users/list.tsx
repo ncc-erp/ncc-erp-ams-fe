@@ -303,6 +303,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       password: data?.password,
       password_confirmation: data?.password_confirmation,
       permissions: data?.permissions !== null ? data?.permissions : "",
+      manager_location: data?.manager_location !== null ? data?.manager_location : "",
     };
 
     setDetail(dataConvert);
