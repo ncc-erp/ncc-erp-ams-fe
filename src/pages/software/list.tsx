@@ -22,7 +22,6 @@ import {
     Tooltip,
     Checkbox,
     Form,
-    Select,
     useSelect,
 } from "@pankod/refine-antd";
 import {
@@ -33,6 +32,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import {
+    IModelSoftware,
     ISoftware,
     ISoftwareFilterVariables,
     ISoftwareResponse,
@@ -55,14 +55,15 @@ import { SoftwareEdit } from "./edit";
 import { SoftwareShow } from "./show";
 import { SoftwareCheckout } from "./checkout";
 import moment from "moment";
+import { IModel } from "interfaces/model";
 
 const defaultCheckedList = [
     "id",
     "name",
     "category",
     "total_licenses",
+    'checkout_count',
     "version",
-    "created_at",
 ];
 
 interface ICheckboxChange {
@@ -74,37 +75,10 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const { list } = useNavigation();
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const searchParam = searchParams.get("search");
     const menuRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
-    const [listening, setListening] = useState(false);
-    const listenForOutsideClicks = (
-        listening: boolean,
-        setListening: (arg0: boolean) => void,
-        menuRef: { current: any },
-        setIsActive: (arg0: boolean) => void
-      ) => {
-        if (listening) return;
-        if (!menuRef.current) return;
-        setListening(true);
-        [`click`, `touchstart`].forEach((type) => {
-          document.addEventListener(`click`, (event) => {
-            const current = menuRef.current;
-            const node = event.target;
-            if (current && current.contains(node)) return;
-            setIsActive(false);
-          });
-        });
-      };
-    useEffect(() => {
-        const aboutController = new AbortController();
-        listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
-        return function cleanup() {
-          aboutController.abort();
-        };
-      }, []);
+
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
@@ -115,8 +89,31 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     const [isCheckoutManySoftwareModalVisible, setIsCheckoutManySoftwareModalVisible] = useState(false);
     const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
     const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParam = searchParams.get("search");
     const dateFromParam = searchParams.get("dateFrom");
     const dateToParam = searchParams.get("dateTo");
+
+    const [listening, setListening] = useState(false);
+    const listenForOutsideClicks = (
+        listening: boolean,
+        setListening: (arg0: boolean) => void,
+        menuRef: { current: any },
+        setIsActive: (arg0: boolean) => void
+    ) => {
+        if (listening) return;
+        if (!menuRef.current) return;
+        setListening(true);
+        [`click`, `touchstart`].forEach((type) => {
+            document.addEventListener(`click`, (event) => {
+                const current = menuRef.current;
+                const node = event.target;
+                if (current && current.contains(node)) return;
+                setIsActive(false);
+            });
+        });
+    };
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
         ISoftwareResponse,
@@ -133,7 +130,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let {
-                search,
                 name,
                 software_tag,
                 category,
@@ -160,16 +156,16 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     field: "dateFrom",
                     operator: "eq",
                     value: created_at
-                      ? created_at[0].format().substring(0, 10)
-                      : undefined,
-                  },
-                  {
+                        ? created_at[0].format().substring(0, 10)
+                        : undefined,
+                },
+                {
                     field: "dateTo",
                     operator: "eq",
                     value: created_at
-                      ? created_at[1].format().substring(0, 10)
-                      : undefined,
-                  },
+                        ? created_at[1].format().substring(0, 10)
+                        : undefined,
+                },
             );
             return filters;
         },
@@ -177,7 +173,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-    const { selectProps: categorySelectProps } = useSelect<ISoftware>({
+    const { selectProps: categorySelectProps } = useSelect<IModel>({
         resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
         optionLabel: "text",
         onSearch: (value) => [
@@ -189,12 +185,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         ],
     });
 
-    const filterCategory = categorySelectProps?.options?.map((item) => ({
-        text: item.label,
-        value: item.value,
-    }));
-
-    const { selectProps: manufacturesSelectProps } = useSelect<ISoftware>({
+    const { selectProps: manufacturesSelectProps } = useSelect<IModel>({
         resource: MANUFACTURES_API,
         optionLabel: "name",
         onSearch: (value) => [
@@ -205,22 +196,16 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             },
         ],
     });
-    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
+   
+    const filterCategory = categorySelectProps?.options?.map((item) => ({
         text: item.label,
         value: item.value,
     }));
 
-    const refreshData = () => {
-        tableQueryResult.refetch();
-    };
-    const handleRefresh = () => {
-        setLoading(true);
-        setTimeout(() => {
-            refreshData();
-            setLoading(false);
-        }, 300);
-    };
-
+    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
 
     const collumns = useMemo(
         () => [
@@ -233,7 +218,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "name",
                 title: t("software.label.field.softwareName"),
-                render: (value: string, record: any) => (
+                render: (value: string, record: IModelSoftware) => (
                     <TextField
                         value={value}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
@@ -270,17 +255,17 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             },
             {
                 key: "checkout_count",
-                title: t("software.label.field.checkout_count"),
+                title: t("software.label.field.checkout-count"),
                 render: (value: string, record: any) => (
                     <TextField value={value} />
                 ),
-                defaultSortOrder: getDefaultSortOrder("checkou_count", sorter),
+                defaultSortOrder: getDefaultSortOrder("checkout_count", sorter),
             },
             {
                 key: "category",
                 title: t("software.label.field.category"),
                 render: (value: ISoftwareResponse) => <TextField value={value.name} />,
-                defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("category", sorter),
                 filters: filterCategory,
                 onFilter: (value: number, record: ISoftwareResponse) => {
                     return record.category.id === value;
@@ -300,11 +285,11 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                     return record.manufacturer.id === value;
                 },
                 filters: filterManufactures,
-                defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
             },
             {
                 key: "created_at",
-                title: t("software.label.field.dateAdd"),
+                title: t("software.label.field.created_at"),
                 render: (value: ISoftware) =>
                     value ? (
                         <DateField format="LL" value={value ? value.datetime : ""} />
@@ -314,7 +299,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("created_at.date", sorter),
             },
         ],
-        [filterCategory]
+        [filterCategory, filterManufactures]
     )
 
     const [collumnSelected, setColumnSelected] = useState<string[]>(
@@ -322,6 +307,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             ? JSON.parse(localStorage.getItem("item_software_selected") as string)
             : defaultCheckedList
     );
+
     const onCheckItem = (value: ICheckboxChange) => {
         if (collumnSelected.includes(value.key)) {
             setColumnSelected(
@@ -332,25 +318,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         }
     };
 
-    useEffect(() => {
-        localStorage.setItem("item_software_selected", JSON.stringify(collumnSelected));
-    }, [collumnSelected]);
-
-    const handleSearch = () => {
-        handleOpenSearchModel();
-    };
-
-    const handleOpenSearchModel = () => {
-        setIsSearchModalVisible(!isSearchModalVisible);
-    };
-
-    const handleOpenModel = () => {
-        setIsModalVisible(!isModalVisible);
-    };
-
-    const handleCreate = () => {
-        handleOpenModel();
-    };
     const clone = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
             id: data.id,
@@ -390,10 +357,6 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setDetailClone(dataConvert);
         setIsCloneModalVisible(true);
     };
-
-    useEffect(() => {
-        refreshData();
-    }, [isEditModalVisible]);
 
     const edit = (data: ISoftwareResponse) => {
         const dataConvert: ISoftwareResponse = {
@@ -463,7 +426,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             localStorage.setItem("selectedSoftwareRowKeys", JSON.stringify(newSelectRow));
             setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
         } else {
-            const newselectedRowKeys = [record, ...initselectedRowKeys];        
+            const newselectedRowKeys = [record, ...initselectedRowKeys];
             localStorage.setItem(
                 "selectedSoftwareRowKeys",
                 JSON.stringify(
@@ -513,10 +476,34 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         setIsCheckoutManySoftwareModalVisible(!isCheckoutManySoftwareModalVisible);
     };
 
-    useEffect(() => {
-        refreshData();
-    }, [isCheckoutManySoftwareModalVisible])
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
 
+    const handleRefresh = () => {
+        setLoading(true);
+        setTimeout(() => {
+            refreshData();
+            setLoading(false);
+        }, 300);
+    };
+
+    const handleSearch = () => {
+        handleOpenSearchModel();
+    };
+
+    const handleOpenSearchModel = () => {
+        setIsSearchModalVisible(!isSearchModalVisible);
+    };
+
+    const handleOpenModel = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const handleCreate = () => {
+        handleOpenModel();
+    };
+    
     const handleDateChange = (val: any, formatString: any) => {
         if (val !== null) {
             const [from, to] = Array.from(val || []);
@@ -538,8 +525,20 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
+        localStorage.setItem("item_software_selected", JSON.stringify(collumnSelected));
+    }, [collumnSelected]);
+
+    useEffect(() => {
         searchFormProps.form?.submit();
     }, [window.location.reload]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isEditModalVisible]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckoutManySoftwareModalVisible])
 
     useEffect(() => {
         if (
@@ -557,6 +556,14 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
             setSelectedCheckout(false);
         }
     }, [initselectedRowKeys]);
+
+    useEffect(() => {
+        const aboutController = new AbortController();
+        listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+        return function cleanup() {
+            aboutController.abort();
+        };
+    }, []);
 
     return (
         <List
@@ -611,7 +618,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                                     }}
                                 >
                                     <Tooltip
-                                        title={t("hardware.label.tooltip.refresh")}
+                                        title={t("software.label.tooltip.refresh")}
                                         color={"#108ee9"}
                                     >
                                         <SyncOutlined
@@ -624,7 +631,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                             <div>
                                 <button onClick={onClickDropDown} className="menu-trigger">
                                     <Tooltip
-                                        title={t("hardware.label.tooltip.columns")}
+                                        title={t("software.label.tooltip.columns")}
                                         color={"#108ee9"}
                                     >
                                         <MenuOutlined style={{ color: "black" }} />
@@ -655,7 +662,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                                 }}
                             >
                                 <Tooltip
-                                    title={t("hardware.label.tooltip.search")}
+                                    title={t("software.label.tooltip.search")}
                                     color={"#108ee9"}
                                 >
                                     <FileSearchOutlined
@@ -691,7 +698,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
             <MModal
-                title={t("software.label.title.search_advanced")}
+                title={t("software.label.title.search")}
                 setIsModalVisible={setIsSearchModalVisible}
                 isModalVisible={isSearchModalVisible}
             >
@@ -723,7 +730,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
             <MModal
-                title={t("hardware.label.title.checkout")}
+                title={t("software.label.title.checkout")}
                 setIsModalVisible={setIsCheckoutManySoftwareModalVisible}
                 isModalVisible={isCheckoutManySoftwareModalVisible}
             >
@@ -749,7 +756,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
                         onClick={handleCheckout}
                         disabled={!selectedCheckout}
                     >
-                        {t("hardware.label.title.checkout")}
+                        {t("software.label.title.checkout")}
                     </Button>
                 </div>
             </div>

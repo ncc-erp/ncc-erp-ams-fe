@@ -1,11 +1,10 @@
-import { CrudFilters, HttpError, useTranslate } from "@pankod/refine-core";
-import { Typography, Tag, Row, Col, Tabs, Table, useTable, Spin, TextField, getDefaultSortOrder, DateField, Space, Tooltip, ShowButton, CloneButton, EditButton, DeleteButton } from "@pankod/refine-antd";
+import { HttpError, useTranslate } from "@pankod/refine-core";
+import { Typography, Row, Col, Tabs, Table, useTable, Spin, TextField, getDefaultSortOrder } from "@pankod/refine-antd";
 import "styles/hardware.less";
-import { ILicensesRequestEdit, ILicensesUsersReponse, IModelSoftware } from "interfaces/software";
+import { ILicensesRequestEdit, ILicensesUsersReponse, ILicenses, ILicenseUsers } from "interfaces/license";
 import { defaultValue } from "constants/permissions";
 import { useEffect, useMemo, useState } from "react";
 import { LICENSES_CHECKOUT_USER_API } from "api/baseApi";
-import { useSearchParams } from "react-router-dom";
 const { Title, Text } = Typography;
 
 type SoftwareShowProps = {
@@ -18,11 +17,7 @@ export const LicensesShow = (props: SoftwareShowProps) => {
     const { detail, isModalVisible } = props;
     const t = useTranslate();
     const { TabPane } = Tabs;
-
-    const [loading, setLoading] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const searchParam = searchParams.get("search");
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, tableQueryResult } = useTable<
         ILicensesUsersReponse,
         HttpError
     >({
@@ -33,17 +28,6 @@ export const LicensesShow = (props: SoftwareShowProps) => {
             },
         ],
         resource: LICENSES_CHECKOUT_USER_API + "/" + detail?.id + "/users",
-        onSearch: (params) => {
-            const filters: CrudFilters = [];
-            filters.push(
-                {
-                    field: "search",
-                    operator: "eq",
-                    value: searchParam,
-                },
-            );
-            return filters;
-        },
     });
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
@@ -51,19 +35,19 @@ export const LicensesShow = (props: SoftwareShowProps) => {
     const collumns = useMemo(
         () => [
             {
-                key: "id",
+                key: "user_id",
                 title: "ID",
-                render: (value: number, record: any) => (
+                render: (value: number, record: ILicenseUsers) => (
                     <TextField
-                        value={record.assigned_user.id}
+                        value={record.assigned_user.user_id}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("id", sorter),
+                defaultSortOrder: getDefaultSortOrder("user_id", sorter),
             },
             {
                 key: "name",
                 title: t("licenses.label.field.user"),
-                render: (value: number, record: any) => (
+                render: (value: number, record: ILicenseUsers) => (
                     <TextField
                         value={record.assigned_user.name}
                     />
@@ -72,35 +56,34 @@ export const LicensesShow = (props: SoftwareShowProps) => {
             },
             {
                 key: "checkout_at",
-                title: t("licenses.label.field.dateCheckout"),
-                render: (value: IModelSoftware, record: any) => (
+                title: t("licenses.label.field.checkout_at"),
+                render: (value: ILicenses, record: any) => (
                     <TextField
-                        value={value.datetime}
+                        value={value ? value.datetime : ""}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("department.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
             },
             {
-                key: "assigned_user",
+                key: "location",
                 title: t("licenses.label.field.location"),
-                render: (value: any, record: any) => (
+                render: (value: any, record: ILicenseUsers) => (
                     <TextField
-                        value={value.department.location.name}
+                        value={record.assigned_user.location ? record.assigned_user.location : ""}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("location", sorter),
             },
             {
-                key: "assigned_user",
+                key: "department",
                 title: t("licenses.label.field.department"),
-                render: (value: any, record: any) => (
+                render: (value: any, record: ILicenseUsers) => (
                     <TextField
-                        value={value.department.name}
+                        value={record.assigned_user.department ? record.assigned_user.department : ""}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+                defaultSortOrder: getDefaultSortOrder("department", sorter),
             },
-            
         ],
         []
     )
@@ -143,17 +126,17 @@ export const LicensesShow = (props: SoftwareShowProps) => {
                     </Row>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
-                            <Title level={5}>{t("licenses.label.field.allocated_seats_count")}</Title>
+                            <Title level={5}>{t("licenses.label.field.checkout-count")}</Title>
                         </Col>
                         <Col span={18}>
                             <Text>
-                                {detail && detail?.allocated_seats_count}
+                                {detail && detail?.checkout_count}
                             </Text>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
-                            <Title level={5}>{t("licenses.label.field.dateAdd")}</Title>
+                            <Title level={5}>{t("licenses.label.field.purchase_date")}</Title>
                         </Col>
                         <Col span={18}>
                             <Text>
@@ -199,31 +182,20 @@ export const LicensesShow = (props: SoftwareShowProps) => {
                     </Row>
                 </TabPane>
                 <TabPane tab={t("licenses.label.title.users")}>
-                    {loading ? (
-                        <>
-                            <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-                                <Spin
-                                    tip={`${t("loading")}...`}
-                                    style={{ fontSize: "18px", color: "black" }}
-                                />
-                            </div>
-                        </>
-                    ) : (
-                        <Table
-                            {...tableProps}
-                            rowKey="id"
-                            scroll={{ x: 1000 }}
-                            pagination={{
-                                position: ["topRight", "bottomRight"],
-                                total: pageTotal ? pageTotal : 0,
-                            }}
-                        >
-                            {collumns
-                                .map((col) => (
-                                    <Table.Column dataIndex={col.key} {...(col as any)} sorter />
-                                ))}
-                        </Table>
-                    )}
+                    <Table
+                        {...tableProps}
+                        rowKey="user_id"
+                        scroll={{ x: 1000 }}
+                        pagination={{
+                            position: ["topRight", "bottomRight"],
+                            total: pageTotal ? pageTotal : 0,
+                        }}
+                    >
+                        {collumns
+                            .map((col) => (
+                                <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+                            ))}
+                    </Table>
                 </TabPane>
             </Tabs>
         </>

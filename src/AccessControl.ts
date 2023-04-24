@@ -73,6 +73,8 @@ p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
 p, 1, ${i18n.t("resource.users")}, list
 p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 1, ${i18n.t("resource.users_licenses")}, (list)
+p, 1, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 1, ${i18n.t("resource.category")}, (list)|(create)
 p, 1, ${CATEGORIES_API}/*, (delete)
@@ -92,6 +94,8 @@ p, 1, ${i18n.t("resource.location_details")}/*, (edit)|(show)|(clone)|(checkout)
 
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 0, ${i18n.t("resource.users_licenses")}, (list)
+p, 0, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 1, ${i18n.t("resource.model")}, (list)|(create)
 p, 1, ${MODELS_API}/*, (delete)

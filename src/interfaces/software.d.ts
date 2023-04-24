@@ -1,11 +1,11 @@
 import { Interface } from "readline";
 
 export interface ISoftware {
-  total: number;
   id: string;
+  name: string;
+  total: number;
   datetime: string;
   date: string;
-  name: string;
 }
 
 export interface ISoftwareResponse {
@@ -65,121 +65,26 @@ export interface IModelSoftware {
   id: number;
   name: string;
   datetime: string;
-
-}
-
-export interface ISoftwareLicensesResponse {
-  id: number;
-  licenses: string;
-  seats: string;
-  freeSeats: number;
-  allocated_seats_count: number;
-  software: {
-    id: number;
-    name: string;
-  };
-  purchase_date: {
-    date: string;
-    formatted: string;
-  };
-  expiration_date: {
-    date: string;
-    formatted: string;
-  };
-  purchase_cost: string;
-  purchase_cost_numeric: string;
-  created_at: {
-    datetime: string;
-    formatted: string;
-  };
-  updated_at: {
-    datetime: string;
-    formatted: string;
-  };
-  deleted_at: {
-    datetime: string;
-    formatted: string;
-  };
-  user_can_checkout: boolean;
-}
-
-export interface ISoftwareLicensesFilterVariables {
-  search: string;
-  licenses: string;
-  seats: string;
-  software: string;
-  purchase_cost: string;
-  purchase_cost_numeric: string;
-  purchase_date: [Dayjs, Dayjs];
-  expiration_date: string;
 }
 
 export interface ISoftwareRequestMultipleCheckout {
   softwares: {}[];
-  assigned_users: [];
+  assigned_users: string;
   checkout_at: string,
   notes: string
+  software: string
 }
-
-export interface ILicensesRequestCheckout {
-  id: number,
-  licenses: string
-  assigned_user: string;
-  software: string;
-  checkout_at: {
-    datetime: string;
-    formatted: string;
-  };
-  notes: string
-}
-
-export interface ILicensesRequestEdit {
-  id: number,
-  licenses: string
-  seats: string;
-  allocated_seats_count: number;
-  software: {
+export interface ISoftwareUsesResponse {
+  id: number;
+  license_active: {
     id: number;
     name: string;
   };
-  purchase_date: {
-    date: string;
-    formatted: string;
-  };
-  expiration_date: {
-    date: string;
-    formatted: string;
-  };
-  purchase_cost: string;
-  created_at: {
-    datetime: string;
-    formatted: string;
-  };
-  updated_at: {
-    datetime: string;
-    formatted: string;
-  }
-}
-
-export interface ILicensesReponse {
-  id: number,
-  licenses: string
-  seats: string;
-  software: string
-  purchase_date: string
-  expiration_date: string
-  purchase_cost: string;
-}
-
-export interface ILicensesUsersReponse {
-  id: number,
-  license_active: {
-    id: number,
-    name: string
-  };
   assigned_user: {
-    id: number,
-    name: string,
+    user_id: number;
+    name: string;
+    department: string;
+    location: string;
   };
+  checkout_at: string
 }
-

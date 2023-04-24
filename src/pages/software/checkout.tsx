@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -12,12 +11,10 @@ import {
   Col,
   Typography,
 } from "@pankod/refine-antd";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
   ISoftwareRequestMultipleCheckout,
 } from "interfaces/software"
-
 import { USERS_API, SOFTWARE_CHECKOUT_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
@@ -32,12 +29,14 @@ setSelectedRowKeys: any;
 export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<ISoftwareRequestMultipleCheckout>();
-
   const t = useTranslate();
-
+  const { mutate, data: dataCheckout, isLoading } = useCreate();
+  
   const { formProps, form } = useForm<ISoftwareRequestMultipleCheckout>({
     action: "create",
   });
+
+  const { setFields } = form;
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
@@ -51,8 +50,6 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
     ],
   });
 
-  const { mutate, data: dataCheckout, isLoading } = useCreate();
-
   const onFinish = (event: ISoftwareRequestMultipleCheckout) => {  
     mutate({
       resource: SOFTWARE_CHECKOUT_API,
@@ -65,12 +62,11 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
     });
   };
 
-  const { setFields } = form;
   useEffect(() => {
     form.resetFields();
     setFields([
       { name: "softwares", value: data?.map((item: any) => item.id) },
-      { name: "notes", value: data?.note ? data?.note : "" },
+      { name: "notes", value: data?.notes ? data?.notes : "" },
       {
         name: "checkout_at",
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
@@ -83,9 +79,11 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
     if (dataCheckout?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(messageErr);
+      setMessageErr(undefined);
       setSelectedRowKeys([]);
       localStorage.removeItem("selectedSoftwareRowKeys");
+    }else{
+      setMessageErr(dataCheckout?.data.messages);
     }
   }, [dataCheckout, form, setIsModalVisible]);
 
@@ -111,6 +109,11 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
                 </div>
               ))}
           </Form.Item>
+          {messageErr?.software && (
+          <Typography.Text type="danger">
+              {messageErr.software}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -120,7 +123,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
               {
                 required: true,
                 message:
-                  t("software.label.field.user") +
+                  t("software.label.field.checkoutTo") +
                   " " +
                   t("software.label.message.required"),
               },
@@ -138,13 +141,13 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("software.label.field.dateCheckout")}
+            label={t("software.label.field.checkout_at")}
             name="checkout_at"
             rules={[
               {
                 required: false,
                 message:
-                  t("software.label.field.dateCheckout") +
+                  t("software.label.field.checkout_at") +
                   " " +
                   t("software.label.message.required"),
               },
@@ -163,7 +166,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
 
       <Form.Item
         label={t("software.label.field.notes")}
-        name="note"
+        name="notes"
         rules={[
           {
             required: false,

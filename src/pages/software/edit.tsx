@@ -1,13 +1,12 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
-import { useCreate, useCustom, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { useCustom, useTranslate } from "@pankod/refine-core";
+import { CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
-import { IModelSoftware, ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
+import { ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
 
 type SoftwareEditProps = {
     isModalVisible: boolean;
@@ -50,7 +49,7 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                 operator: "containss",
                 value,
             },
-        ],        
+        ],
     });
 
     const {
@@ -79,6 +78,7 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
         formData.append("notes", event.notes ?? "");
         formData.append("version", event.version);
         formData.append("_method", "PUT");
+
         setPayload(formData);
         form.resetFields();
     };
@@ -107,17 +107,17 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
             }
         }
     }, [payload]);
-    
+
     useEffect(() => {
         if (updateData?.data.status === "success") {
             form.resetFields();
             setIsModalVisible(false);
-            setMessageErr(messageErr);
+            setMessageErr(undefined);
         } else {
             setMessageErr(updateData?.data.messages);
         }
     }, [updateData]);
-    
+
     return (
         <Form
             {...formProps}
@@ -148,7 +148,6 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                             {messageErr.name[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.software_tag")}
                         name="software_tag"
@@ -170,7 +169,6 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                             {messageErr.software_tag[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.version")}
                         name="version"
@@ -217,7 +215,6 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                             {messageErr.manufacturer_id[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.category")}
                         name="category_id"
@@ -244,15 +241,15 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                 </Col>
             </Row>
             <Form.Item
-                label={t("hardware.label.field.notes")}
+                label={t("software.label.field.notes")}
                 name="notes"
                 rules={[
                     {
                         required: false,
                         message:
-                            t("hardware.label.field.notes") +
+                            t("software.label.field.notes") +
                             " " +
-                            t("hardware.label.message.required"),
+                            t("software.label.message.required"),
                     },
                 ]}
                 initialValue={data?.notes}
@@ -266,7 +263,9 @@ export const SoftwareEdit = (props: SoftwareEditProps) => {
                 />
             </Form.Item>
             {messageErr?.notes && (
-                <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+                <Typography.Text type="danger">
+                    {messageErr.notes[0]}
+                </Typography.Text>
             )}
             <div className="submit">
                 <Button type="primary" htmlType="submit" loading={isLoading}>

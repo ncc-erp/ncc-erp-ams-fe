@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -12,12 +11,10 @@ import {
     Col,
     Typography,
 } from "@pankod/refine-antd";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
     ISoftwareRequestMultipleCheckout,
 } from "interfaces/software"
-
 import { USERS_API, LICENSES_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
@@ -31,9 +28,9 @@ type LicensesCheckoutProps = {
 export const LicensesCheckout = (props: LicensesCheckoutProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
     const [messageErr, setMessageErr] = useState<ISoftwareRequestMultipleCheckout>();
-
     const t = useTranslate();
 
+    const { mutate, data: dataCheckout, isLoading } = useCreate();
     const { formProps, form } = useForm<ISoftwareRequestMultipleCheckout>({
         action: "create",
     });
@@ -50,11 +47,9 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
         ],
     });
 
-    const { mutate, data: dataCheckout, isLoading } = useCreate();
-
     const onFinish = (event: ISoftwareRequestMultipleCheckout) => {
         mutate({
-            resource: LICENSES_API + data.id + "/checkout",
+            resource: LICENSES_API + "/" + data.id + "/checkout",
             values: {
                 checkout_at: event.checkout_at,
                 assigned_users: event.assigned_users,
@@ -69,7 +64,7 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
         setFields([
           { name: "licenses", value: data?.licenses },
           { name: "software", value: data?.software },
-          { name: "notes", value: data?.note ? data?.note : "" },
+          { name: "notes", value: data?.notes ? data?.notes : "" },
           {
             name: "checkout_at",
             value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
@@ -82,6 +77,9 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
             form.resetFields();
             setIsModalVisible(false);
             setMessageErr(messageErr);
+        }
+        else{
+            setMessageErr(dataCheckout?.data.messages);
         }
     }, [dataCheckout, form, setIsModalVisible]);
 
@@ -154,13 +152,13 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
                         </Typography.Text>
                     )}
                     <Form.Item
-                        label={t("licenses.label.field.dateCheckout")}
+                        label={t("licenses.label.field.checkout_at")}
                         name="checkout_at"
                         rules={[
                             {
                                 required: false,
                                 message:
-                                    t("licenses.label.field.dateCheckout") +
+                                    t("licenses.label.field.checkout_at") +
                                     " " +
                                     t("licenses.label.message.required"),
                             },
@@ -179,7 +177,7 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
 
             <Form.Item
                 label={t("licenses.label.field.notes")}
-                name="note"
+                name="notes"
                 rules={[
                     {
                         required: false,
@@ -193,7 +191,6 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
             >
                 <Input.TextArea value={data?.note} />
             </Form.Item>
-
             <div className="submit">
                 <Button type="primary" htmlType="submit" loading={isLoading}>
                     {t("licenses.label.button.checkout")}

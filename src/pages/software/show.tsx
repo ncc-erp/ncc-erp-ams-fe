@@ -1,11 +1,11 @@
-import { CrudFilters, HttpError, useTranslate } from "@pankod/refine-core";
-import { Typography, Tag, Row, Col, Tabs, Table, useTable, Spin, TextField, getDefaultSortOrder, DateField, Space, Tooltip, ShowButton, CloneButton, EditButton, DeleteButton } from "@pankod/refine-antd";
+import { HttpError, useTranslate } from "@pankod/refine-core";
+import { Typography, Row, Col, Tabs, Table, useTable, TextField, getDefaultSortOrder } from "@pankod/refine-antd";
 import "styles/hardware.less";
-import { ISoftware, ISoftwareLicensesFilterVariables, ISoftwareLicensesResponse, ISoftwareResponse } from "interfaces/software";
+import { IModelSoftware, ISoftwareResponse, ISoftwareUsesResponse } from "interfaces/software";
 import { defaultValue } from "constants/permissions";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SOFTWARE_API } from "api/baseApi";
-import { useSearchParams } from "react-router-dom";
+import { ILicenseUsers } from "interfaces/license";
 const { Title, Text } = Typography;
 
 type SoftwareShowProps = {
@@ -17,42 +17,17 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
     const { detail } = props;
     const t = useTranslate();
     const { TabPane } = Tabs;
-
-    const [loading, setLoading] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const searchParam = searchParams.get("search");
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
-        ISoftwareLicensesResponse,
-        HttpError,
-        ISoftwareLicensesFilterVariables
+    const { tableProps, sorter } = useTable<
+        ISoftwareUsesResponse,
+        HttpError
     >({
         initialSorter: [
             {
-                field: "id",
+                field: "checkout_at",
                 order: "desc",
             },
         ],
-        resource: SOFTWARE_API + "/" + detail?.id + "/licenses",
-        onSearch: (params) => {
-            const filters: CrudFilters = [];
-            let {
-                search,
-            } = params;
-            filters.push(
-                {
-                    field: "search",
-                    operator: "eq",
-                    value: searchParam,
-                },
-                {
-                    field: "filter",
-                    operator: "eq",
-                    value: JSON.stringify({
-                    }),
-                },
-            );
-            return filters;
-        },
+        resource: SOFTWARE_API + "/" + detail?.id + "/users"
     });
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
@@ -60,74 +35,54 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
     const collumns = useMemo(
         () => [
             {
-                key: "id",
+                key: "user_id",
                 title: "ID",
-                render: (value: number) => <TextField value={value} />,
-                defaultSortOrder: getDefaultSortOrder("id", sorter),
-            },
-            {
-                key: "licenses",
-                title: t("software.label.field.keyName"),
-                render: (value: number, record: any) => (
+                render: (value: number, record: ILicenseUsers) => (
                     <TextField
-                        value={value}
-                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+                        value={record.assigned_user.user_id}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("licenses", sorter),
+                defaultSortOrder: getDefaultSortOrder("user_id", sorter),
             },
             {
-                key: "seats",
-                title: t("software.label.field.total_licenses"),
-                render: (value: number) => <TextField value={value} />,
-                defaultSortOrder: getDefaultSortOrder("seats", sorter),
-            },
-            {
-                key: "free_seats_count",
-                title: t("software.label.field.free_seats_count"),
-                render: (value: number) => <TextField value={value} />,
-                defaultSortOrder: getDefaultSortOrder("freeSeats", sorter),
-            },
-            {
-                key: "software",
-                title: t("software.label.field.softwareName"),
-                render: (value: ISoftwareResponse) => <TextField value={value.name} />,
-                defaultSortOrder: getDefaultSortOrder("software.name", sorter),
-                onFilter: (value: number, record: ISoftwareResponse) => {
-                    return record.category.id === value;
-                },
-            },
-            {
-                key: "purchase_date",
-                title: t("software.label.field.purchase_date"),
-                render: (value: ISoftware) =>
-                    value ? (
-                        <DateField format="LL" value={value ? value.datetime : ""} />
-                    ) : (
-                        ""
-                    ),
-                defaultSortOrder: getDefaultSortOrder("purchase_date.datetime", sorter),
-            },
-            {
-                key: "expiration_date",
-                title: t("software.label.field.expiration_date"),
-                render: (value: ISoftware) =>
-                    value ? (
-                        <DateField format="LL" value={value ? value.datetime : ""} />
-                    ) : (
-                        ""
-                    ),
-                defaultSortOrder: getDefaultSortOrder("expiration_date.datetime", sorter),
-            },
-            {
-                key: "purchase_cost",
-                title: t("software.label.field.purchase_cost"),
-                render: (value: string, record: any) => (
+                key: "name",
+                title: t("software.label.field.user"),
+                render: (value: number, record: ILicenseUsers) => (
                     <TextField
-                        value={value}
+                        value={record.assigned_user.name}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
+                defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "checkout_at",
+                title: t("software.label.field.checkout_at"),
+                render: (value: IModelSoftware, record: any) => (
+                    <TextField
+                        value={value ? value.datetime : ""}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
+            },
+            {
+                key: "location",
+                title: t("software.label.field.location"),
+                render: (value: any, record: ILicenseUsers) => (
+                    <TextField
+                        value={record.assigned_user.location ? record.assigned_user.location : ""}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location", sorter),
+            },
+            {
+                key: "department",
+                title: t("software.label.field.department"),
+                render: (value: any, record: ILicenseUsers) => (
+                    <TextField
+                        value={record.assigned_user.department ? record.assigned_user.department : ""}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("department", sorter),
             },
         ],
         []
@@ -135,8 +90,8 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
 
     return (
         <>
-            {/* <Tabs defaultActiveKey={defaultValue.active}>
-                <TabPane tab={t("software.label.title.info")} key={defaultValue.active}> */}
+            <Tabs defaultActiveKey={defaultValue.active}>
+                <TabPane tab={t("software.label.title.info")} key={defaultValue.active}>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
                             <Title level={5}>{t("software.label.field.softwareName")}</Title>
@@ -165,7 +120,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                     </Row>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={4}>
-                            <Title level={5}>{t("software.label.field.checkout_count")}</Title>
+                            <Title level={5}>{t("software.label.field.checkout-count")}</Title>
                         </Col>
                         <Col span={18}>
                             <Text className="show-asset">
@@ -206,7 +161,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                             <Title level={5}>{t("software.label.field.notes")}</Title>
                         </Col>
                         <Col span={18}>
-                            <div dangerouslySetInnerHTML={{ __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` }} />
+                        <Text>{detail && detail?.notes}</Text>
                         </Col>
                     </Row>
                     <Row gutter={16}>
@@ -226,38 +181,31 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
                             <Title level={5}>{t("software.label.title.updateAt")}</Title>
                         </Col>
                         <Col span={18}>
-                            <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
+                        {detail?.updated_at ? (
+                                <Text> {detail?.updated_at && detail?.updated_at.formatted}</Text>
+                            ) : (
+                                ""
+                            )}
                         </Col>
                     </Row>
-                {/* </TabPane> */}
-                {/* <TabPane tab={t("software.label.title.key")}>
-                    {loading ? (
-                        <>
-                            <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-                                <Spin
-                                    tip={`${t("loading")}...`}
-                                    style={{ fontSize: "18px", color: "black" }}
-                                />
-                            </div>
-                        </>
-                    ) : (
-                        <Table
-                            {...tableProps}
-                            rowKey="id"
-                            scroll={{ x: 1850 }}
-                            pagination={{
-                                position: ["topRight", "bottomRight"],
-                                total: pageTotal ? pageTotal : 0,
-                            }}
-                        >
-                            {collumns
-                                .map((col) => (
-                                    <Table.Column dataIndex={col.key} {...(col as any)} sorter />
-                                ))}
-                        </Table>
-                    )}
-                </TabPane> */}
-            {/* </Tabs> */}
+                </TabPane>
+                <TabPane tab={t("software.label.title.users")}>
+                    <Table
+                        {...tableProps}
+                        rowKey="user_id"
+                        scroll={{ x: 1000 }}
+                        pagination={{
+                            position: ["topRight", "bottomRight"],
+                            total: pageTotal ? pageTotal : 0,
+                        }}
+                    >
+                        {collumns
+                            .map((col) => (
+                                <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+                            ))}
+                    </Table>
+                </TabPane>
+            </Tabs>
         </>
     );
 };

@@ -1,13 +1,12 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
-import { IModelSoftware, ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
+import { ISoftwareCreateRequest, ISoftwareResponse } from "interfaces/software";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
 
 type SoftwareCloneProps = {
     isModalVisible: boolean;
@@ -17,69 +16,16 @@ type SoftwareCloneProps = {
 
 export const SoftwareClone = (props: SoftwareCloneProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
-    
     const t = useTranslate();
     const [messageErr, setMessageErr] = useState<ISoftwareCreateRequest>();
-
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+    const { mutate, data: createData, isLoading } = useCreate();
+    const [payload, setPayload] = useState<FormData>();
 
-    const onFinish = (event: ISoftwareCreateRequest) => {
-        setMessageErr(messageErr);
-        const formData = new FormData();
-
-        if (event.name !== undefined) {
-            formData.append("name", event.name);
-        }       
-        
-        formData.append("software_tag", event.software_tag);
-        formData.append("manufacturer_id", event.manufacturer_id.toString());
-        formData.append("category_id", event.category_id.toString());
-        formData.append("notes", event.notes ?? "");
-        formData.append("version", event.version);
-
-        setPayload(formData);
-        form.resetFields();
-    };
     const { formProps, form } = useForm<ISoftwareCreateRequest>({
         action: "create",
     });
     const { setFields } = form;
-
-    useEffect(() => {
-        form.resetFields();
-        setFields([
-            { name: "name", value: data?.name },
-            { name: "notes", value: data?.notes ? data?.notes : "" },
-            { name: "manufacturer_id", value: data?.manufacturer.id},
-            { name: "category_id", value: data?.category.id}
-        ]);
-    }, [data, form, isModalVisible]);
-
-    useEffect(() => {
-        form.resetFields();
-    }, [isModalVisible]);
-
-    const { mutate, data: createData, isLoading } = useCreate();
-    const [payload, setPayload] = useState<FormData>();
-    useEffect(() => {
-        if (payload) {
-            mutate({
-                resource: SOFTWARE_API,
-                values: payload,
-            });
-            if (createData?.data.message) form.resetFields();
-        }
-    }, [payload]);
-
-    useEffect(() => {
-        if (createData?.data.status === "success") {
-            form.resetFields();
-            setIsModalVisible(false);
-            setMessageErr(messageErr);
-        } else {
-            setMessageErr(createData?.data.messages);
-        }
-    }, [createData]);
 
     const { selectProps: modelManufactureSelectProps } = useSelect<IModel>({
         resource: MANUFACTURES_API,
@@ -96,7 +42,7 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
 
     const { selectProps: modelCategorySelectProps } = useSelect<IModel>({
         resource: CATEGORIES_SELECT_SOFTWARE_LIST_API,
-        optionLabel: "name",
+        optionLabel: "text",
         onSearch: (value) => [
             {
                 field: "search",
@@ -105,6 +51,55 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
             },
         ],
     });
+
+    const onFinish = (event: ISoftwareCreateRequest) => {
+        setMessageErr(messageErr);
+        const formData = new FormData();
+
+        formData.append("name", event.name);
+        formData.append("software_tag", event.software_tag);
+        formData.append("manufacturer_id", event.manufacturer_id.toString());
+        formData.append("category_id", event.category_id.toString());
+        formData.append("notes", event.notes ?? "");
+        formData.append("version", event.version);
+
+        setPayload(formData);
+        form.resetFields();
+    };
+
+    useEffect(() => {
+        form.resetFields();
+        setFields([
+            { name: "name", value: data?.name },
+            { name: "notes", value: data?.notes ? data?.notes : "" },
+            { name: "manufacturer_id", value: data?.manufacturer.id },
+            { name: "category_id", value: data?.category.id }
+        ]);
+    }, [data, form, isModalVisible]);
+
+    useEffect(() => {
+        form.resetFields();
+    }, [isModalVisible]);
+
+    useEffect(() => {
+        if (payload) {
+            mutate({
+                resource: SOFTWARE_API,
+                values: payload,
+            });
+            if (createData?.data.message) form.resetFields();
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        if (createData?.data.status === "success") {
+            form.resetFields();
+            setIsModalVisible(false);
+            setMessageErr(undefined);
+        } else {
+            setMessageErr(createData?.data.messages);
+        }
+    }, [createData]);
 
     return (
         <Form
@@ -136,7 +131,6 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
                             {messageErr.name[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.software_tag")}
                         name="software_tag"
@@ -203,7 +197,6 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
                             {messageErr.manufacturer_id[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.category")}
                         name="category_id"
@@ -230,15 +223,15 @@ export const SoftwareClone = (props: SoftwareCloneProps) => {
                 </Col>
             </Row>
             <Form.Item
-                label={t("hardware.label.field.notes")}
+                label={t("software.label.field.notes")}
                 name="notes"
                 rules={[
                     {
                         required: false,
                         message:
-                            t("hardware.label.field.notes") +
+                            t("software.label.field.notes") +
                             " " +
-                            t("hardware.label.message.required"),
+                            t("software.label.message.required"),
                     },
                 ]}
             >

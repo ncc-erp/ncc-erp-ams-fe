@@ -1,13 +1,12 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, CATEGORIES_SELECT_LIST_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
+import { CATEGORIES_SELECT_SOFTWARE_LIST_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
 import { ISoftwareCreateRequest } from "interfaces/software";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
 
 type SoftwareCreateProps = {
     isModalVisible: boolean;
@@ -22,13 +21,15 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
     const { mutate, data: createData, isLoading } = useCreate();
     const [payload, setPayload] = useState<FormData>();
 
+    const { formProps, form } = useForm<ISoftwareCreateRequest>({
+        action: "create",
+    });
+
     const onFinish = (event: ISoftwareCreateRequest) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
-        if (event.name !== undefined) {
-            formData.append("name", event.name);
-        }
+        formData.append("name", event.name);
         formData.append("software_tag", event.software_tag);
         formData.append("manufacturer_id", event.manufacturer_id.toString());
         formData.append("category_id", event.category_id.toString());
@@ -38,30 +39,6 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
         setPayload(formData);
         form.resetFields();
     };
-
-    const { formProps, form } = useForm<ISoftwareCreateRequest>({
-        action: "create",
-    });
-
-    useEffect(() => {
-        if (payload) {
-            mutate({
-                resource: SOFTWARE_API,
-                values: payload,
-            });
-            if (createData?.data.message) form.resetFields();
-        }
-    }, [payload]);
-
-    useEffect(() => {
-        if (createData?.data.status === "success") {
-            form.resetFields();
-            setIsModalVisible(false);
-            setMessageErr(messageErr);
-        } else {
-            setMessageErr(createData?.data.messages);
-        }
-    }, [createData]);
 
     const { selectProps: modelManufactureSelectProps } = useSelect<IModel>({
         resource: MANUFACTURES_API,
@@ -86,6 +63,26 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
             },
         ],
     });
+
+    useEffect(() => {
+        if (payload) {
+            mutate({
+                resource: SOFTWARE_API,
+                values: payload,
+            });
+            if (createData?.data.message) form.resetFields();
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        if (createData?.data.status === "success") {
+            form.resetFields();
+            setIsModalVisible(false);
+            setMessageErr(undefined);
+        } else {
+            setMessageErr(createData?.data.messages);
+        }
+    }, [createData]);
 
     return (
         <Form
@@ -116,7 +113,6 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                             {messageErr.name[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.software_tag")}
                         name="software_tag"
@@ -137,7 +133,6 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                             {messageErr.software_tag[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.version")}
                         name="version"
@@ -182,7 +177,6 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                             {messageErr.manufacturer_id[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("software.label.field.category")}
                         name="category_id"
@@ -208,15 +202,15 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                 </Col>
             </Row>
             <Form.Item
-                label={t("hardware.label.field.notes")}
+                label={t("software.label.field.notes")}
                 name="notes"
                 rules={[
                     {
                         required: false,
                         message:
-                            t("hardware.label.field.notes") +
+                            t("software.label.field.notes") +
                             " " +
-                            t("hardware.label.message.required"),
+                            t("software.label.message.required"),
                     },
                 ]}
             >
@@ -229,7 +223,9 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                 />
             </Form.Item>
             {messageErr?.notes && (
-                <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
+                <Typography.Text type="danger">
+                    {messageErr.notes[0]}
+                </Typography.Text>
             )}
             <div className="submit">
                 <Button type="primary" htmlType="submit" loading={isLoading}>

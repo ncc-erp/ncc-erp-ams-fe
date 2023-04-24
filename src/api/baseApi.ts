@@ -12,8 +12,8 @@ export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
 export const SOFTWARE_API = "api/v1/software";
 export const CATEGORIES_SELECT_SOFTWARE_LIST_API = "api/v1/categories/software/selectlist";
 export const SOFTWARE_CHECKOUT_API = "api/v1/software/licenses/checkout"
-export const LICENSES_API = "api/v1/software/licenses/"
-export const LICENSES_CHECKOUT_USER_API = "api/v1/software/license/"
+export const LICENSES_API = "api/v1/software/licenses"
+export const LICENSES_CHECKOUT_USER_API = "api/v1/software/license"
 
 export const MODELS_API = "api/v1/models";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
@@ -29,6 +29,7 @@ export const SUPPLIERS_API = "api/v1/suppliers";
 export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
 export const STATUS_LABELS_API = "api/v1/statuslabels";
 export const ASSIGN_HARDWARE_API = "api/v1/hardware/assign";
+export const ASSIGN_LICENSES_API = "api/v1/software/license/assign";
 
 export const FINFAST_REQUEST_API = "api/v1/finfast-request";
 export const SEND_REQUEST_API = "api/v1/finfast/outcome";

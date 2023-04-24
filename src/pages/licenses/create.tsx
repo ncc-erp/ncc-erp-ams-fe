@@ -1,14 +1,10 @@
-import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
+import { Button, Col, Form, Input, Row, Typography, useForm } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { CATEGORIES_API, CATEGORIES_SELECT_LIST_API, CATEGORIES_SELECT_SOFTWARE_LIST_API, LICENSES_API, MANUFACTURES_API, SOFTWARE_API } from "api/baseApi";
-import { IModel } from "interfaces/model";
-import { ILicensesReponse, ILicensesRequestCheckout, ISoftwareCreateRequest, ISoftwareLicensesResponse } from "interfaces/software";
+import { LICENSES_API } from "api/baseApi";
+import { ILicensesResponse, ILicensesCreateRequest } from "interfaces/license";
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { useSearchParams } from "react-router-dom";
-
 
 type LicensesCreateProps = {
     isModalVisible: boolean;
@@ -18,12 +14,16 @@ type LicensesCreateProps = {
 export const LicensesCreate = (props: LicensesCreateProps) => {
     const { setIsModalVisible } = props;
     const t = useTranslate();
+    const [messageErr, setMessageErr] = useState<ILicensesCreateRequest>();
+
+    const { mutate, data: createData, isLoading } = useCreate();
+    const [payload, setPayload] = useState<FormData>();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const software_id = searchParams.get('id');
     const software_name = searchParams.get('name');
-    const [messageErr, setMessageErr] = useState<ILicensesReponse>();
 
-    const onFinish = (event: ISoftwareLicensesResponse) => {
+    const onFinish = (event: ILicensesResponse) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
@@ -38,12 +38,10 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
         form.resetFields();
     };
 
-
-    const { formProps, form } = useForm<ISoftwareCreateRequest>({
+    const { formProps, form } = useForm<ILicensesCreateRequest>({
         action: "create",
     });
-    const { mutate, data: createData, isLoading } = useCreate();
-    const [payload, setPayload] = useState<FormData>();
+    
     useEffect(() => {
         if (payload) {
             mutate({
@@ -74,27 +72,26 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
             <Row gutter={12}>
                 <Col className="gutter-row" span={12}>
                     <Form.Item
-                        label={t("software.label.field.softwareName")}
-                        name="software"
+                        label={t("licenses.label.field.software")}
+                        name="software_id"
                         initialValue={software_name}
                         rules={[
                             {
                                 required: true,
                                 message:
-                                    t("software.label.field.softwareName") +
+                                    t("licenses.label.field.software") +
                                     " " +
-                                    t("software.label.message.required"),
+                                    t("licenses.label.message.required"),
                             },
                         ]}
                     >
-                        <Input placeholder={t("software.label.placeholder.softwareName")} disabled={true} />
+                        <Input placeholder={t("licenses.label.placeholder.software")} disabled={true} />
                     </Form.Item>
-                    {messageErr?.software && (
+                    {messageErr?.software_id && (
                         <Typography.Text type="danger">
-                            {messageErr.software[0]}
+                            {messageErr.software_id[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.licenses")}
                         name="licenses"
@@ -115,7 +112,6 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                             {messageErr.licenses[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.seats")}
                         name="seats"
@@ -139,13 +135,13 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        label={t("licenses.label.field.dateAdd")}
+                        label={t("licenses.label.field.purchase_date")}
                         name="purchase_date"
                         rules={[
                             {
                                 required: true,
                                 message:
-                                    t("licenses.label.field.dateAdd") +
+                                    t("licenses.label.field.purchase_date") +
                                     " " +
                                     t("licenses.label.message.required"),
                             },
@@ -158,7 +154,6 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                             {messageErr.purchase_date[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.expiration_date")}
                         name="expiration_date"
@@ -176,10 +171,9 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
                     </Form.Item>
                     {messageErr?.expiration_date && (
                         <Typography.Text type="danger">
-                            {messageErr.expiration_date[0]}
+                            {messageErr.expiration_date}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.purchase_cost")}
                         name="purchase_cost"

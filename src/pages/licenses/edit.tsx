@@ -1,10 +1,9 @@
-import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
+import { Button, Col, Form, Input, Row, Typography, useForm } from "@pankod/refine-antd";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import { LICENSES_API } from "api/baseApi";
-import { ILicensesReponse, ILicensesRequestEdit } from "interfaces/software";
+import { ILicensesRequestEdit, ILicensesCreateRequest } from "interfaces/license";
 import { useEffect, useState } from "react";
 import "react-mde/lib/styles/css/react-mde-all.css";
-
 
 type LicensesEditProps = {
     isModalVisible: boolean;
@@ -15,7 +14,7 @@ type LicensesEditProps = {
 export const LicensesEdit = (props: LicensesEditProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
     const t = useTranslate();
-    const [messageErr, setMessageErr] = useState<ILicensesReponse>();
+    const [messageErr, setMessageErr] = useState<ILicensesCreateRequest>();
     const [payload, setPayload] = useState<FormData>();
 
     const { form, formProps } = useForm<ILicensesRequestEdit>({
@@ -49,6 +48,7 @@ export const LicensesEdit = (props: LicensesEditProps) => {
         formData.append("expiration_date", event.expiration_date.toString());
         formData.append("purchase_cost", event.purchase_cost)
         formData.append("_method", "PUT");
+
         setPayload(formData);
         form.resetFields();
     };
@@ -81,7 +81,7 @@ export const LicensesEdit = (props: LicensesEditProps) => {
         if (updateData?.data.status === "success") {
             form.resetFields();
             setIsModalVisible(false);
-            setMessageErr(messageErr);
+            setMessageErr(undefined);
         } else {
             setMessageErr(updateData?.data.messages);
         }
@@ -117,7 +117,6 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                             {messageErr.licenses[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.software")}
                         name="software"
@@ -134,13 +133,11 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                     >
                         <Input disabled={true} placeholder={t("licenses.label.placeholder.software")} />
                     </Form.Item>
-                    {messageErr?.software && (
+                    {messageErr?.software_id && (
                         <Typography.Text type="danger">
-                            {messageErr.software[0]}
+                            {messageErr.software_id[0]}
                         </Typography.Text>
                     )}
-
-
                     <Form.Item
                         label={t("licenses.label.field.seats")}
                         name="seats"
@@ -194,9 +191,8 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                             {messageErr.purchase_cost[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
-                        label={t("licenses.label.field.dateAdd")}
+                        label={t("licenses.label.field.purchase_date")}
                         name="purchase_date"
                         initialValue={
                             data?.purchase_date.date
@@ -209,7 +205,6 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                             {messageErr.purchase_date[0]}
                         </Typography.Text>
                     )}
-
                     <Form.Item
                         label={t("licenses.label.field.expiration_date")}
                         name="expiration_date"
@@ -221,7 +216,7 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                     </Form.Item>
                     {messageErr?.expiration_date && (
                         <Typography.Text type="danger">
-                            {messageErr.expiration_date[0]}
+                            {messageErr.expiration_date}
                         </Typography.Text>
                     )}
                 </Col>
