@@ -57,12 +57,12 @@ export const UserEdit = (props: UserCreateProps) => {
         data.permissions = {};
     }
 
-    const [permissionOfUser, setPermissionOfUser] = useState(data?.permissions);  
+    const [permissionOfUser, setPermissionOfUser] = useState(data?.permissions);
 
     useEffect(() => {
         setPermissionOfUser(data?.permissions);
     }, [data]);
-    
+
 
     const [showCheckboxList, setShowCheckboxList] = useState(false);
 
@@ -75,25 +75,15 @@ export const UserEdit = (props: UserCreateProps) => {
     const handleCheckboxChange = (event: any, location: any) => {
         const { checked } = event.target;
 
-        setSelectedLocation((prevValues) => {
+        setSelectedLocation((prevValues) => {         
             if (checked) {
-                if (prevValues.includes(location)) {
-                    return prevValues;
-                } else {
-                    return [...prevValues, location];
-                }
+                return [...prevValues, location];
             } else {
                 return prevValues.filter((prevValue) => prevValue !== location);
             }
         });
+        
     };
-    
-
-    const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
-
-    useEffect(() => {
-        setIsCheckboxSelected(locationSelected.length > 0);
-    }, [locationSelected]);
 
     const [checkedList, setCheckboxSelected] = useState<any[]>([]);
 
@@ -102,10 +92,11 @@ export const UserEdit = (props: UserCreateProps) => {
             setShowCheckboxList(true);
             setCheckboxSelected(data?.manager_location);
         }
-        else{
+        else {
             setShowCheckboxList(false);
             setCheckboxSelected([]);
         }
+        setMessageErr(undefined);
     }, [data]);
 
     const { form, formProps } = useForm<IUserCreateRequest>({
@@ -539,14 +530,14 @@ export const UserEdit = (props: UserCreateProps) => {
                                                             <Radio.Group
                                                                 options={optionsPermissions}
                                                                 onChange={(event) => {
-                                                                    setPermissionOfUser((prevState: any) => {                                                                        
+                                                                    setPermissionOfUser((prevState: any) => {
                                                                         return {
                                                                             ...prevState,
                                                                             [key.name]: event.target.value
                                                                         }
                                                                     })
-                                                                    
-                                                                    if (event.target.value ===  AccessType.allow && key.name ==  Permission.branchadmin.name) {
+
+                                                                    if (event.target.value === AccessType.allow && key.name == Permission.branchadmin.name) {
                                                                         setShowCheckboxList(true);
                                                                     }
                                                                     if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
@@ -580,7 +571,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                                                     {locationOptions.map((location) => (
                                                                         <Checkbox key={location.value}
                                                                             defaultChecked={checkedList.includes(location.value)}
-                                                                            onChange={(event) =>handleCheckboxChange(event, location.value)}
+                                                                            onChange={(event) => handleCheckboxChange(event, location.value)}
                                                                             className="checkbox"
                                                                         >
                                                                             {location.label}
@@ -592,7 +583,6 @@ export const UserEdit = (props: UserCreateProps) => {
                                                     </Row>
                                                 </div>
                                             )}
-
                                             {key?.children && key?.children.length > 0 && <hr className="hr-row" />}
                                             {key?.children && key?.children.length > 0 && key?.children?.map((item: any) =>
                                             (
@@ -633,11 +623,16 @@ export const UserEdit = (props: UserCreateProps) => {
                                             ))}
                                         </div>
                                     ))}
+                                {messageErr?.manager_location && (
+                                    <Typography.Text type="danger">
+                                        {messageErr?.manager_location}
+                                    </Typography.Text>
+                                )}
                             </div>
                         </Form.Item>
                     </div>
                     <div className="submit">
-                        <Button type="primary" htmlType="submit" disabled={!isCheckboxSelected && showCheckboxList} loading={isLoading}>
+                        <Button type="primary" htmlType="submit" loading={isLoading}>
                             {t("user.label.button.update")}
                         </Button>
                     </div>
