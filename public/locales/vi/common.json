@@ -486,7 +486,7 @@
         "refuse": "Từ chối",
         "inheritance": "Kế thừa",
         "admin": "Admin",
-        "branchadmin": "Giám đốc",
+        "branchadmin": "Admin văn phòng",
         "choose_branchadmin": "Chọn nhánh quản lý",
         "import_csv": "Nhập CSV",
         "asset": "Thiết bị",
@@ -571,7 +571,8 @@
         "admin": "Admin",
         "information": "Thông tin",
         "download_picter": "Tải hình",
-        "permission": "Phân quyền"
+        "permission": "Phân quyền",
+        "role": "Vai trò"
       },
       "message": {
         "required": "bắt buộc"

@@ -109,7 +109,7 @@ export const Sider: React.FC = () => {
           push(key as string);
         }}
       >
-        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+        {permissionsData && (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
           <SubMenu
             title={
               <span>
@@ -150,7 +150,7 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
-        {permissionsData && ( permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
+        {permissionsData && (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
           <SubMenu
             title={
               <span>
@@ -236,7 +236,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === EPermissions.ADMIN &&
+          (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
           menuItems
             .filter(
               (item) => item.name === `${translate("resource.accessory")}`
@@ -272,7 +272,7 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === EPermissions.ADMIN &&
+          (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
           menuItems
             .filter(
               (item) => item.name === `${translate("resource.consumables")}`

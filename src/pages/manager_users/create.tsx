@@ -102,7 +102,6 @@ export const UserCreate = (props: UserCreateProps) => {
 
     const handleCheckboxChange = (event: any, location: any) => {
         const { checked } = event.target;
-        
         setSelectedLocation((prevValues) => {
             if (checked) {
                 return [...prevValues, location];
@@ -112,12 +111,6 @@ export const UserCreate = (props: UserCreateProps) => {
         });
 
     };
-
-    const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
-    
-    useEffect(() => {
-        setIsCheckboxSelected(locationSelected.length > 0);
-    }, [locationSelected]);
 
     const { mutate, data: createData, isLoading } = useCreate();
 
@@ -206,7 +199,7 @@ export const UserCreate = (props: UserCreateProps) => {
     }, [file]);
 
     const style: React.CSSProperties = { padding: '6px 0' };
-    const [showCheckboxes, setShowCheckboxes] = useState(false);
+
     return (
         <Form
             {...formProps}
@@ -537,14 +530,14 @@ export const UserCreate = (props: UserCreateProps) => {
                                                     <Col span={17} offset={5} >
                                                         <Form.Item name={`locationIds.${key.name}`}>
                                                             <div className="checkbox-container">
-                                                                    {locationOptions.map((location) => (
-                                                                        <Checkbox key={location.value}
-                                                                            onChange={(event) => handleCheckboxChange(event, location.value)}
-                                                                            className="checkbox"
-                                                                            >
-                                                                            {location.label}
-                                                                        </Checkbox>
-                                                                    ))}
+                                                                {locationOptions.map((location) => (
+                                                                    <Checkbox key={location.value}
+                                                                        onChange={(event) => handleCheckboxChange(event, location.value)}
+                                                                        className="checkbox"
+                                                                    >
+                                                                        {location.label}
+                                                                    </Checkbox>
+                                                                ))}
                                                             </div>
                                                         </Form.Item>
                                                     </Col>
@@ -591,11 +584,16 @@ export const UserCreate = (props: UserCreateProps) => {
                                         ))}
                                     </div>
                                 ))}
+                                {messageErr?.manager_location && (
+                                    <Typography.Text type="danger">
+                                        {messageErr?.manager_location}
+                                    </Typography.Text>
+                                )}
                             </div>
                         </Form.Item>
                     </div>
                     <div className="submit">
-                        <Button type="primary" disabled={!isCheckboxSelected && showCheckboxList} htmlType="submit" loading={isLoading}>
+                        <Button type="primary" htmlType="submit" loading={isLoading}>
                             {t("user.label.button.create")}
                         </Button>
                     </div>

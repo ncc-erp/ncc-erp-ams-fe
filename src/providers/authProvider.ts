@@ -71,9 +71,9 @@ export const authProvider: AuthProvider = {
     })
     if(!permissions['admin']){
       permissions['admin'] = '0';
-    }
-    if(permissions['branchadmin']){
-      permissions['branchadmin'] = "2";
+      if(permissions['branchadmin']){
+        permissions['branchadmin'] = "2";
+      }
     }
     permissions = JSON.stringify(permissions);
     return Promise.resolve(JSON.parse(permissions as string));

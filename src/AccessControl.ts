@@ -140,6 +140,9 @@ p, 1, ${i18n.t("resource.accessory")}/*, (edit)|(show)
 p, 1, ${i18n.t("resource.accessory_details")}, (list)
 p, 1, ${i18n.t("resource.accessory_details")}/*, (show)
 
+p, 2, ${i18n.t("resource.dashboard")}, list
+
+p, 2, ${i18n.t("resource.checkin-checkout")}, (list)
 
 p, 2, ${i18n.t("resource.assets")}, (list)
 p, 2, ${i18n.t("resource.assets")}/*, (show)
@@ -166,6 +169,15 @@ p, 2, ${i18n.t("resource.assets-broken")}/*,(show)
 
 p, 2, ${i18n.t("resource.assets-expires")}, (list)
 p, 2, ${i18n.t("resource.assets-expires")}/*,(show)
+
+p, 2, ${i18n.t("resource.consumables")}, (list)
+p, 2, ${i18n.t("resource.consumables")}/*, (show)
+
+p, 2, ${i18n.t("resource.accessory")}, (list)
+p, 2, ${i18n.t("resource.accessory")}/*, (show)
+
+p, 2, ${i18n.t("resource.location_details")}, (list) 
+p, 2, ${i18n.t("resource.location_details")}/*,(show)
 `;
 
 export const adapter = new MemoryAdapter(permissions);
