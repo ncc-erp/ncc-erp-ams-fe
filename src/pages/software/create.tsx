@@ -116,15 +116,6 @@ export const SoftwareCreate = (props: SoftwareCreateProps) => {
                     <Form.Item
                         label={t("software.label.field.software_tag")}
                         name="software_tag"
-                        rules={[
-                            {
-                                required: true,
-                                message:
-                                    t("software.label.field.software_tag") +
-                                    " " +
-                                    t("software.label.message.required"),
-                            },
-                        ]}
                     >
                         <Input placeholder={t("software.label.placeholder.software_tag")} />
                     </Form.Item>
