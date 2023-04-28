@@ -4,11 +4,14 @@ import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import "./i18n";
+import {BrowserRouter as Router} from 'react-router-dom';
 
 ReactDOM.render(
   // <React.StrictMode>
   <React.Suspense fallback="loading">
+    <Router>
       <App />	
+    </Router>
   </React.Suspense>,
   // </React.StrictMode>,
   document.getElementById("root")
