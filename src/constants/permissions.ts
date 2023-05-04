@@ -429,10 +429,6 @@ export const optionsPermissions = [
     label: "",
     value: AccessType.refuse,
   },
-  {
-    label: "",
-    value: AccessType.can,
-  },
 ];
 
 export const defaultValue = {
