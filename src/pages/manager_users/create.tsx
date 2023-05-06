@@ -460,14 +460,11 @@ export const UserCreate = (props: UserCreateProps) => {
                                         <Col className="gutter-row" span={7}>
                                             <div style={style}>{t("user.label.title.permission")}</div>
                                         </Col>
-                                        <Col className="gutter-row" span={6}>
+                                        <Col className="gutter-row" span={10}>
                                             <div style={style}>{t("user.label.title.grant")}</div>
                                         </Col>
-                                        <Col className="gutter-row" span={6}>
+                                        <Col className="gutter-row" span={7}>
                                             <div style={style}>{t("user.label.title.refuse")}</div>
-                                        </Col>
-                                        <Col className="gutter-row" span={4}>
-                                            <div style={style}>{t("user.label.title.inheritance")}</div>
                                         </Col>
                                     </Row>
                                 </div>

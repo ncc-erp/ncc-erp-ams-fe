@@ -12,6 +12,9 @@ import {
   HardwareListReadyToDeploy,
 } from "pages/hardware";
 import {
+  SoftwareList,
+} from "pages/software/list";
+import {
   Title,
   Header,
   Sider,
@@ -45,6 +48,8 @@ import { SupplierDetails } from "pages/supplier/details";
 import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
 import { HardwareListExpiration } from "pages/hardware/list-expiration";
+import { LicensesList } from "pages/licenses/list";
+import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
 import { ToolList } from "pages/tools/list";
 import { ToolAssignList } from "pages/tools/list-assign";
@@ -171,6 +176,20 @@ function App() {
           list: ToolAssignList,
           options: {
             route: "tools-assign",
+          }
+        },
+        {
+          name: t("resource.softwares"),
+          list: SoftwareList,
+          options: {
+            route: "softwares",
+          },
+        },
+        {
+          name: t("resource.licenses"),
+          list: LicensesList,
+          options: {
+            route: "licenses",
           },
         },
         {
@@ -185,6 +204,13 @@ function App() {
           list: UserListTool,
           options: {
             route: "users-tools",
+          }
+        },
+        {
+          name: t("resource.users_licenses"),
+          list: UserListLicenses,
+          options: {
+            route: "users-licenses",
           },
         },
         {

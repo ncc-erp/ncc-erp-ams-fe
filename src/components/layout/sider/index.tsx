@@ -23,6 +23,8 @@ const {
   UsergroupAddOutlined,
   CopyOutlined,
   InsertRowBelowOutlined,
+  BlockOutlined,
+  ToolOutlined
 } = Icons;
 
 const logo: CSSProperties = {
@@ -203,7 +205,7 @@ export const Sider: React.FC = () => {
           <SubMenu
             title={
               <span>
-                <SettingOutlined />
+                <ToolOutlined />
                 <span>{translate("resource.tools")}</span>
               </span>
             }
@@ -240,6 +242,41 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
+        
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN &&
+          menuItems
+            .filter(
+              (item) => item.name === `${translate("resource.softwares")}`
+            )
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.softwares")}` ? (
+                      <BlockOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
 
         {permissionsData &&
           (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
@@ -329,7 +366,8 @@ export const Sider: React.FC = () => {
                   (item) =>
                     item.name === `${translate("resource.request")}` ||
                     item.name === `${translate("resource.users")}` ||
-                    item.name === `${translate("resource.users-tools")}`
+                    item.name === `${translate("resource.users-tools")}` ||
+                    item.name === `${translate("resource.users_licenses")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -347,7 +385,9 @@ export const Sider: React.FC = () => {
                         ) : name === `${translate("resource.users")}` ? (
                           <DesktopOutlined />
                         ) : name === `${translate("resource.users-tools")}` ? (
-                          <DesktopOutlined />
+                          <ToolOutlined />
+                        ) : name === `${translate("resource.users_licenses")}` ? (
+                          <BlockOutlined />
                         ) : (
                           ""
                         )
@@ -463,6 +503,7 @@ export const Sider: React.FC = () => {
               {menuItems
                 .filter((item) =>
                   item.name === `${translate("resource.users")}` ||
+                  item.name === `${translate("resource.users_licenses")}`||
                   item.name === `${translate("resource.users-tools")}`)
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -479,6 +520,8 @@ export const Sider: React.FC = () => {
                           <DesktopOutlined />
                         ) : name === `${translate("resource.users-tools")}` ? (
                           <DesktopOutlined />
+                        ) : name === `${translate("resource.users_licenses")}` ? (
+                          <BlockOutlined />
                         ) : (
                           ""
                         )
