@@ -199,6 +199,48 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
+        {permissionsData && (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
+          <SubMenu
+            title={
+              <span>
+                <SettingOutlined />
+                <span>{translate("resource.tools")}</span>
+              </span>
+            }
+            key={"tool"}
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.tools-all")}` ||
+                    item.name === `${translate("resource.tools-assign")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
+
         {permissionsData &&
           (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
           menuItems
@@ -272,47 +314,61 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === EPermissions.ADMIN &&
-          menuItems
-            .filter(
-              (item) =>
-                item.name === `${translate("resource.request")}` ||
-                item.name === `${translate("resource.users")}`
-            )
-            .map(({ icon, name, route }) => {
-              const isSelected = route === selectedKey;
-              return (
-                <Menu.Item
-                  style={{
-                    fontWeight: isSelected ? "bold" : "normal",
-                  }}
-                  key={route}
-                  icon={
-                    name === `${translate("resource.assets")}` ? (
-                      <DesktopOutlined />
-                    ) : name === `${translate("resource.request")}` ? (
-                      <PullRequestOutlined />
-                    ) : name === `${translate("resource.users")}` ? (
-                      <ScheduleOutlined />
-                    ) : (
-                      ""
-                    )
-                  }
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {name}
-                    {!collapsed && isSelected && <RightOutlined />}
-                  </div>
-                </Menu.Item>
-              );
-            })}
+          permissionsData.admin === EPermissions.ADMIN && (
+            <SubMenu
+              title={
+                <span>
+                  <ScheduleOutlined />
+                  <span>{translate("resource.users_assets")}</span>
+                </span>
+              }
+              key={"users_assets"}
+            >
+              {menuItems
+                .filter(
+                  (item) =>
+                    item.name === `${translate("resource.request")}` ||
+                    item.name === `${translate("resource.users")}` ||
+                    item.name === `${translate("resource.users-tools")}`
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                      icon={
+                        name === `${translate("resource.users_assets")}` ? (
+                          <DesktopOutlined />
+                        ) : name === `${translate("resource.request")}` ? (
+                          <PullRequestOutlined />
+                        ) : name === `${translate("resource.users")}` ? (
+                          <DesktopOutlined />
+                        ) : name === `${translate("resource.users-tools")}` ? (
+                          <DesktopOutlined />
+                        ) : (
+                          ""
+                        )
+                      }
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
 
+            </SubMenu>
+          )}
         {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
           <SubMenu
             title={
@@ -394,40 +450,55 @@ export const Sider: React.FC = () => {
             })}
 
         {permissionsData &&
-          permissionsData.admin === EPermissions.USER &&
-          menuItems
-            .filter((item) => item.name === `${translate("resource.users")}`)
-            .map(({ icon, name, route }) => {
-              const isSelected = route === selectedKey;
-              return (
-                <Menu.Item
-                  style={{
-                    fontWeight: isSelected ? "bold" : "normal",
-                  }}
-                  key={route}
-                  icon={
-                    name === `${translate("resource.dashboard")}` ? (
-                      <DashboardOutlined />
-                    ) : name === `${translate("resource.users")}` ? (
-                      <ScheduleOutlined />
-                    ) : (
-                      ""
-                    )
-                  }
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {name}
-                    {!collapsed && isSelected && <RightOutlined />}
-                  </div>
-                </Menu.Item>
-              );
-            })}
+          permissionsData.admin === EPermissions.USER && (
+            <SubMenu
+              title={
+                <span>
+                  <ScheduleOutlined />
+                  <span>{translate("resource.users_assets")}</span>
+                </span>
+              }
+              key={"users_assets"}
+            >
+              {menuItems
+                .filter((item) =>
+                  item.name === `${translate("resource.users")}` ||
+                  item.name === `${translate("resource.users-tools")}`)
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                      icon={
+                        name === `${translate("resource.dashboard")}` ? (
+                          <DashboardOutlined />
+                        ) : name === `${translate("resource.users")}` ? (
+                          <DesktopOutlined />
+                        ) : name === `${translate("resource.users-tools")}` ? (
+                          <DesktopOutlined />
+                        ) : (
+                          ""
+                        )
+                      }
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+            </SubMenu>
+          )}
 
         {permissionsData &&
           permissionsData.admin === EPermissions.ADMIN &&

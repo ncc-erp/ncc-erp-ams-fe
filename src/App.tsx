@@ -46,6 +46,9 @@ import { LocationDetails } from "pages/location/details";
 import { ManufacturesDetails } from "pages/manufacturers/details";
 import { HardwareListExpiration } from "pages/hardware/list-expiration";
 import { EPermissions } from "constants/permissions";
+import { ToolList } from "pages/tools/list";
+import { ToolAssignList } from "pages/tools/list-assign";
+import { UserListTool } from "pages/users/list-tools";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -157,10 +160,31 @@ function App() {
           },
         },
         {
+          name: t("resource.tools-all"),
+          list: ToolList,
+          options: {
+            route: "tools-all",
+          },
+        },
+        {
+          name: t("resource.tools-assign"),
+          list: ToolAssignList,
+          options: {
+            route: "tools-assign",
+          },
+        },
+        {
           name: t("resource.users"),
           list: UserList,
           options: {
             route: "users",
+          },
+        },
+        {
+          name: t("resource.users-tools"),
+          list: UserListTool,
+          options: {
+            route: "users-tools",
           },
         },
         {

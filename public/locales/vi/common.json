@@ -276,6 +276,89 @@
       }
     }
   },
+  "tools": {
+    "label": {
+      "field": {
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "user": "Người dùng",
+        "dateAdd": "Ngày nhập",
+        "notes": "Mô tả",
+        "dateCheckout": "Ngày cấp phát",
+        "dateCheckin": "Ngày thu hồi",
+        "category": "Thể loại",
+        "condition": "Xác nhận",
+        "dateCreate": "Ngày tạo",
+        "manufacturer": "Nhà phát hành",
+        "checkout_count": "Đã cấp phát",
+        "assigned_to": "Cấp phát đến",
+        "requestable": "Yêu cầu",
+        "assign": "Assign",
+        "checkin": "Checkin",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "checkout_at": "Ngày cấp phát",
+        "checkin_at": "Ngày thu hồi",
+        "confirmStatus": "Trạng thái xác nhận",
+        "purchase_cost": "Giá",
+        "purchase_date": "Ngày mua",
+        "version": "Phiên bản",
+        "name": "Tên tool",
+        "key": "Key"
+      },
+      "placeholder": {
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "name": "Nhập tên tool",
+        "key": "Nhập key",
+        "version": "Nhập phiên bản",
+        "notes":"Mô tả",
+        "purchase_cost": "Nhập chi phí",
+        "manufacturer": "Lựa chọn nhà phát hành"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối",
+        "search": "Tìm kiếm"
+      },
+      "title": {
+        "tools": "Tất cả",
+        "create": "Tạo ",
+        "edit": "Cập nhật",
+        "delete": "Xóa",
+        "clone": "Clone",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "detail": "Chi tiết",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "list-assign": "Đã cấp phát",
+        "dateCreate": "Đã tạo lúc",
+        "updateAt": "Cập nhật tại",
+        "time": "Thời gian",
+        "sum-tools": "Số lượng",
+        "name": "Tên tool",
+        "my-tool": "Tools của tôi"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      }
+    }
+  },
   "request": {
     "label": {
       "field": {
@@ -513,7 +596,8 @@
         "nameTitle": "Kho",
         "asset": "Tài sản",
         "accessories": "Phụ kiện",
-        "consumables": "Văn phòng phẩm"
+        "consumables": "Văn phòng phẩm",
+        "tools": "Tool"
       },
       "field": {
         "create": "Thêm mới",
@@ -594,6 +678,11 @@
     "users": "Tài sản của tôi",
     "category": "Danh mục",
     "manufactures": "Kho",
+    "tools": "Tools",
+    "tools-all": "Tất cả tools",
+    "tools-assign": "Tools đã cấp phát",
+    "users-tools": "Tools",
+    "users_assets": "Tài sản của tôi",
     "location": "Văn phòng",
     "supplier": "Nhà cung cấp",
     "model": "Kiểu tài sản",

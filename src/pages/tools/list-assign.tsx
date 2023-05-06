@@ -1,0 +1,761 @@
+import {
+    useTranslate,
+    IResourceComponentsProps,
+    CrudFilters,
+    HttpError,
+    useNavigation,
+} from "@pankod/refine-core";
+import {
+    List,
+    Table,
+    TextField,
+    useTable,
+    getDefaultSortOrder,
+    DateField,
+    Space,
+    EditButton,
+    DeleteButton,
+    CreateButton,
+    Button,
+    ShowButton,
+    Tooltip,
+    Checkbox,
+    Form,
+    useSelect,
+} from "@pankod/refine-antd";
+import {
+    MenuOutlined,
+    SyncOutlined,
+} from "@ant-design/icons";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MModal } from "components/Modal/MModal";
+import {
+    IToolCheckinRequest,
+    IToolFilterVariable,
+    IToolResponse
+} from "interfaces/tool";
+import { dateFormat } from "constants/assets";
+
+import { Spin } from "antd";
+import { DatePicker } from "antd";
+import React from "react";
+import { TableAction } from "components/elements/tables/TableAction";
+import { useSearchParams } from "react-router-dom";
+
+import moment from "moment";
+import { IModel } from "interfaces/model";
+import { MANUFACTURES_API, TOOLS_API, TOOLS_API_CATEGORIES_API, TOOLS_CHECKOUT_API } from "api/baseApi";
+import { ToolCreate } from "./create";
+import { ToolShow } from "./show";
+import { ToolMultiCheckin } from "./multi-checkin";
+import { ToolCheckin } from "./checkin";
+
+const defaultCheckedList = [
+    "tool_id",
+    "name",
+    "category",
+    "assigned_to",
+    "version",
+];
+
+interface ICheckboxChange {
+    key: string;
+}
+
+export const ToolAssignList: React.FC<IResourceComponentsProps> = () => {
+    const t = useTranslate();
+    const { list } = useNavigation();
+    const { RangePicker } = DatePicker;
+    const [loading, setLoading] = useState(false);
+    const menuRef = useRef(null);
+    const [isActive, setIsActive] = useState(false);
+    const onClickDropDown = () => setIsActive(!isActive);
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+    const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+    const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+    const [detail, setDetail] = useState<IToolResponse>();
+    const [detailCheckin, setDetailCheckin] = useState<IToolCheckinRequest>();
+    const [isCheckinToolModalVisible, setIsCheckinToolModalVisible] = useState(false);
+    const [isCheckinMultiToolsModalVisible, setIsCheckinMultiToolsModalVisible] = useState(false);
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParam = searchParams.get("search");
+    const dateFromParam = searchParams.get("dateFrom");
+    const dateToParam = searchParams.get("dateTo");
+
+    const [listening, setListening] = useState(false);
+    const listenForOutsideClicks = (
+        listening: boolean,
+        setListening: (arg0: boolean) => void,
+        menuRef: { current: any },
+        setIsActive: (arg0: boolean) => void
+    ) => {
+        if (listening) return;
+        if (!menuRef.current) return;
+        setListening(true);
+        [`click`, `touchstart`].forEach((type) => {
+            document.addEventListener(`click`, (event) => {
+                const current = menuRef.current;
+                const node = event.target;
+                if (current && current.contains(node)) return;
+                setIsActive(false);
+            });
+        });
+    };
+
+    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+        IToolResponse,
+        HttpError,
+        IToolFilterVariable
+    >({
+        initialSorter: [
+            {
+                field: "id",
+                order: "desc",
+            },
+        ],
+        resource: TOOLS_CHECKOUT_API,
+        onSearch: (params) => {
+            const filters: CrudFilters = [];
+            let {
+                name,
+                key,
+                category,
+                manufacturer,
+                version,
+                created_at
+            } = params;
+            filters.push(
+                {
+                    field: "search",
+                    operator: "eq",
+                    value: searchParam,
+                },
+                {
+                    field: "filter",
+                    operator: "eq",
+                    value: JSON.stringify({
+                        name,
+                        key,
+                        category,
+                        manufacturer,
+                        version
+                    }),
+                },
+                {
+                    field: "dateFrom",
+                    operator: "eq",
+                    value: created_at
+                        ? created_at[0].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "dateTo",
+                    operator: "eq",
+                    value: created_at
+                        ? created_at[1].format().substring(0, 10)
+                        : undefined,
+                },
+            );
+            return filters;
+        },
+    });
+
+    const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
+    const { selectProps: categorySelectProps } = useSelect<IModel>({
+        resource: TOOLS_API_CATEGORIES_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: manufacturesSelectProps } = useSelect<IModel>({
+        resource: MANUFACTURES_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const filterCategory = categorySelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
+
+    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
+
+    const collumns = useMemo(
+        () => [
+            {
+                key: "id",
+                title: "ID",
+                render: (value: number) => <TextField value={value} />,
+                defaultSortOrder: getDefaultSortOrder("id", sorter),
+            },
+            {
+                key: "tool_id",
+                title: "ID Tool",
+                render: (value: number) => <TextField value={value} />,
+                defaultSortOrder: getDefaultSortOrder("tool_id", sorter),
+            },
+            {
+                key: "name",
+                title: t("tools.label.field.name"),
+                render: (value: string, record: IModel) => (
+                    <TextField
+                        value={value}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "purchase_cost",
+                title: t("tools.label.field.purchase_cost"),
+                render: (value: string, record: any) => (
+                    <TextField
+                        value={value}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
+            },
+            {
+                key: "version",
+                title: t("tools.label.field.version"),
+                render: (value: string, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("version", sorter),
+            },
+            {
+                key: "assigned_to",
+                title: t("tools.label.field.assigned_to"),
+                render: (value: IModel, record: any) => (
+                    <TextField strong value={value.name} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
+            },
+            {
+                key: "category",
+                title: t("tools.label.field.category"),
+                render: (value: IToolResponse) => <TextField value={value.name} />,
+                defaultSortOrder: getDefaultSortOrder("category", sorter),
+                filters: filterCategory,
+                onFilter: (value: number, record: IToolResponse) => {
+                    return record.category.id === value;
+                },
+            },
+            {
+                key: "manufacturer",
+                title: t("tools.label.field.manufacturer"),
+                render: (value: IToolResponse) => (
+                    <TextField value={value && value.name}
+                        onClick={() => {
+                            list(`manufactures_details?id=${value.id}&name=${value.name}`);
+                        }}
+                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+                ),
+                onFilter: (value: number, record: IToolResponse) => {
+                    return record.manufacturer.id === value;
+                },
+                filters: filterManufactures,
+                defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
+            },
+            {
+                key: "purchase_date",
+                title: t("tools.label.field.purchase_date"),
+                render: (value: any) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.date : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("purchase_date", sorter),
+            },
+            {
+                key: "checkout_at",
+                title: t("tools.label.field.checkout_at"),
+                render: (value: IModel) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.datetime : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
+            },
+            {
+                key: "notes",
+                title: t("tools.label.field.notes"),
+                render: (value: string, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("notes", sorter),
+            },
+            {
+                key: "created_at",
+                title: t("tools.label.field.dateCreate"),
+                render: (value: IModel) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.datetime : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("created_at", sorter),
+            },
+        ],
+        [filterCategory, filterManufactures]
+    )
+
+    const [collumnSelected, setColumnSelected] = useState<string[]>(
+        localStorage.getItem("item_tools_checkin_selected") !== null
+            ? JSON.parse(localStorage.getItem("item_tools_checkin_selected") as string)
+            : defaultCheckedList
+    );
+
+    const onCheckItem = (value: ICheckboxChange) => {
+        if (collumnSelected.includes(value.key)) {
+            setColumnSelected(
+                collumnSelected.filter((item: any) => item !== value.key)
+            );
+        } else {
+            setColumnSelected(collumnSelected.concat(value.key));
+        }
+    };
+
+    const show = (data: IToolResponse) => {
+        setIsShowModalVisible(true);
+        setDetail(data);
+    };
+
+    const checkin = (data: IToolResponse) => {
+        const dataConvert: IToolCheckinRequest = {
+            id: data.tool_id,
+            name: data.name,
+            username: data.assigned_to.name,
+            checkin_at: {
+                datetime: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+                formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+            },
+            assigned_user: data.assigned_to.id,
+            notes: ""
+        };
+        setDetailCheckin(dataConvert);
+        setIsCheckinToolModalVisible(true);
+    };
+
+    const initselectedRowKeys = useMemo(() => {
+        return JSON.parse(localStorage.getItem("selectedToolsCheckinRowKeys") as string) || [];
+    }, [localStorage.getItem("selectedToolsCheckinRowKeys")]);
+
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<
+        React.Key[] | IToolResponse[]
+    >(initselectedRowKeys as React.Key[]);
+
+    const onSelectChange = (
+        selectedRowKeys: React.Key[],
+        selectedRows: IToolResponse[]
+    ) => {
+        setSelectedRowKeys(selectedRowKeys);
+    };
+
+    const onSelect = (record: any, selected: boolean) => {
+        if (!selected) {
+            const newSelectRow = initselectedRowKeys.filter(
+                (item: IModel) => item.id !== record.id
+            );
+            localStorage.setItem("selectedToolsCheckinRowKeys", JSON.stringify(newSelectRow));
+            setSelectedRowKeys(newSelectRow.map((item: IModel) => item.id));
+        } else {
+            const newselectedRowKeys = [record, ...initselectedRowKeys];
+            localStorage.setItem(
+                "selectedToolsCheckinRowKeys",
+                JSON.stringify(
+                    newselectedRowKeys.filter(function (item, index) {
+                        return newselectedRowKeys;
+                    })
+                )
+            );
+            setSelectedRowKeys(newselectedRowKeys.map((item: IModel) => item.id));
+        }
+    };
+
+    const onSelectAll = (
+        selected: boolean,
+        selectedRows: IToolResponse[],
+        changeRows: IToolResponse[]
+    ) => {
+        if (!selected) {
+            const unSelectIds = changeRows.map((item: IToolResponse) => item.id);
+            let newSelectedRows = initselectedRowKeys.filter(
+                (item: IToolResponse) => item
+            );
+            newSelectedRows = initselectedRowKeys.filter(
+                (item: any) => !unSelectIds.includes(item.id)
+            );
+
+            localStorage.setItem("selectedToolsCheckinRowKeys", JSON.stringify(newSelectedRows));
+        } else {
+            selectedRows = selectedRows.filter((item: IToolResponse) => item);
+            localStorage.setItem(
+                "selectedToolsCheckinRowKeys",
+                JSON.stringify([...initselectedRowKeys, ...selectedRows])
+            );
+            setSelectedRowKeys(selectedRows);
+        }
+    };
+
+    const rowSelection = {
+        selectedRowKeys: initselectedRowKeys.map((item: IModel) => item.id),
+        onChange: onSelectChange,
+        onSelect: onSelect,
+        onSelectAll: onSelectAll,
+        onSelectChange,
+    };
+
+    const handleCheckin = () => {
+        setIsCheckinMultiToolsModalVisible(!isCheckinMultiToolsModalVisible);
+    };
+
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
+
+    const handleRefresh = () => {
+        setLoading(true);
+        setTimeout(() => {
+            refreshData();
+            setLoading(false);
+        }, 300);
+    };
+
+    const handleOpenModel = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const handleCreate = () => {
+        handleOpenModel();
+    };
+
+    const handleDateChange = (val: any, formatString: any) => {
+        if (val !== null) {
+            const [from, to] = Array.from(val || []);
+            searchParams.set(
+                "dateFrom",
+                from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
+            );
+            searchParams.set(
+                "dateTo",
+                to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
+            );
+        } else {
+            searchParams.delete("dateFrom");
+            searchParams.delete("dateTo");
+        }
+
+        setSearchParams(searchParams);
+        searchFormProps.form?.submit();
+    };
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckinToolModalVisible]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckinMultiToolsModalVisible]);
+
+    useEffect(() => {
+        refreshData();
+    }, [isModalVisible]);
+
+    useEffect(() => {
+        localStorage.setItem("item_tools_checkin_selected", JSON.stringify(collumnSelected));
+    }, [collumnSelected]);
+
+    useEffect(() => {
+        localStorage.removeItem("selectedToolsCheckinRowKeys");
+        searchFormProps.form?.submit();
+    }, [window.location.reload]);
+
+    useEffect(() => {
+        if (
+            initselectedRowKeys.filter(
+                (item: IToolResponse) => item.user_can_checkin
+            ).length > 0
+        ) {
+            setSelectedCheckin(true);
+            setSelectdStoreCheckin(
+                initselectedRowKeys
+                    .filter((item: IToolResponse) => item.user_can_checkin)
+                    .map((item: IToolResponse) => item)
+            );
+        } else {
+            setSelectedCheckin(false);
+        }
+    }, [initselectedRowKeys]);
+
+    useEffect(() => {
+        const aboutController = new AbortController();
+        listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
+        return function cleanup() {
+            aboutController.abort();
+        };
+    }, []);
+
+    return (
+        <List
+            title={t("tools.label.title.list-assign")}
+            pageHeaderProps={{
+                extra: (
+                    <CreateButton onClick={handleCreate}>
+                        {t("tools.label.tooltip.create")}
+                    </CreateButton>
+                ),
+            }}>
+            <div className="search">
+                <Form
+                    {...searchFormProps}
+                    initialValues={{
+                        created_at:
+                            dateFromParam && dateToParam
+                                ? [
+                                    moment(dateFromParam, "YYYY/MM/DD"),
+                                    moment(dateToParam, "YYYY/MM/DD"),
+                                ]
+                                : "",
+                    }}
+                    layout="vertical"
+                    className="search-month-location"
+                    onValuesChange={() => searchFormProps.form?.submit()}
+                >
+                    <Form.Item
+                        label={t("tools.label.title.time")}
+                        name="created_at"
+                    >
+                        <RangePicker
+                            format={dateFormat}
+                            placeholder={[
+                                `${t("tools.label.field.start-date")}`,
+                                `${t("tools.label.field.end-date")}`,
+                            ]}
+                            onCalendarChange={handleDateChange}
+                        />
+                    </Form.Item>
+                </Form>
+                <div className="all">
+                    <TableAction searchFormProps={searchFormProps} />
+                    <div className="other_function">
+                        <div className="menu-container" ref={menuRef}>
+                            <div>
+                                <button
+                                    className="menu-trigger"
+                                    style={{
+                                        borderTopLeftRadius: "3px",
+                                        borderBottomLeftRadius: "3px",
+                                    }}
+                                >
+                                    <Tooltip
+                                        title={t("tools.label.tooltip.refresh")}
+                                        color={"#108ee9"}
+                                    >
+                                        <SyncOutlined
+                                            onClick={handleRefresh}
+                                            style={{ color: "black" }}
+                                        />
+                                    </Tooltip>
+                                </button>
+                            </div>
+                            <div>
+                                <button onClick={onClickDropDown} className="menu-trigger">
+                                    <Tooltip
+                                        title={t("tools.label.tooltip.columns")}
+                                        color={"#108ee9"}
+                                    >
+                                        <MenuOutlined style={{ color: "black" }} />
+                                    </Tooltip>
+                                </button>
+                            </div>
+                            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
+                                <div className="menu-dropdown">
+                                    {collumns.map((item) => (
+                                        <Checkbox
+                                            className="checkbox"
+                                            key={item.key}
+                                            onChange={() => onCheckItem(item)}
+                                            checked={collumnSelected.includes(item.key)}
+                                        >
+                                            {item.title}
+                                        </Checkbox>
+                                    ))}
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <MModal
+                title={t("tools.label.title.create")}
+                setIsModalVisible={setIsModalVisible}
+                isModalVisible={isModalVisible}
+            >
+                <ToolCreate
+                    setIsModalVisible={setIsModalVisible}
+                    isModalVisible={isModalVisible}
+                />
+            </MModal>
+            <MModal
+                title={t("tools.label.title.detail")}
+                setIsModalVisible={setIsShowModalVisible}
+                isModalVisible={isShowModalVisible}
+            >
+                <ToolShow
+                    setIsModalVisible={setIsShowModalVisible}
+                    detail={detail}
+                />
+            </MModal>
+
+            <MModal
+                title={t("tools.label.title.checkin")}
+                setIsModalVisible={setIsCheckinMultiToolsModalVisible}
+                isModalVisible={isCheckinMultiToolsModalVisible}
+            >
+                <ToolMultiCheckin
+                    isModalVisible={isCheckinMultiToolsModalVisible}
+                    setIsModalVisible={setIsCheckinMultiToolsModalVisible}
+                    data={selectdStoreCheckin}
+                    setSelectedRowKeys={setSelectedRowKeys}
+                />
+            </MModal>
+
+            <MModal
+                title={t("tools.label.title.checkin")}
+                setIsModalVisible={setIsCheckinToolModalVisible}
+                isModalVisible={isCheckinToolModalVisible}
+            >
+                <ToolCheckin
+                    isModalVisible={isCheckinToolModalVisible}
+                    setIsModalVisible={setIsCheckinToolModalVisible}
+                    data={detailCheckin}
+                />
+            </MModal>
+
+            <div className="checkout-checkin-multiple">
+                <div className="sum-assets">
+                    <span className="name-sum-assets">
+                        {t("tools.label.title.sum-tools")}
+                    </span>{" "}
+                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
+                </div>
+                <div className="checkin-multiple-asset">
+                    <Button
+                        type="primary"
+                        className="btn-select-checkin ant-btn-checkin"
+                        onClick={handleCheckin}
+                        disabled={!selectedCheckin}
+                    >
+                        {t("tools.label.title.checkin")}
+                    </Button>
+                </div>
+            </div>
+            {loading ? (
+                <>
+                    <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+                        <Spin
+                            tip={`${t("loading")}...`}
+                            style={{ fontSize: "18px", color: "black" }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <Table
+                    {...tableProps}
+                    rowKey="id"
+                    scroll={{ x: 1500 }}
+                    pagination={{
+                        position: ["topRight", "bottomRight"],
+                        total: pageTotal ? pageTotal : 0,
+                    }}
+                    rowSelection={{
+                        type: "checkbox",
+                        ...rowSelection,
+                    }}
+                >
+                    {collumns
+                        .filter((collumn) => collumnSelected.includes(collumn.key))
+                        .map((col) => (
+                            <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+                        ))}
+                    <Table.Column<IToolResponse>
+                        title={t("table.actions")}
+                        dataIndex="actions"
+                        render={(_, record) => (
+                            <Space>
+                                <Tooltip
+                                    title={t("tools.label.tooltip.viewDetail")}
+                                    color={"#108ee9"}
+                                >
+                                    <ShowButton
+                                        hideText
+                                        size="small"
+                                        recordItemId={record.id}
+                                        onClick={() => show(record)}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip
+                                    title={t("tools.label.tooltip.edit")}
+                                    color={"#108ee9"}
+                                >
+                                    <EditButton
+                                        hideText
+                                        size="small"
+                                        disabled={true}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip
+                                    title={t("tools.label.tooltip.delete")}
+                                    color={"red"}
+                                >
+                                    <DeleteButton
+                                        resourceName={TOOLS_API}
+                                        hideText
+                                        size="small"
+                                        disabled={true}
+                                    />
+                                </Tooltip>
+                                {record.user_can_checkin === true && (
+                                    <Button
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        onClick={() => checkin(record)}
+                                    >
+                                        {t("tools.label.button.checkin")}
+                                    </Button>
+                                )}
+                            </Space>
+                        )}
+                    />
+                </Table>
+            )}
+        </List>
+    )
+}

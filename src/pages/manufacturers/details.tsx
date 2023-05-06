@@ -53,6 +53,7 @@ import {
 import { defaultValue } from "constants/permissions";
 import { ManufacturesDetailsAccessory } from "./detailAccessory";
 import { ManufacturesDetailsConsumable } from "./detailConsumable";
+import { ManufacturesDetailsTools } from "./detailTools";
 
 
 const defaultCheckedList = [
@@ -1054,6 +1055,9 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                 </TabPane>
                 <TabPane tab={translate("manufactures.label.title.consumables")} key="3">
                     <ManufacturesDetailsConsumable />
+                </TabPane>
+                <TabPane tab={translate("manufactures.label.title.tools")} key="4">
+                    <ManufacturesDetailsTools />
                 </TabPane>
 
             </Tabs>
