@@ -24,9 +24,10 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API, LOCATION_API } from "api/baseApi";
+import { ACCESSORY_API, LOCATION_API, LOCATION_BRANCHADMIN_API } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -47,6 +48,7 @@ import moment from "moment";
 import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import React from "react";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -92,6 +94,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get('supplier_id');
   const manufacturer_id = searchParams.get('manufacturer_id');
 
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IAccesstoryResponse,
@@ -424,7 +427,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const { Option } = Select;
 
   const { selectProps: locationSelectProps } = useSelect<ILocation>({
-    resource: LOCATION_API,
+    resource: permissionsData?.branchadmin === EPermissions.BRANCHADMIN ? LOCATION_BRANCHADMIN_API : LOCATION_API,
     optionLabel: "name",
     optionValue: "id",
     onSearch: (value) => [
