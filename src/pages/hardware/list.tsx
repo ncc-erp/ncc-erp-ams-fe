@@ -6,6 +6,7 @@ import {
   CrudFilters,
   HttpError,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -58,6 +59,7 @@ import {
   CATEGORIES_API,
   HARDWARE_API,
   LOCATION_API,
+  LOCATION_BRANCHADMIN_API,
   STATUS_LABELS_API,
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
@@ -79,6 +81,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -140,6 +143,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
 
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -939,7 +943,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   }, [window.location.reload]);
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
+    resource: permissionsData?.branchadmin === EPermissions.BRANCHADMIN ? LOCATION_BRANCHADMIN_API : LOCATION_API,
     optionLabel: "name",
     optionValue: "id",
     onSearch: (value) => [

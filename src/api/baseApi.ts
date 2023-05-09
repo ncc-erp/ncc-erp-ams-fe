@@ -20,6 +20,7 @@ export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
 
 export const LOCATION_API = "api/v1/locations";
 export const LOCATION_SELECT_LIST_API = "api/v1/locations/selectlist";
+export const LOCATION_BRANCHADMIN_API = "api/v1/locations/branchadmin";
 
 export const COMPANIES_API = "api/v1/companies";
 export const COMPANIES_SELECT_LIST_API = "api/v1/companies/selectlist";
