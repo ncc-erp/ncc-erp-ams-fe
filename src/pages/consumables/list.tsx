@@ -26,10 +26,9 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
-  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { CONSUMABLE_API, LOCATION_API, LOCATION_BRANCHADMIN_API } from "api/baseApi";
+import { CONSUMABLE_API, LOCATION_API } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -49,7 +48,6 @@ import { dateFormat } from "constants/assets";
 import { ConsumablesEdit } from "./edit";
 import "styles/antd.less";
 import { ConsumablesShow } from "./show";
-import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -94,8 +92,6 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const category_id = searchParams.get("category_id");
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
-
-  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -426,7 +422,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: permissionsData?.branchadmin === EPermissions.BRANCHADMIN ? LOCATION_BRANCHADMIN_API : LOCATION_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     optionValue: "id",
     onSearch: (value) => [
