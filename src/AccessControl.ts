@@ -162,7 +162,6 @@ p, 2, ${i18n.t("resource.assets")}/*, (show)
 
 p, 2, ${i18n.t("resource.users")}, list
 p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
-
 p, 2, ${i18n.t("resource.users-tools")}, (list)
 p, 2, ${i18n.t("resource.users-tools")}/*, (show)
 

@@ -23,7 +23,7 @@ export const ToolSearch = (props: ToolSearchProps) => {
             </Form.Item>
             <Form.Item
                 label={t("tools.label.field.version")}
-                name="software_tag"
+                name="version"
             >
                 <Input placeholder={t("tools.label.placeholder.version")} />
             </Form.Item>
@@ -32,6 +32,12 @@ export const ToolSearch = (props: ToolSearchProps) => {
                 name="manufacturer"
             >
                 <Input placeholder={t("tools.label.placeholder.manufacturer")} />
+            </Form.Item>
+            <Form.Item
+                label={t("tools.label.field.category")}
+                name="category"
+            >
+                <Input placeholder={t("tools.label.placeholder.category")} />
             </Form.Item>
             <Form.Item>
                 <Button htmlType="submit" type="primary" className="search-advanced">

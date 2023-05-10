@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect }
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import { MANUFACTURES_API, TOOLS_API, TOOLS_API_CATEGORIES_API } from "api/baseApi";
 import { IModel } from "interfaces/model";
-import { IToolMessageResponse, IToolRequest, IToolResponse } from "interfaces/tool";
+import { IToolMessageResponse, IToolRequest } from "interfaces/tool";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
@@ -175,12 +175,11 @@ export const ToolCreate = (props: ToolCreateProps) => {
                     <Form.Item
                         label={t("tools.label.field.category")}
                         name="category_id"
-                        initialValue={16}
                         rules={[
                             {
                                 required: true,
                                 message:
-                                    t("tools.label.field.seats") +
+                                    t("tools.label.field.category") +
                                     " " +
                                     t("tools.label.message.required"),
                             },

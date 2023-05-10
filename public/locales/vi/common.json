@@ -315,7 +315,8 @@
         "version": "Nhập phiên bản",
         "notes":"Mô tả",
         "purchase_cost": "Nhập chi phí",
-        "manufacturer": "Lựa chọn nhà phát hành"
+        "manufacturer": "Lựa chọn nhà phát hành",
+        "category": "Lựa chọn thể loại"
       },
       "message": {
         "required": "bắt buộc"
@@ -729,7 +730,8 @@
       "options": {
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
-        "consumable": "Văn phòng phẩm"
+        "consumable": "Văn phòng phẩm",
+        "tool": "Tool"
       }
     }
   },

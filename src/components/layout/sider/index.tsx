@@ -201,7 +201,7 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
+        {permissionsData && permissionsData?.admin === EPermissions.ADMIN  && (
           <SubMenu
             title={
               <span>
@@ -519,7 +519,7 @@ export const Sider: React.FC = () => {
                         ) : name === `${translate("resource.users")}` ? (
                           <DesktopOutlined />
                         ) : name === `${translate("resource.users-tools")}` ? (
-                          <DesktopOutlined />
+                          <ToolOutlined />
                         ) : name === `${translate("resource.users_licenses")}` ? (
                           <BlockOutlined />
                         ) : (

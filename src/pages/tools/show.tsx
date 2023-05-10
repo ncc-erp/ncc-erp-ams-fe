@@ -38,7 +38,7 @@ export const ToolShow = (props: ToolShowProps) => {
                     <Text className="show-asset">{detail && detail?.version}</Text>
                 </Col>
             </Row>
-            {detail && detail.checkout_count && (
+            {detail && detail.checkout_count !== undefined && (
                 <Row gutter={16}>
                     <Col className="gutter-row" span={4}>
                         <Title level={5}>{t("tools.label.field.checkout_count")}</Title>

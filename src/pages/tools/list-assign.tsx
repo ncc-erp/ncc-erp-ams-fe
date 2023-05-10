@@ -56,6 +56,7 @@ const defaultCheckedList = [
     "category",
     "assigned_to",
     "version",
+    "checkout_at"
 ];
 
 interface ICheckboxChange {
