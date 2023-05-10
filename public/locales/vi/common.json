@@ -646,7 +646,8 @@
       "options": {
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
-        "consumable": "Văn phòng phẩm"
+        "consumable": "Văn phòng phẩm",
+        "software":"Phần mềm"
       }
     }
   },
