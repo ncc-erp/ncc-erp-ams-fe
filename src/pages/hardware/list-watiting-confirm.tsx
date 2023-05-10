@@ -42,7 +42,6 @@ import {
   CATEGORIES_API,
   HARDWARE_API,
   LOCATION_API,
-  LOCATION_BRANCHADMIN_API,
   STATUS_LABELS_API,
 } from "api/baseApi";
 import {
@@ -717,7 +716,7 @@ export const HardwareListWaitingConfirm: React.FC<
   };
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: permissionsData?.branchadmin === EPermissions.BRANCHADMIN ? LOCATION_BRANCHADMIN_API : LOCATION_API,
+    resource: LOCATION_API,
     optionLabel: "name",
     optionValue: "id",
     onSearch: (value) => [

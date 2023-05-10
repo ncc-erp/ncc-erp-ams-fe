@@ -154,25 +154,26 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
             </Form>
             <div className="title-sum-location">{nameSearch}</div>
           </div>
-
-          <Row gutter={[12, 12]}>
-            {isLoadingData ? (
-              <Col sm={24} md={24} className="dashboard-loading">
-                <Spin
-                  tip={`${translate("loading")}...`}
-                  className="spin-center"
-                />
-              </Col>
-            ) : (
-              (data?.data.payload || []).map(
-                (item: ILocation, index: number) => (
-                  <Col key={index} sm={24} md={24}>
-                    <Locations location={item} data={data}></Locations>
-                  </Col>
+          <div className="locations-container">
+            <Row gutter={[12, 0]}>
+              {isLoadingData ? (
+                <Col sm={24} md={24} className="dashboard-loading">
+                  <Spin
+                    tip={`${translate("loading")}...`}
+                    className="spin-center"
+                  />
+                </Col>
+              ) : (
+                (data?.data.payload || []).map(
+                  (item: ILocation, index: number) => (
+                    <Col key={index} sm={24} md={24}>
+                      <Locations location={item} data={data}></Locations>
+                    </Col>
+                  )
                 )
-              )
-            )}
-          </Row>
+              )}
+            </Row>
+          </div>
         </section>
         <section className="all-location">
           <span className="title-section-dashboard">
