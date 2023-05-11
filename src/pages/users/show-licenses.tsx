@@ -42,7 +42,7 @@ export const LicensesUserShow = (props: LicensesUserShowProps) => {
             </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("licenses.label.field.allocated_seats_count")}</Title>
+                    <Title level={5}>{t("licenses.label.field.checkout-count")}</Title>
                 </Col>
                 <Col span={18}>
                     <Text>
@@ -52,7 +52,7 @@ export const LicensesUserShow = (props: LicensesUserShowProps) => {
             </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("licenses.label.field.dateAdd")}</Title>
+                    <Title level={5}>{t("licenses.label.field.purchase_date")}</Title>
                 </Col>
                 <Col span={18}>
                     <Text>

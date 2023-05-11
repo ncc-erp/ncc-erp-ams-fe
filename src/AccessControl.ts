@@ -149,6 +149,8 @@ p, 2, ${i18n.t("resource.assets")}/*, (show)
 
 p, 2, ${i18n.t("resource.users")}, list
 p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 2, ${i18n.t("resource.users_licenses")}, (list)
+p, 2, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 2, ${i18n.t("resource.assets-assign")}, (list)
 p, 2, ${i18n.t("resource.assets-assign")}/*,(show)
