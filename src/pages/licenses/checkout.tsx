@@ -109,6 +109,11 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
                     >
                         <Input disabled={true} />
                     </Form.Item>
+                    {messageErr?.licenses && (
+                        <Typography.Text type="danger">
+                            {messageErr.licenses}
+                        </Typography.Text>
+                    )}
                     <Form.Item
                         label={t("licenses.label.field.software")}
                         name="software"

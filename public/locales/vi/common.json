@@ -232,6 +232,7 @@
         "list-pending": "Đang chờ Tài sản",
         "list-broken": "Không cho phép cấp phát Tài sản",
         "list-waiting-confirm": "Đang chờ xác nhận",
+        "list-expiration" : "Sắp hết hạn",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
         "time": "Thời gian",

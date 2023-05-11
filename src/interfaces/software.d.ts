@@ -70,9 +70,10 @@ export interface IModelSoftware {
 export interface ISoftwareRequestMultipleCheckout {
   softwares: {}[];
   assigned_users: string;
-  checkout_at: string,
-  notes: string
-  software: string
+  checkout_at: string;
+  notes: string;
+  software: string;
+  licenses: string;
 }
 export interface ISoftwareUsesResponse {
   id: number;
