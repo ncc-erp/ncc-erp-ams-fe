@@ -200,41 +200,6 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && permissionsData.admin === EPermissions.ADMIN &&
-          menuItems
-            .filter(
-              (item) => item.name === `${translate("resource.softwares")}`
-            )
-            .map(({ icon, name, route }) => {
-              const isSelected = route === selectedKey;
-              return (
-                <Menu.Item
-                  style={{
-                    fontWeight: isSelected ? "bold" : "normal",
-                  }}
-                  key={route}
-                  icon={
-                    name === `${translate("resource.softwares")}` ? (
-                      <BlockOutlined />
-                    ) : (
-                      ""
-                    )
-                  }
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {name}
-                    {!collapsed && isSelected && <RightOutlined />}
-                  </div>
-                </Menu.Item>
-              );
-            })}
-
         {permissionsData &&
           (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
           menuItems
@@ -322,8 +287,7 @@ export const Sider: React.FC = () => {
                 .filter(
                   (item) =>
                     item.name === `${translate("resource.request")}` ||
-                    item.name === `${translate("resource.users")}` ||
-                    item.name === `${translate("resource.users_licenses")}`
+                    item.name === `${translate("resource.users")}` 
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -340,8 +304,6 @@ export const Sider: React.FC = () => {
                           <PullRequestOutlined />
                         ) : name === `${translate("resource.users")}` ? (
                           <DesktopOutlined />
-                        ) : name === `${translate("resource.users_licenses")}` ? (
-                          <BlockOutlined />
                         ) : (
                           ""
                         )
