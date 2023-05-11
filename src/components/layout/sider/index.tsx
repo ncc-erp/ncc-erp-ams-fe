@@ -418,8 +418,7 @@ export const Sider: React.FC = () => {
           >
           {menuItems
             .filter((item) => 
-            item.name === `${translate("resource.users")}` || 
-            item.name === `${translate("resource.users_licenses")}`)
+            item.name === `${translate("resource.users")}` )
             .map(({ icon, name, route }) => {
               const isSelected = route === selectedKey;
               return (
@@ -433,8 +432,6 @@ export const Sider: React.FC = () => {
                       <DashboardOutlined />
                       ) : name === `${translate("resource.users")}` ? (
                         <DesktopOutlined />
-                      ) : name === `${translate("resource.users_licenses")}` ? (
-                        <BlockOutlined />
                       ) : (
                         ""
                       )
