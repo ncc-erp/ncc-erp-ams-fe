@@ -86,7 +86,7 @@ export const HardwareListWaitingConfirm: React.FC<
   const [ isAdmin, setIsAdmin] = useState(false);
   
   useEffect(() => {
-    if(permissionsData.admin === EPermissions.ADMIN){
+    if(permissionsData?.admin === EPermissions.ADMIN){
       setIsAdmin(true);
     }else{
       setIsAdmin(false);
