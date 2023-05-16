@@ -167,7 +167,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       mutate({
         resource: HARDWARE_API,
         values: payload,
-      });
+      },
+        {
+          onError: (error) => {
+            setMessageErr(error?.response.data.messages);
+          }
+        });
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
@@ -300,6 +305,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ warranty_months: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
           >
             <Input

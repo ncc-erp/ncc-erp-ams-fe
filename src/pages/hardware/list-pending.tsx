@@ -5,6 +5,7 @@ import {
   CrudFilters,
   HttpError,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -75,6 +76,7 @@ import {
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -122,6 +124,8 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("dateFrom");
   const dateToParam = searchParams.get("dateTo");
   const searchParam = searchParams.get("search");
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -915,9 +919,11 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
       title={t("hardware.label.title.list-pending")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {t("hardware.label.tooltip.create")}
-          </CreateButton>
+          permissionsData.admin === EPermissions.ADMIN && (
+            <CreateButton onClick={handleCreate}>
+              {t("hardware.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >

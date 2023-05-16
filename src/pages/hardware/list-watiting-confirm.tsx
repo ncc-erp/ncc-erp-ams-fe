@@ -82,17 +82,17 @@ export const HardwareListWaitingConfirm: React.FC<
   const [idConfirm, setidConfirm] = useState<number>(-1);
 
   const { data: permissionsData } = usePermissions();
-  
-  const [ isAdmin, setIsAdmin] = useState(false);
-  
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
-    if(permissionsData?.admin === EPermissions.ADMIN){
+    if (permissionsData?.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
-    }else{
+    } else {
       setIsAdmin(false);
     }
   }, [permissionsData])
-  
+
   
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
@@ -970,22 +970,26 @@ export const HardwareListWaitingConfirm: React.FC<
                 )
               }
             >
+              {isAdmin && (
+                <Button
+                  type="primary"
+                  disabled={!selectedAcceptAndRefuse}
+                  loading={loading}
+                  className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
+                >
+                  {t("user.label.button.accept")}
+                </Button>
+              )}
+            </Popconfirm>
+            {isAdmin && (
               <Button
                 type="primary"
+                onClick={handleCancel}
                 disabled={!selectedAcceptAndRefuse}
-                loading={loading}
-                className={selectedAcceptAndRefuse ? "ant-btn-accept" : ""}
               >
-                {t("user.label.button.accept")}
+                {t("user.label.button.cancle")}
               </Button>
-            </Popconfirm>
-            <Button
-              type="primary"
-              onClick={handleCancel}
-              disabled={!selectedAcceptAndRefuse}
-            >
-              {t("user.label.button.cancle")}
-            </Button>
+            )}
           </div>
 
           <div
@@ -996,7 +1000,7 @@ export const HardwareListWaitingConfirm: React.FC<
               .filter(
                 (item: IAssetsWaiting) =>
                   item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN 
+                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
               )
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
@@ -1060,10 +1064,10 @@ export const HardwareListWaitingConfirm: React.FC<
               }
               : false
           }
-          rowSelection={{
+          rowSelection={isAdmin ? {
             type: "checkbox",
             ...rowSelection,
-          }}
+          } : undefined}
           scroll={{ x: 1800 }}
         >
           {collumns
@@ -1160,7 +1164,7 @@ export const HardwareListWaitingConfirm: React.FC<
                     </Button>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && isAdmin &&(
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && isAdmin && (
                   <Button
                     type="primary"
                     shape="round"

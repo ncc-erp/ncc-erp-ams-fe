@@ -113,10 +113,16 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
 
   useEffect(() => {
     if (payload) {
-      mutate({
-        resource: ACCESSORY_API,
-        values: payload,
-      });
+      mutate(
+        {
+          resource: ACCESSORY_API,
+          values: payload,
+        },
+        {
+          onError: (error) => {
+            setMessageErr(error?.response.data.messages);
+          }
+        });
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
@@ -293,6 +299,14 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
                   " " +
                   t("accessory.label.message.required"),
               },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ warranty_months: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
           >
             <Input
