@@ -118,6 +118,11 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       mutate({
         resource: CONSUMABLE_API,
         values: payload,
+      },
+      {
+        onError: (error) => {
+          setMessageErr(error?.response.data.messages);
+        }
       });
       if (createData?.data.message) form.resetFields();
     }
@@ -294,6 +299,14 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
                   " " +
                   t("consumables.label.message.required"),
               },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ warranty_months: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
           >
             <Input

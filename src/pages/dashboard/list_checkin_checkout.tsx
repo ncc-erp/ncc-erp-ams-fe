@@ -245,6 +245,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       }
     );
 
+    dataCheckIn?.data.payload.locations.forEach((location: any) => {
+      if(!sumConsumable[`location_${location.id}`]) {
+        sumConsumable[`location_${location.id}`] = 0;
+      }
+      if(!sumAccessory[`location_${location.id}`]) {
+        sumAccessory[`location_${location.id}`] = 0;
+      }
+    });
+
     dataResponseCheckIn = dataSource;
     dataResponseCheckIn = dataResponseCheckIn.filter(
       (item: any) => item.category_type === CategoryType.ASSET
@@ -387,6 +396,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
+
+    dataCheckOut?.data.payload.locations.forEach((location: any) => {
+      if(!sumConsumable[`location_${location.id}`]) {
+        sumConsumable[`location_${location.id}`] = 0;
+      }
+      if(!sumAccessory[`location_${location.id}`]) {
+        sumAccessory[`location_${location.id}`] = 0;
+      }
+    });
 
     dataResponseCheckOut = dataSource;
     dataResponseCheckOut = dataResponseCheckOut.filter(

@@ -5,6 +5,7 @@ import {
   CrudFilters,
   HttpError,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -77,6 +78,7 @@ import {
 } from "untils/assets";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -129,12 +131,24 @@ export const HardwareListReadyToDeploy: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
     useState(false);
   const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
     useState(false);
+
+  const { data: permissionsData } = usePermissions();
+
+  
+  useEffect(() => {
+    if (permissionsData.admin === EPermissions.ADMIN) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [permissionsData])
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -1117,9 +1131,11 @@ export const HardwareListReadyToDeploy: React.FC<
       title={t("hardware.label.title.list-readyToDeploy")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {t("hardware.label.tooltip.create")}
-          </CreateButton>
+          isAdmin && (
+            <CreateButton onClick={handleCreate}>
+              {t("hardware.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >
@@ -1356,14 +1372,16 @@ export const HardwareListReadyToDeploy: React.FC<
           : {tableProps.pagination ? tableProps.pagination?.total : 0}
         </div>
         <div className="checkout-multiple-asset">
-          <Button
-            type="primary"
-            className="btn-select-checkout ant-btn-checkout"
-            onClick={handleCheckout}
-            disabled={!selectedCheckout}
-          >
-            {t("hardware.label.title.checkout")}
-          </Button>
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleCheckout}
+              disabled={!selectedCheckout}
+            >
+              {t("hardware.label.title.checkout")}
+            </Button>
+          )}
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
 
@@ -1384,14 +1402,16 @@ export const HardwareListReadyToDeploy: React.FC<
         </div>
 
         <div className="checkin-multiple-asset">
-          <Button
-            type="primary"
-            className="btn-select-checkout"
-            disabled={!selectedCheckin}
-            onClick={handleCheckin}
-          >
-            {t("hardware.label.title.checkin")}
-          </Button>
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout"
+              disabled={!selectedCheckin}
+              onClick={handleCheckin}
+            >
+              {t("hardware.label.title.checkin")}
+            </Button>
+          )}
 
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
@@ -1432,10 +1452,10 @@ export const HardwareListReadyToDeploy: React.FC<
             total: pageTotal ? pageTotal : 0,
             showSizeChanger: true,
           }}
-          rowSelection={{
+          rowSelection={ isAdmin ? {
             type: "checkbox",
             ...rowSelection,
-          }}
+          } : undefined }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))

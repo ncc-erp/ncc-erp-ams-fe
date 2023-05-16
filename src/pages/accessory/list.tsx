@@ -48,6 +48,7 @@ import moment from "moment";
 import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import React from "react";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -92,6 +93,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const searchParam = searchParams.get("search");
   const supplier_id = searchParams.get('supplier_id');
   const manufacturer_id = searchParams.get('manufacturer_id');
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IAccesstoryResponse,
@@ -485,9 +488,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       title={translate("accessory.label.title.accessory")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {translate("accessory.label.tooltip.create")}
-          </CreateButton>
+          permissionsData.admin === EPermissions.ADMIN && (
+            <CreateButton onClick={handleCreate}>
+              {translate("accessory.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >

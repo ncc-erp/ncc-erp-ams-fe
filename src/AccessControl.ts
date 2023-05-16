@@ -190,6 +190,8 @@ p, 2, ${i18n.t("resource.accessory_details")}/*, (show)
 
 p, 2, ${i18n.t("resource.location_details")}, (list) 
 p, 2, ${i18n.t("resource.location_details")}/*,(show)
+
+p, 2, ${i18n.t("resource.report")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

@@ -39,6 +39,7 @@ export const SUPPLIER_REQUEST_API = "api/v1/finfast/supplier";
 export const FINFAST_ENTRY_TYPE_API = "api/v1/finfast/entry-type";
 
 export const CATEGORIES_API = "api/v1/categories";
+export const CATEGORIES_SELECT_LIST_ASSET_API = "api/v1/categories/asset/selectlist";
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
 
 export const MANUFACTURES_API = "api/v1/manufacturers";

@@ -11,6 +11,7 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
 import { MModal } from "components/Modal/MModal";
@@ -28,6 +29,7 @@ import { AccessoryCheckin } from "./checkin";
 import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import { AccessoryCheckout } from "./checkout";
+import { EPermissions } from "constants/permissions";
 
 export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -49,6 +51,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
   const accessory_id = searchParams.get("id");
 
   const { list } = useNavigation();
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, tableQueryResult } = useTable<
     IAccesstoryResponse,
@@ -195,21 +199,22 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
               dataIndex="actions"
               render={(_, record) => (
                 <Space>
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
+                  { permissionsData.admin === EPermissions.ADMIN && (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
                           ? false
-                          : true
-                    }
-                    onClick={() => checkin(record)}
-                  >
-                    {translate("accessory.label.button.checkin")}
-                  </Button>
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => checkin(record)}
+                      >
+                      {translate("accessory.label.button.checkin")}
+                    </Button>)}
                 </Space>
               )}
             />
