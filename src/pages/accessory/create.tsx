@@ -131,9 +131,7 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
     if (createData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(undefined);
-    } else {
-      setMessageErr(createData?.data.messages);
+      setMessageErr(messageErr);
     }
   }, [createData, form, setIsModalVisible]);
 
