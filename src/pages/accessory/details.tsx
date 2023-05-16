@@ -94,7 +94,7 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_notes",
         title: translate("accessory.label.field.notes"),
-        render: (value: string) => 
+        render: (value: string) =>
           <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />,
       },
     ],
@@ -199,7 +199,7 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
               dataIndex="actions"
               render={(_, record) => (
                 <Space>
-                  { permissionsData.admin === EPermissions.ADMIN && (
+                  {permissionsData.admin === EPermissions.ADMIN && (
                     <Button
                       type="primary"
                       shape="round"
@@ -212,7 +212,7 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
                             : true
                       }
                       onClick={() => checkin(record)}
-                      >
+                    >
                       {translate("accessory.label.button.checkin")}
                     </Button>)}
                 </Space>

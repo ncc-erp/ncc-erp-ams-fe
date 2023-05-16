@@ -1452,10 +1452,10 @@ export const HardwareListReadyToDeploy: React.FC<
             total: pageTotal ? pageTotal : 0,
             showSizeChanger: true,
           }}
-          rowSelection={ isAdmin ? {
+          rowSelection={isAdmin ? {
             type: "checkbox",
             ...rowSelection,
-          } : undefined }
+          } : undefined}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))

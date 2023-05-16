@@ -119,11 +119,11 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
         resource: CONSUMABLE_API,
         values: payload,
       },
-      {
-        onError: (error) => {
-          setMessageErr(error?.response.data.messages);
-        }
-      });
+        {
+          onError: (error) => {
+            setMessageErr(error?.response.data.messages);
+          }
+        });
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);

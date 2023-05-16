@@ -144,7 +144,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get('supplier_id');
 
   const { data: permissionsData } = usePermissions();
-  
+
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
@@ -1381,7 +1381,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           : {tableProps.pagination ? tableProps.pagination?.total : 0}
         </div>
         <div className="checkout-multiple-asset">
-          { isAdmin && (
+          {isAdmin && (
             <Button
               type="primary"
               className="btn-select-checkout ant-btn-checkout"
@@ -1410,7 +1410,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         </div>
 
         <div className="checkin-multiple-asset">
-          { isAdmin && (
+          {isAdmin && (
             <Button
               type="primary"
               className="btn-select-checkout"
@@ -1456,7 +1456,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={ isAdmin ? {
+          rowSelection={isAdmin ? {
             type: "checkbox",
             ...rowSelection,
           } : undefined}

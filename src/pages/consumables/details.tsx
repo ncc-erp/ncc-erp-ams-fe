@@ -209,7 +209,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
                 render={(_, record) => (
                   <>
                     <Space>
-                      { permissionsData.admin === EPermissions.ADMIN && (
+                      {permissionsData.admin === EPermissions.ADMIN && (
                         <Button
                           className="ant-btn-detail"
                           type="primary"

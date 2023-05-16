@@ -1442,7 +1442,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={ isAdmin ? {
+          rowSelection={isAdmin ? {
             type: "checkbox",
             ...rowSelection,
           } : undefined}
