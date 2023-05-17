@@ -6,6 +6,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   MANUFACTURES_API,
+  SOFTWARE_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -60,11 +61,20 @@ p, 1, ${i18n.t("resource.assets-expires")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets-expires")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.softwares")}, (list)|(create)
+p, 1, ${SOFTWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.softwares")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.licenses")}, (list)|(create)
+p, 1, ${i18n.t("resource.licenses")}/*, (edit)|(show)|(checkout)
+
 p, 1, ${i18n.t("resource.request")}, (list)|(create)
 p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
 p, 1, ${i18n.t("resource.users")}, list
 p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 1, ${i18n.t("resource.users_licenses")}, (list)
+p, 1, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 1, ${i18n.t("resource.category")}, (list)|(create)
 p, 1, ${CATEGORIES_API}/*, (delete)
@@ -84,6 +94,8 @@ p, 1, ${i18n.t("resource.location_details")}/*, (edit)|(show)|(clone)|(checkout)
 
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 0, ${i18n.t("resource.users_licenses")}, (list)
+p, 0, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 1, ${i18n.t("resource.model")}, (list)|(create)
 p, 1, ${MODELS_API}/*, (delete)
@@ -127,6 +139,59 @@ p, 1, ${ACCESSORY_API}/*, (delete)
 p, 1, ${i18n.t("resource.accessory")}/*, (edit)|(show)
 p, 1, ${i18n.t("resource.accessory_details")}, (list)
 p, 1, ${i18n.t("resource.accessory_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.dashboard")}, list
+
+p, 2, ${i18n.t("resource.checkin-checkout")}, (list)
+
+p, 2, ${i18n.t("resource.assets")}, (list)
+p, 2, ${i18n.t("resource.assets")}/*, (show)
+
+p, 2, ${i18n.t("resource.users")}, list
+p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 2, ${i18n.t("resource.users_licenses")}, (list)
+p, 2, ${i18n.t("resource.users_licenses")}/*, (show)
+
+p, 2, ${i18n.t("resource.assets-assign")}, (list)
+p, 2, ${i18n.t("resource.assets-assign")}/*,(show)
+
+p, 2, ${i18n.t("resource.assets-readyToDeploy")}, (list)
+p, 2, ${i18n.t(
+  "resource.assets-readyToDeploy"
+)}/*, (show)
+
+p, 2, ${i18n.t("resource.assets-waiting-confirm")}, list
+p, 2, ${i18n.t("resource.assets-waiting-confirm")}/*, (show)
+
+p, 2, ${i18n.t("resource.assets-pending")}, (list)
+p, 2, ${i18n.t("resource.assets-pending")}/*, (show)
+
+p, 2, ${i18n.t("resource.assets-broken")}, (list)
+p, 2, ${i18n.t("resource.assets-broken")}/*,(show)
+
+p, 2, ${i18n.t("resource.assets-expires")}, (list)
+p, 2, ${i18n.t("resource.assets-expires")}/*,(show)
+
+p, 2, ${i18n.t("resource.supplier_details")}, (list) 
+p, 2, ${i18n.t("resource.supplier_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.manufactures_details")}, (list) 
+p, 2, ${i18n.t("resource.manufactures_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.consumables")}, (list)
+p, 2, ${i18n.t("resource.consumables")}/*, (show)
+p, 2, ${i18n.t("resource.consumable_details")}, (list) 
+p, 2, ${i18n.t("resource.consumable_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.accessory")}, (list)
+p, 2, ${i18n.t("resource.accessory")}/*, (show)
+p, 2, ${i18n.t("resource.accessory_details")}, (list)
+p, 2, ${i18n.t("resource.accessory_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.location_details")}, (list) 
+p, 2, ${i18n.t("resource.location_details")}/*,(show)
+
+p, 2, ${i18n.t("resource.report")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

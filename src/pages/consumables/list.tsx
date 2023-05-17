@@ -26,6 +26,7 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
 import { CONSUMABLE_API, LOCATION_API } from "api/baseApi";
@@ -48,6 +49,7 @@ import { dateFormat } from "constants/assets";
 import { ConsumablesEdit } from "./edit";
 import "styles/antd.less";
 import { ConsumablesShow } from "./show";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -92,6 +94,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const category_id = searchParams.get("category_id");
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -481,9 +485,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       title={translate("consumables.label.title.consumables")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {translate("consumables.label.tooltip.create")}
-          </CreateButton>
+          permissionsData.admin === EPermissions.ADMIN && (
+            <CreateButton onClick={handleCreate}>
+              {translate("consumables.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >

@@ -33,6 +33,7 @@ import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
 import { SYNC_USER_API, USER_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
+import { getPermissionsUser } from "untils/users";
 
 const defaultCheckedList = [
   "id",
@@ -141,6 +142,11 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         title: translate("user.label.field.first_name"),
         render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
+      },
+      {
+        key: "permissions",
+        title: translate("user.label.field.role"),
+        render: (value: any) => <TextField value={getPermissionsUser(value)}/>,
       },
       {
         key: "email",
@@ -303,6 +309,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       password: data?.password,
       password_confirmation: data?.password_confirmation,
       permissions: data?.permissions !== null ? data?.permissions : "",
+      manager_location: data?.manager_location !== null ? data?.manager_location : "",
     };
 
     setDetail(dataConvert);

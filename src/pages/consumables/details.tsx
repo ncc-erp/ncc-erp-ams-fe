@@ -13,6 +13,7 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
 import { MModal } from "components/Modal/MModal";
@@ -29,6 +30,7 @@ import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
 import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesShow } from "./show";
+import { EPermissions } from "constants/permissions";
 
 export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -47,6 +49,8 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
   const nameConsumable = searchParams.get("name");
   const category_id = searchParams.get("category_id");
   const consumable_id = searchParams.get("id");
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -205,22 +209,24 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
                 render={(_, record) => (
                   <>
                     <Space>
-                      <Button
-                        className="ant-btn-detail"
-                        type="primary"
-                        shape="round"
-                        size="small"
-                        loading={
-                          isLoadingArr[record.id] === undefined
-                            ? false
-                            : isLoadingArr[record.id] === false
+                      {permissionsData.admin === EPermissions.ADMIN && (
+                        <Button
+                          className="ant-btn-detail"
+                          type="primary"
+                          shape="round"
+                          size="small"
+                          loading={
+                            isLoadingArr[record.id] === undefined
                               ? false
-                              : true
-                        }
-                        onClick={() => show(record)}
-                      >
-                        {translate("consumables.label.button.detail")}
-                      </Button>
+                              : isLoadingArr[record.id] === false
+                                ? false
+                                : true
+                          }
+                          onClick={() => show(record)}
+                        >
+                          {translate("consumables.label.button.detail")}
+                        </Button>
+                      )}
 
                       {record.user_can_checkout === true && (
                         <Button

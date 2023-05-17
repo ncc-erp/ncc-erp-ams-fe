@@ -165,6 +165,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   }, [payload]);
 
   useEffect(() => {
+    setIsReadyToDeploy(findLabel(Number(data?.status_label.id)));
     form.resetFields();
     setFile(undefined);
     setFields([
@@ -218,7 +219,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
         if (
-          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.PENDING ||
           item.label === EStatus.ASSIGN
         ) {
           check = true;

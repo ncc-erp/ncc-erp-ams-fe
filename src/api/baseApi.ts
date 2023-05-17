@@ -5,9 +5,16 @@ export const DASHBOARD_FINFAST_SETTING_API = "api/v1/dashboard/finfast-setting";
 export const DASHBOARD_REPORT_ASSET_API = "api/v1/dashboard/reportAsset"
 
 export const HARDWARE_API = "api/v1/hardware";
+export const HARDWARE_EXPIRATION_API = "api/v1/hardware/assetExpiration";
 export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";
 export const HARDWARE_CHECKOUT_API = "api/v1/hardware/checkout";
 export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
+
+export const SOFTWARE_API = "api/v1/software";
+export const CATEGORIES_SELECT_SOFTWARE_LIST_API = "api/v1/categories/software/selectlist";
+export const SOFTWARE_CHECKOUT_API = "api/v1/software/licenses/checkout"
+export const LICENSES_API = "api/v1/software/licenses"
+export const LICENSES_CHECKOUT_USER_API = "api/v1/software/license"
 
 export const MODELS_API = "api/v1/models";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
@@ -23,6 +30,7 @@ export const SUPPLIERS_API = "api/v1/suppliers";
 export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
 export const STATUS_LABELS_API = "api/v1/statuslabels";
 export const ASSIGN_HARDWARE_API = "api/v1/hardware/assign";
+export const ASSIGN_LICENSES_API = "api/v1/software/license/assign";
 
 export const FINFAST_REQUEST_API = "api/v1/finfast-request";
 export const SEND_REQUEST_API = "api/v1/finfast/outcome";
@@ -31,6 +39,7 @@ export const SUPPLIER_REQUEST_API = "api/v1/finfast/supplier";
 export const FINFAST_ENTRY_TYPE_API = "api/v1/finfast/entry-type";
 
 export const CATEGORIES_API = "api/v1/categories";
+export const CATEGORIES_SELECT_LIST_ASSET_API = "api/v1/categories/asset/selectlist";
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
 
 export const MANUFACTURES_API = "api/v1/manufacturers";

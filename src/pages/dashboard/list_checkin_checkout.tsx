@@ -205,7 +205,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                 sumAccessory[`location_${items.location_id}`] =
                   sumAccessory[`location_${items.location_id}`] !== undefined
                     ? Number(items.checkin) +
-                      sumAccessory[`location_${items.location_id}`]
+                    sumAccessory[`location_${items.location_id}`]
                     : Number(items.checkin);
                 sumAccessory[`count`] =
                   sumAccessory[`count`] !== undefined
@@ -231,7 +231,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                 sumConsumable[`location_${items.location_id}`] =
                   sumConsumable[`location_${items.location_id}`] !== undefined
                     ? Number(items.checkin) +
-                      sumConsumable[`location_${items.location_id}`]
+                    sumConsumable[`location_${items.location_id}`]
                     : Number(items.checkin);
                 sumConsumable[`count`] =
                   sumConsumable[`count`] !== undefined
@@ -244,6 +244,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
+
+    dataCheckIn?.data.payload.locations.forEach((location: any) => {
+      if (!sumConsumable[`location_${location.id}`]) {
+        sumConsumable[`location_${location.id}`] = 0;
+      }
+      if (!sumAccessory[`location_${location.id}`]) {
+        sumAccessory[`location_${location.id}`] = 0;
+      }
+    });
 
     dataResponseCheckIn = dataSource;
     dataResponseCheckIn = dataResponseCheckIn.filter(
@@ -348,7 +357,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                 sumAccessory[`location_${items.location_id}`] =
                   sumAccessory[`location_${items.location_id}`] !== undefined
                     ? Number(items.checkout) +
-                      sumAccessory[`location_${items.location_id}`]
+                    sumAccessory[`location_${items.location_id}`]
                     : Number(items.checkout);
                 sumAccessory[`count`] =
                   sumAccessory[`count`] !== undefined
@@ -374,7 +383,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                 sumConsumable[`location_${items.location_id}`] =
                   sumConsumable[`location_${items.location_id}`] !== undefined
                     ? Number(items.checkout) +
-                      sumConsumable[`location_${items.location_id}`]
+                    sumConsumable[`location_${items.location_id}`]
                     : Number(items.checkout);
                 sumConsumable[`count`] =
                   sumConsumable[`count`] !== undefined
@@ -387,6 +396,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         });
       }
     );
+
+    dataCheckOut?.data.payload.locations.forEach((location: any) => {
+      if (!sumConsumable[`location_${location.id}`]) {
+        sumConsumable[`location_${location.id}`] = 0;
+      }
+      if (!sumAccessory[`location_${location.id}`]) {
+        sumAccessory[`location_${location.id}`] = 0;
+      }
+    });
 
     dataResponseCheckOut = dataSource;
     dataResponseCheckOut = dataResponseCheckOut.filter(
@@ -415,30 +433,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             record.category_type === CategoryType.ASSET
               ? dateFromCheckOut && dateToCheckOut
                 ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                )
                 : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-              : record.category_type === CategoryType.CONSUMABLE
-              ? dateFromCheckOut && dateToCheckOut
-                ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
-                : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-              : record.category_type === CategoryType.ACCESSORY
-              ? dateFromCheckOut && dateToCheckOut
-                ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
-                : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-              : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                );
+                )
+              : record.category_type === CategoryType.CONSUMABLE
+                ? dateFromCheckOut && dateToCheckOut
+                  ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
+                  : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  )
+                : record.category_type === CategoryType.ACCESSORY
+                  ? dateFromCheckOut && dateToCheckOut
+                    ? list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
+                  : list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  );
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -463,30 +481,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               record.category_type === CategoryType.ASSET
                 ? dateFromCheckOut && dateToCheckOut
                   ? list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
                   : list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? dateFromCheckOut && dateToCheckOut
-                  ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
-                  : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? dateFromCheckOut && dateToCheckOut
-                  ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
-                  : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                : list(
                     `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  );
+                  )
+                : record.category_type === CategoryType.CONSUMABLE
+                  ? dateFromCheckOut && dateToCheckOut
+                    ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
+                  : record.category_type === CategoryType.ACCESSORY
+                    ? dateFromCheckOut && dateToCheckOut
+                      ? list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                      )
+                      : list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                      )
+                    : list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    );
             }}
           >
             {text}
@@ -509,30 +527,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             record.category_type === CategoryType.ASSET
               ? dateFromCheckIn && dateToCheckIn
                 ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
+                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                )
                 : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-              : record.category_type === CategoryType.CONSUMABLE
-              ? dateFromCheckIn && dateToCheckIn
-                ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
-                : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-              : record.category_type === CategoryType.ACCESSORY
-              ? dateFromCheckIn && dateToCheckIn
-                ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
-                : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-              : list(
                   `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                );
+                )
+              : record.category_type === CategoryType.CONSUMABLE
+                ? dateFromCheckIn && dateToCheckIn
+                  ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
+                  : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  )
+                : record.category_type === CategoryType.ACCESSORY
+                  ? dateFromCheckIn && dateToCheckIn
+                    ? list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
+                  : list(
+                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  );
           }}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
@@ -557,30 +575,30 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               record.category_type === CategoryType.ASSET
                 ? dateFromCheckIn && dateToCheckIn
                   ? list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
+                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
                   : list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? dateFromCheckIn && dateToCheckIn
-                  ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
-                  : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? dateFromCheckIn && dateToCheckIn
-                  ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
-                  : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                : list(
                     `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                  );
+                  )
+                : record.category_type === CategoryType.CONSUMABLE
+                  ? dateFromCheckIn && dateToCheckIn
+                    ? list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
+                  : record.category_type === CategoryType.ACCESSORY
+                    ? dateFromCheckIn && dateToCheckIn
+                      ? list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                      )
+                      : list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                      )
+                    : list(
+                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                    );
             }}
           >
             {text}
