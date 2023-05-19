@@ -30,7 +30,7 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
-import { EStatus } from "constants/assets";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -76,6 +76,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
     ],
   });
+
+  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+  statusLabelSelectProps.options = filteredProps
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -179,8 +182,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           data?.notes ? data?.notes : "",
       },
       { name: "asset_tag", value: "" },
-
-      { name: "status_id", value: data?.status_label.id },
       {
         name: "warranty_months",
         value: data?.warranty_months && data.warranty_months.split(" ")[0],
@@ -368,7 +369,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.id}
           >
             <Select
               onChange={(value) => {
