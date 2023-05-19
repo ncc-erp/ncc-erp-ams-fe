@@ -51,6 +51,8 @@ import { HardwareListExpiration } from "pages/hardware/list-expiration";
 import { LicensesList } from "pages/licenses/list";
 import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
+import { TaxTokenList } from "pages/tax_token/list";
+import { TaxTokenListWaiting } from "pages/tax_token/list-waiting";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -309,6 +311,20 @@ function App() {
             route: "assets-expires",
           },
         },
+        {
+          name: t("resource.tax_token"),
+          list: TaxTokenList,
+          options: {
+            route: "tax_token",
+          },
+        },
+        {
+          name: t("resource.tax_token_waiting"),
+          list: TaxTokenListWaiting,
+          options: {
+            route: "tax_token-waiting",
+          },
+        }
       ]}
       Title={Title}
       Header={Header}

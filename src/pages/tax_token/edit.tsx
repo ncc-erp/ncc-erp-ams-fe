@@ -1,0 +1,272 @@
+import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
+import { useCustom, useTranslate } from "@pankod/refine-core";
+import { SUPPLIERS_API, TAX_TOKEN_API } from "api/baseApi";
+import { IModel } from "interfaces/model";
+import { ITaxTokenCreateRequest, ITaxTokenResponse } from "interfaces/tax_token";
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import ReactMde from "react-mde";
+import "react-mde/lib/styles/css/react-mde-all.css";
+
+type TaxTokenEditProps = {
+    isModalVisible: boolean;
+    setIsModalVisible: (data: boolean) => void;
+    data: ITaxTokenResponse | undefined;
+};
+
+export const TaxTokenEdit = (props: TaxTokenEditProps) => {
+    const { setIsModalVisible, data, isModalVisible } = props;
+    const t = useTranslate();
+    const [messageErr, setMessageErr] = useState<ITaxTokenCreateRequest>();
+    const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+    const [payload, setPayload] = useState<FormData>();
+
+    const { form, formProps } = useForm<ITaxTokenCreateRequest>({
+        action: "edit",
+    });
+
+    const { setFields } = form;
+
+    const { selectProps: modelSupplierSelectProps } = useSelect<IModel>({
+        resource: SUPPLIERS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const {
+        refetch,
+        data: updateData,
+        isLoading,
+    } = useCustom({
+        url: TAX_TOKEN_API + "/" + data?.id,
+        method: "post",
+        config: {
+            payload: payload,
+        },
+        queryOptions: {
+            enabled: false,
+        },
+    });
+
+    const onFinish = (event: ITaxTokenCreateRequest) => {
+        setMessageErr(messageErr);
+        const formData = new FormData();
+
+        formData.append("name", event.name);
+        formData.append("seri", event.seri);
+        formData.append("supplier_id", event.supplier)
+        formData.append("purchase_date", event.purchase_date.toString());
+        formData.append("expiration_date", event.expiration_date.toString());
+        formData.append("purchase_cost", event.purchase_cost);
+        formData.append("note", event.note);
+
+        formData.append("_method", "PUT");
+
+        setPayload(formData);
+        form.resetFields();
+    };
+
+    useEffect(() => {
+        form.resetFields();
+        setFields([
+            { name: "name", value: data?.name },
+            { name: "seri", value: data?.seri },
+            { name: "supplier_id", value: data?.supplier.id },
+            { name: "purchase_date", value: data?.purchase_date.date },
+            { name: "expiration_date", value: data?.expiration_date.date },
+            { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
+            { name: "note", value: data?.note ? data?.note : "" },
+        ]);
+    }, [data, form, isModalVisible]);
+
+    useEffect(() => {
+        form.resetFields();
+    }, [isModalVisible]);
+
+    useEffect(() => {
+        if (payload) {
+            refetch();
+            if (updateData?.data.message) {
+                form.resetFields();
+            }
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        if (updateData?.data.status === "success") {
+            form.resetFields();
+            setIsModalVisible(false);
+            setMessageErr(undefined);
+        } else {
+            setMessageErr(updateData?.data.messages);
+        }
+    }, [updateData]);
+
+    return (
+        <Form
+            {...formProps}
+            layout="vertical"
+            onFinish={(event: any) => {
+                onFinish(event);
+            }}>
+            <Row gutter={12}>
+                <Col className="gutter-row" span={12}>
+                    <Form.Item
+                        label={t("tax_token.label.field.name")}
+                        name="name"
+                        initialValue={data?.name}
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.name") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Input placeholder={t("tax_token.label.placeholder.name")} />
+                    </Form.Item>
+                    {messageErr?.name && (
+                        <Typography.Text type="danger">
+                            {messageErr.name[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.seri")}
+                        name="seri"
+                        initialValue={data?.seri}
+                    >
+                        <Input placeholder={t("tax_token.label.placeholder.seri")} />
+                    </Form.Item>
+                    {messageErr?.seri && (
+                        <Typography.Text type="danger">
+                            {messageErr.seri[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.supplier")}
+                        name="supplier"
+                        initialValue={data?.supplier.id}
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.supplier") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Select placeholder={t("tax_token.label.placeholder.supplier")}
+                            {...modelSupplierSelectProps}
+                        />
+                    </Form.Item>
+                    {messageErr?.supplier && (
+                        <Typography.Text type="danger">
+                            {messageErr.supplier[0]}
+                        </Typography.Text>
+                    )}
+                </Col>
+                <Col span={12}>
+                    <Form.Item
+                        label={t("tax_token.label.field.purchase_cost")}
+                        name="purchase_cost"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.purchase_cost") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                        initialValue={
+                            data?.purchase_cost &&
+                            data?.purchase_cost.toString().split(",")[0]
+                        }
+                    >
+                        <Input type="number"
+                            addonAfter={t("hardware.label.field.usd")}
+                            value={
+                                data?.purchase_cost &&
+                                data?.purchase_cost.toString().split(",")[0]
+                            }
+                            placeholder={t("tax_token.label.placeholder.purchase_cost")} />
+                    </Form.Item>
+                    {messageErr?.purchase_cost && (
+                        <Typography.Text type="danger">
+                            {messageErr.purchase_cost[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.purchase_date")}
+                        name="purchase_date"
+                        initialValue={
+                            data?.purchase_date.date
+                        }
+                    >
+                        <Input type="date" />
+                    </Form.Item>
+                    {messageErr?.purchase_date && (
+                        <Typography.Text type="danger">
+                            {messageErr.purchase_date[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.expiration_date")}
+                        name="expiration_date"
+                        initialValue={
+                            data?.expiration_date.date
+                        }
+                    >
+                        <Input type="date" />
+                    </Form.Item>
+                    {messageErr?.expiration_date && (
+                        <Typography.Text type="danger">
+                            {messageErr.expiration_date}
+                        </Typography.Text>
+                    )}
+                </Col>
+            </Row>
+            <Form.Item
+                label={t("tax_token.label.field.note")}
+                name="note"
+                rules={[
+                    {
+                        required: false,
+                        message:
+                            t("tax_token.label.field.note") +
+                            " " +
+                            t("tax_token.label.message.required"),
+                    },
+                ]}
+                initialValue={data?.note}
+            >
+                <ReactMde
+                    selectedTab={selectedTab}
+                    onTabChange={setSelectedTab}
+                    generateMarkdownPreview={(markdown) =>
+                        Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
+                    }
+                />
+            </Form.Item>
+            {messageErr?.note && (
+                <Typography.Text type="danger">
+                    {messageErr.note[0]}
+                </Typography.Text>
+            )}
+            <div className="submit">
+                <Button type="primary" htmlType="submit" loading={isLoading}>
+                    {t("tax_token.label.button.edit")}
+                </Button>
+            </div>
+        </Form>
+    );
+};

@@ -25,6 +25,9 @@ export const LOCATION_SELECT_LIST_API = "api/v1/locations/selectlist";
 export const COMPANIES_API = "api/v1/companies";
 export const COMPANIES_SELECT_LIST_API = "api/v1/companies/selectlist";
 
+export const TAX_TOKEN_API = "api/v1/digital_signatures";
+export const TAX_TOKEN_CHECKOUT_API = "api/v1/digital_signatures/checkout";
+
 export const USERS_API = "api/v1/users/selectlist";
 export const SUPPLIERS_API = "api/v1/suppliers";
 export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
