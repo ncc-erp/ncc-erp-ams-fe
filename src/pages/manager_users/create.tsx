@@ -174,7 +174,7 @@ export const UserCreate = (props: UserCreateProps) => {
     useEffect(() => {
         if (payload) {
             mutate({
-                resource: USER_API,
+                resource: "user",
                 values: payload,
             });
             if (createData?.data.message) form.resetFields();
