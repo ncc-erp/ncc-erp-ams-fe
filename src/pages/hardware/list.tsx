@@ -684,8 +684,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
         filters: filterCategory,
         onFilter: (value: number, record: IHardwareResponse) => {
-          console.log('value',value);
-          console.log('record',record);
           return record.category.id === value;
         },
       },
