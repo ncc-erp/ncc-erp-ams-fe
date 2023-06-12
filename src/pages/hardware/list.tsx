@@ -602,18 +602,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
-  // const filterCategory = categorySelectProps?.options?.map((item) => ({
-  //   text: item.label,
-  //   value: item.value,
-  // }));
-
-  const filterCategory = categorySelectProps?.options?.map((item) => {
-    // console.log(categorySelectProps);
-    return {
-      text: item.label,
-      value: item.value,
-    }
-  });
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
 
   const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
