@@ -602,10 +602,18 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
-  const filterCategory = categorySelectProps?.options?.map((item) => ({
-    text: item.label,
-    value: item.value,
-  }));
+  // const filterCategory = categorySelectProps?.options?.map((item) => ({
+  //   text: item.label,
+  //   value: item.value,
+  // }));
+
+  const filterCategory = categorySelectProps?.options?.map((item) => {
+    // console.log(categorySelectProps);
+    return {
+      text: item.label,
+      value: item.value,
+    }
+  });
 
   const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
@@ -684,6 +692,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
         filters: filterCategory,
         onFilter: (value: number, record: IHardwareResponse) => {
+          console.log('value',value);
+          console.log('record',record);
           return record.category.id === value;
         },
       },

@@ -3,6 +3,12 @@ export interface IAccesory {
   name: string;
   datetime: string;
 }
+
+export interface IAccesoryCategory {
+  id: number;
+  text: string;
+}
+
 export interface IAccesstoryRequest {
   id: number;
   name: string;
