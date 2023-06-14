@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -42,8 +42,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
-  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
-
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
@@ -102,8 +102,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: HARDWARE_API + "/" + data?.id,
     method: "post",
@@ -113,6 +112,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -157,6 +157,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   useEffect(() => {
     form.resetFields();
     setFile(undefined);
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
@@ -189,28 +190,30 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   }, [data, form, isModalVisible]);
 
   useEffect(() => {
-    form.resetFields();
-  }, [isModalVisible]);
-
-  useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+          let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+          let message = Object.values(err)[0][0];
+          open?.({
+            type: 'error',
+            message: message,
+          }); 
+          setMessageErr(response.error?.response.data.messages);
+          return;
+        }
         form.resetFields();
-      }
-    }
-  }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setFile(undefined);
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
+        setFile(undefined);
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
+}, [payload]);
 
   const findLabel = (value: number): Boolean => {
     let check = false;
@@ -544,7 +547,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
       )}
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("hardware.label.button.update")}
         </Button>
       </div>

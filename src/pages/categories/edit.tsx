@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
@@ -18,8 +18,8 @@ export const CategoryEdit = (props: CategoryEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
-  const [messageErr, setMessageErr] = useState<ICategoryRequest>();
-
+  const [messageErr, setMessageErr] = useState<ICategoryRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<ICategoryRequest>({
@@ -30,8 +30,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: CATEGORIES_API + "/" + data?.id,
     method: "post",
@@ -41,6 +40,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: ICategoryRequest) => {
@@ -65,6 +65,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
   useEffect(() => {
     form.resetFields();
     setFile(undefined);
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "category_type", value: data?.category_type },
@@ -79,28 +80,29 @@ export const CategoryEdit = (props: CategoryEditProps) => {
   }, [data, form, isModalVisible]);
 
   useEffect(() => {
-    form.resetFields();
-  }, [isModalVisible]);
-
-  useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message,
+            }); 
+            setMessageErr(response.error?.response.data.messages);
+            return;
+        }
         form.resetFields();
-      }
-    }
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
   }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setFile(undefined);
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -194,7 +196,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
       )}
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("category.label.button.update")}
         </Button>
       </div>
