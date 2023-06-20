@@ -52,7 +52,7 @@ import { LicensesList } from "pages/licenses/list";
 import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
 import { TaxTokenList } from "pages/tax_token/list";
-import { TaxTokenListWaiting } from "pages/tax_token/list-waiting";
+import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -320,9 +320,9 @@ function App() {
         },
         {
           name: t("resource.tax_token_waiting"),
-          list: TaxTokenListWaiting,
+          list: TaxTokenListWaitingConfirm,
           options: {
-            route: "tax_token-waiting",
+            route: "tax_token_waiting",
           },
         }
       ]}

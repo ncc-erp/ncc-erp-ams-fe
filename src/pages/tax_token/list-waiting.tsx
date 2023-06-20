@@ -37,12 +37,14 @@ import {
     ITaxTokenResponse,
   } from "interfaces/tax_token";
   import { CancleAsset } from "../users/cancel";
+  import { TaxTokenSearch } from "./search";
   import {
     CATEGORIES_API,
     HARDWARE_API,
     LOCATION_API,
     STATUS_LABELS_API,
     SUPPLIERS_API,
+    TAX_TOKEN_API
   } from "api/baseApi";
   import {
     CloseOutlined,
@@ -50,7 +52,7 @@ import {
     MenuOutlined,
     FileSearchOutlined,
   } from "@ant-design/icons";
-//   import { TaxTokenCancelMultipleAsset } from "../users/cancel-multiple-assets";
+  // import { TaxTokenCancelMultipleAsset } from "../users/cancel-multiple-assets";
   import {
     ASSIGNED_STATUS,
     dateFormat,
@@ -70,8 +72,9 @@ import {
   import { ICategory } from "interfaces/categories";
   import { IStatusLabel } from "interfaces/statusLabel";
   import { EPermissions } from "constants/permissions";
-import { IModel } from "interfaces/model";
-import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
+  import { IModel } from "interfaces/model";
+  import { IAssetsWaiting } from "interfaces/hardware";
+  import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
   
   export const TaxTokenListWaitingConfirm: React.FC<
     IResourceComponentsProps
@@ -138,7 +141,7 @@ import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, g
           value: ASSIGNED_STATUS.WAITING_CHECKIN,
         },
       ],
-      resource: HARDWARE_API,
+      resource: TAX_TOKEN_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const {
@@ -396,7 +399,7 @@ import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, g
   
     const confirmTaxToken = (id: number, assigned_status: number) => {
       mutate({
-        resource: HARDWARE_API + "/" + id + "?_method=PUT",
+        resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
         values: {
           send_accept: id,
           assigned_status: assigned_status,
@@ -826,23 +829,23 @@ import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, g
           setIsModalVisible={setIsCancleModalVisible}
           isModalVisible={isCancleModalVisible}
         >
-          <CancleAsset
+          {/* <CancleAsset
             setIsModalVisible={setIsCancleModalVisible}
             isModalVisible={isCancleModalVisible}
             data={detail}
-          />
+          /> */}
         </MModal>
         <MModal
           title={t("user.label.title.cancle")}
           setIsModalVisible={setIsCancelManyAssetModalVisible}
           isModalVisible={isCancelManyAssetModalVisible}
         >
-          <TaxTokenCancelMultipleAsset
+          {/* <TaxTokenCancelMultipleAsset
             isModalVisible={isCancelManyAssetModalVisible}
             setIsModalVisible={setIsCancelManyAssetModalVisible}
             data={selectdStoreAcceptAndRefuse}
             setSelectedRowKey={setSelectedRowKeys}
-          />
+          /> */}
         </MModal>
         <MModal
           title={t("hardware.label.title.search_advanced")}
