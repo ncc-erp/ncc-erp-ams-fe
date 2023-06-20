@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
     Form,
     Input,
@@ -48,6 +48,7 @@ export const UserCreate = (props: UserCreateProps) => {
     const [payload, setPayload] = useState<FormData>();
     const [file, setFile] = useState<File>();
     const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
+    const {open } = useNotification();
 
     const [permissionActions, setPermissionActions] = useState<any>(Permission);
 
@@ -112,7 +113,7 @@ export const UserCreate = (props: UserCreateProps) => {
 
     };
 
-    const { mutate, data: createData, isLoading } = useCreate();
+    const { mutate, isLoading } = useCreate();
 
     const onFinish = (event: IUserCreateRequest) => {
         setMessageErr(messageErr);
@@ -172,25 +173,34 @@ export const UserCreate = (props: UserCreateProps) => {
     };
 
     useEffect(() => {
-        if (payload) {
-            mutate({
-                resource: USER_API,
-                values: payload,
-            });
-            if (createData?.data.message) form.resetFields();
-        }
+        if (!payload) return;
+        mutate(
+        {
+            resource: USER_API,
+            values: payload,
+            successNotification: false,
+            errorNotification: false,
+        },
+        {
+            onError(error, variables, context) {
+                open?.({
+                    type: 'error',
+                    message: "There was an error creating user"
+                });
+                setMessageErr(error?.response.data.messages);
+            },
+            onSuccess(data, variables, context) {
+                open?.({
+                    type: 'success',
+                    message: data?.data.messages,
+                })
+                form.resetFields();
+                setFile(undefined);
+                setIsModalVisible(false);
+                setMessageErr(messageErr);
+            },
+        });
     }, [payload]);
-
-    useEffect(() => {
-        if (createData?.data.status === "success") {
-            form.resetFields();
-            setFile(undefined);
-            setIsModalVisible(false);
-            setMessageErr(messageErr);
-        } else {
-            setMessageErr(createData?.data.messages);
-        }
-    }, [createData]);
 
     useEffect(() => {
         form.setFieldsValue({
@@ -495,10 +505,10 @@ export const UserCreate = (props: UserCreateProps) => {
                                                                         [key.name]: event.target.value
                                                                     };
                                                                 });
-                                                                if (event.target.value === AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                if (event.target.value === AccessType.allow && key.name === Permission.branchadmin.name) {
                                                                     setShowCheckboxList(true);
                                                                 }
-                                                                if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                if (event.target.value !== AccessType.allow && key.name === Permission.branchadmin.name) {
                                                                     setShowCheckboxList(false);
                                                                     setSelectedLocation([])
                                                                 }
@@ -510,7 +520,7 @@ export const UserCreate = (props: UserCreateProps) => {
                                                 </Col>
                                             }
                                         </Row>
-                                        {showCheckboxList && index == 2 && (
+                                        {showCheckboxList && index === 2 && (
                                             <div className="list-permission">
                                                 <Row
                                                     gutter={{

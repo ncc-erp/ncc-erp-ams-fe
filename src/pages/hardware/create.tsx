@@ -35,7 +35,7 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
-import { EStatus } from "constants/assets";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -79,6 +79,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
+
+  
+  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+  statusLabelSelectProps.options = filteredProps
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
