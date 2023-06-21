@@ -57,6 +57,7 @@ export const requestable = {
 export const CategoryType = {
   ASSET: "asset",
   CONSUMABLE : "consumable",
-  ACCESSORY: "accessory"
+  ACCESSORY: "accessory",
+  TAXTOKEN: "taxtoken"
 }
 

@@ -1,12 +1,18 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect, } from "@pankod/refine-antd";
-import { useCreate, useTranslate } from "@pankod/refine-core";
-import { SUPPLIERS_API, TAX_TOKEN_API } from "api/baseApi";
-import { IModel } from "interfaces/model";
-import { ITaxTokenCreateRequest, ITaxTokenResponse } from "interfaces/tax_token";
+import { useCreate, useTranslate , useNotification } from "@pankod/refine-core";
+import {
+    TAX_TOKEN_API,
+    SUPPLIERS_SELECT_LIST_API,
+    TAX_TOKEN_CATEGORIES_API,
+    LOCATION_SELECT_LIST_API,
+    STATUS_LABELS_API
+} from "api/baseApi";
+import { ITaxToken, ITaxTokenCreateRequest, ITaxTokenResponse } from "interfaces/tax_token";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
+import { STATUS_LABELS } from "constants/assets";
 
 type TaxTokenCreateProps = {
     isModalVisible: boolean;
@@ -16,14 +22,51 @@ type TaxTokenCreateProps = {
 export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
     const { setIsModalVisible } = props;
     const t = useTranslate();
-    const [messageErr, setMessageErr] = useState<ITaxTokenCreateRequest>();
+    const [messageErr, setMessageErr] = useState<ITaxTokenCreateRequest | null>();
 
     const { mutate, data: createData, isLoading } = useCreate();
     const [payload, setPayload] = useState<FormData>();
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
+    const { open } = useNotification();
 
-    const { selectProps: modelSupplierSelectProps } = useSelect<IModel>({
-        resource: SUPPLIERS_API,
+    const { selectProps: supplierSelectProps } = useSelect<ITaxToken>({
+        resource: SUPPLIERS_SELECT_LIST_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: locationSelectProps } = useSelect<ITaxToken>({
+        resource: LOCATION_SELECT_LIST_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: categorySelectProps } = useSelect<ITaxToken>({
+        resource: TAX_TOKEN_CATEGORIES_API,
+        optionLabel: "text",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const { selectProps: statusLabelSelectProps } = useSelect<ITaxToken>({
+        resource: STATUS_LABELS_API,
         optionLabel: "name",
         onSearch: (value) => [
             {
@@ -34,20 +77,27 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
         ],
     });
 
+    const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+    statusLabelSelectProps.options = filteredProps
+
     const onFinish = (event: ITaxTokenCreateRequest) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
         formData.append("name", event.name);
         formData.append("seri", event.seri);
-        formData.append("supplier_id", event.supplier)
+        formData.append("supplier_id", event.supplier);
+        formData.append("location_id", event.location);
+        formData.append("category_id", event.category);
         formData.append("purchase_date", event.purchase_date.toString());
         formData.append("expiration_date", event.expiration_date.toString());
         formData.append("purchase_cost", event.purchase_cost);
+        formData.append("qty", event.qty.toString());
+        formData.append("status_id", event.status_label.toString());
+        formData.append("warranty_months", event.warranty_months);
         formData.append("note", event.note);
 
         setPayload(formData);
-        form.resetFields();
     };
 
     const { formProps, form } = useForm<ITaxTokenCreateRequest>({
@@ -59,6 +109,25 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
             mutate({
                 resource: TAX_TOKEN_API,
                 values: payload,
+                successNotification: false,
+                errorNotification: false,
+            },
+            {
+                onError: (error) => {
+                    let err: { [key: string]: string[] | string } = error?.response.data.messages;
+                    let message = Object.values(err)[0][0];
+                    open?.({
+                      type: 'error',
+                      message: message
+                    });
+                    setMessageErr(error?.response.data.messages);
+                  },
+                  onSuccess(data, variables, context) {
+                    open?.({
+                        type: 'success',
+                        message: data?.data.messages,
+                    })
+                  },
             });
             if (createData?.data.message) form.resetFields();
         }
@@ -68,7 +137,7 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
         if (createData?.data.status === "success") {
             form.resetFields();
             setIsModalVisible(false);
-            setMessageErr(messageErr);
+            setMessageErr(null);
         } else {
             setMessageErr(createData?.data.messages);
         }
@@ -137,12 +206,79 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
                         ]}
                     >
                         <Select placeholder={t("tax_token.label.placeholder.supplier")}
-                            {...modelSupplierSelectProps}
+                            {...supplierSelectProps}
                         />
                     </Form.Item>
                     {messageErr?.supplier && (
                         <Typography.Text type="danger">
                             {messageErr.supplier[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.location")}
+                        name="location"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.location") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Select placeholder={t("tax_token.label.placeholder.location")}
+                            {...locationSelectProps}
+                        />
+                    </Form.Item>
+                    {messageErr?.location && (
+                        <Typography.Text type="danger">
+                            {messageErr.location[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.category")}
+                        name="category"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.category") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Select placeholder={t("tax_token.label.placeholder.category")}
+                            {...categorySelectProps}
+                        />
+                    </Form.Item>
+                    {messageErr?.category && (
+                        <Typography.Text type="danger">
+                            {messageErr.category[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.status")}
+                        name="status_label"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.status") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Select
+                            placeholder={t("hardware.label.placeholder.status")}
+                            {...statusLabelSelectProps}
+                        />
+                    </Form.Item>
+                    {messageErr?.status_label && (
+                        <Typography.Text type="danger">
+                            {messageErr.status_label}
                         </Typography.Text>
                     )}
                 </Col>
@@ -188,6 +324,49 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
                         </Typography.Text>
                     )}
                     <Form.Item
+                        label={t("tax_token.label.field.warranty_months")}
+                        name="warranty_months"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.warranty_months") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Input type="number"
+                            addonAfter={t("tax_token.label.field.month")}
+                        />
+                    </Form.Item>
+                    {messageErr?.warranty_months && (
+                        <Typography.Text type="danger">
+                            {messageErr.warranty_months[0]}
+                        </Typography.Text>
+                    )}
+                    <Form.Item
+                        label={t("tax_token.label.field.qty")}
+                        name="qty"
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    t("tax_token.label.field.qty") +
+                                    " " +
+                                    t("tax_token.label.message.required"),
+                            },
+                        ]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+                    {messageErr?.qty && (
+                        <Typography.Text type="danger">
+                            {messageErr.qty}
+                        </Typography.Text>
+                    )}
+
+                    <Form.Item
                         label={t("tax_token.label.field.purchase_cost")}
                         name="purchase_cost"
                         rules={[
@@ -212,29 +391,29 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
                 </Col>
             </Row>
             <Form.Item
-                    label={t("tax_token.label.field.note")}
-                    name="note"
-                    rules={[
-                        {
-                            required: false,
-                            message:
-                                t("tax_token.label.field.note") +
-                                " " +
-                                t("tax_token.label.message.required"),
-                        },
-                    ]}
-                >
-                    <ReactMde
-                        selectedTab={selectedTab}
-                        onTabChange={setSelectedTab}
-                        generateMarkdownPreview={(markdown) =>
-                            Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
-                        }
-                    />
-                </Form.Item>
-                {messageErr?.note && (
-                    <Typography.Text type="danger">{messageErr.note[0]}</Typography.Text>
-                )}
+                label={t("tax_token.label.field.note")}
+                name="note"
+                rules={[
+                    {
+                        required: false,
+                        message:
+                            t("tax_token.label.field.note") +
+                            " " +
+                            t("tax_token.label.message.required"),
+                    },
+                ]}
+            >
+                <ReactMde
+                    selectedTab={selectedTab}
+                    onTabChange={setSelectedTab}
+                    generateMarkdownPreview={(markdown) =>
+                        Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
+                    }
+                />
+            </Form.Item>
+            {messageErr?.note && (
+                <Typography.Text type="danger">{messageErr.note[0]}</Typography.Text>
+            )}
             <div className="submit">
                 <Button type="primary" htmlType="submit" loading={isLoading}>
                     {t("tax_token.label.button.create")}

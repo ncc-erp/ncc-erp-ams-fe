@@ -777,8 +777,8 @@
     "accessory_details": "Chi tiết phụ kiện",
     "consumable_details": "Chi tiết văn phòng phẩm",
     "supplier_details": "Chi tiết nhà cung cấp",
-    "tax_token": "Mã số thuế",
-    "tax_token_assign": "Mã số thuế đã cấp phát",
+    "tax_token": "Token thuế",
+    "tax_token_assign": "Token thuế đã cấp phát",
     "tax_token_waiting": "Đang đợi xác nhận"
   },
   "model": {
@@ -826,25 +826,25 @@
   "tax_token": {
     "label": {
       "title":{
-        "tax_token": "Tất cả mã số thuế",
+        "tax_token": "Tất cả token thuế",
         "tax_token_waiting": "Đang đợi xác nhận",
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-tax_token": "Số lượng",
         "checkout":"Cấp phát",
-        "create": "Tạo mã số thuế",
-        "clone": "Clone mã số thuế",
+        "create": "Tạo token thuế",
+        "clone": "Clone token thuế",
         "search": "Tìm kiếm nâng cao",
-        "edit": "Cập nhật mã số thuế",
-        "detail":"Chi tiết mã số thuế",
+        "edit": "Cập nhật token thuế",
+        "detail":"Chi tiết token thuế",
         "info": "Thông tin",
         "users": "Người dùng đã cấp phát",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại"
       },
       "field": {
-        "name": "Tên mã số thuế",
-        "seri": "Seri",
+        "name": "Tên token thuế",
+        "seri": "Seri token",
         "status": "Trạng thái",
         "checkoutTo": "Cấp phát đến",
         "user": "Họ và tên",
@@ -862,7 +862,12 @@
         "created_at":"Ngày tạo",
         "not_active": "Chưa kích hoạt",
         "assign": "Đã cấp phát",
-        "usd": "VND"
+        "usd": "VND",
+        "location": "Văn phòng",
+        "qty": "Số lượng",
+        "warranty_months": "Bảo hành",
+        "month": "Tháng",
+        "category": "Danh mục"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -880,8 +885,10 @@
       "placeholder":{
         "supplier":"Lựa chọn nhà cung cấp",
         "user":"Lựa chọn một người dùng",
-        "name": "Nhập tên mã số thuế",
-        "seri": "Nhập seri mã số thuế",
+        "name": "Nhập tên token thuế",
+        "seri": "Nhập seri token thuế",
+        "category": "Chọn một danh mục",
+        "location": "Lựa chọn một văn phòng",
         "purchase_cost": "Nhập chi phí mua",
         "note": "Nhập ghi chú"
       },
@@ -895,7 +902,7 @@
       "detail":{
         "assign": "Bàn Giao",
         "not_active": "Chưa kích hoạt",
-        "tax_token": "Mã số thuế"
+        "tax_token": "Token thuế"
       }
     }
   },

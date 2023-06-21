@@ -59,7 +59,7 @@ const defaultCheckedList = [
     "name",
     "seri",
     "supplier",
-    "status_id",
+    "status_label",
     "assigned_status",
     "assigned_to",
 ];
@@ -175,7 +175,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
     const { selectProps: suppliersSelectProps } = useSelect<IModel>({
         resource: SUPPLIERS_API,
-        optionLabel: "text",
+        optionLabel: "name",
         onSearch: (value) => [
             {
                 field: "search",
@@ -227,6 +227,22 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 },
             },
             {
+                key: "location",
+                title: t("tax_token.label.field.location"),
+                render: (value: ITaxToken) => (
+                    <TextField value={value && value.name} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+            },
+            {
+                key: "category",
+                title: t("tax_token.label.field.category"),
+                render: (value: ITaxToken) => (
+                    <TagField value={value ? value.name : ""} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+            },
+            {
                 key: "purchase_date",
                 title: t("tax_token.label.field.purchase_date"),
                 render: (value: ITaxToken) =>
@@ -259,9 +275,21 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
             },
             {
-                key: "status_id",
+                key: "qty",
+                title: t("tax_token.label.field.qty"),
+                render: (value: number) => <TextField value={value ? value : 0} />,
+                defaultSortOrder: getDefaultSortOrder("qty", sorter),
+            },
+            {
+                key: "warranty_months",
+                title: t("tax_token.label.field.warranty_months"),
+                render: (value: string) => <TextField value={value ? value : ""} />,
+                defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
+            },
+            {
+                key: "status_label",
                 title: t("tax_token.label.field.status"),
-                render: (value: number) => (
+                render: (value: ITaxTokenResponse) => (
                     <TagField
                         value={getTaxTokenStatusDecription(value)}
                         style={{
@@ -270,7 +298,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                         }}
                     />
                 ),
-                defaultSortOrder: getDefaultSortOrder("status_id", sorter),
+                defaultSortOrder: getDefaultSortOrder("status_label", sorter),
             },
             {
                 key: "assigned_status",
@@ -343,7 +371,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             id: data.id,
             name: data.name,
             seri: data.seri,
-            status_id: data?.status_id,
+            status_label: {
+                id: data?.status_label.id,
+                name: data?.status_label.name,
+                status_type: data?.status_label.status_type,
+                status_meta: data?.status_label.status_meta,
+            },
             assigned_to: data?.assigned_to,
             purchase_date: {
                 date: data?.purchase_date.date,
@@ -380,7 +413,17 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             updated_at: {
                 datetime: "",
                 formatted: ""
-            }
+            },
+            location: {
+                id: data?.location.id,
+                name: data?.location.name
+            },
+            category: {
+                id: data?.category.id,
+                name: data?.category.name
+            },
+            qty: data?.qty,
+            warranty_months: data?.warranty_months
         };
 
         setDetailClone(dataConvert);
@@ -392,7 +435,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             id: data.id,
             name: data.name,
             seri: data.seri,
-            status_id: data?.status_id,
+            status_label: {
+                id: data?.status_label.id,
+                name: data?.status_label.name,
+                status_type: data?.status_label.status_type,
+                status_meta: data?.status_label.status_meta,
+            },
             assigned_to: data?.assigned_to,
             purchase_date: {
                 date: data?.purchase_date.date,
@@ -406,6 +454,14 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             supplier: {
                 id: data?.supplier.id,
                 name: data?.supplier.name
+            },
+            location: {
+                id: data?.location.id,
+                name: data?.location.name
+            },
+            category: {
+                id: data?.category.id,
+                name: data?.category.name
             },
             last_checkout: {
                 datetime: "",
@@ -429,7 +485,9 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             updated_at: {
                 datetime: "",
                 formatted: ""
-            }
+            },
+            qty: data?.qty,
+            warranty_months: data?.warranty_months
         };
         setDetailEdit(dataConvert);
         setIsEditModalVisible(true);

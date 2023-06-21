@@ -3,15 +3,30 @@ import i18n from "../i18n";
 import { ASSIGNED_STATUS } from "constants/assets";
 import { ITaxTokenResponse } from "interfaces/tax_token";
 
-export const getTaxTokenStatusDecription = (value: number) =>
-    value === STATUS_TAX_TOKEN.NOT_ACTIVATE
-        ? i18n.t("tax_token.label.field.not_active")
-        : i18n.t("tax_token.label.field.assign")
+export const getTaxTokenStatusDecription = (value: ITaxTokenResponse) =>
+    // value === STATUS_TAX_TOKEN.NOT_ACTIVATE
+    //     ? i18n.t("tax_token.label.field.not_active")
+    //     : i18n.t("tax_token.label.field.assign")
+    value.name === i18n.t("hardware.label.field.assign")
+        ? i18n.t("hardware.label.detail.assign")
+        : value.name === i18n.t("hardware.label.field.readyToDeploy")
+            ? i18n.t("hardware.label.detail.readyToDeploy")
+            : value.name === i18n.t("hardware.label.field.broken")
+                ? i18n.t("hardware.label.detail.broken")
+                : value.name === i18n.t("hardware.label.field.pending")
+                    ? i18n.t("hardware.label.detail.pending")
+                    : "";
 
-export const getBGTaxTokenStatusDecription = (value: number) =>
-    value === STATUS_TAX_TOKEN.NOT_ACTIVATE
-        ? "#00a65a"
-        : "#0073b7"
+export const getBGTaxTokenStatusDecription = (value: ITaxTokenResponse) =>
+    value.name === i18n.t("hardware.label.field.assign")
+        ? "#0073b7"
+        : value.name === i18n.t("hardware.label.field.readyToDeploy")
+            ? "#00a65a"
+            : value.name === i18n.t("hardware.label.field.broken")
+                ? "red"
+                : value.name === i18n.t("hardware.label.field.pending")
+                    ? "#f39c12"
+                    : "";
 
 export const getTaxTokenAssignedStatusDecription = (value: number) =>
     value === ASSIGNED_STATUS.DEFAULT
@@ -43,6 +58,12 @@ export const getBGTaxTokenAssignedStatusDecription = (value: number) =>
                             : "gray";
 
 export const getDetailTaxTokenStatus = (value: ITaxTokenResponse | undefined) =>
-    value?.status_id ===  STATUS_TAX_TOKEN.NOT_ACTIVATE
-        ? i18n.t("tax_token.label.detail.not_active")
-        :i18n.t("tax_token.label.detail.assign")
+    value?.status_label?.name === i18n.t("hardware.label.field.assign")
+        ? i18n.t("hardware.label.detail.assign")
+        : value?.status_label?.name === i18n.t("hardware.label.field.readyToDeploy")
+            ? i18n.t("hardware.label.detail.readyToDeploy")
+            : value?.status_label?.name === i18n.t("hardware.label.field.broken")
+                ? i18n.t("hardware.label.detail.broken")
+                : value?.status_label?.name === i18n.t("hardware.label.field.pending")
+                    ? i18n.t("hardware.label.detail.pending")
+                    : "";

@@ -70,6 +70,34 @@ export const TaxTokenShow = (props: TaxTokenShowProps) => {
             </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tax_token.label.field.location")}</Title>
+                </Col>
+                <Col span={18}>
+                    {detail?.location ? (
+                        <>
+                            <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.location ? detail?.location.name : ""}</span>` }} />
+                        </>
+                    ) : (
+                        ""
+                    )}
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tax_token.label.field.category")}</Title>
+                </Col>
+                <Col span={18}>
+                    {detail?.category ? (
+                        <>
+                            <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.category ? detail?.category.name : ""}</span>` }} />
+                        </>
+                    ) : (
+                        ""
+                    )}
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
                     <Title level={5}>{t("tax_token.label.field.purchase_date")}</Title>
                 </Col>
                 <Col span={18}>
@@ -146,6 +174,25 @@ export const TaxTokenShow = (props: TaxTokenShowProps) => {
                 </Col>
                 <Col span={18}>
                     <Text>{detail && detail?.checkout_counter}</Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tax_token.label.field.warranty_months")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>
+                        {detail?.warranty_months} (
+                        {t("tax_token.label.field.month")})
+                    </Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tax_token.label.field.qty")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>{detail && detail?.qty}</Text>
                 </Col>
             </Row>
             <Row gutter={16}>

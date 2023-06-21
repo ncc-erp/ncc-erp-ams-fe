@@ -6,6 +6,14 @@ export interface ITaxTokenResponse {
         id: number;
         name: string;
     };
+    location: {
+        id: number;
+        name: string;
+    };
+    category: {
+        id: number;
+        name: string;
+    };
     assigned_to: {
         id: number;
         username: string;
@@ -30,13 +38,20 @@ export interface ITaxTokenResponse {
         datetime: string;
         formatted: string;
     };
-    status_id: number;
+    status_label: {
+        id: number;
+        name: string;
+        status_type: string;
+        status_meta: string;
+    };
     user_can_checkout: boolean;
     user_can_checkin: boolean;
     checkout_counter: number;
     checkin_counter: number;
     assigned_status: number;
     note: string;
+    qty: number;
+    warranty_months: number;
     withdraw_from: number;
     created_at: {
         datetime: string;
@@ -72,6 +87,11 @@ export interface ITaxTokenCreateRequest {
     purchase_cost: string;
     expiration_date: string;
     note: string;
+    location: string;
+    category: string;
+    qty: number;
+    warranty_months: string;
+    status_label: string;
 }
 
 export interface ITaxTokenRequestCheckout {
