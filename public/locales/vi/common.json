@@ -867,7 +867,9 @@
         "qty": "Số lượng",
         "warranty_months": "Bảo hành",
         "month": "Tháng",
-        "category": "Danh mục"
+        "category": "Danh mục",
+        "checkinTo":"Thu hồi từ",
+        "dateCheckin":"Ngày thu hồi"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -897,6 +899,7 @@
         "create":"Thêm mới",
         "edit": "Chỉnh sửa",
         "checkout":"Cấp phát",
+        "checkin": "Thu hồi",
         "clone": "Clone"
       },
       "detail":{

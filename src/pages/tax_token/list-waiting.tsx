@@ -36,7 +36,7 @@ import {
     ITaxTokenFilterVariables,
     ITaxTokenResponse,
   } from "interfaces/tax_token";
-  import { CancleAsset } from "../users/cancel";
+  import { CancleAsset } from "./cancel";
   import { TaxTokenSearch } from "./search";
   import {
     CATEGORIES_API,
@@ -312,7 +312,7 @@ import {
             {
                 key: "status_id",
                 title: t("tax_token.label.field.status"),
-                render: (value: number) => (
+                render: (value: ITaxTokenResponse) => (
                     <TagField
                         value={getTaxTokenStatusDecription(value)}
                         style={{
@@ -401,7 +401,6 @@ import {
       mutate({
         resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
         values: {
-          send_accept: id,
           assigned_status: assigned_status,
         },
       });
@@ -829,11 +828,11 @@ import {
           setIsModalVisible={setIsCancleModalVisible}
           isModalVisible={isCancleModalVisible}
         >
-          {/* <CancleAsset
+          <CancleAsset
             setIsModalVisible={setIsCancleModalVisible}
             isModalVisible={isCancleModalVisible}
             data={detail}
-          /> */}
+          />
         </MModal>
         <MModal
           title={t("user.label.title.cancle")}
@@ -910,7 +909,7 @@ import {
                 )
                 .map((item: ITaxTokenResponse) => (
                   <span className="list-checkin" key={item.id}>
-                    <span className="name-checkin">{item.asset_tag}</span>
+                    <span className="name-checkin">{item.name}</span>
                     <span
                       className="delete-users-accept-refuse"
                       onClick={() => handleRemoveItem(item.id)}
@@ -935,7 +934,7 @@ import {
                 )
                 .map((item: ITaxTokenResponse) => (
                   <span className="list-checkin" key={item.id}>
-                    <span className="name-checkin">{item.asset_tag}</span>
+                    <span className="name-checkin">{item.name}</span>
                     <span
                       className="delete-users-accept-refuse"
                       onClick={() => handleRemoveItem(item.id)}

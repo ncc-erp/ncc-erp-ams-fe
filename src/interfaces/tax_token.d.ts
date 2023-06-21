@@ -94,6 +94,23 @@ export interface ITaxTokenCreateRequest {
     status_label: string;
 }
 
+export interface ITaxTokenUpdateRequest {
+    name: string;
+    seri: string;
+    supplier: string;
+    purchase_date: string;
+    purchase_cost: string;
+    expiration_date: string;
+    note: string;
+    location: string;
+    category: string;
+    qty: number;
+    warranty_months: string;
+    status_label: string;
+    reason: string;
+    assigned_status: number;
+}
+
 export interface ITaxTokenRequestCheckout {
     id: number;
     name: string;
@@ -109,3 +126,41 @@ export interface ITaxTokenMultipleRequestCheckout {
     checkout_date: string;
     note: string;
 }
+
+export interface ITaxTokenRequestCheckin {
+    status_label: string;
+    id: number;
+    seri: string;
+    status_id: number;
+    name: string;
+    note: string;
+    archived: boolean;
+    depreciate: boolean;
+    checkin_at: string;
+    assigned_status: number;
+    assigned_user: string;
+    assigned_to: string;
+  }
+  
+  export interface ITaxTokenResponseCheckin {
+    id: number;
+    name: string;
+    status_label: {
+      id: number;
+      name: string;
+      status_type: string;
+      status_meta: string;
+    };
+    note: string;
+    assigned_to: {
+      id: number;
+      username: string;
+      last_name: string;
+      first_name: string;
+    };
+    checkin_at: {
+      date: string;
+      formatted: string;
+    };
+    user_can_checkout: boolean;
+  }

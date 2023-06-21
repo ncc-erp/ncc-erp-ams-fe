@@ -44,7 +44,7 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { IModel } from "interfaces/model";
-import { ITaxToken, ITaxTokenFilterVariables, ITaxTokenRequestCheckout, ITaxTokenResponse } from "interfaces/tax_token";
+import { ITaxToken, ITaxTokenFilterVariables, ITaxTokenRequestCheckin, ITaxTokenRequestCheckout, ITaxTokenResponse, ITaxTokenResponseCheckin } from "interfaces/tax_token";
 import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
 import { TaxTokenCreate } from "./create";
 import { TaxTokenEdit } from "./edit";
@@ -53,6 +53,7 @@ import { TaxTokenShow } from "./show";
 import { TaxTokenClone } from "./clone";
 import { TaxTokenCheckout } from "./checkout";
 import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
+import { TaxTokenCheckin } from "./checkin";
 
 const defaultCheckedList = [
     "id",
@@ -89,7 +90,8 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const [detailCheckout, setDetailCheckout] = useState<ITaxTokenRequestCheckout>();
-
+    const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
+    const [detailCheckin, setDetailCheckin] = useState<ITaxTokenResponseCheckin>();
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
     const dateFromParam = searchParams.get("dateFrom");
@@ -511,6 +513,23 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         setIsCheckoutModalVisible(true);
     };
 
+    const checkin = (data: ITaxTokenResponse) => {
+        const dataConvert: ITaxTokenResponseCheckin = {
+            id: data?.id,
+            name: data?.name,
+            assigned_to: data?.assigned_to,
+            status_label: data?.status_label,
+            checkin_at: {
+                date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+                formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+            },
+            user_can_checkout: false,
+            note: "",
+        };
+        setDetailCheckin(dataConvert);
+        setIsCheckinModalVisible(true);
+    };
+
     const initselectedRowKeys = useMemo(() => {
         return JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) || [];
     }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
@@ -645,6 +664,9 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         refreshData();
     }, [isEditModalVisible]);
 
+    useEffect(() => {
+        refreshData();
+    }, [isCheckinModalVisible]);
 
     useEffect(() => {
         refreshData();
@@ -866,6 +888,17 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                     setSelectedRowKeys={setSelectedRowKeys}
                 />
             </MModal>
+            <MModal
+                title={t("hardware.label.title.checkin")}
+                setIsModalVisible={setIsCheckinModalVisible}
+                isModalVisible={isCheckinModalVisible}
+            >
+                <TaxTokenCheckin
+                    isModalVisible={isCheckinModalVisible}
+                    setIsModalVisible={setIsCheckinModalVisible}
+                    data={detailCheckin}
+                />
+            </MModal>
 
             <div className="checkout-checkin-multiple">
                 <div className="sum-assets">
@@ -978,6 +1011,17 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                                         onClick={() => checkout(record)}
                                     >
                                         {t("tax_token.label.button.checkout")}
+                                    </Button>
+                                )}
+
+                                {record.user_can_checkin === true && (
+                                    <Button
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        onClick={() => checkin(record)}
+                                    >
+                                        {t("tax_token.label.button.checkin")}
                                     </Button>
                                 )}
                             </Space>
