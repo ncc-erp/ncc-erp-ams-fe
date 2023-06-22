@@ -840,7 +840,8 @@
         "info": "Thông tin",
         "users": "Người dùng đã cấp phát",
         "dateCreate": "Đã tạo lúc",
-        "updateAt": "Cập nhật tại"
+        "updateAt": "Cập nhật tại",
+        "checkin":"Thu hồi"
       },
       "field": {
         "name": "Tên token thuế",
@@ -869,7 +870,8 @@
         "month": "Tháng",
         "category": "Danh mục",
         "checkinTo":"Thu hồi từ",
-        "dateCheckin":"Ngày thu hồi"
+        "dateCheckin":"Ngày thu hồi",
+        "list_tax_token": "Danh sách token thuế"
       },
       "tooltip": {
         "create": "Thêm mới",

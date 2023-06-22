@@ -140,27 +140,46 @@ export interface ITaxTokenRequestCheckin {
     assigned_status: number;
     assigned_user: string;
     assigned_to: string;
-  }
-  
-  export interface ITaxTokenResponseCheckin {
+}
+
+export interface ITaxTokenResponseCheckin {
     id: number;
     name: string;
     status_label: {
-      id: number;
-      name: string;
-      status_type: string;
-      status_meta: string;
+        id: number;
+        name: string;
+        status_type: string;
+        status_meta: string;
     };
     note: string;
     assigned_to: {
-      id: number;
-      username: string;
-      last_name: string;
-      first_name: string;
+        id: number;
+        username: string;
+        last_name: string;
+        first_name: string;
     };
     checkin_at: {
-      date: string;
-      formatted: string;
+        date: string;
+        formatted: string;
     };
     user_can_checkout: boolean;
+}
+
+export interface ITaxTokenRequestMultipleCancel {
+    tax_tokens: {}[];
+    reason: string;
+    assigned_status: number;
+}
+
+export interface ITaxTokenRequestMultipleCheckout {
+    tax_tokens: {}[];
+    assigned_asset: string;
+    assigned_location: string;
+    assigned_user: string;
+    checkout_at: string;
+    checkout_to_type: string;
+    assigned_status: number;
+    user_can_checkout: boolean;
+    note: string;
+    status_id: number;
   }

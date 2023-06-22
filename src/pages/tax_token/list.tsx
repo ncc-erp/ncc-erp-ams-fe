@@ -3,7 +3,6 @@ import {
     IResourceComponentsProps,
     CrudFilters,
     HttpError,
-    useNavigation,
 } from "@pankod/refine-core";
 import {
     List,
@@ -44,8 +43,19 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { IModel } from "interfaces/model";
-import { ITaxToken, ITaxTokenFilterVariables, ITaxTokenRequestCheckin, ITaxTokenRequestCheckout, ITaxTokenResponse, ITaxTokenResponseCheckin } from "interfaces/tax_token";
-import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
+import { 
+    ITaxToken, 
+    ITaxTokenFilterVariables, 
+    ITaxTokenRequestCheckout, 
+    ITaxTokenResponse, 
+    ITaxTokenResponseCheckin 
+} from "interfaces/tax_token";
+import { 
+    getBGTaxTokenAssignedStatusDecription, 
+    getBGTaxTokenStatusDecription, 
+    getTaxTokenAssignedStatusDecription, 
+    getTaxTokenStatusDecription 
+} from "untils/tax_token";
 import { TaxTokenCreate } from "./create";
 import { TaxTokenEdit } from "./edit";
 import { TaxTokenSearch } from "./search";
@@ -54,6 +64,7 @@ import { TaxTokenClone } from "./clone";
 import { TaxTokenCheckout } from "./checkout";
 import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
 import { TaxTokenCheckin } from "./checkin";
+import { TaxTokenCheckinMultiple } from "./checkin-multiple";
 
 const defaultCheckedList = [
     "id",
@@ -71,7 +82,6 @@ interface ICheckboxChange {
 
 export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
-    const { list } = useNavigation();
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
     const menuRef = useRef(null);
@@ -80,18 +90,28 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
     const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
     const [detailClone, setDetailClone] = useState<ITaxTokenResponse>();
+
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [detailEdit, setDetailEdit] = useState<ITaxTokenResponse>();
+
     const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-    const [isCheckoutManyTaxTokenModalVisible, setIsCheckoutManyTaxTokenModalVisible] = useState(false);
-    const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
-    const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const [detailCheckout, setDetailCheckout] = useState<ITaxTokenRequestCheckout>();
+
     const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
     const [detailCheckin, setDetailCheckin] = useState<ITaxTokenResponseCheckin>();
+
+    const [isCheckoutManyTaxTokenModalVisible, setIsCheckoutManyTaxTokenModalVisible] = useState(false);
+    const [isCheckinManyTaxTokenModalVisible, setIsCheckinManyTaxTokenModalVisible] = useState(false);
+    const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+    const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+    const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+    const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+      
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
     const dateFromParam = searchParams.get("dateFrom");
@@ -604,6 +624,10 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         setIsCheckoutManyTaxTokenModalVisible(!isCheckoutManyTaxTokenModalVisible);
     };
 
+    const handleCheckin = () => {
+        setIsCheckinManyTaxTokenModalVisible(!isCheckinManyTaxTokenModalVisible);
+    };
+
     const refreshData = () => {
         tableQueryResult.refetch();
     };
@@ -677,6 +701,10 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     }, [isCheckoutManyTaxTokenModalVisible])
 
     useEffect(() => {
+        refreshData();
+    }, [isCheckinManyTaxTokenModalVisible]);
+
+    useEffect(() => {
         if (
             initselectedRowKeys.filter(
                 (item: ITaxTokenResponse) => item.user_can_checkout
@@ -690,6 +718,34 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
             );
         } else {
             setSelectedCheckout(false);
+        }
+
+        if (
+            initselectedRowKeys.filter(
+                (item: ITaxTokenResponse) => item.user_can_checkin
+            ).length > 0
+        ) {
+            setSelectedCheckin(true);
+            setSelectdStoreCheckin(
+                initselectedRowKeys
+                    .filter((item: ITaxTokenResponse) => item.user_can_checkin)
+                    .map((item: ITaxTokenResponse) => item)
+            );
+        } else {
+            setSelectedCheckin(false);
+        }
+
+        if (
+            initselectedRowKeys.filter(
+                (item: ITaxTokenResponse) => item.user_can_checkout
+            ).length > 0 &&
+            initselectedRowKeys.filter(
+                (item: ITaxTokenResponse) => item.user_can_checkin
+            ).length > 0
+        ) {
+            setSelectedCheckout(false);
+            setSelectedCheckin(false);
+        } else {
         }
     }, [initselectedRowKeys]);
 
@@ -899,6 +955,18 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                     data={detailCheckin}
                 />
             </MModal>
+            <MModal
+                title={t("token_tax.label.title.checkin")}
+                setIsModalVisible={setIsCheckinManyTaxTokenModalVisible}
+                isModalVisible={isCheckinManyTaxTokenModalVisible}
+            >
+                <TaxTokenCheckinMultiple
+                    isModalVisible={isCheckinManyTaxTokenModalVisible}
+                    setIsModalVisible={setIsCheckinManyTaxTokenModalVisible}
+                    data={selectdStoreCheckin}
+                    setSelectedRowKeys={setSelectedRowKeys}
+                />
+            </MModal>
 
             <div className="checkout-checkin-multiple">
                 <div className="sum-assets">
@@ -915,6 +983,16 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                         disabled={!selectedCheckout}
                     >
                         {t("tax_token.label.title.checkout")}
+                    </Button>
+                </div>
+                <div className="checkin-multiple-asset">
+                    <Button
+                        type="primary"
+                        className="btn-select-checkout"
+                        disabled={!selectedCheckin}
+                        onClick={handleCheckin}
+                    >
+                        {t("hardware.label.title.checkin")}
                     </Button>
                 </div>
             </div>

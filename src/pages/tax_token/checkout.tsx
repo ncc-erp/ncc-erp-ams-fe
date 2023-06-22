@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -15,12 +15,10 @@ import {
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
-    ITaxTokenRequestCheckout, ITaxTokenResponse,
+    ITaxTokenRequestCheckout,
 } from "interfaces/tax_token";
-import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
-import { HARDWARE_API, MODELS_SELECT_LIST_API, TAX_TOKEN_API, USERS_API } from "api/baseApi";
-import { STATUS_LABELS } from "constants/assets";
+import { TAX_TOKEN_API, USERS_API } from "api/baseApi";
 import moment from "moment";
 
 type TaxTokenCheckoutProps = {
@@ -33,8 +31,8 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   
-  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
-
+  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<ITaxTokenRequestCheckout>({
@@ -42,18 +40,6 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   });
 
   const { setFields } = form;
-
-  const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: MODELS_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
@@ -69,8 +55,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: TAX_TOKEN_API + "/" + data?.id + "/checkout",
     method: "post",
@@ -80,6 +65,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: ITaxTokenRequestCheckout) => {
@@ -101,6 +87,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
 
   useEffect(() => {
     form.resetFields();
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "supplier", value: data?.supplier },
@@ -113,25 +100,29 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   }, [data, form, isModalVisible, setFields]);
 
   useEffect(() => {
-    form.resetFields();
-  }, [form, isModalVisible]);
-
-  useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) form.resetFields();
-    }
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message,
+            }); 
+            setMessageErr(response.error?.response.data.messages);
+            return;
+        }
+        form.resetFields();
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
   }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   return (
     <Form
@@ -257,7 +248,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
       </Form.Item>
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("tax_token.label.button.checkout")}
         </Button>
       </div>

@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCustom } from "@pankod/refine-core";
+import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import "../../styles/hardware.less";
-// import { IHardwareResponse, IHardwareUpdateRequest } from "interfaces/hardware";
 import { ITaxTokenResponse, ITaxTokenUpdateRequest} from "interfaces/tax_token";
-import { HARDWARE_API, TAX_TOKEN_API } from "api/baseApi";
+import { TAX_TOKEN_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
 
 type TaxTokenEditProps = {
@@ -20,8 +19,8 @@ type TaxTokenEditProps = {
 export const CancleAsset = (props: TaxTokenEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<ITaxTokenUpdateRequest>();
-
+  const [messageErr, setMessageErr] = useState<ITaxTokenUpdateRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
   const { formProps, form } = useForm<ITaxTokenUpdateRequest>({
     action: "edit",
@@ -29,8 +28,7 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: TAX_TOKEN_API + "/" + data?.id,
     method: "post",
@@ -40,6 +38,7 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: ITaxTokenUpdateRequest) => {
@@ -58,23 +57,29 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
   }, [isModalVisible]);
 
   useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message,
+            }); 
+            setMessageErr(response.error?.response.data.messages);
+            return;
+        }
         form.resetFields();
-      }
-    }
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
   }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   return (
     <Form
@@ -104,7 +109,7 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
       )}
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("user.label.button.cancle")}
         </Button>
       </div>

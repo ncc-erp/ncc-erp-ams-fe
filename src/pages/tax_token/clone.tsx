@@ -9,6 +9,7 @@ import {
 } from "api/baseApi";
 import { ITaxTokenCreateRequest, ITaxTokenResponse, ITaxToken } from "interfaces/tax_token";
 import { useEffect, useState } from "react";
+import { STATUS_LABELS } from "constants/assets";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -79,6 +80,9 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
         ],
     });
 
+    const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+    statusLabelSelectProps.options = filteredProps
+
     const onFinish = (event: ITaxTokenCreateRequest) => {
         setMessageErr(messageErr);
         const formData = new FormData();
@@ -111,7 +115,7 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
             { name: "category_id", value: data?.category.id },
             { name: "warranty_months", value: data?.warranty_months },
             { name: "qty", value: data?.qty },
-            { name: "status_id", value: data?.status_label.id },
+            { name: "status_id", value: STATUS_LABELS.READY_TO_DEPLOY },
             { name: "purchase_date", value: data?.purchase_date.date },
             { name: "expiration_date", value: data?.expiration_date.date },
             { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
@@ -292,7 +296,7 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
                                     t("tax_token.label.message.required"),
                             },
                         ]}
-                        initialValue={data?.status_label.id}
+                        initialValue={STATUS_LABELS.READY_TO_DEPLOY}
                     >
                         <Select
                             placeholder={t("hardware.label.placeholder.status")}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useCreate, useTranslate } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -28,7 +28,7 @@ type TaxTokenCheckoutMultipleProps = {
 export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
-
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<ITaxTokenMultipleRequestCheckout>({
@@ -57,6 +57,14 @@ export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) =
         checkout_date: event.checkout_date,
         assigned_to: event.assigned_to,
         note: event.note !== null ? event.note : "",
+      },
+      successNotification: false,
+    },{
+      onSuccess(data, variables, context) {
+        open?.({
+            type: 'success',
+            message: data?.data.messages,
+        })
       },
     });
   };

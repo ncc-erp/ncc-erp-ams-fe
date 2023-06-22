@@ -26,7 +26,6 @@ import {
     Tooltip,
     Checkbox,
   } from "@pankod/refine-antd";
-  import { Image } from "antd";
   import { TableAction } from "components/elements/tables/TableAction";
   import { useEffect, useMemo, useRef, useState } from "react";
   import { MModal } from "components/Modal/MModal";
@@ -39,9 +38,6 @@ import {
   import { CancleAsset } from "./cancel";
   import { TaxTokenSearch } from "./search";
   import {
-    CATEGORIES_API,
-    HARDWARE_API,
-    LOCATION_API,
     STATUS_LABELS_API,
     SUPPLIERS_API,
     TAX_TOKEN_API
@@ -52,7 +48,7 @@ import {
     MenuOutlined,
     FileSearchOutlined,
   } from "@ant-design/icons";
-  // import { TaxTokenCancelMultipleAsset } from "../users/cancel-multiple-assets";
+  import { TaxTokenCancelMultipleToken } from "./cancel-multiple-token";
   import {
     ASSIGNED_STATUS,
     dateFormat,
@@ -61,13 +57,6 @@ import {
   import moment from "moment";
   import { DatePicker } from "antd";
   import { useSearchParams } from "react-router-dom";
-  import { ICompany } from "interfaces/company";
-  import {
-    getAssetAssignedStatusDecription,
-    getAssetStatusDecription,
-    getBGAssetAssignedStatusDecription,
-    getBGAssetStatusDecription,
-  } from "untils/assets";
   import "styles/request.less";
   import { ICategory } from "interfaces/categories";
   import { IStatusLabel } from "interfaces/statusLabel";
@@ -602,11 +591,11 @@ import {
       }, 1300);
     };
   
-    const confirmMultipleTaxToken = (assets: {}[], assigned_status: number) => {
+    const confirmMultipleTaxToken = (tax_tokens: {}[], assigned_status: number) => {
       mutate({
-        resource: HARDWARE_API + "?_method=PUT",
+        resource: TAX_TOKEN_API + "?_method=PUT",
         values: {
-          assets: assets,
+          tax_tokens: tax_tokens,
           assigned_status: assigned_status,
         },
       });
@@ -659,19 +648,6 @@ import {
       setSearchParams(searchParams);
       searchFormProps.form?.submit();
     };
-  
-    const { selectProps: locationSelectProps } = useSelect<ICompany>({
-      resource: LOCATION_API,
-      optionLabel: "name",
-      optionValue: "id",
-      onSearch: (value) => [
-        {
-          field: "search",
-          operator: "containss",
-          value,
-        },
-      ],
-    });
   
     const onCheckItem = (value: any) => {
       if (collumnSelected.includes(value.key)) {
@@ -839,12 +815,12 @@ import {
           setIsModalVisible={setIsCancelManyAssetModalVisible}
           isModalVisible={isCancelManyAssetModalVisible}
         >
-          {/* <TaxTokenCancelMultipleAsset
+          <TaxTokenCancelMultipleToken
             isModalVisible={isCancelManyAssetModalVisible}
             setIsModalVisible={setIsCancelManyAssetModalVisible}
             data={selectdStoreAcceptAndRefuse}
             setSelectedRowKey={setSelectedRowKeys}
-          /> */}
+          />
         </MModal>
         <MModal
           title={t("hardware.label.title.search_advanced")}

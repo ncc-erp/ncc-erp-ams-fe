@@ -7,7 +7,7 @@ import {
     LOCATION_SELECT_LIST_API,
     STATUS_LABELS_API
 } from "api/baseApi";
-import { ITaxToken, ITaxTokenCreateRequest, ITaxTokenResponse } from "interfaces/tax_token";
+import { ITaxToken, ITaxTokenCreateRequest } from "interfaces/tax_token";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -20,14 +20,8 @@ import {
 } from "interfaces/tax_token";
 import { ICompany } from "interfaces/company";
 import {
-  // HARDWARE_API,
-  // LOCATION_API,
-  // MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  // USERS_API,
-
   TAX_TOKEN_API,
-
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
@@ -42,8 +36,8 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckin>();
-
+  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckin | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<ITaxTokenRequestCheckin>({
@@ -51,18 +45,6 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
   });
 
   const { setFields } = form;
-
-  // const { selectProps: modelSelectProps } = useSelect<IModel>({
-  //   resource: MODELS_SELECT_LIST_API,
-  //   optionLabel: "text",
-  //   onSearch: (value) => [
-  //     {
-  //       field: "search",
-  //       operator: "containss",
-  //       value,
-  //     },
-  //   ],
-  // });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: STATUS_LABELS_API,
@@ -76,22 +58,9 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
     ],
   });
 
-  // const { selectProps: locationSelectProps } = useSelect<ICompany>({
-  //   resource: LOCATION_API,
-  //   optionLabel: "name",
-  //   onSearch: (value) => [
-  //     {
-  //       field: "search",
-  //       operator: "containss",
-  //       value,
-  //     },
-  //   ],
-  // });
-
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: TAX_TOKEN_API + "/" + data?.id + "/checkin",
     method: "post",
@@ -115,29 +84,12 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
       moment(new Date()).format("YYYY-MM-DDTHH:mm")
     );
     formData.append("note", event.note ?? "");
-    // formData.append("name", event.name);
-    // if (event.note !== null) {
-    //   formData.append("note", event.note ?? "");
-    // }
-    // if (event.status_label !== undefined) {
-    //   formData.append("status_id", event.status_label);
-    // }
-    // formData.append(
-    //   "checkin_at",
-    //   moment(new Date()).format("YYYY-MM-DDTHH:mm")
-    // );
-    // formData.append("model_id", event.model.toString());
-    // if (event.rtd_location !== undefined) {
-    //   formData.append("rtd_location", event.rtd_location.toString());
-    // }
-    // if (event.assigned_to !== null) {
-    //   formData.append("assigned_user", event.assigned_to);
-    // }
     setPayload(formData);
   };
 
   useEffect(() => {
     form.resetFields();
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "note", value: data?.note },
@@ -150,26 +102,30 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
     ]);
   }, [data, form, isModalVisible, setFields]);
 
-  // useEffect(() => {
-  //   form.resetFields();
-  // }, [form, isModalVisible]);
-
   useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) form.resetFields();
-    }
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message,
+            }); 
+            setMessageErr(response.error?.response.data.messages);
+            return;
+        }
+        form.resetFields();
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: "Tax Token checkin success",
+        });        
+    } 
+    fetch();
   }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   const findLabel = (value: number): Boolean => {
     let check = true;
@@ -315,7 +271,7 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
       </Form.Item>
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("tax_token.label.button.checkin")}
         </Button>
       </div>
