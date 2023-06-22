@@ -648,7 +648,8 @@
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
         "consumable": "Văn phòng phẩm",
-        "software":"Phần mềm"
+        "software":"Phần mềm",
+        "taxtoken": "Token thuế"
       }
     }
   },
