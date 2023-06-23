@@ -6,6 +6,7 @@ import {
   CrudFilters,
   HttpError,
   useNavigation,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   List,
@@ -79,6 +80,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -122,6 +124,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
@@ -140,6 +143,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
 
+  const { data: permissionsData } = usePermissions();
+
+  useEffect(() => {
+    if (permissionsData.admin === EPermissions.ADMIN) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [permissionsData])
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
     IHardwareResponse,
@@ -1128,9 +1140,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       title={t("hardware.label.title.asset")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {t("hardware.label.tooltip.create")}
-          </CreateButton>
+          isAdmin && (
+            <CreateButton onClick={handleCreate}>
+              {t("hardware.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >
@@ -1367,14 +1381,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           : {tableProps.pagination ? tableProps.pagination?.total : 0}
         </div>
         <div className="checkout-multiple-asset">
-          <Button
-            type="primary"
-            className="btn-select-checkout ant-btn-checkout"
-            onClick={handleCheckout}
-            disabled={!selectedCheckout}
-          >
-            {t("hardware.label.title.checkout")}
-          </Button>
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleCheckout}
+              disabled={!selectedCheckout}
+            >
+              {t("hardware.label.title.checkout")}
+            </Button>
+          )}
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
             {initselectedRowKeys
@@ -1394,15 +1410,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         </div>
 
         <div className="checkin-multiple-asset">
-          <Button
-            type="primary"
-            className="btn-select-checkout"
-            disabled={!selectedCheckin}
-            onClick={handleCheckin}
-          >
-            {t("hardware.label.title.checkin")}
-          </Button>
-
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout"
+              disabled={!selectedCheckin}
+              onClick={handleCheckin}
+            >
+              {t("hardware.label.title.checkin")}
+            </Button>
+          )}
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
             {initselectedRowKeys
@@ -1439,10 +1456,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={{
+          rowSelection={isAdmin ? {
             type: "checkbox",
             ...rowSelection,
-          }}
+          } : undefined}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))

@@ -23,8 +23,8 @@ import "../../styles/hardware.less";
 import { ICheckboxChange } from "interfaces";
 import {
   MANUFACTURERS_SELECT_LIST_API,
-  CATEGORIES_API,
   MODELS_API,
+  CATEGORIES_SELECT_LIST_ASSET_API,
 } from "api/baseApi";
 
 type ModelCreateProps = {
@@ -58,8 +58,8 @@ export const ModelCreate = (props: ModelCreateProps) => {
   });
 
   const { selectProps: categorySelectProps } = useSelect<IModel>({
-    resource: CATEGORIES_API,
-    optionLabel: "name",
+    resource: CATEGORIES_SELECT_LIST_ASSET_API,
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",

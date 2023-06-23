@@ -165,6 +165,8 @@ p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 p, 2, ${i18n.t("resource.users-tools")}, (list)
 p, 2, ${i18n.t("resource.users-tools")}/*, (show)
 
+p, 2, ${i18n.t("resource.users_licenses")}, (list)
+p, 2, ${i18n.t("resource.users_licenses")}/*, (show)
 
 p, 2, ${i18n.t("resource.assets-assign")}, (list)
 p, 2, ${i18n.t("resource.assets-assign")}/*,(show)
@@ -186,14 +188,26 @@ p, 2, ${i18n.t("resource.assets-broken")}/*,(show)
 p, 2, ${i18n.t("resource.assets-expires")}, (list)
 p, 2, ${i18n.t("resource.assets-expires")}/*,(show)
 
+p, 2, ${i18n.t("resource.supplier_details")}, (list) 
+p, 2, ${i18n.t("resource.supplier_details")}/*, (show)
+
+p, 2, ${i18n.t("resource.manufactures_details")}, (list) 
+p, 2, ${i18n.t("resource.manufactures_details")}/*, (show)
+
 p, 2, ${i18n.t("resource.consumables")}, (list)
 p, 2, ${i18n.t("resource.consumables")}/*, (show)
+p, 2, ${i18n.t("resource.consumable_details")}, (list) 
+p, 2, ${i18n.t("resource.consumable_details")}/*, (show)
 
 p, 2, ${i18n.t("resource.accessory")}, (list)
 p, 2, ${i18n.t("resource.accessory")}/*, (show)
+p, 2, ${i18n.t("resource.accessory_details")}, (list)
+p, 2, ${i18n.t("resource.accessory_details")}/*, (show)
 
 p, 2, ${i18n.t("resource.location_details")}, (list) 
 p, 2, ${i18n.t("resource.location_details")}/*,(show)
+
+p, 2, ${i18n.t("resource.report")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

@@ -5,6 +5,7 @@ export const DASHBOARD_FINFAST_SETTING_API = "api/v1/dashboard/finfast-setting";
 export const DASHBOARD_REPORT_ASSET_API = "api/v1/dashboard/reportAsset"
 
 export const HARDWARE_API = "api/v1/hardware";
+export const HARDWARE_EXPIRATION_API = "api/v1/hardware/assetExpiration";
 export const HARDWARE_SELECT_LIST_API = "api/v1/hardware/selectlist";
 export const HARDWARE_CHECKOUT_API = "api/v1/hardware/checkout";
 export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
@@ -45,6 +46,7 @@ export const SUPPLIER_REQUEST_API = "api/v1/finfast/supplier";
 export const FINFAST_ENTRY_TYPE_API = "api/v1/finfast/entry-type";
 
 export const CATEGORIES_API = "api/v1/categories";
+export const CATEGORIES_SELECT_LIST_ASSET_API = "api/v1/categories/asset/selectlist";
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
 
 export const MANUFACTURES_API = "api/v1/manufacturers";

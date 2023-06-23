@@ -24,9 +24,10 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API, LOCATION_API } from "api/baseApi";
+import { ACCESSORY_API, LOCATION_API, ACCESSORY_CATEGORIES_API } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -43,10 +44,12 @@ import { AccessoryEdit } from "./edit";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
 import { Image, DatePicker } from "antd";
 import { ILocation } from "interfaces/dashboard";
+import { IAccesoryCategory } from "interfaces/accessory";
 import moment from "moment";
 import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import React from "react";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -92,6 +95,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get('supplier_id');
   const manufacturer_id = searchParams.get('manufacturer_id');
 
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IAccesstoryResponse,
@@ -156,6 +160,25 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   const { list } = useNavigation();
 
+  const { selectProps: categorySelectProps } = useSelect<IAccesoryCategory>({
+    resource: ACCESSORY_CATEGORIES_API,
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => {
+    return {
+      text: item.label,
+      value: item.value,
+    }
+  });
+
   const collumns = useMemo(
     () => [
       {
@@ -194,10 +217,14 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "category",
         title: translate("accessory.label.field.category"),
-        render: (value: IAccesstoryRequest) => (
+        render: (value: IAccesstoryResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IAccesstoryResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "purchase_date",
@@ -270,7 +297,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const edit = (data: IAccesstoryResponse) => {
@@ -485,9 +512,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
       title={translate("accessory.label.title.accessory")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {translate("accessory.label.tooltip.create")}
-          </CreateButton>
+          permissionsData.admin === EPermissions.ADMIN && (
+            <CreateButton onClick={handleCreate}>
+              {translate("accessory.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >
@@ -631,7 +660,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...col as any} sorter />
             ))}
           <Table.Column<IAccesstoryResponse>
             title={translate("table.actions")}

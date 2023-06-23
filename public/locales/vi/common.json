@@ -169,8 +169,8 @@
         "purchase_date": "Ngày mua",
         "eol": "EOL",
         "warranty_expires": "Ngày hết hạn",
-        "checkout_counter": "Thu hồi tài sản",
-        "checkin_counter": "Đăng kí tài sản",
+        "checkout_counter": "Số lần cấp phát",
+        "checkin_counter": "Số lần thu hồi",
         "requestable": "Yêu cầu",
         "assign": "Assign",
         "readyToDeploy": "Ready to Deploy",
@@ -232,6 +232,7 @@
         "list-pending": "Đang chờ Tài sản",
         "list-broken": "Không cho phép cấp phát Tài sản",
         "list-waiting-confirm": "Đang chờ xác nhận",
+        "list-expiration" : "Sắp hết hạn",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
         "time": "Thời gian",
@@ -731,7 +732,8 @@
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
         "consumable": "Văn phòng phẩm",
-        "tool": "Tool"
+        "tool": "Tool",
+        "software":"Phần mềm"
       }
     }
   },

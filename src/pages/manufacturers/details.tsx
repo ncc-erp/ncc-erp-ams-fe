@@ -1063,8 +1063,6 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                 <TabPane tab={translate("manufactures.label.title.tools")} key="5">
                     <ManufacturesDetailsTools />
                 </TabPane>
-
-
             </Tabs>
 
 

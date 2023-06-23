@@ -26,9 +26,10 @@ import {
   HttpError,
   IResourceComponentsProps,
   useNavigation,
+  usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { CONSUMABLE_API, LOCATION_API } from "api/baseApi";
+import { CONSUMABLE_API, LOCATION_API, CONSUMABLE_CATEGORIES_API } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -43,11 +44,13 @@ import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesCreate } from "./create";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
+import { IConsumablesCategory } from "interfaces/consumables";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
 import { ConsumablesEdit } from "./edit";
 import "styles/antd.less";
 import { ConsumablesShow } from "./show";
+import { EPermissions } from "constants/permissions";
 
 const defaultCheckedList = [
   "id",
@@ -92,6 +95,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const category_id = searchParams.get("category_id");
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
+
+  const { data: permissionsData } = usePermissions();
 
   const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
     IConsumablesResponse,
@@ -158,6 +163,25 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const { list } = useNavigation();
 
+  const { selectProps: categorySelectProps } = useSelect<IConsumablesCategory>({
+    resource: CONSUMABLE_CATEGORIES_API,
+    optionLabel: "text",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
+  const filterCategory = categorySelectProps?.options?.map((item) => {
+    return {
+      text: item.label,
+      value: item.value,
+    }
+  });
+
   const collumns = useMemo(
     () => [
       {
@@ -185,10 +209,14 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "category",
         title: translate("consumables.label.field.category"),
-        render: (value: IConsumablesRequest) => (
+        render: (value: IConsumablesResponse) => (
           <TagField value={value ? value.name : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+        filters: filterCategory,
+        onFilter: (value: number, record: IConsumablesResponse) => {
+          return record.category.id === value;
+        },
       },
       {
         key: "manufacturer",
@@ -271,7 +299,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
-    []
+    [filterCategory]
   );
 
   const edit = (data: IConsumablesResponse) => {
@@ -481,9 +509,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       title={translate("consumables.label.title.consumables")}
       pageHeaderProps={{
         extra: (
-          <CreateButton onClick={handleCreate}>
-            {translate("consumables.label.tooltip.create")}
-          </CreateButton>
+          permissionsData.admin === EPermissions.ADMIN && (
+            <CreateButton onClick={handleCreate}>
+              {translate("consumables.label.tooltip.create")}
+            </CreateButton>
+          )
         ),
       }}
     >
@@ -630,7 +660,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...col as any} sorter />
             ))}
           <Table.Column<IConsumablesResponse>
             title={translate("table.actions")}

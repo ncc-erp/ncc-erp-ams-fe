@@ -257,7 +257,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     []
   );
 
-  console.log(tableProps, "?tableProps");
+  // console.log(tableProps, "?tableProps");
 
 
   const handleCreate = () => {
