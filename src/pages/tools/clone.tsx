@@ -139,8 +139,8 @@ export const ToolClone = (props: ToolCloneProps) => {
                         let message = Object.values(err)[0][0];
                         open?.({
                             type: 'error',
-                            message: 'Error',
-                            description: message
+                            description: 'Error',
+                            message: message
                         });
                         setMessageErr(error?.response.data.messages);
                     },

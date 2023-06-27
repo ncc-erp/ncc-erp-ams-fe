@@ -115,8 +115,8 @@ export const ToolCheckin = (props: ToolCheckinProps) => {
             let message = Object.values(err)[0][0];
             open?.({
               type: 'error',
-              message: "Error",
-              description: message
+              description: "Error",
+              message: message
             }); 
             setMessageErr(response.error?.response.data.messages);
             return;
@@ -127,7 +127,7 @@ export const ToolCheckin = (props: ToolCheckinProps) => {
         open?.({
             type: 'success',
             description: 'Success',
-            message: "Tool checkin success",
+            message: response.data?.data.messages,
         });        
     } 
     fetch();
