@@ -92,6 +92,7 @@ export interface ITaxTokenCreateRequest {
     qty: number;
     warranty_months: string;
     status_label: string;
+    messages: string
 }
 
 export interface ITaxTokenUpdateRequest {

@@ -144,9 +144,10 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
                 let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
                 let message = Object.values(err)[0][0];
                 open?.({
-                  type: 'error',
-                  message: message,
-                }); 
+                    type: 'error',
+                    description: 'Error',
+                    message: message
+                });
                 setMessageErr(response.error?.response.data.messages);
                 return;
             }
@@ -155,11 +156,12 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
             setMessageErr(null);
             open?.({
                 type: 'success',
+                description: 'Success',
                 message: response.data?.data.messages,
-            });        
-        } 
+            });
+        }
         fetch();
-      }, [payload]);
+    }, [payload]);
 
     return (
         <Form

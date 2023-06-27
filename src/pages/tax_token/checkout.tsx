@@ -15,7 +15,7 @@ import {
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
-    ITaxTokenRequestCheckout,
+  ITaxTokenRequestCheckout,
 } from "interfaces/tax_token";
 import { ICompany } from "interfaces/company";
 import { TAX_TOKEN_API, USERS_API } from "api/baseApi";
@@ -30,7 +30,7 @@ type TaxTokenCheckoutProps = {
 export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  
+
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout | null>();
   const { open } = useNotification();
   const t = useTranslate();
@@ -91,7 +91,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "supplier", value: data?.supplier },
-      { name: "note", value: ""},
+      { name: "note", value: "" },
       {
         name: "checkout_date",
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
@@ -102,25 +102,27 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-            open?.({
-              type: 'error',
-              message: message,
-            }); 
-            setMessageErr(response.error?.response.data.messages);
-            return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+        let message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            message: response.data?.data.messages,
-        });        
-    } 
+          type: 'error',
+          description: 'Error',
+          message: message
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+      open?.({
+        type: 'success',
+        message: 'Success',
+        description: response.data?.data.messages
+      });
+    }
     fetch();
   }, [payload]);
 
@@ -199,7 +201,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
             ]}
             initialValue={data?.supplier}
           >
-            <Input disabled={true}/>
+            <Input disabled={true} />
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">

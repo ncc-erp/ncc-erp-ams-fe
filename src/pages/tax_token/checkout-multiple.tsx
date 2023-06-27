@@ -59,11 +59,12 @@ export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) =
         note: event.note !== null ? event.note : "",
       },
       successNotification: false,
-    },{
+    }, {
       onSuccess(data, variables, context) {
         open?.({
-            type: 'success',
-            message: data?.data.messages,
+          type: 'success',
+          description: 'Success',
+          message: data?.data.messages
         })
       },
     });

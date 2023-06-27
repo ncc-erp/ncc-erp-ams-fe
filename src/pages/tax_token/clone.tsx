@@ -139,14 +139,17 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
                         let message = Object.values(err)[0][0];
                         open?.({
                             type: 'error',
+                            description: 'Error',
                             message: message
+
                         });
                         setMessageErr(error?.response.data.messages);
                     },
                     onSuccess(data, variables, context) {
                         open?.({
                             type: 'success',
-                            message: data?.data.messages,
+                            description: 'Success',
+                            message: data?.data.messages
                         })
                     },
                 });

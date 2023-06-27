@@ -105,25 +105,27 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-            open?.({
-              type: 'error',
-              message: message,
-            }); 
-            setMessageErr(response.error?.response.data.messages);
-            return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+        let message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            message: "Tax Token checkin success",
-        });        
-    } 
+          type: 'error',
+          description: 'Error',
+          message: message
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+      open?.({
+        type: 'success',
+        description: 'Success',
+        message: response.data?.data.messages
+      });
+    }
     fetch();
   }, [payload]);
 

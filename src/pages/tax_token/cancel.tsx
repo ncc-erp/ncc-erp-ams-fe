@@ -65,7 +65,8 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
             let message = Object.values(err)[0][0];
             open?.({
               type: 'error',
-              message: message,
+              description: 'Error',
+              message: message
             }); 
             setMessageErr(response.error?.response.data.messages);
             return;
@@ -75,7 +76,8 @@ export const CancleAsset = (props: TaxTokenEditProps) => {
         setMessageErr(null);
         open?.({
             type: 'success',
-            message: response.data?.data.messages,
+            description: 'Success',
+            message: response.data?.data.messages
         });        
     } 
     fetch();

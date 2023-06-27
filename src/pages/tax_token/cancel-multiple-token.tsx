@@ -45,7 +45,8 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
       onSuccess(data, variables, context) {
         open?.({
           type: 'success',
-          message: data?.data.messages,
+          description: 'Success',
+          message: data?.data.messages
         })
       },
     });

@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect, } from "@pankod/refine-antd";
-import { useCreate, useTranslate , useNotification } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
     TAX_TOKEN_API,
     SUPPLIERS_SELECT_LIST_API,
@@ -112,23 +112,25 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
                 successNotification: false,
                 errorNotification: false,
             },
-            {
-                onError: (error) => {
-                    let err: { [key: string]: string[] | string } = error?.response.data.messages;
-                    let message = Object.values(err)[0][0];
-                    open?.({
-                      type: 'error',
-                      message: message
-                    });
-                    setMessageErr(error?.response.data.messages);
-                  },
-                  onSuccess(data, variables, context) {
-                    open?.({
-                        type: 'success',
-                        message: data?.data.messages,
-                    })
-                  },
-            });
+                {
+                    onError: (error) => {
+                        let err: { [key: string]: string[] | string } = error?.response.data.messages;
+                        let message = Object.values(err)[0][0];
+                        open?.({
+                            type: 'error',
+                            description: 'Error',
+                            message: message
+                        });
+                        setMessageErr(error?.response.data.messages);
+                    },
+                    onSuccess(data, variables, context) {
+                        open?.({
+                            type: 'success',
+                            description: 'Success',
+                            message: data?.data.messages
+                        })
+                    },
+                });
             if (createData?.data.message) form.resetFields();
         }
     }, [payload]);

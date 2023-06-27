@@ -64,7 +64,8 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
       onSuccess(data, variables, context) {
         open?.({
           type: 'success',
-          message: data?.data.messages,
+          description: 'Success',
+          message: data?.data.messages
         })
       },
     });
