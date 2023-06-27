@@ -1,38 +1,40 @@
 import { Button, Col, Form, Input, Row, Select, Typography, useForm, useSelect } from "@pankod/refine-antd";
-import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
     TOOLS_API,
-    TOOLS_CATEGORIES_API,
     SUPPLIERS_SELECT_LIST_API,
+    TOOLS_CATEGORIES_API,
     LOCATION_SELECT_LIST_API,
     STATUS_LABELS_API
 } from "api/baseApi";
+import {
+    IToolResponse,
+    IToolCreateRequest
+} from "interfaces/tool";
 import { IModel } from "interfaces/model";
-import { IToolMessageResponse, IToolRequest, IToolResponse } from "interfaces/tool";
 import { useEffect, useState } from "react";
-import { EStatus, STATUS_LABELS } from "constants/assets";
+import { STATUS_LABELS } from "constants/assets";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-type ToolEditProps = {
-    data: IToolResponse | undefined;
+type ToolCloneProps = {
     isModalVisible: boolean;
     setIsModalVisible: (data: boolean) => void;
+    data: IToolResponse | undefined;
 };
 
-export const ToolEdit = (props: ToolEditProps) => {
+export const ToolClone = (props: ToolCloneProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
-    const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
     const t = useTranslate();
-    const [messageErr, setMessageErr] = useState<IToolMessageResponse | null>();
-    const [payload, setPayload] = useState<FormData>();
+    const [messageErr, setMessageErr] = useState<IToolCreateRequest | null>();
     const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-    const { form, formProps } = useForm<IToolRequest>({
-        action: "edit",
+    const [payload, setPayload] = useState<FormData>();
+    const { open } = useNotification();
+    const { formProps, form } = useForm<IToolCreateRequest>({
+        action: "create",
     });
     const { setFields } = form;
-    const { open } = useNotification();
 
     const { selectProps: supplierSelectProps } = useSelect<IModel>({
         resource: SUPPLIERS_SELECT_LIST_API,
@@ -82,71 +84,25 @@ export const ToolEdit = (props: ToolEditProps) => {
         ],
     });
 
-    const {
-        refetch,
-        isFetching,
-    } = useCustom({
-        url: TOOLS_API + "/" + data?.id,
-        method: "post",
-        config: {
-            payload: payload,
-        },
-        queryOptions: {
-            enabled: false,
-        },
-    });
+    const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+    statusLabelSelectProps.options = filteredProps
 
-    const findLabel = (value: number): Boolean => {
-        let check = false;
-        statusLabelSelectProps.options?.forEach((item) => {
-            if (value === item.value) {
-                if (
-                    item.label === EStatus.PENDING ||
-                    item.label === EStatus.BROKEN ||
-                    item.label === EStatus.READY_TO_DEPLOY
-                ) {
-                    check = true;
-                    return true;
-                }
-            }
-        });
-        return check;
-    };
-
-    const onChangeStatusLabel = (value: { value: string; label: string }) => {
-        setIsReadyToDeploy(findLabel(Number(value.value)));
-    };
-
-    const filterStatusLabelSelectProps = () => {
-        const optionsFiltered = statusLabelSelectProps.options?.filter(
-            (item) =>
-                item.label === EStatus.PENDING ||
-                item.label === EStatus.BROKEN ||
-                item.label === EStatus.READY_TO_DEPLOY
-        );
-        statusLabelSelectProps.options = optionsFiltered;
-        return statusLabelSelectProps;
-    };
-
-    const onFinish = (event: IToolRequest) => {
+    const onFinish = (event: IToolCreateRequest) => {
         setMessageErr(messageErr);
         const formData = new FormData();
 
         formData.append("name", event.name);
-        formData.append("supplier_id", event.supplier)
-        formData.append("purchase_date", event.purchase_date.toString());
-        formData.append("expiration_date", event.expiration_date.toString());
-        formData.append("purchase_cost", event.purchase_cost);
-        formData.append("notes", event.notes);
+        formData.append("supplier_id", event.supplier.toString());
+        formData.append("notes", event.notes ?? "");
+        if (event.purchase_cost !== null)
+            formData.append("purchase_cost", event.purchase_cost);
+        if (event.purchase_date !== null)
+            formData.append("purchase_date", event.purchase_date);
         formData.append("qty", event.qty.toString());
-        if (event.status_label !== undefined) {
-            formData.append("status_id", event.status_label.toString());
-        }
+        formData.append("status_id", event.status_label.toString());
         formData.append("location_id", event.location);
         formData.append("category_id", event.category);
-
-        formData.append("_method", "PUT");
-
+        formData.append("expiration_date", event.expiration_date.toString());
         setPayload(formData);
     };
 
@@ -159,7 +115,7 @@ export const ToolEdit = (props: ToolEditProps) => {
             { name: "location_id", value: data?.location.id },
             { name: "category_id", value: data?.category.id },
             { name: "qty", value: data?.qty },
-            { name: "status_id", value: data?.status_label.id },
+            { name: "status_id", value: STATUS_LABELS.READY_TO_DEPLOY },
             { name: "purchase_date", value: data?.purchase_date.date },
             { name: "expiration_date", value: data?.expiration_date.date },
             { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
@@ -167,32 +123,48 @@ export const ToolEdit = (props: ToolEditProps) => {
         ]);
     }, [data, form, isModalVisible]);
 
+    const { mutate, data: createData, isLoading } = useCreate();
+
     useEffect(() => {
-        if (!payload) return;
-        const fetch = async () => {
-            const response = await refetch();
-            if (response.isError === true) {
-                let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-                let message = Object.values(err)[0][0];
-                open?.({
-                    type: 'error',
-                    description: 'Error',
-                    message: message
+        if (payload) {
+            mutate({
+                resource: TOOLS_API,
+                values: payload,
+                successNotification: false,
+                errorNotification: false,
+            },
+                {
+                    onError: (error) => {
+                        let err: { [key: string]: string[] | string } = error?.response.data.messages;
+                        let message = Object.values(err)[0][0];
+                        open?.({
+                            type: 'error',
+                            message: 'Error',
+                            description: message
+                        });
+                        setMessageErr(error?.response.data.messages);
+                    },
+                    onSuccess(data, variables, context) {
+                        open?.({
+                            type: 'success',
+                            description: 'Success',
+                            message: data?.data.messages
+                        })
+                    },
                 });
-                setMessageErr(response.error?.response.data.messages);
-                return;
-            }
+            if (createData?.data.message) form.resetFields();
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        if (createData?.data.status === "success") {
             form.resetFields();
             setIsModalVisible(false);
             setMessageErr(null);
-            open?.({
-                type: 'success',
-                description: 'Success',
-                message: response.data?.data.messages
-            });
+        } else {
+            setMessageErr(createData?.data.messages);
         }
-        fetch();
-    }, [payload]);
+    }, [createData]);
 
     return (
         <Form
@@ -293,64 +265,30 @@ export const ToolEdit = (props: ToolEditProps) => {
                             {messageErr.category[0]}
                         </Typography.Text>
                     )}
-                    {data?.status_label.id !== STATUS_LABELS.ASSIGN && (
-                        <>
-                            <Form.Item
-                                label={t("hardware.label.field.status")}
-                                name="status_label"
-                                rules={[
-                                    {
-                                        required: false,
-                                        message:
-                                            t("hardware.label.field.status") +
-                                            " " +
-                                            t("hardware.label.message.required"),
-                                    },
-                                ]}
-                                initialValue={Number(data?.status_label.id)}
-                            >
-                                <Select
-                                    onChange={(value) => {
-                                        onChangeStatusLabel(value);
-                                    }}
-                                    placeholder={t("hardware.label.placeholder.status")}
-                                    {...filterStatusLabelSelectProps()}
-                                />
-                            </Form.Item>
-                            {messageErr?.status_label && (
-                                <Typography.Text type="danger">
-                                    {messageErr.status_label}
-                                </Typography.Text>
-                            )}
-                        </>
-                    )}
-                    {/* <Form.Item
-                        label={t("hardware.label.field.status")}
+                    <Form.Item
+                        label={t("tools.label.field.status")}
                         name="status_label"
                         rules={[
                             {
-                                required: false,
+                                required: true,
                                 message:
-                                    t("hardware.label.field.status") +
+                                    t("tools.label.field.status") +
                                     " " +
-                                    t("hardware.label.message.required"),
+                                    t("tools.label.message.required"),
                             },
                         ]}
-                        initialValue={Number(data?.status_label.id)}
+                        initialValue={STATUS_LABELS.READY_TO_DEPLOY}
                     >
                         <Select
-                            onChange={(value) => {
-                                onChangeStatusLabel(value);
-                            }}
                             placeholder={t("hardware.label.placeholder.status")}
-                            {...filterStatusLabelSelectProps()}
+                            {...statusLabelSelectProps}
                         />
                     </Form.Item>
                     {messageErr?.status_label && (
                         <Typography.Text type="danger">
                             {messageErr.status_label}
                         </Typography.Text>
-                    )} */}
+                    )}
                 </Col>
                 <Col className="gutter-row" span={12}>
                     <Form.Item
@@ -447,8 +385,7 @@ export const ToolEdit = (props: ToolEditProps) => {
             </Row>
             <Form.Item
                 label={t("tools.label.field.notes")}
-                name="notes"
-                initialValue={data?.notes ? data?.notes : ""}
+                name="note"
                 rules={[
                     {
                         required: false,
@@ -458,6 +395,7 @@ export const ToolEdit = (props: ToolEditProps) => {
                             t("tools.label.message.required"),
                     },
                 ]}
+                initialValue={data?.notes}
             >
                 <ReactMde
                     selectedTab={selectedTab}
@@ -468,13 +406,11 @@ export const ToolEdit = (props: ToolEditProps) => {
                 />
             </Form.Item>
             {messageErr?.notes && (
-                <Typography.Text type="danger">
-                    {messageErr.notes[0]}
-                </Typography.Text>
+                <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
             )}
             <div className="submit">
-                <Button type="primary" htmlType="submit" loading={isFetching}>
-                    {t("tools.label.button.edit")}
+                <Button type="primary" htmlType="submit" loading={isLoading}>
+                    {t("tools.label.button.clone")}
                 </Button>
             </div>
         </Form>

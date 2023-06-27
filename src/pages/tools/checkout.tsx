@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCreate, useTranslate } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
     Form,
     Input,
@@ -27,6 +27,7 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
     const { setIsModalVisible, data, isModalVisible } = props;
     const [messageErr, setMessageErr] = useState<IToolCheckoutMessageResponse>();
     const t = useTranslate();
+    const { open } = useNotification();
 
     const { mutate, data: dataCheckout, isLoading } = useCreate();
     const { formProps, form } = useForm<IToolCheckoutRequest>({
@@ -50,24 +51,33 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
             resource: TOOLS_API + "/" + data.id + "/checkout",
             values: {
                 checkout_at: event.checkout_at,
-                assigned_users: event.assigned_users,
+                assigned_to: event.assigned_to,
                 notes: event.notes !== null ? event.notes : "",
+            },
+            successNotification: false,
+        }, {
+            onSuccess(data, variables, context) {
+                open?.({
+                    type: 'success',
+                    description: "Success",
+                    message: data?.data.messages
+                })
             },
         });
     };
 
     const { setFields } = form;
-      useEffect(() => {
+    useEffect(() => {
         form.resetFields();
         setFields([
-          { name: "assigned_to", value: data?.assigned_to },
-          { name: "notes", value: data?.notes ? data?.notes : "" },
-          {
-            name: "checkout_at",
-            value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
-          },
+            { name: "assigned_to", value: data?.assigned_to },
+            { name: "notes", value: data?.notes ? data?.notes : "" },
+            {
+                name: "checkout_at",
+                value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+            },
         ]);
-      }, [data, form, isModalVisible, setFields]);
+    }, [data, form, isModalVisible, setFields]);
 
     useEffect(() => {
         if (dataCheckout?.data.status === "success") {
@@ -75,7 +85,7 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
             setIsModalVisible(false);
             setMessageErr(messageErr);
         }
-        else{
+        else {
             setMessageErr(dataCheckout?.data.messages);
         }
     }, [dataCheckout, form, setIsModalVisible]);
@@ -110,7 +120,7 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
                 <Col className="gutter-row" span={12}>
                     <Form.Item
                         label={t("tools.label.field.assigned_to")}
-                        name="assigned_users"
+                        name="assigned_to"
                         rules={[
                             {
                                 required: true,
@@ -122,14 +132,14 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
                         ]}
                     >
                         <Select
-                            mode="multiple"
+                            // mode="multiple"
                             placeholder={t("tools.label.placeholder.checkoutTo")}
                             {...userSelectProps}
                         />
                     </Form.Item>
-                    {messageErr?.assigned_users && (
+                    {messageErr?.assigned_to && (
                         <Typography.Text type="danger">
-                            {messageErr.assigned_users}
+                            {messageErr.assigned_to}
                         </Typography.Text>
                     )}
                     <Form.Item

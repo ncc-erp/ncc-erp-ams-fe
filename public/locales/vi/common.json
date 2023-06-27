@@ -306,7 +306,19 @@
         "purchase_date": "Ngày mua",
         "version": "Phiên bản",
         "name": "Tên tool",
-        "key": "Key"
+        "key": "Key",
+        "supplier":"Nhà cung cấp",
+        "location":"Văn phòng",
+        "expiration_date":"Ngày hết hạn",
+        "qty":"Số lượng",
+        "checkin_counter":"Số lần thu hồi",
+        "checkout_counter":"Số lần cấp phát",
+        "usd":"VND",
+        "assigned_status": "Xác nhận",
+        "readyToDeploy":"Ready to Deploy",
+        "pending":"Pending",
+        "broken":"Broken",
+        "list_tools": "Danh sách tool"
       },
       "placeholder": {
         "checkoutTo": "Cấp phát đến",
@@ -317,7 +329,9 @@
         "notes":"Mô tả",
         "purchase_cost": "Nhập chi phí",
         "manufacturer": "Lựa chọn nhà phát hành",
-        "category": "Lựa chọn thể loại"
+        "category": "Lựa chọn thể loại",
+        "supplier":"Lựa chọn nhà cung cấp",
+        "location":"Lựa chọn một văn phòng"
       },
       "message": {
         "required": "bắt buộc"
@@ -329,7 +343,8 @@
         "checkin": "Thu hồi",
         "accept": "Xác nhận",
         "refuse": "Từ chối",
-        "search": "Tìm kiếm"
+        "search": "Tìm kiếm",
+        "clone": "Clone tool"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -343,7 +358,7 @@
       },
       "title": {
         "tools": "Tất cả",
-        "create": "Tạo ",
+        "create": "Tạo tool mới",
         "edit": "Cập nhật",
         "delete": "Xóa",
         "clone": "Clone",
@@ -358,6 +373,15 @@
         "sum-tools": "Số lượng",
         "name": "Tên tool",
         "my-tool": "Tools của tôi"
+      },
+      "detail": {
+        "default":"Chưa checkout",
+        "readyToDeploy":"Trong kho",
+        "assign":"Bàn Giao",
+        "broken":"Hỏng",
+        "waitingAcceptCheckout":"Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin":"Chờ xác nhận thu hồi",
+        "accept":"Đã xác nhận"
       }
     }
   },
@@ -835,6 +859,7 @@
     "tools": "Tools",
     "tools-all": "Tất cả tools",
     "tools-assign": "Tools đã cấp phát",
+    "tools-waiting": "Tools đang chờ xác nhận",
     "users-tools": "Tools",
     "users_assets": "Tài sản của tôi",
     "location": "Văn phòng",

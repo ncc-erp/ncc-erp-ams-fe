@@ -1,7 +1,9 @@
 import { useTranslate } from "@pankod/refine-core";
 import { Typography, Tag, Row, Col } from "@pankod/refine-antd";
 import "styles/hardware.less";
+import { UserOutlined } from "@ant-design/icons";
 import { IToolResponse } from "interfaces/tool";
+import { getDetailToolStatus } from "untils/tools"
 const { Title, Text } = Typography;
 
 type ToolShowProps = {
@@ -16,6 +18,26 @@ export const ToolShow = (props: ToolShowProps) => {
         <>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.status")}</Title>
+                </Col>
+                <Col>
+                    <Text>
+                        <Tag>{getDetailToolStatus(detail)}</Tag>
+                        {detail?.assigned_to ? (
+                            <>
+                                <UserOutlined />{" "}
+                                <span className="show-asset">
+                                    {detail?.assigned_to ? detail?.assigned_to.name : ""}
+                                </span>
+                            </>
+                        ) : (
+                            ""
+                        )}
+                    </Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
                     <Title level={5}>{t("tools.label.field.name")}</Title>
                 </Col>
                 <Col>
@@ -24,48 +46,30 @@ export const ToolShow = (props: ToolShowProps) => {
             </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("tools.label.field.purchase_cost")}</Title>
+                    <Title level={5}>{t("tools.label.field.supplier")}</Title>
                 </Col>
                 <Col span={18}>
-                    <Text>{detail && detail?.purchase_cost}</Text>
+                    {detail?.supplier ? (
+                        <>
+                            <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.supplier ? detail?.supplier.name : ""}</span>` }} />
+                        </>
+                    ) : (
+                        ""
+                    )}
                 </Col>
             </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("tools.label.field.version")}</Title>
+                    <Title level={5}>{t("tools.label.field.location")}</Title>
                 </Col>
                 <Col span={18}>
-                    <Text className="show-asset">{detail && detail?.version}</Text>
-                </Col>
-            </Row>
-            {detail && detail.checkout_count !== undefined && (
-                <Row gutter={16}>
-                    <Col className="gutter-row" span={4}>
-                        <Title level={5}>{t("tools.label.field.checkout_count")}</Title>
-                    </Col>
-                    <Col span={18}>
-                        <Text> {detail && detail?.checkout_count} </Text>
-                    </Col>
-                </Row>
-            )}
-            {detail && detail.assigned_to && (
-                <Row gutter={16}>
-                    <Col className="gutter-row" span={4}>
-                        <Title level={5}>{t("tools.label.field.assigned_to")}</Title>
-                    </Col>
-                    <Col span={18}>
-                        <Text> {detail && detail?.assigned_to.name} </Text>
-                    </Col>
-                </Row>
-            )}
-            <Row gutter={16}>
-                <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("tools.label.field.manufacturer")}</Title>
-                </Col>
-                <Col span={18}>
-                    <Text className="show-asset">
-                        {detail && detail?.manufacturer.name}
-                    </Text>
+                    {detail?.location ? (
+                        <>
+                            <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.location ? detail?.location.name : ""}</span>` }} />
+                        </>
+                    ) : (
+                        ""
+                    )}
                 </Col>
             </Row>
             <Row gutter={16}>
@@ -73,17 +77,13 @@ export const ToolShow = (props: ToolShowProps) => {
                     <Title level={5}>{t("tools.label.field.category")}</Title>
                 </Col>
                 <Col span={18}>
-                    <Text className="show-asset">
-                        {detail && detail?.category.name}
-                    </Text>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col className="gutter-row" span={4}>
-                    <Title level={5}>{t("tools.label.field.notes")}</Title>
-                </Col>
-                <Col span={18}>
-                    <Text>{detail && detail?.notes}</Text>
+                    {detail?.category ? (
+                        <>
+                            <div className="show-asset" dangerouslySetInnerHTML={{ __html: `<span>${detail?.category ? detail?.category.name : ""}</span>` }} />
+                        </>
+                    ) : (
+                        ""
+                    )}
                 </Col>
             </Row>
             <Row gutter={16}>
@@ -92,20 +92,28 @@ export const ToolShow = (props: ToolShowProps) => {
                 </Col>
                 <Col span={18}>
                     <Text>
-                        {detail && detail?.purchase_date.formatted}
+                        {detail?.purchase_date && detail?.purchase_date.formatted}
                     </Text>
                 </Col>
             </Row>
-            {detail && detail.checkout_at && (
-                <Row gutter={16}>
-                    <Col className="gutter-row" span={4}>
-                        <Title level={5}>{t("tools.label.field.checkout_at")}</Title>
-                    </Col>
-                    <Col span={18}>
-                        <Text> {detail && detail?.checkout_at.formatted} </Text>
-                    </Col>
-                </Row>
-            )}
+            <Row gutter={16}>
+            <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.expiration_date")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>
+                        {detail?.purchase_date && detail?.expiration_date.formatted}
+                    </Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.notes")}</Title>
+                </Col>
+                <Col span={18}>
+                    <div dangerouslySetInnerHTML={{ __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` }} />
+                </Col>
+            </Row>
             <Row gutter={16}>
                 <Col className="gutter-row" span={4}>
                     <Title level={5}>{t("tools.label.title.dateCreate")}</Title>
@@ -123,11 +131,55 @@ export const ToolShow = (props: ToolShowProps) => {
                     <Title level={5}>{t("tools.label.title.updateAt")}</Title>
                 </Col>
                 <Col span={18}>
-                    {detail?.updated_at ? (
-                        <Text> {detail?.updated_at && detail?.updated_at.formatted}</Text>
+                    <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.checkout_at")}</Title>
+                </Col>
+                <Col span={18}>
+                    {detail?.last_checkout ? (
+                        <>
+                            <Text>
+                                {detail?.last_checkout && detail?.last_checkout.formatted}
+                            </Text>
+                        </>
                     ) : (
                         ""
                     )}
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.checkin_counter")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>{detail && detail?.checkin_counter}</Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.checkout_counter")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>{detail && detail?.checkout_counter}</Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.qty")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>{detail && detail?.qty}</Text>
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col className="gutter-row" span={4}>
+                    <Title level={5}>{t("tools.label.field.purchase_cost")}</Title>
+                </Col>
+                <Col span={18}>
+                    <Text>{detail?.purchase_cost && detail?.purchase_cost}</Text>
                 </Col>
             </Row>
         </>

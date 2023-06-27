@@ -152,6 +152,7 @@ p, 1, ${i18n.t("resource.tools-all")}/*, (edit)|(show)|(clone)|(checkout)
 p, 1, ${i18n.t("resource.tools-assign")}, (list)|(create)
 p, 1, ${TOOLS_API}/*, (delete)
 p, 1, ${i18n.t("resource.tools-assign")}/*, (edit)|(show)|(clone)|(checkout)
+p, 1, ${i18n.t("resource.tools-waiting")}, (list)
 
 p, 2, ${i18n.t("resource.dashboard")}, list
 

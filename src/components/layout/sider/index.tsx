@@ -216,7 +216,8 @@ export const Sider: React.FC = () => {
                 .filter(
                   (item) =>
                     item.name === `${translate("resource.tools-all")}` ||
-                    item.name === `${translate("resource.tools-assign")}`
+                    item.name === `${translate("resource.tools-assign")}` ||
+                    item.name === `${translate("resource.tools-waiting")}`
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;

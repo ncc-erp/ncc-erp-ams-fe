@@ -35,12 +35,12 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } =
         useTable<IToolResponse>({
-            initialSorter: [
-                {
-                    field: "checkout_at",
-                    order: "desc",
-                },
-            ],
+            // initialSorter: [
+            //     {
+            //         field: "checkout_at",
+            //         order: "desc",
+            //     },
+            // ],
             resource: ASSIGN_TOOLS_API,
             onSearch: (params: any) => {
                 const filters: CrudFilters = [];
@@ -84,26 +84,18 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
             defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
         },
         {
-            key: "version",
-            title: t("tools.label.field.version"),
-            render: (value: string, record: any) => (
-                <TextField value={value} />
-            ),
-            defaultSortOrder: getDefaultSortOrder("version", sorter),
-        },
-        {
             key: "category",
             title: t("tools.label.field.category"),
             render: (value: IToolResponse) =>   <TagField value={value ? value.name : ""} />,
             defaultSortOrder: getDefaultSortOrder("category", sorter),
         },
         {
-            key: "manufacturer",
-            title: t("tools.label.field.manufacturer"),
+            key: "supplier",
+            title: t("tools.label.field.supplier"),
             render: (value: IToolResponse) => (
                 <TagField value={value ? value.name : ""} />
             ),
-            defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
+            defaultSortOrder: getDefaultSortOrder("supplier", sorter),
         },
         {
             key: "purchase_date",

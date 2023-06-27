@@ -3,7 +3,7 @@ import {
     IResourceComponentsProps,
     CrudFilters,
     HttpError,
-    useNavigation,
+    useNotification
 } from "@pankod/refine-core";
 import {
     List,
@@ -16,12 +16,14 @@ import {
     EditButton,
     DeleteButton,
     CreateButton,
+    CloneButton,
     Button,
     ShowButton,
     Tooltip,
     Checkbox,
     Form,
     useSelect,
+    TagField,
 } from "@pankod/refine-antd";
 import {
     MenuOutlined,
@@ -33,8 +35,17 @@ import { MModal } from "components/Modal/MModal";
 import {
     IToolCheckoutRequest,
     IToolFilterVariable,
-    IToolResponse
+    IToolResponse,
+    IToolResponseCheckin,
+    ITool
 } from "interfaces/tool";
+import {
+    getBGToolAssignedStatusDecription,
+    getBGToolStatusDecription,
+    getToolAssignedStatusDecription,
+    getToolStatusDecription
+} from "untils/tools";
+import { filterAssignedStatus } from "untils/assets";
 import { dateFormat } from "constants/assets";
 
 import { Spin } from "antd";
@@ -44,21 +55,30 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 
 import moment from "moment";
-import { IModel } from "interfaces/model";
-import { MANUFACTURES_API, TOOLS_API, TOOLS_API_CATEGORIES_API } from "api/baseApi";
+import { IStatusLabel } from "interfaces/statusLabel";
+import {
+    STATUS_LABELS_API,
+    TOOLS_API,
+    TOOLS_CATEGORIES_API,
+    SUPPLIERS_API
+} from "api/baseApi";
 import { ToolSearch } from "./search";
 import { ToolCreate } from "./create";
 import { ToolEdit } from "./edit";
 import { ToolShow } from "./show";
+import { ToolClone } from "./clone";
 import { ToolCheckout } from "./checkout";
 import { ToolMultiCheckout } from "./multi-checkout";
+import { ToolCheckin } from "./checkin";
+import { ToolMultiCheckin } from "./multi-checkin";
 
 const defaultCheckedList = [
     "id",
     "name",
-    "category",
-    'checkout_count',
-    "version",
+    "supplier",
+    "status_label",
+    "assigned_status",
+    "assigned_to",
 ];
 
 interface ICheckboxChange {
@@ -67,28 +87,43 @@ interface ICheckboxChange {
 
 export const ToolList: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
-    const { list } = useNavigation();
+    const menuRef = useRef(null);
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
-    const menuRef = useRef(null);
+
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
 
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+
     const [isModalVisible, setIsModalVisible] = useState(false);
+
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [detailEdit, setDetailEdit] = useState<IToolResponse>();
+
     const [isShowModalVisible, setIsShowModalVisible] = useState(false);
+
     const [isCheckoutToolModalVisible, setIsCheckoutToolModalVisible] = useState(false);
     const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
     const [detailCheckout, setDetailCheckout] = useState<IToolCheckoutRequest>();
     const [isCheckoutMultiToolsModalVisible, setIsCheckoutMultiToolsModalVisible] = useState(false);
     const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
 
+    const [isCloneModalVisible, setIsCloneModalVisible] = useState(false);
+    const [detailClone, setDetailClone] = useState<IToolResponse>();
+
+    const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
+    const [isCheckinManyToolVisible, setIsCheckinManyToolVisible] = useState(false);
+    const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+    const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+    const [detailCheckin, setDetailCheckin] = useState<IToolResponseCheckin>();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
     const dateFromParam = searchParams.get("dateFrom");
     const dateToParam = searchParams.get("dateTo");
+
+    const { open } = useNotification();
 
     const [listening, setListening] = useState(false);
     const listenForOutsideClicks = (
@@ -128,8 +163,6 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 name,
                 key,
                 category,
-                manufacturer,
-                version,
                 created_at
             } = params;
             filters.push(
@@ -145,8 +178,6 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                         name,
                         key,
                         category,
-                        manufacturer,
-                        version
                     }),
                 },
                 {
@@ -170,21 +201,9 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-    const { selectProps: categorySelectProps } = useSelect<IModel>({
-        resource: TOOLS_API_CATEGORIES_API,
+    const { selectProps: categorySelectProps } = useSelect<ITool>({
+        resource: TOOLS_CATEGORIES_API,
         optionLabel: "text",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
-
-    const { selectProps: manufacturesSelectProps } = useSelect<IModel>({
-        resource: MANUFACTURES_API,
-        optionLabel: "name",
         onSearch: (value) => [
             {
                 field: "search",
@@ -199,7 +218,36 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         value: item.value,
     }));
 
-    const filterManufactures = manufacturesSelectProps?.options?.map((item) => ({
+    const { selectProps: suppliersSelectProps } = useSelect<ITool>({
+        resource: SUPPLIERS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const filterSuppliers = suppliersSelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
+
+    const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
+        resource: STATUS_LABELS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
         text: item.label,
         value: item.value,
     }));
@@ -215,12 +263,60 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
             {
                 key: "name",
                 title: t("tools.label.field.name"),
-                render: (value: string, record: IModel) => (
+                render: (value: string, record: any) => (
                     <TextField
                         value={value}
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "supplier",
+                title: t("tools.label.field.supplier"),
+                render: (value: ITool) => <TextField value={value.name} />,
+                defaultSortOrder: getDefaultSortOrder("supplier", sorter),
+                filters: filterSuppliers,
+                onFilter: (value: number, record: IToolResponse) => {
+                    return record.supplier.id === value;
+                },
+            },
+            {
+                key: "location",
+                title: t("tools.label.field.location"),
+                render: (value: ITool) => (
+                    <TextField value={value && value.name} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+            },
+            {
+                key: "category",
+                title: t("tools.label.field.category"),
+                render: (value: ITool) => (
+                    <TagField value={value ? value.name : ""} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("category.name", sorter),
+            },
+            {
+                key: "purchase_date",
+                title: t("tools.label.field.purchase_date"),
+                render: (value: ITool) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.date : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("purchase_date", sorter),
+            },
+            {
+                key: "expiration_date",
+                title: t("tools.label.field.expiration_date"),
+                render: (value: ITool) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.date : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("expiration_date", sorter),
             },
             {
                 key: "purchase_cost",
@@ -233,71 +329,80 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
             },
             {
-                key: "version",
-                title: t("tools.label.field.version"),
-                render: (value: string, record: any) => (
-                    <TextField value={value} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("version", sorter),
+                key: "qty",
+                title: t("tools.label.field.qty"),
+                render: (value: number) => <TextField value={value ? value : 0} />,
+                defaultSortOrder: getDefaultSortOrder("qty", sorter),
             },
             {
-                key: "checkout_count",
-                title: t("tools.label.field.checkout_count"),
-                render: (value: string, record: any) => (
-                    <TextField value={value} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("checkout_count", sorter),
-            },
-            {
-                key: "category",
-                title: t("tools.label.field.category"),
-                render: (value: IToolResponse) => <TextField value={value.name} />,
-                defaultSortOrder: getDefaultSortOrder("category", sorter),
-                filters: filterCategory,
-                onFilter: (value: number, record: IToolResponse) => {
-                    return record.category.id === value;
-                },
-            },
-            {
-                key: "manufacturer",
-                title: t("tools.label.field.manufacturer"),
+                key: "status_label",
+                title: t("tools.label.field.status"),
                 render: (value: IToolResponse) => (
-                    <TextField value={value && value.name}
-                        onClick={() => {
-                            list(`manufactures_details?id=${value.id}&name=${value.name}`);
+                    <TagField
+                        value={getToolStatusDecription(value)}
+                        style={{
+                            background: getBGToolStatusDecription(value),
+                            color: "white",
                         }}
-                        style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+                    />
                 ),
+                defaultSortOrder: getDefaultSortOrder("status_label", sorter),
+                filters: filterStatus_Label,
                 onFilter: (value: number, record: IToolResponse) => {
-                    return record.manufacturer.id === value;
+                    return record.status_label.id === value;
                 },
-                filters: filterManufactures,
-                defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
             },
             {
-                key: "purchase_date",
-                title: t("tools.label.field.purchase_date"),
-                render: (value: any) =>
-                    value ? (
-                        <DateField format="LL" value={value ? value.date : ""} />
-                    ) : (
-                        ""
-                    ),
-                defaultSortOrder: getDefaultSortOrder("purchase_date", sorter),
+                key: "assigned_status",
+                title: t("tools.label.field.assigned_status"),
+                render: (value: number) => (
+                    <TagField
+                        value={getToolAssignedStatusDecription(value)}
+                        style={{
+                            background: getBGToolAssignedStatusDecription(value),
+                            color: "white",
+                        }}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+                filters: filterAssignedStatus,
+                onFilter: (value: number, record: IToolResponse) =>
+                    record.assigned_status === value,
             },
             {
-                key: "created_at",
-                title: t("tools.label.field.dateCreate"),
-                render: (value: IModel) =>
-                    value ? (
-                        <DateField format="LL" value={value ? value.datetime : ""} />
-                    ) : (
-                        ""
-                    ),
-                defaultSortOrder: getDefaultSortOrder("created_at", sorter),
+                key: "assigned_to",
+                title: t("tools.label.field.checkoutTo"),
+                render: (value: string, record: IToolResponse) => (
+                    <TextField value={record.assigned_to ? record.assigned_to.username : ''} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
+            },
+            {
+                key: "checkout_counter",
+                title: t("tools.label.field.checkout_counter"),
+                render: (value: number, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
+            },
+            {
+                key: "checkin_counter",
+                title: t("tools.label.field.checkin_counter"),
+                render: (value: number, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
+            },
+            {
+                key: "notes",
+                title: t("tools.label.field.notes"),
+                render: (value: string, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("notes", sorter),
             },
         ],
-        [filterCategory, filterManufactures]
+        [filterCategory, filterSuppliers, filterStatus_Label]
     )
 
     const [collumnSelected, setColumnSelected] = useState<string[]>(
@@ -320,27 +425,49 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         const dataConvert: IToolResponse = {
             id: data.id,
             name: data.name,
-            tool_id: data?.tool_id,
-            purchase_cost: data.purchase_cost,
-            checkout_count: data.checkout_count,
-            user: {
-                id: data?.user.id,
-                name: data?.user.name
+            status_label: {
+                id: data?.status_label.id,
+                name: data?.status_label.name,
+                status_type: data?.status_label.status_type,
+                status_meta: data?.status_label.status_meta,
             },
-            manufacturer: {
-                id: data?.manufacturer.id,
-                name: data?.manufacturer.name
+            assigned_to: data?.assigned_to,
+            purchase_date: {
+                date: data?.purchase_date.date,
+                formatted: data?.purchase_date.formatted
             },
-            notes: data?.notes,
+            purchase_cost: data?.purchase_cost,
+            expiration_date: {
+                date: data?.expiration_date.date,
+                formatted: data?.expiration_date.formatted
+            },
+            supplier: {
+                id: data?.supplier.id,
+                name: data?.supplier.name
+            },
+            location: {
+                id: data?.location.id,
+                name: data?.location.name
+            },
             category: {
                 id: data?.category.id,
                 name: data?.category.name
             },
-            version: data.version,
+            last_checkout: {
+                datetime: "",
+                formatted: ""
+            },
+            checkin_date: {
+                datetime: "",
+                formatted: ""
+            },
+            notes: data?.notes,
             user_can_checkout: false,
             user_can_checkin: false,
-            assigned_to: data?.assigned_to,
-            purchase_date: data?.purchase_date,
+            checkout_counter: 0,
+            checkin_counter: 0,
+            assigned_status: data?.assigned_status,
+            withdraw_from: data?.withdraw_from,
             created_at: {
                 datetime: "",
                 formatted: ""
@@ -349,18 +476,73 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 datetime: "",
                 formatted: ""
             },
-            deleted_at: {
-                datetime: "",
-                formatted: ""
-            },
-            checkout_at: {
-                datetime: "",
-                formatted: ""
-            }
+            qty: data?.qty,
         };
         setDetailEdit(dataConvert);
         setIsEditModalVisible(true);
     }
+
+    const clone = (data: IToolResponse) => {
+        const dataConvert: IToolResponse = {
+            id: data.id,
+            name: data.name,
+            status_label: {
+                id: data?.status_label.id,
+                name: data?.status_label.name,
+                status_type: data?.status_label.status_type,
+                status_meta: data?.status_label.status_meta,
+            },
+            assigned_to: data?.assigned_to,
+            purchase_date: {
+                date: data?.purchase_date.date,
+                formatted: data?.purchase_date.formatted
+            },
+            purchase_cost: data?.purchase_cost,
+            expiration_date: {
+                date: data?.expiration_date.date,
+                formatted: data?.expiration_date.formatted
+            },
+            supplier: {
+                id: data?.supplier.id,
+                name: data?.supplier.name
+            },
+            last_checkout: {
+                datetime: "",
+                formatted: ""
+            },
+            checkin_date: {
+                datetime: "",
+                formatted: ""
+            },
+            notes: data?.notes,
+            user_can_checkout: false,
+            user_can_checkin: false,
+            withdraw_from: data?.withdraw_from,
+            checkout_counter: 0,
+            checkin_counter: 0,
+            assigned_status: data?.assigned_status,
+            created_at: {
+                datetime: "",
+                formatted: ""
+            },
+            updated_at: {
+                datetime: "",
+                formatted: ""
+            },
+            location: {
+                id: data?.location.id,
+                name: data?.location.name
+            },
+            category: {
+                id: data?.category.id,
+                name: data?.category.name
+            },
+            qty: data?.qty,
+        };
+
+        setDetailClone(dataConvert);
+        setIsCloneModalVisible(true);
+    };
 
     const checkout = (data: IToolResponse) => {
         const dataConvert: IToolCheckoutRequest = {
@@ -370,11 +552,28 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 datetime: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
                 formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
             },
-            assigned_users: [],
+            assigned_to: "",
             notes: ""
         };
         setDetailCheckout(dataConvert);
         setIsCheckoutToolModalVisible(true);
+    };
+
+    const checkin = (data: IToolResponse) => {
+        const dataConvert: IToolResponseCheckin = {
+            id: data?.id,
+            name: data?.name,
+            assigned_to: data?.assigned_to,
+            status_label: data?.status_label,
+            checkin_at: {
+                date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+                formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
+            },
+            user_can_checkout: false,
+            notes: "",
+        };
+        setDetailCheckin(dataConvert);
+        setIsCheckinModalVisible(true);
     };
 
     const initselectedRowKeys = useMemo(() => {
@@ -396,10 +595,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     const onSelect = (record: any, selected: boolean) => {
         if (!selected) {
             const newSelectRow = initselectedRowKeys.filter(
-                (item: IModel) => item.id !== record.id
+                (item: ITool) => item.id !== record.id
             );
             localStorage.setItem("selectedToolsRowKeys", JSON.stringify(newSelectRow));
-            setSelectedRowKeys(newSelectRow.map((item: IModel) => item.id));
+            setSelectedRowKeys(newSelectRow.map((item: ITool) => item.id));
         } else {
             const newselectedRowKeys = [record, ...initselectedRowKeys];
             localStorage.setItem(
@@ -410,7 +609,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                     })
                 )
             );
-            setSelectedRowKeys(newselectedRowKeys.map((item: IModel) => item.id));
+            setSelectedRowKeys(newselectedRowKeys.map((item: ITool) => item.id));
         }
     };
 
@@ -440,7 +639,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     };
 
     const rowSelection = {
-        selectedRowKeys: initselectedRowKeys.map((item: IModel) => item.id),
+        selectedRowKeys: initselectedRowKeys.map((item: ITool) => item.id),
         onChange: onSelectChange,
         onSelect: onSelect,
         onSelectAll: onSelectAll,
@@ -455,6 +654,11 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     const handleCheckout = () => {
         setIsCheckoutMultiToolsModalVisible(!isCheckoutMultiToolsModalVisible);
     };
+
+    const handleCheckin = () => {
+        setIsCheckinManyToolVisible(!isCheckinManyToolVisible);
+    };
+
     const refreshData = () => {
         tableQueryResult.refetch();
     };
@@ -521,9 +725,22 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     }, [isCheckoutToolModalVisible])
 
     useEffect(() => {
+        refreshData();
+    }, [isCloneModalVisible]);
+
+    useEffect(() => {
         localStorage.removeItem("selectedToolsRowKeys");
         refreshData();
     }, [isCheckoutMultiToolsModalVisible])
+
+    useEffect(() => {
+        refreshData();
+    }, [isCheckinModalVisible]);
+
+    useEffect(() => {
+        localStorage.removeItem("selectedToolsRowKeys");
+        refreshData();
+    }, [isCheckinManyToolVisible]);
 
     useEffect(() => {
         if (
@@ -539,6 +756,34 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
             );
         } else {
             setSelectedCheckout(false);
+        }
+
+        if (
+            initselectedRowKeys.filter(
+                (item: IToolResponse) => item.user_can_checkin
+            ).length > 0
+        ) {
+            setSelectedCheckin(true);
+            setSelectdStoreCheckin(
+                initselectedRowKeys
+                    .filter((item: IToolResponse) => item.user_can_checkin)
+                    .map((item: IToolResponse) => item)
+            );
+        } else {
+            setSelectedCheckin(false);
+        }
+
+        if (
+            initselectedRowKeys.filter(
+                (item: IToolResponse) => item.user_can_checkout
+            ).length > 0 &&
+            initselectedRowKeys.filter(
+                (item: IToolResponse) => item.user_can_checkin
+            ).length > 0
+        ) {
+            setSelectedCheckout(false);
+            setSelectedCheckin(false);
+        } else {
         }
     }, [initselectedRowKeys]);
 
@@ -731,6 +976,43 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
+            <MModal
+                title={t("tools.label.title.checkin")}
+                setIsModalVisible={setIsCheckinModalVisible}
+                isModalVisible={isCheckinModalVisible}
+            >
+                <ToolCheckin
+                    isModalVisible={isCheckinModalVisible}
+                    setIsModalVisible={setIsCheckinModalVisible}
+                    data={detailCheckin}
+                />
+            </MModal>
+
+            <MModal
+                title={t("tools.label.title.checkin")}
+                setIsModalVisible={setIsCheckinManyToolVisible}
+                isModalVisible={isCheckinManyToolVisible}
+            >
+                <ToolMultiCheckin
+                    isModalVisible={isCheckinManyToolVisible}
+                    setIsModalVisible={setIsCheckinManyToolVisible}
+                    data={selectdStoreCheckin}
+                    setSelectedRowKeys={setSelectedRowKeys}
+                />
+            </MModal>
+
+            <MModal
+                title={t("tools.label.title.clone")}
+                setIsModalVisible={setIsCloneModalVisible}
+                isModalVisible={isCloneModalVisible}
+            >
+                <ToolClone
+                    isModalVisible={isCloneModalVisible}
+                    setIsModalVisible={setIsCloneModalVisible}
+                    data={detailClone}
+                />
+            </MModal>
+
             <div className="checkout-checkin-multiple">
                 <div className="sum-assets">
                     <span className="name-sum-assets">
@@ -746,6 +1028,16 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                         disabled={!selectedCheckout}
                     >
                         {t("tools.label.title.checkout")}
+                    </Button>
+                </div>
+                <div className="checkin-multiple-asset">
+                    <Button
+                        type="primary"
+                        className="btn-select-checkout"
+                        disabled={!selectedCheckin}
+                        onClick={handleCheckin}
+                    >
+                        {t("hardware.label.title.checkin")}
                     </Button>
                 </div>
             </div>
@@ -795,6 +1087,18 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                                 </Tooltip>
 
                                 <Tooltip
+                                    title={t("tools.label.tooltip.clone")}
+                                    color={"#108ee9"}
+                                >
+                                    <CloneButton
+                                        hideText
+                                        size="small"
+                                        recordItemId={record.id}
+                                        onClick={() => clone(record)}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip
                                     title={t("tools.label.tooltip.edit")}
                                     color={"#108ee9"}
                                 >
@@ -826,6 +1130,16 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                                         onClick={() => checkout(record)}
                                     >
                                         {t("tools.label.button.checkout")}
+                                    </Button>
+                                )}
+                                {record.user_can_checkin === true && (
+                                    <Button
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        onClick={() => checkin(record)}
+                                    >
+                                        {t("tools.label.button.checkin")}
                                     </Button>
                                 )}
                             </Space>

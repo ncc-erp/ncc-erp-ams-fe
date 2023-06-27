@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCreate, useTranslate } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -21,15 +21,16 @@ type ToolMultiCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-setSelectedRowKeys: any;
+  setSelectedRowKeys: any;
 };
 
 export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<IToolCheckoutMessageResponse>();
   const t = useTranslate();
+  const { open } = useNotification();
   const { mutate, data: dataCheckout, isLoading } = useCreate();
-  
+
   const { formProps, form } = useForm<IToolMultiCheckoutRequest>({
     action: "create",
   });
@@ -48,14 +49,23 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
     ],
   });
 
-  const onFinish = (event: IToolMultiCheckoutRequest) => {  
+  const onFinish = (event: IToolMultiCheckoutRequest) => {
     mutate({
       resource: TOOLS_MULTI_CHECKOUT_API,
       values: {
         tools: event.tools,
         checkout_at: event.checkout_at,
-        assigned_users: event.assigned_users,
+        assigned_to: event.assigned_to,
         notes: event.notes !== null ? event.notes : "",
+      },
+      successNotification: false,
+    }, {
+      onSuccess(data, variables, context) {
+        open?.({
+          type: 'success',
+          description: 'Success',
+          message: data?.data.messages
+        })
       },
     });
   };
@@ -69,7 +79,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
         name: "checkout_at",
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
-      { name: "assigned_users", value: data?.assigned_users },
+      { name: "assigned_to", value: data?.assigned_to },
     ]);
   }, [data, form, isModalVisible, setFields]);
 
@@ -80,7 +90,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
       setMessageErr(undefined);
       setSelectedRowKeys([]);
       localStorage.removeItem("selectedToolsCheckoutRowKeys");
-    }else{
+    } else {
       setMessageErr(dataCheckout?.data.messages);
     }
   }, [dataCheckout, form, setIsModalVisible]);
@@ -108,7 +118,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
               ))}
           </Form.Item>
           {messageErr?.name && (
-          <Typography.Text type="danger">
+            <Typography.Text type="danger">
               {messageErr.name}
             </Typography.Text>
           )}
@@ -116,7 +126,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
         <Col className="gutter-row" span={12}>
           <Form.Item
             label={t("tools.label.field.checkoutTo")}
-            name="assigned_users"
+            name="assigned_to"
             rules={[
               {
                 required: true,
@@ -129,13 +139,12 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
           >
             <Select
               placeholder={t("tools.label.placeholder.checkoutTo")}
-              mode="multiple"
               {...userSelectProps}
             />
           </Form.Item>
-          {messageErr?.assigned_users && (
+          {messageErr?.assigned_to && (
             <Typography.Text type="danger">
-              {messageErr.assigned_users}
+              {messageErr.assigned_to}
             </Typography.Text>
           )}
           <Form.Item

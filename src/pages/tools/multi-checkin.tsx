@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCreate, useTranslate } from "@pankod/refine-core";
+import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -26,6 +26,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
   const [messageErr, setMessageErr] = useState<IToolCheckinMessageResponse>();
   const [assigned_users, setAssignedUsers] = useState([])
   const t = useTranslate();
+  const { open } = useNotification();
   const { mutate, data: dataCheckin, isLoading } = useCreate();
   
   const { formProps, form } = useForm<IToolMultiCheckinRequest>({
@@ -43,6 +44,15 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
         assigned_users: assigned_users,
         notes: event.notes !== null ? event.notes : "",
       },
+      successNotification: false,
+    }, {
+      onSuccess(data, variables, context) {
+        open?.({
+          type: 'success',
+          description: 'Success',
+          message: data?.data.messages
+        })
+      },
     });
   };
 
@@ -51,7 +61,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
     setAssignedUsers(assignedToIds);
     form.resetFields();
     setFields([
-      { name: "tools", value: data?.map((item: any) => item.tool_id) },
+      { name: "tools", value: data?.map((item: any) => item.id) },
       { name: "notes", value: data?.notes ? data?.notes : "" },
       {
         name: "checkin_at",

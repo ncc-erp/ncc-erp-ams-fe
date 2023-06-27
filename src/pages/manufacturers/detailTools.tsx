@@ -42,7 +42,7 @@ import { useSearchParams } from "react-router-dom";
 
 import moment from "moment";
 import { IModel } from "interfaces/model";
-import { MANUFACTURES_API, TOOLS_API, TOOLS_API_CATEGORIES_API } from "api/baseApi";
+import { MANUFACTURES_API, TOOLS_API, TOOLS_CATEGORIES_API } from "api/baseApi";
 import { ToolSearch } from "pages/tools/search";
 import { ToolCreate } from "pages/tools/create";
 import { ToolEdit } from "pages/tools/edit";
@@ -106,7 +106,7 @@ export const ManufacturesDetailsTools: React.FC<IResourceComponentsProps> = () =
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
     const { selectProps: categorySelectProps } = useSelect<IModel>({
-        resource: TOOLS_API_CATEGORIES_API,
+        resource: TOOLS_CATEGORIES_API,
         optionLabel: "text",
         onSearch: (value) => [
             {
@@ -230,27 +230,49 @@ export const ManufacturesDetailsTools: React.FC<IResourceComponentsProps> = () =
         const dataConvert: IToolResponse = {
             id: data.id,
             name: data.name,
-            tool_id: data?.tool_id,
-            purchase_cost: data.purchase_cost,
-            checkout_count: data.checkout_count,
-            user: {
-                id: data?.user.id,
-                name: data?.user.name
+            status_label: {
+                id: data?.status_label.id,
+                name: data?.status_label.name,
+                status_type: data?.status_label.status_type,
+                status_meta: data?.status_label.status_meta,
             },
-            manufacturer: {
-                id: data?.manufacturer.id,
-                name: data?.manufacturer.name
+            assigned_to: data?.assigned_to,
+            purchase_date: {
+                date: data?.purchase_date.date,
+                formatted: data?.purchase_date.formatted
             },
-            notes: data?.notes,
+            purchase_cost: data?.purchase_cost,
+            expiration_date: {
+                date: data?.expiration_date.date,
+                formatted: data?.expiration_date.formatted
+            },
+            supplier: {
+                id: data?.supplier.id,
+                name: data?.supplier.name
+            },
+            location: {
+                id: data?.location.id,
+                name: data?.location.name
+            },
             category: {
                 id: data?.category.id,
                 name: data?.category.name
             },
-            version: data.version,
+            last_checkout: {
+                datetime: "",
+                formatted: ""
+            },
+            checkin_date: {
+                datetime: "",
+                formatted: ""
+            },
+            notes: data?.notes,
             user_can_checkout: false,
             user_can_checkin: false,
-            assigned_to: data?.assigned_to,
-            purchase_date: data?.purchase_date,
+            checkout_counter: 0,
+            checkin_counter: 0,
+            assigned_status: data?.assigned_status,
+            withdraw_from: data?.withdraw_from,
             created_at: {
                 datetime: "",
                 formatted: ""
@@ -259,14 +281,7 @@ export const ManufacturesDetailsTools: React.FC<IResourceComponentsProps> = () =
                 datetime: "",
                 formatted: ""
             },
-            deleted_at: {
-                datetime: "",
-                formatted: ""
-            },
-            checkout_at: {
-                datetime: "",
-                formatted: ""
-            }
+            qty: data?.qty,
         };
         setDetailEdit(dataConvert);
         setIsEditModalVisible(true);
@@ -280,7 +295,7 @@ export const ManufacturesDetailsTools: React.FC<IResourceComponentsProps> = () =
                 datetime: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
                 formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
             },
-            assigned_users: [],
+            assigned_to: "",
             notes: ""
         };
         setDetailCheckout(dataConvert);

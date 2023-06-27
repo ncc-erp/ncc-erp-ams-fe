@@ -52,7 +52,7 @@ import { LicensesList } from "pages/licenses/list";
 import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
 import { ToolList } from "pages/tools/list";
-import { ToolAssignList } from "pages/tools/list-assign";
+import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
 
 function App() {
@@ -172,10 +172,10 @@ function App() {
           },
         },
         {
-          name: t("resource.tools-assign"),
-          list: ToolAssignList,
+          name: t("resource.tools-waiting"),
+          list: ToolListWaitingConfirm,
           options: {
-            route: "tools-assign",
+            route: "tools-waiting",
           }
         },
         {
