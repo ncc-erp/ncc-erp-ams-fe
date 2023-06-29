@@ -11,6 +11,7 @@ export interface IHardware {
   total: number;
   id: string;
   datetime: string;
+  date: string;
 }
 // from demo
 export interface IPost {
@@ -24,7 +25,7 @@ export interface IPost {
 export interface ISelectItem {
   key: number;
   map: any;
-  asset: []
+  asset: [];
 }
 export interface ICheckboxProps {
   name: string;
@@ -32,5 +33,5 @@ export interface ICheckboxProps {
 export interface ICheckboxChange {
   target: {
     checked: boolean;
-  }
+  };
 }

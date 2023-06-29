@@ -1,6 +1,6 @@
 {
-  "lang":{
-    "vi":"Vietnamese"
+  "lang": {
+    "vi": "Vietnamese"
   },
   "pages": {
     "login": {
@@ -22,19 +22,19 @@
     }
   },
   "buttons": {
-    "create": "Create",
-    "save": "Save",
-    "logout": "Logout",
-    "delete": "Delete",
-    "edit": "Edit",
-    "cancel": "Cancel",
+    "create": "Thêm mới",
+    "save": "Lưu",
+    "logout": "Đăng xuất",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "cancel": "Hủy",
     "confirm": "Are you sure?",
-    "filter": "Filter",
+    "filter": "Lọc",
     "clear": "Clear",
-    "refresh": "Refresh",
-    "show": "Show",
+    "refresh": "Làm mới",
+    "show": "Hiển thị",
     "undo": "Undo",
-    "import": "Import",
+    "import": "Nhập",
     "clone": "Clone",
     "notAccessTitle": "You don't have permission to access"
   },
@@ -55,16 +55,48 @@
   "tags": {
     "clone": "Clone"
   },
+  "all": "Tất cả",
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Thống kê",
+    "field": {
+      "name": "Tên thiết bị",
+      "pending": "Check Lại - Bảo Hành",
+      "broken": "Hỏng",
+      "assign": "Bàn Giao",
+      "ready-to-deploy": "Trong Kho",
+      "sum": "Tổng",
+      "tilte-section-1": "Chi tiết các loại thiết bị",
+      "tilte-section-2": "Số lượng thiết bị theo văn phòng",
+      "search-date": "Thời gian mua thiết bị",
+      "search-location": "Vị trí",
+      "start-date": "Ngày bắt đầu",
+      "end-date": "Ngày kết thúc",
+      "sum-assets": "Tổng số lượng thiết bị của các văn phòng",
+      "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng",
+      "sum-report": "Số lượng",
+      "typeConsumable": "Văn phòng phẩm",
+      "typeAccessory": "Phụ kiện"
+    },
+    "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
+    "time": "Thời gian mua thiết bị",
+    "time_checkout": "Thời gian bàn giao",
+    "time_checkin": "Thời gian thu hồi",
     "assetFilter": {
-      "filters" : {
+      "filters": {
         "label": {
           "from": "Từ ngày",
           "to": "Đến ngày",
           "filters": "Bộ lọc"
         }
       }
+    },
+    "placeholder": {
+      "select-category": "Tất cả",
+      "searchToDate": "Thời gian"
+    },
+    "detail": {
+      "title-show": "Tổng số lượng thiết bị của các văn phòng",
+      "title-count-asset": "Số lượng thiết bị của các văn phòng trong khoảng thời gian"
     }
   },
   "posts": {
@@ -101,82 +133,298 @@
   },
   "hardware": {
     "label": {
-        "field": {
-          "nameCompany": "Công ty",
-          "propertyCard": "Thẻ tài sản",
-          "serial": "Số Sê-ri",
-          "propertyType": "Kiểu tài sản",
-          "status": "Trạng thái",
-          "checkoutTo": "Cấp phát đến",
-          "user": "Người dùng",
-          "asset": "Tài sản",
-          "location": "Địa phương",
-          "assetName": "Tên tài sản",
-          "dateBuy": "Ngày mua",
-          "supplier": "Nhà cung cấp",
-          "orderNumber": "Số đơn đặt hàng",
-          "cost": "Chi phí mua hàng",
-          "insurance": "Bảo hành",
-          "usd": "VND",
-          "month": "Tháng",
-          "notes": "Mô tả",
-          "locationFix": "Chi nhánh",
-          "checkbox": "Cho phép đề xuất",
-          "device": "Thiết bị",
-          "dateCheckout": "Ngày cấp phát",
-          "dateWantCheckin": "Ngày mong muốn thu hồi",
-          "dateCheckin": "Ngày thu hồi",
-          "note": "Ghi chú",
-          "category": "Thể loại",
-          "rtd_location": "Vị trí"
-        },
-        "placeholder": {
-          "nameCompany": "Chọn công ty",
-          "propertyCard": "Thẻ tài sản",
-          "serial": "Serial",
-          "propertyType": "Lựa chọn một kiểu tài sản",
-          "status": "Chọn tình trạng",
-          "checkoutTo": "Cấp phát đến",
-          "user": "Lựa chọn một người dùng",
-          "asset": "Chọn tài sản",
-          "location": "Lựa chọn một địa phương",
-          "supplier": "Lựa chọn nhà cung cấp",
-          "assetName": "Tên tài sản",
-          "orderNumber": "Mã order",
-          "cost": "Chi phí mua hàng",
-          "insurance": "Bảo hành",
-          "choiceAsset": "Lựa chọn tài sản"
-        },
-        "message": {
-          "required":"bắt buộc"
-        },
-        "button": {
-          "create": "Thêm mới",
-          "update": "Chỉnh sửa",
-          "clone": "Clone",
-          "checkout": "Cấp phát",
-          "checkin": "Thu hồi"
-        },
-        "title": {
-          "create":"Tạo mới",
-          "edit": "Chỉnh sửa",
-          "clone": "Clone",
-          "checkout": "Cấp phát",
-          "checkin": "Thu hồi",
-          "detail": "Chi tiết tài sản"
-        },
-        "tooltip":{
-          "create": "Tạo hardware",
-          "viewDetail": "Xem chi tiết",
-          "clone": "Clone tài sản",
-          "edit": "Chỉnh sửa tài sản",
-          "delete": "Xóa tài sản"
-        }
+      "field": {
+        "nameCompany": "Công ty",
+        "propertyCard": "Thẻ tài sản",
+        "serial": "Số Sê-ri",
+        "propertyType": "Kiểu tài sản",
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "user": "Người dùng",
+        "asset": "Tài sản",
+        "location": "Địa phương",
+        "assetName": "Tên tài sản",
+        "dateAdd": "Ngày nhập",
+        "supplier": "Nhà cung cấp",
+        "orderNumber": "Mã đơn hàng",
+        "cost": "Chi phí mua hàng",
+        "insurance": "Bảo hành",
+        "usd": "VND",
+        "month": "Tháng",
+        "notes": "Mô tả",
+        "locationFix": "Văn phòng",
+        "checkbox": "Cho phép đề xuất",
+        "device": "Thiết bị",
+        "dateCheckout": "Ngày cấp phát",
+        "dateCheckin": "Ngày thu hồi",
+        "note": "Ghi chú",
+        "category": "Thể loại",
+        "rtd_location": "Vị trí",
+        "image": "Hình ảnh",
+        "loading_image": "Tải hình",
+        "condition": "Xác nhận",
+        "dateCreate": "Ngày tạo",
+        "manufacturer": "Kho",
+        "purchase_date": "Ngày mua",
+        "eol": "EOL",
+        "warranty_expires": "Ngày hết hạn",
+        "checkout_counter": "Số lần cấp phát",
+        "checkin_counter": "Số lần thu hồi",
+        "requestable": "Yêu cầu",
+        "assign": "Assign",
+        "readyToDeploy": "Ready to Deploy",
+        "broken": "Broken",
+        "pending": "Pending",
+        "checkin": "Checkin",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "confirmStatus": "Trạng thái xác nhận",
+        "purchase_cost": "Giá"
+      },
+      "placeholder": {
+        "nameCompany": "Chọn công ty",
+        "propertyCard": "Thẻ tài sản",
+        "serial": "Serial",
+        "propertyType": "Lựa chọn một kiểu tài sản",
+        "status": "Chọn tình trạng",
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "user": "Lựa chọn một người dùng",
+        "asset": "Chọn tài sản",
+        "location": "Lựa chọn một văn phòng",
+        "supplier": "Lựa chọn nhà cung cấp",
+        "assetName": "Tên tài sản",
+        "orderNumber": "Mã đơn hàng",
+        "cost": "Chi phí mua hàng",
+        "insurance": "Bảo hành",
+        "choiceAsset": "Lựa chọn tài sản"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "clone": "Clone",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối",
+        "search": "Tìm kiếm",
+        "accept_checkout": "Xác nhận cấp phát",
+        "accept_checkin": "Xác nhận thu hồi",
+        "rejectCheckout": "Từ chối cấp phát",
+        "rejectCheckin": "Từ chối thu hồi"
+      },
+      "title": {
+        "asset": "Tất cả tài sản",
+        "create": "Tạo tài sản",
+        "edit": "Cập nhật tài sản",
+        "delete": "Xóa",
+        "clone": "Clone tài sản",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "detail": "Chi tiết tài sản",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "list-assign": "Đã cấp phát Tài sản",
+        "list-readyToDeploy": "Sẵn sàng để cấp phát Tài sản",
+        "list-pending": "Đang chờ Tài sản",
+        "list-broken": "Không cho phép cấp phát Tài sản",
+        "list-waiting-confirm": "Đang chờ xác nhận",
+        "list-expiration" : "Sắp hết hạn",
+        "dateCreate": "Đã tạo lúc",
+        "updateAt": "Cập nhật tại",
+        "time": "Thời gian",
+        "location": "Văn phòng",
+        "sum-assets": "Số lượng",
+        "confirmStatus": "Trạng thái xác nhận"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "detail": {
+        "assign": "Bàn giao",
+        "readyToDeploy": "Trong kho",
+        "broken": "Hỏng",
+        "pending": "Check lại-Bảo hành",
+        "default": "Chưa checkout",
+        "pendingAccept": "Chờ xác nhận",
+        "waitingAcceptCheckout": "Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin": "Chờ xác nhận thu hồi",
+        "accept": "Đã xác nhận",
+        "refuse": "Đã từ chối",
+        "note-checkin": "Những tài sản này không được phép thu hồi. Hãy xóa chúng khỏi danh sách đi",
+        "note-checkout": "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi",
+        "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
+        "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
+        "list-asset": "Danh sách các thiết bị"
+      },
+      "option_assigned": {
+        "no-checkout": "Chưa checkout",
+        "waiting-confirm": "Đang chờ xác nhận",
+        "confirmed": "Đã xác nhận",
+        "refuse": "Đã từ chối",
+        "waiting-confirm-checkout": "Chờ xác nhận cấp phát",
+        "waiting-confirm-checkin": "Chờ xác nhận thu hồi"
+      }
+    }
+  },
+  "licenses":{
+    "label": {
+      "title":{
+        "licenses": "Danh sách key",
+        "time": "Thời gian",
+        "location": "Văn phòng",
+        "sum-licenses": "Tổng số key",
+        "checkout":"Cấp phát",
+        "create": "Tạo Key",
+        "edit": "Cập nhật Key",
+        "detail":"Chi tiết Key",
+        "search": "Tìm kiếm nâng cao",
+        "dateCreate": "Ngày tạo",
+        "updateAt": "Ngày cập nhật",
+        "info": "Thông tin",
+        "key": "Danh sách key",
+        "users":"Người dùng đã cấp phát",
+        "my-licenses": "Key của tôi"
+      },
+      "field": {
+        "licenses": "Key",
+        "seats": "Tổng số lượng",
+        "software": "Phần mềm",     
+        "purchase_cost":"Chi phí",
+        "checkoutTo": "Cấp phát đến",
+        "user": "Họ và tên",
+        "category":"Thể loại",
+        "manufacturer": "Nhà sản xuất",
+        "notes":"Ghi chú",
+        "keyName": "Tên key",
+        "checkout-count": "Đã cấp phát",
+        "location": "Văn phòng",
+        "department": "Bộ phận",
+        "created_at":"Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "checkout_at": "Ngày cấp phát",
+        "purchase_date":"Ngày mua",
+        "expiration_date": "Ngày hết hạn", 
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "message":{
+        "required":"bắt buộc"
+      },
+      "placeholder":{
+        "manufacturer":"Lựa chọn nhà sản xuất",
+        "softwareName": "Tên phần mềm",
+        "software_tag": "Thẻ phần mềm",
+        "category": "Lựa chọn thể loại",
+        "version": "Phiên bản",
+        "user":"Lựa chọn một người dùng",
+        "licenses": "Key",
+        "seats": "Tổng số lượng",
+        "purchase_cost":"Chi phí",
+        "purchase_date":"Ngày mua",
+        "expiration_date":"Ngày hết hạn"
+      },
+      "button":{
+        "search":"Tìm kiếm",
+        "create":"Thêm mới",
+        "edit": "Chỉnh sửa",
+        "checkout":"Cấp phát"
+      }
+    }
+  },
+  "software":{
+    "label": {
+      "title":{
+        "all_software": "Tất cả phần mềm",
+        "time": "Thời gian",
+        "location": "Văn phòng",
+        "sum-assets": "Số lượng",
+        "checkout":"Cấp phát",
+        "create": "Tạo phần mềm",
+        "clone": "Clone phần mềm",
+        "search": "Tìm kiếm nâng cao",
+        "edit": "Cập nhật phần mềm",
+        "detail":"Chi tiết phần mềm",
+        "info": "Thông tin",
+        "users": "Người dùng đã cấp phát",
+        "list_software": "Danh sách các phần mềm",
+        "dateCreate": "Đã tạo lúc",
+        "updateAt": "Cập nhật tại"
+      },
+      "field": {
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "user": "Họ và tên",
+        "location": "Văn phòng",
+        "department":"Bộ phận",
+        "softwareName": "Tên phần mềm",
+        "category":"Thể loại",
+        "manufacturer": "Nhà sản xuất",
+        "software_tag": "Thẻ phần mềm",
+        "total_licenses": "Số lượng key",
+        "version": "Phiên bản",
+        "notes":"Ghi chú",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "purchase_date":"Ngày mua",
+        "expiration_date": "Ngày hết hạn",
+        "checkout_at": "Ngày cấp phát",
+        "checkout-count": "Số key đã cấp phát",
+        "created_at":"Ngày tạo"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "message":{
+        "required":"bắt buộc"
+      },
+      "placeholder":{
+        "manufacturer":"Lựa chọn nhà sản xuất",
+        "softwareName": "Tên phần mềm",
+        "software_tag": "Thẻ phần mềm",
+        "category": "Lựa chọn thể loại",
+        "version": "Phiên bản",
+        "user":"Lựa chọn một người dùng"
+      },
+      "button":{
+        "search":"Tìm kiếm",
+        "create":"Thêm mới",
+        "edit": "Chỉnh sửa",
+        "checkout":"Cấp phát"
+      }
     }
   },
   "request": {
     "label": {
       "field": {
+        "create": "Tạo request",
         "name": "Tên yêu cầu",
         "branch": "Chọn nhánh",
         "supplier": "Nhà cung cấp",
@@ -195,8 +443,8 @@
         "price": "Giá",
         "image": "Ảnh thiết bị",
         "warranty_months": "Bảo hành",
-        "model": "Kiểu tài sản"
-        
+        "model": "Kiểu tài sản",
+        "dateCreate": "Ngày tạo"
       },
       "placeholder": {
         "name": "Nhập tên",
@@ -205,30 +453,72 @@
         "asset_ids": "Lựa chọn thiết bị"
       },
       "button": {
-        "create":"Tạo mới",
+        "create": "Thêm mới",
         "send": "Gửi",
         "delete": "Xóa",
         "cancle": "Từ chối",
-        "accept": "Xác nhận",
-        "refuse": "Từ chối"
+        "viewDetail": "Xem chi tiết"
       },
       "message": {
         "required": "bắt buộc",
         "assetsRequired": "* Bạn chưa chọn thiết bị"
       },
       "title": {
-        "create": "Tạo Request",
+        "create": "Thêm mới",
         "detail": "Chi tiết Request"
       }
     }
   },
-  "user":{
+  "user": {
     "label": {
       "title": {
         "name": "Tài sản của tôi",
-        "detail":"Chi tiết tài sản của tôi"
+        "detail": "Chi tiết tài sản của tôi",
+        "detail_licenses": "Chi tiết key của tôi",
+        "cancle": "Từ chối",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "edit": "Cập nhật người dùng",
+        "clone": "Clone",
+        "create": "Tạo người dùng",
+        "name_user": "Người dùng",
+        "changePassword": "Thay đổi mật khẩu",
+        "permission": "Phân quyền",
+        "grant": "Cho phép",
+        "refuse": "Từ chối",
+        "inheritance": "Kế thừa",
+        "admin": "Admin",
+        "branchadmin": "Admin văn phòng",
+        "choose_branchadmin": "Chọn nhánh quản lý",
+        "import_csv": "Nhập CSV",
+        "asset": "Thiết bị",
+        "view": "Xem",
+        "delete": "Xoá",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "audit": "Kiểm tra",
+        "view_requestable": "Xem thiết bị được yêu cầu",
+        "accessory": "Phụ kiện",
+        "consumables": "Văn phòng phẩm",
+        "licenses": "Bản quyền",
+        "keys": "Xem mã bản quyền",
+        "files": "Xem và sửa tập tin bản quyền",
+        "models": "Kiểu tài sản",
+        "categories": "Danh mục",
+        "departments": "Phòng ban",
+        "statuslabels": "Trạng thái",
+        "customfields": "Trường khách hàng",
+        "suppliers": "Nhà cung cấp",
+        "manufacturers": "Kho",
+        "locations": "Văn phòng",
+        "superuser": "Người dùng",
+        "assets": "Thiết bị",
+        "import": "Nhập CSV",
+        "reports.view": "Báo cáo",
+        "accessories": "Phụ kiện",
+        "users": "Người dùng",
+        "sum-assets": "Tổng số tài sản"
       },
-      "field":{
+      "field": {
         "notes": "Mô tả",
         "category": "Thể loại",
         "status": "Trạng thái",
@@ -236,33 +526,579 @@
         "supplier": "Nhà cung cấp",
         "name": "Tên tài sản",
         "model": "Kiểu tài sản",
-        "insurance": "Bảo hành"
+        "insurance": "Bảo hành",
+        "reason": "Lý do",
+        "inputReason": "Nhập lý do từ chối",
+        "image": "Hình ảnh",
+        "condition": "Xác nhận",
+        "dateCheckout": "Ngày cấp phát",
+        "title": "Tiêu đề",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "username": "Tên đăng nhập",
+        "locations": "Văn phòng",
+        "remote": "Remote",
+        "first_name": "Tên",
+        "last_name": "Họ",
+        "full_name": "Họ và tên",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "job_title": "Tiêu đề",
+        "user_manager": "Người quản lý",
+        "department": "Bộ phận",
+        "website": "Website",
+        "state": "Tỉnh/Quận huyện",
+        "country": "Nước",
+        "note": "Ghi chú",
+        "activated": "Cho phép đăng nhập",
+        "checkbox": "Người dùng này có thể đăng nhập",
+        "locale": "Ngôn ngữ",
+        "remote_checkbox": "Đây là một người dùng từ xa",
+        "assets_count": "Tài sản",
+        "accessories_count": "Phụ kiện",
+        "licenses_count": "Bản quyền",
+        "consumables_count": "Hàng tiêu dùng",
+        "password": "Mật khẩu",
+        "password_confirmation": "Xác nhận mật khẩu",
+        "old_password": "Mật khẩu cũ",
+        "new_password": "Mật khẩu mới",
+        "list_assets": "Danh sách các thiết bị",
+        "dateBuy": "Ngày mua",
+        "warranty_months": "Bảo hành",
+        "name_user": "Tên người dùng",
+        "accept": "Chấp nhận",
+        "refuse": "Từ chối",
+        "user": "Người dùng",
+        "admin": "Admin",
+        "information": "Thông tin",
+        "download_picter": "Tải hình",
+        "permission": "Phân quyền",
+        "role": "Vai trò"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "cancle": "Từ chối",
+        "create": "Thêm mới",
+        "synchronized": "Đồng bộ",
+        "update": "Chỉnh sửa",
+        "changePass": "Đổi mật khẩu",
+        "accept": "Xác nhận"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh",
+        "columns": "Danh sách các cột",
+        "changePass": "Đổi mật khẩu"
+      },
+      "placeholder": {
+        "first_name": "Tên",
+        "last_name": "Họ",
+        "username": "Tên đăng nhập",
+        "email": "Email",
+        "user_manager": "Lựa chọn một Người dùng",
+        "department": "Chọn một phòng",
+        "locations": "Lựa chọn một văn phòng",
+        "phone": "Số điện thoại",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "state": "Tỉnh/Quận huyện"
       }
     }
   },
-  "category":{
-    "label":{
+  "category": {
+    "label": {
       "title": {
-        "create":"Tạo danh mục",
-        "edit":"Chỉnh sửa danh mục"
+        "create": "Tạo danh mục",
+        "edit": "Cập nhật danh mục",
+        "nameTitle": "Danh mục"
       },
       "field": {
-        "create": "Tạo danh mục",
-        "edit": "Chỉnh sửa danh mục",
-        "delete": "Xóa danh mục",
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
         "name": "Tên danh mục",
         "category": "Loại",
-        "categoryEULA": "Danh mục EULA",
+        "categoryEULA": "Mô tả danh mục",
         "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
         "sendMail": "Gửi email đến người dùng khi checkin/checkout",
-        "image": "Tải hình"
+        "image": "Tải hình",
+        "dateCreate": "Đã tạo lúc"
       },
       "message": {
-        "required":"bắt buộc"
+        "required": "bắt buộc"
       },
       "button": {
         "create": "Thêm mới",
         "update": "Chỉnh sửa"
+      },
+      "table": {
+        "nameAsset": "Tên tài sản",
+        "image": "Hình ảnh",
+        "category": "Loại",
+        "assetCount": "Số lượng",
+        "sendEmail": "Gửi email",
+        "accept": "Chấp nhận"
+      },
+      "options": {
+        "accessory": "Phụ kiện",
+        "asset": "Thiết bị",
+        "consumable": "Văn phòng phẩm",
+        "software":"Phần mềm"
+      }
+    }
+  },
+  "manufactures": {
+    "label": {
+      "title": {
+        "create": "Tạo kho",
+        "edit": "Cập nhật kho",
+        "nameTitle": "Kho",
+        "asset": "Tài sản",
+        "accessories": "Phụ kiện",
+        "consumables": "Văn phòng phẩm",
+        "softwares": "Phần mềm"
+      },
+      "field": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "name": "Tên",
+        "url": "URL",
+        "urlSupport": "URL Hỗ trợ",
+        "phone": "Điện thoại hỗ trợ",
+        "email": "Hỗ trợ Email",
+        "image": "Tải hình",
+        "imageTable": "Hình ảnh",
+        "assetCount": "Thiết bị",
+        "accessoriesCount": "Phụ kiện",
+        "consumableCount": "Văn phòng phẩm",
+        "dateCreate": "Ngày tạo"
+      },
+      "placeholder": {
+        "url": "https://",
+        "urlSupport": "https://"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      }
+    }
+  },
+  "location": {
+    "label": {
+      "title": {
+        "create": "Tạo văn phòng",
+        "edit": "Cập nhật văn phòng",
+        "nameTitle": "Văn phòng"
+      },
+      "field": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "name": " Tên văn phòng",
+        "parent": "Parent",
+        "manager": "Người quản lý",
+        "currency": "Tiền tệ văn phòng",
+        "address_detail": "Địa chỉ chi tiết",
+        "address": "Tên đường",
+        "city": "Tỉnh/Thành phố",
+        "state": "Quận/Huyện",
+        "country": "Nước",
+        "image": "Tải hình",
+        "imageTable": "Hình ảnh",
+        "assetCount": "Số lượng",
+        "assetAssign": "Assets Assigned",
+        "dateCreate": "Ngày tạo",
+        "users_count": "Thành viên"
+      },
+      "placeholder": {
+        "parent": "Lựa chọn một văn phòng",
+        "manager": "Lựa chọn một người dùng",
+        "country": "Lựa chọn một nước",
+        "currency": "USD"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      }
+    }
+  },
+  "resource": {
+    "dashboard": "Thống kê",
+    "asset": "Thiết bị",
+    "assets": "Tất cả",
+    "software": "Phần mềm",
+    "softwares": "Phần mềm",
+    "licenses": "Key",
+    "request": "Tạo request",
+    "users": "Tài sản",
+    "users_licenses": "Phầm mềm",
+    "users_assets": "Tài sản của tôi",
+    "category": "Danh mục",
+    "manufactures": "Kho",
+    "location": "Văn phòng",
+    "supplier": "Nhà cung cấp",
+    "model": "Kiểu tài sản",
+    "suppliers": "Nhà cung cấp",
+    "department": "Phòng ban",
+    "setting": "Cài đặt",
+    "depreciation": "Khấu hao",
+    "assets_refuse": "Thiết bị từ chối",
+    "assets-assign": "Đã cấp phát",
+    "assets-readyToDeploy": "Trong kho",
+    "assets-pending": "Bảo hành-check lại",
+    "assets-broken": "Hỏng",
+    "assets-waiting-confirm": "Đang chờ xác nhận",
+    "assets-expires": "Sắp hết hạn",
+    "report": "Báo cáo",
+    "asset-category-PC": "Tất cả máy tính",
+    "asset-category-Monitor": "Tất cả màn hình",
+    "asset-category-Mouse": "Tất cả chuột",
+    "asset-category-Keyboard": "Tất cả bàn phím",
+    "asset-category-Headphone": "Tất cả tai nghe",
+    "asset-category-Device": "Tất cả thiết bị",
+    "checkin-checkout": "Cấp phát/thu hồi",
+    "checkout": "Cấp phát",
+    "checkin": "Thu hồi",
+    "manager_user": "Người dùng",
+    "accessory": "Phụ kiện",
+    "consumables": "Văn phòng phẩm",
+    "accessory_details": "Chi tiết phụ kiện",
+    "consumable_details": "Chi tiết văn phòng phẩm",
+    "supplier_details": "Chi tiết nhà cung cấp"
+  },
+  "model": {
+    "label": {
+      "field": {
+        "id": "ID",
+        "name": "Tên kiểu tài sản",
+        "manufacturer": "Kho",
+        "category": "Danh mục",
+        "notes": "Ghi chú",
+        "image": "Tải hình",
+        "checkbox": "Người dùng có thể yêu cầu mô hình này",
+        "assets": "Tài sản",
+        "images": "Hình ảnh",
+        "requestable": "Cho phép đề xuất",
+        "created_at": "Đã tạo lúc"
+      },
+      "placeholder": {
+        "manufacturer": "Lựa chọn một kho",
+        "category": "Lựa chọn một danh mục",
+        "name": "Tên kiểu tài sản"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "clone": "Clone"
+      },
+      "title": {
+        "model": "Kiểu tài sản",
+        "create": "Tạo kiểu tài sản",
+        "edit": "Cập nhật kiểu tài sản",
+        "clone": "Clone kiểu tài sản"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "clone": "Clone",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "supplier": {
+    "label": {
+      "field": {
+        "id": "ID",
+        "name": "Tên nhà cung cấp",
+        "address": "Địa chỉ nhà cung cấp",
+        "city": "Thành phố",
+        "state": "Tỉnh/Thành phố",
+        "zip": "Zip",
+        "contact": "Tên người liên hệ",
+        "phone": "Điện thoại",
+        "email": "Email",
+        "notes": "Ghi chú",
+        "image": "Tải hình",
+        "assets": "Tài sản",
+        "accessories": "Phụ kiện",
+        "licenses": "Bản quyền",
+        "images": "Hình ảnh"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "supplier": "Nhà cung cấp",
+        "create": "Tạo nhà cung cấp",
+        "edit": "Cập nhật nhà cung cấp",
+        "note": "Xem nhà cung cấp",
+        "assets": "Tài sản"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "department": {
+    "label": {
+      "field": {
+        "name": "Tên bộ phận",
+        "manager": "Giám đốc",
+        "user": "Người dùng",
+        "location": "Vị trí",
+        "company": "Công ty",
+        "image": "Tải hình"
+      },
+      "placeholder": {
+        "name": "Tên bộ phận",
+        "company": "Chọn công ty",
+        "manager": "Lựa chọn một Người dùng",
+        "location": "Lựa chọn một Địa phương"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "department": "Phòng ban",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "depreciation": {
+    "label": {
+      "field": {
+        "name": "Tên khấu hao",
+        "rules": "Điều khoản",
+        "months": "Số lượng tháng",
+        "month": "tháng",
+        "depreciation_min": "Floor Value",
+        "minimum_value": "Giá trị tối thiểu sau khi khấu hao"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa"
+      },
+      "title": {
+        "depreciation": "Khấu hao",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá"
+      }
+    }
+  },
+  "report": {
+    "label": {
+      "title": {
+        "name": "Báo cáo",
+        "nameReportCheckIn": "Thiết bị thu hồi",
+        "nameReportCheckOut": "Thiết bị bàn giao"
+      },
+      "field": {
+        "id": "ID",
+        "name": "Tên tài sản",
+        "asset": "Tài sản",
+        "image": "Hình ảnh",
+        "propertyCard": "Thẻ tài sản",
+        "serial": "Số Sê-ri",
+        "dateBuy": "Ngày mua",
+        "orderNumber": "Mã đơn hàng",
+        "note": "Mô tả",
+        "logMeta": "Thay đổi chi tiết",
+        "dateCreate": "Ngày tạo",
+        "dateCheckout": "Ngày cấp phát",
+        "dateCheckin": "Ngày thu hồi",
+        "dateStart": "Ngày bắt đầu",
+        "dateEnd": "Ngày kết thúc",
+        "assetType": "Loại",
+        "type": "Kiểu hoạt động",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "manager": "Quản lý",
+        "user": "Người dùng",
+        "dateCheckout_And_dateCheckin": "Ngày nhập"
+      }
+    }
+  },
+  "accessory": {
+    "label": {
+      "field": {
+        "name": "Tên phụ kiện",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "supplier": "Nhà cung cấp",
+        "location": "Văn phòng",
+        "total_accessory": "Số lượng",
+        "notes": "Ghi chú",
+        "order_number": "Số đơn đặt hàng",
+        "purchase_cost": "Chi phí mua hàng",
+        "manufacturer": "Kho",
+        "vnd": "VND",
+        "checkoutTo": "Cấp phát đến",
+        "user": "Lựa chọn một người dùng",
+        "image": "Hình ảnh",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "users": "Người dùng",
+        "checkout_date": "Ngày cấp phát",
+        "checkin_date": "Ngày thu hồi",
+        "cost": "Chi phí mua hàng",
+        "insurance": "Bảo hành",
+        "month": "Tháng",
+        "remaining_qty": "Số lượng phụ kiện còn lại",
+        "first_name": "Tên người dùng",
+        "username": "Tên đăng nhập",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "warranty_expires": "Hết hạn",
+        "qty": "Số lượng phụ kiện được cấp phát"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "detail": "Chi tiết"
+      },
+      "placeholder": {
+        "name": "Tên phụ kiện",
+        "category": "Chọn một danh mục",
+        "purchase_date": "Ngày mua",
+        "supplier": "Lựa chọn một nhà cung cấp",
+        "manufacturer": "Lựa chọn kho",
+        "location": "Lựa chọn một văn phòng",
+        "total_accessory": "Số lượng",
+        "notes": "Ghi chú",
+        "user": "Lựa chọn một người dùng",
+        "cost": "Chi phí mua hàng",
+        "insurance": "Bảo hành"
+      },
+      "title": {
+        "accessory": "Phụ kiện",
+        "create": "Tạo phụ kiện",
+        "edit": "Cập nhật phụ kiện",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "time": "Thời gian",
+        "detail": "Chi tiết phụ kiện"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh",
+        "detail": "Xem chi tiết"
+      }
+    }
+  },
+  "consumables": {
+    "label": {
+      "field": {
+        "name": "Tên văn phòng phẩm",
+        "category": "Danh mục",
+        "purchase_date": "Ngày mua",
+        "insurance": "Bảo hành",
+        "manufacturer": "Kho",
+        "location": "Văn phòng",
+        "total_consumables": "Số lượng",
+        "notes": "Ghi chú",
+        "order_number": "Số đơn đặt hàng",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "checkoutTo": "Cấp phát đến",
+        "users": "Người dùng",
+        "admin": "Admin",
+        "checkout_date": "Ngày cấp phát",
+        "purchase_cost": "Chi phí mua hàng",
+        "vnd": "VND",
+        "month": "Tháng",
+        "supplier": "Nhà cung cấp",
+        "remaining": "Số lượng văn phòng phẩm còn lại",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật tại",
+        "warranty_expires": "Hết hạn",
+        "qty": "Số lượng văn phòng phẩm được cấp phát",
+        "user": "Lựa chọn một người dùng"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "update": "Chỉnh sửa",
+        "checkout": "Cấp phát",
+        "detail": "Chi tiết"
+      },
+      "title": {
+        "consumables": "Văn phòng phẩm",
+        "create": "Tạo văn phòng phẩm",
+        "edit": "Cập nhật văn phòng phẩm",
+        "date": "Thời gian",
+        "checkout": "Cấp phát",
+        "detail": "Chi tiết văn phòng phẩm"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "refresh": "Refresh",
+        "detail": "Xem chi tiết"
+      },
+      "placeholder": {
+        "name": "Tên",
+        "category": "Lựa chọn một danh mục",
+        "purchase_date": "Ngày mua",
+        "insurance": "Bảo hành",
+        "manufacturer": "Lựa chọn kho",
+        "location": "Lựa chọn một văn phòng",
+        "total_consumables": "Số lượng",
+        "notes": "Ghi chú",
+        "user": "Lựa chọn một người dùng",
+        "supplier": "Lựa chọn nhà cung cấp",
+        "purchase_cost": "Chi phí mua hàng"
       }
     }
   }

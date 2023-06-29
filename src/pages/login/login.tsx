@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Row,
   Col,
@@ -13,7 +13,8 @@ import {
 
 import { Icons } from "@pankod/refine-antd";
 
-import { useLogin, useTranslate } from "@pankod/refine-core";
+import { useLogin, useNavigation, useTranslate } from "@pankod/refine-core";
+import { gapi } from 'gapi-script';
 
 import {
   layoutStyles,
@@ -22,8 +23,9 @@ import {
   imageContainer,
   logo,
   buttonLoginGoogle,
-  forgotPass
+  forgotPass,
 } from "./styles";
+import "styles/antd.less";
 
 import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
 
@@ -47,6 +49,7 @@ export const LoginPage: React.FC = () => {
   const translate = useTranslate();
 
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
+  const { list } = useNavigation();
 
   const CardTitle = (
     <Title level={3} style={titleStyles}>
@@ -54,19 +57,31 @@ export const LoginPage: React.FC = () => {
     </Title>
   );
 
-  const clientId = process.env.GOOGLE_CLIENT_ID
-    ? process.env.GOOGLE_CLIENT_ID
-    : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
+    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
+    : "773310957148-o1bk15p279jst37itlfqmfulglnh4t1k.apps.googleusercontent.com";
 
   const { mutate: loginGoogle, isLoading: isLoadingGoogle } =
     useLogin<GoogleLoginResponse>();
 
   const { signIn } = useGoogleLogin({
-    onSuccess: (response) => loginGoogle(response as GoogleLoginResponse),
+    onSuccess: (response) => {
+      loginGoogle(response as GoogleLoginResponse);
+    },
     clientId,
-    isSignedIn: true,
+    isSignedIn: false,
     cookiePolicy: "single_host_origin",
   });
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: 'email',
+      });
+    }
+    gapi.load('client:auth2', start);
+  }, []);
 
   return (
     <Layout style={layoutStyles}>
@@ -82,7 +97,7 @@ export const LoginPage: React.FC = () => {
             <div style={imageContainer}>
               <img
                 style={logo}
-                src="/images/global/nccsoft-logo.png"
+                src="/images/global/nccsoft-logo-small.png"
                 alt="Refine Logo"
               />
             </div>
@@ -126,16 +141,6 @@ export const LoginPage: React.FC = () => {
                       {translate("pages.login.remember", "Remember me")}
                     </Checkbox>
                   </Form.Item>
-
-                  <a
-                    style={forgotPass}
-                    href="/"
-                  >
-                    {translate(
-                      "pages.login.forgotPassword",
-                      "Forgot password?"
-                    )}
-                  </a>
                 </div>
                 <Button
                   type="primary"
@@ -155,17 +160,10 @@ export const LoginPage: React.FC = () => {
                 loading={isLoadingGoogle}
                 onClick={() => signIn()}
                 style={buttonLoginGoogle}
+                className="btn-login-google"
               >
                 {translate("pages.login.signinGoogle", "Sign in with google")}
               </Button>
-              <div style={{ marginTop: 8 }}>
-                <Text style={{ fontSize: 12 }}>
-                  {translate("pages.login.noAccount", "Don’t have an account?")}{" "}
-                  <a href="/" style={{ fontWeight: "bold" }}>
-                    {translate("pages.login.signup", "Sign up")}
-                  </a>
-                </Text>
-              </div>
             </Card>
           </div>
         </Col>

@@ -1,8 +1,10 @@
 import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
+import { UserAPI } from "api/userApi";
+import { GET_ME_API } from "api/baseApi";
+import { parseJwt } from "untils/assets";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
-
 
 export const authProvider: AuthProvider = {
   getToken: () => {
@@ -10,7 +12,7 @@ export const authProvider: AuthProvider = {
   },
   login: async ({ username, password, tokenId, profileObj, tokenObj }) => {
     const { post } = dataProvider;
-    const url = tokenId ? "api/v1/auth/google" : "oauth/token";
+    const url = tokenId ? "api/v1/auth/google" : "api/v1/auth/login";
     const payload = tokenId
       ? {
           token_id: tokenId,
@@ -24,14 +26,16 @@ export const authProvider: AuthProvider = {
           username: username,
           password: password,
         };
-
-    return post({
+    const data = await post({
       url: url,
       payload: payload,
-    }).then((data: any) => {
-      localStorage.setItem(TOKEN_KEY, data.data.access_token);
-      return;
-    }); // todo others
+    });
+    localStorage.setItem(TOKEN_KEY, data.data.access_token);
+
+    if (tokenId) {
+      return Promise.resolve("/users");
+    }
+    return Promise.resolve();
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
@@ -46,15 +50,35 @@ export const authProvider: AuthProvider = {
 
     return Promise.reject();
   },
-  getPermissions: () => Promise.resolve(),
   getUserIdentity: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      return Promise.reject();
+    const permissionRes = await UserAPI.getAll(GET_ME_API);
+    localStorage.setItem(
+      "username",
+      JSON.stringify(permissionRes.data.username)
+    );
+    const token = localStorage.getItem("username");
+    if (token) {
+      return Promise.resolve(token);
     }
-
-    return Promise.resolve({
-      id: 1,
-    });
+    return Promise.reject();
   },
+  getPermissions: function() {
+    const scopes = parseJwt(localStorage.getItem(TOKEN_KEY))?.scopes;
+    
+    let permissions = {} as any;
+    scopes?.forEach((item: any) =>{
+      permissions[item] = "1";
+    })
+    if(!permissions['admin']){
+      permissions['admin'] = '0';
+      if(permissions['branchadmin']){
+        permissions['branchadmin'] = "2";
+      }
+    }
+    permissions = JSON.stringify(permissions);
+    return Promise.resolve(JSON.parse(permissions as string));
+  },
+
 };
+
+

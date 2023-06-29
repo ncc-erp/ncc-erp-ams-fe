@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
 import { Image, Input, Space, Typography } from "@pankod/refine-antd";
 import "./type.less";
 
 type UploadImageProps = {
-  file: File;
+  file: File | undefined;
   setFile: (data: File) => void;
   url?: string;
   id?: string;
 };
 
 export const UploadImage = (props: UploadImageProps) => {
-  const {id, file, setFile, url } = props;
+  const { id, file, setFile, url } = props;
 
   const fileHandler = (e: any) => {
     setFile(e?.target?.files[0]);

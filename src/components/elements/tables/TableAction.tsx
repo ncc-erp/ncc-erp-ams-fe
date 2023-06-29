@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ICheckboxChange } from "interfaces";
 import { useTranslate } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 const { Search } = Input;
 export declare type CheckboxValueType = string | number | boolean;
 export interface ISelectTableCol {
@@ -120,6 +121,16 @@ export const TableAction = (props: ITableAction) => {
   );
   const onSelectCollumn = useCallback(() => {}, []);
 
+  const searchValues = useMemo(() => {
+    return localStorage.getItem("search");
+  }, [localStorage.getItem("search")]);
+
+  useEffect(() => {
+    searchFormProps.form.submit();
+  }, [window.location.reload]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParam = searchParams.get("search");
   return (
     <Row style={{ marginBottom: "10px" }}>
       <Col xs={12}>
@@ -139,11 +150,37 @@ export const TableAction = (props: ITableAction) => {
           }}
         >
           {searchFormProps && (
-            <Form {...searchFormProps}>
+            <Form
+              {...searchFormProps}
+              initialValues={{
+                search:
+                  localStorage.getItem("search") !== null ?? searchValues !== ""
+                    ? searchValues
+                    : searchParam ?? searchParam,
+              }}
+              onChange={() => {
+                localStorage.setItem(
+                  "search",
+                  searchFormProps.form?.getFieldsValue()?.search !== undefined
+                    ? searchFormProps.form?.getFieldsValue()?.search
+                    : ""
+                );
+                searchFormProps.form.submit();
+                searchParams.set(
+                  "search",
+                  searchFormProps.form?.getFieldsValue()?.search
+                );
+                setSearchParams(searchParams);
+              }}
+            >
               <Form.Item name={"search"}>
                 <Search
                   placeholder={t("table.search")}
                   onSearch={(key) => {
+                    localStorage.setItem(
+                      "search",
+                      searchFormProps.form.getFieldsValue().search
+                    );
                     searchFormProps.form.submit();
                   }}
                   style={{ width: 200 }}

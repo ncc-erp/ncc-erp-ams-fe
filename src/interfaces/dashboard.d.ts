@@ -14,6 +14,9 @@ export interface ICategoryAsset {
   name: StatusAsset;
   assets_count: number;
   status_labels: IStatusAsset[];
+  category_type: string;
+  consumables_count: number;
+  accessories_count: number;
 }
 
 export interface ILocation {
@@ -21,6 +24,9 @@ export interface ILocation {
   name: string;
   assets_count: number;
   categories: ICategoryAsset[];
+  items_count: number;
+  consumables_count: number;
+  accessories_count: number;
 }
 
 export interface IEntryType {
@@ -75,3 +81,20 @@ export interface IFilters {
   to?: string;
   entyType?: number[];
 }
+
+export interface IAssetHistory {
+  category_type: string;
+  count: number;
+  id: string;
+  type: string;
+}
+export interface DataTable {
+  name: string;
+  pending: string;
+  broken: string;
+  assign: string;
+  ready_to_deploy: string;
+  category_id: number;
+  rtd_location_id: number;
+  category_type: string;
+};

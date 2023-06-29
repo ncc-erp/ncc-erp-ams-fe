@@ -7,6 +7,8 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 
 import "../../styles/hardware.less";
 import { IHardwareResponse, IHardwareUpdateRequest } from "interfaces/hardware";
+import { HARDWARE_API } from "api/baseApi";
+import { ASSIGNED_STATUS } from "constants/assets";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -17,7 +19,7 @@ type HardwareEditProps = {
 export const CancleAsset = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
   const t = useTranslate();
   const { formProps, form } = useForm<IHardwareUpdateRequest>({
@@ -29,7 +31,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id,
+    url: HARDWARE_API + "/" + data?.id,
     method: "post",
     config: {
       payload: payload,
@@ -40,11 +42,11 @@ export const CancleAsset = (props: HardwareEditProps) => {
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("reason", event.reason);
-    formData.append("assigned_status", "2");
+    formData.append("assigned_status", ASSIGNED_STATUS.REFUSE.toString());
 
     formData.append("_method", "PATCH");
     setPayload(formData);
@@ -67,7 +69,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     if (updateData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }

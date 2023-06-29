@@ -3,6 +3,9 @@ import {
   useSetLocale,
   useGetIdentity,
   useLogout,
+  useNavigation,
+  useTranslate,
+  usePermissions,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
@@ -14,23 +17,27 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import dataProvider from "providers/dataProvider";
+import { SYNC_USER_API } from "api/baseApi";
+import { EPermissions } from "constants/permissions";
 
-const { LogoutOutlined } = Icons;
+const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const { t } = useTranslation();
-
+  const translate = useTranslate();
   const locale = useGetLocale();
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
   const currentLocale = locale();
+  const { push } = useNavigation();
+  const [hrmLoading, setHrmLoading] = useState(false);
 
-  const clientId = process.env.GOOGLE_CLIENT_ID
-    ? process.env.GOOGLE_CLIENT_ID
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
+    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
     : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
 
   const { signOut: signOutGoogle } = useGoogleLogout({
@@ -38,9 +45,22 @@ export const Header: React.FC = () => {
     cookiePolicy: "single_host_origin",
   });
 
+  const syncHrm = () => {
+    const { custom } = dataProvider;
+    setHrmLoading(true);
+    custom &&
+      custom({
+        url: SYNC_USER_API,
+        method: "get",
+      }).then((x) => {
+        setHrmLoading(false);
+      });
+  };
+
   const logoutAccount = () => {
     signOutGoogle();
     logout();
+    push("/login");
   };
 
   const menu = (
@@ -54,10 +74,13 @@ export const Header: React.FC = () => {
           </span>
         }
       >
-        {t("lang.vi")}
+        {translate("lang.vi")}
       </Menu.Item>
     </Menu>
   );
+
+  const { data: userIdentity } = useGetIdentity<string>();
+  const { data: permissionsData } = usePermissions();
 
   return (
     <AntdLayout.Header
@@ -70,7 +93,27 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Button type="link" onClick={() => logoutAccount()}>
+      <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+        <Button
+          type="link"
+          loading={hrmLoading}
+          onClick={syncHrm}
+        >
+          <SyncOutlined />
+        </Button>
+      )}
+
+      {/* <Button type="link" onClick={() => {
+        logoutAccount()
+      }}>
+      </Button> */}
+      <Button
+        type="link"
+        onClick={() => {
+          logoutAccount();
+        }}
+      >
         <LogoutOutlined />
       </Button>
       {/* <Dropdown overlay={menu}>

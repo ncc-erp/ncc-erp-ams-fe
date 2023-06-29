@@ -25,6 +25,7 @@ export interface IHardwareCreateRequest {
 }
 
 export interface IHardwareUpdateRequest {
+  assigned_user: number;
   name: string;
   serial: string;
   company: number;
@@ -68,6 +69,10 @@ export interface IHardwareResponse {
     id: number;
     name: string;
   };
+  manufacturer: {
+    id: number;
+    name: string;
+  };
   supplier: {
     id: number;
     name: string;
@@ -84,12 +89,22 @@ export interface IHardwareResponse {
   };
   image: string;
   warranty_months: string;
+  warranty_expires: {
+    date: string;
+    formatted: string;
+  };
   purchase_cost: number;
   purchase_date: {
     date: string;
     formatted: string;
   };
-  assigned_to: number;
+  assigned_to: {
+    id: number;
+    name: string;
+    username: string;
+    last_name: string;
+    first_name: string;
+  };
   last_audit_date: string;
   requestable: string;
   physical: number;
@@ -118,11 +133,28 @@ export interface IHardwareResponse {
     };
   };
   user_can_checkout: boolean;
+  user_can_checkin: boolean;
   assigned_status: number;
-  checkin_at:{
+  checkin_at: {
     date: string;
     formatted: string;
-  }
+  };
+  created_at: {
+    datetime: string;
+    formatted: string;
+  };
+  updated_at: {
+    datetime: string;
+    formatted: string;
+  };
+  checkout_at: {
+    date: string;
+    formatted: string;
+  };
+  checkin_counter: number;
+  checkout_counter: number;
+  requests_counter: number;
+  withdraw_from: number;
 }
 
 export interface IDefaultValue {
@@ -151,6 +183,27 @@ export interface IHardwareRequestCheckout {
   assigned_status: number;
   user_can_checkout: boolean;
 }
+export interface IHardwareRequestMultipleCheckout {
+  assets: {}[];
+  assigned_asset: string;
+  assigned_location: string;
+  assigned_user: string;
+  checkout_at: string;
+  checkout_to_type: string;
+  assigned_status: number;
+  user_can_checkout: boolean;
+  note: string;
+  status_id: number;
+}
+
+export interface IHardwareRequestMultipleCheckin {
+  assets: {}[];
+  status_label: string;
+  status_id: string;
+  checkin_at: string;
+  rtd_location: string;
+  note: string;
+}
 
 export interface IHardwareResponseCheckout {
   id: number;
@@ -171,15 +224,7 @@ export interface IHardwareResponseCheckout {
     name: string;
   };
   note: string;
-  company: {
-    id: number;
-    name: string;
-  };
 
-  expected_checkin: {
-    date: string;
-    formatted: string;
-  };
   checkout_at: {
     date: string;
     formatted: string;
@@ -203,15 +248,14 @@ export interface IHardwareResponseCheckout {
 
 export interface IHardwareList {
   data:
-    | {
-        data: IHardwareCreateRequest;
-      }
-    | undefined;
+  | {
+    data: IHardwareCreateRequest;
+  }
+  | undefined;
   refetch: Function;
 }
 
 export interface IHardwareRequestCheckin {
-  
   status_label: string;
   model: string;
   id: number;
@@ -224,6 +268,9 @@ export interface IHardwareRequestCheckin {
   depreciate: boolean;
   checkin_at: string;
   rtd_location: number;
+  assigned_status: number;
+  assigned_user: string;
+  assigned_to: string;
 }
 
 export interface IHardwareResponseCheckin {
@@ -233,30 +280,70 @@ export interface IHardwareResponseCheckin {
     id: number;
     name: string;
   };
-  model_number: string;
   status_label: {
     id: number;
     name: string;
     status_type: string;
     status_meta: string;
   };
-  category: {
-    id: number;
-    name: string;
-  };
   note: string;
-  company: {
-    id: number;
-    name: string;
-  };
   rtd_location: {
     id: number;
     name: string;
   };
-
+  assigned_to: {
+    id: number;
+    username: string;
+    last_name: string;
+    first_name: string;
+  };
   checkin_at: {
     date: string;
     formatted: string;
   };
   user_can_checkout: boolean;
+}
+
+export interface IHardwareFilterVariables {
+  search: string;
+  name: string;
+  serial: string;
+  model: string;
+  asset_tag: string;
+  filter: string;
+  rtd_location_id: string;
+  location: string;
+  status_label: string;
+  purchase_date: [Dayjs, Dayjs];
+  assigned_to: string;
+  assigned_status: string;
+  category: string;
+}
+
+export interface IHardwareRequestMultipleCancel {
+  assets: {}[];
+  reason: string;
+  assigned_status: number;
+}
+export interface IAssetsWaiting {
+  id: number;
+  asset_tag: string;
+  status_id: number;
+  model_id: number;
+  name: string;
+  image: string;
+  serial: string;
+  purchase_date: string;
+  purchase_cost: number;
+  order_number: string;
+  notes: string;
+  archived: boolean;
+  warranty_months: string;
+  depreciate: boolean;
+  supplier_id: number;
+  requestable: number;
+  rtd_location_id: number;
+  last_audit_date: string;
+  location_id: number;
+  assigned_status: number;
 }

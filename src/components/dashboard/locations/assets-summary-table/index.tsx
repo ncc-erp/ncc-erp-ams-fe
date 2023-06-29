@@ -1,123 +1,200 @@
+/* eslint-disable no-lone-blocks */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
-import { ICategoryAsset } from "interfaces/dashboard";
+import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
+import { useNavigation, useTranslate } from "@pankod/refine-core";
+import { useSearchParams } from "react-router-dom";
+import { CategoryType } from "constants/assets";
 
 type AssetsSummaryTableProps = {
+  id: number;
   categories: ICategoryAsset[];
-};
-
-enum Status {
-  "PENDING" = "Pending",
-  "BROKEN" = "Broken",
-  "ASSIGN" = "Assign",
-  "READY_TO_DEPLOY" = "Ready to deploy",
-}
-
-type DataTable = {
-  name: string;
-  pending: string;
-  broken: string;
-  assign: string;
-  ready_to_deploy: string;
+  data: any;
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
-  const { categories } = props;
+  const { id, categories, data } = props;
 
-  const [data, setData] = useState<DataTable[]>([]);
+  const t = useTranslate();
+  const { list } = useNavigation();
 
-  const calculation = (value: number, sum: number) => {
-    if (value === 0) {
-      return "0";
-    }
-    return value + "(" + ((value / sum) * 100).toFixed(2) + "%)";
-  };
+  const [dataAllLocation, setDataAllLocation] = useState<DataTable[]>([]);
+
+  const [searchParams] = useSearchParams();
+  const dateFrom = searchParams.get("purchase_date_from");
+  const dateTo = searchParams.get("purchase_date_to");
+
+  const response = data?.data.payload || [];
 
   useEffect(() => {
-    const items = categories.map((category: ICategoryAsset) => {
-      let name = category.name;
-      let pending = "";
-      let broken = "";
-      let assign = "";
-      let ready_to_deploy = "";
+    const index = response.findIndex(
+      (item: any) => item?.categories?.length > 0
+    );
+    const arrNameAsset = (response[index !== -1 ? index : 0]?.categories).map(
+      (item: ICategoryAsset) => item.name
+    );
 
-      category.status_labels.forEach((status_label) => {
-        if (status_label.name === Status.ASSIGN) {
-          assign = calculation(
-            status_label.assets_count,
-            category.assets_count
-          );
-        }
-        if (status_label.name === Status.BROKEN) {
-          broken = calculation(
-            status_label.assets_count,
-            category.assets_count
-          );
-        }
-        if (status_label.name === Status.PENDING) {
-          pending = calculation(
-            status_label.assets_count,
-            category.assets_count
-          );
-        }
-        if (status_label.name === Status.READY_TO_DEPLOY) {
-          ready_to_deploy = calculation(
-            status_label.assets_count,
-            category.assets_count
-          );
+    let dataAll = [] as any;
+
+    let sumConsumable = {
+      type: t("dashboard.field.typeConsumable"),
+      category_type: CategoryType.CONSUMABLE,
+    } as any;
+
+    let sumAccessory = {
+      type: t("dashboard.field.typeAccessory"),
+      category_type: CategoryType.ACCESSORY,
+    } as any;
+
+    arrNameAsset?.forEach((nameAsset: any) => {
+      let type = {} as any;
+      let category = "" as ICategoryAsset | string | undefined;
+      type.type = nameAsset;
+
+      response.forEach((item: ILocation) => {
+        category = item.categories.find(
+          (c: ICategoryAsset) => c.name === nameAsset
+        );
+
+        if (category?.category_type === CategoryType.CONSUMABLE) {
+          sumConsumable["rtd_location_" + item.id] =
+            sumConsumable["rtd_location_" + item.id] !== undefined
+              ? category?.consumables_count +
+                sumConsumable["rtd_location_" + item.id]
+              : category?.consumables_count;
+        } else if (category?.category_type === CategoryType.ACCESSORY) {
+          sumAccessory["rtd_location_" + item.id] =
+            sumAccessory["rtd_location_" + item.id] !== undefined
+              ? category?.accessories_count +
+                sumAccessory["rtd_location_" + item.id]
+              : category?.accessories_count;
+        } else {
+          type["rtd_location_" + item.id] = category && category.assets_count;
+          type.category_id = category && category.id;
+          type.category_type = category && category.category_type;
         }
       });
-      return {
-        name: name,
-        pending: pending,
-        broken: broken,
-        assign: assign,
-        key: category.id,
-        ready_to_deploy: ready_to_deploy,
-      };
+
+      const dataAsset = (response[index !== -1 ? index : 0]?.categories).filter(
+        (item: ICategoryAsset) => item.category_type === CategoryType.ASSET
+      );
+
+      const arrNameAsset = dataAsset.map((item: any) => item.name);
+      if (arrNameAsset.includes(nameAsset)) {
+        dataAll.push(type);
+      }
     });
 
-    setData(items);
-  }, [categories]);
+    setDataAllLocation([...dataAll, sumConsumable, sumAccessory]);
+  }, [response]);
 
-  const columns = [
+  let columnSum = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text: string) => (
-        <Typography.Text strong type="success">
-          {text}
+      title: "Tên thiết bị",
+      dataIndex: "type",
+      key: "type",
+      render: (text: string, record: DataTable) => (
+        <Typography.Text
+          strong
+          type="success"
+          className="field-category"
+          onClick={() => {
+            {
+              record.category_type === CategoryType.ASSET
+                ? dateFrom && dateTo
+                  ? list(
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
+                  : list(`assets?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFrom && dateTo
+                  ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`consumables`)
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFrom && dateTo
+                  ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`accessory`)
+                : dateFrom && dateTo
+                ? list(
+                    `assets?category_id=${record.category_id}&dateTo=${dateFrom}&dateTo=${dateTo}`
+                  )
+                : list(`assets?category_id=${record.category_id}`);
+            }
+          }}
+        >
+          {text ? text : ""}
         </Typography.Text>
       ),
     },
-    {
-      title: "Pending",
-      dataIndex: "pending",
-      key: "pending",
-    },
-    {
-      title: "Broken",
-      dataIndex: "broken",
-      key: "broken",
-    },
-    {
-      title: "Assign",
-      dataIndex: "assign",
-      key: "assign",
-    },
-    {
-      title: "Ready to deploy",
-      key: "ready_to_deploy",
-      dataIndex: "ready_to_deploy",
-    },
   ];
+
+  
+  let columnTypes = response.map((item: ILocation) => {
+    return {
+      title: item.name,
+      dataIndex: "rtd_location_" + item.id,
+      key: "rtd_location_" + item.id,
+      render: (text: number, record: DataTable) => (
+        <Typography.Text
+          type="secondary"
+          className="field-category"
+          onClick={() => {
+            {
+              record.category_type === CategoryType.ASSET
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                    : list(
+                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                      )
+                  : item.id !== 99999
+                  ? list(
+                      `assets?rtd_location_id=${item.id}&category_id=${record.category_id}`
+                    )
+                  : list(`assets?category_id=${record.category_id}`)
+                : record.category_type === CategoryType.CONSUMABLE
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `consumables?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `consumables?date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                  : item.id !== 99999
+                  ? list(`consumables?location_id=${item.id}`)
+                  : list(`consumables`)
+                : record.category_type === CategoryType.ACCESSORY
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `accessory?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : item.id !== 99999
+                  ? list(`accessory?location_id=${item.id}`)
+                  : list(`accessory`)
+                : list(`assets?category_id=${record.category_id}`);
+            }
+          }}
+        >
+          {text ? text : 0}
+        </Typography.Text>
+      ),
+    };
+  });
+
+  columnSum = [...columnSum, ...columnTypes];
 
   return (
     <Table
-      columns={columns}
-      dataSource={data}
-      pagination={categories.length <= 10 ? false : { pageSize: 10 }}
+      columns={id === 99999 ? columnSum : []}
+      dataSource={id === 99999 ? dataAllLocation : []}
+      pagination={false}
+      scroll={{ x: 'calc(500px + 50%)', y: 400 }}
     />
   );
 };

@@ -7,19 +7,13 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
   Typography,
-  Tabs,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
+
 import {
   IHardwareCreateRequest,
   IHardwareResponse,
@@ -28,7 +22,15 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-import { ICheckboxChange } from "interfaces";
+import {
+  HARDWARE_API,
+  LOCATION_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
+  SUPPLIERS_SELECT_LIST_API,
+  USERS_API,
+} from "api/baseApi";
+import { EStatus } from "constants/assets";
 
 type HardwareCloneProps = {
   isModalVisible: boolean;
@@ -39,31 +41,20 @@ type HardwareCloneProps = {
 export const HardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
-  const [file, setFile] = useState<any>(null);
   const [messageErr, setMessageErr] = useState<any>(null);
-  const [activeModel, setActiveModel] = useState<String>("1");
-  const [checked, setChecked] = useState(true);
 
   const t = useTranslate();
 
-  useEffect(() => {
-    setChecked(props.data?.requestable === "1" ? true : false);
-  }, [props]);
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
-
   const { form, formProps } = useForm<IHardwareCreateRequest>({
-    action: "clone",
+    action: "create",
   });
 
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -75,7 +66,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -87,7 +78,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -99,19 +90,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/suppliers",
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
+    resource: SUPPLIERS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -122,8 +101,8 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     ],
   });
 
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
+  const { selectProps: userSelectProps } = useSelect<ICompany>({
+    resource: USERS_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -146,12 +125,12 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     if (event.order_number !== null)
       formData.append("order_number", event.order_number);
 
-    formData.append("notes", event.notes);
+    formData.append("notes", event.notes ?? "");
     formData.append("asset_tag", event.asset_tag);
     formData.append("status_id", event.status_label.toString());
 
-    if (event.user_id !== undefined)
-      formData.append("assigned_to", event.user_id.toString());
+    if (event.assigned_user !== undefined)
+      formData.append("assigned_user", event.assigned_user.toString());
 
     formData.append("warranty_months", event.warranty_months);
 
@@ -161,12 +140,16 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       formData.append("purchase_date", event.purchase_date);
 
     formData.append("rtd_location_id", event.rtd_location.toString());
+    formData.append("location_id", event.rtd_location.toString());
+
     formData.append("supplier_id", event.supplier.toString());
 
-    if (typeof event.image !== "string" && event.image !== null)
+    if (
+      typeof event.image !== "string" &&
+      event.image !== null &&
+      event.image !== undefined
+    )
       formData.append("image", event.image);
-
-    formData.append("requestable", checked ? "1" : "0");
 
     setPayload(formData);
   };
@@ -174,7 +157,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   useEffect(() => {
     if (payload) {
       mutate({
-        resource: "api/v1/hardware",
+        resource: HARDWARE_API,
         values: payload,
       });
       if (cloneData?.data.message) form.resetFields();
@@ -182,15 +165,19 @@ export const HardwareClone = (props: HardwareCloneProps) => {
   }, [payload]);
 
   useEffect(() => {
+    setIsReadyToDeploy(findLabel(Number(data?.status_label.id)));
     form.resetFields();
-    setFile(null);
+    setFile(undefined);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: "" },
-      { name: "model_id", value: data?.model.id },
+      { name: "model_id", value: data?.model.name },
       { name: "order_number", value: data?.order_number },
-
-      { name: "notes", value: data?.notes },
+      {
+        name: "notes",
+        value:
+          data?.notes ? data?.notes : "",
+      },
       { name: "asset_tag", value: "" },
 
       { name: "status_id", value: data?.status_label.id },
@@ -210,11 +197,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
-
-      { name: "assigned_to", value: data?.assigned_to },
-      { name: "requestable", value: data?.requestable },
-
-      { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -237,7 +219,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
         if (
-          item.label === EStatus.READY_TO_DEPLOY ||
+          item.label === EStatus.PENDING ||
           item.label === EStatus.ASSIGN
         ) {
           check = true;
@@ -316,9 +298,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             />
           </Form.Item>
           {messageErr?.model && (
-            <Typography.Text type="danger">
-              {messageErr.model[0]}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.model}</Typography.Text>
           )}
 
           <Form.Item
@@ -342,7 +322,37 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           </Form.Item>
           {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location}
+            </Typography.Text>
+          )}
+
+          <Form.Item
+            label={t("hardware.label.field.insurance")}
+            name="warranty_months"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.insurance") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={
+              data?.warranty_months && data?.warranty_months.split(" ")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.month")}
+              value={
+                data?.warranty_months && data?.warranty_months.split(" ")[0]
+              }
+            />
+          </Form.Item>
+          {messageErr?.warranty_months && (
+            <Typography.Text type="danger">
+              {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
 
@@ -368,65 +378,25 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               {...statusLabelSelectProps}
             />
           </Form.Item>
-          {messageErr?.status && (
+          {messageErr?.status_label && (
             <Typography.Text type="danger">
-              {messageErr.status[0]}
+              {messageErr.status_label}
             </Typography.Text>
           )}
           {isReadyToDeploy && (
-            <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-              <Tabs
-                defaultActiveKey="1"
-                onTabClick={(value) => {
-                  setActiveModel(value);
-                }}
-              >
-                <Tabs.TabPane
-                  tab={
-                    <span>
-                      <UserOutlined />
-                      {t("hardware.label.field.user")}
-                    </span>
-                  }
-                  key="1"
-                ></Tabs.TabPane>
-                {/* <Tabs.TabPane
-                  tab={
-                    <span>
-                      <AndroidOutlined />
-                      {t("hardware.label.field.asset")}
-                    </span>
-                  }
-                  key="2"
-                ></Tabs.TabPane>
-                <Tabs.TabPane
-                  tab={
-                    <span>
-                      <EnvironmentOutlined />
-                      {t("hardware.label.field.location")}
-                    </span>
-                  }
-                  key="3"
-                ></Tabs.TabPane> */}
-              </Tabs>
-            </Form.Item>
-          )}
-
-          {activeModel === "1" && (
             <Form.Item
               className="tabUser"
-              label={t("hardware.label.field.user")}
-              name="assigned_to"
+              label={t("hardware.label.field.checkoutTo")}
+              name="assigned_user"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message:
                     t("hardware.label.field.user") +
                     " " +
                     t("hardware.label.message.required"),
                 },
               ]}
-              initialValue={data?.assigned_to}
             >
               <Select
                 placeholder={t("hardware.label.placeholder.user")}
@@ -434,50 +404,6 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               />
             </Form.Item>
           )}
-          {/* {activeModel === "2" && (
-            <Form.Item
-              className="tabAsset"
-              label={t("hardware.label.field.asset")}
-              name="physical"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.asset") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-              initialValue={data?.physical}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.asset")}
-                {...hardwareSelectProps}
-              />
-            </Form.Item>
-          )}
-          {activeModel === "3" && (
-            <Form.Item
-              className="tabLocation"
-              label={t("hardware.label.field.location")}
-              name="location"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.location") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-              initialValue={data?.location}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.location")}
-                {...locationSelectProps}
-              />
-            </Form.Item>
-          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -502,7 +428,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.dateBuy")}
+            label={t("hardware.label.field.dateAdd")}
             name="purchase_date"
             initialValue={
               data?.purchase_date.date !== null ? data?.purchase_date.date : ""
@@ -536,7 +462,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier}
             </Typography.Text>
           )}
           <Form.Item
@@ -568,38 +494,9 @@ export const HardwareClone = (props: HardwareCloneProps) => {
               }
             />
           </Form.Item>
-          {messageErr?.puchase_cost && (
+          {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
-            </Typography.Text>
-          )}
-          <Form.Item
-            label={t("hardware.label.field.insurance")}
-            name="warranty_months"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.insurance") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={
-              data?.warranty_months && data?.warranty_months.split(" ")[0]
-            }
-          >
-            <Input
-              type="number"
-              addonAfter={t("hardware.label.field.month")}
-              value={
-                data?.warranty_months && data?.warranty_months.split(" ")[0]
-              }
-            />
-          </Form.Item>
-          {messageErr?.warranty_months && (
-            <Typography.Text type="danger">
-              {messageErr.warranty_months[0]}
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>
@@ -609,7 +506,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
         name="notes"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +
@@ -623,16 +520,7 @@ export const HardwareClone = (props: HardwareCloneProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      <Checkbox
-        name="requestable"
-        style={{ marginTop: 20 }}
-        checked={checked}
-        value={data?.requestable}
-        onChange={(event: ICheckboxChange) => {
-          setChecked(event.target.checked);
-        }}
-      ></Checkbox>{" "}
-      {t("hardware.label.field.checkbox")}
+
       <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
         {data?.image ? (
           <UploadImage

@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Tabs,
   Button,
   Row,
   Col,
@@ -20,32 +19,23 @@ import {
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import {
-  UserOutlined,
-  AndroidOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
 import { ICompany } from "interfaces/company";
+import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
-  data: IHardwareResponseCheckout;
+  data: IHardwareResponseCheckout | undefined;
 };
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
-  const [activeModel, setActiveModel] = useState<String | any>("1");
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<any>(null);
+  const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
     action: "edit",
@@ -54,20 +44,8 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
-    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -78,32 +56,8 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/users/selectlist",
+    resource: USERS_API,
     optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: hardwareSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/hardware/selectlist",
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
-    optionLabel: "name",
     onSearch: (value) => [
       {
         field: "search",
@@ -118,7 +72,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id + "/checkout",
+    url: HARDWARE_API + "/" + data?.id + "/checkout",
     method: "post",
     config: {
       payload: payload,
@@ -129,25 +83,17 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   });
 
   const onFinish = (event: IHardwareRequestCheckout) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
 
     const formData = new FormData();
     formData.append("name", event.name);
-    if (event.note !== undefined) {
-      formData.append("note", event.note);
+    if (event.note !== null) {
+      formData.append("note", event.note ?? "");
     }
-    formData.append("status_id", event.status_label);
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
+    formData.append("status_id", STATUS_LABELS.ASSIGN as any);
 
-    // if (event.assigned_location !== undefined) {
-    //   formData.append("assigned_location", event.assigned_location);
-    //   formData.append("checkout_to_type", "location");
-    // }
-    // if (event.assigned_asset !== undefined) {
-    //   formData.append("assigned_asset", event.assigned_asset);
-    //   formData.append("checkout_to_type", "asset");
-    // }
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
       formData.append("checkout_to_type", "user");
@@ -159,15 +105,14 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   useEffect(() => {
     form.resetFields();
     setFields([
-      { name: "name", value: data.name },
-      { name: "model_id", value: data.model.name },
-      { name: "note", value: data.note },
-      { name: "status_id", value: data.status_label.id },
+      { name: "name", value: data?.name },
+      { name: "model_id", value: data?.model.name },
+      { name: "note", value: data?.note },
       {
         name: "checkout_at",
-        value: new Date().toISOString().substring(0, 10),
+        value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
-      { name: "assigned_user", value: data.assigned_user },
+      { name: "assigned_user", value: data?.assigned_user },
       { name: "assigned_location", value: data?.assigned_location.name },
     ]);
   }, [data, form, isModalVisible, setFields]);
@@ -187,40 +132,11 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     if (updateData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }
   }, [updateData]);
-
-  const findLabel = (value: number): Boolean => {
-    let check = false;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
-          check = true;
-          return true;
-        }
-      }
-    });
-    return check;
-  };
-
-  const onChangeStatusLabel = (value: { value: string; label: string }) => {
-    setIsReadyToDeploy(findLabel(Number(value)));
-  };
-
-  const filterStatusLabelSelectProps = () => {
-    const optionsFiltered = statusLabelSelectProps.options?.filter(
-      (item) =>
-        item.label === EStatus.READY_TO_DEPLOY || item.label === EStatus.ASSIGN
-    );
-    statusLabelSelectProps.options = optionsFiltered;
-    return statusLabelSelectProps;
-  };
 
   return (
     <Form
@@ -257,141 +173,31 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
               {messageErr.model[0]}
             </Typography.Text>
           )}
+
           <Form.Item
-            label={t("hardware.label.field.status")}
-            name="status_label"
+            className="tabUserCheckout"
+            label={t("hardware.label.field.checkoutTo")}
+            name="assigned_user"
             rules={[
               {
                 required: true,
                 message:
-                  t("hardware.label.field.status") +
+                  t("hardware.label.field.user") +
                   " " +
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.status_label.id}
           >
             <Select
-              onChange={(value) => {
-                onChangeStatusLabel(value);
-              }}
-              placeholder={t("hardware.label.placeholder.status")}
-              {...filterStatusLabelSelectProps()}
+              placeholder={t("hardware.label.placeholder.user")}
+              {...userSelectProps}
             />
           </Form.Item>
-          {messageErr?.status_label && (
-            <Typography.Text type="danger">
-              {messageErr.status_label[0]}
-            </Typography.Text>
-          )}
-
-          <Form.Item label={t("hardware.label.field.checkoutTo")} name="tab">
-            <Tabs
-              defaultActiveKey="1"
-              onTabClick={(value) => {
-                setActiveModel(value);
-              }}
-            >
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <UserOutlined />
-                    {t("hardware.label.field.user")}
-                  </span>
-                }
-                key="1"
-              ></Tabs.TabPane>
-              {/* <Tabs.TabPane
-                tab={
-                  <span>
-                    <AndroidOutlined />
-                    {t("hardware.label.field.asset")}
-                  </span>
-                }
-                key="2"
-              ></Tabs.TabPane>
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <EnvironmentOutlined />
-                    {t("hardware.label.field.location")}
-                  </span>
-                }
-                key="3"
-              ></Tabs.TabPane> */}
-            </Tabs>
-          </Form.Item>
-
-          {activeModel === "1" && (
-            <Form.Item
-              className="tabUserCheckout"
-              label={t("hardware.label.field.user")}
-              name="assigned_user"
-              rules={[
-                {
-                  required: true,
-                  message:
-                    t("hardware.label.field.user") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.user")}
-                {...userSelectProps}
-              />
-            </Form.Item>
-          )}
           {messageErr?.assigned_user && (
             <Typography.Text type="danger">
               {messageErr.assigned_user[0]}
             </Typography.Text>
           )}
-
-          {/* {activeModel === "2" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.asset")}
-              name="assigned_asset"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.asset") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.asset")}
-                {...hardwareSelectProps}
-              />
-            </Form.Item>
-          )} */}
-
-          {/* {activeModel === "3" && (
-            <Form.Item
-              className="tabUser"
-              label={t("hardware.label.field.location")}
-              name="assigned_location"
-              rules={[
-                {
-                  required: false,
-                  message:
-                    t("hardware.label.field.location") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
-            >
-              <Select
-                placeholder={t("hardware.label.placeholder.location")}
-                {...locationSelectProps}
-              />
-            </Form.Item>
-          )} */}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -427,9 +233,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={new Date().toISOString().substring(0, 10)}
+            initialValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
           >
-            <Input type="date" />
+            <Input type="datetime-local" />
           </Form.Item>
           {messageErr?.checkout_at && (
             <Typography.Text type="danger">

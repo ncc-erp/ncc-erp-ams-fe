@@ -7,7 +7,6 @@ import {
   Select,
   useSelect,
   useForm,
-  Checkbox,
   Button,
   Row,
   Col,
@@ -22,7 +21,15 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-import { ICheckboxChange } from "interfaces";
+
+import {
+  HARDWARE_API,
+  LOCATION_API,
+  MODELS_SELECT_LIST_API,
+  STATUS_LABELS_API,
+  SUPPLIERS_SELECT_LIST_API,
+} from "api/baseApi";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -32,22 +39,12 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [file, setFile] = useState<any>(null);
-  const [messageErr, setMessageErr] = useState<any>(null);
-  const [checked, setChecked] = useState(true);
-
-  useEffect(() => {
-    setChecked(props.data?.requestable === "1" ? true : false);
-  }, [props]);
+  const [file, setFile] = useState<File>();
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
 
   const t = useTranslate();
-
-  enum EStatus {
-    READY_TO_DEPLOY = "Ready to deploy",
-    ASSIGN = "Assign",
-  }
 
   const { form, formProps } = useForm<IHardwareCreateRequest>({
     action: "edit",
@@ -56,7 +53,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   const { setFields } = form;
 
   const { selectProps: modelSelectProps } = useSelect<IModel>({
-    resource: "api/v1/models/selectlist",
+    resource: MODELS_SELECT_LIST_API,
     optionLabel: "text",
     onSearch: (value) => [
       {
@@ -68,7 +65,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/statuslabels",
+    resource: STATUS_LABELS_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -80,7 +77,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/locations",
+    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {
@@ -92,8 +89,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const { selectProps: supplierSelectProps } = useSelect<ICompany>({
-    resource: "api/v1/suppliers",
-    optionLabel: "name",
+    resource: SUPPLIERS_SELECT_LIST_API,
+    optionLabel: "text",
     onSearch: (value) => [
       {
         field: "search",
@@ -108,7 +105,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/hardware/" + data?.id,
+    url: HARDWARE_API + "/" + data?.id,
     method: "post",
     config: {
       payload: payload,
@@ -119,48 +116,56 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(null);
+    setMessageErr(messageErr);
     const formData = new FormData();
 
     formData.append("name", event.name);
-    if (event.serial !== undefined) formData.append("serial", event.serial);
-    formData.append("model_id", event.model.toString());
+    if (event.model !== undefined) {
+      formData.append("model_id", event.model.toString());
 
-    if (event.order_number !== null)
-      formData.append("order_number", event.order_number);
-    formData.append("notes", event.notes);
+    }
+    formData.append("serial", event.serial ?? "");
+    formData.append("order_number", event.order_number ?? "");
 
+    formData.append("notes", event.notes ?? "");
     formData.append("asset_tag", event.asset_tag);
-    formData.append("status_id", event.status_label.toString());
+    if (event.status_label !== undefined) {
+      formData.append("status_id", event.status_label.toString());
+    }
     formData.append("warranty_months", event.warranty_months);
 
-    if (event.purchase_cost !== null)
-      formData.append("purchase_cost", event.purchase_cost);
-    if (event.purchase_date !== null)
-      formData.append("purchase_date", event.purchase_date);
-
+    formData.append("purchase_cost", event.purchase_cost ?? "");
+    formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
-    if (event.supplier !== undefined)
-      formData.append("supplier_id", event.supplier.toString());
+    formData.append("location_id", event.rtd_location.toString());
 
-    if (typeof event.image !== "string" && event.image !== null)
+    if (event.supplier !== undefined) {
+      formData.append("supplier_id", event.supplier.toString());
+    }
+
+    if (
+      typeof event.image !== "string" &&
+      event.image !== undefined &&
+      event.image !== null
+    )
       formData.append("image", event.image);
 
-    formData.append("requestable", checked ? "1" : "0");
-
-    formData.append("_method", "PATCH");
+    formData.append("_method", "PUT");
     setPayload(formData);
   };
 
   useEffect(() => {
     form.resetFields();
-    setFile(null);
+    setFile(undefined);
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
       { name: "model_id", value: data?.model.id },
       { name: "order_number", value: data?.order_number },
-      { name: "notes", value: data?.notes },
+      {
+        name: "notes",
+        value: data?.notes ?? "",
+      },
       { name: "asset_tag", value: data?.asset_tag },
       { name: "status_id", value: data?.status_label.id },
       {
@@ -174,15 +179,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
       {
         name: "purchase_date",
-        value:
-          data?.purchase_date.date !== null ? data?.purchase_date.date : "",
+        value: data?.purchase_date.date ?? "",
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "rtd_location_id", value: data?.rtd_location.id },
-
       { name: "assigned_to", value: data?.assigned_to },
-      { name: "requestable", value: data?.requestable },
-
       { name: "image", value: data?.image },
     ]);
   }, [data, form, isModalVisible]);
@@ -203,9 +204,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
   useEffect(() => {
     if (updateData?.data.status === "success") {
       form.resetFields();
-      setFile(null);
+      setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(null);
+      setMessageErr(messageErr);
     } else {
       setMessageErr(updateData?.data.messages);
     }
@@ -216,8 +217,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
         if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
+          item.label === EStatus.PENDING ||
+          item.label === EStatus.BROKEN ||
+          item.label === EStatus.READY_TO_DEPLOY
         ) {
           check = true;
           return true;
@@ -229,6 +231,17 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
     setIsReadyToDeploy(findLabel(Number(value.value)));
+  };
+
+  const filterStatusLabelSelectProps = () => {
+    const optionsFiltered = statusLabelSelectProps.options?.filter(
+      (item) =>
+        item.label === EStatus.PENDING ||
+        item.label === EStatus.BROKEN ||
+        item.label === EStatus.READY_TO_DEPLOY
+    );
+    statusLabelSelectProps.options = optionsFiltered;
+    return statusLabelSelectProps;
   };
 
   useEffect(() => {
@@ -302,9 +315,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             />
           </Form.Item>
           {messageErr?.model && (
-            <Typography.Text type="danger">
-              {messageErr.model[0]}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.model}</Typography.Text>
           )}
 
           <Form.Item
@@ -328,36 +339,40 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           </Form.Item>
           {messageErr?.rtd_location && (
             <Typography.Text type="danger">
-              {messageErr.rtd_location[0]}
+              {messageErr.rtd_location}
             </Typography.Text>
           )}
 
-          <Form.Item
-            label={t("hardware.label.field.status")}
-            name="status_label"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.status") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-            initialValue={data?.status_label.id}
-          >
-            <Select
-              onChange={(value) => {
-                onChangeStatusLabel(value);
-              }}
-              placeholder={t("hardware.label.placeholder.status")}
-              {...statusLabelSelectProps}
-            />
-          </Form.Item>
-          {messageErr?.status && (
-            <Typography.Text type="danger">
-              {messageErr.status[0]}
-            </Typography.Text>
+          {data?.status_label.id !== STATUS_LABELS.ASSIGN && (
+            <>
+              <Form.Item
+                label={t("hardware.label.field.status")}
+                name="status_label"
+                rules={[
+                  {
+                    required: false,
+                    message:
+                      t("hardware.label.field.status") +
+                      " " +
+                      t("hardware.label.message.required"),
+                  },
+                ]}
+                initialValue={Number(data?.status_label.id)}
+              >
+                <Select
+                  onChange={(value) => {
+                    onChangeStatusLabel(value);
+                  }}
+                  placeholder={t("hardware.label.placeholder.status")}
+                  {...filterStatusLabelSelectProps()}
+                />
+              </Form.Item>
+              {messageErr?.status_label && (
+                <Typography.Text type="danger">
+                  {messageErr.status_label}
+                </Typography.Text>
+              )}
+            </>
           )}
 
           <Form.Item
@@ -371,6 +386,14 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ warranty_months: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
             initialValue={
               data?.warranty_months && data?.warranty_months.split(" ")[0]
@@ -414,7 +437,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           )}
 
           <Form.Item
-            label={t("hardware.label.field.dateBuy")}
+            label={t("hardware.label.field.dateAdd")}
             name="purchase_date"
             initialValue={
               data?.purchase_date.date !== null ? data?.purchase_date.date : ""
@@ -440,7 +463,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           </Form.Item>
           {messageErr?.supplier && (
             <Typography.Text type="danger">
-              {messageErr.supplier[0]}
+              {messageErr.supplier}
             </Typography.Text>
           )}
 
@@ -474,9 +497,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               }
             />
           </Form.Item>
-          {messageErr?.puchase_cost && (
+          {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
-              {messageErr.puchase_cost[0]}
+              {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
         </Col>
@@ -486,7 +509,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         name="notes"
         rules={[
           {
-            required: true,
+            required: false,
             message:
               t("hardware.label.field.notes") +
               " " +
@@ -500,17 +523,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       {messageErr?.notes && (
         <Typography.Text type="danger">{messageErr.notes[0]}</Typography.Text>
       )}
-      <Checkbox
-        name="requestable"
-        style={{ marginTop: 20 }}
-        checked={checked}
-        value={data?.requestable}
-        onChange={(event: ICheckboxChange) => {
-          setChecked(event.target.checked);
-        }}
-      ></Checkbox>{" "}
-      {t("hardware.label.field.checkbox")}
-      <Form.Item label="Tải hình" name="image" initialValue={data?.image}>
+
+      <Form.Item
+        label={t("hardware.label.field.loading_image")}
+        name="image"
+        initialValue={data?.image}
+      >
         {data?.image ? (
           <UploadImage
             id={"update" + data?.id}
