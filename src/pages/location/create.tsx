@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -27,11 +27,11 @@ type LocationCreateProps = {
 };
 
 export const LocationCreate = (props: LocationCreateProps) => {
-  const { setIsModalVisible } = props;
+  const { isModalVisible, setIsModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
-  const [messageErr, setMessageErr] = useState<ILocationRequest>();
-
+  const [messageErr, setMessageErr] = useState<ILocationRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<ILocationRequest>({
@@ -93,14 +93,32 @@ export const LocationCreate = (props: LocationCreateProps) => {
     }
 
     setPayload(formData);
-    form.resetFields();
   };
-
+  
   useEffect(() => {
     if (payload) {
       mutate({
         resource: LOCATION_API,
         values: payload,
+        successNotification: false,
+        errorNotification: false,
+      },
+      {
+        onError: (error) => {
+          let err: { [key: string]: string[] | string } = error?.response.data.messages;
+          let message = Object.values(err)[0][0];
+          open?.({
+            type: 'error',
+            message: message
+          });
+          setMessageErr(error?.response.data.messages);
+        },
+        onSuccess(data, variables, context) {
+          open?.({
+              type: 'success',
+              message: data?.data.messages,
+          })
+        },
       });
       if (createData?.data.message) form.resetFields();
     }
@@ -111,7 +129,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
       form.resetFields();
       setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(messageErr);
+      setMessageErr(null);
     } else {
       setMessageErr(createData?.data.messages);
     }

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCustom } from "@pankod/refine-core";
+import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -36,8 +36,8 @@ type AccessoryEditProps = {
 export const AccessoryEdit = (props: AccessoryEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<IAccesstoryRequest>();
-
+  const [messageErr, setMessageErr] = useState<IAccesstoryRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<IAccesstoryRequest>({
@@ -84,8 +84,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: ACCESSORY_API + "/" + data?.id,
     method: "post",
@@ -95,6 +94,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: IAccesstoryRequest) => {
@@ -130,6 +130,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
 
   useEffect(() => {
     form.resetFields();
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "category_id", value: data?.category.id },
@@ -155,27 +156,29 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
   }, [data, form, isModalVisible]);
 
   useEffect(() => {
-    form.resetFields();
-  }, [isModalVisible]);
-
-  useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message,
+            }); 
+            setMessageErr(response.error?.response.data.messages);
+            return;
+        }
         form.resetFields();
-      }
-    }
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
   }, [payload]);
-
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   return (
     <Form
@@ -192,7 +195,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="name"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.name") +
                   " " +
@@ -214,7 +217,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="category"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.category") +
                   " " +
@@ -297,7 +300,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="location"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.location") +
                   " " +
@@ -337,7 +340,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="qty"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.total_accessory") +
                   " " +
@@ -359,7 +362,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             name="warranty_months"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("accessory.label.field.insurance") +
                   " " +
@@ -411,7 +414,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       )}
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("accessory.label.button.update")}
         </Button>
       </div>
