@@ -43,7 +43,7 @@ const generateSort = (sort?: CrudSorting) => {
 };
 
 const generateFilter = (filters?: CrudFilters) => {
-    const queryFilters: { [key: string]: string } = {};
+    const queryFilters: { [key: string]: string | string[] } = {};
     if (filters) {
         // eslint-disable-next-line array-callback-return
         filters.map((filter) => {
@@ -99,7 +99,7 @@ const JsonServer = (
         }
 
         const { data } = await httpClient.get(
-            `${url}?${stringify(query)}&${stringify(queryFilters)}`,
+            `${url}?${stringify(query)}&${stringify(queryFilters, {arrayFormat: 'index'})}`,
         );
         // const total = +headers["x-total-count"];
         
