@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCustom } from "@pankod/refine-core";
+import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import {
     Form,
     Input,
@@ -44,7 +44,8 @@ export const UserEdit = (props: UserCreateProps) => {
 
     const [payload, setPayload] = useState<FormData>();
     const [file, setFile] = useState<any>();
-    const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
+    const [messageErr, setMessageErr] = useState<IUserCreateRequest | null>();
+    const { open } = useNotification(); 
 
     if (data?.permissions) {
         Object.keys(data.permissions).forEach((categoryName: string) => {
@@ -133,10 +134,9 @@ export const UserEdit = (props: UserCreateProps) => {
 
     const {
         refetch,
-        data: updateData,
-        isLoading,
+        isFetching,
     } = useCustom({
-        url: "api/v1/users" + "/" + data?.id,
+        url: "api/v1/users/" + data?.id,
         method: "post",
         config: {
             payload: payload,
@@ -205,6 +205,7 @@ export const UserEdit = (props: UserCreateProps) => {
     useEffect(() => {
         form.resetFields();
         setFile(undefined);
+        setMessageErr(null);
         setFields([
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
@@ -225,28 +226,25 @@ export const UserEdit = (props: UserCreateProps) => {
     }, [data, form, isModalVisible]);
 
     useEffect(() => {
-        form.resetFields();
-    }, [isModalVisible]);
-
-    useEffect(() => {
-        if (payload) {
-            refetch();
-            if (updateData?.data.message) {
-                form.resetFields();
+        if (!payload) return;
+        const fetch = async () => {
+            const response = await refetch();
+            if (response.isError === true) {
+                const errors = response.error?.response.data.errors
+                setMessageErr(errors);
+                return;
             }
-        }
-    }, [payload]);
-
-    useEffect(() => {
-        if (updateData?.data.status === "success") {
             form.resetFields();
             setFile(undefined);
             setIsModalVisible(false);
-            setMessageErr(messageErr);
-        } else {
-            setMessageErr(updateData?.data.messages);
-        }
-    }, [updateData]);
+            setMessageErr(null);
+            open?.({
+                type: 'success',
+                message: response.data?.data.messages,
+            });         
+        } 
+        fetch();
+    }, [payload]);
 
     useEffect(() => {
         form.setFieldsValue({
@@ -472,7 +470,7 @@ export const UserEdit = (props: UserCreateProps) => {
                     )}
 
                     <div className="submit">
-                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                        <Button type="primary" htmlType="submit" loading={isFetching}>
                             {t("user.label.button.update")}
                         </Button>
                     </div>
@@ -506,7 +504,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                     </Row>
                                 </div>
 
-                                {!isLoading &&
+                                {!isFetching &&
                                     Object.values(Permission).map((key, index) => (
                                         <div className="list-permission">
                                             <Row
@@ -534,10 +532,10 @@ export const UserEdit = (props: UserCreateProps) => {
                                                                         }
                                                                     })
 
-                                                                    if (event.target.value === AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                    if (event.target.value === AccessType.allow && key.name === Permission.branchadmin.name) {
                                                                         setShowCheckboxList(true);
                                                                     }
-                                                                    if (event.target.value !== AccessType.allow && key.name == Permission.branchadmin.name) {
+                                                                    if (event.target.value !== AccessType.allow && key.name === Permission.branchadmin.name) {
                                                                         setShowCheckboxList(false);
                                                                     }
                                                                 }}
@@ -548,7 +546,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                                     </Col>
                                                 }
                                             </Row>
-                                            {showCheckboxList && index == 2 && (
+                                            {showCheckboxList && index === 2 && (
                                                 <div className="list-permission">
                                                     <Row
                                                         gutter={{
@@ -629,7 +627,7 @@ export const UserEdit = (props: UserCreateProps) => {
                         </Form.Item>
                     </div>
                     <div className="submit">
-                        <Button type="primary" htmlType="submit" loading={isLoading}>
+                        <Button type="primary" htmlType="submit" loading={isFetching}>
                             {t("user.label.button.update")}
                         </Button>
                     </div>

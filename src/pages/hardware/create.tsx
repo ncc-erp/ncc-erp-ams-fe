@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification  } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -35,7 +35,7 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
-import { EStatus } from "constants/assets";
+import { EStatus, STATUS_LABELS } from "constants/assets";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -48,8 +48,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
   const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
-
+  const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
@@ -79,6 +79,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
+
+  
+  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
+  statusLabelSelectProps.options = filteredProps
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
@@ -159,7 +163,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
 
     setPayload(formData);
-    form.resetFields();
   };
 
   useEffect(() => {
@@ -167,11 +170,25 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       mutate({
         resource: HARDWARE_API,
         values: payload,
+        successNotification: false,
+        errorNotification: false,
       },
         {
           onError: (error) => {
+            let err: { [key: string]: string[] | string } = error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message
+            });
             setMessageErr(error?.response.data.messages);
-          }
+          },
+          onSuccess(data, variables, context) {
+            open?.({
+                type: 'success',
+                message: data?.data.messages,
+            })
+          },
         });
       if (createData?.data.message) form.resetFields();
     }
@@ -182,7 +199,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       form.resetFields();
       setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(messageErr);
+      setMessageErr(null);
     } else {
       setMessageErr(createData?.data.messages);
     }

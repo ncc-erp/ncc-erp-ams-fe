@@ -3,6 +3,12 @@ export interface IConsumables {
   name: string;
   datetime: string;
 }
+
+export interface IConsumablesCategory {
+  id: number;
+  text: string;
+}
+
 export interface IConsumablesRequest {
   id: number;
   name: string;
