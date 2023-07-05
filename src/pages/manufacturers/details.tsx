@@ -53,6 +53,7 @@ import {
 import { defaultValue } from "constants/permissions";
 import { ManufacturesDetailsAccessory } from "./detailAccessory";
 import { ManufacturesDetailsConsumable } from "./detailConsumable";
+import { ManufacturesDetailsTools } from "./detailTools";
 import { ManufacturesDetailsSoftware } from "./detailSoftware";
 
 
@@ -1056,8 +1057,12 @@ export const ManufacturesDetails: React.FC<IResourceComponentsProps> = () => {
                 <TabPane tab={translate("manufactures.label.title.consumables")} key="3">
                     <ManufacturesDetailsConsumable />
                 </TabPane>
-
-
+                <TabPane tab={translate("manufactures.label.title.softwares")} key="4">
+                    <ManufacturesDetailsSoftware />
+                </TabPane>
+                <TabPane tab={translate("manufactures.label.title.tools")} key="5">
+                    <ManufacturesDetailsTools />
+                </TabPane>
             </Tabs>
 
 

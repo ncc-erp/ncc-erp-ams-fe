@@ -161,7 +161,15 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
             {
               label: t("category.label.options.consumable"),
               value: "consumable",
-            }
+            },
+            {
+              label: t("category.label.options.software"),
+              value: "software",
+            },
+            {
+              label: t("category.label.options.tool"),
+              value: "tool",
+            },
           ]}
         />
       </Form.Item>
