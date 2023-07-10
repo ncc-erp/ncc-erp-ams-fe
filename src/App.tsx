@@ -51,6 +51,8 @@ import { HardwareListExpiration } from "pages/hardware/list-expiration";
 import { LicensesList } from "pages/licenses/list";
 import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
+import { TaxTokenList } from "pages/tax_token/list";
+import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
 import { ToolList } from "pages/tools/list";
 import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
@@ -333,6 +335,20 @@ function App() {
             route: "assets-expires",
           },
         },
+        {
+          name: t("resource.tax_token"),
+          list: TaxTokenList,
+          options: {
+            route: "tax_token",
+          },
+        },
+        {
+          name: t("resource.tax_token_waiting"),
+          list: TaxTokenListWaitingConfirm,
+          options: {
+            route: "tax_token_waiting",
+          },
+        }
       ]}
       Title={Title}
       Header={Header}

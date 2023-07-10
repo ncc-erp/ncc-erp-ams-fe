@@ -163,6 +163,10 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
               value: "consumable",
             },
             {
+              label: t("category.label.options.taxtoken"),
+              value: "taxtoken",
+            },
+            {
               label: t("category.label.options.software"),
               value: "software",
             },

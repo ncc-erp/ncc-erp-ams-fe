@@ -8,6 +8,7 @@ import {
   MANUFACTURES_API,
   TOOLS_API,
   SOFTWARE_API,
+  TAX_TOKEN_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -139,6 +140,12 @@ p, 1, ${CONSUMABLE_API}/*, (delete)
 p, 1, ${i18n.t("resource.consumables")}/*, (edit)|(checkout)|(show)
 p, 1, ${i18n.t("resource.consumable_details")}, (list) 
 p, 1, ${i18n.t("resource.consumable_details")}/*, (show)
+
+p, 1, ${i18n.t("resource.tax_token")}, (list)|(create)
+p, 1, ${i18n.t("resource.tax_token")}/*, (edit)|(checkout)|(show)
+p, 1, ${TAX_TOKEN_API}/*, (delete)
+
+p, 1, ${i18n.t("resource.tax_token_waiting")}, (list)
 
 p, 1, ${i18n.t("resource.accessory")}, (list)|(create)
 p, 1, ${ACCESSORY_API}/*, (delete)
