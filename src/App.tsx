@@ -178,13 +178,13 @@ function App() {
             route: "tools-waiting",
           }
         },
-        {
-          name: t("resource.softwares"),
-          list: SoftwareList,
-          options: {
-            route: "softwares",
-          },
-        },
+        // {
+        //   name: t("resource.softwares"),
+        //   list: SoftwareList,
+        //   options: {
+        //     route: "softwares",
+        //   },
+        // },
         {
           name: t("resource.licenses"),
           list: LicensesList,
