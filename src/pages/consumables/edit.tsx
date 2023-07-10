@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useCustom } from "@pankod/refine-core";
+import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -42,8 +42,8 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [messageErr, setMessageErr] = useState<IConsumablesRequest>();
-
+  const [messageErr, setMessageErr] = useState<IConsumablesRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<IConsumablesRequest>({
@@ -88,8 +88,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
 
   const {
     refetch,
-    data: updateData,
-    isLoading,
+    isFetching,
   } = useCustom({
     url: CONSUMABLE_API + "/" + data?.id,
     method: "post",
@@ -99,6 +98,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
   const onFinish = (event: IConsumablesRequest) => {
     setMessageErr(messageErr);
@@ -131,6 +131,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
   const { setFields } = form;
   useEffect(() => {
     form.resetFields();
+    setMessageErr(null);
     setFields([
       { name: "name", value: data?.name },
       { name: "category_id", value: data?.category.id },
@@ -160,26 +161,29 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
   }, [data, form, isModalVisible]);
 
   useEffect(() => {
-    form.resetFields();
-  }, [isModalVisible]);
-
-  useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
+    if (!payload) return;
+    const fetch = async () => {
+        const response = await refetch();
+        if (response.isError === true) {
+          let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+          let message = Object.values(err)[0][0];
+          open?.({
+            type: 'error',
+            message: message,
+          }); 
+          setMessageErr(response.error?.response.data.messages);
+          return;
+        }
         form.resetFields();
-      }
-    }
+        setIsModalVisible(false);
+        setMessageErr(null);
+        open?.({
+            type: 'success',
+            message: response.data?.data.messages,
+        });        
+    } 
+    fetch();
   }, [payload]);
-  useEffect(() => {
-    if (updateData?.data.status === "success") {
-      form.resetFields();
-      setIsModalVisible(false);
-      setMessageErr(messageErr);
-    } else {
-      setMessageErr(updateData?.data.messages);
-    }
-  }, [updateData]);
 
   return (
     <Form
@@ -422,7 +426,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       )}
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isFetching}>
           {t("consumables.label.button.update")}
         </Button>
       </div>

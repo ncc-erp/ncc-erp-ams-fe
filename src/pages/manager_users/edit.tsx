@@ -44,8 +44,8 @@ export const UserEdit = (props: UserCreateProps) => {
 
     const [payload, setPayload] = useState<FormData>();
     const [file, setFile] = useState<any>();
-    const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
-    const {open, close } = useNotification(); 
+    const [messageErr, setMessageErr] = useState<IUserCreateRequest | null>();
+    const { open } = useNotification(); 
 
     if (data?.permissions) {
         Object.keys(data.permissions).forEach((categoryName: string) => {
@@ -205,6 +205,7 @@ export const UserEdit = (props: UserCreateProps) => {
     useEffect(() => {
         form.resetFields();
         setFile(undefined);
+        setMessageErr(null);
         setFields([
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
@@ -225,10 +226,6 @@ export const UserEdit = (props: UserCreateProps) => {
     }, [data, form, isModalVisible]);
 
     useEffect(() => {
-        form.resetFields();
-    }, [isModalVisible]);
-
-    useEffect(() => {
         if (!payload) return;
         const fetch = async () => {
             const response = await refetch();
@@ -240,15 +237,11 @@ export const UserEdit = (props: UserCreateProps) => {
             form.resetFields();
             setFile(undefined);
             setIsModalVisible(false);
-            setMessageErr(messageErr);
+            setMessageErr(null);
             open?.({
-                key: "success_notification_key",
                 type: 'success',
                 message: response.data?.data.messages,
-            });
-            setTimeout(() => {
-                close?.("success_notification_key");
-            },3000);          
+            });         
         } 
         fetch();
     }, [payload]);

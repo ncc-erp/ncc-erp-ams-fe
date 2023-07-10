@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -39,8 +39,8 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
 
   const [payload, setPayload] = useState<FormData>();
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [messageErr, setMessageErr] = useState<IConsumablesRequest>();
-
+  const [messageErr, setMessageErr] = useState<IConsumablesRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<IConsumablesRequest>({
@@ -118,11 +118,25 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       mutate({
         resource: CONSUMABLE_API,
         values: payload,
+        successNotification: false,
+        errorNotification: false,
       },
         {
           onError: (error) => {
+            let err: { [key: string]: string[] | string } = error?.response.data.messages;
+            let message = Object.values(err)[0][0];
+            open?.({
+              type: 'error',
+              message: message
+            });
             setMessageErr(error?.response.data.messages);
-          }
+          },
+          onSuccess(data, variables, context) {
+            open?.({
+                type: 'success',
+                message: data?.data.messages,
+            })
+          },
         });
       if (createData?.data.message) form.resetFields();
     }
@@ -132,7 +146,7 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
     if (createData?.data.status === "success") {
       form.resetFields();
       setIsModalVisible(false);
-      setMessageErr(messageErr);
+      setMessageErr(null);
     }
   }, [createData, form, setIsModalVisible]);
 

@@ -53,6 +53,9 @@ import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
 import { TaxTokenList } from "pages/tax_token/list";
 import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
+import { ToolList } from "pages/tools/list";
+import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
+import { UserListTool } from "pages/users/list-tools";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -164,6 +167,20 @@ function App() {
           },
         },
         {
+          name: t("resource.tools-all"),
+          list: ToolList,
+          options: {
+            route: "tools-all",
+          },
+        },
+        {
+          name: t("resource.tools-waiting"),
+          list: ToolListWaitingConfirm,
+          options: {
+            route: "tools-waiting",
+          }
+        },
+        {
           name: t("resource.softwares"),
           list: SoftwareList,
           options: {
@@ -183,6 +200,13 @@ function App() {
           options: {
             route: "users",
           },
+        },
+        {
+          name: t("resource.users-tools"),
+          list: UserListTool,
+          options: {
+            route: "users-tools",
+          }
         },
         {
           name: t("resource.users_licenses"),

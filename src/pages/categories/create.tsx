@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -31,8 +31,8 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
-  const [messageErr, setMessageErr] = useState<ICategoryRequest>();
-
+  const [messageErr, setMessageErr] = useState<ICategoryRequest | null>();
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { formProps, form } = useForm<ICategoryRequest>({
@@ -59,7 +59,6 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
     }
 
     setPayload(formData);
-    form.resetFields();
   };
 
   useEffect(() => {
@@ -67,6 +66,25 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
       mutate({
         resource: CATEGORIES_API,
         values: payload,
+        successNotification: false,
+        errorNotification: false,
+      },
+      {
+        onError: (error) => {
+          let err: { [key: string]: string[] | string } = error?.response.data.messages;
+          let message = Object.values(err)[0][0];
+          open?.({
+            type: 'error',
+            message: message
+          });
+          setMessageErr(error?.response.data.messages);
+        },
+        onSuccess(data, variables, context) {
+          open?.({
+              type: 'success',
+              message: data?.data.messages,
+          })
+        },
       });
       if (createData?.data.message) form.resetFields();
     }
@@ -77,7 +95,7 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
       form.resetFields();
       setFile(undefined);
       setIsModalVisible(false);
-      setMessageErr(messageErr);
+      setMessageErr(null);
     } else {
       setMessageErr(createData?.data.messages);
     }
@@ -147,7 +165,15 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
             {
               label: t("category.label.options.taxtoken"),
               value: "taxtoken",
-            }
+            },
+            {
+              label: t("category.label.options.software"),
+              value: "software",
+            },
+            {
+              label: t("category.label.options.tool"),
+              value: "tool",
+            },
           ]}
         />
       </Form.Item>
