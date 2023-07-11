@@ -244,7 +244,8 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
         
-        {permissionsData && permissionsData.admin === EPermissions.ADMIN &&
+        {/* software */}
+        {/* {permissionsData && permissionsData.admin === EPermissions.ADMIN &&
           menuItems
             .filter(
               (item) => item.name === `${translate("resource.softwares")}`
@@ -277,7 +278,7 @@ export const Sider: React.FC = () => {
                   </div>
                 </Menu.Item>
               );
-            })}
+            })} */}
 
         {permissionsData &&
           (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) &&
