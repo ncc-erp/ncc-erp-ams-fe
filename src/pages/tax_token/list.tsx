@@ -704,7 +704,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
-        localStorage.setItem("item_TaxToken_selected", JSON.stringify(collumnSelected));
+        localStorage.setItem("item_tax_token_selected", JSON.stringify(collumnSelected));
     }, [collumnSelected]);
 
     useEffect(() => {
