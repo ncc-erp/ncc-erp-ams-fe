@@ -104,12 +104,11 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-        let message = Object.values(err)[0][0];
+        let err: string = response.error?.response.data.messages;
         open?.({
           type: 'error',
           description: 'Error',
-          message: message
+          message: err
         });
         setMessageErr(response.error?.response.data.messages);
         return;

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ICheckboxChange } from "interfaces";
 import { useTranslate } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
@@ -106,6 +106,8 @@ export interface ITableAction {
 export const TableAction = (props: ITableAction) => {
   const { actions, searchFormProps, collumns, defaultCollumns } = props;
   const t = useTranslate();
+  let timeout: any = null;
+  const debounceWaitTime = 1000;
 
   const menu = useMemo(
     () => (
@@ -119,11 +121,29 @@ export const TableAction = (props: ITableAction) => {
     ),
     [actions]
   );
-  const onSelectCollumn = useCallback(() => {}, []);
+  const onSelectCollumn = useCallback(() => { }, []);
 
   const searchValues = useMemo(() => {
     return localStorage.getItem("search");
   }, [localStorage.getItem("search")]);
+
+  const debouncedSearch = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      localStorage.setItem(
+        "search",
+        searchFormProps.form?.getFieldsValue()?.search !== undefined
+          ? searchFormProps.form?.getFieldsValue()?.search
+          : ""
+      );
+      searchFormProps.form.submit();
+      searchParams.set(
+        "search",
+        searchFormProps.form?.getFieldsValue()?.search
+      );
+      setSearchParams(searchParams);
+    }, debounceWaitTime)
+  }
 
   useEffect(() => {
     searchFormProps.form.submit();
@@ -159,18 +179,7 @@ export const TableAction = (props: ITableAction) => {
                     : searchParam ?? searchParam,
               }}
               onChange={() => {
-                localStorage.setItem(
-                  "search",
-                  searchFormProps.form?.getFieldsValue()?.search !== undefined
-                    ? searchFormProps.form?.getFieldsValue()?.search
-                    : ""
-                );
-                searchFormProps.form.submit();
-                searchParams.set(
-                  "search",
-                  searchFormProps.form?.getFieldsValue()?.search
-                );
-                setSearchParams(searchParams);
+                debouncedSearch();
               }}
             >
               <Form.Item name={"search"}>

@@ -32,9 +32,11 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { dateFormat } from "constants/assets";
+import { filterAssignedStatus } from "untils/assets";
 import {
     SUPPLIERS_API,
     TAX_TOKEN_API,
+    STATUS_LABELS_API
 } from "api/baseApi";
 import { Spin } from "antd";
 import { DatePicker } from "antd";
@@ -43,6 +45,7 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { IModel } from "interfaces/model";
+import { IStatusLabel } from "interfaces/statusLabel";
 import { 
     ITaxToken, 
     ITaxTokenFilterVariables, 
@@ -212,6 +215,23 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         value: item.value,
     }));
 
+    const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
+        resource: STATUS_LABELS_API,
+        optionLabel: "name",
+        onSearch: (value) => [
+            {
+                field: "search",
+                operator: "containss",
+                value,
+            },
+        ],
+    });
+
+    const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
+        text: item.label,
+        value: item.value,
+    }));
+
     const collumns = useMemo(
         () => [
             {
@@ -321,6 +341,10 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("status_label", sorter),
+                filters: filterStatus_Label,
+                onFilter: (value: number, record: ITaxTokenResponse) => {
+                    return record.status_label.id === value;
+                },
             },
             {
                 key: "assigned_status",
@@ -335,6 +359,9 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                     />
                 ),
                 defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+                filters: filterAssignedStatus,
+                onFilter: (value: number, record: ITaxTokenResponse) =>
+                    record.assigned_status === value,
             },
             {
                 key: "assigned_to",
@@ -677,7 +704,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     };
 
     useEffect(() => {
-        localStorage.setItem("item_TaxToken_selected", JSON.stringify(collumnSelected));
+        localStorage.setItem("item_tax_token_selected", JSON.stringify(collumnSelected));
     }, [collumnSelected]);
 
     useEffect(() => {
