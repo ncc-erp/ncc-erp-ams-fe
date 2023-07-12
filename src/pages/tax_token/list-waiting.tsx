@@ -38,6 +38,7 @@ import {
 } from "interfaces/tax_token";
 import { CancleAsset } from "./cancel";
 import { TaxTokenSearch } from "./search";
+import { filterAssignedStatus } from "untils/assets";
 import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
@@ -301,7 +302,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
-        key: "status_id",
+        key: "status_label",
         title: t("tax_token.label.field.status"),
         render: (value: ITaxTokenResponse) => (
           <TagField
@@ -312,7 +313,11 @@ export const TaxTokenListWaitingConfirm: React.FC<
             }}
           />
         ),
-        defaultSortOrder: getDefaultSortOrder("status_id", sorter),
+        defaultSortOrder: getDefaultSortOrder("status_label", sorter),
+        filters: filterStatus_Label,
+        onFilter: (value: number, record: ITaxTokenResponse) => {
+          return record.status_label.id === value;
+        },
       },
       {
         key: "assigned_status",
@@ -327,6 +332,9 @@ export const TaxTokenListWaitingConfirm: React.FC<
           />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+        filters: filterAssignedStatus,
+        onFilter: (value: number, record: ITaxTokenResponse) =>
+          record.assigned_status === value,
       },
       {
         key: "assigned_to",
