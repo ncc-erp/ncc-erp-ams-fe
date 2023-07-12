@@ -118,8 +118,8 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
       setMessageErr(null);
       open?.({
         type: 'success',
-        message: 'Success',
-        description: response.data?.data.messages
+        description: 'Success',
+        message: response.data?.data.messages
       });
     }
     fetch();
