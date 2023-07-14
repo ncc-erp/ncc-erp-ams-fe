@@ -179,6 +179,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         location,
         status_label,
         purchase_date,
+        last_checkout,
         assigned_to,
       } = params;
       filters.push(
@@ -207,15 +208,15 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         {
           field: "dateCheckoutFrom",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
+          value: last_checkout
+            ? last_checkout[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "dateCheckoutTo",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
+          value: last_checkout
+            ? last_checkout[1].format().substring(0, 10)
             : undefined,
         },
         {
@@ -1153,8 +1154,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             location: localStorage.getItem("rtd_location_id")
               ? searchValuesLocation
               : Number(rtd_location_id),
-            purchase_date:
-              localStorage.getItem("purchase_date") !== null
+            last_checkout:
+              localStorage.getItem("last_checkout") !== null
                 ? searchValuesByDateCheckoutFrom !== "" && searchValuesByDateCheckoutTo !== ""
                   ? [
                     moment(searchValuesByDateCheckoutFrom),
@@ -1171,7 +1172,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         >
           <Form.Item
             label={t("hardware.label.title.timeCheckout")}
-            name="purchase_date"
+            name="last_checkout"
           >
             <RangePicker
               onChange={handleChangePickerByMonth}
