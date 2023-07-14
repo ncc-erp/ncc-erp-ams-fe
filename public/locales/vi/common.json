@@ -238,7 +238,8 @@
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
-        "confirmStatus": "Trạng thái xác nhận"
+        "confirmStatus": "Trạng thái xác nhận",
+        "timeCheckout" : "Ngày cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",
