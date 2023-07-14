@@ -177,7 +177,6 @@ export interface IHardwareRequestCheckout {
   archived: boolean;
   depreciate: boolean;
   checkout_at: string;
-  //last_checkout: string;
   expected_checkin: string;
   location_id: number;
   checkout_to_type: string;
@@ -190,7 +189,6 @@ export interface IHardwareRequestMultipleCheckout {
   assigned_location: string;
   assigned_user: string;
   checkout_at: string;
-  //last_checkout: string;
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
