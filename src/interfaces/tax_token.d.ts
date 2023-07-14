@@ -77,6 +77,7 @@ export interface ITaxTokenFilterVariables {
     seri: string;
     supplier: string;
     purchase_date: [Dayjs, Dayjs];
+    expiration_date: [Dayjs, Dayjs];
 }
 
 export interface ITaxTokenCreateRequest {
