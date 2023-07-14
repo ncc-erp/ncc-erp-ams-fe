@@ -72,6 +72,8 @@ export interface IToolFilterVariable {
   manufacturer: string;
   version: string;
   created_at: [Dayjs, Dayjs];
+  purchase_date: [Dayjs, Dayjs];
+  expiration_date: [Dayjs, Dayjs];
 }
 
 export interface IToolRequest {
