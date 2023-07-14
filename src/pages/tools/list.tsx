@@ -120,10 +120,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
-    const dateFromParam = searchParams.get("dateFrom");
-    const dateToParam = searchParams.get("dateTo");
-
-    const { open } = useNotification();
+    const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
+    const purchaseDateToParam = searchParams.get("purchaseDateTo");
+    const expirationDateFromParam = searchParams.get("expirationDateFrom");
+    const expirationDateToParam = searchParams.get("expirationDateTo");
 
     const [listening, setListening] = useState(false);
     const listenForOutsideClicks = (
@@ -163,7 +163,8 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 name,
                 key,
                 category,
-                created_at
+                purchase_date,
+                expiration_date
             } = params;
             filters.push(
                 {
@@ -181,17 +182,31 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                     }),
                 },
                 {
-                    field: "dateFrom",
+                    field: "purchaseDateFrom",
                     operator: "eq",
-                    value: created_at
-                        ? created_at[0].format().substring(0, 10)
+                    value: purchase_date
+                        ? purchase_date[0].format().substring(0, 10)
                         : undefined,
                 },
                 {
-                    field: "dateTo",
+                    field: "purchaseDateTo",
                     operator: "eq",
-                    value: created_at
-                        ? created_at[1].format().substring(0, 10)
+                    value: purchase_date
+                        ? purchase_date[1].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "expirationDateFrom",
+                    operator: "eq",
+                    value: expiration_date
+                        ? expiration_date[0].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "expirationDateTo",
+                    operator: "eq",
+                    value: expiration_date
+                        ? expiration_date[1].format().substring(0, 10)
                         : undefined,
                 },
             );
@@ -687,25 +702,37 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         handleOpenModel();
     };
 
-    const handleDateChange = (val: any, formatString: any) => {
+    const handleDateChange = (val: any, dateFrom: string, dateTo: string) => {
         if (val !== null) {
             const [from, to] = Array.from(val || []);
             searchParams.set(
-                "dateFrom",
+                dateFrom,
                 from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
             );
             searchParams.set(
-                "dateTo",
+                dateTo,
                 to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
             );
         } else {
-            searchParams.delete("dateFrom");
-            searchParams.delete("dateTo");
+            searchParams.delete(dateFrom);
+            searchParams.delete(dateTo);
         }
-
+        console.log(searchParam);
         setSearchParams(searchParams);
         searchFormProps.form?.submit();
     };
+
+    const purchaseDateChange = (val: any, formatString: any) => {
+        const dateFrom = "purchaseDateFrom";
+        const dateTo = "purchaseDateTo";
+        handleDateChange(val, dateFrom, dateTo);
+    }
+
+    const expirationDateChange = (val: any, formatString: any) => {
+        const dateFrom = "expirationDateFrom";
+        const dateTo = "expirationDateTo";
+        handleDateChange(val, dateFrom, dateTo);
+    }
 
     useEffect(() => {
         localStorage.setItem("item_tools_selected", JSON.stringify(collumnSelected));
@@ -809,11 +836,18 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 <Form
                     {...searchFormProps}
                     initialValues={{
-                        created_at:
-                            dateFromParam && dateToParam
+                        purchase_date:
+                            purchaseDateFromParam && purchaseDateToParam
                                 ? [
-                                    moment(dateFromParam, "YYYY/MM/DD"),
-                                    moment(dateToParam, "YYYY/MM/DD"),
+                                    moment(purchaseDateFromParam, "YYYY/MM/DD"),
+                                    moment(purchaseDateToParam, "YYYY/MM/DD"),
+                                ]
+                                : "",
+                        expiration_date:
+                            expirationDateFromParam && expirationDateToParam
+                                ? [
+                                    moment(expirationDateFromParam, "YYYY/MM/DD"),
+                                    moment(expirationDateToParam, "YYYY/MM/DD"),
                                 ]
                                 : "",
                     }}
@@ -822,8 +856,8 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                     onValuesChange={() => searchFormProps.form?.submit()}
                 >
                     <Form.Item
-                        label={t("tools.label.title.time")}
-                        name="created_at"
+                        label={t("tools.label.title.time-purchase-date")}
+                        name="purchase_date"
                     >
                         <RangePicker
                             format={dateFormat}
@@ -831,7 +865,20 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                                 `${t("tools.label.field.start-date")}`,
                                 `${t("tools.label.field.end-date")}`,
                             ]}
-                            onCalendarChange={handleDateChange}
+                            onCalendarChange={purchaseDateChange}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={t("tools.label.title.time-expiration-date")}
+                        name="expiration_date"
+                    >
+                        <RangePicker
+                            format={dateFormat}
+                            placeholder={[
+                                `${t("tools.label.field.start-date")}`,
+                                `${t("tools.label.field.end-date")}`,
+                            ]}
+                            onCalendarChange={expirationDateChange}
                         />
                     </Form.Item>
                 </Form>

@@ -357,7 +357,7 @@
         "refresh": "Refresh"
       },
       "title": {
-        "tools": "Tất cả",
+        "tools": "Tất cả tools & domains",
         "create": "Tạo tool mới",
         "edit": "Cập nhật",
         "delete": "Xóa",
@@ -370,6 +370,8 @@
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
         "time": "Thời gian",
+        "time-purchase-date": "Ngày mua Tools hoặc Domains",
+        "time-expiration-date": "Ngày hết hạn Tools hoặc Domains",
         "sum-tools": "Số lượng",
         "name": "Tên tool",
         "my-tool": "Tools của tôi"
@@ -857,7 +859,7 @@
     "users_licenses": "Phầm mềm",
     "category": "Danh mục",
     "manufactures": "Kho",
-    "tools": "Tools",
+    "tools": "Tools & Domains",
     "tools-all": "Tất cả tools",
     "tools-assign": "Tools đã cấp phát",
     "tools-waiting": "Tools đang chờ xác nhận",
