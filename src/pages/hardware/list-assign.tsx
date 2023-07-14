@@ -95,7 +95,7 @@ const defaultCheckedList = [
 
 export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
-
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");
   const category_id = searchParams.get("category_id");
@@ -789,6 +789,17 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             ""
           ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+      },
+      {
+        key: "last_checkout",
+        title: t("hardware.label.field.dateCheckout"),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value && value.datetime} />
+          ) : (
+            ""
+          ),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
     ],
     [filterCategory]

@@ -844,7 +844,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardware) => (value &&
           <DateField format="LL" value={value ? value.datetime : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
       // {
       //   key: "last_checkout",
