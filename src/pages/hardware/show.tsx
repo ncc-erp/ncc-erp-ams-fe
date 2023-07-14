@@ -171,10 +171,10 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.field.dateCheckout")}</Title>
         </Col>
         <Col span={18}>
-          {detail?.checkout_at ? (
+          {detail?.last_checkout ? (
             <>
               <Text>
-                {detail?.checkout_at && detail?.checkout_at.formatted}
+                {detail?.last_checkout && detail?.last_checkout.formatted}
               </Text>
             </>
           ) : (

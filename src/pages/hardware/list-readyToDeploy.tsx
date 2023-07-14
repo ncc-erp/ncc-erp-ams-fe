@@ -311,7 +311,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -416,7 +416,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -489,7 +489,7 @@ export const HardwareListReadyToDeploy: React.FC<
         id: data?.assigned_location?.id,
         name: data?.assigned_location?.name,
       },
-      checkout_at: {
+      last_checkout: {
         date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },

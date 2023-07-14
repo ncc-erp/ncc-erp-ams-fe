@@ -114,7 +114,7 @@ export interface IHardwareResponse {
     date: string;
     formatted: string;
   };
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
@@ -147,7 +147,7 @@ export interface IHardwareResponse {
     datetime: string;
     formatted: string;
   };
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
@@ -177,6 +177,7 @@ export interface IHardwareRequestCheckout {
   archived: boolean;
   depreciate: boolean;
   checkout_at: string;
+  //last_checkout: string;
   expected_checkin: string;
   location_id: number;
   checkout_to_type: string;
@@ -189,6 +190,7 @@ export interface IHardwareRequestMultipleCheckout {
   assigned_location: string;
   assigned_user: string;
   checkout_at: string;
+  //last_checkout: string;
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
@@ -225,7 +227,7 @@ export interface IHardwareResponseCheckout {
   };
   note: string;
 
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
