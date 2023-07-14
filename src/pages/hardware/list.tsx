@@ -312,7 +312,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -417,7 +417,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -490,7 +490,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         id: data?.assigned_location?.id,
         name: data?.assigned_location?.name,
       },
-      checkout_at: {
+      last_checkout: {
         date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
@@ -844,7 +844,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IHardware) => (value &&
           <DateField format="LL" value={value ? value.datetime : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
       // {
       //   key: "last_checkout",

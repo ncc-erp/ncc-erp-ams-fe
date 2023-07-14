@@ -261,7 +261,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -366,7 +366,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -439,7 +439,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         id: data?.assigned_location?.id,
         name: data?.assigned_location?.name,
       },
-      checkout_at: {
+      last_checkout: {
         date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },

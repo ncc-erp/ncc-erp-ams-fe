@@ -114,7 +114,7 @@ export interface IHardwareResponse {
     date: string;
     formatted: string;
   };
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
@@ -147,7 +147,7 @@ export interface IHardwareResponse {
     datetime: string;
     formatted: string;
   };
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
@@ -225,7 +225,7 @@ export interface IHardwareResponseCheckout {
   };
   note: string;
 
-  checkout_at: {
+  last_checkout: {
     date: string;
     formatted: string;
   };
