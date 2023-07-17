@@ -14,7 +14,7 @@ type HardwareShowProps = {
 
 export const HardwareShow = (props: HardwareShowProps) => {
   const { detail } = props;
-  const t = useTranslate();
+  const t = useTranslate();  
   return (
     <>
       <Row gutter={16}>
@@ -153,7 +153,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col span={18}>
           {detail?.created_at ? (
-            <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
+            <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
           ) : (
             ""
           )}
@@ -164,7 +164,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.title.updateAt")}</Title>
         </Col>
         <Col span={18}>
-          <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
+          <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
         </Col>
       </Row>
       <Row gutter={16}>

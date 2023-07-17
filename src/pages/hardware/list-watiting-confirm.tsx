@@ -429,7 +429,7 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value && moment(value.datetime).add(7, 'hours').toDate()} />
+            <DateField format="LLL" value={value && moment(value.datetime).add(moment.duration(moment().format('Z'))).toDate()} />
           ) : (
             ""
           ),
