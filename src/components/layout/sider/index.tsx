@@ -165,6 +165,7 @@ export const Sider: React.FC = () => {
               menuItems
                 .filter(
                   (item) =>
+                    (item.options?.label === 'assets') && (
                     item.name === `${translate("resource.assets")}` ||
                     item.name === `${translate("resource.assets-assign")}` ||
                     item.name ===
@@ -174,7 +175,7 @@ export const Sider: React.FC = () => {
                     item.name ===
                     `${translate("resource.assets-waiting-confirm")}` ||
                     item.name ===
-                    `${translate("resource.assets-expires")}`
+                    `${translate("resource.assets-expires")}` )
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -215,9 +216,10 @@ export const Sider: React.FC = () => {
               menuItems
                 .filter(
                   (item) =>
+                    (item.options?.label === 'tools') && (
                     item.name === `${translate("resource.tools-all")}` ||
                     item.name === `${translate("resource.tools-assign")}` ||
-                    item.name === `${translate("resource.tools-waiting")}`
+                    item.name === `${translate("resource.tools-waiting")}` )
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;

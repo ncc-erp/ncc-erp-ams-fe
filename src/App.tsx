@@ -136,6 +136,7 @@ function App() {
           list: HardwareList,
           options: {
             route: "assets",
+            label: 'assets'
           },
         },
         {
@@ -143,6 +144,7 @@ function App() {
           list: HardwareListAssign,
           options: {
             route: "assets-assign",
+            label: 'assets'
           },
         },
         {
@@ -150,6 +152,7 @@ function App() {
           list: HardwareListReadyToDeploy,
           options: {
             route: "assets-readyToDeploy",
+            label: 'assets'
           },
         },
         {
@@ -157,6 +160,7 @@ function App() {
           list: HardwareListPending,
           options: {
             route: "assets-pending",
+            label: 'assets'
           },
         },
         {
@@ -164,6 +168,7 @@ function App() {
           list: HardwareListBroken,
           options: {
             route: "assets-broken",
+            label: 'assets'
           },
         },
         {
@@ -171,6 +176,7 @@ function App() {
           list: ToolList,
           options: {
             route: "tools-all",
+            label: 'tools'
           },
         },
         {
@@ -178,7 +184,8 @@ function App() {
           list: ToolListWaitingConfirm,
           options: {
             route: "tools-waiting",
-          }
+            label: 'tools'
+          },
         },
         // {
         //   name: t("resource.softwares"),
@@ -276,6 +283,7 @@ function App() {
           list: HardwareListWaitingConfirm,
           options: {
             route: "assets-waiting-confirm",
+            label: 'assets'
           },
         },
 
@@ -333,6 +341,7 @@ function App() {
           list: HardwareListExpiration,
           options: {
             route: "assets-expires",
+            label: 'assets'
           },
         },
         {
