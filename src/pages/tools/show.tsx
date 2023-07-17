@@ -4,6 +4,7 @@ import "styles/hardware.less";
 import { UserOutlined } from "@ant-design/icons";
 import { IToolResponse } from "interfaces/tool";
 import { getDetailToolStatus } from "untils/tools"
+import moment from "moment"
 const { Title, Text } = Typography;
 
 type ToolShowProps = {
@@ -120,7 +121,7 @@ export const ToolShow = (props: ToolShowProps) => {
                 </Col>
                 <Col span={18}>
                     {detail?.created_at ? (
-                        <Text> {detail?.created_at && detail?.created_at.formatted}</Text>
+                        <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
                     ) : (
                         ""
                     )}

@@ -4,6 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
 import { getDetailAssetStatus } from "untils/assets";
+import moment from "moment";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -152,7 +153,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col span={18}>
           {detail?.created_at ? (
-            <Text> {detail?.created_at && detail?.created_at.formatted}</Text>
+            <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
           ) : (
             ""
           )}

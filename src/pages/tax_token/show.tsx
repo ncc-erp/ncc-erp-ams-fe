@@ -4,6 +4,7 @@ import "styles/hardware.less";
 import { UserOutlined } from "@ant-design/icons";
 import { ITaxTokenResponse } from "interfaces/tax_token";
 import { getDetailTaxTokenStatus } from "untils/tax_token";
+import moment from "moment"
 const { Title, Text } = Typography;
 
 type TaxTokenShowProps = {
@@ -130,7 +131,7 @@ export const TaxTokenShow = (props: TaxTokenShowProps) => {
                 </Col>
                 <Col span={18}>
                     {detail?.created_at ? (
-                        <Text> {detail?.created_at && detail?.created_at.formatted}</Text>
+                        <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
                     ) : (
                         ""
                     )}
