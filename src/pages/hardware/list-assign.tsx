@@ -101,8 +101,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const category_id = searchParams.get("category_id");
   const type = searchParams.get("type");
   const status_id = searchParams.get("status_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
+  const dateCheckoutFromParam = searchParams.get("dateCheckoutFrom");
+  const dateCheckoutToParam = searchParams.get("dateCheckoutTo");
   const searchParam = searchParams.get("search");
 
   const t = useTranslate();
@@ -179,6 +179,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         location,
         status_label,
         purchase_date,
+        last_checkout,
         assigned_to,
       } = params;
       filters.push(
@@ -205,17 +206,17 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           value: location ? location : rtd_location_id,
         },
         {
-          field: "dateFrom",
+          field: "dateCheckoutFrom",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
+          value: last_checkout
+            ? last_checkout[0].format().substring(0, 10)
             : undefined,
         },
         {
-          field: "dateTo",
+          field: "dateCheckoutTo",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
+          value: last_checkout
+            ? last_checkout[1].format().substring(0, 10)
             : undefined,
         },
         {
@@ -906,13 +907,13 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
+  const searchValuesByDateCheckoutFrom = useMemo(() => {
+    return localStorage.getItem("last_checkout")?.substring(0, 10);
+  }, [localStorage.getItem("last_checkout")]);
 
-  const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+  const searchValuesByDateCheckoutTo = useMemo(() => {
+    return localStorage.getItem("last_checkout")?.substring(11, 21);
+  }, [localStorage.getItem("last_checkout")]);
 
   let searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
@@ -921,19 +922,19 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem("last_checkout", formatString ?? "");
       searchParams.set(
-        "dateFrom",
+        "dateCheckoutFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
       );
       searchParams.set(
-        "dateTo",
+        "dateCheckoutTo",
         to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
       );
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date", formatString ?? "");
+      searchParams.delete("dateCheckoutFrom");
+      searchParams.delete("dateCheckoutTo");
+      localStorage.setItem("last_checkout", formatString ?? "");
     }
 
     setSearchParams(searchParams);
@@ -1153,15 +1154,15 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             location: localStorage.getItem("rtd_location_id")
               ? searchValuesLocation
               : Number(rtd_location_id),
-            purchase_date:
-              localStorage.getItem("purchase_date") !== null
-                ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
+            last_checkout:
+              localStorage.getItem("last_checkout") !== null
+                ? searchValuesByDateCheckoutFrom !== "" && searchValuesByDateCheckoutTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
+                    moment(searchValuesByDateCheckoutFrom),
+                    moment(searchValuesByDateCheckoutTo),
                   ]
-                  : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
+                  : dateCheckoutFromParam && dateCheckoutToParam
+                    ? [moment(dateCheckoutFromParam), moment(dateCheckoutToParam)]
                     : ""
                 : "",
           }}
@@ -1170,8 +1171,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           className="search-month-location"
         >
           <Form.Item
-            label={t("hardware.label.title.time")}
-            name="purchase_date"
+            label={t("hardware.label.title.timeCheckout")}
+            name="last_checkout"
           >
             <RangePicker
               onChange={handleChangePickerByMonth}
