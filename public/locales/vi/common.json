@@ -960,7 +960,9 @@
         "users": "Người dùng đã cấp phát",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
-        "checkin":"Thu hồi"
+        "checkin":"Thu hồi",
+        "time-purchase-date": "Ngày mua token thuế",
+        "time-expiration-date": "Ngày hết hạn token thuế"
       },
       "field": {
         "name": "Tên token thuế",

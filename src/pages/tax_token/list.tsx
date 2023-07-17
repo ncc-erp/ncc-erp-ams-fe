@@ -117,8 +117,10 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
       
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
-    const dateFromParam = searchParams.get("dateFrom");
-    const dateToParam = searchParams.get("dateTo");
+    const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
+    const purchaseDateToParam = searchParams.get("purchaseDateTo");
+    const expirationDateFromParam = searchParams.get("expirationDateFrom");
+    const expirationDateToParam = searchParams.get("expirationDateTo");
 
     const [listening, setListening] = useState(false);
     const listenForOutsideClicks = (
@@ -159,7 +161,8 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 name,
                 seri,
                 supplier,
-                purchase_date
+                purchase_date,
+                expiration_date
             } = params;
             filters.push(
                 {
@@ -174,21 +177,34 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                         name,
                         seri,
                         supplier,
-                        purchase_date
                     }),
                 },
                 {
-                    field: "dateFrom",
+                    field: "purchaseDateFrom",
                     operator: "eq",
                     value: purchase_date
                         ? purchase_date[0].format().substring(0, 10)
                         : undefined,
                 },
                 {
-                    field: "dateTo",
+                    field: "purchaseDateTo",
                     operator: "eq",
                     value: purchase_date
                         ? purchase_date[1].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "expirationDateFrom",
+                    operator: "eq",
+                    value: expiration_date
+                        ? expiration_date[0].format().substring(0, 10)
+                        : undefined,
+                },
+                {
+                    field: "expirationDateTo",
+                    operator: "eq",
+                    value: expiration_date
+                        ? expiration_date[1].format().substring(0, 10)
                         : undefined,
                 },
             );
@@ -683,25 +699,36 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         handleOpenModel();
     };
 
-    const handleDateChange = (val: any, formatString: any) => {
+    const handleDateChange = (val: any, dateFrom: string, dateTo: string) => {
         if (val !== null) {
             const [from, to] = Array.from(val || []);
             searchParams.set(
-                "dateFrom",
+                dateFrom,
                 from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
             );
             searchParams.set(
-                "dateTo",
+                dateTo,
                 to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
             );
         } else {
-            searchParams.delete("dateFrom");
-            searchParams.delete("dateTo");
+            searchParams.delete(dateFrom);
+            searchParams.delete(dateTo);
         }
-
         setSearchParams(searchParams);
         searchFormProps.form?.submit();
     };
+
+    const purchaseDateChange = (val: any, formatString: any) => {
+        const dateFrom = "purchaseDateFrom";
+        const dateTo = "purchaseDateTo";
+        handleDateChange(val, dateFrom, dateTo);
+    }
+
+    const expirationDateChange = (val: any, formatString: any) => {
+        const dateFrom = "expirationDateFrom";
+        const dateTo = "expirationDateTo";
+        handleDateChange(val, dateFrom, dateTo);
+    }
 
     useEffect(() => {
         localStorage.setItem("item_tax_token_selected", JSON.stringify(collumnSelected));
@@ -798,11 +825,18 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 <Form
                     {...searchFormProps}
                     initialValues={{
-                        created_at:
-                            dateFromParam && dateToParam
+                        purchase_date:
+                            purchaseDateFromParam && purchaseDateToParam
                                 ? [
-                                    moment(dateFromParam, "YYYY/MM/DD"),
-                                    moment(dateToParam, "YYYY/MM/DD"),
+                                    moment(purchaseDateFromParam, "YYYY/MM/DD"),
+                                    moment(purchaseDateToParam, "YYYY/MM/DD"),
+                                ]
+                                : "",
+                        expiration_date:
+                            expirationDateFromParam && expirationDateToParam
+                                ? [
+                                    moment(expirationDateFromParam, "YYYY/MM/DD"),
+                                    moment(expirationDateToParam, "YYYY/MM/DD"),
                                 ]
                                 : "",
                     }}
@@ -811,8 +845,8 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                     onValuesChange={() => searchFormProps.form?.submit()}
                 >
                     <Form.Item
-                        label={t("tax_token.label.title.time")}
-                        name="created_at"
+                        label={t("tax_token.label.title.time-purchase-date")}
+                        name="purchase_date"
                     >
                         <RangePicker
                             format={dateFormat}
@@ -820,7 +854,20 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                                 `${t("tax_token.label.field.start-date")}`,
                                 `${t("tax_token.label.field.end-date")}`,
                             ]}
-                            onCalendarChange={handleDateChange}
+                            onCalendarChange={purchaseDateChange}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={t("tax_token.label.title.time-expiration-date")}
+                        name="expiration_date"
+                    >
+                        <RangePicker
+                            format={dateFormat}
+                            placeholder={[
+                                `${t("tax_token.label.field.start-date")}`,
+                                `${t("tax_token.label.field.end-date")}`,
+                            ]}
+                            onCalendarChange={expirationDateChange}
                         />
                     </Form.Item>
                 </Form>

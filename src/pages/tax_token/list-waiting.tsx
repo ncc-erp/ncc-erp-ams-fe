@@ -104,8 +104,10 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
+  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
+  const purchaseDateToParam = searchParams.get("purchaseDateTo");
+  const expirationDateFromParam = searchParams.get("expirationDateFrom");
+  const expirationDateToParam = searchParams.get("expirationDateTo");
   const searchParam = searchParams.get("search");
 
   const { RangePicker } = DatePicker;
@@ -145,6 +147,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
         location,
         status_label,
         purchase_date,
+        expiration_date,
         assigned_to,
       } = params;
       filters.push(
@@ -171,19 +174,33 @@ export const TaxTokenListWaitingConfirm: React.FC<
           value: location ? location : rtd_location_id,
         },
         {
-          field: "dateFrom",
+          field: "purchaseDateFrom",
           operator: "eq",
           value: purchase_date
             ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
-          field: "dateTo",
+          field: "purchaseDateTo",
           operator: "eq",
           value: purchase_date
             ? purchase_date[1].format().substring(0, 10)
             : undefined,
-        }
+        },
+        {
+          field: "expirationDateFrom",
+          operator: "eq",
+          value: expiration_date
+            ? expiration_date[0].format().substring(0, 10)
+            : undefined,
+        },
+        {
+          field: "expirationDateTo",
+          operator: "eq",
+          value: expiration_date
+            ? expiration_date[1].format().substring(0, 10)
+            : undefined,
+        },
       );
       return filters;
     },
@@ -655,10 +672,10 @@ export const TaxTokenListWaitingConfirm: React.FC<
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const handleChangePickerByMonth = (val: any, formatString: any) => {
+  const handleDateChange = (val: any, dateFrom: string, dateTo: string) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      // localStorage.setItem("purchase_date", formatString ?? "");
       searchParams.set(
         "dateFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -670,12 +687,26 @@ export const TaxTokenListWaitingConfirm: React.FC<
     } else {
       searchParams.delete("dateFrom");
       searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date", formatString ?? "");
+      // localStorage.setItem("purchase_date", formatString ?? "");
     }
 
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
+
+  const purchaseDateChange = (val: any, formatString: any) => {
+    localStorage.setItem("purchase_date", formatString ?? "");
+    const dateFrom = "purchaseDateFrom";
+    const dateTo = "purchaseDateTo";
+    handleDateChange(val, dateFrom, dateTo);
+  }
+
+  const expirationDateChange = (val: any, formatString: any) => {
+    localStorage.setItem("purchase_date", formatString ?? "");
+    const dateFrom = "expirationDateFrom";
+    const dateTo = "expirationDateTo";
+    handleDateChange(val, dateFrom, dateTo);
+  }
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -733,9 +764,16 @@ export const TaxTokenListWaitingConfirm: React.FC<
                     moment(searchValuesByDateFrom),
                     moment(searchValuesByDateTo),
                   ]
-                  : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
+                  : purchaseDateFromParam && purchaseDateToParam
+                    ? [moment(purchaseDateFromParam), moment(purchaseDateToParam)]
                     : ""
+                : "",
+            expiration_date:
+              expirationDateFromParam && expirationDateToParam
+                ? [
+                  moment(expirationDateFromParam, "YYYY/MM/DD"),
+                  moment(expirationDateToParam, "YYYY/MM/DD"),
+                ]
                 : "",
           }}
           layout="vertical"
@@ -743,16 +781,29 @@ export const TaxTokenListWaitingConfirm: React.FC<
           className="search-month-location"
         >
           <Form.Item
-            label={t("hardware.label.title.time")}
+            label={t("tax_token.label.title.time-purchase-date")}
             name="purchase_date"
           >
             <RangePicker
-              onChange={handleChangePickerByMonth}
               format={dateFormat}
               placeholder={[
-                `${t("hardware.label.field.start-date")}`,
-                `${t("hardware.label.field.end-date")}`,
+                `${t("tax_token.label.field.start-date")}`,
+                `${t("tax_token.label.field.end-date")}`,
               ]}
+              onCalendarChange={purchaseDateChange}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("tax_token.label.title.time-expiration-date")}
+            name="expiration_date"
+          >
+            <RangePicker
+              format={dateFormat}
+              placeholder={[
+                `${t("tax_token.label.field.start-date")}`,
+                `${t("tax_token.label.field.end-date")}`,
+              ]}
+              onCalendarChange={expirationDateChange}
             />
           </Form.Item>
         </Form>
