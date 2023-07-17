@@ -142,7 +142,7 @@ export const TaxTokenShow = (props: TaxTokenShowProps) => {
                     <Title level={5}>{t("tax_token.label.title.updateAt")}</Title>
                 </Col>
                 <Col span={18}>
-                    <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
+                    <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(7, 'hours').format('ddd MMM D, YYYY h:mmA')}</Text>
                 </Col>
             </Row>
             <Row gutter={16}>
