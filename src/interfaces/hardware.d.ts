@@ -229,7 +229,7 @@ export interface IHardwareResponseCheckout {
     date: string;
     formatted: string;
   };
-  assigned_location: {
+  rtd_location: {
     id: number;
     name: string;
   };
