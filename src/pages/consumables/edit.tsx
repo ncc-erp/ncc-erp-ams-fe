@@ -151,7 +151,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       { name: "supplier_id", value: data?.supplier.id },
       {
         name: "purchase_cost",
-        value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+        value: data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
       },
       {
         name: "warranty_months",
@@ -281,7 +281,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
             ]}
             initialValue={
               data?.purchase_cost &&
-              data?.purchase_cost.toString().split(",")[0]
+              data?.purchase_cost.toString().split(",").join("")
             }
           >
             <Input
@@ -289,7 +289,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
               addonAfter={t("consumables.label.field.vnd")}
               value={
                 data?.purchase_cost &&
-                data?.purchase_cost.toString().split(",")[0]
+                data?.purchase_cost.toString().split(",").join("")
               }
             />
           </Form.Item>

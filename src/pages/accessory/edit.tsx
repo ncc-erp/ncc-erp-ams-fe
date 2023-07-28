@@ -144,7 +144,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
       {
         name: "purchase_cost",
         value:
-          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+          data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
       },
       { name: "supplier_id", value: data?.supplier.id },
       { name: "notes", value: data?.notes },
@@ -275,7 +275,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
             ]}
             initialValue={
               data?.purchase_cost &&
-              data?.purchase_cost.toString().split(",")[0]
+              data?.purchase_cost.toString().split(",").join("")
             }
           >
             <Input
@@ -283,7 +283,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
               addonAfter={t("accessory.label.field.vnd")}
               value={
                 data?.purchase_cost &&
-                data?.purchase_cost.toString().split(",")[0]
+                data?.purchase_cost.toString().split(",").join("")
               }
             />
           </Form.Item>
