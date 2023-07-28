@@ -60,7 +60,7 @@ export const LicensesEdit = (props: LicensesEditProps) => {
             { name: "seats", value: data?.seats },
             { name: "purchase_date", value: data?.purchase_date.date },
             { name: "expiration_date", value: data?.expiration_date.date },
-            { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
+            { name: "purchase_cost", value: data?.purchase_cost && data?.purchase_cost.toString().split(",").join("") },
         ]);
     }, [data, form, isModalVisible]);
 
@@ -175,14 +175,14 @@ export const LicensesEdit = (props: LicensesEditProps) => {
                         ]}
                         initialValue={
                             data?.purchase_cost &&
-                            data?.purchase_cost.toString().split(",")[0]
+                            data?.purchase_cost.toString().split(",").join("")
                         }
                     >
                         <Input type="number"
                             addonAfter={t("hardware.label.field.usd")}
                             value={
                                 data?.purchase_cost &&
-                                data?.purchase_cost.toString().split(",")[0]
+                                data?.purchase_cost.toString().split(",").join("")
                             }
                             placeholder={t("licenses.label.placeholder.purchase_cost")} />
                     </Form.Item>

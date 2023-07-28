@@ -176,7 +176,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       {
         name: "purchase_cost",
         value:
-          data?.purchase_cost && data.purchase_cost.toString().split(",")[0],
+          data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
       },
       {
         name: "purchase_date",
@@ -488,7 +488,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             name="purchase_cost"
             initialValue={
               data?.purchase_cost &&
-              data?.purchase_cost.toString().split(",")[0]
+              data?.purchase_cost.toString().split(",").join("")
             }
           >
             <Input
@@ -496,7 +496,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               addonAfter={t("hardware.label.field.usd")}
               value={
                 data?.purchase_cost &&
-                data?.purchase_cost.toString().split(",")[0]
+                data?.purchase_cost.toString().split(",").join("")
               }
             />
           </Form.Item>

@@ -118,7 +118,7 @@ export const ToolClone = (props: ToolCloneProps) => {
             { name: "status_id", value: STATUS_LABELS.READY_TO_DEPLOY },
             { name: "purchase_date", value: data?.purchase_date.date },
             { name: "expiration_date", value: data?.expiration_date.date },
-            { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
+            { name: "purchase_cost", value: data?.purchase_cost && data?.purchase_cost.toString().split(",").join("") },
             { name: "note", value: data?.notes ? data?.notes : "" },
         ]);
     }, [data, form, isModalVisible]);
@@ -369,7 +369,7 @@ export const ToolClone = (props: ToolCloneProps) => {
                         ]}
                         initialValue={
                             data?.purchase_cost &&
-                            data?.purchase_cost.toString().split(",")[0]
+                            data?.purchase_cost.toString().split(",").join("")
                         }
                     >
                         <Input type="number"
