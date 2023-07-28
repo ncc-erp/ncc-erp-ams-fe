@@ -47,6 +47,16 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       category_type: CategoryType.ACCESSORY,
     } as any;
 
+    let sumTool = {
+      type: t("dashboard.field.typeTool"),
+      category_type: CategoryType.TOOL,
+    } as any;
+
+    let sumTaxToken = {
+      type: t("dashboard.field.typeTaxToken"),
+      category_type: CategoryType.TAXTOKEN,
+    } as any;
+
     arrNameAsset?.forEach((nameAsset: any) => {
       let type = {} as any;
       let category = "" as ICategoryAsset | string | undefined;
@@ -69,6 +79,18 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
               ? category?.accessories_count +
                 sumAccessory["rtd_location_" + item.id]
               : category?.accessories_count;
+        } else if (category?.category_type === CategoryType.TOOL) {
+          sumTool["rtd_location_" + item.id] =
+            sumTool["rtd_location_" + item.id] !== undefined
+              ? category?.tools_count +
+                sumTool["rtd_location_" + item.id]
+              : category?.tools_count;
+        } else if (category?.category_type === CategoryType.TAXTOKEN) {
+          sumTaxToken["rtd_location_" + item.id] =
+            sumTaxToken["rtd_location_" + item.id] !== undefined
+              ? category?.digital_signatures_count +
+                sumTaxToken["rtd_location_" + item.id]
+              : category?.digital_signatures_count;
         } else {
           type["rtd_location_" + item.id] = category && category.assets_count;
           type.category_id = category && category.id;
@@ -86,7 +108,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       }
     });
 
-    setDataAllLocation([...dataAll, sumConsumable, sumAccessory]);
+    setDataAllLocation([...dataAll, sumConsumable, sumAccessory,sumTool,sumTaxToken]);
   }, [response]);
 
   let columnSum = [
@@ -115,6 +137,14 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                 ? dateFrom && dateTo
                   ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
                   : list(`accessory`)
+                : record.category_type === CategoryType.TOOL
+                ? dateFrom && dateTo
+                  ? list(`tools?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`tools`)
+                : record.category_type === CategoryType.TAXTOKEN
+                ? dateFrom && dateTo
+                  ? list(`digital_signatures?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`digital_signatures`)
                 : dateFrom && dateTo
                 ? list(
                     `assets?category_id=${record.category_id}&dateTo=${dateFrom}&dateTo=${dateTo}`
@@ -177,6 +207,26 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                   : item.id !== 99999
                   ? list(`accessory?location_id=${item.id}`)
                   : list(`accessory`)
+                : record.category_type === CategoryType.TOOL
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `tools?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`tools?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : item.id !== 99999
+                  ? list(`tools?location_id=${item.id}`)
+                  : list(`tools`)
+                : record.category_type === CategoryType.TAXTOKEN
+                ? dateFrom && dateTo
+                  ? item.id !== 99999
+                    ? list(
+                        `digital_signatures?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`digital_signatures?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : item.id !== 99999
+                  ? list(`digital_signatures?location_id=${item.id}`)
+                  : list(`digital_signatures`)
                 : list(`assets?category_id=${record.category_id}`);
             }
           }}

@@ -58,6 +58,7 @@ export const CategoryType = {
   ASSET: "asset",
   CONSUMABLE : "consumable",
   ACCESSORY: "accessory",
-  TAXTOKEN: "taxtoken"
+  TAXTOKEN: "taxtoken",
+  TOOL: "tool"
 }
 
