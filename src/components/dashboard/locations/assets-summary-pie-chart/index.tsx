@@ -29,6 +29,12 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       let dataAccessory = categories.filter(
         (item) => item.category_type === CategoryType.ACCESSORY
       ) as any;
+      let dataTool = categories.filter(
+        (item) => item.category_type === CategoryType.TOOL
+      ) as any;
+      let dataTaxToken = categories.filter(
+        (item) => item.category_type === CategoryType.TAXTOKEN
+      ) as any;
       let sumConsumable = dataConsumable.reduce(
         (total: number, object: any) => {
           return total + object.consumables_count;
@@ -39,6 +45,12 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       let sumAccessory = dataAccessory.reduce((total: number, object: any) => {
         return total + object.accessories_count;
       }, 0);
+      let sumTool = dataTool.reduce((total: number, object: any) => {
+        return total + object.tools_count;
+      }, 0);
+      let sumTaxToken = dataTaxToken.reduce((total: number, object: any) => {
+        return total + object.digital_signatures_count;
+      }, 0);
 
       dataClone = {
         ...dataClone,
@@ -48,6 +60,8 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
             : false,
         [t("dashboard.field.typeConsumable")]: sumConsumable ? false : true,
         [t("dashboard.field.typeAccessory")]: sumAccessory ? false : true,
+        [t("dashboard.field.typeTool")]: sumTool ? false : true,
+        [t("dashboard.field.typeTaxToken")]: sumTaxToken ? false : true,
       };
     }
     
@@ -57,6 +71,8 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   useEffect(() => {
     let consumable = { label: t("dashboard.field.typeConsumable") } as any;
     let accessory = { label: t("dashboard.field.typeAccessory") } as any;
+    let tool = { label: t("dashboard.field.typeTool") } as any;
+    let taxtoken = { label: t("dashboard.field.typeTaxToken") } as any;
 
     let dataAsset = [] as any;
 
@@ -85,13 +101,35 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           0
         );
         accessory.value = sumAccessory;
+      } else if (item.category_type === CategoryType.TOOL) {
+        let dataTool = categories.filter(
+          (item) => item.category_type === CategoryType.TOOL
+        ) as any;
+        let sumTool = dataTool.reduce(
+          (total: number, object: any) => {
+            return total + object.tools_count;
+          },
+          0
+        );
+        tool.value = sumTool;
+      } else if (item.category_type === CategoryType.TAXTOKEN) {
+        let dataTaxToken = categories.filter(
+          (item) => item.category_type === CategoryType.TAXTOKEN
+        ) as any;
+        let sumTaxToken = dataTaxToken.reduce(
+          (total: number, object: any) => {
+            return total + object.digital_signatures_count;
+          },
+          0
+        );
+        taxtoken.value = sumTaxToken;
       } else {
         asset.label = item.name;
         asset.value = item.assets_count;
       }
       dataAsset.push(asset);
     });
-    setDataPie([...dataAsset, consumable, accessory]);
+    setDataPie([...dataAsset, consumable, accessory,tool,taxtoken]);
   }, [data]);
 
   const config: PieConfig = {
