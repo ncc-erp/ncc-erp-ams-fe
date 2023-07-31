@@ -7,6 +7,10 @@ export interface IStatusAsset {
   id: number;
   name: string;
   assets_count: number;
+  tools_count: number;
+  accessories_count: number;
+  consumables_count: number;
+  digital_signatures_count: number;
 }
 
 export interface ICategoryAsset {
