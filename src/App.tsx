@@ -206,6 +206,7 @@ function App() {
           list: UserList,
           options: {
             route: "users",
+            label: "users"
           },
         },
         {
@@ -213,6 +214,7 @@ function App() {
           list: UserListTool,
           options: {
             route: "users-tools",
+            label: "users"
           }
         },
         {

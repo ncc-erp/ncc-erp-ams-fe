@@ -306,7 +306,7 @@
         "purchase_cost": "Giá",
         "purchase_date": "Ngày mua",
         "version": "Phiên bản",
-        "name": "Tên tool",
+        "name": "Tên Tool & Domain",
         "key": "Key",
         "supplier":"Nhà cung cấp",
         "location":"Văn phòng",
@@ -374,8 +374,8 @@
         "time-purchase-date": "Ngày mua Tools hoặc Domains",
         "time-expiration-date": "Ngày hết hạn Tools hoặc Domains",
         "sum-tools": "Số lượng",
-        "name": "Tên tool",
-        "my-tool": "Tools của tôi"
+        "name": "Tên Tool & Domain",
+        "my-tool": "Tool & Domain của tôi"
       },
       "detail": {
         "default":"Chưa checkout",
@@ -864,7 +864,7 @@
     "tools-all": "Tất cả",
     "tools-assign": "Tools đã cấp phát",
     "tools-waiting": "Đang chờ xác nhận",
-    "users-tools": "Tools",
+    "users-tools": "Tool & Domain",
     "users_assets": "Tài sản của tôi",
     "location": "Văn phòng",
     "supplier": "Nhà cung cấp",

@@ -410,10 +410,11 @@ export const Sider: React.FC = () => {
               {menuItems
                 .filter(
                   (item) =>
+                  (item.options?.label === 'users') && (
                     item.name === `${translate("resource.request")}` ||
                     item.name === `${translate("resource.users")}` ||
                     item.name === `${translate("resource.users-tools")}` ||
-                    item.name === `${translate("resource.users_licenses")}`
+                    item.name === `${translate("resource.users_licenses")}`)
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
