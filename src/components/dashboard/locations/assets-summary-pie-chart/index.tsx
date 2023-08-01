@@ -64,7 +64,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
         [t("dashboard.field.typeTaxToken")]: sumTaxToken ? false : true,
       };
     }
-    
+
     setDataActive(dataClone);
   }, []);
 
@@ -129,7 +129,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       }
       dataAsset.push(asset);
     });
-    setDataPie([...dataAsset, consumable, accessory,tool,taxtoken]);
+    setDataPie([...dataAsset, consumable, accessory, tool, taxtoken]);
   }, [data]);
 
   const config: PieConfig = {
