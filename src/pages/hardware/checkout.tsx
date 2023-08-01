@@ -65,6 +65,13 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
         value,
       },
     ],
+    filters: [
+      {
+        field: "location_id",
+        operator: "eq",
+        value: data?.rtd_location?.id.toString(),
+      },
+    ],
   });
 
   const {
@@ -113,7 +120,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
         value: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
       { name: "assigned_user", value: data?.assigned_user },
-      { name: "assigned_location", value: data?.assigned_location.name },
+      { name: "assigned_location", value: data?.rtd_location.name },
     ]);
   }, [data, form, isModalVisible, setFields]);
 

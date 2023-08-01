@@ -131,7 +131,7 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
             { name: "status_id", value: data?.status_label.id },
             { name: "purchase_date", value: data?.purchase_date.date },
             { name: "expiration_date", value: data?.expiration_date.date },
-            { name: "purchase_cost", value: data?.purchase_cost && data.purchase_cost.toString().split(",")[0] },
+            { name: "purchase_cost", value: data?.purchase_cost && data?.purchase_cost.toString().split(",").join("") },
             { name: "note", value: data?.note ? data?.note : "" },
         ]);
     }, [data, form, isModalVisible]);
@@ -410,7 +410,7 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
                         ]}
                         initialValue={
                             data?.purchase_cost &&
-                            data?.purchase_cost.toString().split(",")[0]
+                            data?.purchase_cost.toString().split(",").join("")
                         }
                     >
                         <Input type="number"
