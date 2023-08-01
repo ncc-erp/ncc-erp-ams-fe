@@ -116,6 +116,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       title: "Tên thiết bị",
       dataIndex: "type",
       key: "type",
+      width: 150,
       render: (text: string, record: DataTable) => (
         <Typography.Text
           strong
@@ -165,6 +166,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       title: item.name,
       dataIndex: "rtd_location_" + item.id,
       key: "rtd_location_" + item.id,
+      width: 100,
       render: (text: number, record: DataTable) => (
         <Typography.Text
           type="secondary"
