@@ -13,7 +13,9 @@ export const AllLocations = (props: LocationProps) => {
   const items_count =
     location.assets_count +
     location.accessories_count +
-    location.consumables_count;
+    location.consumables_count +
+    location.tools_count + 
+    location.digital_signatures_count;
     
     
   return (

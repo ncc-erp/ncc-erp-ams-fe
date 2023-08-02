@@ -75,7 +75,9 @@
       "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng",
       "sum-report": "Số lượng",
       "typeConsumable": "Văn phòng phẩm",
-      "typeAccessory": "Phụ kiện"
+      "typeAccessory": "Phụ kiện",
+      "typeTool": "Tool & Domain",
+      "typeTaxToken": "Token Thuế"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
