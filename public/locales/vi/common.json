@@ -740,7 +740,8 @@
         "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
         "sendMail": "Gửi email đến người dùng khi checkin/checkout",
         "image": "Tải hình",
-        "dateCreate": "Đã tạo lúc"
+        "dateCreate": "Đã tạo lúc",
+        "checkin_email": "Gửi mail khi cấp hoặc nhận"
       },
       "message": {
         "required": "bắt buộc"
