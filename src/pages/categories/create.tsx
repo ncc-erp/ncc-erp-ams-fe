@@ -8,6 +8,7 @@ import {
   useForm,
   Button,
   Typography,
+  Switch
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -47,6 +48,7 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
 
     formData.append("name", event.name);
     formData.append("category_type", event.category_type);
+    formData.append("checkin_email", event.checkin_email ? "true" : "false");
     if (event.eula_text !== undefined) {
       formData.append("eula_text", event.eula_text);
     }
@@ -176,6 +178,21 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
             },
           ]}
         />
+      </Form.Item>
+
+      <Form.Item
+        label={t("category.label.field.checkin_email")}
+        name="checkin_email"
+        rules={[
+          {
+            message:
+              t("category.label.field.category") +
+              " " +
+              t("category.label.message.required"),
+          },
+        ]}
+      >
+        <Switch defaultChecked={false} />
       </Form.Item>
 
       <Form.Item
