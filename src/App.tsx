@@ -56,6 +56,7 @@ import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
 import { ToolList } from "pages/tools/list";
 import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
+import { W2RequestList } from "pages/w2request/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -264,6 +265,13 @@ function App() {
           list: LocationList,
           options: {
             route: "location",
+          },
+        },
+        {
+          name: t("resource.w2request"),
+          list: W2RequestList,
+          options: {
+            route: 'w2request',
           },
         },
         {

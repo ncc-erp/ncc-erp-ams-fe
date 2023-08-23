@@ -126,6 +126,7 @@ p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
 p, 1, ${i18n.t("resource.checkin-checkout")}, (list)
 
 p, 1, ${i18n.t("resource.report")}, (list)
+p, 1, ${i18n.t("resource.w2request")}, (list)
 
 p, 1, ${i18n.t("resource.checkin")}, (list)
 p, 1, ${i18n.t("resource.checkout")}, (list)
@@ -216,6 +217,7 @@ p, 2, ${i18n.t("resource.location_details")}, (list)
 p, 2, ${i18n.t("resource.location_details")}/*,(show)
 
 p, 2, ${i18n.t("resource.report")}, (list)
+p, 2, ${i18n.t("resource.w2request")}, (list)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

@@ -505,6 +505,40 @@ export const Sider: React.FC = () => {
         {permissionsData &&
           permissionsData.admin === EPermissions.ADMIN &&
           menuItems
+            .filter((item) => item.name === `${translate("resource.w2request")}`)
+            .map(({ icon, name, route }) => {
+              const isSelected = route === selectedKey;
+              return (
+                <Menu.Item
+                  style={{
+                    fontWeight: isSelected ? "bold" : "normal",
+                  }}
+                  key={route}
+                  icon={
+                    name === `${translate("resource.w2request")}` ? (
+                      <BarChartOutlined />
+                    ) : (
+                      ""
+                    )
+                  }
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {name}
+                    {!collapsed && isSelected && <RightOutlined />}
+                  </div>
+                </Menu.Item>
+              );
+            })}
+
+        {permissionsData &&
+          permissionsData.admin === EPermissions.ADMIN &&
+          menuItems
             .filter((item) => item.name === `${translate("resource.report")}`)
             .map(({ icon, name, route }) => {
               const isSelected = route === selectedKey;

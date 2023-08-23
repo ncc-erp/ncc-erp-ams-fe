@@ -901,7 +901,8 @@
     "supplier_details": "Chi tiết nhà cung cấp",
     "tax_token": "Token thuế",
     "tax_token_assign": "Token thuế đã cấp phát",
-    "tax_token_waiting": "Đang đợi xác nhận"
+    "tax_token_waiting": "Đang đợi xác nhận",
+    "w2request": "W2Request"
   },
   "model": {
     "label": {
@@ -1314,6 +1315,25 @@
         "user": "Lựa chọn một người dùng",
         "supplier": "Lựa chọn nhà cung cấp",
         "purchase_cost": "Chi phí mua hàng"
+      }
+    }
+  },
+  "w2request": {
+    "label": {
+      "field": {
+        "id": "Id",
+        "type": "Loại yêu cầu",
+        "userRequestName": "Nhân viên yêu cầu",
+        "createdAt": "Ngày tạo",
+        "lastExecutedAt": "Cập nhật",
+        "status": "Trạng thái",
+        "device": "Thiết bị yêu cầu",
+        "location": "Văn phòng"
+      },
+      "title": {
+        "name": "Danh sách yêu cầu",
+        "type": "Loại yêu cầu",
+        "status": "Trạng thái" 
       }
     }
   }

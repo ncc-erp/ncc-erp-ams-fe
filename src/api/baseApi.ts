@@ -73,4 +73,5 @@ export const CONSUMABLE_CATEGORIES_API = "api/v1/categories/consumable/selectlis
 
 export const SYNC_USER_API = "api/v1/users/sync-list-user";
 
-
+export const W2REQUEST_API = "api/v1/w2request";
+export const W2REQUEST_TYPE_API = "api/v1/w2request/type";
