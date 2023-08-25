@@ -60,6 +60,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import moment from "moment";
@@ -77,6 +78,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -127,7 +129,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
 
   const { data: permissionsData } = usePermissions();
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -1128,12 +1130,10 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      <div className="sum-assets">
-        <span className="name-sum-assets">
-          {t("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
-      </div>
+      <TotalDetail 
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+      ></TotalDetail>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

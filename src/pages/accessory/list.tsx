@@ -27,7 +27,12 @@ import {
   usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API, LOCATION_API, ACCESSORY_CATEGORIES_API } from "api/baseApi";
+import { 
+  ACCESSORY_API, 
+  LOCATION_API, 
+  ACCESSORY_CATEGORIES_API,
+  ACCRSSORY_TOTAL_DETAIL_API
+} from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -50,6 +55,7 @@ import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import React from "react";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -97,7 +103,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   const { data: permissionsData } = usePermissions();
 
-  const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
+  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } = useTable<
     IAccesstoryResponse,
     HttpError,
     IAccessoryFilterVariables
@@ -625,13 +631,11 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      <div className="sum-items">
-        <span className="name-sum-assets">
-          {translate("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
-      </div>
 
+      <TotalDetail 
+        filters={filters}
+        links={ACCRSSORY_TOTAL_DETAIL_API}
+      ></TotalDetail>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

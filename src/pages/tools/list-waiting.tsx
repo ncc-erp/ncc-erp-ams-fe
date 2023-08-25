@@ -48,7 +48,8 @@ import { ToolSearch } from "./search";
 import {
     STATUS_LABELS_API,
     SUPPLIERS_API,
-    TOOLS_API
+    TOOLS_API,
+    TOOLS_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
     CloseOutlined,
@@ -71,7 +72,7 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { IModel } from "interfaces/model";
 import { IAssetsWaiting } from "interfaces/hardware";
-
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const ToolListWaitingConfirm: React.FC<
     IResourceComponentsProps
@@ -119,7 +120,7 @@ export const ToolListWaitingConfirm: React.FC<
 
     const { RangePicker } = DatePicker;
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         any,
         HttpError,
         IToolFilterVariable
@@ -909,13 +910,12 @@ export const ToolListWaitingConfirm: React.FC<
                     searchFormProps={searchFormProps}
                 />
             </MModal>
+
+            <TotalDetail
+                filters={filters}
+                links={TOOLS_TOTAL_DETAIL_API}
+            ></TotalDetail>
             <div className="list-waiting-confirm">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("hardware.label.title.sum-assets")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="list-users">
                     <div className="button-list-accept-refuse">
                         <Popconfirm

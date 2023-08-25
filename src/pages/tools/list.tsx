@@ -37,7 +37,7 @@ import {
     IToolFilterVariable,
     IToolResponse,
     IToolResponseCheckin,
-    ITool
+    ITool,
 } from "interfaces/tool";
 import {
     getBGToolAssignedStatusDecription,
@@ -60,7 +60,8 @@ import {
     STATUS_LABELS_API,
     TOOLS_API,
     TOOLS_CATEGORIES_API,
-    SUPPLIERS_API
+    SUPPLIERS_API,
+    TOOLS_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { ToolSearch } from "./search";
 import { ToolCreate } from "./create";
@@ -71,6 +72,7 @@ import { ToolCheckout } from "./checkout";
 import { ToolMultiCheckout } from "./multi-checkout";
 import { ToolCheckin } from "./checkin";
 import { ToolMultiCheckin } from "./multi-checkin";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -145,7 +147,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         });
     };
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         IToolResponse,
         HttpError,
         IToolFilterVariable
@@ -1060,13 +1062,11 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
+            <TotalDetail
+                filters={filters}
+                links={TOOLS_TOTAL_DETAIL_API}
+            ></TotalDetail>
             <div className="checkout-checkin-multiple">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("tools.label.title.sum-tools")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="checkout-multiple-asset">
                     <Button
                         type="primary"
