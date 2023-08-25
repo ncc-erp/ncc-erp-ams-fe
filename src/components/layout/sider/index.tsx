@@ -24,7 +24,9 @@ const {
   CopyOutlined,
   InsertRowBelowOutlined,
   BlockOutlined,
-  ToolOutlined
+  ToolOutlined,
+  AppstoreAddOutlined,
+  UsbOutlined
 } = Icons;
 
 const logo: CSSProperties = {
@@ -357,7 +359,7 @@ export const Sider: React.FC = () => {
           <SubMenu
             title={
               <span>
-                <SettingOutlined />
+                <UsbOutlined />
                 <span>{translate("resource.tax_token")}</span>
               </span>
             }
@@ -516,7 +518,7 @@ export const Sider: React.FC = () => {
                   key={route}
                   icon={
                     name === `${translate("resource.w2request")}` ? (
-                      <BarChartOutlined />
+                      <AppstoreAddOutlined />
                     ) : (
                       ""
                     )

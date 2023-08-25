@@ -17,11 +17,10 @@ import {
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IW2Request } from "interfaces/w2request";
-import { W2REQUEST_API, W2REQUEST_TYPE_API } from "api/baseApi";
-import { ICompany } from "interfaces/company";
+import { W2REQUEST_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
 import { TableAction } from "components/elements/tables/TableAction";
-import { StatusType } from "constants/w2request";
+import { StatusType, RequestType } from "constants/w2request";
 
 
 export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
@@ -76,14 +75,14 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 key: "type",
                 title: translate("w2request.label.field.type"),
                 render: (value: IW2Request) => (
-                    <TextField value={value ? value.type : ""} />
+                    <TextField value={value ? value : ""} />
                 ),
             },
             {
                 key: "userRequestName",
                 title: translate("w2request.label.field.userRequestName"),
                 render: (value: IW2Request) => (
-                    <TextField value={value ? value.type : ""} />
+                    <TextField value={value ? value : ""} />
                 ),
             },
             {
@@ -110,39 +109,12 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 key: "status",
                 title: translate("w2request.label.field.status"),
                 render: (value: IW2Request) => (
-                    <TextField value={value ? value.status : ""} />
+                    <TextField value={value ? value : ""} />
                 ),
-            },
-            {
-                key: "device",
-                title: translate("w2request.label.field.device"),
-                render: (value: IW2Request) => (
-                    <TextField value={value ? value.device : ""} />
-                ),
-            },
-            {
-                key: "location",
-                title: translate("w2request.label.field.location"),
-                render: (value: IW2Request) => (
-                    <TextField value={value ? value.location : ""} />
-                ),
-            },
+            }
         ],
         []
     );
-
-    const { selectProps: typeSelectProps } = useSelect<ICompany>({
-        resource: W2REQUEST_TYPE_API,
-        optionLabel: "name",
-        optionValue: "id",
-        onSearch: (value) => [
-            {
-                field: "search",
-                operator: "containss",
-                value,
-            },
-        ],
-    });
 
     const handleTypeChange = (value: {
         value: string;
@@ -185,9 +157,9 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                     >
                         <Select onChange={handleTypeChange} placeholder="xxx">
                             <Option value={"all"}>{translate("all")}</Option>
-                            {typeSelectProps.options?.map((item: any) => (
-                                <Option value={item.value}>{item.label}</Option>
-                            ))}
+                            {Object.entries(RequestType).map(([key, value]) => {
+                                return <Option value={value}>{value}</Option>;
+                            })}
                         </Select>
                     </Form.Item>
 

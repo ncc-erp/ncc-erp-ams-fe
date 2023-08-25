@@ -1,10 +1,8 @@
 export interface IW2Request {
     id: string,
     type: string,
-    userRequestname: string,
+    userRequestName: string,
     createdAt: string,
     lastExecutedAt: string,
-    status: string,
-    device: string
-    location: string
+    status: string
 }
