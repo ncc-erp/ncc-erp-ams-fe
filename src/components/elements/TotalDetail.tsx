@@ -33,15 +33,7 @@ export const TotalDetail = (props: TotalDetailProps) => {
             `${links}?${stringify(queryFilters, { arrayFormat: 'index' })}`
         );
         data.then(response => {
-            if (response.status !== 200) {
-                open?.({
-                    type: 'error',
-                    message: "Đã có lỗi xảy ra",
-                });
-                return;
-            }
             setTotalDetail(response.data.payload);
-            console.log('res', response.data.payload);
         })
     }
 
