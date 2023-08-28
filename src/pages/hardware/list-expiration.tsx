@@ -61,6 +61,7 @@ import {
   HARDWARE_EXPIRATION_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
@@ -82,6 +83,7 @@ import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -154,7 +156,7 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
     }
   }, [permissionsData])
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -1374,13 +1376,11 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
         />
       </MModal>
 
+      <TotalDetail 
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+      ></TotalDetail>
       <div className="checkout-checkin-multiple">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="checkout-multiple-asset">
           {isAdmin && (
             <Button

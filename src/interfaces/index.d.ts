@@ -35,3 +35,7 @@ export interface ICheckboxChange {
     checked: boolean;
   };
 }
+export interface ITotalDetail {
+  name: string;
+  total: number;
+}
