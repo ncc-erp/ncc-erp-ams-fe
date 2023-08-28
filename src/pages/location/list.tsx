@@ -91,6 +91,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       country: data.country,
       currency: data?.currency,
       assets_count: data?.assets_count,
+      branch_code: data?.branch_code,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -105,6 +106,12 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         title: "ID",
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("id", sorter),
+      },
+      {
+        key: "branch_code",
+        title: t("location.label.field.branch_code"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("branch_code", sorter),
       },
       {
         key: "name",

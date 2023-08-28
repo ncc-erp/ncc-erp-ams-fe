@@ -836,7 +836,8 @@
         "assetCount": "Số lượng",
         "assetAssign": "Assets Assigned",
         "dateCreate": "Ngày tạo",
-        "users_count": "Thành viên"
+        "users_count": "Thành viên",
+        "branch_code": "Mã văn phòng"
       },
       "placeholder": {
         "parent": "Lựa chọn một văn phòng",
