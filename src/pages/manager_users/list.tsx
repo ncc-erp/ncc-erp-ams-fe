@@ -15,6 +15,7 @@ import {
   TextField,
   Tooltip,
   useTable,
+  useSelect
 } from "@pankod/refine-antd";
 import {
   CrudFilters,
@@ -31,9 +32,11 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
-import { SYNC_USER_API, USER_API } from "api/baseApi";
+import { LOCATION_API, SYNC_USER_API, USER_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
 import { getPermissionsUser } from "untils/users";
+import { ILocations } from "interfaces/location";
+import { IUserType, IJobPosition } from "interfaces/index";
 
 const defaultCheckedList = [
   "id",
@@ -105,6 +108,40 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         tableQueryResult.refetch();
       });
   };
+
+  //prepare filter
+  const { selectProps: locationSelectProps } = useSelect<ILocations>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+  });
+
+  const filterLocation = locationSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
+  const { selectProps: userTypeSelectProps } = useSelect<IUserType>({
+    resource: USER_API + "/list-user-type",
+    optionLabel: "name",
+    optionValue: "name",
+  });
+
+  const filterUserType = userTypeSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
+  const { selectProps: jobPositionSelectProps } = useSelect<IJobPosition>({
+    resource: USER_API + "/list-user-position",
+    optionLabel: "name",
+    optionValue: "name",
+  });
+
+  const filterJobPosition = jobPositionSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
 
   const collumns = useMemo(
     () => [
@@ -201,6 +238,21 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         render: (value: IUser) =>
           <TextField value={value ? value.name : ""} />,
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+        filters: filterLocation,
+      },
+      {
+        key: "job_position_code",
+        title: translate("user.label.field.job_position"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("job_position_code", sorter),
+        filters: filterJobPosition,
+      },
+      {
+        key: "user_type",
+        title: translate("user.label.field.user_type"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("user_type", sorter),
+        filters: filterUserType,
       },
       {
         key: "manager",
@@ -254,11 +306,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
-    []
+    [filterLocation, filterJobPosition, filterUserType]
   );
-
-  // console.log(tableProps, "?tableProps");
-
 
   const handleCreate = () => {
     handleOpenModel();
@@ -464,7 +513,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...col as any} sorter />
             ))}
           <Table.Column<IUserResponse>
             title={translate("table.actions")}
