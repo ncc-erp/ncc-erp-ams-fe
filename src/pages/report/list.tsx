@@ -18,7 +18,7 @@ import {
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IReport, IReportResponse } from "interfaces/report";
-import { ASSET_HISTORY_API, LOCATION_API } from "api/baseApi";
+import { ASSET_HISTORY_API, LOCATION_API, ASSET_HISTORY_TOTAL_DETAIL_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
@@ -30,6 +30,7 @@ import {
   TypeAssetHistory,
 } from "constants/assets";
 import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const { RangePicker } = DatePicker;
 
@@ -51,7 +52,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   const { Option } = Select;
 
-  const { tableProps, searchFormProps } = useTable<IReportResponse>({
+  const { tableProps, searchFormProps, filters } = useTable<IReportResponse>({
     initialSorter: [
       {
         field: "id",
@@ -345,12 +346,10 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         </Form>
       </div>
       <div className="report">
-        <div className="sum-report">
-          <span className="name-sum-report">
-            {translate("dashboard.field.sum-report")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
+        <TotalDetail
+          filters={filters}
+          links={ASSET_HISTORY_TOTAL_DETAIL_API}
+        ></TotalDetail>
         <div className="search-report">
           <TableAction searchFormProps={searchFormProps} />
         </div>

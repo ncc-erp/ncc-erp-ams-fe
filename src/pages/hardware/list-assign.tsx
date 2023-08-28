@@ -54,6 +54,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   MenuOutlined,
@@ -80,6 +81,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -149,7 +151,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     }
   }, [permissionsData])
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -1368,13 +1370,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
+
+      <TotalDetail 
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+      ></TotalDetail>
       <div className="checkout-checkin-multiple">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="checkout-multiple-asset">
           {isAdmin && (
             <Button

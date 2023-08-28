@@ -36,7 +36,8 @@ import { filterAssignedStatus } from "untils/assets";
 import {
     SUPPLIERS_API,
     TAX_TOKEN_API,
-    STATUS_LABELS_API
+    STATUS_LABELS_API,
+    TAX_TOKEN_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { Spin } from "antd";
 import { DatePicker } from "antd";
@@ -68,6 +69,7 @@ import { TaxTokenCheckout } from "./checkout";
 import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
 import { TaxTokenCheckin } from "./checkin";
 import { TaxTokenCheckinMultiple } from "./checkin-multiple";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -142,7 +144,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         });
     };
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         ITaxTokenResponse,
         HttpError,
         ITaxTokenFilterVariables
@@ -1042,13 +1044,11 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
+            <TotalDetail
+                filters={filters}
+                links={TAX_TOKEN_TOTAL_DETAIL_API}
+            ></TotalDetail>
             <div className="checkout-checkin-multiple">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("tax_token.label.title.sum-tax_token")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="checkout-multiple-asset">
                     <Button
                         type="primary"

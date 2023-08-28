@@ -43,3 +43,8 @@ export interface IUserType {
 export interface IJobPosition {
   name: string;
 }
+
+export interface ITotalDetail {
+  name: string;
+  total: number;
+}
