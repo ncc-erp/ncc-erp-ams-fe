@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
-import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
+import { Form, Input, useForm, Button, Typography, Switch } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { UploadImage } from "components/elements/uploadImage";
@@ -49,6 +49,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
 
     formData.append("name", event.name);
     formData.append("category_type", event.category_type);
+    formData.append("checkin_email", event.checkin_email ? "true" : "false");
     formData.append("eula_text", event.eula_text ?? "");
 
     if (
@@ -69,6 +70,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "category_type", value: data?.category_type },
+      { name: "checkin_email", value: data?.checkin_email },
       {
         name: "eula_text",
         value: data?.eula ?? "",
@@ -82,25 +84,25 @@ export const CategoryEdit = (props: CategoryEditProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-            open?.({
-              type: 'error',
-              message: message,
-            }); 
-            setMessageErr(response.error?.response.data.messages);
-            return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+        let message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            message: response.data?.data.messages,
-        });        
-    } 
+          type: 'error',
+          message: message,
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+      open?.({
+        type: 'success',
+        message: response.data?.data.messages,
+      });
+    }
     fetch();
   }, [payload]);
 
@@ -156,6 +158,27 @@ export const CategoryEdit = (props: CategoryEditProps) => {
       {messageErr?.category_type && (
         <Typography.Text type="danger">
           {messageErr.category_type}
+        </Typography.Text>
+      )}
+
+      <Form.Item
+        label={t("category.label.field.checkin_email")}
+        name="checkin_email"
+        rules={[
+          {
+            message:
+              t("category.label.field.category") +
+              " " +
+              t("category.label.message.required"),
+          },
+        ]}
+        initialValue={data?.checkin_email}
+      >
+        <Switch defaultChecked={data?.checkin_email} />
+      </Form.Item>
+      {messageErr?.checkin_email && (
+        <Typography.Text type="danger">
+          {messageErr.checkin_email}
         </Typography.Text>
       )}
 

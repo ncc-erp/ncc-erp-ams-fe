@@ -2,11 +2,9 @@
 import {
     Button,
     Checkbox,
-    CloneButton,
     DateField,
     DeleteButton,
     EditButton,
-    Form,
     getDefaultSortOrder,
     List,
     ShowButton,
@@ -16,7 +14,6 @@ import {
     TagField,
     TextField,
     Tooltip,
-    Typography,
     useTable,
 } from "@pankod/refine-antd";
 import {
@@ -26,18 +23,15 @@ import {
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API, CONSUMABLE_API } from "api/baseApi";
+import { CONSUMABLE_API, CONSUMABLE_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
-import { Image } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";
-import { HardwareSearch } from "pages/hardware/search";
 import {
     MenuOutlined,
-    FileSearchOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
 
@@ -45,6 +39,7 @@ import { IConsumablesFilterVariables, IConsumablesRequest, IConsumablesResponse,
 import moment from "moment";
 import { ConsumablesCheckout, ConsumablesEdit } from "pages/consumables";
 import { ConsumablesShow } from "pages/consumables/show";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -87,7 +82,7 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
     const searchParam = searchParams.get("search");
     const location_id = searchParams.get('id');
 
-    const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
+    const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
         IConsumablesResponse,
         HttpError,
         IConsumablesFilterVariables
@@ -444,12 +439,10 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                     </div>
                 </div>
             </div>
-            <div className="sum-items">
-                <span className="name-sum-assets">
-                    {translate("hardware.label.title.sum-assets")}
-                </span>{" "}
-                : {tableProps.pagination ? tableProps.pagination?.total : 0}
-            </div>
+            <TotalDetail
+                links={CONSUMABLE_TOTAL_DETAIL_API}
+                filters={filters}
+            ></TotalDetail>
 
             {loading ? (
                 <>

@@ -54,6 +54,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import {
@@ -79,6 +80,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -150,7 +152,7 @@ export const HardwareListReadyToDeploy: React.FC<
     }
   }, [permissionsData])
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -311,7 +313,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -416,7 +418,7 @@ export const HardwareListReadyToDeploy: React.FC<
         date: "",
         formatted: "",
       },
-      checkout_at: {
+      last_checkout: {
         date: "",
         formatted: "",
       },
@@ -485,11 +487,11 @@ export const HardwareListReadyToDeploy: React.FC<
         name: data?.category?.name,
       },
       note: data.note,
-      assigned_location: {
-        id: data?.assigned_location?.id,
-        name: data?.assigned_location?.name,
+      rtd_location: {
+        id: data?.rtd_location?.id,
+        name: data?.rtd_location?.name,
       },
-      checkout_at: {
+      last_checkout: {
         date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
       },
@@ -1364,13 +1366,12 @@ export const HardwareListReadyToDeploy: React.FC<
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
+
+      <TotalDetail 
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+      ></TotalDetail>
       <div className="checkout-checkin-multiple">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="checkout-multiple-asset">
           {isAdmin && (
             <Button

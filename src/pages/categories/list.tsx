@@ -38,6 +38,7 @@ export enum ECategory {
   ACCESSORY = "Accessory",
   ASSET = "Asset",
   CONSUMABLE = "Consumable",
+  TAXTOKEN = "Taxtoken"
 }
 
 export const CategoryList: React.FC<IResourceComponentsProps> = () => {
@@ -156,7 +157,9 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                     ? t("category.label.options.asset")
                     : value === ECategory.CONSUMABLE
                       ? t("category.label.options.consumable")
-                      : ""
+                      : value === ECategory.TAXTOKEN
+                        ? t("category.label.options.taxtoken")
+                        : ""
                 : ""
             }
           />

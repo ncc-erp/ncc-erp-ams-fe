@@ -428,7 +428,7 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
                 date: "",
                 formatted: "",
             },
-            checkout_at: {
+            last_checkout: {
                 date: "",
                 formatted: "",
             },
@@ -533,7 +533,7 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
                 date: "",
                 formatted: "",
             },
-            checkout_at: {
+            last_checkout: {
                 date: "",
                 formatted: "",
             },
@@ -602,11 +602,11 @@ export const SupplierDetails: React.FC<IResourceComponentsProps> = () => {
                 name: data?.category?.name,
             },
             note: data.note,
-            assigned_location: {
-                id: data?.assigned_location?.id,
-                name: data?.assigned_location?.name,
+            rtd_location: {
+                id: data?.rtd_location?.id,
+                name: data?.rtd_location?.name,
             },
-            checkout_at: {
+            last_checkout: {
                 date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
                 formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
             },

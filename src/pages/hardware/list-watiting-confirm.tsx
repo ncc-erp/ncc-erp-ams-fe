@@ -43,6 +43,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -71,6 +72,7 @@ import "styles/request.less";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -114,7 +116,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     any,
     HttpError,
     IHardwareFilterVariables
@@ -429,7 +431,7 @@ export const HardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value && value.datetime} />
+            <DateField format="LLL" value={value && moment(value.datetime).add(moment.duration(moment().format('Z'))).toDate()} />
           ) : (
             ""
           ),
@@ -952,13 +954,12 @@ export const HardwareListWaitingConfirm: React.FC<
           searchFormProps={searchFormProps}
         />
       </MModal>
+
+      <TotalDetail 
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+      ></TotalDetail>
       <div className="list-waiting-confirm">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="list-users">
           <div className="button-list-accept-refuse">
             <Popconfirm

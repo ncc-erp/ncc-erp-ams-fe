@@ -3,6 +3,7 @@ import { Typography, Row, Col, MarkdownField } from "@pankod/refine-antd";
 
 import "styles/hardware.less";
 import { IConsumablesResponse } from "interfaces/consumables";
+import moment from "moment";
 const { Title, Text } = Typography;
 
 type ConsumablesShowProps = {
@@ -141,7 +142,7 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
         <Col span={18}>
           {detail?.created_at ? (
-            <Text> {detail?.created_at && detail?.created_at.formatted}</Text>
+            <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
           ) : (
             ""
           )}
@@ -154,7 +155,7 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
           </Title>
         </Col>
         <Col span={18}>
-          <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
+          <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
         </Col>
       </Row>
       <Row gutter={16}>

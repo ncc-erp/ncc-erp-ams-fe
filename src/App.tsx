@@ -51,6 +51,11 @@ import { HardwareListExpiration } from "pages/hardware/list-expiration";
 import { LicensesList } from "pages/licenses/list";
 import { UserListLicenses } from "pages/users/list-licenses";
 import { EPermissions } from "constants/permissions";
+import { TaxTokenList } from "pages/tax_token/list";
+import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
+import { ToolList } from "pages/tools/list";
+import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
+import { UserListTool } from "pages/users/list-tools";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -131,6 +136,7 @@ function App() {
           list: HardwareList,
           options: {
             route: "assets",
+            label: 'assets'
           },
         },
         {
@@ -138,6 +144,7 @@ function App() {
           list: HardwareListAssign,
           options: {
             route: "assets-assign",
+            label: 'assets'
           },
         },
         {
@@ -145,6 +152,7 @@ function App() {
           list: HardwareListReadyToDeploy,
           options: {
             route: "assets-readyToDeploy",
+            label: 'assets'
           },
         },
         {
@@ -152,6 +160,7 @@ function App() {
           list: HardwareListPending,
           options: {
             route: "assets-pending",
+            label: 'assets'
           },
         },
         {
@@ -159,15 +168,32 @@ function App() {
           list: HardwareListBroken,
           options: {
             route: "assets-broken",
+            label: 'assets'
           },
         },
         {
-          name: t("resource.softwares"),
-          list: SoftwareList,
+          name: t("resource.tools-all"),
+          list: ToolList,
           options: {
-            route: "softwares",
+            route: "tools-all",
+            label: 'tools'
           },
         },
+        {
+          name: t("resource.tools-waiting"),
+          list: ToolListWaitingConfirm,
+          options: {
+            route: "tools-waiting",
+            label: 'tools'
+          },
+        },
+        // {
+        //   name: t("resource.softwares"),
+        //   list: SoftwareList,
+        //   options: {
+        //     route: "softwares",
+        //   },
+        // },
         {
           name: t("resource.licenses"),
           list: LicensesList,
@@ -180,7 +206,16 @@ function App() {
           list: UserList,
           options: {
             route: "users",
+            label: "users"
           },
+        },
+        {
+          name: t("resource.users-tools"),
+          list: UserListTool,
+          options: {
+            route: "users-tools",
+            label: "users"
+          }
         },
         {
           name: t("resource.users_licenses"),
@@ -250,6 +285,7 @@ function App() {
           list: HardwareListWaitingConfirm,
           options: {
             route: "assets-waiting-confirm",
+            label: 'assets'
           },
         },
 
@@ -307,8 +343,23 @@ function App() {
           list: HardwareListExpiration,
           options: {
             route: "assets-expires",
+            label: 'assets'
           },
         },
+        {
+          name: t("resource.tax_token"),
+          list: TaxTokenList,
+          options: {
+            route: "tax_token",
+          },
+        },
+        {
+          name: t("resource.tax_token_waiting"),
+          list: TaxTokenListWaitingConfirm,
+          options: {
+            route: "tax_token_waiting",
+          },
+        }
       ]}
       Title={Title}
       Header={Header}

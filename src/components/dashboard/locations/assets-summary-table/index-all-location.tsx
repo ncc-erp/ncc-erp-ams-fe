@@ -49,6 +49,16 @@ export const AssetsSummaryTableAllLocation = (
       category_type: CategoryType.ACCESSORY,
     } as any;
 
+    let sumToolByLocation = {
+      name: t("dashboard.field.typeTool"),
+      category_type: CategoryType.TOOL,
+    } as any;
+
+    let sumTaxTokenByLocation = {
+      name: t("dashboard.field.typeTaxToken"),
+      category_type: CategoryType.TAXTOKEN,
+    } as any;
+
     categories.map((category: ICategoryAsset) => {
       let type = {} as any;
       type.pending = "";
@@ -65,32 +75,16 @@ export const AssetsSummaryTableAllLocation = (
 
         category.status_labels.forEach((status_label) => {
           if (status_label.name === EStatus.ASSIGN) {
-            sumConsumableByLocation.assign =
-              sumConsumableByLocation.assign !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumConsumableByLocation.assign = status_label.consumables_count;
           }
           if (status_label.name === EStatus.BROKEN) {
-            sumConsumableByLocation.broken =
-              sumConsumableByLocation.broken !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumConsumableByLocation.broken = status_label.consumables_count;
           }
           if (status_label.name === EStatus.PENDING) {
-            sumConsumableByLocation.pending =
-              sumConsumableByLocation.pending !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumConsumableByLocation.pending = status_label.consumables_count;
           }
           if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            sumConsumableByLocation.ready_to_deploy =
-              sumConsumableByLocation.ready_to_deploy !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumConsumableByLocation.ready_to_deploy =status_label.consumables_count;
           }
         });
 
@@ -103,32 +97,16 @@ export const AssetsSummaryTableAllLocation = (
         sumAccessoryByLocation.rtd_location_id = id;
         category.status_labels.forEach((status_label) => {
           if (status_label.name === EStatus.ASSIGN) {
-            sumAccessoryByLocation.assign =
-              sumAccessoryByLocation.assign !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumAccessoryByLocation.assign = status_label.accessories_count;
           }
           if (status_label.name === EStatus.BROKEN) {
-            sumAccessoryByLocation.broken =
-              sumAccessoryByLocation.broken !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumAccessoryByLocation.broken = status_label.accessories_count;
           }
           if (status_label.name === EStatus.PENDING) {
-            sumAccessoryByLocation.pending =
-              sumAccessoryByLocation.pending !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumAccessoryByLocation.pending = status_label.accessories_count;
           }
           if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            sumAccessoryByLocation.ready_to_deploy =
-              sumAccessoryByLocation.ready_to_deploy !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+            sumAccessoryByLocation.ready_to_deploy = status_label.accessories_count;
           }
         });
 
@@ -136,6 +114,50 @@ export const AssetsSummaryTableAllLocation = (
           sumAccessoryByLocation.type !== undefined
             ? category.accessories_count + sumAccessoryByLocation.type
             : category.accessories_count;
+      } else if (category.category_type === CategoryType.TOOL) {
+        sumToolByLocation.category_id = category.id;
+        sumToolByLocation.rtd_location_id = id;
+        category.status_labels.forEach((status_label) => {
+          if (status_label.name === EStatus.ASSIGN) {
+            sumToolByLocation.assign = status_label.tools_count
+          }
+          if (status_label.name === EStatus.BROKEN) {
+            sumToolByLocation.broken = status_label.tools_count
+          }
+          if (status_label.name === EStatus.PENDING) {
+            sumToolByLocation.pending = status_label.tools_count
+          }
+          if (status_label.name === EStatus.READY_TO_DEPLOY) {
+            sumToolByLocation.ready_to_deploy = status_label.tools_count
+          }
+        });
+        
+        sumToolByLocation.type =
+          sumToolByLocation.type !== undefined
+            ? category.tools_count + sumToolByLocation.type
+            : category.tools_count;
+      } else if (category.category_type === CategoryType.TAXTOKEN) {
+        sumTaxTokenByLocation.category_id = category.id;
+        sumTaxTokenByLocation.rtd_location_id = id;
+        category.status_labels.forEach((status_label) => {
+          if (status_label.name === EStatus.ASSIGN) {
+            sumTaxTokenByLocation.assign = status_label.digital_signatures_count;
+          }
+          if (status_label.name === EStatus.BROKEN) {
+            sumTaxTokenByLocation.broken = status_label.digital_signatures_count;
+          }
+          if (status_label.name === EStatus.PENDING) {
+            sumTaxTokenByLocation.pending = status_label.digital_signatures_count;
+          }
+          if (status_label.name === EStatus.READY_TO_DEPLOY) {
+            sumTaxTokenByLocation.ready_to_deploy = status_label.digital_signatures_count;
+          }
+        });
+
+        sumTaxTokenByLocation.type =
+          sumTaxTokenByLocation.type !== undefined
+            ? category.digital_signatures_count + sumTaxTokenByLocation.type
+            : category.digital_signatures_count;
       } else {
         type.category_id = category.id;
         type.rtd_location_id = id;
@@ -180,6 +202,8 @@ export const AssetsSummaryTableAllLocation = (
       ...dataAllCategory,
       sumConsumableByLocation,
       sumAccessoryByLocation,
+      sumToolByLocation,
+      sumTaxTokenByLocation
     ]);
   }, [categories]);
 
@@ -220,6 +244,26 @@ export const AssetsSummaryTableAllLocation = (
                   : dateFrom && dateTo
                   ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
                   : list(`consumables`)
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
+                    : list(`tools-all`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`tools-all?location_id=${rtd_location_id}`)
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
+                    : list(`tax_token`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`tax_token?location_id=${rtd_location_id}`)
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
@@ -282,6 +326,38 @@ export const AssetsSummaryTableAllLocation = (
                     )
                   : list(
                       `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                    )
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tools-all?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tools-all?category_id=${record.category_id}&status_id=1`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                    )
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tax_token?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tax_token?category_id=${record.category_id}&status_id=1`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                     )
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
@@ -351,6 +427,38 @@ export const AssetsSummaryTableAllLocation = (
                     )
                   : list(
                       `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                    )
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tools-all?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tools-all?category_id=${record.category_id}&status_id=3`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                    )
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tax_token?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tax_token?category_id=${record.category_id}&status_id=3`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
                     )
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
@@ -422,6 +530,38 @@ export const AssetsSummaryTableAllLocation = (
                   : list(
                       `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
                     )
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tools-all?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tools-all?category_id=${record.category_id}&status_id=4`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                    )
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tax_token?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tax_token?category_id=${record.category_id}&status_id=4`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                    )
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
@@ -492,6 +632,38 @@ export const AssetsSummaryTableAllLocation = (
                   : list(
                       `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
                     )
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tools-all?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tools-all?category_id=${record.category_id}&status_id=5`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                    )
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tax_token?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(
+                        `tax_token?category_id=${record.category_id}&status_id=5`
+                      )
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(
+                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                    )
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
@@ -556,6 +728,30 @@ export const AssetsSummaryTableAllLocation = (
                       `consumables?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
                     )
                   : list(`consumables?location_id=${record.rtd_location_id}`)
+                : record.category_type === CategoryType.TOOL
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tools-all?date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`tools-all`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `tools-all?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`tools-all?location_id=${record.rtd_location_id}`)
+                : record.category_type === CategoryType.TAXTOKEN
+                ? record.rtd_location_id === 99999
+                  ? dateFrom && dateTo
+                    ? list(
+                        `tax_token?date_from=${dateFrom}&date_to=${dateTo}`
+                      )
+                    : list(`tax_token`)
+                  : dateFrom && dateTo
+                  ? list(
+                      `tax_token?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                    )
+                  : list(`tax_token?location_id=${record.rtd_location_id}`)
                 : record.category_type === CategoryType.ACCESSORY
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo

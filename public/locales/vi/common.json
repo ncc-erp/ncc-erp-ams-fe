@@ -75,7 +75,9 @@
       "sum-assets-by-category": "Số lượng thiết bị theo loại của các văn phòng",
       "sum-report": "Số lượng",
       "typeConsumable": "Văn phòng phẩm",
-      "typeAccessory": "Phụ kiện"
+      "typeAccessory": "Phụ kiện",
+      "typeTool": "Tool & Domain",
+      "typeTaxToken": "Token Thuế"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
@@ -238,7 +240,8 @@
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
-        "confirmStatus": "Trạng thái xác nhận"
+        "confirmStatus": "Trạng thái xác nhận",
+        "timeCheckout" : "Ngày cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -274,6 +277,116 @@
         "refuse": "Đã từ chối",
         "waiting-confirm-checkout": "Chờ xác nhận cấp phát",
         "waiting-confirm-checkin": "Chờ xác nhận thu hồi"
+      }
+    }
+  },
+  "tools": {
+    "label": {
+      "field": {
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "user": "Người dùng",
+        "dateAdd": "Ngày nhập",
+        "notes": "Mô tả",
+        "dateCheckout": "Ngày cấp phát",
+        "dateCheckin": "Ngày thu hồi",
+        "category": "Thể loại",
+        "condition": "Xác nhận",
+        "dateCreate": "Ngày tạo",
+        "manufacturer": "Nhà phát hành",
+        "checkout_count": "Đã cấp phát",
+        "assigned_to": "Cấp phát đến",
+        "requestable": "Yêu cầu",
+        "assign": "Assign",
+        "checkin": "Checkin",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "checkout_at": "Ngày cấp phát",
+        "checkin_at": "Ngày thu hồi",
+        "confirmStatus": "Trạng thái xác nhận",
+        "purchase_cost": "Giá",
+        "purchase_date": "Ngày mua",
+        "version": "Phiên bản",
+        "name": "Tên Tool & Domain",
+        "key": "Key",
+        "supplier":"Nhà cung cấp",
+        "location":"Văn phòng",
+        "expiration_date":"Ngày hết hạn",
+        "qty":"Số lượng",
+        "checkin_counter":"Số lần thu hồi",
+        "checkout_counter":"Số lần cấp phát",
+        "usd":"VND",
+        "assigned_status": "Xác nhận",
+        "readyToDeploy":"Ready to Deploy",
+        "pending":"Pending",
+        "broken":"Broken",
+        "list_tools": "Danh sách tool"
+      },
+      "placeholder": {
+        "checkoutTo": "Cấp phát đến",
+        "checkinTo": "Thu hồi từ",
+        "name": "Nhập tên tool",
+        "key": "Nhập key",
+        "version": "Nhập phiên bản",
+        "notes":"Mô tả",
+        "purchase_cost": "Nhập chi phí",
+        "manufacturer": "Lựa chọn nhà phát hành",
+        "category": "Lựa chọn thể loại",
+        "supplier":"Lựa chọn nhà cung cấp",
+        "location":"Lựa chọn một văn phòng"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "button": {
+        "create": "Thêm mới",
+        "edit": "Chỉnh sửa",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "accept": "Xác nhận",
+        "refuse": "Từ chối",
+        "search": "Tìm kiếm",
+        "clone": "Clone tool"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "title": {
+        "tools": "Tất cả Tool & Domain",
+        "create": "Tạo Tool & Domain mới",
+        "edit": "Cập nhật",
+        "delete": "Xóa",
+        "clone": "Clone",
+        "checkout": "Cấp phát",
+        "checkin": "Thu hồi",
+        "detail": "Chi tiết",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "list-assign": "Đã cấp phát",
+        "dateCreate": "Đã tạo lúc",
+        "updateAt": "Cập nhật tại",
+        "time": "Thời gian",
+        "time-purchase-date": "Ngày mua Tool hoặc Domain",
+        "time-expiration-date": "Ngày hết hạn Tool hoặc Domain",
+        "sum-tools": "Số lượng",
+        "name": "Tên Tool & Domain",
+        "my-tool": "Tool & Domain của tôi"
+      },
+      "detail": {
+        "default":"Chưa checkout",
+        "readyToDeploy":"Trong kho",
+        "assign":"Bàn Giao",
+        "broken":"Hỏng",
+        "waitingAcceptCheckout":"Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin":"Chờ xác nhận thu hồi",
+        "accept":"Đã xác nhận"
       }
     }
   },
@@ -627,7 +740,8 @@
         "accept": "Yêu cầu người dùng xác nhận nhận tài sản trong hạng mục này",
         "sendMail": "Gửi email đến người dùng khi checkin/checkout",
         "image": "Tải hình",
-        "dateCreate": "Đã tạo lúc"
+        "dateCreate": "Đã tạo lúc",
+        "checkin_email": "Gửi mail khi cấp hoặc nhận"
       },
       "message": {
         "required": "bắt buộc"
@@ -648,7 +762,9 @@
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
         "consumable": "Văn phòng phẩm",
-        "software":"Phần mềm"
+        "software":"Phần mềm",
+        "taxtoken": "Token thuế",
+        "tool": "Tool"
       }
     }
   },
@@ -661,6 +777,7 @@
         "asset": "Tài sản",
         "accessories": "Phụ kiện",
         "consumables": "Văn phòng phẩm",
+        "tools": "Tool",
         "softwares": "Phần mềm"
       },
       "field": {
@@ -744,9 +861,14 @@
     "request": "Tạo request",
     "users": "Tài sản",
     "users_licenses": "Phầm mềm",
-    "users_assets": "Tài sản của tôi",
     "category": "Danh mục",
     "manufactures": "Kho",
+    "tools": "Tool & Domain",
+    "tools-all": "Tất cả",
+    "tools-assign": "Tools đã cấp phát",
+    "tools-waiting": "Đang chờ xác nhận",
+    "users-tools": "Tool & Domain",
+    "users_assets": "Tài sản của tôi",
     "location": "Văn phòng",
     "supplier": "Nhà cung cấp",
     "model": "Kiểu tài sản",
@@ -776,7 +898,10 @@
     "consumables": "Văn phòng phẩm",
     "accessory_details": "Chi tiết phụ kiện",
     "consumable_details": "Chi tiết văn phòng phẩm",
-    "supplier_details": "Chi tiết nhà cung cấp"
+    "supplier_details": "Chi tiết nhà cung cấp",
+    "tax_token": "Token thuế",
+    "tax_token_assign": "Token thuế đã cấp phát",
+    "tax_token_waiting": "Đang đợi xác nhận"
   },
   "model": {
     "label": {
@@ -817,6 +942,96 @@
         "edit": "Chỉnh sửa",
         "clone": "Clone",
         "delete": "Xoá"
+      }
+    }
+  },
+  "tax_token": {
+    "label": {
+      "title":{
+        "tax_token": "Tất cả token thuế",
+        "tax_token_waiting": "Đang đợi xác nhận",
+        "time": "Thời gian",
+        "location": "Văn phòng",
+        "sum-tax_token": "Số lượng",
+        "checkout":"Cấp phát",
+        "create": "Tạo token thuế",
+        "clone": "Clone token thuế",
+        "search": "Tìm kiếm nâng cao",
+        "edit": "Cập nhật token thuế",
+        "detail":"Chi tiết token thuế",
+        "info": "Thông tin",
+        "users": "Người dùng đã cấp phát",
+        "dateCreate": "Đã tạo lúc",
+        "updateAt": "Cập nhật tại",
+        "checkin":"Thu hồi",
+        "time-purchase-date": "Ngày mua token thuế",
+        "time-expiration-date": "Ngày hết hạn token thuế"
+      },
+      "field": {
+        "name": "Tên token thuế",
+        "seri": "Seri token",
+        "status": "Trạng thái",
+        "checkoutTo": "Cấp phát đến",
+        "user": "Họ và tên",
+        "supplier": "Nhà cung cấp",
+        "note":"Ghi chú",
+        "start-date": "Ngày bắt đầu",
+        "end-date": "Ngày kết thúc",
+        "purchase_date":"Ngày mua",
+        "purchase_cost":"Chi phí mua",
+        "expiration_date": "Ngày hết hạn",
+        "checkout_at": "Ngày cấp phát",
+        "checkout_counter": "Số lần cấp phát",
+        "checkin_counter": "Số lần thu hồi",
+        "assigned_status": "Xác nhận",
+        "created_at":"Ngày tạo",
+        "not_active": "Chưa kích hoạt",
+        "assign": "Đã cấp phát",
+        "usd": "VND",
+        "location": "Văn phòng",
+        "qty": "Số lượng",
+        "warranty_months": "Bảo hành",
+        "month": "Tháng",
+        "category": "Danh mục",
+        "checkinTo":"Thu hồi từ",
+        "dateCheckin":"Ngày thu hồi",
+        "list_tax_token": "Danh sách token thuế"
+      },
+      "tooltip": {
+        "create": "Thêm mới",
+        "viewDetail": "Xem chi tiết",
+        "clone": "Clone",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh"
+      },
+      "message":{
+        "required":"bắt buộc"
+      },
+      "placeholder":{
+        "supplier":"Lựa chọn nhà cung cấp",
+        "user":"Lựa chọn một người dùng",
+        "name": "Nhập tên token thuế",
+        "seri": "Nhập seri token thuế",
+        "category": "Chọn một danh mục",
+        "location": "Lựa chọn một văn phòng",
+        "purchase_cost": "Nhập chi phí mua",
+        "note": "Nhập ghi chú"
+      },
+      "button":{
+        "search":"Tìm kiếm",
+        "create":"Thêm mới",
+        "edit": "Chỉnh sửa",
+        "checkout":"Cấp phát",
+        "checkin": "Thu hồi",
+        "clone": "Clone"
+      },
+      "detail":{
+        "assign": "Bàn Giao",
+        "not_active": "Chưa kích hoạt",
+        "tax_token": "Token thuế"
       }
     }
   },

@@ -6,7 +6,9 @@ import {
   HARDWARE_API,
   LOCATION_API,
   MANUFACTURES_API,
+  TOOLS_API,
   SOFTWARE_API,
+  TAX_TOKEN_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -73,6 +75,8 @@ p, 1, ${i18n.t("resource.request")}/*, (edit)|(show)|(delete)
 
 p, 1, ${i18n.t("resource.users")}, list
 p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 1, ${i18n.t("resource.users-tools")}, (list)
+p, 1, ${i18n.t("resource.users-tools")}/*, (show)
 p, 1, ${i18n.t("resource.users_licenses")}, (list)
 p, 1, ${i18n.t("resource.users_licenses")}/*, (show)
 
@@ -94,6 +98,9 @@ p, 1, ${i18n.t("resource.location_details")}/*, (edit)|(show)|(clone)|(checkout)
 
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 0, ${i18n.t("resource.users-tools")}, (list)
+p, 0, ${i18n.t("resource.users-tools")}/*, (show)
+
 p, 0, ${i18n.t("resource.users_licenses")}, (list)
 p, 0, ${i18n.t("resource.users_licenses")}/*, (show)
 
@@ -134,11 +141,25 @@ p, 1, ${i18n.t("resource.consumables")}/*, (edit)|(checkout)|(show)
 p, 1, ${i18n.t("resource.consumable_details")}, (list) 
 p, 1, ${i18n.t("resource.consumable_details")}/*, (show)
 
+p, 1, ${i18n.t("resource.tax_token")}, (list)|(create)
+p, 1, ${i18n.t("resource.tax_token")}/*, (edit)|(checkout)|(show)
+p, 1, ${TAX_TOKEN_API}/*, (delete)
+
+p, 1, ${i18n.t("resource.tax_token_waiting")}, (list)
+
 p, 1, ${i18n.t("resource.accessory")}, (list)|(create)
 p, 1, ${ACCESSORY_API}/*, (delete)
 p, 1, ${i18n.t("resource.accessory")}/*, (edit)|(show)
 p, 1, ${i18n.t("resource.accessory_details")}, (list)
 p, 1, ${i18n.t("resource.accessory_details")}/*, (show)
+
+p, 1, ${i18n.t("resource.tools-all")}, (list)|(create)
+p, 1, ${TOOLS_API}/*, (delete)
+p, 1, ${i18n.t("resource.tools-all")}/*, (edit)|(show)|(clone)|(checkout)
+p, 1, ${i18n.t("resource.tools-assign")}, (list)|(create)
+p, 1, ${TOOLS_API}/*, (delete)
+p, 1, ${i18n.t("resource.tools-assign")}/*, (edit)|(show)|(clone)|(checkout)
+p, 1, ${i18n.t("resource.tools-waiting")}, (list)
 
 p, 2, ${i18n.t("resource.dashboard")}, list
 
@@ -149,6 +170,9 @@ p, 2, ${i18n.t("resource.assets")}/*, (show)
 
 p, 2, ${i18n.t("resource.users")}, list
 p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
+p, 2, ${i18n.t("resource.users-tools")}, (list)
+p, 2, ${i18n.t("resource.users-tools")}/*, (show)
+
 p, 2, ${i18n.t("resource.users_licenses")}, (list)
 p, 2, ${i18n.t("resource.users_licenses")}/*, (show)
 

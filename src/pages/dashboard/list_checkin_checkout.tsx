@@ -154,6 +154,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       category_type: CategoryType.ACCESSORY,
     } as any;
 
+    let sumTool = {
+      type: translate("dashboard.field.typeTool"),
+      category_type: CategoryType.TOOL,
+    } as any;
+
+    let sumTaxToken = {
+      type: translate("dashboard.field.typeTaxToken"),
+      category_type: CategoryType.TAXTOKEN,
+    } as any;
+
     var dataResponseCheckIn: any = [];
     var iteLocationKey: any = [];
     let dataSource = (dataCheckIn?.data.payload.categories || []).map(
@@ -245,12 +255,70 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       }
     );
 
+    (dataCheckIn?.data.payload.tools_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.TOOL
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                sumTool[`location_${items.location_id}`] =
+                  sumTool[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkin) +
+                    sumTool[`location_${items.location_id}`]
+                    : Number(items.checkin);
+                sumTool[`count`] =
+                  sumTool[`count`] !== undefined
+                    ? Number(items.checkin) + sumTool[`count`]
+                    : Number(items.checkin);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
+    (dataCheckIn?.data.payload.digital_signatures_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.TAXTOKEN
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                sumTaxToken[`location_${items.location_id}`] =
+                  sumTaxToken[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkin) +
+                    sumTaxToken[`location_${items.location_id}`]
+                    : Number(items.checkin);
+                sumTaxToken[`count`] =
+                  sumTaxToken[`count`] !== undefined
+                    ? Number(items.checkin) + sumTaxToken[`count`]
+                    : Number(items.checkin);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
     dataCheckIn?.data.payload.locations.forEach((location: any) => {
       if (!sumConsumable[`location_${location.id}`]) {
         sumConsumable[`location_${location.id}`] = 0;
       }
       if (!sumAccessory[`location_${location.id}`]) {
         sumAccessory[`location_${location.id}`] = 0;
+      }
+      if (!sumTool[`location_${location.id}`]) {
+        sumTool[`location_${location.id}`] = 0;
+      }
+      if (!sumTaxToken[`location_${location.id}`]) {
+        sumTaxToken[`location_${location.id}`] = 0;
       }
     });
 
@@ -259,11 +327,13 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       (item: any) => item.category_type === CategoryType.ASSET
     );
 
-    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable]);
+    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable, sumTool, sumTaxToken]);
   }, [
     dataCheckIn?.data.payload.assets_statistic || [],
     dataCheckIn?.data.payload.accessories_statistic || [],
     dataCheckIn?.data.payload.consumables_statistic || [],
+    dataCheckIn?.data.payload.tools_statistic || [],
+    dataCheckIn?.data.payload.digital_signatures_statistic || [],
   ]);
 
   useEffect(() => {
@@ -279,6 +349,14 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       dataCheckOut?.data.payload.accessories_statistic || []
     ).map((item: any) => item.category_name);
 
+    let toolNames = (
+      dataCheckOut?.data.payload.tools_statistic || []
+    ).map((item: any) => item.category_name);
+
+    let taxTokenNames = (
+      dataCheckOut?.data.payload.digital_signatures_statistic || []
+    ).map((item: any) => item.category_name);
+
     let sumConsumable = {
       type: translate("dashboard.field.typeConsumable"),
       category_type: CategoryType.CONSUMABLE,
@@ -287,6 +365,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     let sumAccessory = {
       type: translate("dashboard.field.typeAccessory"),
       category_type: CategoryType.ACCESSORY,
+    } as any;
+
+    let sumTool = {
+      type: translate("dashboard.field.typeTool"),
+      category_type: CategoryType.TOOL,
+    } as any;
+
+    let sumTaxToken = {
+      type: translate("dashboard.field.typeTaxToken"),
+      category_type: CategoryType.TAXTOKEN,
     } as any;
 
     let assetArr: string[] = [];
@@ -302,6 +390,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     let consumableArr: string[] = [];
     consumableArr = consumableNames.filter(function (item: string) {
       return consumableArr.includes(item) ? "" : consumableArr.push(item);
+    });
+
+    let toolArr: string[] = [];
+    toolArr = toolNames.filter(function (item: string) {
+      return toolArr.includes(item) ? "" : toolArr.push(item);
+    });
+
+    let taxTokenArr: string[] = [];
+    taxTokenArr = taxTokenNames.filter(function (item: string) {
+      return taxTokenArr.includes(item) ? "" : taxTokenArr.push(item);
     });
 
     let dataResponseCheckOut: any = [];
@@ -397,12 +495,70 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       }
     );
 
+    (dataCheckOut?.data.payload.tools_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.TOOL
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                sumTool[`location_${items.location_id}`] =
+                  sumTool[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkout) +
+                    sumTool[`location_${items.location_id}`]
+                    : Number(items.checkout);
+                sumTool[`count`] =
+                  sumTool[`count`] !== undefined
+                    ? Number(items.checkout) + sumTool[`count`]
+                    : Number(items.checkout);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
+    (dataCheckOut?.data.payload.digital_signatures_statistic || []).forEach(
+      (items: any) => {
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === CategoryType.TAXTOKEN
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === `location_${items.location_id}`) {
+                sumTaxToken[`location_${items.location_id}`] =
+                  sumTaxToken[`location_${items.location_id}`] !== undefined
+                    ? Number(items.checkout) +
+                    sumTaxToken[`location_${items.location_id}`]
+                    : Number(items.checkout);
+                sumTaxToken[`count`] =
+                  sumTaxToken[`count`] !== undefined
+                    ? Number(items.checkout) + sumTaxToken[`count`]
+                    : Number(items.checkout);
+                break;
+              }
+            }
+          }
+        });
+      }
+    );
+
     dataCheckOut?.data.payload.locations.forEach((location: any) => {
       if (!sumConsumable[`location_${location.id}`]) {
         sumConsumable[`location_${location.id}`] = 0;
       }
       if (!sumAccessory[`location_${location.id}`]) {
         sumAccessory[`location_${location.id}`] = 0;
+      }
+      if (!sumTool[`location_${location.id}`]) {
+        sumTool[`location_${location.id}`] = 0;
+      }
+      if (!sumTaxToken[`location_${location.id}`]) {
+        sumTaxToken[`location_${location.id}`] = 0;
       }
     });
 
@@ -415,11 +571,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       ...dataResponseCheckOut,
       sumAccessory,
       sumConsumable,
+      sumTool,
+      sumTaxToken
     ]);
   }, [
     dataCheckOut?.data.payload.assets_statistic || [],
     dataCheckOut?.data.payload.accessories_statistic || [],
     dataCheckOut?.data.payload.consumables_statistic || [],
+    dataCheckIn?.data.payload.tools_statistic || [],
+    dataCheckIn?.data.payload.digital_signatures_statistic || [],
   ]);
 
   var columnsCheckOut = [
@@ -427,6 +587,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       title: translate("report.label.title.nameReportCheckOut"),
       dataIndex: "type",
       key: "type",
+      width: 150,
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
@@ -446,6 +607,22 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   : list(
                     `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
                   )
+              : record.category_type === CategoryType.TOOL
+                ? dateFromCheckOut && dateToCheckOut
+                  ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                  )
+                  : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                  )
+                : record.category_type === CategoryType.TAXTOKEN
+                  ? dateFromCheckOut && dateToCheckOut
+                    ? list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
+                    )
                 : record.category_type === CategoryType.ACCESSORY
                   ? dateFromCheckOut && dateToCheckOut
                     ? list(
@@ -472,6 +649,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         title: item.name,
         dataIndex: "location_" + item.id,
         key: "location_" + item.id,
+        width: 100,
         render: (text: string, record: IReport) => (
           <Typography.Text
             strong
@@ -494,6 +672,22 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                     : list(
                       `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
                     )
+                  : record.category_type === CategoryType.TOOL
+                    ? dateFromCheckOut && dateToCheckOut
+                      ? list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                      )
+                      : list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                      )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? dateFromCheckOut && dateToCheckOut
+                        ? list(
+                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
+                        )
+                        : list(
+                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
+                        )
                   : record.category_type === CategoryType.ACCESSORY
                     ? dateFromCheckOut && dateToCheckOut
                       ? list(
@@ -521,6 +715,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       title: translate("report.label.title.nameReportCheckIn"),
       dataIndex: "type",
       key: "type",
+      width: 150,
       render: (text: string, record: IReport) => (
         <strong
           onClick={() => {
@@ -540,6 +735,22 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   : list(
                     `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
                   )
+              : record.category_type === CategoryType.TOOL
+                ? dateFromCheckIn && dateToCheckIn
+                  ? list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                  )
+                  : list(
+                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                  )
+                : record.category_type === CategoryType.TAXTOKEN
+                  ? dateFromCheckIn && dateToCheckIn
+                    ? list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                    )
+                    : list(
+                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
+                    )
                 : record.category_type === CategoryType.ACCESSORY
                   ? dateFromCheckIn && dateToCheckIn
                     ? list(
@@ -566,6 +777,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         title: item.name,
         dataIndex: "location_" + item.id,
         key: "location_" + item.id,
+        width: 100,
         render: (text: string, record: IReport) => (
           <Typography.Text
             strong
@@ -588,6 +800,22 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                     : list(
                       `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
                     )
+                  : record.category_type === CategoryType.TOOL
+                    ? dateFromCheckIn && dateToCheckIn
+                      ? list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                      )
+                      : list(
+                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                      )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? dateFromCheckIn && dateToCheckIn
+                        ? list(
+                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
+                        )
+                        : list(
+                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
+                        )
                   : record.category_type === CategoryType.ACCESSORY
                     ? dateFromCheckIn && dateToCheckIn
                       ? list(
