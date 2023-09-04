@@ -140,12 +140,12 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                   : list(`accessory`)
                 : record.category_type === CategoryType.TOOL
                 ? dateFrom && dateTo
-                  ? list(`tools?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`tools`)
+                  ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`tools-all`)
                 : record.category_type === CategoryType.TAXTOKEN
                 ? dateFrom && dateTo
-                  ? list(`digital_signatures?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`digital_signatures`)
+                  ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
+                  : list(`tax_token`)
                 : dateFrom && dateTo
                 ? list(
                     `assets?category_id=${record.category_id}&dateTo=${dateFrom}&dateTo=${dateTo}`
@@ -213,22 +213,22 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                 ? dateFrom && dateTo
                   ? item.id !== 99999
                     ? list(
-                        `tools?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                        `tools-all?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(`tools?date_from=${dateFrom}&date_to=${dateTo}`)
+                    : list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
                   : item.id !== 99999
-                  ? list(`tools?location_id=${item.id}`)
-                  : list(`tools`)
+                  ? list(`tools-all?location_id=${item.id}`)
+                  : list(`tools-all`)
                 : record.category_type === CategoryType.TAXTOKEN
                 ? dateFrom && dateTo
                   ? item.id !== 99999
                     ? list(
-                        `digital_signatures?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                        `tax_token?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(`digital_signatures?date_from=${dateFrom}&date_to=${dateTo}`)
+                    : list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
                   : item.id !== 99999
-                  ? list(`digital_signatures?location_id=${item.id}`)
-                  : list(`digital_signatures`)
+                  ? list(`tax_token?location_id=${item.id}`)
+                  : list(`tax_token`)
                 : list(`assets?category_id=${record.category_id}`);
             }
           }}

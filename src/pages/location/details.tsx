@@ -27,7 +27,7 @@ import {
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { CATEGORIES_API, HARDWARE_API, STATUS_LABELS_API } from "api/baseApi";
+import { CATEGORIES_API, HARDWARE_API, STATUS_LABELS_API, HARDWARE_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 import {
     IConsumables,
@@ -58,6 +58,7 @@ import {
 } from "@ant-design/icons";
 import { LocationDetailsAccessory } from "./detailAccessory";
 import { LocationDetailsConsumable } from "./detailConsumable";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 
 const defaultCheckedList = [
@@ -119,7 +120,7 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
     const location_name = searchParams.get('name');
 
 
-    const { tableProps, tableQueryResult, sorter, searchFormProps } = useTable<
+    const { tableProps, tableQueryResult, sorter, searchFormProps, filters } = useTable<
         IHardwareResponse,
         HttpError,
         IHardwareFilterVariables
@@ -846,12 +847,10 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
                         </div>
                     </div>
                 </div>
-                <div className="sum-items">
-                    <span className="name-sum-assets">
-                        {translate("hardware.label.title.sum-assets")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
+                <TotalDetail
+                    links={HARDWARE_TOTAL_DETAIL_API}
+                    filters={filters}
+                ></TotalDetail>
 
                 {loading ? (
                     <>

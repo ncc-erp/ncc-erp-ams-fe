@@ -2,11 +2,9 @@
 import {
     Button,
     Checkbox,
-    CloneButton,
     DateField,
     DeleteButton,
     EditButton,
-    Form,
     getDefaultSortOrder,
     List,
     ShowButton,
@@ -16,7 +14,6 @@ import {
     TagField,
     TextField,
     Tooltip,
-    Typography,
     useTable,
 } from "@pankod/refine-antd";
 import {
@@ -26,7 +23,7 @@ import {
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API } from "api/baseApi";
+import { ACCESSORY_API, ACCRSSORY_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -34,15 +31,14 @@ import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
 import { Image } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";
-import { HardwareSearch } from "pages/hardware/search";
 import {
     MenuOutlined,
-    FileSearchOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
 import { IAccessoryFilterVariables, IAccessoryResponseCheckout, IAccesstoryRequest, IAccesstoryResponse } from "interfaces/accessory";
 import { AccessoryShow } from "pages/accessory/show";
 import { AccessoryCheckout, AccessoryEdit } from "pages/accessory";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 
 const defaultCheckedListAccessory = [
@@ -55,10 +51,6 @@ const defaultCheckedListAccessory = [
     "qty",
     "notes",
 ];
-
-interface ICheckboxChange {
-    key: string;
-}
 
 export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () => {
     const translate = useTranslate();
@@ -90,7 +82,7 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
     const searchParam = searchParams.get("search");
     const location_id = searchParams.get('id');
 
-    const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
+    const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
         IAccesstoryResponse,
         HttpError,
         IAccessoryFilterVariables
@@ -458,12 +450,10 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                 </div>
             </div>
 
-            <div className="sum-items">
-                <span className="name-sum-assets">
-                    {translate("hardware.label.title.sum-assets")}
-                </span>{" "}
-                : {tableProps.pagination ? tableProps.pagination?.total : 0}
-            </div>
+            <TotalDetail
+                links={ACCRSSORY_TOTAL_DETAIL_API}
+                filters={filters}
+            ></TotalDetail>
 
             {loading ? (
                 <>
