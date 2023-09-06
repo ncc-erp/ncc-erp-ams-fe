@@ -74,6 +74,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
 > = () => {
   const t = useTranslate();
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<ITaxTokenResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -403,7 +404,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
   )
 
 
-  const { mutate, isLoading: isLoadingSendRequest } =
+  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
     useCreate<ITaxTokenCreateRequest>();
 
   const cancle = (data: ITaxTokenResponse) => {
@@ -750,6 +751,10 @@ export const TaxTokenListWaitingConfirm: React.FC<
     };
   }, []);
 
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
       <div className="users">
@@ -918,6 +923,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
       <TotalDetail
         filters={filters}
         links={TAX_TOKEN_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
       ></TotalDetail>
       <div className="list-waiting-confirm">
         <div className="list-users">

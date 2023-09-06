@@ -11,10 +11,11 @@ import { stringify } from "query-string";
 type TotalDetailProps = {
     filters: CrudFilters | undefined;
     links: string;
+    isReload?: boolean | undefined;
 };
 
 export const TotalDetail = (props: TotalDetailProps) => {
-    const { filters, links } = props;
+    const { filters, links, isReload } = props;
     const t = useTranslate();
     const { open } = useNotification();
     const [totalDetail, setTotalDetail] = useState<ITotalDetail[]>();
@@ -39,7 +40,7 @@ export const TotalDetail = (props: TotalDetailProps) => {
 
     useEffect(() => {
         getTotalDetail();
-    }, [filters]);
+    }, [filters, isReload]);
 
     return (
         <div className="sum-assets">

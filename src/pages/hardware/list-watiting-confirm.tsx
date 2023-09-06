@@ -79,6 +79,7 @@ export const HardwareListWaitingConfirm: React.FC<
 > = () => {
   const t = useTranslate();
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -95,7 +96,7 @@ export const HardwareListWaitingConfirm: React.FC<
     }
   }, [permissionsData])
 
-  
+
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
       ? JSON.parse(localStorage.getItem("item_selected") as string)
@@ -441,7 +442,7 @@ export const HardwareListWaitingConfirm: React.FC<
     [filterCategory]
   );
 
-  const { mutate, isLoading: isLoadingSendRequest } =
+  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
     useCreate<IHardwareCreateRequest>();
 
   const cancle = (data: IHardwareResponse) => {
@@ -792,6 +793,10 @@ export const HardwareListWaitingConfirm: React.FC<
     searchFormProps.form?.submit();
   };
 
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
       <div className="users">
@@ -955,9 +960,10 @@ export const HardwareListWaitingConfirm: React.FC<
         />
       </MModal>
 
-      <TotalDetail 
+      <TotalDetail
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
       ></TotalDetail>
       <div className="list-waiting-confirm">
         <div className="list-users">
