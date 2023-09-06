@@ -21,7 +21,7 @@ export interface ILocationResponse {
     currency: number;
     image: string;
     assets_count: number;
-
+    branch_code: string;
 
 }
 export interface ILocationRequest {
@@ -41,4 +41,5 @@ export interface ILocationRequest {
     assigned_assets_count: number;
     users_count : number;
     ldap_ou: string;
+    branch_code: string;
 }
