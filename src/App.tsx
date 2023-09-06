@@ -56,6 +56,7 @@ import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
 import { ToolList } from "pages/tools/list";
 import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
+import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -66,309 +67,316 @@ function App() {
     getLocale: () => i18n.language,
   };
 
-  return (
-    <Refine
-      routerProvider={routerProvider}
-      notificationProvider={notificationProvider}
-      dataProvider={dataProvider}
-      authProvider={authProvider}
-      LoginPage={LoginPage}
-      accessControlProvider={{
-        can: async ({ resource, action, params }) => {
-          let role = await authProvider.getPermissions();
-          const enforcer = await newEnforcer(model, adapter);
+  const currThemes = {
+    dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
+    light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
+  };
 
-          if (role.branchadmin == EPermissions.BRANCHADMIN) {
-            if(action === "show"){
+  return (
+    <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
+      <Refine
+        routerProvider={routerProvider}
+        notificationProvider={notificationProvider}
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        LoginPage={LoginPage}
+        accessControlProvider={{
+          can: async ({ resource, action, params }) => {
+            let role = await authProvider.getPermissions();
+            const enforcer = await newEnforcer(model, adapter);
+
+            if (role.branchadmin == EPermissions.BRANCHADMIN) {
+              if (action === "show") {
+                const can = await enforcer.enforce(
+                  role.branchadmin,
+                  `${resource}/${params.id}`,
+                  action
+                );
+                return Promise.resolve({ can });
+              } else {
+                const can = await enforcer.enforce(
+                  role.branchadmin,
+                  `${resource}`,
+                  action,
+                );
+                return Promise.resolve({ can });
+              }
+            }
+            if (action === "delete" || action === "edit" || action === "show") {
               const can = await enforcer.enforce(
-                role.branchadmin,
+                role.admin,
                 `${resource}/${params.id}`,
                 action
               );
               return Promise.resolve({ can });
-            }else{
+            }
+
+            if (action === "field") {
               const can = await enforcer.enforce(
-                role.branchadmin,
-                `${resource}`,
-                action,
+                role.admin,
+                `${resource}/${params.field}`,
+                action
               );
               return Promise.resolve({ can });
             }
-          }
-          if (action === "delete" || action === "edit" || action === "show") {
-            const can = await enforcer.enforce(
-              role.admin,
-              `${resource}/${params.id}`,
-              action
-            );
+            const can = await enforcer.enforce(role.admin, resource, action);
             return Promise.resolve({ can });
-          }
-          
-          if (action === "field") {
-            const can = await enforcer.enforce(
-              role.admin,
-              `${resource}/${params.field}`,
-              action
-            );
-            return Promise.resolve({ can });
-          }
-          const can = await enforcer.enforce(role.admin, resource, action);
-          return Promise.resolve({ can });
-        },
-      }}
-      resources={[
-        {
-          name: t("resource.dashboard"),
-          list: DashboardPage,
-          options: {
-            route: "dashboard",
           },
-        },
-        {
-          name: t("resource.checkin-checkout"),
-          list: ListCheckin_Checkout,
-          options: {
-            route: "checkin_checkout",
+        }}
+        resources={[
+          {
+            name: t("resource.dashboard"),
+            list: DashboardPage,
+            options: {
+              route: "dashboard",
+            },
           },
-        },
-        {
-          name: t("resource.assets"),
-          list: HardwareList,
-          options: {
-            route: "assets",
-            label: 'assets'
+          {
+            name: t("resource.checkin-checkout"),
+            list: ListCheckin_Checkout,
+            options: {
+              route: "checkin_checkout",
+            },
           },
-        },
-        {
-          name: t("resource.assets-assign"),
-          list: HardwareListAssign,
-          options: {
-            route: "assets-assign",
-            label: 'assets'
+          {
+            name: t("resource.assets"),
+            list: HardwareList,
+            options: {
+              route: "assets",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.assets-readyToDeploy"),
-          list: HardwareListReadyToDeploy,
-          options: {
-            route: "assets-readyToDeploy",
-            label: 'assets'
+          {
+            name: t("resource.assets-assign"),
+            list: HardwareListAssign,
+            options: {
+              route: "assets-assign",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.assets-pending"),
-          list: HardwareListPending,
-          options: {
-            route: "assets-pending",
-            label: 'assets'
+          {
+            name: t("resource.assets-readyToDeploy"),
+            list: HardwareListReadyToDeploy,
+            options: {
+              route: "assets-readyToDeploy",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.assets-broken"),
-          list: HardwareListBroken,
-          options: {
-            route: "assets-broken",
-            label: 'assets'
+          {
+            name: t("resource.assets-pending"),
+            list: HardwareListPending,
+            options: {
+              route: "assets-pending",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.tools-all"),
-          list: ToolList,
-          options: {
-            route: "tools-all",
-            label: 'tools'
+          {
+            name: t("resource.assets-broken"),
+            list: HardwareListBroken,
+            options: {
+              route: "assets-broken",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.tools-waiting"),
-          list: ToolListWaitingConfirm,
-          options: {
-            route: "tools-waiting",
-            label: 'tools'
+          {
+            name: t("resource.tools-all"),
+            list: ToolList,
+            options: {
+              route: "tools-all",
+              label: 'tools'
+            },
           },
-        },
-        // {
-        //   name: t("resource.softwares"),
-        //   list: SoftwareList,
-        //   options: {
-        //     route: "softwares",
-        //   },
-        // },
-        {
-          name: t("resource.licenses"),
-          list: LicensesList,
-          options: {
-            route: "licenses",
+          {
+            name: t("resource.tools-waiting"),
+            list: ToolListWaitingConfirm,
+            options: {
+              route: "tools-waiting",
+              label: 'tools'
+            },
           },
-        },
-        {
-          name: t("resource.users"),
-          list: UserList,
-          options: {
-            route: "users",
-            label: "users"
+          // {
+          //   name: t("resource.softwares"),
+          //   list: SoftwareList,
+          //   options: {
+          //     route: "softwares",
+          //   },
+          // },
+          {
+            name: t("resource.licenses"),
+            list: LicensesList,
+            options: {
+              route: "licenses",
+            },
           },
-        },
-        {
-          name: t("resource.users-tools"),
-          list: UserListTool,
-          options: {
-            route: "users-tools",
-            label: "users"
-          }
-        },
-        {
-          name: t("resource.users_licenses"),
-          list: UserListLicenses,
-          options: {
-            route: "users-licenses",
+          {
+            name: t("resource.users"),
+            list: UserList,
+            options: {
+              route: "users",
+              label: "users"
+            },
           },
-        },
-        {
-          name: t("resource.model"),
-          list: ModelList,
-          options: {
-            route: "models",
+          {
+            name: t("resource.users-tools"),
+            list: UserListTool,
+            options: {
+              route: "users-tools",
+              label: "users"
+            }
           },
-        },
-        {
-          name: t("resource.category"),
-          list: CategoryList,
-          options: {
-            route: "category",
+          {
+            name: t("resource.users_licenses"),
+            list: UserListLicenses,
+            options: {
+              route: "users-licenses",
+            },
           },
-        },
-        {
-          name: t("resource.manufactures"),
-          list: ManufacturesList,
-          options: {
-            route: "manufactures",
+          {
+            name: t("resource.model"),
+            list: ModelList,
+            options: {
+              route: "models",
+            },
           },
-        },
-        {
-          name: t("resource.suppliers"),
-          list: SupplierList,
-          options: {
-            route: "suppliers",
+          {
+            name: t("resource.category"),
+            list: CategoryList,
+            options: {
+              route: "category",
+            },
           },
-        },
-        {
-          name: t("resource.department"),
-          list: DepartmentList,
-          options: {
-            route: "department",
+          {
+            name: t("resource.manufactures"),
+            list: ManufacturesList,
+            options: {
+              route: "manufactures",
+            },
           },
-        },
-        {
-          name: t("resource.location"),
-          list: LocationList,
-          options: {
-            route: "location",
+          {
+            name: t("resource.suppliers"),
+            list: SupplierList,
+            options: {
+              route: "suppliers",
+            },
           },
-        },
-        {
-          name: t("resource.report"),
-          list: ReportList,
-          options: {
-            route: "report",
+          {
+            name: t("resource.department"),
+            list: DepartmentList,
+            options: {
+              route: "department",
+            },
           },
-        },
-        {
-          name: t("resource.manager_user"),
-          list: Manager_UserList,
-          options: {
-            route: "manager_user",
+          {
+            name: t("resource.location"),
+            list: LocationList,
+            options: {
+              route: "location",
+            },
           },
-        },
-        {
-          name: t("resource.assets-waiting-confirm"),
-          list: HardwareListWaitingConfirm,
-          options: {
-            route: "assets-waiting-confirm",
-            label: 'assets'
+          {
+            name: t("resource.report"),
+            list: ReportList,
+            options: {
+              route: "report",
+            },
           },
-        },
+          {
+            name: t("resource.manager_user"),
+            list: Manager_UserList,
+            options: {
+              route: "manager_user",
+            },
+          },
+          {
+            name: t("resource.assets-waiting-confirm"),
+            list: HardwareListWaitingConfirm,
+            options: {
+              route: "assets-waiting-confirm",
+              label: 'assets'
+            },
+          },
 
-        {
-          name: t("resource.consumables"),
-          list: ConsumablesList,
-          options: {
-            route: "consumables",
+          {
+            name: t("resource.consumables"),
+            list: ConsumablesList,
+            options: {
+              route: "consumables",
+            },
           },
-        },
-        {
-          name: t("resource.accessory"),
-          list: AccessoryList,
-          options: {
-            route: "accessory",
+          {
+            name: t("resource.accessory"),
+            list: AccessoryList,
+            options: {
+              route: "accessory",
+            },
           },
-        },
-        {
-          name: t("resource.accessory_details"),
-          list: AccessoryDetails,
-          options: {
-            route: "accessory_details",
+          {
+            name: t("resource.accessory_details"),
+            list: AccessoryDetails,
+            options: {
+              route: "accessory_details",
+            },
           },
-        },
-        {
-          name: t("resource.consumable_details"),
-          list: ConsumableDetails,
-          options: {
-            route: "consumable_details",
+          {
+            name: t("resource.consumable_details"),
+            list: ConsumableDetails,
+            options: {
+              route: "consumable_details",
+            },
           },
-        },
-        {
-          name: t("resource.supplier_details"),
-          list: SupplierDetails,
-          options: {
-            route: "supplier_details",
+          {
+            name: t("resource.supplier_details"),
+            list: SupplierDetails,
+            options: {
+              route: "supplier_details",
+            },
           },
-        },
-        {
-          name: t("resource.location_details"),
-          list: LocationDetails,
-          options: {
-            route: "location_details",
+          {
+            name: t("resource.location_details"),
+            list: LocationDetails,
+            options: {
+              route: "location_details",
+            },
           },
-        },
-        {
-          name: t("resource.manufactures_details"),
-          list: ManufacturesDetails,
-          options: {
-            route: "manufactures_details",
+          {
+            name: t("resource.manufactures_details"),
+            list: ManufacturesDetails,
+            options: {
+              route: "manufactures_details",
+            },
           },
-        },
-        {
-          name: t("resource.assets-expires"),
-          list: HardwareListExpiration,
-          options: {
-            route: "assets-expires",
-            label: 'assets'
+          {
+            name: t("resource.assets-expires"),
+            list: HardwareListExpiration,
+            options: {
+              route: "assets-expires",
+              label: 'assets'
+            },
           },
-        },
-        {
-          name: t("resource.tax_token"),
-          list: TaxTokenList,
-          options: {
-            route: "tax_token",
+          {
+            name: t("resource.tax_token"),
+            list: TaxTokenList,
+            options: {
+              route: "tax_token",
+            },
           },
-        },
-        {
-          name: t("resource.tax_token_waiting"),
-          list: TaxTokenListWaitingConfirm,
-          options: {
-            route: "tax_token_waiting",
-          },
-        }
-      ]}
-      Title={Title}
-      Header={Header}
-      Sider={Sider}
-      Footer={Footer}
-      Layout={Layout}
-      OffLayoutArea={OffLayoutArea}
-      i18nProvider={i18nProvider}
-    />
+          {
+            name: t("resource.tax_token_waiting"),
+            list: TaxTokenListWaitingConfirm,
+            options: {
+              route: "tax_token_waiting",
+            },
+          }
+        ]}
+        Title={Title}
+        Header={Header}
+        Sider={Sider}
+        Footer={Footer}
+        Layout={Layout}
+        OffLayoutArea={OffLayoutArea}
+        i18nProvider={i18nProvider}
+      />
+    </ThemeSwitcherProvider>
   );
 }
 
