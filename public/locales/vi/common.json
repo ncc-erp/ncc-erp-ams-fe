@@ -241,7 +241,8 @@
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
         "confirmStatus": "Trạng thái xác nhận",
-        "timeCheckout" : "Ngày cấp phát"
+        "timeCheckout" : "Ngày cấp phát",
+        "asset-history": "Lịch sử"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -883,6 +884,7 @@
     "assets-broken": "Hỏng",
     "assets-waiting-confirm": "Đang chờ xác nhận",
     "assets-expires": "Sắp hết hạn",
+    "assets-report": "Báo cáo",
     "report": "Báo cáo",
     "asset-category-PC": "Tất cả máy tính",
     "asset-category-Monitor": "Tất cả màn hình",
@@ -1143,8 +1145,7 @@
     "label": {
       "title": {
         "name": "Báo cáo",
-        "nameReportCheckIn": "Thiết bị thu hồi",
-        "nameReportCheckOut": "Thiết bị bàn giao"
+        "nameReportCheckIn": "Thiết bị thu hồi"
       },
       "field": {
         "id": "ID",
@@ -1168,7 +1169,8 @@
         "end-date": "Ngày kết thúc",
         "manager": "Quản lý",
         "user": "Người dùng",
-        "dateCheckout_And_dateCheckin": "Ngày nhập"
+        "dateCheckout_And_dateCheckin": "Ngày nhập",
+        "datetime": "Ngày giờ"
       }
     }
   },

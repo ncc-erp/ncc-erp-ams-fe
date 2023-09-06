@@ -61,3 +61,12 @@ export interface responseCheckIn {
   id: number;
   count: number;
 }
+
+export interface IAssetHistories {
+  action_type: string;
+  created_at: {
+    datetime: string;
+    formatted: string;
+  }
+  user: string;
+}
