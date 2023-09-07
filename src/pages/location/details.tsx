@@ -84,6 +84,8 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
 
     const [isLoadingArr] = useState<boolean[]>([]);
 
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
+
     const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     const [detailShow, setDetailShow] = useState<IConsumablesResponse>();
 
@@ -766,6 +768,7 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -850,6 +853,7 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
                 <TotalDetail
                     links={HARDWARE_TOTAL_DETAIL_API}
                     filters={filters}
+                    isReload={isTotalDetailReload}
                 ></TotalDetail>
 
                 {loading ? (
@@ -936,6 +940,9 @@ export const LocationDetails: React.FC<IResourceComponentsProps> = () => {
                                                 hideText
                                                 size="small"
                                                 recordItemId={record.id}
+                                                onSuccess={() => {
+                                                    setIsTotalDetailReload(!isTotalDetailReload);
+                                                }}
                                             />
                                         </Tooltip>
                                     )}

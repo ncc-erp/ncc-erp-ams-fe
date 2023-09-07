@@ -57,6 +57,8 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
     const { list } = useNavigation();
     const [isLoadingArr] = useState<boolean[]>([]);
 
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
+
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
@@ -375,6 +377,7 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -442,6 +445,7 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
             <TotalDetail
                 links={CONSUMABLE_TOTAL_DETAIL_API}
                 filters={filters}
+                isReload={isTotalDetailReload}
             ></TotalDetail>
 
             {loading ? (
@@ -506,6 +510,9 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                                     hideText
                                     size="small"
                                     recordItemId={record.id}
+                                    onSuccess={() => {
+                                        setIsTotalDetailReload(!isTotalDetailReload);
+                                    }}
                                 />
 
                                 {record.user_can_checkout === true ? (

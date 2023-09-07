@@ -466,6 +466,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   useEffect(() => {
@@ -793,9 +794,9 @@ export const HardwareListWaitingConfirm: React.FC<
     searchFormProps.form?.submit();
   };
 
-  useEffect(() => {
-    setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+  // useEffect(() => {
+  //   setIsTotalDetailReload(!isTotalDetailReload);
+  // }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
 
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>

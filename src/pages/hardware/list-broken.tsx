@@ -95,6 +95,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [detailCheckout, setDetailCheckout] =
     useState<IHardwareResponseCheckout>();
@@ -767,12 +768,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -1135,10 +1141,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckin}
         />
       </MModal>
-      
-      <TotalDetail 
+
+      <TotalDetail
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
       ></TotalDetail>
       {loading ? (
         <>
@@ -1222,6 +1229,9 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    onSuccess={() => {
+                      setIsTotalDetailReload(!isTotalDetailReload);
+                    }}
                   />
                 </Tooltip>
                 {record.user_can_checkout === true && (
