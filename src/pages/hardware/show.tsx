@@ -28,14 +28,14 @@ export const HardwareShow = (props: HardwareShowProps) => {
   const collumns = useMemo(
     () => [
       {
-        key: "created_at",
-        title: t("report.label.field.datetime"),
-        render: (value: any) => <TextField value={value ? moment(value?.datetime).add(moment.duration(moment().format('Z'))).format('DD-MM-YYYY hh:mmA') : ""} />,
-      },
-      {
         key: "action_type",
         title: t("report.label.field.type"),
         render: (value: IAssetHistories) => <TextField value={value ? value : ""} />,
+      },
+      {
+        key: "created_at",
+        title: t("report.label.field.datetime"),
+        render: (value: any) => <TextField value={value ? moment(value?.datetime).add(moment.duration(moment().format('Z'))).format('DD-MM-YYYY hh:mmA') : ""} />,
       },
       {
         key: "user",
