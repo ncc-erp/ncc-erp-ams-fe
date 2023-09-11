@@ -38,7 +38,8 @@ export enum ECategory {
   ACCESSORY = "Accessory",
   ASSET = "Asset",
   CONSUMABLE = "Consumable",
-  TAXTOKEN = "Taxtoken"
+  TAXTOKEN = "Taxtoken",
+  TOOLDOMAIN = "Tool"
 }
 
 export const CategoryList: React.FC<IResourceComponentsProps> = () => {
@@ -125,7 +126,11 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                     ? list(`consumables?category_id=${record.id}`)
                     : record.category_type === "Accessory"
                       ? list(`accessory?category_id=${record.id}`)
-                      : list(`assets?category_id=${record.id}`);
+                      :record.category_type === "Tool"
+                      ? list(`tools-all?category_id=${record.id}`)
+                        : record.category_type === "Taxtoken"
+                        ? list(`tax_token?category_id=${record.id}`)
+                          : list(`assets?category_id=${record.id}`);
               }
             }}
           />
@@ -159,7 +164,9 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                       ? t("category.label.options.consumable")
                       : value === ECategory.TAXTOKEN
                         ? t("category.label.options.taxtoken")
-                        : ""
+                        : value === ECategory.TOOLDOMAIN
+                          ? t("category.label.options.tool")
+                            : ""
                 : ""
             }
           />
