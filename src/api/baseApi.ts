@@ -66,7 +66,7 @@ export const DEPARTMENT_API = "api/v1/departments";
 export const DEPARTMENT_SELECT_LIST_API = "api/v1/departments/selectlist";
 
 export const ACCESSORY_API = "api/v1/accessories/accessories";
-export const ACCRSSORY_TOTAL_DETAIL_API = "api/v1/accessories/total-detail";
+export const ACCESSORY_TOTAL_DETAIL_API = "api/v1/accessories/total-detail";
 export const USER_API = "api/v1/users";
 export const ASSET_HISTORY_API = "api/v1/reports/activity";
 export const ASSET_HISTORY_TOTAL_DETAIL_API = "api/v1/reports/activity/total-detail";

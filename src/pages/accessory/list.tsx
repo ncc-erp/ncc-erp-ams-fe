@@ -31,7 +31,7 @@ import {
   ACCESSORY_API, 
   LOCATION_API, 
   ACCESSORY_CATEGORIES_API,
-  ACCRSSORY_TOTAL_DETAIL_API
+  ACCESSORY_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
@@ -634,7 +634,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
       <TotalDetail 
         filters={filters}
-        links={ACCRSSORY_TOTAL_DETAIL_API}
+        links={ACCESSORY_TOTAL_DETAIL_API}
       ></TotalDetail>
       {loading ? (
         <>

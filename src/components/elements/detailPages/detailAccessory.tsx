@@ -2,11 +2,9 @@
 import {
     Button,
     Checkbox,
-    CloneButton,
     DateField,
     DeleteButton,
     EditButton,
-    Form,
     getDefaultSortOrder,
     List,
     ShowButton,
@@ -21,28 +19,28 @@ import {
 import {
     CrudFilters,
     HttpError,
-    IResourceComponentsProps,
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { CONSUMABLE_API } from "api/baseApi";
+import { ACCESSORY_API, ACCESSORY_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "styles/antd.less";
+import { Image } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";
 import {
     MenuOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
+import { IAccessoryFilterVariables, IAccessoryResponseCheckout, IAccesstoryRequest, IAccesstoryResponse } from "interfaces/accessory";
+import { AccessoryShow } from "pages/accessory/show";
+import { AccessoryCheckout, AccessoryEdit } from "pages/accessory";
+import { TotalDetail } from "components/elements/TotalDetail";
 
-import { IConsumablesFilterVariables, IConsumablesRequest, IConsumablesResponse, IConsumablesResponseCheckout } from "interfaces/consumables";
-import moment from "moment";
-import { ConsumablesCheckout, ConsumablesEdit } from "pages/consumables";
-import { ConsumablesShow } from "pages/consumables/show";
 
-const defaultCheckedList = [
+const defaultCheckedListAccessory = [
     "id",
     "name",
     "category",
@@ -53,10 +51,17 @@ const defaultCheckedList = [
     "notes",
 ];
 
-export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> = () => {
+type detailAccessoryProps = {
+    id_name: string;
+};
+
+export const DetailsAccessory = (props: detailAccessoryProps) => {
     const translate = useTranslate();
     const { list } = useNavigation();
+    const { id_name } = props;
     const [isLoadingArr] = useState<boolean[]>([]);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -66,27 +71,27 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
     const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-    const [detail, setDetail] = useState<IConsumablesResponse>();
+    const [detail, setDetail] = useState<IAccesstoryResponse>();
 
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const [detailCheckout, setDetailCheckout] =
-        useState<IConsumablesResponseCheckout>();
+        useState<IAccessoryResponseCheckout>();
 
-    const [collumnSelected, setColumnSelected] = useState<string[]>(
-        localStorage.getItem("item_consumable_selected") !== null
-            ? JSON.parse(localStorage.getItem("item_consumable_selected") as string)
-            : defaultCheckedList
+    const [collumnSelectedAccessory, setColumnSelectedAccessory] = useState<string[]>(
+        localStorage.getItem("item_accessory_selected") !== null
+            ? JSON.parse(localStorage.getItem("item_accessory_selected") as string)
+            : defaultCheckedListAccessory
     );
 
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
     const searchParam = searchParams.get("search");
-    const manufacturer_id = searchParams.get('id');
+    const type_id = searchParams.get('id');
 
-    const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
-        IConsumablesResponse,
+    const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
+        IAccesstoryResponse,
         HttpError,
-        IConsumablesFilterVariables
+        IAccessoryFilterVariables
     >({
         initialSorter: [
             {
@@ -94,7 +99,14 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 order: "desc",
             },
         ],
-        resource: `${CONSUMABLE_API}?manufacturer_id=${manufacturer_id}`,
+        permanentFilter: [
+            {
+                field: id_name,
+                operator: 'eq',
+                value: type_id
+            }
+        ],
+        resource: ACCESSORY_API,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let { search, category } = params;
@@ -110,9 +122,9 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     value: category ? category : category_id,
                 },
                 {
-                    field: "manufacturer_id",
+                    field: id_name,
                     operator: "eq",
-                    value: manufacturer_id,
+                    value: type_id,
                 },
             );
 
@@ -121,7 +133,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     });
 
 
-    const collumns = useMemo(
+    const collumnDetailsAccessory = useMemo(
         () => [
             {
                 key: "id",
@@ -131,66 +143,43 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
             },
             {
                 key: "name",
-                title: translate("consumables.label.field.name"),
+                title: translate("accessory.label.field.name"),
                 render: (value: string, record: any) => (
                     <TextField
                         value={value ? value : ""}
                         onClick={() => {
                             record.id &&
-                                list(`consumable_details?id=${record.id}&name=${record.name}
+                                list(`accessory_details?id=${record.id}&name=${record.name}
                     &category_id=${record.category.id}`);
                         }}
                         style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-                    />
+                    ></TextField>
                 ),
                 defaultSortOrder: getDefaultSortOrder("name", sorter),
             },
             {
+                key: "image",
+                title: translate("accessory.label.field.image"),
+                render: (value: string) => {
+                    return value ? (
+                        <Image width={80} alt="" height={"auto"} src={value} />
+                    ) : (
+                        ""
+                    );
+                },
+            },
+            {
                 key: "category",
-                title: translate("consumables.label.field.category"),
-                render: (value: IConsumablesRequest) => (
+                title: translate("accessory.label.field.category"),
+                render: (value: IAccesstoryRequest) => (
                     <TagField value={value ? value.name : ""} />
                 ),
                 defaultSortOrder: getDefaultSortOrder("category.name", sorter),
             },
             {
-                key: "manufacturer",
-                title: translate("consumables.label.field.manufacturer"),
-                render: (value: IConsumablesRequest) => (
-                    <TagField value={value ? value.name : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
-            },
-            {
-                key: "warranty_months",
-                title: translate("consumables.label.field.insurance"),
-                render: (value: IConsumablesRequest) => (
-                    <TagField value={value ? value : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
-            },
-            {
-                key: "supplier",
-                title: translate("consumables.label.field.supplier"),
-                render: (value: IConsumablesRequest) => (
-                    <div
-                        dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
-                    />
-                ),
-                defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
-            },
-            {
-                key: "location",
-                title: translate("consumables.label.field.location"),
-                render: (value: IConsumablesRequest) => (
-                    <TagField value={value ? value.name : ""} />
-                ),
-                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
-            },
-            {
                 key: "purchase_date",
-                title: translate("consumables.label.field.purchase_date"),
-                render: (value: IConsumablesRequest) =>
+                title: translate("accessory.label.field.purchase_date"),
+                render: (value: IAccesstoryRequest) =>
                     value ? (
                         <DateField format="LL" value={value ? value.date : ""} />
                     ) : (
@@ -199,20 +188,50 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
             },
             {
-                key: "qty",
-                title: translate("consumables.label.field.total_consumables"),
+                key: "warranty_months",
+                title: translate("accessory.label.field.insurance"),
+                render: (value: IAccesstoryRequest) => (
+                    <TagField value={value ? value : ""} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
+            },
+            {
+                key: "supplier",
+                title: translate("accessory.label.field.supplier"),
+                render: (value: IAccesstoryRequest) => (
+                    <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
+            },
+            {
+                key: "location",
+                title: translate("accessory.label.field.location"),
+                render: (value: IAccesstoryRequest) => (
+                    <TagField value={value ? value.name : ""} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+            },
+            {
+                key: "order_number",
+                title: translate("accessory.label.field.order_number"),
                 render: (value: string) => <TextField value={value ? value : ""} />,
+                defaultSortOrder: getDefaultSortOrder("order_number", sorter),
+            },
+            {
+                key: "qty",
+                title: translate("accessory.label.field.total_accessory"),
+                render: (value: number) => <TextField value={value ? value : 0} />,
                 defaultSortOrder: getDefaultSortOrder("qty", sorter),
             },
             {
                 key: "purchase_cost",
-                title: translate("consumables.label.field.purchase_cost"),
+                title: translate("accessory.label.field.purchase_cost"),
                 render: (value: number) => <TextField value={value ? value : 0} />,
                 defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
             },
             {
                 key: "notes",
-                title: translate("consumables.label.field.notes"),
+                title: translate("accessory.label.field.notes"),
                 render: (value: string) => (
                     <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
                 ),
@@ -222,23 +241,19 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
         []
     );
 
-    const edit = (data: IConsumablesResponse) => {
-        const dataConvert: IConsumablesResponse = {
+    const edit = (data: IAccesstoryResponse) => {
+        const dataConvert: IAccesstoryResponse = {
             id: data.id,
             name: data.name,
             category: {
                 id: data?.category?.id,
                 name: data?.category?.name,
             },
-            manufacturer: {
-                id: data?.manufacturer?.id,
-                name: data?.manufacturer?.name,
-            },
             supplier: {
                 id: data?.supplier?.id,
                 name: data?.supplier?.name,
             },
-            notes: data.notes,
+            notes: data?.notes,
             location: {
                 id: data?.location?.id,
                 name: data?.location?.name,
@@ -248,14 +263,27 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 formatted:
                     data?.purchase_date !== null ? data?.purchase_date.formatted : "",
             },
-            total_consumables: data?.total_consumables,
+            total_accessory: data?.total_accessory,
+            manufacturer: {
+                id: data?.manufacturer?.id,
+                name: data?.manufacturer?.name,
+            },
             purchase_cost: data ? data?.purchase_cost : 0,
             image: data ? data?.image : "",
             order_number: data ? data?.order_number : 0,
             qty: data ? data.qty : 0,
             user_can_checkout: data?.user_can_checkout,
             assigned_to: data?.assigned_to,
+            remaining_qty: 0,
+            checkin_date: data?.checkin_date,
+            assigned_pivot_id: data?.assigned_pivot_id,
             warranty_months: data?.warranty_months,
+            username: "",
+            last_checkout: {
+                datetime: "",
+                formatted: "",
+            },
+            checkout_notes: "",
             created_at: {
                 datetime: "",
                 formatted: "",
@@ -264,25 +292,20 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 datetime: "",
                 formatted: "",
             },
-            remaining: 0,
         };
         setDetail(dataConvert);
         setIsEditModalVisible(true);
     };
 
-    const checkout = (data: IConsumablesResponse) => {
-        const dataConvert: IConsumablesResponseCheckout = {
+    const checkout = (data: IAccesstoryResponse) => {
+        const dataConvert: IAccessoryResponseCheckout = {
             id: data.id,
             name: data.name,
             category: {
                 id: data?.category?.id,
                 name: data?.category?.name,
             },
-            note: data.notes,
-            checkout_at: {
-                date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
-                formatted: new Date().toDateString(),
-            },
+            note: "",
             assigned_to: data?.assigned_to,
             user_can_checkout: data?.user_can_checkout,
         };
@@ -300,7 +323,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
         setIsSearchModalVisible(!isSearchModalVisible);
     };
 
-    const show = (data: IConsumablesResponse) => {
+    const show = (data: IAccesstoryResponse) => {
         setIsShowModalVisible(true);
         setDetail(data);
     };
@@ -319,22 +342,22 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
         searchFormProps.form?.submit();
     }, [window.location.reload]);
 
-    const onCheckItem = (value: { key: string }) => {
-        if (collumnSelected.includes(value.key)) {
-            setColumnSelected(
-                collumnSelected.filter((item: any) => item !== value.key)
+    const onCheckItemAccessory = (value: { key: string }) => {
+        if (collumnSelectedAccessory.includes(value.key)) {
+            setColumnSelectedAccessory(
+                collumnSelectedAccessory.filter((item: any) => item !== value.key)
             );
         } else {
-            setColumnSelected(collumnSelected.concat(value.key));
+            setColumnSelectedAccessory(collumnSelectedAccessory.concat(value.key));
         }
     };
 
     useEffect(() => {
         localStorage.setItem(
-            "item_consumables_selected",
-            JSON.stringify(collumnSelected)
+            "item_accessory_selected",
+            JSON.stringify(collumnSelectedAccessory)
         );
-    }, [collumnSelected]);
+    }, [collumnSelectedAccessory]);
 
 
     const listenForOutsideClicks = (
@@ -376,6 +399,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -387,7 +411,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     return (
 
         <List
-            title=""
+            title={translate("accessory.label.title.accessory")}
         >
             <div className="all">
                 <TableAction searchFormProps={searchFormProps} />
@@ -402,7 +426,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                                 }}
                             >
                                 <Tooltip
-                                    title={translate("consumables.label.tooltip.refresh")}
+                                    title={translate("hardware.label.tooltip.refresh")}
                                     color={"#108ee9"}
                                 >
                                     <SyncOutlined
@@ -415,7 +439,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                         <div>
                             <button onClick={onClickDropDown} className="menu-trigger">
                                 <Tooltip
-                                    title={translate("consumables.label.tooltip.columns")}
+                                    title={translate("accessory.label.tooltip.columns")}
                                     color={"#108ee9"}
                                 >
                                     <MenuOutlined style={{ color: "black" }} />
@@ -424,12 +448,12 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                         </div>
                         <nav className={`menu ${isActive ? "active" : "inactive"}`}>
                             <div className="menu-dropdown">
-                                {collumns.map((item) => (
+                                {collumnDetailsAccessory.map((item) => (
                                     <Checkbox
                                         className="checkbox"
                                         key={item.key}
-                                        onChange={() => onCheckItem(item)}
-                                        checked={collumnSelected.includes(item.key)}
+                                        onChange={() => onCheckItemAccessory(item)}
+                                        checked={collumnSelectedAccessory.includes(item.key)}
                                     >
                                         {item.title}
                                     </Checkbox>
@@ -439,12 +463,12 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     </div>
                 </div>
             </div>
-            <div className="sum-items">
-                <span className="name-sum-assets">
-                    {translate("hardware.label.title.sum-assets")}
-                </span>{" "}
-                : {tableProps.pagination ? tableProps.pagination?.total : 0}
-            </div>
+
+            <TotalDetail
+                links={`${ACCESSORY_TOTAL_DETAIL_API}?${id_name}=${type_id}`}
+                filters={filters}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
 
             {loading ? (
                 <>
@@ -460,7 +484,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     className={(pageTotal as number) <= 10 ? "list-table" : ""}
                     {...tableProps}
                     rowKey="id"
-                    scroll={{ x: 1200 }}
+                    scroll={{ x: 1090 }}
                     pagination={
                         (pageTotal as number) > 10
                             ? {
@@ -471,12 +495,12 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                             : false
                     }
                 >
-                    {collumns
-                        .filter((collumn) => collumnSelected.includes(collumn.key))
+                    {collumnDetailsAccessory
+                        .filter((collumn) => collumnSelectedAccessory.includes(collumn.key))
                         .map((col) => (
                             <Table.Column dataIndex={col.key} {...col} sorter />
                         ))}
-                    <Table.Column<IConsumablesResponse>
+                    <Table.Column<IAccesstoryResponse>
                         title={translate("table.actions")}
                         dataIndex="actions"
                         render={(_, record) => (
@@ -493,7 +517,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                                     />
                                 </Tooltip>
                                 <Tooltip
-                                    title={translate("consumables.label.tooltip.edit")}
+                                    title={translate("accessory.label.tooltip.edit")}
                                     color={"#108ee9"}
                                 >
                                     <EditButton
@@ -503,14 +527,27 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                                         onClick={() => edit(record)}
                                     />
                                 </Tooltip>
-                                <DeleteButton
-                                    resourceName={CONSUMABLE_API}
-                                    hideText
-                                    size="small"
-                                    recordItemId={record.id}
-                                />
 
-                                {record.user_can_checkout === true ? (
+                                {record.qty === record.remaining_qty ? (
+                                    <Tooltip
+                                        title={translate("accessory.label.tooltip.delete")}
+                                        color={"#108ee9"}
+                                    >
+                                        <DeleteButton
+                                            resourceName={ACCESSORY_API}
+                                            hideText
+                                            size="small"
+                                            recordItemId={record.id}
+                                            onSuccess={() => {
+                                                setIsTotalDetailReload(!isTotalDetailReload);
+                                            }}
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <DeleteButton hideText size="small" disabled />
+                                )}
+
+                                {record.user_can_checkout === true && (
                                     <Button
                                         className="ant-btn-checkout"
                                         type="primary"
@@ -525,11 +562,19 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                                         }
                                         onClick={() => checkout(record)}
                                     >
-                                        {translate("consumables.label.button.checkout")}
+                                        {translate("accessory.label.button.checkout")}
                                     </Button>
-                                ) : (
-                                    <Button type="primary" shape="round" size="small" disabled>
-                                        {translate("consumables.label.button.checkout")}
+                                )}
+
+                                {record.user_can_checkout === false && (
+                                    <Button
+                                        className="ant-btn-checkout"
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        disabled
+                                    >
+                                        {translate("accessory.label.button.checkout")}
                                     </Button>
                                 )}
                             </Space>
@@ -539,33 +584,33 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
             )}
 
             <MModal
-                title={translate("consumables.label.title.detail")}
+                title={translate("accessory.label.title.detail")}
                 setIsModalVisible={setIsShowModalVisible}
                 isModalVisible={isShowModalVisible}
             >
-                <ConsumablesShow
+                <AccessoryShow
                     setIsModalVisible={setIsShowModalVisible}
                     detail={detail}
                 />
             </MModal>
 
             <MModal
-                title={translate("consumables.label.title.edit")}
+                title={translate("accessory.label.title.edit")}
                 setIsModalVisible={setIsEditModalVisible}
                 isModalVisible={isEditModalVisible}
             >
-                <ConsumablesEdit
+                <AccessoryEdit
                     isModalVisible={isEditModalVisible}
                     setIsModalVisible={setIsEditModalVisible}
                     data={detail}
                 />
             </MModal>
             <MModal
-                title={translate("consumables.label.title.checkout")}
+                title={translate("accessory.label.title.checkout")}
                 setIsModalVisible={setIsCheckoutModalVisible}
                 isModalVisible={isCheckoutModalVisible}
             >
-                <ConsumablesCheckout
+                <AccessoryCheckout
                     isModalVisible={isCheckoutModalVisible}
                     setIsModalVisible={setIsCheckoutModalVisible}
                     data={detailCheckout}
