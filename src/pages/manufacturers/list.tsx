@@ -140,19 +140,6 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("consumables_count", sorter),
       },
       {
-        key: "tools_count",
-        title: t("manufactures.label.field.toolCount"),
-        render: (value: number) => <TagField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("tools_count", sorter),
-      },
-      {
-        key: "digital_signatures_count",
-        title: t("manufactures.label.field.taxTokenCount"),
-        render: (value: number) => <TagField value={value} />,
-        defaultSortOrder: getDefaultSortOrder("digital_signatures_count", sorter),
-      },
-
-      {
         key: "created_at",
         title: t("manufactures.label.field.dateCreate"),
         render: (value: IHardware) => (
