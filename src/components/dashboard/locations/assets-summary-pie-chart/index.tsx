@@ -35,6 +35,10 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       let dataTaxToken = categories.filter(
         (item) => item.category_type === CategoryType.TAXTOKEN
       ) as any;
+      let dataClientAsset = categories.filter(
+        (item) => item.category_type === CategoryType.ASSET
+      ) as any;
+
       let sumConsumable = dataConsumable.reduce(
         (total: number, object: any) => {
           return total + object.consumables_count;
@@ -51,6 +55,9 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       let sumTaxToken = dataTaxToken.reduce((total: number, object: any) => {
         return total + object.digital_signatures_count;
       }, 0);
+      let sumClientAsset = dataClientAsset.reduce((total: number, object: any) => {
+        return total + object.client_assets_count;
+      }, 0);
 
       dataClone = {
         ...dataClone,
@@ -62,6 +69,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
         [t("dashboard.field.typeAccessory")]: sumAccessory ? false : true,
         [t("dashboard.field.typeTool")]: sumTool ? false : true,
         [t("dashboard.field.typeTaxToken")]: sumTaxToken ? false : true,
+        [t("dashboard.field.typeClientAsset")]: sumClientAsset ? false : true,
       };
     }
 
@@ -73,6 +81,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
     let accessory = { label: t("dashboard.field.typeAccessory") } as any;
     let tool = { label: t("dashboard.field.typeTool") } as any;
     let taxtoken = { label: t("dashboard.field.typeTaxToken") } as any;
+    let clientAsset = { label: t("dashboard.field.typeClientAsset") } as any;
 
     let dataAsset = [] as any;
 
@@ -126,10 +135,22 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       } else {
         asset.label = item.name;
         asset.value = item.assets_count;
+
+        let dataClientAsset = categories.filter(
+          (item) => item.category_type === CategoryType.ASSET
+        ) as any;
+        let sumClientAsset = dataClientAsset.reduce(
+          (total: number, object: any) => {
+            return total + object.client_assets_count;
+          },
+          0
+        );
+        clientAsset.value = sumClientAsset
+        
       }
       dataAsset.push(asset);
     });
-    setDataPie([...dataAsset, consumable, accessory, tool, taxtoken]);
+    setDataPie([...dataAsset, consumable, accessory, tool, taxtoken, clientAsset]);
   }, [data]);
 
   const config: PieConfig = {
@@ -202,8 +223,8 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           const text = datum
             ? `${name} ${datum.value}`
             : dataPieChart
-            ? `${name} ${dataPieChart.reduce((r, d) => r + d.value, 0)}`
-            : `${name} 0`;
+              ? `${name} ${dataPieChart.reduce((r, d) => r + d.value, 0)}`
+              : `${name} 0`;
           return renderStatistic(width, text, {
             fontSize: 32,
           });

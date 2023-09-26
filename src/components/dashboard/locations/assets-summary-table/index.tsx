@@ -14,7 +14,7 @@ type AssetsSummaryTableProps = {
 };
 
 export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
-  const { id, categories, data } = props;
+  const { id, data } = props;
 
   const t = useTranslate();
   const { list } = useNavigation();
@@ -57,6 +57,11 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       category_type: CategoryType.TAXTOKEN,
     } as any;
 
+    let sumClientAsset = {
+      type: t("dashboard.field.typeClientAsset"),
+      category_type: CategoryType.ASSET,
+    } as any;
+
     arrNameAsset?.forEach((nameAsset: any) => {
       let type = {} as any;
       let category = "" as ICategoryAsset | string | undefined;
@@ -71,30 +76,36 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
           sumConsumable["rtd_location_" + item.id] =
             sumConsumable["rtd_location_" + item.id] !== undefined
               ? category?.consumables_count +
-                sumConsumable["rtd_location_" + item.id]
+              sumConsumable["rtd_location_" + item.id]
               : category?.consumables_count;
         } else if (category?.category_type === CategoryType.ACCESSORY) {
           sumAccessory["rtd_location_" + item.id] =
             sumAccessory["rtd_location_" + item.id] !== undefined
               ? category?.accessories_count +
-                sumAccessory["rtd_location_" + item.id]
+              sumAccessory["rtd_location_" + item.id]
               : category?.accessories_count;
         } else if (category?.category_type === CategoryType.TOOL) {
           sumTool["rtd_location_" + item.id] =
             sumTool["rtd_location_" + item.id] !== undefined
               ? category?.tools_count +
-                sumTool["rtd_location_" + item.id]
+              sumTool["rtd_location_" + item.id]
               : category?.tools_count;
         } else if (category?.category_type === CategoryType.TAXTOKEN) {
           sumTaxToken["rtd_location_" + item.id] =
             sumTaxToken["rtd_location_" + item.id] !== undefined
               ? category?.digital_signatures_count +
-                sumTaxToken["rtd_location_" + item.id]
+              sumTaxToken["rtd_location_" + item.id]
               : category?.digital_signatures_count;
         } else {
           type["rtd_location_" + item.id] = category && category.assets_count;
           type.category_id = category && category.id;
           type.category_type = category && category.category_type;
+
+          sumClientAsset["rtd_location_" + item.id] =
+            sumClientAsset["rtd_location_" + item.id] !== undefined
+              ? category?.client_assets_count +
+              sumClientAsset["rtd_location_" + item.id]
+              : category?.client_assets_count;
         }
       });
 
@@ -108,7 +119,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       }
     });
 
-    setDataAllLocation([...dataAll, sumConsumable, sumAccessory,sumTool,sumTaxToken]);
+    setDataAllLocation([...dataAll, sumConsumable, sumAccessory, sumTool, sumTaxToken, sumClientAsset]);
   }, [response]);
 
   let columnSum = [
@@ -127,30 +138,30 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
               record.category_type === CategoryType.ASSET
                 ? dateFrom && dateTo
                   ? list(
-                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
+                    `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                  )
                   : list(`assets?category_id=${record.category_id}`)
                 : record.category_type === CategoryType.CONSUMABLE
-                ? dateFrom && dateTo
-                  ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`consumables`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? dateFrom && dateTo
-                  ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`accessory`)
-                : record.category_type === CategoryType.TOOL
-                ? dateFrom && dateTo
-                  ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`tools-all`)
-                : record.category_type === CategoryType.TAXTOKEN
-                ? dateFrom && dateTo
-                  ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`tax_token`)
-                : dateFrom && dateTo
-                ? list(
-                    `assets?category_id=${record.category_id}&dateTo=${dateFrom}&dateTo=${dateTo}`
-                  )
-                : list(`assets?category_id=${record.category_id}`);
+                  ? dateFrom && dateTo
+                    ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
+                    : list(`consumables`)
+                  : record.category_type === CategoryType.ACCESSORY
+                    ? dateFrom && dateTo
+                      ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                      : list(`accessory`)
+                    : record.category_type === CategoryType.TOOL
+                      ? dateFrom && dateTo
+                        ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
+                        : list(`tools-all`)
+                      : record.category_type === CategoryType.TAXTOKEN
+                        ? dateFrom && dateTo
+                          ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
+                          : list(`tax_token`)
+                        : dateFrom && dateTo
+                          ? list(
+                            `assets?category_id=${record.category_id}&dateTo=${dateFrom}&dateTo=${dateTo}`
+                          )
+                          : list(`assets?category_id=${record.category_id}`);
             }
           }}
         >
@@ -160,7 +171,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     },
   ];
 
-  
+
   let columnTypes = response.map((item: ILocation) => {
     return {
       title: item.name,
@@ -177,59 +188,59 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
                 ? dateFrom && dateTo
                   ? item.id !== 99999
                     ? list(
-                        `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?rtd_location_id=${item.id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(
-                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                   : item.id !== 99999
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${item.id}&category_id=${record.category_id}`
                     )
-                  : list(`assets?category_id=${record.category_id}`)
+                    : list(`assets?category_id=${record.category_id}`)
                 : record.category_type === CategoryType.CONSUMABLE
-                ? dateFrom && dateTo
-                  ? item.id !== 99999
-                    ? list(
+                  ? dateFrom && dateTo
+                    ? item.id !== 99999
+                      ? list(
                         `consumables?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
+                      : list(
                         `consumables?date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                  : item.id !== 99999
-                  ? list(`consumables?location_id=${item.id}`)
-                  : list(`consumables`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? dateFrom && dateTo
-                  ? item.id !== 99999
-                    ? list(
-                        `accessory?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : item.id !== 99999
-                  ? list(`accessory?location_id=${item.id}`)
-                  : list(`accessory`)
-                : record.category_type === CategoryType.TOOL
-                ? dateFrom && dateTo
-                  ? item.id !== 99999
-                    ? list(
-                        `tools-all?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : item.id !== 99999
-                  ? list(`tools-all?location_id=${item.id}`)
-                  : list(`tools-all`)
-                : record.category_type === CategoryType.TAXTOKEN
-                ? dateFrom && dateTo
-                  ? item.id !== 99999
-                    ? list(
-                        `tax_token?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : item.id !== 99999
-                  ? list(`tax_token?location_id=${item.id}`)
-                  : list(`tax_token`)
-                : list(`assets?category_id=${record.category_id}`);
+                    : item.id !== 99999
+                      ? list(`consumables?location_id=${item.id}`)
+                      : list(`consumables`)
+                  : record.category_type === CategoryType.ACCESSORY
+                    ? dateFrom && dateTo
+                      ? item.id !== 99999
+                        ? list(
+                          `accessory?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                      : item.id !== 99999
+                        ? list(`accessory?location_id=${item.id}`)
+                        : list(`accessory`)
+                    : record.category_type === CategoryType.TOOL
+                      ? dateFrom && dateTo
+                        ? item.id !== 99999
+                          ? list(
+                            `tools-all?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
+                        : item.id !== 99999
+                          ? list(`tools-all?location_id=${item.id}`)
+                          : list(`tools-all`)
+                      : record.category_type === CategoryType.TAXTOKEN
+                        ? dateFrom && dateTo
+                          ? item.id !== 99999
+                            ? list(
+                              `tax_token?location_id=${item.id}&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
+                          : item.id !== 99999
+                            ? list(`tax_token?location_id=${item.id}`)
+                            : list(`tax_token`)
+                        : list(`assets?category_id=${record.category_id}`);
             }
           }}
         >

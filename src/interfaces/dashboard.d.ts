@@ -11,6 +11,7 @@ export interface IStatusAsset {
   accessories_count: number;
   consumables_count: number;
   digital_signatures_count: number;
+  client_assets_count: number;
 }
 
 export interface ICategoryAsset {
@@ -23,6 +24,7 @@ export interface ICategoryAsset {
   accessories_count: number;
   tools_count: number;
   digital_signatures_count: number;
+  client_assets_count: number;
 }
 
 export interface ILocation {
@@ -35,6 +37,7 @@ export interface ILocation {
   accessories_count: number;
   tools_count: number;
   digital_signatures_count: number;
+  client_assets_count: number;
 }
 
 export interface IEntryType {
@@ -105,4 +108,4 @@ export interface DataTable {
   category_id: number;
   rtd_location_id: number;
   category_type: string;
-};
+}

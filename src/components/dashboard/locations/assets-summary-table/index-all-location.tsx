@@ -59,12 +59,21 @@ export const AssetsSummaryTableAllLocation = (
       category_type: CategoryType.TAXTOKEN,
     } as any;
 
+    let sumClientAssetByLocation = {
+      name: t("dashboard.field.typeClientAsset"),
+      category_type: CategoryType.ASSET,
+      pending: 0,
+      assign: 0,
+      broken: 0,
+      ready_to_deploy: 0
+    } as any;
+
     categories.map((category: ICategoryAsset) => {
       let type = {} as any;
-      type.pending = "";
-      type.broken = "";
+      type.pending = 0;
+      type.broken = 0;
       type.assign = 0;
-      type.ready_to_deploy = "";
+      type.ready_to_deploy = 0;
       type.assets_count = category.assets_count;
       type.category_type = category.category_type;
       type.type = 0;
@@ -84,7 +93,7 @@ export const AssetsSummaryTableAllLocation = (
             sumConsumableByLocation.pending = status_label.consumables_count;
           }
           if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            sumConsumableByLocation.ready_to_deploy =status_label.consumables_count;
+            sumConsumableByLocation.ready_to_deploy = status_label.consumables_count;
           }
         });
 
@@ -131,7 +140,7 @@ export const AssetsSummaryTableAllLocation = (
             sumToolByLocation.ready_to_deploy = status_label.tools_count
           }
         });
-        
+
         sumToolByLocation.type =
           sumToolByLocation.type !== undefined
             ? category.tools_count + sumToolByLocation.type
@@ -163,8 +172,15 @@ export const AssetsSummaryTableAllLocation = (
         type.rtd_location_id = id;
         type.name = category.name;
         type.type = category.assets_count;
+        sumClientAssetByLocation.category_id = category.id;
+        sumClientAssetByLocation.rtd_location_id = id;
+
         category.status_labels.forEach((status_label) => {
           if (status_label.name === EStatus.ASSIGN) {
+
+            if (status_label.client_assets_count) {
+              sumClientAssetByLocation.assign = status_label.client_assets_count
+            }
             type.assign = calculation(
               status_label.assets_count,
               category.assets_count
@@ -175,20 +191,37 @@ export const AssetsSummaryTableAllLocation = (
               status_label.assets_count,
               category.assets_count
             );
+
+            if (status_label.client_assets_count) {
+              sumClientAssetByLocation.broken = status_label.client_assets_count
+            }
           }
           if (status_label.name === EStatus.PENDING) {
             type.pending = calculation(
               status_label.assets_count,
               category.assets_count
             );
+
+            if (status_label.client_assets_count) {
+              sumClientAssetByLocation.pending = status_label.client_assets_count
+            }
           }
           if (status_label.name === EStatus.READY_TO_DEPLOY) {
             type.ready_to_deploy = calculation(
               status_label.assets_count,
               category.assets_count
             );
+
+            if (status_label.client_assets_count) {
+              sumClientAssetByLocation.ready_to_deploy = status_label.client_assets_count
+            }
           }
         });
+        
+        sumClientAssetByLocation.type =
+          sumClientAssetByLocation.type !== undefined
+            ? category.client_assets_count + sumClientAssetByLocation.type
+            : category.client_assets_count;
       }
 
       dataAllCategory.push(type);
@@ -203,11 +236,12 @@ export const AssetsSummaryTableAllLocation = (
       sumConsumableByLocation,
       sumAccessoryByLocation,
       sumToolByLocation,
-      sumTaxTokenByLocation
+      sumTaxTokenByLocation,
+      sumClientAssetByLocation,
     ]);
   }, [categories]);
 
-  
+
   const columns = [
     {
       title: `${t("dashboard.field.name")}`,
@@ -224,59 +258,59 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(`assets?category_id=${record.category_id}`)
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id !== 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id !== 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(`consumables?location_id=${rtd_location_id}`)
-                  : dateFrom && dateTo
-                  ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`consumables`)
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`tools-all`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`tools-all?location_id=${rtd_location_id}`)
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`tax_token`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`tax_token?location_id=${rtd_location_id}`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`accessory`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`accessory?location_id=${rtd_location_id}`)
-                : list(
-                    `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
-                  );
+                      : list(`consumables?location_id=${rtd_location_id}`)
+                    : dateFrom && dateTo
+                      ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
+                      : list(`consumables`)
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(`tools-all?date_from=${dateFrom}&date_to=${dateTo}`)
+                        : list(`tools-all`)
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(`tools-all?location_id=${rtd_location_id}`)
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(`tax_token?date_from=${dateFrom}&date_to=${dateTo}`)
+                          : list(`tax_token`)
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(`tax_token?location_id=${rtd_location_id}`)
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                            : list(`accessory`)
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(`accessory?location_id=${rtd_location_id}`)
+                        : list(
+                          `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
+                        );
             }
           }}
         >
@@ -299,85 +333,85 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(
-                        `assets?category_id=${record.category_id}&status_id=1`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=1`
+                    )
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id === 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
+                      : list(
                         `consumables?category_id=${record.category_id}&status_id=1`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tools-all?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                    : dateFrom && dateTo
+                      ? list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
-                        `tools-all?category_id=${record.category_id}&status_id=1`
+                      : list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tax_token?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `tax_token?category_id=${record.category_id}&status_id=1`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=1`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                  );
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(
+                          `tools-all?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?category_id=${record.category_id}&status_id=1`
+                        )
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                        )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(
+                            `tax_token?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?category_id=${record.category_id}&status_id=1`
+                          )
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                          )
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(
+                              `accessory?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?category_id=${record.category_id}&status_id=1`
+                            )
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                            )
+                        : list(
+                          `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
+                        );
             }
           }}
         >
@@ -400,85 +434,85 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(
-                        `assets?category_id=${record.category_id}&status_id=3`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=3`
+                    )
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id === 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
+                      : list(
                         `consumables?category_id=${record.category_id}&status_id=3`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tools-all?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                    : dateFrom && dateTo
+                      ? list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
-                        `tools-all?category_id=${record.category_id}&status_id=3`
+                      : list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tax_token?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `tax_token?category_id=${record.category_id}&status_id=3`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=3`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                  );
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(
+                          `tools-all?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?category_id=${record.category_id}&status_id=3`
+                        )
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                        )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(
+                            `tax_token?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?category_id=${record.category_id}&status_id=3`
+                          )
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                          )
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(
+                              `accessory?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?category_id=${record.category_id}&status_id=3`
+                            )
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                            )
+                        : list(
+                          `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
+                        );
             }
           }}
         >
@@ -502,85 +536,85 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(
-                        `assets?category_id=${record.category_id}&status_id=4`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=4`
+                    )
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id === 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
+                      : list(
                         `consumables?category_id=${record.category_id}&status_id=4`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tools-all?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                    : dateFrom && dateTo
+                      ? list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
-                        `tools-all?category_id=${record.category_id}&status_id=4`
+                      : list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tax_token?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `tax_token?category_id=${record.category_id}&status_id=4`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=4`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                  );
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(
+                          `tools-all?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?category_id=${record.category_id}&status_id=4`
+                        )
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                        )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(
+                            `tax_token?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?category_id=${record.category_id}&status_id=4`
+                          )
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                          )
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(
+                              `accessory?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?category_id=${record.category_id}&status_id=4`
+                            )
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                            )
+                        : list(
+                          `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
+                        );
             }
           }}
         >
@@ -604,85 +638,85 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(
-                        `assets?category_id=${record.category_id}&status_id=5`
-                      )
+                      `assets?category_id=${record.category_id}&status_id=5`
+                    )
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id === 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
+                      : list(
                         `consumables?category_id=${record.category_id}&status_id=5`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tools-all?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                    : dateFrom && dateTo
+                      ? list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(
-                        `tools-all?category_id=${record.category_id}&status_id=5`
+                      : list(
+                        `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
                       )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tax_token?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `tax_token?category_id=${record.category_id}&status_id=5`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=5`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                  );
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(
+                          `tools-all?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?category_id=${record.category_id}&status_id=5`
+                        )
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(
+                          `tools-all?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                        )
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(
+                            `tax_token?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?category_id=${record.category_id}&status_id=5`
+                          )
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(
+                            `tax_token?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                          )
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(
+                              `accessory?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?category_id=${record.category_id}&status_id=5`
+                            )
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(
+                              `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                            )
+                        : list(
+                          `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
+                        );
             }
           }}
         >
@@ -706,63 +740,63 @@ export const AssetsSummaryTableAllLocation = (
                 ? record.rtd_location_id === 99999
                   ? dateFrom && dateTo
                     ? list(
-                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
+                      `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
+                    )
                     : list(`assets?category_id=${record.category_id}`)
                   : dateFrom && dateTo
-                  ? list(
+                    ? list(
                       `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
                     )
-                  : list(
+                    : list(
                       `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}`
                     )
                 : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
+                  ? record.rtd_location_id === 99999
+                    ? dateFrom && dateTo
+                      ? list(
                         `consumables?date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(`consumables`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`consumables?location_id=${record.rtd_location_id}`)
-                : record.category_type === CategoryType.TOOL
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tools-all?date_from=${dateFrom}&date_to=${dateTo}`
+                      : list(`consumables`)
+                    : dateFrom && dateTo
+                      ? list(
+                        `consumables?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
                       )
-                    : list(`tools-all`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `tools-all?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`tools-all?location_id=${record.rtd_location_id}`)
-                : record.category_type === CategoryType.TAXTOKEN
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `tax_token?date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`tax_token`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `tax_token?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`tax_token?location_id=${record.rtd_location_id}`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`accessory`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`accessory?location_id=${record.rtd_location_id}`)
-                : list(`assets?category_id=${record.category_id}`);
+                      : list(`consumables?location_id=${record.rtd_location_id}`)
+                  : record.category_type === CategoryType.TOOL
+                    ? record.rtd_location_id === 99999
+                      ? dateFrom && dateTo
+                        ? list(
+                          `tools-all?date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(`tools-all`)
+                      : dateFrom && dateTo
+                        ? list(
+                          `tools-all?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                        )
+                        : list(`tools-all?location_id=${record.rtd_location_id}`)
+                    : record.category_type === CategoryType.TAXTOKEN
+                      ? record.rtd_location_id === 99999
+                        ? dateFrom && dateTo
+                          ? list(
+                            `tax_token?date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(`tax_token`)
+                        : dateFrom && dateTo
+                          ? list(
+                            `tax_token?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                          )
+                          : list(`tax_token?location_id=${record.rtd_location_id}`)
+                      : record.category_type === CategoryType.ACCESSORY
+                        ? record.rtd_location_id === 99999
+                          ? dateFrom && dateTo
+                            ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
+                            : list(`accessory`)
+                          : dateFrom && dateTo
+                            ? list(
+                              `accessory?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
+                            )
+                            : list(`accessory?location_id=${record.rtd_location_id}`)
+                        : list(`assets?category_id=${record.category_id}`);
             }
           }}
         >
