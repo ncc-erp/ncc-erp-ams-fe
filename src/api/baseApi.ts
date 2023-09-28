@@ -12,7 +12,6 @@ export const HARDWARE_CHECKIN_API = "api/v1/hardware/checkin";
 export const HARDWARE_TOTAL_DETAIL_API = "api/v1/hardware/total-detail";
 
 export const TOOLS_API = "api/v1/tools"
-export const TOOLS_CHECKOUT_API = "api/v1/tools/checkout"
 export const TOOLS_MULTI_CHECKOUT_API = "api/v1/tools/multicheckout"
 export const TOOLS_MULTI_CHECKIN_API = "api/v1/tools/multicheckin"
 export const TOOLS_CATEGORIES_API = "api/v1/categories/tool/selectlist";

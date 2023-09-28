@@ -2,6 +2,8 @@ import {
     useTranslate,
     IResourceComponentsProps,
     CrudFilters,
+    useCreate,
+    useNotification
 } from "@pankod/refine-core";
 import {
     List,
@@ -15,16 +17,24 @@ import {
     TagField,
     Tooltip,
     Spin,
+    Button,
+    Popconfirm,
 } from "@pankod/refine-antd";
+import {
+    getBGToolAssignedStatusDecription,
+    getToolAssignedStatusDecription
+} from "untils/tools";
+import { CancleAsset } from "./cancel";
 import { SyncOutlined } from "@ant-design/icons";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useRef, useState } from "react";
-import { ASSIGN_TOOLS_API } from "api/baseApi";
-import type { ColumnsType } from "antd/es/table";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { ASSIGN_TOOLS_API, TOOLS_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 import { IModel } from "interfaces/model";
-import { IToolResponse } from "interfaces/tool";
+import { IToolCreateRequest, IToolResponse } from "interfaces/tool";
 import { ToolShow } from "pages/tools/show";
+import { ASSIGNED_STATUS } from "constants/assets";
+import { filterAssignedStatus } from "untils/assets";
 
 export const UserListTool: React.FC<IResourceComponentsProps> = () => {
     const t = useTranslate();
@@ -32,6 +42,10 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
     const [isShowModalVisible, setIsShowModalVisible] = useState(false);
     const [detail, setDetail] = useState<IToolResponse>();
     const [loading, setLoading] = useState(false);
+    const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
+    const [idConfirm, setidConfirm] = useState<number>(-1);
+    const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+    const { open } = useNotification();
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } =
         useTable<IToolResponse>({
@@ -56,93 +70,151 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
 
     const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-    const collumns: ColumnsType<IToolResponse> = [
-        {
-            key: "id",
-            title: "ID",
-            render: (value: number) => <TextField value={value} />,
-            defaultSortOrder: getDefaultSortOrder("id", sorter),
-        },
-        {
-            key: "name",
-            title: t("tools.label.field.name"),
-            render: (value: string) => (
-                <TextField
-                    value={value}
-                />
-            ),
-            defaultSortOrder: getDefaultSortOrder("name", sorter),
-        },
-        {
-            key: "purchase_cost",
-            title: t("tools.label.field.purchase_cost"),
-            render: (value: string, record: any) => (
-                <TextField
-                    value={value}
-                />
-            ),
-            defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
-        },
-        {
-            key: "category",
-            title: t("tools.label.field.category"),
-            render: (value: IToolResponse) =>   <TagField value={value ? value.name : ""} />,
-            defaultSortOrder: getDefaultSortOrder("category", sorter),
-        },
-        {
-            key: "supplier",
-            title: t("tools.label.field.supplier"),
-            render: (value: IToolResponse) => (
-                <TagField value={value ? value.name : ""} />
-            ),
-            defaultSortOrder: getDefaultSortOrder("supplier", sorter),
-        },
-        {
-            key: "purchase_date",
-            title: t("tools.label.field.purchase_date"),
-            render: (value: any) =>
-                value ? (
-                    <DateField format="LL" value={value ? value.date : ""} />
-                ) : (
-                    ""
+    // const collumns: ColumnsType<IToolResponse> = [
+    const collumns = useMemo(
+        () => [
+            {
+                key: "id",
+                title: "ID",
+                render: (value: number) => <TextField value={value} />,
+                defaultSortOrder: getDefaultSortOrder("id", sorter),
+            },
+            {
+                key: "name",
+                title: t("tools.label.field.name"),
+                render: (value: string) => (
+                    <TextField
+                        value={value}
+                    />
                 ),
-            defaultSortOrder: getDefaultSortOrder("purchase_date", sorter),
-        },
-        {
-            key: "checkout_at",
-            title: t("tools.label.field.checkout_at"),
-            render: (value: IModel) =>
-                value ? (
-                    <DateField format="LL" value={value ? value.datetime : ""} />
-                ) : (
-                    ""
+                defaultSortOrder: getDefaultSortOrder("name", sorter),
+            },
+            {
+                key: "purchase_cost",
+                title: t("tools.label.field.purchase_cost"),
+                render: (value: string, record: any) => (
+                    <TextField
+                        value={value}
+                    />
                 ),
-            defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
-        },
-        {
-            key: "notes",
-            title: t("tools.label.field.notes"),
-            render: (value: string, record: any) => (
-                <TextField value={value} />
-            ),
-            defaultSortOrder: getDefaultSortOrder("notes", sorter),
-        },
-        {
-            key: "created_at",
-            title: t("tools.label.field.dateCreate"),
-            render: (value: IModel) =>
-                value ? (
-                    <DateField format="LL" value={value ? value.datetime : ""} />
-                ) : (
-                    ""
+                defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
+            },
+            {
+                key: "category",
+                title: t("tools.label.field.category"),
+                render: (value: IToolResponse) => <TagField value={value ? value.name : ""} />,
+                defaultSortOrder: getDefaultSortOrder("category", sorter),
+            },
+            {
+                key: "supplier",
+                title: t("tools.label.field.supplier"),
+                render: (value: IToolResponse) => (
+                    <TagField value={value ? value.name : ""} />
                 ),
-            defaultSortOrder: getDefaultSortOrder("created_at", sorter),
-        },
-    ];
+                defaultSortOrder: getDefaultSortOrder("supplier", sorter),
+            },
+            {
+                key: "purchase_date",
+                title: t("tools.label.field.purchase_date"),
+                render: (value: any) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.date : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("purchase_date", sorter),
+            },
+            {
+                key: "checkout_at",
+                title: t("tools.label.field.checkout_at"),
+                render: (value: IModel) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.datetime : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
+            },
+            {
+                key: "assigned_status",
+                title: t("tools.label.field.assigned_status"),
+                render: (value: number) => (
+                    <TagField
+                        value={getToolAssignedStatusDecription(value)}
+                        style={{
+                            background: getBGToolAssignedStatusDecription(value),
+                            color: "white",
+                        }}
+                    />
+                ),
+                defaultSortOrder: getDefaultSortOrder("assigned_status", sorter),
+                filters: filterAssignedStatus,
+                onFilter: (value: number, record: IToolResponse) =>
+                    record.assigned_status === value,
+            },
+            {
+                key: "notes",
+                title: t("tools.label.field.notes"),
+                render: (value: string, record: any) => (
+                    <TextField value={value} />
+                ),
+                defaultSortOrder: getDefaultSortOrder("notes", sorter),
+            },
+            {
+                key: "created_at",
+                title: t("tools.label.field.dateCreate"),
+                render: (value: IModel) =>
+                    value ? (
+                        <DateField format="LL" value={value ? value.datetime : ""} />
+                    ) : (
+                        ""
+                    ),
+                defaultSortOrder: getDefaultSortOrder("created_at", sorter),
+            },
+        ], []);
+
+    const { mutate, isLoading: isLoadingSendRequest } =
+        useCreate<IToolCreateRequest>();
+
+    const OnAcceptRequest = (id: number, assigned_status: number) => {
+        confirmTool(id, assigned_status);
+    };
+
+    const cancle = (data: IToolResponse) => {
+        setIsCancleModalVisible(true);
+        setDetail(data);
+    };
+
+    const confirmTool = (id: number, assigned_status: number) => {
+        mutate({
+            resource: TOOLS_API + "/" + id + "?_method=PUT",
+            values: {
+                send_accept: id,
+                assigned_status: assigned_status,
+            },
+            successNotification: false
+        } , {
+            onSuccess(data, variables, context) {
+                open?.({
+                    type: 'success',
+                    description: 'Success',
+                    message: data?.data.messages
+                })
+            },
+        });
+        handleRefresh();
+    };
 
     const refreshData = () => {
         tableQueryResult.refetch();
     };
+
+    useEffect(() => {
+        let arr = [...isLoadingArr];
+        arr[idConfirm] = isLoadingSendRequest;
+        setIsLoadingArr(arr);
+        refreshData();
+    }, [isLoadingSendRequest]);
 
     const handleRefresh = () => {
         setLoading(true);
@@ -156,6 +228,10 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
         setIsShowModalVisible(true);
         setDetail(data);
     };
+
+    useEffect(() => {
+        refreshData();
+    }, [isCancleModalVisible]);
 
     return (
         <List title={t("tools.label.title.my-tool")}>
@@ -197,7 +273,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
                 </div>
             </div>
 
-             <MModal
+            <MModal
                 title={t("user.label.title.detail_Tool")}
                 setIsModalVisible={setIsShowModalVisible}
                 isModalVisible={isShowModalVisible}
@@ -206,6 +282,19 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
                     setIsModalVisible={setIsShowModalVisible}
                     detail={detail} />
             </MModal>
+            <MModal
+                title={t("user.label.title.cancle")}
+                setIsModalVisible={setIsCancleModalVisible}
+                isModalVisible={isCancleModalVisible}
+            >
+                <CancleAsset
+                    setIsModalVisible={setIsCancleModalVisible}
+                    isModalVisible={isCancleModalVisible}
+                    data={detail}
+                    ApiLink={TOOLS_API}
+                />
+            </MModal>
+
 
             {loading ? (
                 <>
@@ -233,7 +322,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
                     {collumns.map((col) => (
                         <Table.Column
                             dataIndex={col.key}
-                            {...(col as ColumnsType)}
+                            {...(col as any)}
                             sorter
                         />
                     ))}
@@ -253,6 +342,101 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
                                         onClick={() => show(record)}
                                     />
                                 </Tooltip>
+
+                                {record.assigned_to.id !== record.withdraw_from &&
+                                    record.assigned_status ===
+                                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                                        <Popconfirm
+                                            title={t("hardware.label.button.accept_checkout")}
+                                            onConfirm={() =>
+                                                OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                                            }
+                                        >
+                                            {isLoadingArr[record.id] !== false && (
+                                                <Button
+                                                    className="ant-btn-accept"
+                                                    type="primary"
+                                                    shape="round"
+                                                    size="small"
+                                                    loading={
+                                                        isLoadingArr[record.id] === undefined
+                                                            ? false
+                                                            : isLoadingArr[record.id] === false
+                                                                ? false
+                                                                : true
+                                                    }
+                                                >
+                                                    {t("hardware.label.button.accept_checkout")}
+                                                </Button>
+                                            )}
+                                        </Popconfirm>
+                                    )}
+
+                                {record.assigned_to.id === record.withdraw_from &&
+                                    record.assigned_status ===
+                                    ASSIGNED_STATUS.WAITING_CHECKIN && (
+                                        <Popconfirm
+                                            title={t("hardware.label.button.accept_checkin")}
+                                            onConfirm={() =>
+                                                OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
+                                            }
+                                        >
+                                            {isLoadingArr[record.id] !== false && (
+                                                <Button
+                                                    className="ant-btn-accept"
+                                                    type="primary"
+                                                    shape="round"
+                                                    size="small"
+                                                    loading={
+                                                        isLoadingArr[record.id] === undefined
+                                                            ? false
+                                                            : isLoadingArr[record.id] === false
+                                                                ? false
+                                                                : true
+                                                    }
+                                                >
+                                                    {t("hardware.label.button.accept_checkin")}
+                                                </Button>
+                                            )}
+                                        </Popconfirm>
+                                    )}
+
+                                {record.assigned_status ===
+                                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            size="small"
+                                            loading={
+                                                isLoadingArr[record.id] === undefined
+                                                    ? false
+                                                    : isLoadingArr[record.id] === false
+                                                        ? false
+                                                        : true
+                                            }
+                                            onClick={() => cancle(record)}
+                                        >
+                                            {t("hardware.label.button.rejectCheckout")}
+                                        </Button>
+                                    )}
+
+                                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                                    <Button
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        loading={
+                                            isLoadingArr[record.id] === undefined
+                                                ? false
+                                                : isLoadingArr[record.id] === false
+                                                    ? false
+                                                    : true
+                                        }
+                                        onClick={() => cancle(record)}
+                                    >
+                                        {t("hardware.label.button.rejectCheckin")}
+                                    </Button>
+                                )}
                             </Space>
                         )}
                     />

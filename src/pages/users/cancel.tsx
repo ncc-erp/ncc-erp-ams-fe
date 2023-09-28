@@ -1,25 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCustom } from "@pankod/refine-core";
+import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import "../../styles/hardware.less";
 import { IHardwareResponse, IHardwareUpdateRequest } from "interfaces/hardware";
-import { HARDWARE_API } from "api/baseApi";
+import { HARDWARE_API, TOOLS_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
+import { IToolResponse } from "interfaces/tool";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
-  data: IHardwareResponse | undefined;
+  data: IHardwareResponse | IToolResponse | undefined;
+  ApiLink?: string;
 };
 
 export const CancleAsset = (props: HardwareEditProps) => {
-  const { setIsModalVisible, data, isModalVisible } = props;
+  const { setIsModalVisible, data, isModalVisible, ApiLink } = props;
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
+  const { open } = useNotification();
 
   const t = useTranslate();
   const { formProps, form } = useForm<IHardwareUpdateRequest>({
@@ -31,7 +34,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: HARDWARE_API + "/" + data?.id,
+    url: ApiLink + "/" + data?.id,
     method: "post",
     config: {
       payload: payload,
@@ -39,6 +42,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     queryOptions: {
       enabled: false,
     },
+    errorNotification: false
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -48,7 +52,8 @@ export const CancleAsset = (props: HardwareEditProps) => {
     formData.append("reason", event.reason);
     formData.append("assigned_status", ASSIGNED_STATUS.REFUSE.toString());
 
-    formData.append("_method", "PATCH");
+    const method = ApiLink === HARDWARE_API ? "PATCH" : "PUT";
+    formData.append("_method", method);
     setPayload(formData);
   };
 
@@ -57,12 +62,35 @@ export const CancleAsset = (props: HardwareEditProps) => {
   }, [isModalVisible]);
 
   useEffect(() => {
-    if (payload) {
-      refetch();
-      if (updateData?.data.message) {
-        form.resetFields();
+    // if (payload) {
+    //   refetch();
+    //   if (updateData?.data.message) {
+    //     form.resetFields();
+    //   }
+    // }
+    if (!payload) return;
+    const fetch = async () => {
+      const response = await refetch();
+      if (response.isError === true) {
+        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
+        let message = Object.values(err)[0][0];
+        open?.({
+          type: 'error',
+          description: 'Error',
+          message: message,
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
       }
+      form.resetFields();
+      setIsModalVisible(false);
+      open?.({
+        type: 'success',
+        description: 'Success',
+        message: response.data?.data.messages,
+      });
     }
+    fetch();
   }, [payload]);
 
   useEffect(() => {
