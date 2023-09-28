@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 
 export const antLayoutSider: CSSProperties = {
   position: "sticky",
-  maxHeight: "100vh",
+  maxHeight: "calc(100vh - 48px)",
   overflowY: "auto",
   top: 0,
 };
