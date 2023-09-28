@@ -19,7 +19,7 @@ import {
   IHardwareRequestMultipleCheckout,
 } from "interfaces/hardware";
 import { ICompany } from "interfaces/company";
-import { USERS_API, HARDWARE_CHECKOUT_API } from "api/baseApi";
+import { USERS_API, CLIENT_HARDWARE_CHECKOUT_API } from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
@@ -56,7 +56,7 @@ export const ClientHardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps
 
   const onFinish = (event: IHardwareRequestMultipleCheckout) => {
     mutate({
-      resource: HARDWARE_CHECKOUT_API,
+      resource: CLIENT_HARDWARE_CHECKOUT_API,
       values: {
         assets: event.assets,
         assigned_asset: event.assigned_asset,

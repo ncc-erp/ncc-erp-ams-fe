@@ -167,6 +167,13 @@ export const ClientHardwareListExpiration: React.FC<IResourceComponentsProps> = 
         order: "desc",
       },
     ],
+    initialFilter: [
+      {
+        field: "IS_EXPIRE_PAGE",
+        operator: "eq",
+        value: true,
+      }
+    ],
     resource: CLIENT_HARDWARE_EXPIRATION_API,
     onSearch: (params) => {
       const filters: CrudFilters = [];

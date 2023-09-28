@@ -15,7 +15,7 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { IHardwareRequestMultipleCheckin } from "interfaces/hardware";
 
-import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
+import { CLIENT_HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
@@ -56,7 +56,7 @@ export const ClientHardwareCheckinMultipleAsset = (props: HardwareCheckinProps) 
 
   const onFinish = (event: IHardwareRequestMultipleCheckin) => {
     mutate({
-      resource: HARDWARE_CHECKIN_API,
+      resource: CLIENT_HARDWARE_CHECKIN_API,
       values: {
         assets: event.assets,
         status_id: event.status_id,
