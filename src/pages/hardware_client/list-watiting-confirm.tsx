@@ -129,14 +129,9 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     ],
     initialFilter: [
       {
-        field: "WAITING_CHECKOUT",
+        field: "IS_WAITING_PAGE",
         operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKOUT,
-      },
-      {
-        field: "WAITING_CHECKIN",
-        operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKIN,
+        value: true,
       },
     ],
     resource: CLIENT_HARDWARE_API,
@@ -656,7 +651,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     setTimeout(() => {
       refreshData();
       setLoading(false);
-    }, 1300);
+    }, 4000);
   };
 
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
@@ -666,7 +661,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         assets: assets,
         assigned_status: assigned_status,
       },
-    });
+    });;
     handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRow_AcceptRefuse");
