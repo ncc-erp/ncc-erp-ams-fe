@@ -11,10 +11,11 @@ import { stringify } from "query-string";
 type TotalDetailProps = {
     filters: CrudFilters | undefined;
     links: string;
+    additional_filter?: string;
 };
 
 export const TotalDetail = (props: TotalDetailProps) => {
-    const { filters, links } = props;
+    const { filters, links, additional_filter } = props;
     const t = useTranslate();
     const { open } = useNotification();
     const [totalDetail, setTotalDetail] = useState<ITotalDetail[]>();
@@ -30,7 +31,7 @@ export const TotalDetail = (props: TotalDetailProps) => {
             });
         }
         const data = axiosInstance.get(
-            `${links}?${stringify(queryFilters, { arrayFormat: 'index' })}`
+            `${links}?${stringify(queryFilters, { arrayFormat: 'index' })}&${additional_filter}`
         );
         data.then(response => {
             setTotalDetail(response.data.payload);

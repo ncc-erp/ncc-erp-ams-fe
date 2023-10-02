@@ -234,14 +234,14 @@
         "list-pending": "Đang chờ Tài sản",
         "list-broken": "Không cho phép cấp phát Tài sản",
         "list-waiting-confirm": "Đang chờ xác nhận",
-        "list-expiration" : "Sắp hết hạn",
+        "list-expiration": "Sắp hết hạn",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
         "confirmStatus": "Trạng thái xác nhận",
-        "timeCheckout" : "Ngày cấp phát"
+        "timeCheckout": "Ngày cấp phát"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -310,17 +310,17 @@
         "version": "Phiên bản",
         "name": "Tên Tool & Domain",
         "key": "Key",
-        "supplier":"Nhà cung cấp",
-        "location":"Văn phòng",
-        "expiration_date":"Ngày hết hạn",
-        "qty":"Số lượng",
-        "checkin_counter":"Số lần thu hồi",
-        "checkout_counter":"Số lần cấp phát",
-        "usd":"VND",
+        "supplier": "Nhà cung cấp",
+        "location": "Văn phòng",
+        "expiration_date": "Ngày hết hạn",
+        "qty": "Số lượng",
+        "checkin_counter": "Số lần thu hồi",
+        "checkout_counter": "Số lần cấp phát",
+        "usd": "VND",
         "assigned_status": "Xác nhận",
-        "readyToDeploy":"Ready to Deploy",
-        "pending":"Pending",
-        "broken":"Broken",
+        "readyToDeploy": "Ready to Deploy",
+        "pending": "Pending",
+        "broken": "Broken",
         "list_tools": "Danh sách tool"
       },
       "placeholder": {
@@ -329,12 +329,12 @@
         "name": "Nhập tên tool",
         "key": "Nhập key",
         "version": "Nhập phiên bản",
-        "notes":"Mô tả",
+        "notes": "Mô tả",
         "purchase_cost": "Nhập chi phí",
         "manufacturer": "Lựa chọn nhà phát hành",
         "category": "Lựa chọn thể loại",
-        "supplier":"Lựa chọn nhà cung cấp",
-        "location":"Lựa chọn một văn phòng"
+        "supplier": "Lựa chọn nhà cung cấp",
+        "location": "Lựa chọn một văn phòng"
       },
       "message": {
         "required": "bắt buộc"
@@ -380,54 +380,54 @@
         "my-tool": "Tool & Domain của tôi"
       },
       "detail": {
-        "default":"Chưa checkout",
-        "readyToDeploy":"Trong kho",
-        "assign":"Bàn Giao",
-        "broken":"Hỏng",
-        "waitingAcceptCheckout":"Chờ xác nhận cấp phát",
-        "waitingAcceptCheckin":"Chờ xác nhận thu hồi",
-        "accept":"Đã xác nhận"
+        "default": "Chưa checkout",
+        "readyToDeploy": "Trong kho",
+        "assign": "Bàn Giao",
+        "broken": "Hỏng",
+        "waitingAcceptCheckout": "Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin": "Chờ xác nhận thu hồi",
+        "accept": "Đã xác nhận"
       }
     }
   },
-  "licenses":{
+  "licenses": {
     "label": {
-      "title":{
+      "title": {
         "licenses": "Danh sách key",
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-licenses": "Tổng số key",
-        "checkout":"Cấp phát",
+        "checkout": "Cấp phát",
         "create": "Tạo Key",
         "edit": "Cập nhật Key",
-        "detail":"Chi tiết Key",
+        "detail": "Chi tiết Key",
         "search": "Tìm kiếm nâng cao",
         "dateCreate": "Ngày tạo",
         "updateAt": "Ngày cập nhật",
         "info": "Thông tin",
         "key": "Danh sách key",
-        "users":"Người dùng đã cấp phát",
+        "users": "Người dùng đã cấp phát",
         "my-licenses": "Key của tôi"
       },
       "field": {
         "licenses": "Key",
         "seats": "Tổng số lượng",
-        "software": "Phần mềm",     
-        "purchase_cost":"Chi phí",
+        "software": "Phần mềm",
+        "purchase_cost": "Chi phí",
         "checkoutTo": "Cấp phát đến",
         "user": "Họ và tên",
-        "category":"Thể loại",
+        "category": "Thể loại",
         "manufacturer": "Nhà sản xuất",
-        "notes":"Ghi chú",
+        "notes": "Ghi chú",
         "keyName": "Tên key",
         "checkout-count": "Đã cấp phát",
         "location": "Văn phòng",
         "department": "Bộ phận",
-        "created_at":"Đã tạo lúc",
+        "created_at": "Đã tạo lúc",
         "updated_at": "Cập nhật tại",
         "checkout_at": "Ngày cấp phát",
-        "purchase_date":"Ngày mua",
-        "expiration_date": "Ngày hết hạn", 
+        "purchase_date": "Ngày mua",
+        "expiration_date": "Ngày hết hạn",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc"
       },
@@ -441,43 +441,43 @@
         "search": "Tìm kiếm nâng cao",
         "refresh": "Refresh"
       },
-      "message":{
-        "required":"bắt buộc"
+      "message": {
+        "required": "bắt buộc"
       },
-      "placeholder":{
-        "manufacturer":"Lựa chọn nhà sản xuất",
+      "placeholder": {
+        "manufacturer": "Lựa chọn nhà sản xuất",
         "softwareName": "Tên phần mềm",
         "software_tag": "Thẻ phần mềm",
         "category": "Lựa chọn thể loại",
         "version": "Phiên bản",
-        "user":"Lựa chọn một người dùng",
+        "user": "Lựa chọn một người dùng",
         "licenses": "Key",
         "seats": "Tổng số lượng",
-        "purchase_cost":"Chi phí",
-        "purchase_date":"Ngày mua",
-        "expiration_date":"Ngày hết hạn"
+        "purchase_cost": "Chi phí",
+        "purchase_date": "Ngày mua",
+        "expiration_date": "Ngày hết hạn"
       },
-      "button":{
-        "search":"Tìm kiếm",
-        "create":"Thêm mới",
+      "button": {
+        "search": "Tìm kiếm",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
-        "checkout":"Cấp phát"
+        "checkout": "Cấp phát"
       }
     }
   },
-  "software":{
+  "software": {
     "label": {
-      "title":{
+      "title": {
         "all_software": "Tất cả phần mềm",
         "time": "Thời gian",
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
-        "checkout":"Cấp phát",
+        "checkout": "Cấp phát",
         "create": "Tạo phần mềm",
         "clone": "Clone phần mềm",
         "search": "Tìm kiếm nâng cao",
         "edit": "Cập nhật phần mềm",
-        "detail":"Chi tiết phần mềm",
+        "detail": "Chi tiết phần mềm",
         "info": "Thông tin",
         "users": "Người dùng đã cấp phát",
         "list_software": "Danh sách các phần mềm",
@@ -489,21 +489,21 @@
         "checkoutTo": "Cấp phát đến",
         "user": "Họ và tên",
         "location": "Văn phòng",
-        "department":"Bộ phận",
+        "department": "Bộ phận",
         "softwareName": "Tên phần mềm",
-        "category":"Thể loại",
+        "category": "Thể loại",
         "manufacturer": "Nhà sản xuất",
         "software_tag": "Thẻ phần mềm",
         "total_licenses": "Số lượng key",
         "version": "Phiên bản",
-        "notes":"Ghi chú",
+        "notes": "Ghi chú",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
-        "purchase_date":"Ngày mua",
+        "purchase_date": "Ngày mua",
         "expiration_date": "Ngày hết hạn",
         "checkout_at": "Ngày cấp phát",
         "checkout-count": "Số key đã cấp phát",
-        "created_at":"Ngày tạo"
+        "created_at": "Ngày tạo"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -515,22 +515,22 @@
         "search": "Tìm kiếm nâng cao",
         "refresh": "Refresh"
       },
-      "message":{
-        "required":"bắt buộc"
+      "message": {
+        "required": "bắt buộc"
       },
-      "placeholder":{
-        "manufacturer":"Lựa chọn nhà sản xuất",
+      "placeholder": {
+        "manufacturer": "Lựa chọn nhà sản xuất",
         "softwareName": "Tên phần mềm",
         "software_tag": "Thẻ phần mềm",
         "category": "Lựa chọn thể loại",
         "version": "Phiên bản",
-        "user":"Lựa chọn một người dùng"
+        "user": "Lựa chọn một người dùng"
       },
-      "button":{
-        "search":"Tìm kiếm",
-        "create":"Thêm mới",
+      "button": {
+        "search": "Tìm kiếm",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
-        "checkout":"Cấp phát"
+        "checkout": "Cấp phát"
       }
     }
   },
@@ -629,7 +629,9 @@
         "reports.view": "Báo cáo",
         "accessories": "Phụ kiện",
         "users": "Người dùng",
-        "sum-assets": "Tổng số tài sản"
+        "sum-assets": "Tổng số tài sản",
+        "detail_tool": "Chi tiết tool của tôi",
+        "detail_tax_token": "Chi tiết token thuế của tôi"
       },
       "field": {
         "notes": "Mô tả",
@@ -762,7 +764,7 @@
         "accessory": "Phụ kiện",
         "asset": "Thiết bị",
         "consumable": "Văn phòng phẩm",
-        "software":"Phần mềm",
+        "software": "Phần mềm",
         "taxtoken": "Token thuế",
         "tool": "Tool"
       }
@@ -901,7 +903,8 @@
     "supplier_details": "Chi tiết nhà cung cấp",
     "tax_token": "Token thuế",
     "tax_token_assign": "Token thuế đã cấp phát",
-    "tax_token_waiting": "Đang đợi xác nhận"
+    "tax_token_waiting": "Đang đợi xác nhận",
+    "users-tax-tokens": "Token thuế"
   },
   "model": {
     "label": {
@@ -947,25 +950,26 @@
   },
   "tax_token": {
     "label": {
-      "title":{
+      "title": {
         "tax_token": "Tất cả token thuế",
         "tax_token_waiting": "Đang đợi xác nhận",
         "time": "Thời gian",
         "location": "Văn phòng",
-        "sum-tax_token": "Số lượng",
-        "checkout":"Cấp phát",
+        "sum-tax-token": "Số lượng",
+        "checkout": "Cấp phát",
         "create": "Tạo token thuế",
         "clone": "Clone token thuế",
         "search": "Tìm kiếm nâng cao",
         "edit": "Cập nhật token thuế",
-        "detail":"Chi tiết token thuế",
+        "detail": "Chi tiết token thuế",
         "info": "Thông tin",
         "users": "Người dùng đã cấp phát",
         "dateCreate": "Đã tạo lúc",
         "updateAt": "Cập nhật tại",
-        "checkin":"Thu hồi",
+        "checkin": "Thu hồi",
         "time-purchase-date": "Ngày mua token thuế",
-        "time-expiration-date": "Ngày hết hạn token thuế"
+        "time-expiration-date": "Ngày hết hạn token thuế",
+        "my-tax-token": "Token thuế của tôi"
       },
       "field": {
         "name": "Tên token thuế",
@@ -974,17 +978,17 @@
         "checkoutTo": "Cấp phát đến",
         "user": "Họ và tên",
         "supplier": "Nhà cung cấp",
-        "note":"Ghi chú",
+        "note": "Ghi chú",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
-        "purchase_date":"Ngày mua",
-        "purchase_cost":"Chi phí mua",
+        "purchase_date": "Ngày mua",
+        "purchase_cost": "Chi phí mua",
         "expiration_date": "Ngày hết hạn",
         "checkout_at": "Ngày cấp phát",
         "checkout_counter": "Số lần cấp phát",
         "checkin_counter": "Số lần thu hồi",
         "assigned_status": "Xác nhận",
-        "created_at":"Ngày tạo",
+        "created_at": "Ngày tạo",
         "not_active": "Chưa kích hoạt",
         "assign": "Đã cấp phát",
         "usd": "VND",
@@ -993,9 +997,11 @@
         "warranty_months": "Bảo hành",
         "month": "Tháng",
         "category": "Danh mục",
-        "checkinTo":"Thu hồi từ",
-        "dateCheckin":"Ngày thu hồi",
-        "list_tax_token": "Danh sách token thuế"
+        "checkinTo": "Thu hồi từ",
+        "dateCheckin": "Ngày thu hồi",
+        "list_tax_token": "Danh sách token thuế",
+        "notes": "Ghi chú",
+        "dateCreate": "Ngày tạo"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -1007,12 +1013,12 @@
         "search": "Tìm kiếm nâng cao",
         "refresh": "Refresh"
       },
-      "message":{
-        "required":"bắt buộc"
+      "message": {
+        "required": "bắt buộc"
       },
-      "placeholder":{
-        "supplier":"Lựa chọn nhà cung cấp",
-        "user":"Lựa chọn một người dùng",
+      "placeholder": {
+        "supplier": "Lựa chọn nhà cung cấp",
+        "user": "Lựa chọn một người dùng",
         "name": "Nhập tên token thuế",
         "seri": "Nhập seri token thuế",
         "category": "Chọn một danh mục",
@@ -1020,15 +1026,15 @@
         "purchase_cost": "Nhập chi phí mua",
         "note": "Nhập ghi chú"
       },
-      "button":{
-        "search":"Tìm kiếm",
-        "create":"Thêm mới",
+      "button": {
+        "search": "Tìm kiếm",
+        "create": "Thêm mới",
         "edit": "Chỉnh sửa",
-        "checkout":"Cấp phát",
+        "checkout": "Cấp phát",
         "checkin": "Thu hồi",
         "clone": "Clone"
       },
-      "detail":{
+      "detail": {
         "assign": "Bàn Giao",
         "not_active": "Chưa kích hoạt",
         "tax_token": "Token thuế"

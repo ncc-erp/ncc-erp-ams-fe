@@ -504,6 +504,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCancleModalVisible}
           data={detail}
           ApiLink={HARDWARE_API}
+          refreshData={refreshData}
         />
       </MModal>
       <MModal

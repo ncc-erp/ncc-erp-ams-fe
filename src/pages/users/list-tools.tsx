@@ -49,12 +49,12 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
 
     const { tableProps, sorter, searchFormProps, tableQueryResult } =
         useTable<IToolResponse>({
-            // initialSorter: [
-            //     {
-            //         field: "checkout_at",
-            //         order: "desc",
-            //     },
-            // ],
+            initialSorter: [
+                {
+                    field: "id",
+                    order: "desc",
+                },
+            ],
             resource: ASSIGN_TOOLS_API,
             onSearch: (params: any) => {
                 const filters: CrudFilters = [];
@@ -193,7 +193,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
                 assigned_status: assigned_status,
             },
             successNotification: false
-        } , {
+        }, {
             onSuccess(data, variables, context) {
                 open?.({
                     type: 'success',
