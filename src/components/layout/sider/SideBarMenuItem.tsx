@@ -17,7 +17,6 @@ type MenuItemProps = {
 export const SideBarMenuItem = (props: MenuItemProps) => {
   const { label, itemList, collapsed, hasItemIcon, ...others } = props;
   const { menuItems, selectedKey } = useMenu();
-
   const filterSideBarItems = (item: IMenuItem, label: string, filters: string[]) => {
     const checkLabel = item.options?.label === label;
     const checkName = filters.indexOf(item.name) > -1;
@@ -40,6 +39,7 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
                   fontWeight: isSelected ? "bold" : "normal"
                 }}
                 key={route}
+                eventKey={route}
                 icon={(<SideBarIcon title={name} type={"item"} />)}
               >
                 <div
