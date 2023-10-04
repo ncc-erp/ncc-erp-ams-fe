@@ -180,7 +180,6 @@ export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () =
         model,
         location,
         status_label,
-        purchase_date,
         last_checkout,
         assigned_to,
       } = params;
@@ -188,7 +187,7 @@ export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () =
         {
           field: "search",
           operator: "eq",
-          value: search ? search : searchParam,
+          value: search ?? searchParam,
         },
         {
           field: "filter",
@@ -205,19 +204,19 @@ export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () =
         {
           field: "rtd_location_id",
           operator: "eq",
-          value: location ? location : rtd_location_id,
+          value: location ?? rtd_location_id,
         },
         {
           field: "dateCheckoutFrom",
           operator: "eq",
-          value: last_checkout
+          value: last_checkout && last_checkout.length > 0
             ? last_checkout[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "dateCheckoutTo",
           operator: "eq",
-          value: last_checkout
+          value: last_checkout && last_checkout.length > 1
             ? last_checkout[1].format().substring(0, 10)
             : undefined,
         },
@@ -1156,17 +1155,16 @@ export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () =
             location: localStorage.getItem("rtd_location_id")
               ? searchValuesLocation
               : Number(rtd_location_id),
-            last_checkout:
-              localStorage.getItem("last_checkout") !== null
-                ? searchValuesByDateCheckoutFrom !== "" && searchValuesByDateCheckoutTo !== ""
-                  ? [
-                    moment(searchValuesByDateCheckoutFrom),
-                    moment(searchValuesByDateCheckoutTo),
-                  ]
-                  : dateCheckoutFromParam && dateCheckoutToParam
-                    ? [moment(dateCheckoutFromParam), moment(dateCheckoutToParam)]
-                    : ""
-                : "",
+            last_checkout: localStorage.getItem("last_checkout")
+              ? searchValuesByDateCheckoutFrom && searchValuesByDateCheckoutTo
+                ? [
+                  moment(searchValuesByDateCheckoutFrom),
+                  moment(searchValuesByDateCheckoutTo),
+                ]
+                : dateCheckoutFromParam && dateCheckoutToParam
+                  ? [moment(dateCheckoutFromParam), moment(dateCheckoutToParam)]
+                  : ""
+              : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}

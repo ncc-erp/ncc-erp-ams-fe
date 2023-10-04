@@ -23,10 +23,8 @@ import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import {
   CLIENT_HARDWARE_API,
-  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
@@ -75,18 +73,6 @@ export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
     ],
   });
 
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
   const {
     refetch,
     data: updateData,
@@ -106,24 +92,14 @@ export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
     setMessageErr(messageErr);
 
     const formData = new FormData();
+
     formData.append("name", event.name);
-    if (event.note !== null) {
-      formData.append("note", event.note ?? "");
-    }
-    if (event.status_label !== undefined) {
-      formData.append("status_id", event.status_label);
-    }
-    formData.append(
-      "checkin_at",
-      moment(new Date()).format("YYYY-MM-DDTHH:mm")
-    );
+    formData.append("note", event.note ?? "");
+    formData.append("status_id", event.status_label);
+    formData.append("checkin_at", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
     formData.append("model_id", event.model.toString());
-    if (event.rtd_location !== undefined) {
-      formData.append("rtd_location", event.rtd_location.toString());
-    }
-    if (event.assigned_to !== null) {
-      formData.append("assigned_user", event.assigned_to);
-    }
+    formData.append("assigned_user", event.assigned_to);
+
     setPayload(formData);
   };
 
@@ -164,20 +140,14 @@ export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
     }
   }, [updateData]);
 
-  const findLabel = (value: number): Boolean => {
-    let check = true;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
-          check = false;
-          return false;
-        }
-      }
-    });
-    return check;
+  const findLabel = (value: number): boolean => {
+    if (statusLabelSelectProps.options) {
+      statusLabelSelectProps.options?.forEach((item) => {
+        return (value === item.value && (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN))
+      });
+    }
+
+    return false;
   };
 
   const filterStatusLabelSelectProps = () => {

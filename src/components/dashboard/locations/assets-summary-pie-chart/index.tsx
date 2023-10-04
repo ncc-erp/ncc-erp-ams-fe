@@ -20,57 +20,64 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const [dataPie, setDataPie] = useState<any>([]);
   const t = useTranslate();
 
+  const sumEachCategory = (category: string, is_client = false) => {
+    let category_const = (CategoryType as { [key: string]: string })[category.toUpperCase()];
+    let columnCount = category.toLowerCase() + "s_count";
+
+    if (category === "Asset" && is_client) {
+      columnCount = "client_" + columnCount;
+    }
+    if (category === "TaxToken") {
+      columnCount = "digital_signatures_count";
+    }
+    if (category === "Accessory") {
+      columnCount = "accessories_count";
+    }
+
+    let dataCategory: any;
+    let sumCategory: any;
+
+    data.forEach((item: any) => {
+      if (item?.category_type === category_const) {
+        dataCategory = categories.filter(
+          (item1) => item1?.category_type === category_const
+        )
+
+        sumCategory = dataCategory.reduce(
+          (total: number, object: any) => {
+            return total + Number(object[columnCount])
+          },
+          0
+        )
+      }
+    })
+
+    return sumCategory;
+  }
+
   useEffect(() => {
     let dataClone = { ...dataActive };
-    for (var i = 0; i < data.length; i++) {
-      let dataConsumable = categories.filter(
-        (item) => item.category_type === CategoryType.CONSUMABLE
-      ) as any;
-      let dataAccessory = categories.filter(
-        (item) => item.category_type === CategoryType.ACCESSORY
-      ) as any;
-      let dataTool = categories.filter(
-        (item) => item.category_type === CategoryType.TOOL
-      ) as any;
-      let dataTaxToken = categories.filter(
-        (item) => item.category_type === CategoryType.TAXTOKEN
-      ) as any;
-      let dataClientAsset = categories.filter(
-        (item) => item.category_type === CategoryType.ASSET
-      ) as any;
 
-      let sumConsumable = dataConsumable.reduce(
-        (total: number, object: any) => {
-          return total + object.consumables_count;
-        },
-        0
-      );
+    let sumConsumable = sumEachCategory("Consumable");
+    let sumAccessory = sumEachCategory("Accessory");
+    let sumTool = sumEachCategory("Tool");
+    let sumTaxToken = sumEachCategory("TaxToken");
+    let sumClientAsset = sumEachCategory("Asset", true);
 
-      let sumAccessory = dataAccessory.reduce((total: number, object: any) => {
-        return total + object.accessories_count;
-      }, 0);
-      let sumTool = dataTool.reduce((total: number, object: any) => {
-        return total + object.tools_count;
-      }, 0);
-      let sumTaxToken = dataTaxToken.reduce((total: number, object: any) => {
-        return total + object.digital_signatures_count;
-      }, 0);
-      let sumClientAsset = dataClientAsset.reduce((total: number, object: any) => {
-        return total + object.client_assets_count;
-      }, 0);
-
+    for (let i = 0; i < data.length; i++) {
       dataClone = {
         ...dataClone,
-        [data[i].name]:
-          data.slice(0, 6)[i] && data.slice(0, 6)[i].assets_count > 0
-            ? true
-            : false,
-        [t("dashboard.field.typeConsumable")]: sumConsumable ? false : true,
-        [t("dashboard.field.typeAccessory")]: sumAccessory ? false : true,
-        [t("dashboard.field.typeTool")]: sumTool ? false : true,
-        [t("dashboard.field.typeTaxToken")]: sumTaxToken ? false : true,
-        [t("dashboard.field.typeClientAsset")]: sumClientAsset ? false : true,
+        [data[i].name]: !!(data.slice(0, 6)[i] && data.slice(0, 6)[i].assets_count > 0),
       };
+    }
+
+    dataClone = {
+      ...dataClone,
+      [t("dashboard.field.typeConsumable")]: sumConsumable ? true : false,
+      [t("dashboard.field.typeAccessory")]: sumAccessory ? true : false,
+      [t("dashboard.field.typeTool")]: sumTool ? true : false,
+      [t("dashboard.field.typeTaxToken")]: sumTaxToken ? true : false,
+      [t("dashboard.field.typeClientAsset")]: sumClientAsset ? true : false,
     }
 
     setDataActive(dataClone);
@@ -83,71 +90,22 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
     let taxtoken = { label: t("dashboard.field.typeTaxToken") } as any;
     let clientAsset = { label: t("dashboard.field.typeClientAsset") } as any;
 
+    consumable.value = sumEachCategory("Consumable");
+    accessory.value = sumEachCategory("Accessory");
+    tool.value = sumEachCategory("Tool");
+    taxtoken.value = sumEachCategory("TaxToken");
+    clientAsset.value = sumEachCategory("Asset", true);
+
     let dataAsset = [] as any;
 
-    data.map((item: any) => {
+    data.forEach((item: any) => {
       let asset = {} as any;
 
-      if (item.category_type === CategoryType.CONSUMABLE) {
-        let dataConsumable = categories.filter(
-          (item) => item.category_type === CategoryType.CONSUMABLE
-        ) as any;
-        let sumConsumable = dataConsumable.reduce(
-          (total: number, object: any) => {
-            return total + object.consumables_count;
-          },
-          0
-        );
-        consumable.value = sumConsumable;
-      } else if (item.category_type === CategoryType.ACCESSORY) {
-        let dataAccessory = categories.filter(
-          (item) => item.category_type === CategoryType.ACCESSORY
-        ) as any;
-        let sumAccessory = dataAccessory.reduce(
-          (total: number, object: any) => {
-            return total + object.accessories_count;
-          },
-          0
-        );
-        accessory.value = sumAccessory;
-      } else if (item.category_type === CategoryType.TOOL) {
-        let dataTool = categories.filter(
-          (item) => item.category_type === CategoryType.TOOL
-        ) as any;
-        let sumTool = dataTool.reduce(
-          (total: number, object: any) => {
-            return total + object.tools_count;
-          },
-          0
-        );
-        tool.value = sumTool;
-      } else if (item.category_type === CategoryType.TAXTOKEN) {
-        let dataTaxToken = categories.filter(
-          (item) => item.category_type === CategoryType.TAXTOKEN
-        ) as any;
-        let sumTaxToken = dataTaxToken.reduce(
-          (total: number, object: any) => {
-            return total + object.digital_signatures_count;
-          },
-          0
-        );
-        taxtoken.value = sumTaxToken;
-      } else {
+      if (item.category_type === CategoryType.ASSET) {
         asset.label = item.name;
         asset.value = item.assets_count;
-
-        let dataClientAsset = categories.filter(
-          (item) => item.category_type === CategoryType.ASSET
-        ) as any;
-        let sumClientAsset = dataClientAsset.reduce(
-          (total: number, object: any) => {
-            return total + object.client_assets_count;
-          },
-          0
-        );
-        clientAsset.value = sumClientAsset
-        
       }
+
       dataAsset.push(asset);
     });
     setDataPie([...dataAsset, consumable, accessory, tool, taxtoken, clientAsset]);

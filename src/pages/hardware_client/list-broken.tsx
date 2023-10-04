@@ -187,14 +187,14 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
         {
           field: "dateFrom",
           operator: "eq",
-          value: purchase_date
+          value: purchase_date && purchase_date.length > 0
             ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
-          value: purchase_date
+          value: purchase_date && purchase_date.length > 1
             ? purchase_date[1].format().substring(0, 10)
             : undefined,
         },
@@ -695,26 +695,26 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
         key: "notes",
         title: t("hardware.label.field.note"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
+          <div dangerouslySetInnerHTML={{ __html: `${value ?? ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
       {
         key: "checkout_counter",
         title: t("hardware.label.field.checkout_counter"),
-        render: (value: number) => <TextField value={value ? value : 0} />,
+        render: (value: number) => <TextField value={value ?? 0} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("hardware.label.field.checkin_counter"),
-        render: (value: number) => <TextField value={value ? value : 0} />,
+        render: (value: number) => <TextField value={value ?? 0} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "requestable",
         title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value ?? ""} />,
         defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
@@ -941,17 +941,11 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
             location: localStorage.getItem("rtd_location_id")
               ? searchValuesLocation
               : Number(rtd_location_id),
-            purchase_date:
-              localStorage.getItem("purchase_date") !== null
-                ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
-                  ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
-                  : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
-                : "",
+            purchase_date: localStorage.getItem("purchase_date")
+              ? searchValuesByDateFrom && searchValuesByDateTo
+                ? [moment(searchValuesByDateFrom), moment(searchValuesByDateTo)]
+                : dateFromParam && dateToParam ? [moment(dateFromParam), moment(dateToParam)] : ""
+              : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
@@ -973,11 +967,7 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
           <Form.Item
             label={t("hardware.label.title.location")}
             name="location"
-            className={
-              searchValuesLocation !== 0
-                ? "search-month-location-null"
-                : "search-month-location-null"
-            }
+            className="search-month-location-null"
           >
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
@@ -1159,7 +1149,7 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
             (pageTotal as number) > 10
               ? {
                 position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
+                total: (pageTotal as number) ?? 0,
                 showSizeChanger: true,
               }
               : false
@@ -1230,13 +1220,7 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkout(record)}
                   >
                     {t("hardware.label.button.checkout")}
@@ -1248,13 +1232,7 @@ export const ClientHardwareListBroken: React.FC<IResourceComponentsProps> = () =
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkin(record)}
                   >
                     {t("hardware.label.button.checkin")}

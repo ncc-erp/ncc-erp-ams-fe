@@ -1088,19 +1088,13 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                         OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                       }
                     >
-                      {isLoadingArr[record.id] !== false && (
+                      {isLoadingArr[record.id] && (
                         <Button
                           className="ant-btn-accept"
                           type="primary"
                           shape="round"
                           size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                                ? false
-                                : true
-                          }
+                          loading={isLoadingArr[record.id] ? true : false}
                         >
                           {t("hardware.label.button.accept_checkout")}
                         </Button>
@@ -1120,19 +1114,13 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                         OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                       }
                     >
-                      {isLoadingArr[record.id] !== false && (
+                      {isLoadingArr[record.id] && (
                         <Button
                           className="ant-btn-accept"
                           type="primary"
                           shape="round"
                           size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                                ? false
-                                : true
-                          }
+                          loading={isLoadingArr[record.id] ? true : false}
                         >
                           {t("hardware.label.button.accept_checkin")}
                         </Button>
@@ -1147,13 +1135,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                       type="primary"
                       shape="round"
                       size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
+                      loading={isLoadingArr[record.id] ? true : false}
                       onClick={() => cancle(record)}
                     >
                       {t("hardware.label.button.rejectCheckout")}
@@ -1165,13 +1147,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => cancle(record)}
                   >
                     {t("hardware.label.button.rejectCheckin")}

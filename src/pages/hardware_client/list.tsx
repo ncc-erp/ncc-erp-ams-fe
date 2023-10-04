@@ -1529,14 +1529,9 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkout(record)}
+                    style={{ backgroundColor: "#0073B7", color: "white", borderColor: "#0073B7" }}
                   >
                     {t("hardware.label.button.checkout")}
                   </Button>
@@ -1547,13 +1542,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkin(record)}
                   >
                     {t("hardware.label.button.checkin")}

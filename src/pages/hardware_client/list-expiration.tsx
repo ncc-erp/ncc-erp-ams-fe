@@ -216,14 +216,14 @@ export const ClientHardwareListExpiration: React.FC<IResourceComponentsProps> = 
         {
           field: "dateFrom",
           operator: "eq",
-          value: purchase_date
+          value: purchase_date && purchase_date.length > 0
             ? purchase_date[0].format().substring(0, 10)
             : undefined,
         },
         {
           field: "dateTo",
           operator: "eq",
-          value: purchase_date
+          value: purchase_date && purchase_date.length > 1
             ? purchase_date[1].format().substring(0, 10)
             : undefined,
         },
@@ -856,14 +856,6 @@ export const ClientHardwareListExpiration: React.FC<IResourceComponentsProps> = 
         ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
-      // {
-      //   key: "last_checkout",
-      //   title: "Het bao hanh",
-      //   render: (value: IHardware) => (value &&
-      //     <>Thiết bị còn <DateField format="LLL" value={value ? value.datetime : ""} /> ngày bảo hành </>
-      //   ),
-      //   defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
-      // },
     ],
     [filterCategory]
   );
@@ -1538,13 +1530,7 @@ export const ClientHardwareListExpiration: React.FC<IResourceComponentsProps> = 
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkout(record)}
                   >
                     {t("hardware.label.button.checkout")}
@@ -1556,13 +1542,7 @@ export const ClientHardwareListExpiration: React.FC<IResourceComponentsProps> = 
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkin(record)}
                   >
                     {t("hardware.label.button.checkin")}

@@ -93,18 +93,14 @@ export const ClientHardwareCheckout = (props: HardwareCheckoutProps) => {
     setMessageErr(messageErr);
 
     const formData = new FormData();
+
     formData.append("name", event.name);
-    if (event.note !== null) {
-      formData.append("note", event.note ?? "");
-    }
+    formData.append("note", event.note ?? "");
     formData.append("checkout_at", event.checkout_at);
     formData.append("model_id", event.model.toString());
     formData.append("status_id", STATUS_LABELS.ASSIGN as any);
-
-    if (event.assigned_user !== undefined) {
-      formData.append("assigned_user", event.assigned_user);
-      formData.append("checkout_to_type", "user");
-    }
+    formData.append("assigned_user", event.assigned_user);
+    formData.append("checkout_to_type", "user");
 
     setPayload(formData);
   };
@@ -270,7 +266,12 @@ export const ClientHardwareCheckout = (props: HardwareCheckoutProps) => {
       </Form.Item>
 
       <div className="submit">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          style={{ backgroundColor: "#0073B7", color: "white", borderColor: "#0073B7" }}
+        >
           {t("hardware.label.button.checkout")}
         </Button>
       </div>

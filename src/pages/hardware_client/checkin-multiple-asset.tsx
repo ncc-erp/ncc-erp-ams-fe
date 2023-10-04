@@ -60,7 +60,7 @@ export const ClientHardwareCheckinMultipleAsset = (props: HardwareCheckinProps) 
       values: {
         assets: event.assets,
         status_id: event.status_id,
-        note: event.note !== null ? event.note : "",
+        note: event.note ?? "",
         checkin_at: event.checkin_at,
       },
     });
@@ -89,20 +89,15 @@ export const ClientHardwareCheckinMultipleAsset = (props: HardwareCheckinProps) 
     }
   }, [dataCheckin, form, setIsModalVisible]);
 
-  const findLabel = (value: number): Boolean => {
-    let check = true;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.READY_TO_DEPLOY ||
-          item.label === EStatus.ASSIGN
-        ) {
-          check = false;
-          return false;
-        }
-      }
-    });
-    return check;
+  const findLabel = (value: number): boolean => {
+
+    if (statusLabelSelectProps.options) {
+      statusLabelSelectProps.options?.forEach((item) => {
+        return (value === item.value && (item.label === EStatus.READY_TO_DEPLOY || item.label === EStatus.ASSIGN))
+      });
+    }
+
+    return false;
   };
 
   const filterStatusLabelSelectProps = () => {

@@ -205,17 +205,14 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
     }
   }, [createData]);
 
-  const findLabel = (value: number): Boolean => {
-    let check = false;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (item.label === EStatus.ASSIGN) {
-          check = true;
-          return true;
-        }
-      }
-    });
-    return check;
+  const findLabel = (value: number): boolean => {
+    if (statusLabelSelectProps.options) {
+      statusLabelSelectProps.options?.forEach((item) => {
+        return (value === item.value && item.label === EStatus.ASSIGN)
+      });
+    }
+
+    return false;
   };
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {

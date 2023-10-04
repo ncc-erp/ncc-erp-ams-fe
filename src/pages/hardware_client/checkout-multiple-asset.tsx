@@ -65,7 +65,7 @@ export const ClientHardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps
         assigned_user: event.assigned_user,
         checkout_to_type: "user",
         status_id: STATUS_LABELS.ASSIGN,
-        note: event.note !== null ? event.note : "",
+        note: event.note ?? "",
       },
     });
   };

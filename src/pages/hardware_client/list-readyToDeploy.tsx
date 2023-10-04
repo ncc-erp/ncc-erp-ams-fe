@@ -1524,13 +1524,7 @@ export const ClientHardwareListReadyToDeploy: React.FC<
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkout(record)}
                   >
                     {t("hardware.label.button.checkout")}
@@ -1542,13 +1536,7 @@ export const ClientHardwareListReadyToDeploy: React.FC<
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => checkin(record)}
                   >
                     {t("hardware.label.button.checkin")}

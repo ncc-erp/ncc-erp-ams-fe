@@ -1,13 +1,10 @@
 import { useTranslate } from "@pankod/refine-core";
-import { Typography, Tag, Row, Col, List, TextField, Table, useTable } from "@pankod/refine-antd";
+import { Typography, Tag, Row, Col } from "@pankod/refine-antd";
 import { UserOutlined } from "@ant-design/icons";
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
 import { getDetailAssetStatus } from "untils/assets";
 import moment from "moment";
-import { CLIENT_HARDWARE_API } from "api/baseApi";
-import { IAssetHistories } from "interfaces/report";
-import { useMemo } from "react";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -18,33 +15,6 @@ type HardwareShowProps = {
 export const ClientHardwareShow = (props: HardwareShowProps) => {
   const { detail } = props;
   const t = useTranslate();
-  // const { tableProps } = useTable<IAssetHistories>({
-  //   resource: CLIENT_HARDWARE_API + `/${detail?.id}/report`,
-  //   metaData: {
-  //     pagination: false,
-  //   }
-  // });
-
-  // const collumns = useMemo(
-  //   () => [
-  //     {
-  //       key: "action_type",
-  //       title: t("report.label.field.type"),
-  //       render: (value: IAssetHistories) => <TextField value={value ? value : ""} />,
-  //     },
-  //     {
-  //       key: "created_at",
-  //       title: t("report.label.field.datetime"),
-  //       render: (value: any) => <TextField value={value ? moment(value?.datetime).add(moment.duration(moment().format('Z'))).format('DD-MM-YYYY hh:mmA') : ""} />,
-  //     },
-  //     {
-  //       key: "user",
-  //       title: t("report.label.field.user"),
-  //       render: (value: IAssetHistories) => <TextField value={value ? value : ""} />,
-  //     },
-  //   ],
-  //   []
-  // );
 
   return (
     <div className="hardware-detail">
@@ -250,22 +220,6 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
           </Row>
         </>
       </div>
-      {/* <div className="hardware-history">
-        <List
-          title={t("hardware.label.title.asset-history")}
-        >
-          <Table
-            {...tableProps}
-            rowKey="id"
-            pagination={false}
-            scroll={{ x: 500 }}
-          >
-            {collumns.map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} />
-            ))}
-          </Table>
-        </List>
-      </div> */}
     </div>
 
   );

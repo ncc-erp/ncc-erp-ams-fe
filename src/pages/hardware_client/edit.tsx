@@ -215,21 +215,14 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
     fetch();
   }, [payload]);
 
-  const findLabel = (value: number): Boolean => {
-    let check = false;
-    statusLabelSelectProps.options?.forEach((item) => {
-      if (value === item.value) {
-        if (
-          item.label === EStatus.PENDING ||
-          item.label === EStatus.BROKEN ||
-          item.label === EStatus.READY_TO_DEPLOY
-        ) {
-          check = true;
-          return true;
-        }
-      }
-    });
-    return check;
+  const findLabel = (value: number): boolean => {
+    if (statusLabelSelectProps.options) {
+      statusLabelSelectProps.options?.forEach((item) => {
+        return (value === item.value && (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN || item.label === EStatus.READY_TO_DEPLOY))
+      });
+    }
+
+    return false;
   };
 
   const onChangeStatusLabel = (value: { value: string; label: string }) => {
