@@ -28,6 +28,7 @@ jobs:
           REACT_APP_AUTH_CLIENT_ID: ${{secrets.REACT_APP_AUTH_CLIENT_ID}}
           REACT_APP_AUTH_SECRET_KEY: ${{secrets.REACT_APP_AUTH_SECRET_KEY}}
           REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
+          CI: ""
 
       - name: Compress build file
         run: zip -r fe.zip dist/
