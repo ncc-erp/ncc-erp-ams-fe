@@ -57,6 +57,8 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
     const { list } = useNavigation();
     const [isLoadingArr] = useState<boolean[]>([]);
 
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
+
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
@@ -386,6 +388,7 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -453,6 +456,7 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
             <TotalDetail
                 links={ACCRSSORY_TOTAL_DETAIL_API}
                 filters={filters}
+                isReload={isTotalDetailReload}
             ></TotalDetail>
 
             {loading ? (
@@ -523,6 +527,9 @@ export const LocationDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                                             hideText
                                             size="small"
                                             recordItemId={record.id}
+                                            onSuccess={() => {
+                                                setIsTotalDetailReload(!isTotalDetailReload);
+                                            }}
                                         />
                                     </Tooltip>
                                 ) : (
