@@ -31,7 +31,7 @@ jobs:
           CI: ""
 
       - name: Compress build file
-        run: zip -r fe.zip dist/
+        run: zip -r fe.zip build/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
