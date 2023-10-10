@@ -1164,21 +1164,21 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                                         onClick={() => edit(record)}
                                     />
                                 </Tooltip>
-
-                                <Tooltip
-                                    title={t("tools.label.tooltip.delete")}
-                                    color={"red"}
-                                >
-                                    <DeleteButton
-                                        resourceName={TOOLS_API}
-                                        hideText
-                                        size="small"
-                                        recordItemId={record.id}
-                                        onSuccess={() => {
-                                            setIsTotalDetailReload(!isTotalDetailReload);
-                                        }}
-                                    />
-                                </Tooltip>
+                                {record.assigned_to !== null ? (
+                                    <DeleteButton hideText size="small" disabled />
+                                ) : (
+                                    <Tooltip
+                                        title={t("tools.label.tooltip.delete")}
+                                        color={"red"}
+                                    >
+                                        <DeleteButton
+                                            resourceName={TOOLS_API}
+                                            hideText
+                                            size="small"
+                                            recordItemId={record.id}
+                                        />
+                                    </Tooltip>
+                                )}
                                 {record.user_can_checkout && (
                                     <Button
                                         className="ant-btn-checkout"

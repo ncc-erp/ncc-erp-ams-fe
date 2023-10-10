@@ -56,6 +56,7 @@ import { TaxTokenListWaitingConfirm } from "pages/tax_token/list-waiting";
 import { ToolList } from "pages/tools/list";
 import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
+import { UserListTaxToken } from "pages/users/list-tax-tokens";
 import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken, ClientHardwareListPending, ClientHardwareListReadyToDeploy } from "pages/hardware_client";
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
@@ -228,6 +229,14 @@ function App() {
             }
           },
           {
+            name: t("resource.users-tax-tokens"),
+            list: UserListTaxToken,
+            options: {
+              route: "users-tax-tokens",
+              label: "users"
+            }
+          },
+          {
             name: t("resource.users_licenses"),
             list: UserListLicenses,
             options: {
@@ -361,6 +370,7 @@ function App() {
             list: TaxTokenList,
             options: {
               route: "tax_token",
+              label: "tax_token"
             },
           },
           {
@@ -368,6 +378,7 @@ function App() {
             list: TaxTokenListWaitingConfirm,
             options: {
               route: "tax_token_waiting",
+              label: "tax_token"
             },
           },
           {

@@ -16,7 +16,7 @@ import { ICompany } from "interfaces/company";
 import { STATUS_LABELS_API, TAX_TOKEN_CHECKIN_API } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
-import { ITaxTokenMultipleRequestCheckout, ITaxTokenRequestCheckout } from "interfaces/tax_token";
+import { ITaxTokenMultipleRequestCheckin, ITaxTokenRequestCheckout } from "interfaces/tax_token";
 
 type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;
@@ -32,7 +32,7 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
   const { open } = useNotification();
   const t = useTranslate();
 
-  const { formProps, form } = useForm<ITaxTokenMultipleRequestCheckout>({
+  const { formProps, form } = useForm<ITaxTokenMultipleRequestCheckin>({
     action: "create",
   });
 
@@ -50,13 +50,12 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
 
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
-  const onFinish = (event: ITaxTokenMultipleRequestCheckout) => {
+  const onFinish = (event: ITaxTokenMultipleRequestCheckin) => {
     mutate({
       resource: TAX_TOKEN_CHECKIN_API,
       values: {
         signatures: event.signatures,
-        checkout_date: event.checkout_date,
-        assigned_to: event.assigned_to,
+        checkin_at: event.checkin_at,
         note: event.note !== null ? event.note : "",
       },
       successNotification: false,

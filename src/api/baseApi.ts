@@ -38,8 +38,8 @@ export const TAX_TOKEN_API = "api/v1/digital_signatures";
 export const TAX_TOKEN_CATEGORIES_API = "api/v1/categories/taxtoken/selectlist";
 export const TAX_TOKEN_CHECKOUT_API = "api/v1/digital_signatures/checkout";
 export const TAX_TOKEN_CHECKIN_API = "api/v1/digital_signatures/checkin";
-export const TAX_TOKEN_TOTAL_DETAIL_API =
-  "api/v1/digital_signatures/total-detail";
+export const TAX_TOKEN_TOTAL_DETAIL_API = "api/v1/digital_signatures/total-detail";
+export const TAX_TOKEN_ASSIGN_API = "api/v1/digital_signatures/assign";
 
 export const USERS_API = "api/v1/users/selectlist";
 export const SUPPLIERS_API = "api/v1/suppliers";

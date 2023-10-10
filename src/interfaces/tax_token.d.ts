@@ -129,6 +129,12 @@ export interface ITaxTokenMultipleRequestCheckout {
     note: string;
 }
 
+export interface ITaxTokenMultipleRequestCheckin {
+    signatures: {}[];
+    checkin_at: string;
+    note: string;
+}
+
 export interface ITaxTokenRequestCheckin {
     status_label: string;
     id: number;
