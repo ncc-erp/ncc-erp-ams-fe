@@ -2,11 +2,9 @@
 import {
     Button,
     Checkbox,
-    CloneButton,
     DateField,
     DeleteButton,
     EditButton,
-    Form,
     getDefaultSortOrder,
     List,
     ShowButton,
@@ -21,11 +19,10 @@ import {
 import {
     CrudFilters,
     HttpError,
-    IResourceComponentsProps,
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { ACCESSORY_API } from "api/baseApi";
+import { ACCESSORY_API, ACCESSORY_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -40,6 +37,7 @@ import {
 import { IAccessoryFilterVariables, IAccessoryResponseCheckout, IAccesstoryRequest, IAccesstoryResponse } from "interfaces/accessory";
 import { AccessoryShow } from "pages/accessory/show";
 import { AccessoryCheckout, AccessoryEdit } from "pages/accessory";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 
 const defaultCheckedListAccessory = [
@@ -53,10 +51,17 @@ const defaultCheckedListAccessory = [
     "notes",
 ];
 
-export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () => {
+type detailAccessoryProps = {
+    id_name: string;
+};
+
+export const DetailsAccessory = (props: detailAccessoryProps) => {
     const translate = useTranslate();
     const { list } = useNavigation();
+    const { id_name } = props;
     const [isLoadingArr] = useState<boolean[]>([]);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -81,9 +86,9 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
     const searchParam = searchParams.get("search");
-    const supplier_id = searchParams.get('id');
+    const type_id = searchParams.get('id');
 
-    const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
+    const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
         IAccesstoryResponse,
         HttpError,
         IAccessoryFilterVariables
@@ -94,7 +99,14 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                 order: "desc",
             },
         ],
-        resource: `${ACCESSORY_API}?supplier_id=${supplier_id}`,
+        permanentFilter: [
+            {
+                field: id_name,
+                operator: 'eq',
+                value: type_id
+            }
+        ],
+        resource: ACCESSORY_API,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let { search, category } = params;
@@ -110,9 +122,9 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                     value: category ? category : category_id,
                 },
                 {
-                    field: "supplier_id",
+                    field: id_name,
                     operator: "eq",
-                    value: supplier_id,
+                    value: type_id,
                 },
             );
 
@@ -387,6 +399,7 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -451,12 +464,11 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                 </div>
             </div>
 
-            <div className="sum-items">
-                <span className="name-sum-assets">
-                    {translate("hardware.label.title.sum-assets")}
-                </span>{" "}
-                : {tableProps.pagination ? tableProps.pagination?.total : 0}
-            </div>
+            <TotalDetail
+                links={`${ACCESSORY_TOTAL_DETAIL_API}?${id_name}=${type_id}`}
+                filters={filters}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
 
             {loading ? (
                 <>
@@ -526,6 +538,9 @@ export const SupplierDetailsAccessory: React.FC<IResourceComponentsProps> = () =
                                             hideText
                                             size="small"
                                             recordItemId={record.id}
+                                            onSuccess={() => {
+                                                setIsTotalDetailReload(!isTotalDetailReload);
+                                            }}
                                         />
                                     </Tooltip>
                                 ) : (

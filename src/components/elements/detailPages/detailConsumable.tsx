@@ -2,11 +2,9 @@
 import {
     Button,
     Checkbox,
-    CloneButton,
     DateField,
     DeleteButton,
     EditButton,
-    Form,
     getDefaultSortOrder,
     List,
     ShowButton,
@@ -25,7 +23,7 @@ import {
     useNavigation,
     useTranslate,
 } from "@pankod/refine-core";
-import { CONSUMABLE_API } from "api/baseApi";
+import { CONSUMABLE_API, CONSUMABLE_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -41,6 +39,7 @@ import { IConsumablesFilterVariables, IConsumablesRequest, IConsumablesResponse,
 import moment from "moment";
 import { ConsumablesCheckout, ConsumablesEdit } from "pages/consumables";
 import { ConsumablesShow } from "pages/consumables/show";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -53,10 +52,17 @@ const defaultCheckedList = [
     "notes",
 ];
 
-export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> = () => {
+type detailConsumableProps = {
+    id_name: string;
+};
+
+export const DetailsConsumable = (props: detailConsumableProps) => {
     const translate = useTranslate();
     const { list } = useNavigation();
+    const { id_name } = props;
     const [isLoadingArr] = useState<boolean[]>([]);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -81,9 +87,9 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
     const searchParam = searchParams.get("search");
-    const manufacturer_id = searchParams.get('id');
+    const type_id = searchParams.get('id');
 
-    const { tableProps, tableQueryResult, searchFormProps, sorter } = useTable<
+    const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
         IConsumablesResponse,
         HttpError,
         IConsumablesFilterVariables
@@ -94,7 +100,14 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                 order: "desc",
             },
         ],
-        resource: `${CONSUMABLE_API}?manufacturer_id=${manufacturer_id}`,
+        permanentFilter: [
+            {
+                field: id_name,
+                operator: 'eq',
+                value: type_id
+            }
+        ],
+        resource: CONSUMABLE_API,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let { search, category } = params;
@@ -110,9 +123,9 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     value: category ? category : category_id,
                 },
                 {
-                    field: "manufacturer_id",
+                    field: id_name,
                     operator: "eq",
-                    value: manufacturer_id,
+                    value: type_id,
                 },
             );
 
@@ -376,6 +389,7 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -387,7 +401,8 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
     return (
 
         <List
-            title=""
+            title={translate("consumables.label.title.consumables")}
+
         >
             <div className="all">
                 <TableAction searchFormProps={searchFormProps} />
@@ -439,12 +454,11 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                     </div>
                 </div>
             </div>
-            <div className="sum-items">
-                <span className="name-sum-assets">
-                    {translate("hardware.label.title.sum-assets")}
-                </span>{" "}
-                : {tableProps.pagination ? tableProps.pagination?.total : 0}
-            </div>
+            <TotalDetail
+                links={`${CONSUMABLE_TOTAL_DETAIL_API}?${id_name}=${type_id}`}
+                filters={filters}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
 
             {loading ? (
                 <>
@@ -508,6 +522,9 @@ export const ManufacturesDetailsConsumable: React.FC<IResourceComponentsProps> =
                                     hideText
                                     size="small"
                                     recordItemId={record.id}
+                                    onSuccess={() => {
+                                        setIsTotalDetailReload(!isTotalDetailReload);
+                                    }}
                                 />
 
                                 {record.user_can_checkout === true ? (

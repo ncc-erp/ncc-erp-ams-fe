@@ -96,6 +96,21 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         title: t("supplier.label.field.accessories"),
         render: (value: number) => <TagField value={value} />,
       },
+      {
+        key: "consumables_count",
+        title: t("supplier.label.field.consumables"),
+        render: (value: number) => <TagField value={value} />,
+      },
+      {
+        key: "tools_count",
+        title: t("supplier.label.field.tools"),
+        render: (value: number) => <TagField value={value} />,
+      },
+      {
+        key: "digital_signatures_count",
+        title: t("supplier.label.field.tax_tokens"),
+        render: (value: number) => <TagField value={value} />,
+      },
     ],
     []
   );

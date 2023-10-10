@@ -361,6 +361,7 @@
         "refresh": "Refresh"
       },
       "title": {
+        "tool": "Tool & Domain",
         "tools": "Tất cả Tool & Domain",
         "create": "Tạo Tool & Domain mới",
         "edit": "Cập nhật",
@@ -780,7 +781,8 @@
         "asset": "Tài sản",
         "accessories": "Phụ kiện",
         "consumables": "Văn phòng phẩm",
-        "tools": "Tool",
+        "tools": "Tool & Domain",
+        "tax_token": "Token thuế",
         "softwares": "Phần mềm"
       },
       "field": {
@@ -797,6 +799,8 @@
         "assetCount": "Thiết bị",
         "accessoriesCount": "Phụ kiện",
         "consumableCount": "Văn phòng phẩm",
+        "toolCount": "Tool & Domain",
+        "taxTokenCount": "Token thuế",
         "dateCreate": "Ngày tạo"
       },
       "placeholder": {
@@ -817,7 +821,12 @@
       "title": {
         "create": "Tạo văn phòng",
         "edit": "Cập nhật văn phòng",
-        "nameTitle": "Văn phòng"
+        "nameTitle": "Văn phòng",
+        "assets": "Tài sản",
+        "tools": "Tool & Domain",
+        "accessories": "Phụ kiện",
+        "consumables": "Văn phòng phẩm",
+        "tax_tokens": "Token thuế"
       },
       "field": {
         "create": "Thêm mới",
@@ -835,7 +844,12 @@
         "image": "Tải hình",
         "imageTable": "Hình ảnh",
         "assetCount": "Số lượng",
-        "assetAssign": "Assets Assigned",
+        "assets_count": "Tài sản",
+        "tools_count": "Tool & Domain",
+        "accessories_count": "Phụ kiện",
+        "consumables_count": "Văn phòng phẩm",
+        "tax_tokens_count": "Token thuế",
+        "assetAssign": "Thiết bị đã cấp phát",
         "dateCreate": "Ngày tạo",
         "users_count": "Thành viên"
       },
@@ -961,6 +975,7 @@
     "label": {
       "title": {
         "tax_token": "Tất cả token thuế",
+        "location_detail_tax_token": "Token thuế",
         "tax_token_waiting": "Đang đợi xác nhận",
         "time": "Thời gian",
         "location": "Văn phòng",
@@ -1066,6 +1081,9 @@
         "image": "Tải hình",
         "assets": "Tài sản",
         "accessories": "Phụ kiện",
+        "tools": "Tool & Domain",
+        "consumables": "Văn phòng phẩm",
+        "tax_tokens": "Token thuế",
         "licenses": "Bản quyền",
         "images": "Hình ảnh"
       },
@@ -1081,7 +1099,11 @@
         "create": "Tạo nhà cung cấp",
         "edit": "Cập nhật nhà cung cấp",
         "note": "Xem nhà cung cấp",
-        "assets": "Tài sản"
+        "assets": "Tài sản",
+        "accessories": "Phụ kiện",
+        "tools": "Tool & Domain",
+        "consumables": "Văn phòng phẩm",
+        "tax_tokens": "Token thuế"
       },
       "tooltip": {
         "create": "Thêm mới",
