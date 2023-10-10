@@ -108,6 +108,11 @@ export const SideBarIcon = (props: SideBarIconProps) => {
       type: "item",
       icon: <UsergroupAddOutlined />
     },
+    {
+      title: translate("resource.client-asset"),
+      type: "title",
+      icon: <SettingOutlined />
+    },
   ]
   return (
     <>

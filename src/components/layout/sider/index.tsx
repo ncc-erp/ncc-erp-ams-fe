@@ -94,6 +94,16 @@ export const Sider: React.FC = () => {
     translate("resource.manager_user")
   ];
 
+  const clientAssetList = [
+    translate("resource.client-assets"),
+    translate("resource.client-asset-assigned"),
+    translate("resource.client-asset-readyToDeploy"),
+    translate("resource.client-asset-pending"),
+    translate("resource.client-asset-broken"),
+    translate("resource.client-asset-waitingConfirm"),
+    translate("resource.client-asset-expires")
+  ]
+
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;
   const userIsBranchAdmin = permissionsData?.branchadmin === EPermissions.BRANCHADMIN;
@@ -181,6 +191,17 @@ export const Sider: React.FC = () => {
           />
         )}
 
+        {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
+          <SideBarSubMenuItem
+            title={translate("resource.client-asset")}
+            label={"client-assets"}
+            key={"client-asset"}
+            hasItemIcon={false}
+            collapsed={collapsed}
+            itemList={clientAssetList}
+          />
+        )}
+
         {permissionsData && userIsAdmin && (
           <SideBarSubMenuItem
             title={translate("resource.tools")}
@@ -224,15 +245,15 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData && userIsAdmin && (
-            <SideBarSubMenuItem
-              title={translate("resource.users_assets")}
-              label={"users"}
-              key={"users_assets"}
-              hasItemIcon={true}
-              collapsed={collapsed}
-              itemList={userAssetItemList}
-            />
-          )}
+          <SideBarSubMenuItem
+            title={translate("resource.users_assets")}
+            label={"users"}
+            key={"users_assets"}
+            hasItemIcon={true}
+            collapsed={collapsed}
+            itemList={userAssetItemList}
+          />
+        )}
 
         {permissionsData && userIsAdmin && (
           <SideBarSubMenuItem
