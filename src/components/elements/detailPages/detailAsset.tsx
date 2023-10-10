@@ -307,7 +307,7 @@ export const DetailsAsset = (props: detailAssetProps) => {
             },
             {
                 key: "purchase_date",
-                title: translate("hardware.label.field.dateBuy"),
+                title: translate("hardware.label.field.dateAdd"),
                 render: (value: IHardware) =>
                     value ? (
                         <DateField format="LL" value={value ? value.date : ""} />

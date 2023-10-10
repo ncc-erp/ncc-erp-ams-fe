@@ -641,7 +641,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
       <TotalDetail
         filters={filters}
-        links={ACCRSSORY_TOTAL_DETAIL_API}
+        links={ACCESSORY_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
       ></TotalDetail>
       {loading ? (
