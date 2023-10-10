@@ -77,7 +77,8 @@
       "typeConsumable": "Văn phòng phẩm",
       "typeAccessory": "Phụ kiện",
       "typeTool": "Tool & Domain",
-      "typeTaxToken": "Token Thuế"
+      "typeTaxToken": "Token Thuế",
+      "typeClientAsset": "Thiết bị khách hàng"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
@@ -630,7 +631,9 @@
         "reports.view": "Báo cáo",
         "accessories": "Phụ kiện",
         "users": "Người dùng",
-        "sum-assets": "Tổng số tài sản"
+        "sum-assets": "Tổng số tài sản",
+        "detail_tool": "Chi tiết tool của tôi",
+        "detail_tax_token": "Chi tiết token thuế của tôi"
       },
       "field": {
         "notes": "Mô tả",
@@ -765,7 +768,7 @@
         "consumable": "Văn phòng phẩm",
         "software": "Phần mềm",
         "taxtoken": "Token thuế",
-        "tool": "Tool"
+        "tool": "Tool & Domain"
       }
     }
   },
@@ -915,7 +918,16 @@
     "supplier_details": "Chi tiết nhà cung cấp",
     "tax_token": "Token thuế",
     "tax_token_assign": "Token thuế đã cấp phát",
-    "tax_token_waiting": "Đang đợi xác nhận"
+    "tax_token_waiting": "Đang đợi xác nhận",
+    "users-tax-tokens": "Token thuế",
+    "client-asset": "Thiết bị khách hàng",
+    "client-assets": "Tất cả",
+    "client-asset-assigned": "Đã cấp phát",
+    "client-asset-readyToDeploy": "Trong kho",
+    "client-asset-pending": "Bảo hành-Check lại",
+    "client-asset-broken": "Hỏng",
+    "client-asset-waitingConfirm": "Đang chờ xác nhận",
+    "client-asset-expires": "Sắp hết hạn"
   },
   "model": {
     "label": {
@@ -967,7 +979,7 @@
         "tax_token_waiting": "Đang đợi xác nhận",
         "time": "Thời gian",
         "location": "Văn phòng",
-        "sum-tax_token": "Số lượng",
+        "sum-tax-token": "Số lượng",
         "checkout": "Cấp phát",
         "create": "Tạo token thuế",
         "clone": "Clone token thuế",
@@ -980,7 +992,8 @@
         "updateAt": "Cập nhật tại",
         "checkin": "Thu hồi",
         "time-purchase-date": "Ngày mua token thuế",
-        "time-expiration-date": "Ngày hết hạn token thuế"
+        "time-expiration-date": "Ngày hết hạn token thuế",
+        "my-tax-token": "Token thuế của tôi"
       },
       "field": {
         "name": "Tên token thuế",
@@ -1010,7 +1023,9 @@
         "category": "Danh mục",
         "checkinTo": "Thu hồi từ",
         "dateCheckin": "Ngày thu hồi",
-        "list_tax_token": "Danh sách token thuế"
+        "list_tax_token": "Danh sách token thuế",
+        "notes": "Ghi chú",
+        "dateCreate": "Ngày tạo"
       },
       "tooltip": {
         "create": "Thêm mới",

@@ -28,23 +28,18 @@ import {
   Select,
   useSelect,
 } from "@pankod/refine-antd";
+
 import { Image } from "antd";
 import "styles/antd.less";
-import { Spin } from "antd";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
-import { HardwareCreate } from "./create";
-import { HardwareEdit } from "./edit";
-import { HardwareClone } from "./clone";
-import { HardwareShow } from "./show";
-import {
-  MenuOutlined,
-  FileSearchOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
+import { ClientHardwareCreate } from "./create";
+import { ClientHardwareEdit } from "./edit";
+import { ClientHardwareClone } from "./clone";
+import { ClientHardwareShow } from "./show";
 
 import {
   IHardwareFilterVariables,
@@ -52,20 +47,29 @@ import {
   IHardwareResponseCheckin,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
-import { HardwareCheckout } from "./checkout";
-import { HardwareCheckin } from "./checkin";
+import { ClientHardwareCheckout } from "./checkout";
+import { ClientHardwareCheckin } from "./checkin";
 import {
   CATEGORIES_API,
-  HARDWARE_API,
+  CLIENT_HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API
+  CLIENT_HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
-import { HardwareSearch } from "./search";
+import {
+  MenuOutlined,
+  FileSearchOutlined,
+  SyncOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
+import { ClientHardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { Spin } from "antd";
+import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   filterAssignedStatus,
@@ -91,11 +95,21 @@ const defaultCheckedList = [
   "created_at",
 ];
 
-export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
+export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () => {
+  const { RangePicker } = DatePicker;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rtd_location_id = searchParams.get("rtd_location_id");
+  const category_id = searchParams.get("category_id");
+  const type = searchParams.get("type");
+  const status_id = searchParams.get("status_id");
+  const dateCheckoutFromParam = searchParams.get("dateCheckoutFrom");
+  const dateCheckoutToParam = searchParams.get("dateCheckoutTo");
+  const searchParam = searchParams.get("search");
+
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [detailCheckout, setDetailCheckout] =
     useState<IHardwareResponseCheckout>();
@@ -119,16 +133,23 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
+  const [isCheckoutManyAssetModalVisible, setIsCheckoutManyAssetModalVisible] =
+    useState(false);
+  const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
+    useState(false);
 
   const { data: permissionsData } = usePermissions();
+
+  useEffect(() => {
+    if (permissionsData.admin === EPermissions.ADMIN) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [permissionsData])
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
@@ -145,10 +166,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         field: "status.id",
         operator: "eq",
-        value: STATUS_LABELS.BROKEN,
+        value: STATUS_LABELS.ASSIGN,
       },
     ],
-    resource: HARDWARE_API,
+    resource: CLIENT_HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const {
@@ -159,14 +180,14 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         model,
         location,
         status_label,
-        purchase_date,
+        last_checkout,
         assigned_to,
       } = params;
       filters.push(
         {
           field: "search",
           operator: "eq",
-          value: search ? search : searchParam,
+          value: search ?? searchParam,
         },
         {
           field: "filter",
@@ -183,21 +204,31 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         {
           field: "rtd_location_id",
           operator: "eq",
-          value: location ? location : rtd_location_id,
+          value: location ?? rtd_location_id,
         },
         {
-          field: "dateFrom",
+          field: "dateCheckoutFrom",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
+          value: last_checkout && last_checkout.length > 0
+            ? last_checkout[0].format().substring(0, 10)
             : undefined,
         },
         {
-          field: "dateTo",
+          field: "dateCheckoutTo",
           operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
+          value: last_checkout && last_checkout.length > 1
+            ? last_checkout[1].format().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
+        },
+        {
+          field: "status_id",
+          operator: "eq",
+          value: status_id,
         },
         {
           field: "assigned_status",
@@ -206,6 +237,20 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         }
       );
 
+      if (type) {
+        filters.push({
+          field: "type",
+          operator: "eq",
+          value: type,
+        });
+      }
+      if (category_id) {
+        filters.push({
+          field: "category_id",
+          operator: "eq",
+          value: category_id,
+        });
+      }
       return filters;
     },
   });
@@ -505,6 +550,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     ],
   });
 
+  const filterCategory = categorySelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
   const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
@@ -518,11 +568,6 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   });
 
   const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
-    text: item.label,
-    value: item.value,
-  }));
-
-  const filterCategory = categorySelectProps?.options?.map((item) => ({
     text: item.label,
     value: item.value,
   }));
@@ -570,7 +615,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "model",
         title: t("hardware.label.field.propertyType"),
         render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
@@ -578,7 +623,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "category",
         title: t("hardware.label.field.category"),
         render: (value: IHardwareResponse) => (
-          <TagField value={value ? value.name : ""} />
+          <TagField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
         filters: filterCategory,
@@ -616,16 +661,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         key: "location",
         title: t("hardware.label.field.rtd_location"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value ? value.name : ""} />
+          <TextField value={value && value.name} />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse, record: IHardwareResponse) => (
+        render: (value: IHardwareResponse, record: any) =>
+        (
           <TextField
-            value={value ? value.name : ""}
+            value={value && value.name}
             onClick={() => {
               list(`location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
             }}
@@ -638,7 +684,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.manufacturer"),
         render: (value: IHardwareResponse, record: IHardwareResponse) => (
           <TextField
-            value={value ? value.name : ""}
+            value={value && value.name}
             onClick={() => {
               list(`manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
             }}
@@ -687,7 +733,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.warranty_expires"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.date : ""} />
+            <DateField format="LLL" value={value ? value.datetime : ""} />
           ) : (
             ""
           ),
@@ -715,7 +761,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "requestable",
         title: t("hardware.label.field.requestable"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("requestable", sorter),
       },
       {
@@ -740,11 +786,22 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value ? value.datetime : ""} />
+            <DateField format="LLL" value={value && value.datetime} />
           ) : (
             ""
           ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
+      },
+      {
+        key: "last_checkout",
+        title: t("hardware.label.field.dateCheckout"),
+        render: (value: IHardware) =>
+          value ? (
+            <DateField format="LLL" value={value && value.datetime} />
+          ) : (
+            ""
+          ),
+        defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
     ],
     [filterCategory]
@@ -768,17 +825,12 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
-    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
-
-  useEffect(() => {
-    setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -795,6 +847,14 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   useEffect(() => {
     refreshData();
   }, [isCheckinModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckoutManyAssetModalVisible]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isCheckinManyAssetModalVisible]);
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -831,9 +891,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     const aboutController = new AbortController();
-
     listenForOutsideClicks(listening, setListening, menuRef, setIsActive);
-
     return function cleanup() {
       aboutController.abort();
     };
@@ -850,15 +908,13 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const { RangePicker } = DatePicker;
+  const searchValuesByDateCheckoutFrom = useMemo(() => {
+    return localStorage.getItem("last_checkout")?.substring(0, 10);
+  }, [localStorage.getItem("last_checkout")]);
 
-  const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
-
-  const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+  const searchValuesByDateCheckoutTo = useMemo(() => {
+    return localStorage.getItem("last_checkout")?.substring(11, 21);
+  }, [localStorage.getItem("last_checkout")]);
 
   let searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
@@ -867,19 +923,19 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem("last_checkout", formatString ?? "");
       searchParams.set(
-        "dateFrom",
+        "dateCheckoutFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
       );
       searchParams.set(
-        "dateTo",
+        "dateCheckoutTo",
         to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
       );
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date", formatString ?? "");
+      searchParams.delete("dateCheckoutFrom");
+      searchParams.delete("dateCheckoutTo");
+      localStorage.setItem("last_checkout", formatString ?? "");
     }
 
     setSearchParams(searchParams);
@@ -902,8 +958,160 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
       },
     ],
   });
-
   const { Option } = Select;
+
+  const initselectedRowKeys = useMemo(() => {
+    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
+  }, [localStorage.getItem("selectedRowKeys")]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    React.Key[] | IHardwareResponse[]
+  >(initselectedRowKeys as React.Key[]);
+
+  const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
+  const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+
+  const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
+  const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
+
+  const [nameCheckout, setNameCheckout] = useState("");
+  const [nameCheckin, setNameCheckin] = useState("");
+  useEffect(() => {
+    if (
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0
+    ) {
+      setSelectedCheckout(true);
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
+      setSelectdStoreCheckout(
+        initselectedRowKeys
+          .filter((item: IHardwareResponse) => item.user_can_checkout)
+          .map((item: IHardwareResponse) => item)
+      );
+    } else {
+      setSelectedCheckout(false);
+      setNameCheckin("");
+    }
+
+    if (
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
+    ) {
+      setSelectedCheckin(true);
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
+      setSelectdStoreCheckin(
+        initselectedRowKeys
+          .filter((item: IHardwareResponse) => item.user_can_checkin)
+          .map((item: IHardwareResponse) => item)
+      );
+    } else {
+      setSelectedCheckin(false);
+      setNameCheckout("");
+    }
+
+    if (
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkout
+      ).length > 0 &&
+      initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.user_can_checkin
+      ).length > 0
+    ) {
+      setSelectedCheckout(false);
+      setSelectedCheckin(false);
+      setNameCheckin(t("hardware.label.detail.note-checkin"));
+      setNameCheckout(t("hardware.label.detail.note-checkout"));
+    } else {
+    }
+  }, [initselectedRowKeys]);
+
+  const onSelect = (record: IHardwareResponse, selected: boolean) => {
+    if (!selected) {
+      const newSelectRow = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item.id !== record.id
+      );
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+      setSelectedRowKeys(
+        newSelectRow.map((item: IHardwareResponse) => item.id)
+      );
+    } else {
+      const newselectedRowKeys = [record, ...initselectedRowKeys];
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify(
+          newselectedRowKeys.filter(function (item, index) {
+            return newselectedRowKeys.findIndex((item) => item.id === index);
+          })
+        )
+      );
+      setSelectedRowKeys(
+        newselectedRowKeys.map((item: IHardwareResponse) => item.id)
+      );
+    }
+  };
+
+  const onSelectAll = (
+    selected: boolean,
+    selectedRows: IHardwareResponse[],
+    changeRows: IHardwareResponse[]
+  ) => {
+    if (!selected) {
+      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
+      let newSelectedRows = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => item
+      );
+      newSelectedRows = initselectedRowKeys.filter(
+        (item: IHardwareResponse) => !unSelectIds.includes(item.id)
+      );
+
+      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
+    } else {
+      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
+      localStorage.setItem(
+        "selectedRowKeys",
+        JSON.stringify([...initselectedRowKeys, ...selectedRows])
+      );
+      setSelectedRowKeys(selectedRows);
+    }
+  };
+
+  const onSelectChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: IHardwareResponse[]
+  ) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys: initselectedRowKeys.map(
+      (item: IHardwareResponse) => item.id
+    ),
+    onChange: onSelectChange,
+    onSelect: onSelect,
+    onSelectAll: onSelectAll,
+  };
+
+  useEffect(() => {
+    localStorage.removeItem("selectedRowKeys");
+  }, [window.location.reload]);
+
+  const handleCheckout = () => {
+    setIsCheckoutManyAssetModalVisible(!isCheckoutManyAssetModalVisible);
+  };
+
+  const handleCheckin = () => {
+    setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
+  };
+
+  const handleRemoveCheckInCheckOutItem = (id: number) => {
+    const newSelectRow = initselectedRowKeys.filter(
+      (item: IHardwareResponse) => item.id !== id
+    );
+    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
+  };
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
@@ -929,10 +1137,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
-      title={t("hardware.label.title.list-broken")}
+      title={t("hardware.label.title.list-assign")}
       pageHeaderProps={{
         extra: (
-          permissionsData.admin === EPermissions.ADMIN && (
+          isAdmin && (
             <CreateButton onClick={handleCreate}>
               {t("hardware.label.tooltip.create")}
             </CreateButton>
@@ -947,25 +1155,24 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
             location: localStorage.getItem("rtd_location_id")
               ? searchValuesLocation
               : Number(rtd_location_id),
-            purchase_date:
-              localStorage.getItem("purchase_date") !== null
-                ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
-                  ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
-                  : dateFromParam && dateToParam
-                    ? [moment(dateFromParam), moment(dateToParam)]
-                    : ""
-                : "",
+            last_checkout: localStorage.getItem("last_checkout")
+              ? searchValuesByDateCheckoutFrom && searchValuesByDateCheckoutTo
+                ? [
+                  moment(searchValuesByDateCheckoutFrom),
+                  moment(searchValuesByDateCheckoutTo),
+                ]
+                : dateCheckoutFromParam && dateCheckoutToParam
+                  ? [moment(dateCheckoutFromParam), moment(dateCheckoutToParam)]
+                  : ""
+              : "",
           }}
           layout="vertical"
           onValuesChange={() => searchFormProps.form?.submit()}
           className="search-month-location"
         >
           <Form.Item
-            label={t("hardware.label.title.time")}
-            name="purchase_date"
+            label={t("hardware.label.title.timeCheckout")}
+            name="last_checkout"
           >
             <RangePicker
               onChange={handleChangePickerByMonth}
@@ -979,11 +1186,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           <Form.Item
             label={t("hardware.label.title.location")}
             name="location"
-            className={
-              searchValuesLocation !== 0
-                ? "search-month-location-null"
-                : "search-month-location-null"
-            }
+            className={"search-month-location-null"}
           >
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
@@ -1071,7 +1274,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsSearchModalVisible}
         isModalVisible={isSearchModalVisible}
       >
-        <HardwareSearch
+        <ClientHardwareSearch
           isModalVisible={isSearchModalVisible}
           setIsModalVisible={setIsSearchModalVisible}
           searchFormProps={searchFormProps}
@@ -1082,7 +1285,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
       >
-        <HardwareCreate
+        <ClientHardwareCreate
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
         />
@@ -1092,7 +1295,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsEditModalVisible}
         isModalVisible={isEditModalVisible}
       >
-        <HardwareEdit
+        <ClientHardwareEdit
           isModalVisible={isEditModalVisible}
           setIsModalVisible={setIsEditModalVisible}
           data={detail}
@@ -1103,7 +1306,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsCloneModalVisible}
         isModalVisible={isCloneModalVisible}
       >
-        <HardwareClone
+        <ClientHardwareClone
           isModalVisible={isCloneModalVisible}
           setIsModalVisible={setIsCloneModalVisible}
           data={detailClone}
@@ -1114,7 +1317,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
       >
-        <HardwareCheckout
+        <ClientHardwareCheckout
           isModalVisible={isCheckoutModalVisible}
           setIsModalVisible={setIsCheckoutModalVisible}
           data={detailCheckout}
@@ -1125,7 +1328,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
-        <HardwareShow
+        <ClientHardwareShow
           setIsModalVisible={setIsShowModalVisible}
           detail={detail}
         />
@@ -1135,18 +1338,103 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsCheckinModalVisible}
         isModalVisible={isCheckinModalVisible}
       >
-        <HardwareCheckin
+        <ClientHardwareCheckin
           isModalVisible={isCheckinModalVisible}
           setIsModalVisible={setIsCheckinModalVisible}
           data={detailCheckin}
         />
       </MModal>
+      <MModal
+        title={t("hardware.label.title.checkout")}
+        setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+        isModalVisible={isCheckoutManyAssetModalVisible}
+      >
+        <ClientHardwareCheckoutMultipleAsset
+          isModalVisible={isCheckoutManyAssetModalVisible}
+          setIsModalVisible={setIsCheckoutManyAssetModalVisible}
+          data={selectdStoreCheckout}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
+      <MModal
+        title={t("hardware.label.title.checkin")}
+        setIsModalVisible={setIsCheckinManyAssetModalVisible}
+        isModalVisible={isCheckinManyAssetModalVisible}
+      >
+        <ClientHardwareCheckinMultipleAsset
+          isModalVisible={isCheckinManyAssetModalVisible}
+          setIsModalVisible={setIsCheckinManyAssetModalVisible}
+          data={selectdStoreCheckin}
+          setSelectedRowKeys={setSelectedRowKeys}
+        />
+      </MModal>
 
       <TotalDetail
         filters={filters}
-        links={HARDWARE_TOTAL_DETAIL_API}
-        isReload={isTotalDetailReload}
+        links={CLIENT_HARDWARE_TOTAL_DETAIL_API}
       ></TotalDetail>
+      <div className="checkout-checkin-multiple">
+        <div className="checkout-multiple-asset">
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleCheckout}
+              disabled={!selectedCheckout}
+            >
+              {t("hardware.label.title.checkout")}
+            </Button>
+          )}
+          <div className={nameCheckout ? "list-checkouts" : ""}>
+            <span className="title-remove-name">{nameCheckout}</span>
+
+            {initselectedRowKeys
+              .filter((item: IHardwareResponse) => item.user_can_checkin)
+              .map((item: IHardwareResponse) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
+
+        <div className="checkin-multiple-asset">
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout"
+              disabled={!selectedCheckin}
+              onClick={handleCheckin}
+            >
+              {t("hardware.label.title.checkin")}
+            </Button>
+          )}
+
+          <div className={nameCheckin ? "list-checkins" : ""}>
+            <span className="title-remove-name">{nameCheckin}</span>
+
+            {initselectedRowKeys
+              .filter((item: IHardwareResponse) => item.user_can_checkout)
+              .map((item: IHardwareResponse) => (
+                <span className="list-checkin" key={item.id}>
+                  <span className="name-checkin">{item.asset_tag}</span>
+                  <span
+                    className="delete-checkin-checkout"
+                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                  >
+                    <CloseOutlined />
+                  </span>
+                </span>
+              ))}
+          </div>
+        </div>
+      </div>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
@@ -1158,19 +1446,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
           {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
-              : false
-          }
+          pagination={{
+            position: ["topRight", "bottomRight"],
+            total: pageTotal ? pageTotal : 0,
+          }}
+          rowSelection={isAdmin ? {
+            type: "checkbox",
+            ...rowSelection,
+          } : undefined}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
@@ -1220,20 +1506,22 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
                 ) : (
                   <EditButton hideText size="small" disabled />
                 )}
-                <Tooltip
-                  title={t("hardware.label.tooltip.delete")}
-                  color={"red"}
-                >
-                  <DeleteButton
-                    resourceName={HARDWARE_API}
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onSuccess={() => {
-                      setIsTotalDetailReload(!isTotalDetailReload);
-                    }}
-                  />
-                </Tooltip>
+                {record.assigned_to !== null ? (
+                  <DeleteButton hideText size="small" disabled />
+                ) : (
+                  <Tooltip
+                    title={t("hardware.label.tooltip.delete")}
+                    color={"red"}
+                  >
+                    <DeleteButton
+                      resourceName={CLIENT_HARDWARE_API}
+                      hideText
+                      size="small"
+                      recordItemId={record.id}
+                    />
+                  </Tooltip>
+                )}
+
                 {record.user_can_checkout === true && (
                   <Button
                     className="ant-btn-checkout"

@@ -40,10 +40,10 @@ import {
 import { CancleAsset } from "../users/cancel";
 import {
   CATEGORIES_API,
-  HARDWARE_API,
+  CLIENT_HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API
+  CLIENT_HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -61,7 +61,7 @@ import moment from "moment";
 import { DatePicker } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { ICompany } from "interfaces/company";
-import { HardwareSearch } from "./search";
+import { ClientHardwareSearch } from "./search";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
@@ -74,12 +74,11 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 
-export const HardwareListWaitingConfirm: React.FC<
+export const ClientHardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
 > = () => {
   const t = useTranslate();
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
-  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -130,17 +129,12 @@ export const HardwareListWaitingConfirm: React.FC<
     ],
     initialFilter: [
       {
-        field: "WAITING_CHECKOUT",
+        field: "IS_WAITING_PAGE",
         operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKOUT,
-      },
-      {
-        field: "WAITING_CHECKIN",
-        operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKIN,
+        value: true,
       },
     ],
-    resource: HARDWARE_API,
+    resource: CLIENT_HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
       const {
@@ -442,7 +436,7 @@ export const HardwareListWaitingConfirm: React.FC<
     [filterCategory]
   );
 
-  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
+  const { mutate, isLoading: isLoadingSendRequest } =
     useCreate<IHardwareCreateRequest>();
 
   const cancle = (data: IHardwareResponse) => {
@@ -456,7 +450,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const confirmHardware = (id: number, assigned_status: number) => {
     mutate({
-      resource: HARDWARE_API + "/" + id + "?_method=PUT",
+      resource: CLIENT_HARDWARE_API + "/" + id + "?_method=PUT",
       values: {
         send_accept: id,
         assigned_status: assigned_status,
@@ -466,7 +460,6 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const refreshData = () => {
     tableQueryResult.refetch();
-    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   useEffect(() => {
@@ -658,17 +651,17 @@ export const HardwareListWaitingConfirm: React.FC<
     setTimeout(() => {
       refreshData();
       setLoading(false);
-    }, 1300);
+    }, 4000);
   };
 
   const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
     mutate({
-      resource: HARDWARE_API + "?_method=PUT",
+      resource: CLIENT_HARDWARE_API + "?_method=PUT",
       values: {
         assets: assets,
         assigned_status: assigned_status,
       },
-    });
+    });;
     handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRow_AcceptRefuse");
@@ -793,10 +786,6 @@ export const HardwareListWaitingConfirm: React.FC<
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
-  // useEffect(() => {
-  //   setIsTotalDetailReload(!isTotalDetailReload);
-  // }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
 
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
@@ -954,7 +943,7 @@ export const HardwareListWaitingConfirm: React.FC<
         setIsModalVisible={setIsSearchModalVisible}
         isModalVisible={isSearchModalVisible}
       >
-        <HardwareSearch
+        <ClientHardwareSearch
           isModalVisible={isSearchModalVisible}
           setIsModalVisible={setIsSearchModalVisible}
           searchFormProps={searchFormProps}
@@ -963,8 +952,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
       <TotalDetail
         filters={filters}
-        links={HARDWARE_TOTAL_DETAIL_API}
-        isReload={isTotalDetailReload}
+        links={CLIENT_HARDWARE_TOTAL_DETAIL_API}
       ></TotalDetail>
       <div className="list-waiting-confirm">
         <div className="list-users">
@@ -1100,19 +1088,13 @@ export const HardwareListWaitingConfirm: React.FC<
                         OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                       }
                     >
-                      {isLoadingArr[record.id] !== false && (
+                      {isLoadingArr[record.id] && (
                         <Button
                           className="ant-btn-accept"
                           type="primary"
                           shape="round"
                           size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                                ? false
-                                : true
-                          }
+                          loading={isLoadingArr[record.id] ? true : false}
                         >
                           {t("hardware.label.button.accept_checkout")}
                         </Button>
@@ -1132,19 +1114,13 @@ export const HardwareListWaitingConfirm: React.FC<
                         OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                       }
                     >
-                      {isLoadingArr[record.id] !== false && (
+                      {isLoadingArr[record.id] && (
                         <Button
                           className="ant-btn-accept"
                           type="primary"
                           shape="round"
                           size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                                ? false
-                                : true
-                          }
+                          loading={isLoadingArr[record.id] ? true : false}
                         >
                           {t("hardware.label.button.accept_checkin")}
                         </Button>
@@ -1159,13 +1135,7 @@ export const HardwareListWaitingConfirm: React.FC<
                       type="primary"
                       shape="round"
                       size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
-                          ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
+                      loading={isLoadingArr[record.id] ? true : false}
                       onClick={() => cancle(record)}
                     >
                       {t("hardware.label.button.rejectCheckout")}
@@ -1177,13 +1147,7 @@ export const HardwareListWaitingConfirm: React.FC<
                     type="primary"
                     shape="round"
                     size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                          ? false
-                          : true
-                    }
+                    loading={isLoadingArr[record.id] ? true : false}
                     onClick={() => cancle(record)}
                   >
                     {t("hardware.label.button.rejectCheckin")}

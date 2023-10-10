@@ -9,6 +9,7 @@ import {
   TOOLS_API,
   SOFTWARE_API,
   TAX_TOKEN_API,
+  CLIENT_HARDWARE_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -77,6 +78,8 @@ p, 1, ${i18n.t("resource.users")}, list
 p, 1, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 p, 1, ${i18n.t("resource.users-tools")}, (list)
 p, 1, ${i18n.t("resource.users-tools")}/*, (show)
+p, 1, ${i18n.t("resource.users-tax-tokens")}, (list)
+p, 1, ${i18n.t("resource.users-tax-tokens")}/*, (show)
 p, 1, ${i18n.t("resource.users_licenses")}, (list)
 p, 1, ${i18n.t("resource.users_licenses")}/*, (show)
 
@@ -88,18 +91,24 @@ p, 1, ${i18n.t("resource.manufactures")}, (list)|(create)
 p, 1, ${MANUFACTURES_API}/*, (delete)
 p, 1, ${i18n.t("resource.manufactures")}/*, (edit)
 p, 1, ${i18n.t("resource.manufactures_details")}, (list) 
-p, 1, ${i18n.t("resource.manufactures_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
+p, 1, ${i18n.t(
+  "resource.manufactures_details"
+)}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 p, 1, ${i18n.t("resource.location")}, (list)|(create)
 p, 1, ${LOCATION_API}/*, (delete)
 p, 1, ${i18n.t("resource.location")}/*, (edit)
 p, 1, ${i18n.t("resource.location_details")}, (list) 
-p, 1, ${i18n.t("resource.location_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
+p, 1, ${i18n.t(
+  "resource.location_details"
+)}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 p, 0, ${i18n.t("resource.users")}, (list)
 p, 0, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 p, 0, ${i18n.t("resource.users-tools")}, (list)
 p, 0, ${i18n.t("resource.users-tools")}/*, (show)
+p, 0, ${i18n.t("resource.users-tax-tokens")}, (list)
+p, 0, ${i18n.t("resource.users-tax-tokens")}/*, (show)
 
 p, 0, ${i18n.t("resource.users_licenses")}, (list)
 p, 0, ${i18n.t("resource.users_licenses")}/*, (show)
@@ -112,7 +121,9 @@ p, 1, ${i18n.t("resource.suppliers")}, (list)|(create)
 p, 1, ${SUPPLIERS_API}/*, (delete)
 p, 1, ${i18n.t("resource.suppliers")}/*, (edit)
 p, 1, ${i18n.t("resource.supplier_details")}, (list) 
-p, 1, ${i18n.t("resource.supplier_details")}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
+p, 1, ${i18n.t(
+  "resource.supplier_details"
+)}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 
 p, 1, ${i18n.t("resource.department")}, (list)|(create)
@@ -161,6 +172,46 @@ p, 1, ${TOOLS_API}/*, (delete)
 p, 1, ${i18n.t("resource.tools-assign")}/*, (edit)|(show)|(clone)|(checkout)
 p, 1, ${i18n.t("resource.tools-waiting")}, (list)
 
+p, 1, ${i18n.t("resource.client-assets")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.client-assets")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.client-asset-assigned")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t(
+  "resource.client-asset-assigned"
+)}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.client-asset-readyToDeploy")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t(
+  "resource.client-asset-readyToDeploy"
+)}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.client-asset-waitingConfirm")}, list
+p, 1, ${i18n.t(
+  "resource.client-asset-waitingConfirm"
+)}/*, (show)|(confirm)|(refuse)
+
+p, 1, ${i18n.t("resource.client-asset-pending")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t(
+  "resource.client-asset-pending"
+)}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.client-asset-broken")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t(
+  "resource.client-asset-broken"
+)}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.client-asset-expires")}, (list)|(create)
+p, 1, ${CLIENT_HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t(
+  "resource.client-asset-expires"
+)}/*, (edit)|(show)|(clone)|(checkout)
+
+
 p, 2, ${i18n.t("resource.dashboard")}, list
 
 p, 2, ${i18n.t("resource.checkin-checkout")}, (list)
@@ -172,6 +223,8 @@ p, 2, ${i18n.t("resource.users")}, list
 p, 2, ${i18n.t("resource.users")}/*, (show)|(confirm)|(refuse)
 p, 2, ${i18n.t("resource.users-tools")}, (list)
 p, 2, ${i18n.t("resource.users-tools")}/*, (show)
+p, 2, ${i18n.t("resource.users-tax-tokens")}, (list)
+p, 2, ${i18n.t("resource.users-tax-tokens")}/*, (show)
 
 p, 2, ${i18n.t("resource.users_licenses")}, (list)
 p, 2, ${i18n.t("resource.users_licenses")}/*, (show)
@@ -180,9 +233,7 @@ p, 2, ${i18n.t("resource.assets-assign")}, (list)
 p, 2, ${i18n.t("resource.assets-assign")}/*,(show)
 
 p, 2, ${i18n.t("resource.assets-readyToDeploy")}, (list)
-p, 2, ${i18n.t(
-  "resource.assets-readyToDeploy"
-)}/*, (show)
+p, 2, ${i18n.t("resource.assets-readyToDeploy")}/*, (show)
 
 p, 2, ${i18n.t("resource.assets-waiting-confirm")}, list
 p, 2, ${i18n.t("resource.assets-waiting-confirm")}/*, (show)
@@ -216,6 +267,27 @@ p, 2, ${i18n.t("resource.location_details")}, (list)
 p, 2, ${i18n.t("resource.location_details")}/*,(show)
 
 p, 2, ${i18n.t("resource.report")}, (list)
+
+p, 2, ${i18n.t("resource.client-assets")}, (list)
+p, 2, ${i18n.t("resource.client-assets")}/*, (show)
+
+p, 2, ${i18n.t("resource.client-asset-assigned")}, (list)
+p, 2, ${i18n.t("resource.client-asset-assigned")}/*,(show)
+
+p, 2, ${i18n.t("resource.client-asset-readyToDeploy")}, (list)
+p, 2, ${i18n.t("resource.client-asset-readyToDeploy")}/*, (show)
+
+p, 2, ${i18n.t("resource.client-asset-waitingConfirm")}, list
+p, 2, ${i18n.t("resource.client-asset-waitingConfirm")}/*, (show)
+
+p, 2, ${i18n.t("resource.client-asset-pending")}, (list)
+p, 2, ${i18n.t("resource.client-asset-pending")}/*, (show)
+
+p, 2, ${i18n.t("resource.client-asset-broken")}, (list)
+p, 2, ${i18n.t("resource.client-asset-broken")}/*,(show)
+
+p, 2, ${i18n.t("resource.client-asset-expires")}, (list)
+p, 2, ${i18n.t("resource.client-asset-expires")}/*,(show)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

@@ -79,6 +79,7 @@ export const ToolListWaitingConfirm: React.FC<
 > = () => {
     const t = useTranslate();
     const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
     const [detail, setDetail] = useState<IToolResponse>();
     const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
     const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -399,7 +400,7 @@ export const ToolListWaitingConfirm: React.FC<
     )
 
 
-    const { mutate, isLoading: isLoadingSendRequest } =
+    const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
         useCreate<IToolCreateRequest>();
 
     const cancle = (data: IToolResponse) => {
@@ -746,6 +747,10 @@ export const ToolListWaitingConfirm: React.FC<
         };
     }, []);
 
+    useEffect(() => {
+        setIsTotalDetailReload(!isTotalDetailReload);
+      }, [isMutateSuccess, isCancleModalVisible, isCancelManyToolVisible])
+
     return (
         <List title={t("hardware.label.title.list-waiting-confirm")}>
             <div className="users">
@@ -914,6 +919,7 @@ export const ToolListWaitingConfirm: React.FC<
             <TotalDetail
                 filters={filters}
                 links={TOOLS_TOTAL_DETAIL_API}
+                isReload={isTotalDetailReload}
             ></TotalDetail>
             <div className="list-waiting-confirm">
                 <div className="list-users">

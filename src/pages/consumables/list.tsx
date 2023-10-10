@@ -72,6 +72,8 @@ const defaultCheckedList = [
 export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -379,6 +381,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const handleCreate = () => {
@@ -388,6 +391,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -631,10 +638,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      
+
       <TotalDetail
         filters={filters}
         links={CONSUMABLE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
       ></TotalDetail>
 
       {loading ? (
@@ -699,6 +707,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                   hideText
                   size="small"
                   recordItemId={record.id}
+                  onSuccess={() => {
+                    setIsTotalDetailReload(!isTotalDetailReload);
+                  }}
                 />
 
                 {record.user_can_checkout === true ? (
