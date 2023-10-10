@@ -12,10 +12,11 @@ type TotalDetailProps = {
     filters: CrudFilters | undefined;
     links: string;
     additional_filter?: string;
+    isReload?: boolean | undefined;
 };
 
 export const TotalDetail = (props: TotalDetailProps) => {
-    const { filters, links, additional_filter } = props;
+    const { filters, links, isReload, additional_filter } = props;
     const t = useTranslate();
     const { open } = useNotification();
     const [totalDetail, setTotalDetail] = useState<ITotalDetail[]>();
@@ -40,7 +41,7 @@ export const TotalDetail = (props: TotalDetailProps) => {
 
     useEffect(() => {
         getTotalDetail();
-    }, [filters]);
+    }, [filters, isReload]);
 
     return (
         <div className="sum-assets">

@@ -106,6 +106,8 @@ export const Sider: React.FC = () => {
       collapsedWidth={isMobile ? 0 : 80}
       breakpoint="lg"
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
+      width="230px"
+      className="custom-overflow-y"
     >
       {permissionsData && userIsUser && (
         <>

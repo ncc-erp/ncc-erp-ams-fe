@@ -93,6 +93,8 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
 
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
+
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
 
@@ -678,6 +680,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     const handleRefresh = () => {
@@ -744,6 +747,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         localStorage.removeItem("selectedToolsRowKeys");
         searchFormProps.form?.submit();
     }, [window.location.reload]);
+
+    useEffect(() => {
+        setIsTotalDetailReload(!isTotalDetailReload);
+    }, [isModalVisible])
 
     useEffect(() => {
         refreshData();
@@ -1065,6 +1072,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
             <TotalDetail
                 filters={filters}
                 links={TOOLS_TOTAL_DETAIL_API}
+                isReload={isTotalDetailReload}
             ></TotalDetail>
             <div className="checkout-checkin-multiple">
                 <div className="checkout-multiple-asset">

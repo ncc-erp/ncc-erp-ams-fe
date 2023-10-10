@@ -77,7 +77,8 @@
       "typeConsumable": "Văn phòng phẩm",
       "typeAccessory": "Phụ kiện",
       "typeTool": "Tool & Domain",
-      "typeTaxToken": "Token Thuế"
+      "typeTaxToken": "Token Thuế",
+      "typeClientAsset": "Thiết bị khách hàng"
     },
     "titleStatistic": "Thống kê tổng thiết bị bàn giao - thu hồi",
     "time": "Thời gian mua thiết bị",
@@ -766,7 +767,7 @@
         "consumable": "Văn phòng phẩm",
         "software": "Phần mềm",
         "taxtoken": "Token thuế",
-        "tool": "Tool"
+        "tool": "Tool & Domain"
       }
     }
   },
@@ -904,7 +905,15 @@
     "tax_token": "Token thuế",
     "tax_token_assign": "Token thuế đã cấp phát",
     "tax_token_waiting": "Đang đợi xác nhận",
-    "users-tax-tokens": "Token thuế"
+    "users-tax-tokens": "Token thuế",
+    "client-asset": "Thiết bị khách hàng",
+    "client-assets": "Tất cả",
+    "client-asset-assigned": "Đã cấp phát",
+    "client-asset-readyToDeploy": "Trong kho",
+    "client-asset-pending": "Bảo hành-Check lại",
+    "client-asset-broken": "Hỏng",
+    "client-asset-waitingConfirm": "Đang chờ xác nhận",
+    "client-asset-expires": "Sắp hết hạn"
   },
   "model": {
     "label": {

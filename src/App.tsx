@@ -58,6 +58,9 @@ import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
 import { UserListTaxToken } from "pages/users/list-tax-tokens";
 import { ThemeSwitcherProvider } from "react-css-theme-switcher";
+import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken, ClientHardwareListPending, ClientHardwareListReadyToDeploy } from "pages/hardware_client";
+import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
+import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -377,7 +380,63 @@ function App() {
               route: "tax_token_waiting",
               label: "tax_token"
             },
-          }
+          },
+          {
+            name: t("resource.client-assets"),
+            list: ClientHardwareList,
+            options: {
+              route: "client-assets",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.client-asset-assigned"),
+            list: ClientHardwareListAssign,
+            options: {
+              route: "client-asset-assigned",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.client-asset-readyToDeploy"),
+            list: ClientHardwareListReadyToDeploy,
+            options: {
+              route: "client-asset-readyToDeploy",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.client-asset-pending"),
+            list: ClientHardwareListPending,
+            options: {
+              route: "client-asset-pending",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.assets-broken"),
+            list: ClientHardwareListBroken,
+            options: {
+              route: "client-asset-broken",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.client-asset-waitingConfirm"),
+            list: ClientHardwareListWaitingConfirm,
+            options: {
+              route: "client-asset-waitingConfirm",
+              label: 'client-assets'
+            },
+          },
+          {
+            name: t("resource.assets-expires"),
+            list: ClientHardwareListExpiration,
+            options: {
+              route: "client-assets-expires",
+              label: 'client-assets'
+            },
+          },
         ]}
         Title={Title}
         Header={Header}

@@ -27,9 +27,9 @@ import {
   usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { 
-  ACCESSORY_API, 
-  LOCATION_API, 
+import {
+  ACCESSORY_API,
+  LOCATION_API,
   ACCESSORY_CATEGORIES_API,
   ACCRSSORY_TOTAL_DETAIL_API
 } from "api/baseApi";
@@ -70,6 +70,8 @@ const defaultCheckedList = [
 
 export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
@@ -381,6 +383,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const handleCreate = () => {
@@ -390,6 +393,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -632,9 +639,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         </div>
       </div>
 
-      <TotalDetail 
+      <TotalDetail
         filters={filters}
         links={ACCRSSORY_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
       ></TotalDetail>
       {loading ? (
         <>
@@ -704,6 +712,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onSuccess={() => {
+                        setIsTotalDetailReload(!isTotalDetailReload);
+                      }}
                     />
                   </Tooltip>
                 ) : (
