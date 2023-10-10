@@ -59,6 +59,8 @@ export const Sider: React.FC = () => {
       collapsedWidth={isMobile ? 0 : 80}
       breakpoint="lg"
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
+      width="230px"
+      className="custom-overflow-y"
     >
       {permissionsData && permissionsData.admin === EPermissions.USER && (
         <>
@@ -166,16 +168,16 @@ export const Sider: React.FC = () => {
                 .filter(
                   (item) =>
                     (item.options?.label === 'assets') && (
-                    item.name === `${translate("resource.assets")}` ||
-                    item.name === `${translate("resource.assets-assign")}` ||
-                    item.name ===
-                    `${translate("resource.assets-readyToDeploy")}` ||
-                    item.name === `${translate("resource.assets-pending")}` ||
-                    item.name === `${translate("resource.assets-broken")}` ||
-                    item.name ===
-                    `${translate("resource.assets-waiting-confirm")}` ||
-                    item.name ===
-                    `${translate("resource.assets-expires")}` )
+                      item.name === `${translate("resource.assets")}` ||
+                      item.name === `${translate("resource.assets-assign")}` ||
+                      item.name ===
+                      `${translate("resource.assets-readyToDeploy")}` ||
+                      item.name === `${translate("resource.assets-pending")}` ||
+                      item.name === `${translate("resource.assets-broken")}` ||
+                      item.name ===
+                      `${translate("resource.assets-waiting-confirm")}` ||
+                      item.name ===
+                      `${translate("resource.assets-expires")}`)
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -202,24 +204,28 @@ export const Sider: React.FC = () => {
           </SubMenu>
         )}
 
-        {permissionsData && permissionsData?.admin === EPermissions.ADMIN  && (
+        {permissionsData && (permissionsData?.admin === EPermissions.ADMIN || permissionsData?.branchadmin === EPermissions.BRANCHADMIN) && (
           <SubMenu
             title={
               <span>
-                <ToolOutlined />
-                <span>{translate("resource.tools")}</span>
+                <SettingOutlined />
+                <span>{translate("resource.client-asset")}</span>
               </span>
             }
-            key={"tool"}
+            key={"client-asset"}
           >
             {menuItems &&
               menuItems
                 .filter(
                   (item) =>
-                    (item.options?.label === 'tools') && (
-                    item.name === `${translate("resource.tools-all")}` ||
-                    item.name === `${translate("resource.tools-assign")}` ||
-                    item.name === `${translate("resource.tools-waiting")}` )
+                    (item.options?.label === 'client-assets') && (
+                      item.name === `${translate("resource.client-assets")}` ||
+                      item.name === `${translate("resource.client-asset-assigned")}` ||
+                      item.name === `${translate("resource.client-asset-readyToDeploy")}` ||
+                      item.name === `${translate("resource.client-asset-pending")}` ||
+                      item.name === `${translate("resource.client-asset-broken")}` ||
+                      item.name === `${translate("resource.client-asset-waitingConfirm")}` ||
+                      item.name === `${translate("resource.client-asset-expires")}`)
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -245,7 +251,51 @@ export const Sider: React.FC = () => {
                 })}
           </SubMenu>
         )}
-        
+
+        {permissionsData && permissionsData?.admin === EPermissions.ADMIN && (
+          <SubMenu
+            title={
+              <span>
+                <ToolOutlined />
+                <span>{translate("resource.tools")}</span>
+              </span>
+            }
+            key={"tool"}
+          >
+            {menuItems &&
+              menuItems
+                .filter(
+                  (item) =>
+                    (item.options?.label === 'tools') && (
+                      item.name === `${translate("resource.tools-all")}` ||
+                      item.name === `${translate("resource.tools-assign")}` ||
+                      item.name === `${translate("resource.tools-waiting")}`)
+                )
+                .map(({ icon, name, route }) => {
+                  const isSelected = route === selectedKey;
+                  return (
+                    <Menu.Item
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                      }}
+                      key={route}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        {name}
+                        {!collapsed && isSelected && <RightOutlined />}
+                      </div>
+                    </Menu.Item>
+                  );
+                })}
+          </SubMenu>
+        )}
+
         {/* software */}
         {/* {permissionsData && permissionsData.admin === EPermissions.ADMIN &&
           menuItems
@@ -410,11 +460,11 @@ export const Sider: React.FC = () => {
               {menuItems
                 .filter(
                   (item) =>
-                  (item.options?.label === 'users') && (
-                    item.name === `${translate("resource.request")}` ||
-                    item.name === `${translate("resource.users")}` ||
-                    item.name === `${translate("resource.users-tools")}` ||
-                    item.name === `${translate("resource.users_licenses")}`)
+                    (item.options?.label === 'users') && (
+                      item.name === `${translate("resource.request")}` ||
+                      item.name === `${translate("resource.users")}` ||
+                      item.name === `${translate("resource.users-tools")}` ||
+                      item.name === `${translate("resource.users_licenses")}`)
                 )
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;
@@ -550,7 +600,7 @@ export const Sider: React.FC = () => {
               {menuItems
                 .filter((item) =>
                   item.name === `${translate("resource.users")}` ||
-                  item.name === `${translate("resource.users_licenses")}`||
+                  item.name === `${translate("resource.users_licenses")}` ||
                   item.name === `${translate("resource.users-tools")}`)
                 .map(({ icon, name, route }) => {
                   const isSelected = route === selectedKey;

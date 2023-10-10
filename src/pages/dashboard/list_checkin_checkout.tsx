@@ -135,205 +135,168 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     setSearchParamsCheckOut(searchParamsCheckOut);
   };
 
-  useEffect(() => {
-    var assetNames = (dataCheckIn?.data.payload.assets_statistic || []).map(
-      (item: any) => item.category_name
-    );
-    var assetArr: string[] = [];
-    assetArr = assetNames.filter(function (item: string) {
-      return assetArr.includes(item) ? "" : assetArr.push(item);
+  const calculateSumEachCategory = (
+    checkType: string,
+    category: string,
+    iteLocationKey: any,
+    dataSource: any,
+    is_client = false
+  ) => {
+
+    let categoryKeyTranslate = category;
+    let payloadKey = category.toLowerCase() + "s_statistic";
+    let category_const = (CategoryType as { [key: string]: string })[category.toUpperCase()]
+
+    if (category === "Asset" && is_client) {
+      payloadKey = "client_" + payloadKey;
+      categoryKeyTranslate = "ClientAsset";
+    }
+    if (category === "TaxToken") {
+      payloadKey = "digital_signatures_statistic";
+    }
+    if (category === "Accessory") {
+      payloadKey = "accessories_statistic";
+    }
+
+    let typeSum = {
+      type: translate("dashboard.field.type" + categoryKeyTranslate),
+      category_type: category_const,
+    } as any;
+
+    let dataForCalculate = dataCheckIn;
+
+    if (checkType === "checkout") {
+      dataForCalculate = dataCheckOut;
+    }
+
+    (dataForCalculate?.data.payload[payloadKey] || []).forEach(
+      (items: any) => {
+
+        let locationAttribute = (category === "Asset") ? `location_${items.rtd_location_id}` : `location_${items.location_id}`;
+        dataSource.forEach((item: any) => {
+          if (
+            item.type === items.category_name &&
+            item.category_type === category_const
+          ) {
+            for (const key of iteLocationKey) {
+              if (key === locationAttribute) {
+
+                if (category === "Asset" && !is_client) {
+                  item[locationAttribute] = (item[locationAttribute] ?? 0) + Number(items[checkType]);
+                  item[`count`] = (item[`count`] ?? 0) + Number(items[checkType]);
+                  break;
+                } else {
+                  typeSum[locationAttribute] = (typeSum[locationAttribute] ?? 0) + Number(items[checkType]);
+                  typeSum[`count`] = (typeSum[`count`] ?? 0) + Number(items[checkType]);
+                  break;
+                }
+              }
+            }
+          }
+        })
+      }
+    )
+
+    return typeSum;
+  }
+
+  const setDefaultValueForLocationNotExist = (type: string, sumTypes: any) => {
+    let dataCheckForSet = dataCheckIn;
+
+    if (type === "checkout") {
+      dataCheckForSet = dataCheckOut;
+    }
+
+    dataCheckForSet?.data.payload.locations.forEach((location: any) => {
+      sumTypes.forEach((sumType: any) => {
+        sumType[`location_${location.id}`] = sumType[`location_${location.id}`] ?? 0;
+      })
     });
+  }
 
-    let sumConsumable = {
-      type: translate("dashboard.field.typeConsumable"),
-      category_type: CategoryType.CONSUMABLE,
-    } as any;
+  const getDataSource = (type: string, iteLocationKey: any) => {
+    let dataForGet = dataCheckIn;
 
-    let sumAccessory = {
-      type: translate("dashboard.field.typeAccessory"),
-      category_type: CategoryType.ACCESSORY,
-    } as any;
+    if (type === "checkout") {
+      dataForGet = dataCheckOut;
+    }
 
-    let sumTool = {
-      type: translate("dashboard.field.typeTool"),
-      category_type: CategoryType.TOOL,
-    } as any;
-
-    let sumTaxToken = {
-      type: translate("dashboard.field.typeTaxToken"),
-      category_type: CategoryType.TAXTOKEN,
-    } as any;
-
-    var dataResponseCheckIn: any = [];
-    var iteLocationKey: any = [];
-    let dataSource = (dataCheckIn?.data.payload.categories || []).map(
+    return (dataForGet?.data.payload.categories || []).map(
       (category: IReport) => {
-        var iteDataSource = {
+        let iteDataSource = {
           type: category.name,
           id: category.id,
           category_type: category.category_type,
         };
-        var iteLocation = {};
-        for (let i of dataCheckIn?.data.payload.locations) {
+        let iteLocation = {};
+        for (let i of dataForGet?.data?.payload?.locations) {
           iteLocation = {
             ...iteLocation,
             [`location_${i.id}`]: 0,
             [`count`]: 0,
           };
-          iteLocationKey.push(`location_${i.id}` as string);
+          iteLocationKey.push(`location_${i.id}`);
         }
         return { ...iteDataSource, ...iteLocation };
       }
     );
+  }
 
-    (dataCheckIn?.data.payload.assets_statistic || []).forEach((items: any) => {
-      dataSource.forEach((item: any) => {
-        if (
-          item.type === items.category_name &&
-          item.category_type === CategoryType.ASSET
-        ) {
-          for (const key of iteLocationKey) {
-            if (key === `location_${items.rtd_location_id}`) {
-              item[key] = item[key] + Number(items.checkin);
-              item[`count`] += Number(items.checkin);
-              break;
-            }
-          }
-        }
-      });
+  const getUrlForOnClick = (action_type: string, record: IReport, dateFrom: string | null, dateTo: string | null, location_id = "") => {
+    let url = `report?category_type=${record.category_type}&action_type=${action_type}`;
+
+    if (dateFrom && dateTo) {
+      url += `&date_from=${dateFrom}&date_to=${dateTo}`;
+    }
+
+    if (record.category_type === CategoryType.ASSET) {
+      url += `&category_id=${record.id}`;
+    }
+
+    if (location_id) {
+      url += `&location_id=${location_id}`;
+    }
+
+    return list(url);
+  }
+
+  useEffect(() => {
+    let assetNames = (dataCheckIn?.data.payload.assets_statistic || []).map(
+      (item: any) => item.category_name
+    );
+
+    let assetArr: string[] = [];
+    assetArr = assetNames.filter(function (item: string) {
+      return assetArr.includes(item) ? "" : assetArr.push(item);
     });
 
-    (dataCheckIn?.data.payload.accessories_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.ACCESSORY
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumAccessory[`location_${items.location_id}`] =
-                  sumAccessory[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkin) +
-                    sumAccessory[`location_${items.location_id}`]
-                    : Number(items.checkin);
-                sumAccessory[`count`] =
-                  sumAccessory[`count`] !== undefined
-                    ? Number(items.checkin) + sumAccessory[`count`]
-                    : Number(items.checkin);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
+    const type = "checkin";
+    let dataResponseCheckIn: any = [];
+    let iteLocationKey: any = [];
+    let dataSource = getDataSource(type, iteLocationKey);
 
-    (dataCheckIn?.data.payload.consumables_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.CONSUMABLE
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumConsumable[`location_${items.location_id}`] =
-                  sumConsumable[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkin) +
-                    sumConsumable[`location_${items.location_id}`]
-                    : Number(items.checkin);
-                sumConsumable[`count`] =
-                  sumConsumable[`count`] !== undefined
-                    ? Number(items.checkin) + sumConsumable[`count`]
-                    : Number(items.checkin);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
+    let sumConsumable = calculateSumEachCategory(type, 'Consumable', iteLocationKey, dataSource);
+    let sumClientAsset = calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource, true);
+    let sumAccessory = calculateSumEachCategory(type, 'Accessory', iteLocationKey, dataSource);
+    let sumTool = calculateSumEachCategory(type, 'Tool', iteLocationKey, dataSource);
+    let sumTaxToken = calculateSumEachCategory(type, 'TaxToken', iteLocationKey, dataSource);
+    calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource);
 
-    (dataCheckIn?.data.payload.tools_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.TOOL
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumTool[`location_${items.location_id}`] =
-                  sumTool[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkin) +
-                    sumTool[`location_${items.location_id}`]
-                    : Number(items.checkin);
-                sumTool[`count`] =
-                  sumTool[`count`] !== undefined
-                    ? Number(items.checkin) + sumTool[`count`]
-                    : Number(items.checkin);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    (dataCheckIn?.data.payload.digital_signatures_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.TAXTOKEN
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumTaxToken[`location_${items.location_id}`] =
-                  sumTaxToken[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkin) +
-                    sumTaxToken[`location_${items.location_id}`]
-                    : Number(items.checkin);
-                sumTaxToken[`count`] =
-                  sumTaxToken[`count`] !== undefined
-                    ? Number(items.checkin) + sumTaxToken[`count`]
-                    : Number(items.checkin);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    dataCheckIn?.data.payload.locations.forEach((location: any) => {
-      if (!sumConsumable[`location_${location.id}`]) {
-        sumConsumable[`location_${location.id}`] = 0;
-      }
-      if (!sumAccessory[`location_${location.id}`]) {
-        sumAccessory[`location_${location.id}`] = 0;
-      }
-      if (!sumTool[`location_${location.id}`]) {
-        sumTool[`location_${location.id}`] = 0;
-      }
-      if (!sumTaxToken[`location_${location.id}`]) {
-        sumTaxToken[`location_${location.id}`] = 0;
-      }
-    });
+    setDefaultValueForLocationNotExist(type, [sumConsumable, sumClientAsset, sumAccessory, sumTool, sumTaxToken]);
 
     dataResponseCheckIn = dataSource;
     dataResponseCheckIn = dataResponseCheckIn.filter(
       (item: any) => item.category_type === CategoryType.ASSET
     );
 
-    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable, sumTool, sumTaxToken]);
+    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable, sumTool, sumTaxToken, sumClientAsset]);
   }, [
     dataCheckIn?.data.payload.assets_statistic || [],
     dataCheckIn?.data.payload.accessories_statistic || [],
     dataCheckIn?.data.payload.consumables_statistic || [],
     dataCheckIn?.data.payload.tools_statistic || [],
     dataCheckIn?.data.payload.digital_signatures_statistic || [],
+    dataCheckIn?.data.payload.client_assets_statistic || [],
   ]);
 
   useEffect(() => {
@@ -341,226 +304,24 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       (item: any) => item.category_name
     );
 
-    let consumableNames = (
-      dataCheckOut?.data.payload.assets_statistic || []
-    ).map((item: any) => item.category_name);
-
-    let accessoryNames = (
-      dataCheckOut?.data.payload.accessories_statistic || []
-    ).map((item: any) => item.category_name);
-
-    let toolNames = (
-      dataCheckOut?.data.payload.tools_statistic || []
-    ).map((item: any) => item.category_name);
-
-    let taxTokenNames = (
-      dataCheckOut?.data.payload.digital_signatures_statistic || []
-    ).map((item: any) => item.category_name);
-
-    let sumConsumable = {
-      type: translate("dashboard.field.typeConsumable"),
-      category_type: CategoryType.CONSUMABLE,
-    } as any;
-
-    let sumAccessory = {
-      type: translate("dashboard.field.typeAccessory"),
-      category_type: CategoryType.ACCESSORY,
-    } as any;
-
-    let sumTool = {
-      type: translate("dashboard.field.typeTool"),
-      category_type: CategoryType.TOOL,
-    } as any;
-
-    let sumTaxToken = {
-      type: translate("dashboard.field.typeTaxToken"),
-      category_type: CategoryType.TAXTOKEN,
-    } as any;
-
     let assetArr: string[] = [];
     assetArr = assetNames.filter(function (item: string) {
       return assetArr.includes(item) ? "" : assetArr.push(item);
     });
 
-    let accessoryArr: string[] = [];
-    accessoryArr = accessoryNames.filter(function (item: string) {
-      return accessoryArr.includes(item) ? "" : accessoryArr.push(item);
-    });
-
-    let consumableArr: string[] = [];
-    consumableArr = consumableNames.filter(function (item: string) {
-      return consumableArr.includes(item) ? "" : consumableArr.push(item);
-    });
-
-    let toolArr: string[] = [];
-    toolArr = toolNames.filter(function (item: string) {
-      return toolArr.includes(item) ? "" : toolArr.push(item);
-    });
-
-    let taxTokenArr: string[] = [];
-    taxTokenArr = taxTokenNames.filter(function (item: string) {
-      return taxTokenArr.includes(item) ? "" : taxTokenArr.push(item);
-    });
-
+    const type = "checkout";
     let dataResponseCheckOut: any = [];
     let iteLocationKey: any = [];
-    let dataSource = (dataCheckOut?.data.payload.categories || []).map(
-      (category: IReport) => {
-        var iteDataSource = {
-          type: category.name,
-          id: category.id,
-          category_type: category.category_type,
-        };
-        var iteLocation = {};
-        for (let i of dataCheckOut?.data.payload.locations) {
-          iteLocation = {
-            ...iteLocation,
-            [`location_${i.id}`]: 0,
-            [`count`]: 0,
-          };
-          iteLocationKey.push(`location_${i.id}` as string);
-        }
-        return { ...iteDataSource, ...iteLocation };
-      }
-    );
+    let dataSource = getDataSource(type, iteLocationKey);
 
-    (dataCheckOut?.data.payload.assets_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.ASSET
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.rtd_location_id}`) {
-                item[key] = item[key] + Number(items.checkout);
-                item[`count`] += Number(items.checkout);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
+    let sumConsumable = calculateSumEachCategory(type, 'Consumable', iteLocationKey, dataSource);
+    let sumClientAsset = calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource, true);
+    let sumAccessory = calculateSumEachCategory(type, 'Accessory', iteLocationKey, dataSource);
+    let sumTool = calculateSumEachCategory(type, 'Tool', iteLocationKey, dataSource);
+    let sumTaxToken = calculateSumEachCategory(type, 'TaxToken', iteLocationKey, dataSource);
+    calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource);
 
-    (dataCheckOut?.data.payload.accessories_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.ACCESSORY
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumAccessory[`location_${items.location_id}`] =
-                  sumAccessory[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkout) +
-                    sumAccessory[`location_${items.location_id}`]
-                    : Number(items.checkout);
-                sumAccessory[`count`] =
-                  sumAccessory[`count`] !== undefined
-                    ? Number(items.checkout) + sumAccessory[`count`]
-                    : Number(items.checkout);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    (dataCheckOut?.data.payload.consumables_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.CONSUMABLE
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumConsumable[`location_${items.location_id}`] =
-                  sumConsumable[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkout) +
-                    sumConsumable[`location_${items.location_id}`]
-                    : Number(items.checkout);
-                sumConsumable[`count`] =
-                  sumConsumable[`count`] !== undefined
-                    ? Number(items.checkout) + sumConsumable[`count`]
-                    : Number(items.checkout);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    (dataCheckOut?.data.payload.tools_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.TOOL
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumTool[`location_${items.location_id}`] =
-                  sumTool[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkout) +
-                    sumTool[`location_${items.location_id}`]
-                    : Number(items.checkout);
-                sumTool[`count`] =
-                  sumTool[`count`] !== undefined
-                    ? Number(items.checkout) + sumTool[`count`]
-                    : Number(items.checkout);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    (dataCheckOut?.data.payload.digital_signatures_statistic || []).forEach(
-      (items: any) => {
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === CategoryType.TAXTOKEN
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === `location_${items.location_id}`) {
-                sumTaxToken[`location_${items.location_id}`] =
-                  sumTaxToken[`location_${items.location_id}`] !== undefined
-                    ? Number(items.checkout) +
-                    sumTaxToken[`location_${items.location_id}`]
-                    : Number(items.checkout);
-                sumTaxToken[`count`] =
-                  sumTaxToken[`count`] !== undefined
-                    ? Number(items.checkout) + sumTaxToken[`count`]
-                    : Number(items.checkout);
-                break;
-              }
-            }
-          }
-        });
-      }
-    );
-
-    dataCheckOut?.data.payload.locations.forEach((location: any) => {
-      if (!sumConsumable[`location_${location.id}`]) {
-        sumConsumable[`location_${location.id}`] = 0;
-      }
-      if (!sumAccessory[`location_${location.id}`]) {
-        sumAccessory[`location_${location.id}`] = 0;
-      }
-      if (!sumTool[`location_${location.id}`]) {
-        sumTool[`location_${location.id}`] = 0;
-      }
-      if (!sumTaxToken[`location_${location.id}`]) {
-        sumTaxToken[`location_${location.id}`] = 0;
-      }
-    });
+    setDefaultValueForLocationNotExist(type, [sumConsumable, sumClientAsset, sumAccessory, sumTool, sumTaxToken]);
 
     dataResponseCheckOut = dataSource;
     dataResponseCheckOut = dataResponseCheckOut.filter(
@@ -572,17 +333,19 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       sumAccessory,
       sumConsumable,
       sumTool,
-      sumTaxToken
+      sumTaxToken,
+      sumClientAsset
     ]);
   }, [
     dataCheckOut?.data.payload.assets_statistic || [],
     dataCheckOut?.data.payload.accessories_statistic || [],
     dataCheckOut?.data.payload.consumables_statistic || [],
-    dataCheckIn?.data.payload.tools_statistic || [],
-    dataCheckIn?.data.payload.digital_signatures_statistic || [],
+    dataCheckOut?.data.payload.tools_statistic || [],
+    dataCheckOut?.data.payload.digital_signatures_statistic || [],
+    dataCheckOut?.data.payload.client_assets_statistic || [],
   ]);
 
-  var columnsCheckOut = [
+  let columnsCheckOut = [
     {
       title: translate("report.label.title.nameReportCheckOut"),
       dataIndex: "type",
@@ -590,51 +353,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       width: 150,
       render: (text: string, record: IReport) => (
         <strong
-          onClick={() => {
-            record.category_type === CategoryType.ASSET
-              ? dateFromCheckOut && dateToCheckOut
-                ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                )
-                : list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                )
-              : record.category_type === CategoryType.CONSUMABLE
-                ? dateFromCheckOut && dateToCheckOut
-                  ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
-                  : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-              : record.category_type === CategoryType.TOOL
-                ? dateFromCheckOut && dateToCheckOut
-                  ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
-                  : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-                : record.category_type === CategoryType.TAXTOKEN
-                  ? dateFromCheckOut && dateToCheckOut
-                    ? list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                  ? dateFromCheckOut && dateToCheckOut
-                    ? list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                  : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  );
-          }}
+          onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKOUT, record, dateFromCheckOut, dateToCheckOut)}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
@@ -643,7 +362,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   ];
 
-  var columntypesCheckOut = (dataCheckOut?.data.payload.locations || []).map(
+  let columntypesCheckOut = (dataCheckOut?.data.payload.locations || []).map(
     (item: any) => {
       return {
         title: item.name,
@@ -655,51 +374,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             strong
             type="secondary"
             className="field-category"
-            onClick={() => {
-              record.category_type === CategoryType.ASSET
-                ? dateFromCheckOut && dateToCheckOut
-                  ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                  )
-                  : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                  )
-                : record.category_type === CategoryType.CONSUMABLE
-                  ? dateFromCheckOut && dateToCheckOut
-                    ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    )
-                  : record.category_type === CategoryType.TOOL
-                    ? dateFromCheckOut && dateToCheckOut
-                      ? list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                      )
-                      : list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                      )
-                    : record.category_type === CategoryType.TAXTOKEN
-                      ? dateFromCheckOut && dateToCheckOut
-                        ? list(
-                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                        )
-                        : list(
-                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                        )
-                  : record.category_type === CategoryType.ACCESSORY
-                    ? dateFromCheckOut && dateToCheckOut
-                      ? list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}&date_from=${dateFromCheckOut}&date_to=${dateToCheckOut}`
-                      )
-                      : list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                      )
-                    : list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKOUT}`
-                    );
-            }}
+            onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKOUT, record, dateFromCheckOut, dateToCheckOut, item.id)}
           >
             {text}
           </Typography.Text>
@@ -710,7 +385,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   columnsCheckOut = [...columnsCheckOut, ...columntypesCheckOut];
 
-  var columnsCheckIn = [
+  let columnsCheckIn = [
     {
       title: translate("report.label.title.nameReportCheckIn"),
       dataIndex: "type",
@@ -718,51 +393,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       width: 150,
       render: (text: string, record: IReport) => (
         <strong
-          onClick={() => {
-            record.category_type === CategoryType.ASSET
-              ? dateFromCheckIn && dateToCheckIn
-                ? list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                )
-                : list(
-                  `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                )
-              : record.category_type === CategoryType.CONSUMABLE
-                ? dateFromCheckIn && dateToCheckIn
-                  ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
-                  : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-              : record.category_type === CategoryType.TOOL
-                ? dateFromCheckIn && dateToCheckIn
-                  ? list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
-                  : list(
-                    `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-                : record.category_type === CategoryType.TAXTOKEN
-                  ? dateFromCheckIn && dateToCheckIn
-                    ? list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                  ? dateFromCheckIn && dateToCheckIn
-                    ? list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                  : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&action_type=${TypeAssetHistory.CHECKIN}`
-                  );
-          }}
+          onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKIN, record, dateFromCheckIn, dateToCheckIn)}
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
@@ -771,7 +402,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   ];
 
-  var columntypesCheckIn = (dataCheckIn?.data.payload.locations || []).map(
+  let columntypesCheckIn = (dataCheckIn?.data.payload.locations || []).map(
     (item: any) => {
       return {
         title: item.name,
@@ -783,51 +414,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             strong
             type="secondary"
             className="field-category"
-            onClick={() => {
-              record.category_type === CategoryType.ASSET
-                ? dateFromCheckIn && dateToCheckIn
-                  ? list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                  )
-                  : list(
-                    `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                  )
-                : record.category_type === CategoryType.CONSUMABLE
-                  ? dateFromCheckIn && dateToCheckIn
-                    ? list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                    )
-                    : list(
-                      `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                    )
-                  : record.category_type === CategoryType.TOOL
-                    ? dateFromCheckIn && dateToCheckIn
-                      ? list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                      )
-                      : list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                      )
-                    : record.category_type === CategoryType.TAXTOKEN
-                      ? dateFromCheckIn && dateToCheckIn
-                        ? list(
-                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                        )
-                        : list(
-                          `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                        )
-                  : record.category_type === CategoryType.ACCESSORY
-                    ? dateFromCheckIn && dateToCheckIn
-                      ? list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}&date_from=${dateFromCheckIn}&date_to=${dateToCheckIn}`
-                      )
-                      : list(
-                        `report?category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                      )
-                    : list(
-                      `report?category_id=${record.id}&category_type=${record.category_type}&location_id=${item.id}&action_type=${TypeAssetHistory.CHECKIN}`
-                    );
-            }}
+            onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKIN, record, dateFromCheckIn, dateToCheckIn, item.id)}
           >
             {text}
           </Typography.Text>
@@ -883,7 +470,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                     <Col sm={10} md={7}>
                       <AssetsSummaryPieChartCheckOut
                         assets_statistic={
-                          dataReportCheckOut ? dataReportCheckOut : ""
+                          dataReportCheckOut ?? ""
                         }
                       />
                     </Col>
@@ -939,7 +526,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                     <Col sm={24} md={7}>
                       <AssetsSummaryPieChartCheckIn
                         assets_statistic={
-                          dataReportCheckIn ? dataReportCheckIn : ""
+                          dataReportCheckIn ?? ""
                         }
                       />
                     </Col>
