@@ -15,7 +15,7 @@ import {
   Icons,
   Avatar,
   Typography,
-  Switch,
+  // Switch,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
 import { useState } from "react";
@@ -83,13 +83,13 @@ export const Header: React.FC = () => {
 
   const { data: userIdentity } = useGetIdentity<string>();
   const { data: permissionsData } = usePermissions();
-  const [isDarkMode, setIsDarkMode] = useState<boolean>();
-  const { switcher, themes } = useThemeSwitcher();
+  // const [isDarkMode, setIsDarkMode] = useState<boolean>();
+  // const { switcher, themes } = useThemeSwitcher();
 
-  const toggleTheme = (isChecked: boolean) => {
-    setIsDarkMode(isChecked);
-    switcher({ theme: isChecked ? themes.dark : themes.light });
-  };
+  // const toggleTheme = (isChecked: boolean) => {
+  //   setIsDarkMode(isChecked);
+  //   switcher({ theme: isChecked ? themes.dark : themes.light });
+  // };
 
   return (
     <AntdLayout.Header
@@ -99,15 +99,17 @@ export const Header: React.FC = () => {
         alignItems: "center",
         padding: "0px 24px",
         height: "64px",
+        backgroundColor: "#FFF",
       }}
     >
-      <Switch
+      <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      {/* <Switch
         checkedChildren={<FaMoon style={{fontSize: "17px", paddingTop: "3px"}}/>}
         unCheckedChildren={<FaSun style={{color: "white", fontSize: "17px", paddingTop: "3px"}}/>}
         checked={isDarkMode}
         onChange={toggleTheme}
       />
-      <Text style={{ fontWeight: "500", fontSize: "16px", marginLeft: "20px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      <Text style={{ fontWeight: "500", fontSize: "16px", marginLeft: "20px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text> */}
       {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
         <Button
           type="link"

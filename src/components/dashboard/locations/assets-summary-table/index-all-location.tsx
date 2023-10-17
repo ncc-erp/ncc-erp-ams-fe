@@ -138,7 +138,7 @@ export const AssetsSummaryTableAllLocation = (
         break;
 
       case CategoryType.TOOL:
-        url += "tool-all?";
+        url += "tools-all?";
         break;
     }
 

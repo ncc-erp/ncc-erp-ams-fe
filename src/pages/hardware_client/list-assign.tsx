@@ -204,7 +204,7 @@ export const ClientHardwareListAssign: React.FC<IResourceComponentsProps> = () =
         {
           field: "rtd_location_id",
           operator: "eq",
-          value: location ?? rtd_location_id,
+          value: location ? location : rtd_location_id,
         },
         {
           field: "dateCheckoutFrom",

@@ -5,7 +5,8 @@ export const antLayoutSider: CSSProperties = {
   maxHeight: "calc(100vh - 48px)",
   overflowY: "auto",
   top: 0,
-  border: "none"
+  border: "none",
+  overflowX: "hidden"
 };
 export const antLayoutSiderMobile: CSSProperties = {
   position: "fixed",
