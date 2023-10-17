@@ -119,7 +119,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         break;
 
       case CategoryType.TOOL:
-        url += "tool-all?";
+        url += "tools-all?";
         break;
     }
 

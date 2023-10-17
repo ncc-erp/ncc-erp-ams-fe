@@ -57,7 +57,7 @@ import { ToolList } from "pages/tools/list";
 import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
 import { UserListTaxToken } from "pages/users/list-tax-tokens";
-import { ThemeSwitcherProvider } from "react-css-theme-switcher";
+// import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken, ClientHardwareListPending, ClientHardwareListReadyToDeploy } from "pages/hardware_client";
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
@@ -71,13 +71,13 @@ function App() {
     getLocale: () => i18n.language,
   };
 
-  const currThemes = {
-    dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
-    light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
-  };
+  // const currThemes = {
+  //   dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
+  //   light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
+  // };
 
   return (
-    <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
+    // <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
       <Refine
         routerProvider={routerProvider}
         notificationProvider={notificationProvider}
@@ -446,7 +446,6 @@ function App() {
         OffLayoutArea={OffLayoutArea}
         i18nProvider={i18nProvider}
       />
-    </ThemeSwitcherProvider>
   );
 }
 
