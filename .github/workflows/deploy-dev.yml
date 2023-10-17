@@ -53,7 +53,6 @@ jobs:
 
       - name: Extract file to server
         run: |
-          rm -rf /var/www/build
-          mkdir -p /var/www/build
-          unzip /home/nccsoft/fe.zip -d /var/www/build
+          rm -rf /home/nccsoft/NCC-ITTools-Client/build
+          unzip /home/nccsoft/fe.zip -d /home/nccsoft/NCC-ITTools-Client/
           rm -rf /home/nccsoft/fe.zip
