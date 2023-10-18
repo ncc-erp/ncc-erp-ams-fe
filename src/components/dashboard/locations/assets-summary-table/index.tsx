@@ -123,8 +123,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         break;
     }
 
-    if (item && item?.id !== 99999) {
-
+    if (item && item?.id !== 99999 && item?.id != undefined) {
       if (record.category_type === CategoryType.ASSET) {
         url += `rtd_location_id=${item?.id}&`;
       } else {

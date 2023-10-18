@@ -244,7 +244,7 @@ export const Sider: React.FC = () => {
           />
         )}
 
-        {permissionsData && userIsAdmin && (
+        {permissionsData && (
           <SideBarSubMenuItem
             title={translate("resource.users_assets")}
             label={"users"}

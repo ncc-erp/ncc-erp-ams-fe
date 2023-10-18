@@ -1120,13 +1120,19 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                         OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
                       }
                     >
-                      {isLoadingArr[record.id] && (
+                      {isLoadingArr[record.id] !== false && (
                         <Button
                           className="ant-btn-accept"
                           type="primary"
                           shape="round"
                           size="small"
-                          loading={isLoadingArr[record.id] ? true : false}
+                          loading={
+                            isLoadingArr[record.id] === undefined
+                              ? false
+                              : isLoadingArr[record.id] === false
+                                ? false
+                                : true
+                          }
                         >
                           {t("hardware.label.button.accept_checkin")}
                         </Button>
