@@ -226,3 +226,17 @@ export interface IToolRequestMultipleCancel {
   reason: string;
   assigned_status: number;
 }
+
+export interface IToolCreateRequest {
+  rows: any;
+  id: number;
+  status_id: number;
+  name: string;
+  purchase_date: string;
+  purchase_cost: number;
+  expiration_date: string;
+  supplier_id: number;
+  notes: string;
+  location_id: number;
+  created_at: string;
+}

@@ -52,10 +52,17 @@ const defaultCheckedList = [
     "notes",
 ];
 
-export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () => {
+type detailConsumableProps = {
+    id_name: string;
+};
+
+export const DetailsConsumable = (props: detailConsumableProps) => {
     const translate = useTranslate();
     const { list } = useNavigation();
+    const { id_name } = props;
     const [isLoadingArr] = useState<boolean[]>([]);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [listening, setListening] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -80,7 +87,7 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
     const [searchParams] = useSearchParams();
     const category_id = searchParams.get("category_id");
     const searchParam = searchParams.get("search");
-    const location_id = searchParams.get('id');
+    const type_id = searchParams.get('id');
 
     const { tableProps, tableQueryResult, searchFormProps, sorter, filters } = useTable<
         IConsumablesResponse,
@@ -93,7 +100,14 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                 order: "desc",
             },
         ],
-        resource: `${CONSUMABLE_API}?location_id=${location_id}`,
+        permanentFilter: [
+            {
+                field: id_name,
+                operator: 'eq',
+                value: type_id
+            }
+        ],
+        resource: CONSUMABLE_API,
         onSearch: (params) => {
             const filters: CrudFilters = [];
             let { search, category } = params;
@@ -109,9 +123,9 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                     value: category ? category : category_id,
                 },
                 {
-                    field: "location_id",
+                    field: id_name,
                     operator: "eq",
-                    value: location_id,
+                    value: type_id,
                 },
             );
 
@@ -375,6 +389,7 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     useEffect(() => {
@@ -440,8 +455,9 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                 </div>
             </div>
             <TotalDetail
-                links={CONSUMABLE_TOTAL_DETAIL_API}
+                links={`${CONSUMABLE_TOTAL_DETAIL_API}?${id_name}=${type_id}`}
                 filters={filters}
+                isReload={isTotalDetailReload}
             ></TotalDetail>
 
             {loading ? (
@@ -506,6 +522,9 @@ export const LocationDetailsConsumable: React.FC<IResourceComponentsProps> = () 
                                     hideText
                                     size="small"
                                     recordItemId={record.id}
+                                    onSuccess={() => {
+                                        setIsTotalDetailReload(!isTotalDetailReload);
+                                    }}
                                 />
 
                                 {record.user_can_checkout === true ? (

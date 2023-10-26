@@ -91,6 +91,10 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       country: data.country,
       currency: data?.currency,
       assets_count: data?.assets_count,
+      tools_count: data?.tools_count,
+      accessories_count: data?.accessories_count,
+      consumables_count: data?.assets_count,
+      digital_signatures_count: data?.digital_signatures_count
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -120,20 +124,8 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
-        key: "image",
-        title: t("location.label.field.imageTable"),
-        render: (value: string) => {
-          return value ? (
-            <Image width={50} alt="" height={"auto"} src={value ? value : ""} />
-          ) : (
-            ""
-          );
-        },
-      },
-
-      {
         key: "assets_count",
-        title: t("location.label.field.assetCount"),
+        title: t("location.label.field.assets_count"),
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assets_count", sorter),
       },
@@ -142,6 +134,30 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         title: t("location.label.field.assetAssign"),
         render: (value: number) => <TagField value={value ? value : 0} />,
         defaultSortOrder: getDefaultSortOrder("assigned_assets_count", sorter),
+      },
+      {
+        key: "tools_count",
+        title: t("location.label.field.tools_count"),
+        render: (value: number) => <TagField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("tools_count", sorter),
+      },
+      {
+        key: "digital_signatures_count",
+        title: t("location.label.field.tax_tokens_count"),
+        render: (value: number) => <TagField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("digital_signatures_count", sorter),
+      },
+      {
+        key: "accessories_count",
+        title: t("location.label.field.accessories_count"),
+        render: (value: number) => <TagField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("accessories_count", sorter),
+      },
+      {
+        key: "consumables_count",
+        title: t("location.label.field.consumables_count"),
+        render: (value: number) => <TagField value={value ? value : 0} />,
+        defaultSortOrder: getDefaultSortOrder("consumables_count", sorter),
       },
       {
         key: "users_count",

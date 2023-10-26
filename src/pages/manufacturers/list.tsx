@@ -139,7 +139,6 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
         render: (value: number) => <TagField value={value} />,
         defaultSortOrder: getDefaultSortOrder("consumables_count", sorter),
       },
-
       {
         key: "created_at",
         title: t("manufactures.label.field.dateCreate"),
