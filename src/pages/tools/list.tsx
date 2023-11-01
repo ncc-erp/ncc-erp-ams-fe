@@ -37,7 +37,7 @@ import {
     IToolFilterVariable,
     IToolResponse,
     IToolResponseCheckin,
-    ITool
+    ITool,
 } from "interfaces/tool";
 import {
     getBGToolAssignedStatusDecription,
@@ -60,7 +60,8 @@ import {
     STATUS_LABELS_API,
     TOOLS_API,
     TOOLS_CATEGORIES_API,
-    SUPPLIERS_API
+    SUPPLIERS_API,
+    TOOLS_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { ToolSearch } from "./search";
 import { ToolCreate } from "./create";
@@ -71,6 +72,7 @@ import { ToolCheckout } from "./checkout";
 import { ToolMultiCheckout } from "./multi-checkout";
 import { ToolCheckin } from "./checkin";
 import { ToolMultiCheckin } from "./multi-checkin";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -90,6 +92,8 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     const menuRef = useRef(null);
     const { RangePicker } = DatePicker;
     const [loading, setLoading] = useState(false);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
@@ -145,7 +149,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         });
     };
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         IToolResponse,
         HttpError,
         IToolFilterVariable
@@ -676,6 +680,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
     };
 
     const handleRefresh = () => {
@@ -742,6 +747,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
         localStorage.removeItem("selectedToolsRowKeys");
         searchFormProps.form?.submit();
     }, [window.location.reload]);
+
+    useEffect(() => {
+        setIsTotalDetailReload(!isTotalDetailReload);
+    }, [isModalVisible])
 
     useEffect(() => {
         refreshData();
@@ -1060,13 +1069,12 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
+            <TotalDetail
+                filters={filters}
+                links={TOOLS_TOTAL_DETAIL_API}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
             <div className="checkout-checkin-multiple">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("tools.label.title.sum-tools")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="checkout-multiple-asset">
                     <Button
                         type="primary"
@@ -1156,18 +1164,21 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                                         onClick={() => edit(record)}
                                     />
                                 </Tooltip>
-
-                                <Tooltip
-                                    title={t("tools.label.tooltip.delete")}
-                                    color={"red"}
-                                >
-                                    <DeleteButton
-                                        resourceName={TOOLS_API}
-                                        hideText
-                                        size="small"
-                                        recordItemId={record.id}
-                                    />
-                                </Tooltip>
+                                {record.assigned_to !== null ? (
+                                    <DeleteButton hideText size="small" disabled />
+                                ) : (
+                                    <Tooltip
+                                        title={t("tools.label.tooltip.delete")}
+                                        color={"red"}
+                                    >
+                                        <DeleteButton
+                                            resourceName={TOOLS_API}
+                                            hideText
+                                            size="small"
+                                            recordItemId={record.id}
+                                        />
+                                    </Tooltip>
+                                )}
                                 {record.user_can_checkout && (
                                     <Button
                                         className="ant-btn-checkout"

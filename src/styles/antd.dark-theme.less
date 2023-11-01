@@ -1,0 +1,81 @@
+@import '~antd/lib/style/color/colorPalette.less';
+@import '~antd/dist/antd.less';
+@import '~antd/lib/style/themes/dark.less';
+
+// font
+@font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+// base variables
+@border-radius-base: 6px;
+
+// colors
+@primary-color: #ed1b23;
+@error-color: #fa541c;
+@text-color: rgba(255, 255, 255, 0.75);
+
+// sider
+@layout-sider-background: #292929;
+@menu-bg: transparent;
+@menu-item-color: #fff;
+@menu-highlight-color: #fff;
+@menu-item-active-bg: transparent;
+@menu-item-active-border-width: 0px;
+@layout-trigger-background: #292929;
+
+//form
+@label-color: @text-color;
+
+// header
+@layout-header-background: #292929;
+
+.react-mde {
+    border: 1px solid #565656;
+}
+
+.mde-header {
+    background: #c7c7c7;
+}
+
+.mde-header .mde-tabs button {
+    color: black;
+}
+
+.mde-header .mde-tabs button.seleted {
+    border: 1px solid #101010;
+}
+
+textarea.mde-text {
+    background: #1f1f1f;
+}
+
+.all-location {
+    margin-top: 2rem;
+    border-radius: 5px;
+    box-shadow: rgba(255, 255, 255, 0.24) 0px 3px 8px;
+    padding: 25px 30px;
+}
+
+.reportAssetContainer {
+    margin-top: 2rem;
+    border-radius: 5px;
+    box-shadow: rgba(255, 255, 255, 0.24) 0px 3px 8px;
+    padding: 25px 30px;
+}
+
+.dashboard-loading {
+    height: 50vh;
+    width: 100%
+}
+
+.spin-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.list-checkouts, .list-checkins {
+    background-color: #282828;
+}

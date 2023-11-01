@@ -60,6 +60,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
@@ -81,6 +82,7 @@ import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -101,6 +103,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [detailCheckout, setDetailCheckout] =
     useState<IHardwareResponseCheckout>();
@@ -153,7 +156,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
   }, [permissionsData])
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -489,7 +492,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       rtd_location: {
         id: data?.rtd_location?.id,
         name: data?.rtd_location?.name,
-    },
+      },
       last_checkout: {
         date: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
         formatted: moment(new Date()).format("YYYY-MM-DDTHH:mm"),
@@ -559,12 +562,17 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -1373,13 +1381,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
 
+      <TotalDetail
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
+      ></TotalDetail>
       <div className="checkout-checkin-multiple">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="checkout-multiple-asset">
           {isAdmin && (
             <Button
@@ -1519,6 +1526,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onSuccess={() => {
+                        setIsTotalDetailReload(!isTotalDetailReload)
+                      }}
                     />
                   </Tooltip>
                 )}

@@ -36,7 +36,8 @@ import { filterAssignedStatus } from "untils/assets";
 import {
     SUPPLIERS_API,
     TAX_TOKEN_API,
-    STATUS_LABELS_API
+    STATUS_LABELS_API,
+    TAX_TOKEN_TOTAL_DETAIL_API
 } from "api/baseApi";
 import { Spin } from "antd";
 import { DatePicker } from "antd";
@@ -46,18 +47,18 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { IModel } from "interfaces/model";
 import { IStatusLabel } from "interfaces/statusLabel";
-import { 
-    ITaxToken, 
-    ITaxTokenFilterVariables, 
-    ITaxTokenRequestCheckout, 
-    ITaxTokenResponse, 
-    ITaxTokenResponseCheckin 
+import {
+    ITaxToken,
+    ITaxTokenFilterVariables,
+    ITaxTokenRequestCheckout,
+    ITaxTokenResponse,
+    ITaxTokenResponseCheckin
 } from "interfaces/tax_token";
-import { 
-    getBGTaxTokenAssignedStatusDecription, 
-    getBGTaxTokenStatusDecription, 
-    getTaxTokenAssignedStatusDecription, 
-    getTaxTokenStatusDecription 
+import {
+    getBGTaxTokenAssignedStatusDecription,
+    getBGTaxTokenStatusDecription,
+    getTaxTokenAssignedStatusDecription,
+    getTaxTokenStatusDecription
 } from "untils/tax_token";
 import { TaxTokenCreate } from "./create";
 import { TaxTokenEdit } from "./edit";
@@ -68,6 +69,7 @@ import { TaxTokenCheckout } from "./checkout";
 import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
 import { TaxTokenCheckin } from "./checkin";
 import { TaxTokenCheckinMultiple } from "./checkin-multiple";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
     "id",
@@ -90,6 +92,8 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     const menuRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
     const onClickDropDown = () => setIsActive(!isActive);
+
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
     const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -114,7 +118,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
     const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
     const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
-      
+
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParam = searchParams.get("search");
     const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
@@ -142,7 +146,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
         });
     };
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         ITaxTokenResponse,
         HttpError,
         ITaxTokenFilterVariables
@@ -673,6 +677,8 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
     const refreshData = () => {
         tableQueryResult.refetch();
+        setIsTotalDetailReload(!isTotalDetailReload);
+
     };
 
     const handleRefresh = () => {
@@ -737,6 +743,10 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     useEffect(() => {
         searchFormProps.form?.submit();
     }, [window.location.reload]);
+
+    useEffect(() => {
+        setIsTotalDetailReload(!isTotalDetailReload);
+    }, [isModalVisible])
 
     useEffect(() => {
         refreshData();
@@ -1042,13 +1052,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 />
             </MModal>
 
+            <TotalDetail
+                filters={filters}
+                links={TAX_TOKEN_TOTAL_DETAIL_API}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
             <div className="checkout-checkin-multiple">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("tax_token.label.title.sum-tax_token")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="checkout-multiple-asset">
                     <Button
                         type="primary"
@@ -1151,6 +1160,9 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                                             hideText
                                             size="small"
                                             recordItemId={record.id}
+                                            onSuccess={() => {
+                                                setIsTotalDetailReload(!isTotalDetailReload);
+                                            }}
                                         />
                                     </Tooltip>
                                 )}

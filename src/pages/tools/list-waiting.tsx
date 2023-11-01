@@ -48,7 +48,8 @@ import { ToolSearch } from "./search";
 import {
     STATUS_LABELS_API,
     SUPPLIERS_API,
-    TOOLS_API
+    TOOLS_API,
+    TOOLS_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
     CloseOutlined,
@@ -71,13 +72,14 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { IModel } from "interfaces/model";
 import { IAssetsWaiting } from "interfaces/hardware";
-
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const ToolListWaitingConfirm: React.FC<
     IResourceComponentsProps
 > = () => {
     const t = useTranslate();
     const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+    const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
     const [detail, setDetail] = useState<IToolResponse>();
     const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
     const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -119,7 +121,7 @@ export const ToolListWaitingConfirm: React.FC<
 
     const { RangePicker } = DatePicker;
 
-    const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+    const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
         any,
         HttpError,
         IToolFilterVariable
@@ -398,7 +400,7 @@ export const ToolListWaitingConfirm: React.FC<
     )
 
 
-    const { mutate, isLoading: isLoadingSendRequest } =
+    const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
         useCreate<IToolCreateRequest>();
 
     const cancle = (data: IToolResponse) => {
@@ -745,6 +747,10 @@ export const ToolListWaitingConfirm: React.FC<
         };
     }, []);
 
+    useEffect(() => {
+        setIsTotalDetailReload(!isTotalDetailReload);
+      }, [isMutateSuccess, isCancleModalVisible, isCancelManyToolVisible])
+
     return (
         <List title={t("hardware.label.title.list-waiting-confirm")}>
             <div className="users">
@@ -909,13 +915,13 @@ export const ToolListWaitingConfirm: React.FC<
                     searchFormProps={searchFormProps}
                 />
             </MModal>
+
+            <TotalDetail
+                filters={filters}
+                links={TOOLS_TOTAL_DETAIL_API}
+                isReload={isTotalDetailReload}
+            ></TotalDetail>
             <div className="list-waiting-confirm">
-                <div className="sum-assets">
-                    <span className="name-sum-assets">
-                        {t("hardware.label.title.sum-assets")}
-                    </span>{" "}
-                    : {tableProps.pagination ? tableProps.pagination?.total : 0}
-                </div>
                 <div className="list-users">
                     <div className="button-list-accept-refuse">
                         <Popconfirm

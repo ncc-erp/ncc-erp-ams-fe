@@ -43,6 +43,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -71,12 +72,14 @@ import "styles/request.less";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
 > = () => {
   const t = useTranslate();
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -93,7 +96,7 @@ export const HardwareListWaitingConfirm: React.FC<
     }
   }, [permissionsData])
 
-  
+
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
       ? JSON.parse(localStorage.getItem("item_selected") as string)
@@ -114,7 +117,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     any,
     HttpError,
     IHardwareFilterVariables
@@ -439,7 +442,7 @@ export const HardwareListWaitingConfirm: React.FC<
     [filterCategory]
   );
 
-  const { mutate, isLoading: isLoadingSendRequest } =
+  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
     useCreate<IHardwareCreateRequest>();
 
   const cancle = (data: IHardwareResponse) => {
@@ -463,6 +466,7 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   useEffect(() => {
@@ -790,6 +794,10 @@ export const HardwareListWaitingConfirm: React.FC<
     searchFormProps.form?.submit();
   };
 
+  // useEffect(() => {
+  //   setIsTotalDetailReload(!isTotalDetailReload);
+  // }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
       <div className="users">
@@ -952,13 +960,13 @@ export const HardwareListWaitingConfirm: React.FC<
           searchFormProps={searchFormProps}
         />
       </MModal>
+
+      <TotalDetail
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
+      ></TotalDetail>
       <div className="list-waiting-confirm">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="list-users">
           <div className="button-list-accept-refuse">
             <Popconfirm

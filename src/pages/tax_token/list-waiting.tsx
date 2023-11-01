@@ -42,7 +42,8 @@ import { filterAssignedStatus } from "untils/assets";
 import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
-  TAX_TOKEN_API
+  TAX_TOKEN_API,
+  TAX_TOKEN_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -66,12 +67,14 @@ import { EPermissions } from "constants/permissions";
 import { IModel } from "interfaces/model";
 import { IAssetsWaiting } from "interfaces/hardware";
 import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const TaxTokenListWaitingConfirm: React.FC<
   IResourceComponentsProps
 > = () => {
   const t = useTranslate();
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<ITaxTokenResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
@@ -112,7 +115,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     any,
     HttpError,
     ITaxTokenFilterVariables
@@ -401,7 +404,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
   )
 
 
-  const { mutate, isLoading: isLoadingSendRequest } =
+  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
     useCreate<ITaxTokenCreateRequest>();
 
   const cancle = (data: ITaxTokenResponse) => {
@@ -748,6 +751,10 @@ export const TaxTokenListWaitingConfirm: React.FC<
     };
   }, []);
 
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
       <div className="users">
@@ -912,13 +919,13 @@ export const TaxTokenListWaitingConfirm: React.FC<
           searchFormProps={searchFormProps}
         />
       </MModal>
+
+      <TotalDetail
+        filters={filters}
+        links={TAX_TOKEN_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
+      ></TotalDetail>
       <div className="list-waiting-confirm">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="list-users">
           <div className="button-list-accept-refuse">
             <Popconfirm

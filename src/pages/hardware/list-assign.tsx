@@ -54,6 +54,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
+  HARDWARE_TOTAL_DETAIL_API
 } from "api/baseApi";
 import {
   MenuOutlined,
@@ -80,6 +81,7 @@ import {
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -95,7 +97,7 @@ const defaultCheckedList = [
 
 export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
-  
+
   const [searchParams, setSearchParams] = useSearchParams();
   const rtd_location_id = searchParams.get("rtd_location_id");
   const category_id = searchParams.get("category_id");
@@ -108,6 +110,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [detailCheckout, setDetailCheckout] =
     useState<IHardwareResponseCheckout>();
@@ -149,7 +152,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     }
   }, [permissionsData])
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } = useTable<
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
     IHardwareResponse,
     HttpError,
     IHardwareFilterVariables
@@ -824,12 +827,17 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -1368,13 +1376,13 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
+
+      <TotalDetail
+        filters={filters}
+        links={HARDWARE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
+      ></TotalDetail>
       <div className="checkout-checkin-multiple">
-        <div className="sum-assets">
-          <span className="name-sum-assets">
-            {t("hardware.label.title.sum-assets")}
-          </span>{" "}
-          : {tableProps.pagination ? tableProps.pagination?.total : 0}
-        </div>
         <div className="checkout-multiple-asset">
           {isAdmin && (
             <Button
@@ -1519,6 +1527,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onSuccess={() => {
+                        setIsTotalDetailReload(!isTotalDetailReload);
+                      }}
                     />
                   </Tooltip>
                 )}
