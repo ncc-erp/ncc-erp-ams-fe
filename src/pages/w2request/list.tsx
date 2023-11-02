@@ -1,41 +1,103 @@
 /* eslint-disable no-lone-blocks */
 import {
+    Button,
     DateField,
     Form,
     List,
+    Popconfirm,
     Select,
+    Space,
     Table,
     TextField,
-    useSelect,
     useTable,
 } from "@pankod/refine-antd";
 import {
     CrudFilters,
     IResourceComponentsProps,
-    useNavigation,
+    useCreate,
+    useNotification,
     useTranslate,
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IW2Request } from "interfaces/w2request";
 import { W2REQUEST_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
-import { TableAction } from "components/elements/tables/TableAction";
-import { StatusType, RequestType } from "constants/w2request";
+// import { TableAction } from "components/elements/tables/TableAction"; 
+import { RequestStatus, StatusType } from "constants/w2request";
+import { MModal } from "components/Modal/MModal";
+import { CancelRequest } from "./cancel";
 
 
 export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
     const translate = useTranslate();
-    const { list } = useNavigation();
 
+    const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+    const [requestId, setRequestId] = useState<string>('');
     const [searchParams, setSearchParams] = useSearchParams();
+    const [isBtnAcceptLoading, setIsBtnAcceptLoading] = useState<Record<string, boolean>>({});
+    const { open } = useNotification();
 
-    // const location = searchParams.get("location_id");
-    const workflowId = searchParams.get("type");
+    // const workflowId = searchParams.get("type");
     const statusParam = searchParams.get("status");
+
+    const setIsBtnAcceptLoadingByKey = (key: string, value: boolean) => {
+        setIsBtnAcceptLoading((prevState) => ({
+            ...prevState,
+            [key]: value,
+        }));
+    };
+
+    const { mutate, isLoading: isLoadingSendRequest } = useCreate();
+    const onAcceptRequest = (id: string) => {
+        setIsBtnAcceptLoadingByKey(id, true);
+
+        mutate({
+            resource: W2REQUEST_API + "/approve-request",
+            values: {
+                id: id
+            },
+            successNotification: false,
+            errorNotification: false,
+        }, {
+            onSuccess(data) {
+                open?.({
+                    type: 'success',
+                    description: 'Success',
+                    message: data?.data.messages
+                })
+                setIsBtnAcceptLoadingByKey(id, false);
+            },
+            onError(error) {
+                open?.({
+                    type: 'error',
+                    description: 'Error',
+                    message: error?.response?.data.messages
+                })
+                setIsBtnAcceptLoadingByKey(id, false);
+            }
+        })
+    }
+
+    const refreshData = () => {
+        tableQueryResult.refetch();
+    };
+
+    useEffect(() => {
+        refreshData();
+    }, [isLoadingSendRequest])
+
+    useEffect(() => {
+        searchFormProps.form?.submit();
+    }, [window.location.reload]);
+
+    const cancel = (data: IW2Request) => {
+        setIsCancelModalVisible(true);
+        setRequestId(data.id);
+    }
 
     const { Option } = Select;
 
-    const { tableProps, searchFormProps } = useTable<IW2Request>({
+    const { tableProps, searchFormProps, tableQueryResult } = useTable<IW2Request>({
         initialSorter: [
             {
                 field: "createdAt",
@@ -47,15 +109,15 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
             const filters: CrudFilters = [];
             let { type, status } = params;
             filters.push(
-                {
-                    field: "type",
-                    operator: "eq",
-                    value: workflowId,
-                },
+                // {
+                //     field: "type",
+                //     operator: "eq",
+                //     value: workflowId,
+                // },
                 {
                     field: "status",
                     operator: "eq",
-                    value: statusParam,
+                    value: (status == "all") ? [] : [status],
                 },
             );
             return filters;
@@ -86,6 +148,13 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 ),
             },
             {
+                key: "status",
+                title: translate("w2request.label.field.status"),
+                render: (value: string) => (
+                    <TextField value={translate(`w2request.label.status.${StatusType[value]}`)} />
+                ),
+            },
+            {
                 key: "createdAt",
                 title: translate("w2request.label.field.createdAt"),
                 render: (value: IW2Request) =>
@@ -95,27 +164,21 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                         ""
                     ),
             },
-            {
-                key: "lastExecutedAt",
-                title: translate("w2request.label.field.lastExecutedAt"),
-                render: (value: IW2Request) =>
-                    value ? (
-                        <DateField format="LL" value={value ? value.lastExecutedAt : ""} />
-                    ) : (
-                        ""
-                    ),
-            },
-            {
-                key: "status",
-                title: translate("w2request.label.field.status"),
-                render: (value: IW2Request) => (
-                    <TextField value={value ? value : ""} />
-                ),
-            }
+            // {
+            //     key: "lastExecutedAt",
+            //     title: translate("w2request.label.field.lastExecutedAt"),
+            //     render: (value: IW2Request) =>
+            //         value ? (
+            //             <DateField format="LL" value={value ? value.lastExecutedAt : ""} />
+            //         ) : (
+            //             ""
+            //         ),
+            // },
         ],
         []
     );
 
+    /*
     const handleTypeChange = (value: {
         value: string;
         label: React.ReactNode;
@@ -125,30 +188,32 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
         } else searchParams.set("type", JSON.stringify(value));
         searchFormProps.form?.submit();
         setSearchParams(searchParams);
-    };
+    }; */
 
-    const handleStatusChange = (value: {
-        value: string;
-        label: React.ReactNode;
-      }) => {
-        if (JSON.stringify(value) === JSON.stringify("all")) {
-          searchParams.delete("status");
-        } else searchParams.set("status", JSON.stringify(value));
+    const handleStatusChange = (value: string) => {
+        if (value == "all") {
+            searchParams.delete("status");
+        }
+        else {
+            searchParams.set("status", value);
+        }
         searchFormProps.form?.submit();
         setSearchParams(searchParams);
-      };
+    };
 
     return (
         <List title={translate("w2request.label.title.name")}>
             <div className="search" style={{ marginBottom: "20px" }}>
                 <Form
+                    {...searchFormProps}
                     layout="vertical"
                     className="search-month-location"
                     initialValues={{
-                        status: statusParam ? statusParam : translate("all"),
-                        type: workflowId ? workflowId : translate("all"),
+                        status: statusParam ? statusParam : "all",
+                        // type: workflowId ? workflowId : translate("all"),
                     }}
                 >
+                    {/*  
                     <Form.Item
                         label={translate("w2request.label.title.type")}
                         name="type"
@@ -161,12 +226,11 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                                 return <Option value={value}>{value}</Option>;
                             })}
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item
                         label={translate("w2request.label.title.status")}
                         name="status"
-                        initialValue={"all"}
                         className="search-month-location-null"
                     >
                         <Select
@@ -175,7 +239,7 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                         >
                             <Option value={"all"}>{translate("all")}</Option>
                             {Object.entries(StatusType).map(([key, value]) => {
-                                return <Option value={key}>{value}</Option>;
+                                return <Option value={key}>{translate(`w2request.label.status.${value}`)}</Option>;
                             })}
                         </Select>
                     </Form.Item>
@@ -188,9 +252,10 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                     </span>{" "}
                     : {tableProps.pagination ? tableProps.pagination?.total : 0}
                 </div>
-                <div className="search-report">
+                {/* 
+                 <div className="search-report">
                     <TableAction searchFormProps={searchFormProps} />
-                </div>
+                </div> */}
             </div>
             <Table
                 {...tableProps}
@@ -204,7 +269,60 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 {collumns.map((col) => (
                     <Table.Column dataIndex={col.key} {...(col as any)} sorter />
                 ))}
+                <Table.Column<IW2Request>
+                    title={translate("table.actions")}
+                    dataIndex="actions"
+                    render={(_, record) => {
+                        if (!isBtnAcceptLoading.hasOwnProperty(record.id)) {
+                            isBtnAcceptLoading[record.id] = false;
+                        }
+
+                        return (
+                            <Space align="start">
+                                <Popconfirm
+                                    title={translate("w2request.label.button.accept")}
+                                    onConfirm={() => onAcceptRequest(record.id)}
+                                    disabled={record.status != RequestStatus.PENDING || isBtnAcceptLoading[record.id]}
+                                    style={{ display: "block" }}
+                                >
+                                    <Button
+                                        className={(record.status == RequestStatus.PENDING) ? "ant-btn-accept" : ""}
+                                        type="primary"
+                                        shape="round"
+                                        size="small"
+                                        disabled={record.status != RequestStatus.PENDING}
+                                        loading={isBtnAcceptLoading[record.id]}
+                                    >
+                                        {translate("w2request.label.button.accept")}
+                                    </Button>
+                                </Popconfirm>
+
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    size="small"
+                                    onClick={() => cancel(record)}
+                                    disabled={record.status != RequestStatus.PENDING || isBtnAcceptLoading[record.id]}
+                                >
+                                    {translate("w2request.label.button.reject")}
+                                </Button>
+                            </Space>
+                        )
+                    }}
+                />
             </Table>
+
+            <MModal
+                title={translate("w2request.label.title.cancel")}
+                setIsModalVisible={setIsCancelModalVisible}
+                isModalVisible={isCancelModalVisible}
+            >
+                <CancelRequest
+                    refreshData={refreshData}
+                    setIsModalVisible={setIsCancelModalVisible}
+                    id={requestId}
+                />
+            </MModal>
         </List>
     );
 };

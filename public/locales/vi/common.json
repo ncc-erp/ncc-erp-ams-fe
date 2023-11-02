@@ -1370,7 +1370,17 @@
       "title": {
         "name": "Danh sách yêu cầu",
         "type": "Loại yêu cầu",
-        "status": "Trạng thái" 
+        "status": "Trạng thái",
+        "cancel": "Từ chối"
+      },
+      "status": {
+        "Pending": "Đang chờ xác nhận",
+        "Approved": "Đã xác nhận",
+        "Rejected": "Đã từ chối"
+      },
+      "button": {
+        "accept": "Xác nhận cấp phát",
+        "reject": "Từ chối cấp phát"
       }
     }
   }
