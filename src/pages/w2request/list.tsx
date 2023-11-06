@@ -8,6 +8,7 @@ import {
     Select,
     Space,
     Table,
+    TagField,
     TextField,
     useTable,
 } from "@pankod/refine-antd";
@@ -26,6 +27,7 @@ import { useSearchParams } from "react-router-dom";
 import { RequestStatus, StatusType } from "constants/w2request";
 import { MModal } from "components/Modal/MModal";
 import { CancelRequest } from "./cancel";
+import { getBGRequestAssignedStatusDecription, getRequestStatusDecription } from "untils/request";
 
 
 export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
@@ -151,7 +153,13 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 key: "status",
                 title: translate("w2request.label.field.status"),
                 render: (value: string) => (
-                    <TextField value={translate(`w2request.label.status.${StatusType[value]}`)} />
+                    <TagField
+                        value={getRequestStatusDecription(value)}
+                        style={{
+                            background: getBGRequestAssignedStatusDecription(value),
+                            color: "white",
+                        }}
+                    />
                 ),
             },
             {
