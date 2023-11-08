@@ -6,10 +6,12 @@ import {
     List,
     Popconfirm,
     Select,
+    ShowButton,
     Space,
     Table,
     TagField,
     TextField,
+    Tooltip,
     useTable,
 } from "@pankod/refine-antd";
 import {
@@ -28,12 +30,16 @@ import { RequestStatus, StatusType } from "constants/w2request";
 import { MModal } from "components/Modal/MModal";
 import { CancelRequest } from "./cancel";
 import { getBGRequestAssignedStatusDecription, getRequestStatusDecription } from "untils/request";
+import { DetailRequest } from "./show";
+import "styles/antd.less";
 
 
 export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
     const translate = useTranslate();
 
-    const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+    const [isCancelModalVisible, setIsCancelModalVisible] = useState<boolean>(false);
+    const [isDetailModalVisible, setIsDetailModalVisible] = useState<boolean>(false);
+
     const [requestId, setRequestId] = useState<string>('');
     const [searchParams, setSearchParams] = useSearchParams();
     const [isBtnAcceptLoading, setIsBtnAcceptLoading] = useState<Record<string, boolean>>({});
@@ -97,6 +103,11 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
         setRequestId(data.id);
     }
 
+    const showDetail = (data: IW2Request) => {
+        setIsDetailModalVisible(true);
+        setRequestId(data.id);
+    }
+
     const { Option } = Select;
 
     const { tableProps, searchFormProps, tableQueryResult } = useTable<IW2Request>({
@@ -130,11 +141,11 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
 
     const collumns = useMemo(
         () => [
-            {
-                key: "id",
-                title: translate("w2request.label.field.id"),
-                render: (value: IW2Request) => <TextField value={value ? value : ""} />,
-            },
+            // {
+            //     key: "id",
+            //     title: translate("w2request.label.field.id"),
+            //     render: (value: IW2Request) => <TextField value={value ? value : ""} />,
+            // },
             {
                 key: "type",
                 title: translate("w2request.label.field.type"),
@@ -210,7 +221,7 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
     };
 
     return (
-        <List title={translate("w2request.label.title.name")}>
+        <List title={translate("w2request.label.title.pagename")}>
             <div className="search" style={{ marginBottom: "20px" }}>
                 <Form
                     {...searchFormProps}
@@ -287,6 +298,17 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
 
                         return (
                             <Space align="start">
+                                <Tooltip
+                                    title={translate("w2request.label.tooltip.viewDetail")}
+                                    color={"#108ee9"}
+                                >
+                                    <ShowButton
+                                        hideText
+                                        size="small"
+                                        recordItemId={record.id}
+                                        onClick={() => showDetail(record)}
+                                    />
+                                </Tooltip>
                                 <Popconfirm
                                     title={translate("w2request.label.button.accept")}
                                     onConfirm={() => onAcceptRequest(record.id)}
@@ -328,6 +350,18 @@ export const W2RequestList: React.FC<IResourceComponentsProps> = () => {
                 <CancelRequest
                     refreshData={refreshData}
                     setIsModalVisible={setIsCancelModalVisible}
+                    id={requestId}
+                />
+            </MModal>
+
+            <MModal
+                title={translate("w2request.label.title.requestDetail")}
+                setIsModalVisible={setIsDetailModalVisible}
+                isModalVisible={isDetailModalVisible}
+                key={requestId}
+            >
+                <DetailRequest
+                    key={requestId}
                     id={requestId}
                 />
             </MModal>

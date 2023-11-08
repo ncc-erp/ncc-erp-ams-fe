@@ -1368,10 +1368,24 @@
         "location": "Văn phòng"
       },
       "title": {
-        "name": "Danh sách yêu cầu",
+        "pagename": "Danh sách yêu cầu",
         "type": "Loại yêu cầu",
         "status": "Trạng thái",
-        "cancel": "Từ chối"
+        "cancel": "Từ chối",
+        "requestDetail": "Chi tiết yêu cầu",
+        "CurrentOffice": "Văn phòng hiện tại",
+        "Device": "Thiết bị",
+        "Project": "Dự án",
+        "Reason": "Lý do",
+        "Branchname": "Chi nhánh",
+        "RequestUser": "Người yêu cầu",
+        "Detail": "Chi tiết",
+        "RequestInput": "Thông tin yêu cầu",
+        "Requesttemplate": "Loại yêu cầu",
+        "Creationtime": "Thời gian tạo",
+        "RejectedBy": "Người từ chối",
+        "Emailassignment": "Email được ủy quyền",
+        "Name": "Họ và tên"
       },
       "status": {
         "Pending": "Đang chờ xác nhận",
@@ -1379,8 +1393,11 @@
         "Rejected": "Đã từ chối"
       },
       "button": {
-        "accept": "Xác nhận cấp phát",
-        "reject": "Từ chối cấp phát"
+        "accept": "Xác nhận",
+        "reject": "Từ chối"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
       }
     }
   }

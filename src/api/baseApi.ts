@@ -91,5 +91,5 @@ export const CLIENT_HARDWARE_SELECT_LIST_API =
   "api/v1/client-hardware/selectlist";
 export const CLIENT_HARDWARE_CHECKOUT_API = "api/v1/client-hardware/checkout";
 export const CLIENT_HARDWARE_CHECKIN_API = "api/v1/client-hardware/checkin";
-export const CLIENT_HARDWARE_TOTAL_DETAIL_API =
-  "api/v1/client-hardware/total-detail";export const W2REQUEST_API = "api/v1/w2-requests";
+export const CLIENT_HARDWARE_TOTAL_DETAIL_API = "api/v1/client-hardware/total-detail";
+export const W2REQUEST_API = "api/v1/w2-requests";

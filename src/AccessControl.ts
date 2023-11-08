@@ -137,7 +137,8 @@ p, 1, ${i18n.t("resource.depreciation")}/*, (edit)
 p, 1, ${i18n.t("resource.checkin-checkout")}, (list)
 
 p, 1, ${i18n.t("resource.report")}, (list)
-p, 1, ${i18n.t("resource.w2request")}, (list)
+p, 1, ${i18n.t("resource.w2request")}, (list)|(show)
+p, 1, ${i18n.t("resource.w2request")}/*, (show)
 
 p, 1, ${i18n.t("resource.checkin")}, (list)
 p, 1, ${i18n.t("resource.checkout")}, (list)
@@ -289,7 +290,8 @@ p, 2, ${i18n.t("resource.client-asset-broken")}/*,(show)
 
 p, 2, ${i18n.t("resource.client-asset-expires")}, (list)
 p, 2, ${i18n.t("resource.client-asset-expires")}/*,(show)
-p, 2, ${i18n.t("resource.w2request")}, (list)
+p, 2, ${i18n.t("resource.w2request")}, (list)|(show)
+p, 2, ${i18n.t("resource.w2request")}/*, (show)
 `;
 
 export const adapter = new MemoryAdapter(permissions);
