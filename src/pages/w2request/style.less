@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  gap: 0; /* Không có khoảng cách theo trục Y */
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 2rem; /* Khoảng cách theo trục X là 2rem */
+}
+
+.wrapper > div {
+  width: 100%;
+  margin-bottom: 10px !important;
+}
+
+@media (min-width: 768px) {
+  .wrapper > div {
+    width: 46%;
+  }
+}
+
+.modalBody {
+  max-height: 70vh;
+  overflow-y: scroll;
+  padding-right: 8px;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 10px;
+}

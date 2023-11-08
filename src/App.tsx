@@ -61,6 +61,7 @@ import { UserListTaxToken } from "pages/users/list-tax-tokens";
 import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken, ClientHardwareListPending, ClientHardwareListReadyToDeploy } from "pages/hardware_client";
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
+import { W2RequestList } from "pages/w2request/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -286,6 +287,13 @@ function App() {
             },
           },
           {
+          name: t("resource.w2request"),
+          list: W2RequestList,
+          options: {
+            route: 'w2request',
+          },
+        },
+        {
             name: t("resource.report"),
             list: ReportList,
             options: {

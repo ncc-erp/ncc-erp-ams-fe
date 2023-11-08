@@ -919,6 +919,7 @@
     "tax_token": "Token thuế",
     "tax_token_assign": "Token thuế đã cấp phát",
     "tax_token_waiting": "Đang đợi xác nhận",
+    "w2request": "W2Request",
     "users-tax-tokens": "Token thuế",
     "client-asset": "Thiết bị khách hàng",
     "client-assets": "Tất cả",
@@ -1351,6 +1352,52 @@
         "user": "Lựa chọn một người dùng",
         "supplier": "Lựa chọn nhà cung cấp",
         "purchase_cost": "Chi phí mua hàng"
+      }
+    }
+  },
+  "w2request": {
+    "label": {
+      "field": {
+        "id": "Id",
+        "type": "Loại yêu cầu",
+        "userRequestName": "Nhân viên yêu cầu",
+        "createdAt": "Ngày tạo",
+        "lastExecutedAt": "Cập nhật",
+        "status": "Trạng thái",
+        "device": "Thiết bị yêu cầu",
+        "location": "Văn phòng"
+      },
+      "title": {
+        "pagename": "Danh sách yêu cầu",
+        "type": "Loại yêu cầu",
+        "status": "Trạng thái",
+        "cancel": "Từ chối",
+        "requestDetail": "Chi tiết yêu cầu",
+        "CurrentOffice": "Văn phòng hiện tại",
+        "Device": "Thiết bị",
+        "Project": "Dự án",
+        "Reason": "Lý do",
+        "Branchname": "Chi nhánh",
+        "RequestUser": "Người yêu cầu",
+        "Detail": "Chi tiết",
+        "RequestInput": "Thông tin yêu cầu",
+        "Requesttemplate": "Loại yêu cầu",
+        "Creationtime": "Thời gian tạo",
+        "RejectedBy": "Người từ chối",
+        "Emailassignment": "Email được ủy quyền",
+        "Name": "Họ và tên"
+      },
+      "status": {
+        "Pending": "Đang chờ xác nhận",
+        "Approved": "Đã xác nhận",
+        "Rejected": "Đã từ chối"
+      },
+      "button": {
+        "accept": "Xác nhận",
+        "reject": "Từ chối"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
       }
     }
   }

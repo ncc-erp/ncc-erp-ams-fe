@@ -102,7 +102,11 @@ export const Sider: React.FC = () => {
     translate("resource.client-asset-broken"),
     translate("resource.client-asset-waitingConfirm"),
     translate("resource.client-asset-expires")
-  ]
+  ];
+
+  const requestItemList = [
+    translate("resource.w2request"),
+  ];
 
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;
@@ -252,6 +256,16 @@ export const Sider: React.FC = () => {
             hasItemIcon={true}
             collapsed={collapsed}
             itemList={userAssetItemList}
+          />
+        )}
+
+        {permissionsData && userIsAdmin && (
+          <SideBarMenuItem
+            collapsed={collapsed}
+            label={""}
+            hasItemIcon={true}
+            itemList={requestItemList}
+            key={"w2-request"}
           />
         )}
 

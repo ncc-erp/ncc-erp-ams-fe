@@ -14,7 +14,8 @@ const {
   CopyOutlined,
   InsertRowBelowOutlined,
   ToolOutlined,
-  UsbOutlined
+  UsbOutlined,
+  AppstoreAddOutlined,
 } = Icons;
 
 type SideBarIconProps = {
@@ -113,6 +114,11 @@ export const SideBarIcon = (props: SideBarIconProps) => {
       type: "title",
       icon: <SettingOutlined />
     },
+    {
+      title: translate("resource.w2request"),
+      type: "item",
+      icon: <AppstoreAddOutlined />
+    }
   ]
   return (
     <>
