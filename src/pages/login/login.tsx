@@ -52,7 +52,7 @@ export const LoginPage: React.FC = () => {
   const { list } = useNavigation();
 
   const CardTitle = (
-    <Title level={3} style={titleStyles}>
+    <Title level={3} style={titleStyles} data-test-id="title">
       {translate("pages.login.title", "Sign in your account")}
     </Title>
   );
@@ -115,6 +115,7 @@ export const LoginPage: React.FC = () => {
               >
                 <Form.Item
                   name="username"
+                  data-test-id="username"
                   label={translate("pages.login.username", "Username")}
                   rules={[{ required: true }]}
                 >
@@ -124,6 +125,7 @@ export const LoginPage: React.FC = () => {
                   />
                 </Form.Item>
                 <Form.Item
+                  data-test-id="password"
                   name="password"
                   label={translate("pages.login.password", "Password")}
                   rules={[{ required: true }]}
@@ -132,7 +134,7 @@ export const LoginPage: React.FC = () => {
                   <Input type="password" placeholder="●●●●●●●●" size="large" />
                 </Form.Item>
                 <div style={{ marginBottom: "12px" }}>
-                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Form.Item data-test-id="remember" name="remember" valuePropName="checked" noStyle>
                     <Checkbox
                       style={{
                         fontSize: "12px",
@@ -143,6 +145,7 @@ export const LoginPage: React.FC = () => {
                   </Form.Item>
                 </div>
                 <Button
+                  data-test-id="signin-btn"
                   type="primary"
                   size="large"
                   htmlType="submit"
@@ -153,6 +156,7 @@ export const LoginPage: React.FC = () => {
                 </Button>
               </Form>
               <Button
+                data-test-id="signin-google-btn"
                 type="primary"
                 size="large"
                 block

@@ -102,7 +102,9 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      <Text
+        data-test-id="username"
+       style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
       {/* <Switch
         checkedChildren={<FaMoon style={{fontSize: "17px", paddingTop: "3px"}}/>}
         unCheckedChildren={<FaSun style={{color: "white", fontSize: "17px", paddingTop: "3px"}}/>}
@@ -115,6 +117,7 @@ export const Header: React.FC = () => {
           type="link"
           loading={hrmLoading}
           onClick={syncHrm}
+          data-test-id="sync-hrm-btn"
         >
           <SyncOutlined />
         </Button>
@@ -129,6 +132,7 @@ export const Header: React.FC = () => {
         onClick={() => {
           logoutAccount();
         }}
+        data-test-id="logout-btn"
       >
         <LogoutOutlined />
       </Button>
