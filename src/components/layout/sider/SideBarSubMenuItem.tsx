@@ -34,10 +34,9 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
       title={
         <span>
           <SideBarIcon title={title} type={"title"} />
-          <span>{title}</span>
+          <span data-test-id="menu-item">{title}</span>
         </span>
       }
-      data-test-id="menu-item"
       key={key}
 
     >
