@@ -34,7 +34,7 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
       title={
         <span>
           <SideBarIcon title={title} type={"title"} />
-          <span>{title}</span>
+          <span data-test-id="menu-item">{title}</span>
         </span>
       }
       key={key}
@@ -62,6 +62,7 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
+                  data-test-id="sub-menu-item"
                 >
                   {name}
                   {!collapsed && isSelected && <RightOutlined />}

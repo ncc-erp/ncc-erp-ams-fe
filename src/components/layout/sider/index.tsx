@@ -118,10 +118,11 @@ export const Sider: React.FC = () => {
       style={isMobile ? antLayoutSiderMobile : antLayoutSider}
       width="230px"
       className="custom-overflow-y"
+      data-test-id="sidebar"
     >
       {permissionsData && userIsUser && (
         <>
-          <Link to="users">
+          <Link to="users" data-test-id="logo">
             {collapsed ? (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
@@ -141,7 +142,7 @@ export const Sider: React.FC = () => {
 
       {permissionsData && userIsAdmin && (
         <>
-          <Link to="dashboard">
+          <Link to="dashboard" data-test-id="logo">
             {collapsed ? (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
@@ -168,6 +169,7 @@ export const Sider: React.FC = () => {
 
           push(key as string);
         }}
+        data-test-id="menu"
       >
         {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
           <SideBarSubMenuItem

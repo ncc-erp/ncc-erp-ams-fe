@@ -48,6 +48,7 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
+                  data-test-id="menu-item"
                 >
                   {name}
                   {!collapsed && isSelected && <RightOutlined />}

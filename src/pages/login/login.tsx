@@ -52,7 +52,7 @@ export const LoginPage: React.FC = () => {
   const { list } = useNavigation();
 
   const CardTitle = (
-    <Title level={3} style={titleStyles}>
+    <Title level={3} style={titleStyles} data-test-id="title">
       {translate("pages.login.title", "Sign in your account")}
     </Title>
   );
@@ -102,57 +102,71 @@ export const LoginPage: React.FC = () => {
               />
             </div>
             <Card title={CardTitle} headStyle={{ borderBottom: 0 }}>
-              <Form<ILoginForm>
-                layout="vertical"
-                form={form}
-                onFinish={(values) => {
-                  login(values);
-                }}
-                requiredMark={false}
-                initialValues={{
-                  remember: false,
-                }}
-              >
-                <Form.Item
-                  name="username"
-                  label={translate("pages.login.username", "Username")}
-                  rules={[{ required: true }]}
+              {process.env.NODE_ENV !== "production" && (
+                <Form<ILoginForm>
+                  layout="vertical"
+                  form={form}
+                  onFinish={(values) => {
+                    login(values);
+                  }}
+                  requiredMark={false}
+                  initialValues={{
+                    remember: false,
+                  }}
                 >
-                  <Input
-                    size="large"
-                    placeholder={translate("pages.login.username", "Username")}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  label={translate("pages.login.password", "Password")}
-                  rules={[{ required: true }]}
-                  style={{ marginBottom: "12px" }}
-                >
-                  <Input type="password" placeholder="●●●●●●●●" size="large" />
-                </Form.Item>
-                <div style={{ marginBottom: "12px" }}>
-                  <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox
-                      style={{
-                        fontSize: "12px",
-                      }}
-                    >
-                      {translate("pages.login.remember", "Remember me")}
-                    </Checkbox>
+                  <Form.Item
+                    name="username"
+                    data-test-id="username"
+                    label={translate("pages.login.username", "Username")}
+                    rules={[{ required: true }]}
+                  >
+                    <Input
+                      size="large"
+                      placeholder={translate(
+                        "pages.login.username",
+                        "Username"
+                      )}
+                    />
                   </Form.Item>
-                </div>
-                <Button
-                  type="primary"
-                  size="large"
-                  htmlType="submit"
-                  loading={isLoading}
-                  block
-                >
-                  {translate("pages.login.signin", "Sign in")}
-                </Button>
-              </Form>
+                  <Form.Item
+                    data-test-id="password"
+                    name="password"
+                    label={translate("pages.login.password", "Password")}
+                    rules={[{ required: true }]}
+                    style={{ marginBottom: "12px" }}
+                  >
+                    <Input
+                      type="password"
+                      placeholder="●●●●●●●●"
+                      size="large"
+                    />
+                  </Form.Item>
+                  <div style={{ marginBottom: "12px" }}>
+                    <Form.Item data-test-id="remember" name="remember" valuePropName="checked" noStyle>
+                      <Checkbox
+                        style={{
+                          fontSize: "12px",
+                        }}
+                      >
+                        {translate("pages.login.remember", "Remember me")}
+                      </Checkbox>
+                    </Form.Item>
+                  </div>
+                  <Button
+                    data-test-id="signin-btn"
+                    type="primary"
+                    size="large"
+                    htmlType="submit"
+                    loading={isLoading}
+                    block
+                  >
+                    {translate("pages.login.signin", "Sign in")}
+                  </Button>
+                </Form>
+              )}
+
               <Button
+                data-test-id="signin-google-btn"
                 type="primary"
                 size="large"
                 block
