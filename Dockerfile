@@ -12,7 +12,9 @@ ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . .
 
-RUN npm run build
+ARG NODE_ENV
+
+RUN NODE_ENV=${NODE_ENV} npm run build
 
 FROM nginx:1.25.4-alpine
 
