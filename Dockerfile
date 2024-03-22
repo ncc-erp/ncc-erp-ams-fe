@@ -1,4 +1,4 @@
-FROM node:16.15.1-alpine AS builder
+FROM node:16.15.1-alpine AS base
 
 RUN mkdir opt/web
 WORKDIR /opt/web
@@ -10,10 +10,18 @@ RUN yarn
 
 ENV PATH="./node_modules/.bin:$PATH"
 
-FROM builder
-
 COPY . .
 
-EXPOSE 3000
+RUN npm run build
 
-ENTRYPOINT npm run dev
+FROM nginx:1.25.4-alpine
+
+COPY ./nginx/default.conf /etc/nginx/conf.d/
+
+COPY --from=base /opt/web/build /usr/share/nginx/html
+
+WORKDIR /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
