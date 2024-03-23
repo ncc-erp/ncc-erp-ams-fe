@@ -11,7 +11,7 @@ RUN yarn
 ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . .
-
+RUN mv .env.e2e .env
 RUN npm run build
 
 FROM nginx:1.25.4-alpine
