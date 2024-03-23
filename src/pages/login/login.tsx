@@ -102,7 +102,7 @@ export const LoginPage: React.FC = () => {
               />
             </div>
             <Card title={CardTitle} headStyle={{ borderBottom: 0 }}>
-              {process.env.NODE_ENV !== "production" && (
+              {process.env.REACT_APP_SHOW_MANUAL_LOGIN === "true" && (
                 <Form<ILoginForm>
                   layout="vertical"
                   form={form}
