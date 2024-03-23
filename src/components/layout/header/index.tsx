@@ -15,13 +15,15 @@ import {
   Icons,
   Avatar,
   Typography,
+  // Switch,
 } from "@pankod/refine-antd";
 import { useGoogleLogout } from "react-google-login";
 import { useState } from "react";
 import dataProvider from "providers/dataProvider";
 import { SYNC_USER_API } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
-
+import { useThemeSwitcher } from "react-css-theme-switcher";
+import { FaMoon, FaSun } from 'react-icons/fa';
 const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
@@ -81,6 +83,13 @@ export const Header: React.FC = () => {
 
   const { data: userIdentity } = useGetIdentity<string>();
   const { data: permissionsData } = usePermissions();
+  // const [isDarkMode, setIsDarkMode] = useState<boolean>();
+  // const { switcher, themes } = useThemeSwitcher();
+
+  // const toggleTheme = (isChecked: boolean) => {
+  //   setIsDarkMode(isChecked);
+  //   switcher({ theme: isChecked ? themes.dark : themes.light });
+  // };
 
   return (
     <AntdLayout.Header
@@ -93,12 +102,22 @@ export const Header: React.FC = () => {
         backgroundColor: "#FFF",
       }}
     >
-      <Text style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      <Text
+        data-test-id="username"
+       style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
+      {/* <Switch
+        checkedChildren={<FaMoon style={{fontSize: "17px", paddingTop: "3px"}}/>}
+        unCheckedChildren={<FaSun style={{color: "white", fontSize: "17px", paddingTop: "3px"}}/>}
+        checked={isDarkMode}
+        onChange={toggleTheme}
+      />
+      <Text style={{ fontWeight: "500", fontSize: "16px", marginLeft: "20px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text> */}
       {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
         <Button
           type="link"
           loading={hrmLoading}
           onClick={syncHrm}
+          data-test-id="sync-hrm-btn"
         >
           <SyncOutlined />
         </Button>
@@ -113,6 +132,7 @@ export const Header: React.FC = () => {
         onClick={() => {
           logoutAccount();
         }}
+        data-test-id="logout-btn"
       >
         <LogoutOutlined />
       </Button>

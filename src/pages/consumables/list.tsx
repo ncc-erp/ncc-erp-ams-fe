@@ -29,7 +29,12 @@ import {
   usePermissions,
   useTranslate,
 } from "@pankod/refine-core";
-import { CONSUMABLE_API, LOCATION_API, CONSUMABLE_CATEGORIES_API } from "api/baseApi";
+import {
+  CONSUMABLE_API,
+  LOCATION_API,
+  CONSUMABLE_CATEGORIES_API,
+  CONSUMABLE_TOTAL_DETAIL_API
+} from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
@@ -51,6 +56,7 @@ import { ConsumablesEdit } from "./edit";
 import "styles/antd.less";
 import { ConsumablesShow } from "./show";
 import { EPermissions } from "constants/permissions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "id",
@@ -65,6 +71,8 @@ const defaultCheckedList = [
 
 export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+
+  const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
@@ -98,7 +106,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const { data: permissionsData } = usePermissions();
 
-  const { tableProps, searchFormProps, sorter, tableQueryResult } = useTable<
+  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } = useTable<
     IConsumablesResponse,
     HttpError,
     IConsumablesFilterVariables
@@ -373,6 +381,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const refreshData = () => {
     tableQueryResult.refetch();
+    setIsTotalDetailReload(!isTotalDetailReload);
   };
 
   const handleCreate = () => {
@@ -382,6 +391,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    setIsTotalDetailReload(!isTotalDetailReload);
+  }, [isModalVisible])
 
   useEffect(() => {
     refreshData();
@@ -625,12 +638,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-      <div className="sum-items">
-        <span className="name-sum-assets">
-          {translate("hardware.label.title.sum-assets")}
-        </span>{" "}
-        : {tableProps.pagination ? tableProps.pagination?.total : 0}
-      </div>
+
+      <TotalDetail
+        filters={filters}
+        links={CONSUMABLE_TOTAL_DETAIL_API}
+        isReload={isTotalDetailReload}
+      ></TotalDetail>
 
       {loading ? (
         <>
@@ -694,6 +707,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
                   hideText
                   size="small"
                   recordItemId={record.id}
+                  onSuccess={() => {
+                    setIsTotalDetailReload(!isTotalDetailReload);
+                  }}
                 />
 
                 {record.user_can_checkout === true ? (

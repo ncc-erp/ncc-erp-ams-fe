@@ -13,9 +13,11 @@ export const AllLocations = (props: LocationProps) => {
   const items_count =
     location.assets_count +
     location.accessories_count +
-    location.consumables_count;
-    
-    
+    location.consumables_count +
+    location.tools_count +
+    location.digital_signatures_count +
+    location.client_assets_count;
+
   return (
     <div className="locationContainer">
       <Row gutter={16}>

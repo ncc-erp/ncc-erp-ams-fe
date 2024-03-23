@@ -4,6 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
 import { getDetailAssetStatus } from "untils/assets";
+import moment from "moment";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -13,7 +14,7 @@ type HardwareShowProps = {
 
 export const HardwareShow = (props: HardwareShowProps) => {
   const { detail } = props;
-  const t = useTranslate();
+  const t = useTranslate();  
   return (
     <>
       <Row gutter={16}>
@@ -152,7 +153,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
         </Col>
         <Col span={18}>
           {detail?.created_at ? (
-            <Text> {detail?.created_at && detail?.created_at.formatted}</Text>
+            <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
           ) : (
             ""
           )}
@@ -163,7 +164,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.title.updateAt")}</Title>
         </Col>
         <Col span={18}>
-          <Text>{detail?.updated_at && detail?.updated_at.formatted}</Text>
+          <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
         </Col>
       </Row>
       <Row gutter={16}>
@@ -171,10 +172,10 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Title level={5}>{t("hardware.label.field.dateCheckout")}</Title>
         </Col>
         <Col span={18}>
-          {detail?.checkout_at ? (
+          {detail?.last_checkout ? (
             <>
               <Text>
-                {detail?.checkout_at && detail?.checkout_at.formatted}
+                {detail?.last_checkout && detail?.last_checkout.formatted}
               </Text>
             </>
           ) : (

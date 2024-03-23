@@ -29,148 +29,147 @@ export const AssetsSummaryTableAllLocation = (
   const dateTo = searchParams.get("purchase_date_to1");
   const rtd_location_id = searchParams.get("rtd_location_id");
 
-  const calculation = (value: number, sum: number) => {
-    if (value === 0) {
-      return "0";
-    }
-    return value + "";
-  };
-
-  useEffect(() => {
+  const sumEachCategoryByLocation = (type: string, is_client = false) => {
     let dataAllCategory = [] as any;
+    let categoryKeyTranslate = type;
+    let categoryType = (CategoryType as { [key: string]: string })[type.toUpperCase()];
+    let columnCount = type.toLowerCase() + "s_count";
 
-    let sumConsumableByLocation = {
-      name: t("dashboard.field.typeConsumable"),
-      category_type: CategoryType.CONSUMABLE,
-    } as any;
+    if (type === "Asset" && is_client) {
+      columnCount = "client_" + columnCount;
+      categoryKeyTranslate = "ClientAsset";
+    }
+    if (type === "TaxToken") {
+      columnCount = "digital_signatures_count";
+    }
+    if (type === "Accessory") {
+      columnCount = "accessories_count";
+    }
 
-    let sumAccessoryByLocation = {
-      name: t("dashboard.field.typeAccessory"),
-      category_type: CategoryType.ACCESSORY,
-    } as any;
+    let sumCategoryByLocation = {
+      name: t("dashboard.field.type" + categoryKeyTranslate),
+      category_type: categoryType,
+    } as any
 
-    categories.map((category: ICategoryAsset) => {
-      let type = {} as any;
-      type.pending = "";
-      type.broken = "";
-      type.assign = 0;
-      type.ready_to_deploy = "";
-      type.assets_count = category.assets_count;
-      type.category_type = category.category_type;
-      type.type = 0;
+    categories.forEach((category: ICategoryAsset) => {
+      if (category.category_type === categoryType) {
 
-      if (category.category_type === CategoryType.CONSUMABLE) {
-        sumConsumableByLocation.category_id = category.id;
-        sumConsumableByLocation.rtd_location_id = id;
+        sumCategoryByLocation.category_id = category.id;
+        sumCategoryByLocation.rtd_location_id = id;
+
+        if (type === "Asset" && !is_client) {
+          sumCategoryByLocation.pending = 0;
+          sumCategoryByLocation.broken = 0;
+          sumCategoryByLocation.assign = 0;
+          sumCategoryByLocation.ready_to_deploy = 0;
+          sumCategoryByLocation[columnCount] = category[columnCount];
+          sumCategoryByLocation.category_type = category.category_type;
+          sumCategoryByLocation.name = category.name;
+          sumCategoryByLocation.type = Number(category[columnCount]);
+        }
 
         category.status_labels.forEach((status_label) => {
-          if (status_label.name === EStatus.ASSIGN) {
-            sumConsumableByLocation.assign =
-              sumConsumableByLocation.assign !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.BROKEN) {
-            sumConsumableByLocation.broken =
-              sumConsumableByLocation.broken !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.PENDING) {
-            sumConsumableByLocation.pending =
-              sumConsumableByLocation.pending !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            sumConsumableByLocation.ready_to_deploy =
-              sumConsumableByLocation.ready_to_deploy !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
+
+          switch (status_label.name) {
+            case EStatus.ASSIGN:
+              sumCategoryByLocation.assign = (type === "Asset" && is_client)
+                ? (sumCategoryByLocation.assign ?? 0) + Number(status_label[columnCount])
+                : Number(status_label[columnCount])
+              break;
+
+            case EStatus.BROKEN:
+              sumCategoryByLocation.broken = (type === "Asset" && is_client)
+                ? (sumCategoryByLocation.broken ?? 0) + Number(status_label[columnCount])
+                : Number(status_label[columnCount])
+              break;
+
+            case EStatus.PENDING:
+              sumCategoryByLocation.pending = (type === "Asset" && is_client)
+                ? (sumCategoryByLocation.pending ?? 0) + Number(status_label[columnCount])
+                : Number(status_label[columnCount])
+              break;
+
+            case EStatus.READY_TO_DEPLOY:
+              sumCategoryByLocation.ready_to_deploy = (type === "Asset" && is_client)
+                ? (sumCategoryByLocation.ready_to_deploy ?? 0) + Number(status_label[columnCount])
+                : Number(status_label[columnCount])
+              break;
           }
         });
 
-        sumConsumableByLocation.type =
-          sumConsumableByLocation.type !== undefined
-            ? category.consumables_count + sumConsumableByLocation.type
-            : category.consumables_count;
-      } else if (category.category_type === CategoryType.ACCESSORY) {
-        sumAccessoryByLocation.category_id = category.id;
-        sumAccessoryByLocation.rtd_location_id = id;
-        category.status_labels.forEach((status_label) => {
-          if (status_label.name === EStatus.ASSIGN) {
-            sumAccessoryByLocation.assign =
-              sumAccessoryByLocation.assign !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.BROKEN) {
-            sumAccessoryByLocation.broken =
-              sumAccessoryByLocation.broken !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.PENDING) {
-            sumAccessoryByLocation.pending =
-              sumAccessoryByLocation.pending !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-          if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            sumAccessoryByLocation.ready_to_deploy =
-              sumAccessoryByLocation.ready_to_deploy !== undefined
-                ? category.assets_count +
-                  +calculation(status_label.assets_count, category.assets_count)
-                : category.assets_count;
-          }
-        });
-
-        sumAccessoryByLocation.type =
-          sumAccessoryByLocation.type !== undefined
-            ? category.accessories_count + sumAccessoryByLocation.type
-            : category.accessories_count;
-      } else {
-        type.category_id = category.id;
-        type.rtd_location_id = id;
-        type.name = category.name;
-        type.type = category.assets_count;
-        category.status_labels.forEach((status_label) => {
-          if (status_label.name === EStatus.ASSIGN) {
-            type.assign = calculation(
-              status_label.assets_count,
-              category.assets_count
-            );
-          }
-          if (status_label.name === EStatus.BROKEN) {
-            type.broken = calculation(
-              status_label.assets_count,
-              category.assets_count
-            );
-          }
-          if (status_label.name === EStatus.PENDING) {
-            type.pending = calculation(
-              status_label.assets_count,
-              category.assets_count
-            );
-          }
-          if (status_label.name === EStatus.READY_TO_DEPLOY) {
-            type.ready_to_deploy = calculation(
-              status_label.assets_count,
-              category.assets_count
-            );
-          }
-        });
+        if (!(type === "Asset" && !is_client)) {
+          sumCategoryByLocation.type = (sumCategoryByLocation.type ?? 0) + Number(category[columnCount]);
+        }
       }
 
-      dataAllCategory.push(type);
-    });
+      if (category.category_type === CategoryType.ASSET && !is_client && type === "Asset") {
+        dataAllCategory.push({ ...sumCategoryByLocation });
+      }
+    })
+
+    if (!is_client && type === "Asset") {
+      return dataAllCategory;
+    }
+    return sumCategoryByLocation;
+  }
+
+  const getUrlForOnClick = (record: DataTable, dateFrom: string | null, dateTo: string | null, status_id = -1) => {
+    let url = "";
+    switch (record.category_type) {
+      case CategoryType.ASSET:
+        if (record.name === t("dashboard.field.typeClientAsset")) {
+          url += `client-assets?`;
+        }
+        else {
+          url += `assets?category_id=${record.category_id}&`;
+        }
+        break;
+
+      case CategoryType.CONSUMABLE:
+        url += "consumables?";
+        break;
+
+      case CategoryType.ACCESSORY:
+        url += "accessory?";
+        break;
+
+      case CategoryType.TAXTOKEN:
+        url += "tax_token?";
+        break;
+
+      case CategoryType.TOOL:
+        url += "tools-all?";
+        break;
+    }
+
+    if (record.rtd_location_id !== 99999) {
+
+      if (record.category_type === CategoryType.ASSET) {
+        url += `rtd_location_id=${rtd_location_id}&`;
+      } else {
+        url += `location_id=${rtd_location_id}&`;
+      }
+
+    }
+
+    if (status_id !== -1) {
+      url += `status_id=${status_id}&`
+    }
+
+    if (dateFrom && dateTo) {
+      url += `date_from=${dateFrom}&date_to=${dateTo}`
+    }
+
+    return list(url);
+  }
+
+  useEffect(() => {
+    let sumConsumableByLocation = sumEachCategoryByLocation("Consumable");
+    let sumAccessoryByLocation = sumEachCategoryByLocation("Accessory");
+    let sumToolByLocation = sumEachCategoryByLocation("Tool");
+    let sumTaxTokenByLocation = sumEachCategoryByLocation("TaxToken");
+    let sumClientAssetByLocation = sumEachCategoryByLocation("Asset", true);
+    let dataAllCategory = sumEachCategoryByLocation("Asset", false);
 
     dataAllCategory = dataAllCategory.filter(
       (item: any) => item.category_type === CategoryType.ASSET
@@ -180,10 +179,13 @@ export const AssetsSummaryTableAllLocation = (
       ...dataAllCategory,
       sumConsumableByLocation,
       sumAccessoryByLocation,
+      sumToolByLocation,
+      sumTaxTokenByLocation,
+      sumClientAssetByLocation,
     ]);
   }, [categories]);
 
-  
+
   const columns = [
     {
       title: `${t("dashboard.field.name")}`,
@@ -194,47 +196,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="success"
           className="field-category"
-          onClick={() => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(`assets?category_id=${record.category_id}`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id !== 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`consumables?location_id=${rtd_location_id}`)
-                  : dateFrom && dateTo
-                  ? list(`consumables?date_from=${dateFrom}&date_to=${dateTo}`)
-                  : list(`consumables`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`accessory`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`accessory?location_id=${rtd_location_id}`)
-                : list(
-                    `assets?rtd_location_id=${rtd_location_id}&category_id=${record.category_id}`
-                  );
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo)}
         >
           {text}
         </Typography.Text>
@@ -249,61 +211,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="secondary"
           className="field-category"
-          onClick={() => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(
-                        `assets?category_id=${record.category_id}&status_id=1`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `consumables?category_id=${record.category_id}&status_id=1`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=1`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=1`
-                  );
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo, 1)}
         >
           {text}
         </Typography.Text>
@@ -318,61 +226,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="secondary"
           className="field-category"
-          onClick={(): void => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(
-                        `assets?category_id=${record.category_id}&status_id=3`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `consumables?category_id=${record.category_id}&status_id=3`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=3`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=3`
-                  );
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo, 3)}
         >
           {text}
         </Typography.Text>
@@ -388,61 +242,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="secondary"
           className="field-category"
-          onClick={() => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(
-                        `assets?category_id=${record.category_id}&status_id=4`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `consumables?category_id=${record.category_id}&status_id=4`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=4`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=4`
-                  );
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo, 4)}
         >
           {text}
         </Typography.Text>
@@ -458,61 +258,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="secondary"
           className="field-category"
-          onClick={() => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(
-                        `assets?category_id=${record.category_id}&status_id=5`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `consumables?category_id=${record.category_id}&status_id=5`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `consumables?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `accessory?category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(
-                        `accessory?category_id=${record.category_id}&status_id=5`
-                      )
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(
-                      `accessory?location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                    )
-                : list(
-                    `assets?rtd_location_id=${record.rtd_location_id}&category_id=${record.category_id}&status_id=5`
-                  );
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo, 5)}
         >
           {text}
         </Typography.Text>
@@ -528,47 +274,7 @@ export const AssetsSummaryTableAllLocation = (
           strong
           type="secondary"
           className="field-category"
-          onClick={() => {
-            {
-              record.category_type === CategoryType.ASSET
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `assets?category_id=${record.category_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                      )
-                    : list(`assets?category_id=${record.category_id}`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}&dateFrom=${dateFrom}&dateTo=${dateTo}`
-                    )
-                  : list(
-                      `assets?category_id=${record.category_id}&rtd_location_id=${record.rtd_location_id}`
-                    )
-                : record.category_type === CategoryType.CONSUMABLE
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(
-                        `consumables?date_from=${dateFrom}&date_to=${dateTo}`
-                      )
-                    : list(`consumables`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `consumables?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`consumables?location_id=${record.rtd_location_id}`)
-                : record.category_type === CategoryType.ACCESSORY
-                ? record.rtd_location_id === 99999
-                  ? dateFrom && dateTo
-                    ? list(`accessory?date_from=${dateFrom}&date_to=${dateTo}`)
-                    : list(`accessory`)
-                  : dateFrom && dateTo
-                  ? list(
-                      `accessory?location_id=${record.rtd_location_id}&date_from=${dateFrom}&date_to=${dateTo}`
-                    )
-                  : list(`accessory?location_id=${record.rtd_location_id}`)
-                : list(`assets?category_id=${record.category_id}`);
-            }
-          }}
+          onClick={() => getUrlForOnClick(record, dateFrom, dateTo)}
         >
           {text}
         </Typography.Text>

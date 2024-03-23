@@ -1,0 +1,58 @@
+name: Deploy NCC-ERP-AMS-FE to server
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install package
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env: 
+          REACT_APP_API_PROXY: ${{secrets.REACT_APP_API_PROXY}}
+          REACT_APP_AUTH_CLIENT_ID: ${{secrets.REACT_APP_AUTH_CLIENT_ID}}
+          REACT_APP_AUTH_SECRET_KEY: ${{secrets.REACT_APP_AUTH_SECRET_KEY}}
+          REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
+          CI: ""
+
+      - name: Compress build file
+        run: zip -r fe.zip build/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: fe-build
+          path: fe.zip
+          retention-days: 1
+
+  deploy:
+    runs-on: self-hosted
+    needs: 
+      - build
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: fe-build
+          path: /home/nccsoft/
+
+      - name: Extract file to server
+        run: |
+          rm -rf /home/nccsoft/NCC-ITTools-Client/build
+          unzip /home/nccsoft/fe.zip -d /home/nccsoft/NCC-ITTools-Client/
+          rm -rf /home/nccsoft/fe.zip
