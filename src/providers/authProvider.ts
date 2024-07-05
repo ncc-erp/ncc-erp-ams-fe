@@ -43,8 +43,10 @@ export const authProvider: AuthProvider = {
   },
   checkError: () => Promise.resolve(),
   checkAuth: () => {
+    const route = window.location.pathname;
+    console.log(route);
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
+    if (token ||route === "/detail-product") {
       return Promise.resolve();
     }
 
@@ -80,5 +82,3 @@ export const authProvider: AuthProvider = {
   },
 
 };
-
-

@@ -158,7 +158,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
-    setDetail(data);
+    setDetail(data);    
   };
 
   const cancle = (data: IHardwareResponse) => {
@@ -572,7 +572,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_to.id !== record.withdraw_from &&
+                {/*{record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
@@ -628,9 +628,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                         </Button>
                       )}
                     </Popconfirm>
-                  )}
+                  )}*/}
 
-                {record.assigned_status ===
+                {/*{record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
                   <Button
                     type="primary"
@@ -647,9 +647,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.rejectCheckout")}
                   </Button>
-                )}
+                )}*/}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                {/*{record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
                   <Button
                     type="primary"
                     shape="round"
@@ -665,7 +665,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.rejectCheckin")}
                   </Button>
-                )}
+                )}*/}
               </Space>
             )}
           />

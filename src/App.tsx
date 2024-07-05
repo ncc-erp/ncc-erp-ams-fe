@@ -60,6 +60,7 @@ import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken,
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
 import { useRef } from "react";
+import { DetailProduct } from "pages/users/detail";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -80,7 +81,8 @@ function App() {
   //   dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
   //   light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
   // };
-
+  const route = window.location.pathname;
+  console.log(route);
   return (
     // <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
       <>
@@ -94,7 +96,6 @@ function App() {
             can: async ({ resource, action, params }) => {
               let role = await authProvider.getPermissions();
               const enforcer = await newEnforcer(model, adapter);
-
               if (role.branchadmin == EPermissions.BRANCHADMIN) {
                 if (action === "show") {
                   const can = await enforcer.enforce(
@@ -141,6 +142,13 @@ function App() {
                 route: "dashboard",
               },
             },
+            {
+                name: t("resource.detail-product"),
+                list: DetailProduct,
+                options: {
+                  route: "detail-product",
+                },
+              },
             {
               name: t("resource.checkin-checkout"),
               list: ListCheckin_Checkout,
@@ -445,8 +453,8 @@ function App() {
             },
           ]}
           Title={Title}
-          Header={Header}
-          Sider={Sider}
+          Header={route === "/detail-product" ? undefined : Header}
+          Sider={route === "/detail-product" ? undefined : Sider}
           Footer={Footer}
           Layout={Layout}
           OffLayoutArea={OffLayoutArea}
