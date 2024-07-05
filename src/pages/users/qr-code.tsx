@@ -17,7 +17,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
         id: detail?.id ?? 0,
         name: detail?.name ?? "",
         first_name: detail?.assigned_to.first_name ?? "",
-        last_name:  detail?.assigned_to.last_name ?? "",
+        last_name: detail?.assigned_to.last_name ?? "",
         model_name: detail?.model.name ?? "",
         category_name: detail?.category.name ?? "",
         rtd_location_name: detail?.rtd_location.name ?? "",
@@ -38,13 +38,13 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
         );
     };
 
-    
+
     const redirectUrl = useMemo(() => {
         if (!data) return '';
-    
+
         const {
-          name,
-          notes,
+            name,
+            notes,
             id,
             first_name,
             last_name,
@@ -53,25 +53,25 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
             rtd_location_name,
             status_label_name
         } = data;
-    
+
         const selectedFields = {
-          id,
-          name,
-          first_name,
-          last_name,
-          model_name,
-          category_name,
-          rtd_location_name,
-          notes,
-          status_label_name
+            id,
+            name,
+            first_name,
+            last_name,
+            model_name,
+            category_name,
+            rtd_location_name,
+            notes,
+            status_label_name
         };
-    
+
         const queryParams = Object.entries(selectedFields)
-          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-          .join('&');
-    
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join('&');
+
         return `${window.location.origin}/detail-product?${queryParams}`;
-      }, [data]);
+    }, [data]);
 
     // Render selected fields based on checkboxes
     const renderSelectedFields = useCallback(() => {
@@ -80,7 +80,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
             if (data) {
                 if (field === 'name') {
                     value = data[field]
-                }else if( field === 'name_user' ){
+                } else if (field === 'name_user') {
                     value = `${data?.first_name} ${data?.last_name}`;
                 }
             }
@@ -125,16 +125,16 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
     });
 
     const paddingStyle = useMemo(() => {
-        if(selectedFields.length === 0) return "24px";
+        if (selectedFields.length === 0) return "24px";
         if (layout === 'above') {
-          return "8px 24px 24px 24px";
+            return "8px 24px 24px 24px";
         } else if (layout === 'below') {
-          return "24px 24px 8px 24px";
+            return "24px 24px 8px 24px";
         } else {
-          return "24px";
+            return "24px";
         }
-      }, [layout, selectedFields]);
-    
+    }, [layout, selectedFields]);
+
 
 
     const renderQR = useCallback(() => {
