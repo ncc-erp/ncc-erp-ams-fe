@@ -67,6 +67,7 @@ function App() {
   const { t, i18n } = useTranslation();
   const notificationRef = useRef(null);
   const route = window.location.pathname;
+
   notification.config({
     getContainer() {
       return notificationRef.current as unknown as HTMLElement;

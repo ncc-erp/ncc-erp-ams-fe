@@ -69,7 +69,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
         const queryParams = Object.entries(selectedFields)
           .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
           .join('&');    
-        return `${window.location.origin}/detail-product?${queryParams}`;
+        return `${window.location.origin}/detail-device?${queryParams}`;
       }, [data]);
 
     // Render selected fields based on checkboxes
