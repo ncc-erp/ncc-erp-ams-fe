@@ -61,10 +61,12 @@ import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-wat
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
 import { useRef } from "react";
 import { DetailProduct } from "pages/users/detail";
+import { DETAIL_DEVICE_ROUTE } from "constants/route";
 
 function App() {
   const { t, i18n } = useTranslation();
   const notificationRef = useRef(null);
+  const route = window.location.pathname;
   notification.config({
     getContainer() {
       return notificationRef.current as unknown as HTMLElement;
@@ -81,8 +83,6 @@ function App() {
   //   dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
   //   light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
   // };
-  const route = window.location.pathname;
-  console.log(route);
   return (
     // <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
       <>
@@ -143,10 +143,10 @@ function App() {
               },
             },
             {
-                name: t("resource.detail-product"),
+                name: t("resource.detail-device"),
                 list: DetailProduct,
                 options: {
-                  route: "detail-product",
+                  route: "detail-device",
                 },
               },
             {
@@ -453,8 +453,8 @@ function App() {
             },
           ]}
           Title={Title}
-          Header={route === "/detail-product" ? undefined : Header}
-          Sider={route === "/detail-product" ? undefined : Sider}
+          Header={route === DETAIL_DEVICE_ROUTE ? undefined : Header}
+          Sider={route === DETAIL_DEVICE_ROUTE ? undefined : Sider}
           Footer={Footer}
           Layout={Layout}
           OffLayoutArea={OffLayoutArea}

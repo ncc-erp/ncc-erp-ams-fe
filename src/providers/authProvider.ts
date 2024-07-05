@@ -3,6 +3,7 @@ import dataProvider from "providers/dataProvider";
 import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "untils/assets";
+import { DETAIL_DEVICE_ROUTE } from "constants/route";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -44,9 +45,8 @@ export const authProvider: AuthProvider = {
   checkError: () => Promise.resolve(),
   checkAuth: () => {
     const route = window.location.pathname;
-    console.log(route);
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token ||route === "/detail-product") {
+    if (token ||route === DETAIL_DEVICE_ROUTE) {
       return Promise.resolve();
     }
 

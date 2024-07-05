@@ -35,8 +35,8 @@ m = g(r.sub, p.sub) && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act)
 export const permissions = `
 p, 1, ${i18n.t("resource.dashboard")}, list
 
-p, 1, ${i18n.t("resource.detail-product")}, (list) 
-p, 1, ${i18n.t("resource.detail-product")}/*, (show)
+p, 1, ${i18n.t("resource.detail-device")}, (list) 
+p, 1, ${i18n.t("resource.detail-device")}/*, (show)
 
 p, 1, ${i18n.t("resource.assets")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
@@ -115,8 +115,8 @@ p, 0, ${i18n.t("resource.users-tax-tokens")}/*, (show)
 
 p, 0, ${i18n.t("resource.users_licenses")}, (list)
 p, 0, ${i18n.t("resource.users_licenses")}/*, (show)
-p, 0, ${i18n.t("resource.detail-product")}, (list)
-p, 0, ${i18n.t("resource.detail-product")}/*, (show)|(confirm)|(refuse)
+p, 0, ${i18n.t("resource.detail-device")}, (list)
+p, 0, ${i18n.t("resource.detail-device")}/*, (show)|(confirm)|(refuse)
 p, 1, ${i18n.t("resource.model")}, (list)|(create)
 p, 1, ${MODELS_API}/*, (delete)
 p, 1, ${i18n.t("resource.model")}/*, (edit)
@@ -218,8 +218,8 @@ p, 1, ${i18n.t(
 
 p, 2, ${i18n.t("resource.dashboard")}, list
 
-p, 2, ${i18n.t("resource.detail-product")}, (list) 
-p, 2, ${i18n.t("resource.detail-product")}/*, (show)
+p, 2, ${i18n.t("resource.detail-device")}, (list) 
+p, 2, ${i18n.t("resource.detail-device")}/*, (show)
 
 p, 2, ${i18n.t("resource.checkin-checkout")}, (list)
 

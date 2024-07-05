@@ -68,8 +68,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
     
         const queryParams = Object.entries(selectedFields)
           .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-          .join('&');
-    
+          .join('&');    
         return `${window.location.origin}/detail-product?${queryParams}`;
       }, [data]);
 
