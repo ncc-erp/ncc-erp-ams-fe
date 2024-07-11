@@ -1,3 +1,4 @@
+
 export const defaultCheckedListWaitingConfirm = [
   "id",
   "name",
@@ -45,6 +46,7 @@ export const ActionType = {
   delete: "Xóa",
   "create new": "Tạo mới",
   create: "Tạo mới",
+  QRCode: "In Mã QR"
 };
 
 export const dateFormat = "YYYY/MM/DD";

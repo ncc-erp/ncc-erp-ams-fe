@@ -42,12 +42,11 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
-import { QrCodeDetail } from "./qr-code";
+
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-  const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
@@ -160,13 +159,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
   const show = (data: IHardwareResponse) => {
     setIsShowModalVisible(true);
-    setDetail(data);
+    setDetail(data);    
   };
-
-  const showQR = (data: IHardwareResponse) => {
-    setIsShowModalVisibleQR(true);
-    setDetail(data);
-  }
 
   const cancle = (data: IHardwareResponse) => {
     setIsCancleModalVisible(true);
@@ -502,13 +496,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         <UserShow setIsModalVisible={setIsShowModalVisible} detail={detail} />
       </MModal>
       <MModal
-        title={t("user.label.title.qrCode")}
-        setIsModalVisible={setIsShowModalVisibleQR}
-        isModalVisible={isShowModalVisibleQR}
-      >
-        <QrCodeDetail detail={detail} />
-      </MModal>
-      <MModal
         title={t("user.label.title.cancle")}
         setIsModalVisible={setIsCancleModalVisible}
         isModalVisible={isCancleModalVisible}
@@ -570,120 +557,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             />
           ))}
           <Table.Column<any>
-            title={t("table.qrCode")}
-            dataIndex="qrCode"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("hardware.label.tooltip.viewDetail")}
-                  color={"#108ee9"}
-                >
-                  <ShowButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => showQR(record)}
-                  />
-                </Tooltip>
-
-                {record.assigned_to.id !== record.withdraw_from &&
-                  record.assigned_status ===
-                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
-                    <Popconfirm
-                      title={t("hardware.label.button.accept_checkout")}
-                      onConfirm={() =>
-                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
-                      }
-                    >
-                      {isLoadingArr[record.id] !== false && (
-                        <Button
-                          className="ant-btn-accept"
-                          type="primary"
-                          shape="round"
-                          size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                              ? false
-                              : true
-                          }
-                        >
-                          {t("hardware.label.button.accept_checkout")}
-                        </Button>
-                      )}
-                    </Popconfirm>
-                  )}
-
-                {record.assigned_to.id === record.withdraw_from &&
-                  record.assigned_status ===
-                    ASSIGNED_STATUS.WAITING_CHECKIN && (
-                    <Popconfirm
-                      title={t("hardware.label.button.accept_checkin")}
-                      onConfirm={() =>
-                        OnAcceptRequest(record.id, ASSIGNED_STATUS.ACCEPT)
-                      }
-                    >
-                      {isLoadingArr[record.id] !== false && (
-                        <Button
-                          className="ant-btn-accept"
-                          type="primary"
-                          shape="round"
-                          size="small"
-                          loading={
-                            isLoadingArr[record.id] === undefined
-                              ? false
-                              : isLoadingArr[record.id] === false
-                              ? false
-                              : true
-                          }
-                        >
-                          {t("hardware.label.button.accept_checkin")}
-                        </Button>
-                      )}
-                    </Popconfirm>
-                  )}
-
-                {record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => cancle(record)}
-                  >
-                    {t("hardware.label.button.rejectCheckout")}
-                  </Button>
-                )}
-
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
-                        ? false
-                        : true
-                    }
-                    onClick={() => cancle(record)}
-                  >
-                    {t("hardware.label.button.rejectCheckin")}
-                  </Button>
-                )}
-              </Space>
-            )}
-          />
-          <Table.Column<any>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (
@@ -700,7 +573,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
 
-                {record.assigned_to.id !== record.withdraw_from &&
+                {/*{record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
                     ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
@@ -756,9 +629,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                         </Button>
                       )}
                     </Popconfirm>
-                  )}
+                  )}*/}
 
-                {record.assigned_status ===
+                {/*{record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
                   <Button
                     type="primary"
@@ -775,9 +648,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.rejectCheckout")}
                   </Button>
-                )}
+                )}*/}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
+                {/*{record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
                   <Button
                     type="primary"
                     shape="round"
@@ -793,7 +666,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                   >
                     {t("hardware.label.button.rejectCheckin")}
                   </Button>
-                )}
+                )}*/}
               </Space>
             )}
           />
