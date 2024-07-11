@@ -40,6 +40,7 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareClone } from "./clone";
 import { HardwareShow } from "./show";
+//import { UserShow } from "./show";
 import {
   MenuOutlined,
   FileSearchOutlined,
@@ -83,6 +84,7 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { QrCodeDetail } from "../users/qr-code";
 
 const defaultCheckedList = [
   "id",
@@ -134,6 +136,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     useState(false);
   const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
     useState(false);
+    const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
@@ -1093,7 +1096,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
-  const rowSelection = {
+  const rowSelection = {    
     selectedRowKeys: initselectedRowKeys.map((item: IHardware) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
@@ -1142,7 +1145,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
+  const showQR = (data: IHardwareResponse) => {
+    setIsShowModalVisibleQR(true);
+    setDetail(data);    
+    console.log(data);
+  }
+  const handleQRGenerator =()=>{
+    setIsShowModalVisibleQR(true);   
+    setDetail(initselectedRowKeys);     
+  }
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -1380,7 +1391,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
-
+      {isShowModalVisibleQR && <MModal
+        title={t("user.label.title.qrCode")}
+        setIsModalVisible={setIsShowModalVisibleQR}
+        isModalVisible={isShowModalVisibleQR}
+      >
+        <QrCodeDetail detail={detail}/>
+      </MModal>}
       <TotalDetail
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
@@ -1396,6 +1413,16 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               disabled={!selectedCheckout}
             >
               {t("hardware.label.title.checkout")}
+            </Button>
+          )}
+           {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleQRGenerator}
+              disabled={!selectedCheckout}
+            >
+              {t("hardware.label.field.qr_code")}
             </Button>
           )}
           <div className={nameCheckout ? "list-checkouts" : ""}>
@@ -1569,6 +1596,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                     {t("hardware.label.button.checkin")}
                   </Button>
                 )}
+              </Space>
+            )}
+          />
+              <Table.Column<any>
+            title={t("table.qrCode")}
+            dataIndex="qrCode"
+            render={(_, record) => (
+              <Space>
+                <Tooltip
+                  title={t("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
+                >
+                  <ShowButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => showQR(record)}
+                  />
+                </Tooltip>
               </Space>
             )}
           />

@@ -44,6 +44,7 @@ import {
 import "styles/request.less";
 import { QrCodeDetail } from "./qr-code";
 
+
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);

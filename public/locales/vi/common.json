@@ -184,7 +184,8 @@
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
-        "purchase_cost": "Giá"
+        "purchase_cost": "Giá",
+        "qr_code":"In mã QR"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
