@@ -84,7 +84,7 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
-import { QrCodeDetail } from "../users/qr-code";
+import { QrCodeDetail } from "./qr-code";
 
 const defaultCheckedList = [
   "id",

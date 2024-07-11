@@ -60,7 +60,7 @@ import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken,
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
 import { useRef } from "react";
-import { DetailProduct } from "pages/users/detail";
+import { DetailProduct } from "pages/hardware/detail";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 
 function App() {
