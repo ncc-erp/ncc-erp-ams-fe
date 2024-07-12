@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
 export const Scanner = () => {
-  const [scanning, setScanning] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReader = useRef(new BrowserMultiFormatReader());
   const [showModalDevice, setShowModalDevice] = useState(false);
   useEffect(() => {
-    if (scanning) {
+    if (isScanning) {
       startScanning();
     } else {
       stopScanning();
@@ -18,11 +18,11 @@ export const Scanner = () => {
     return () => {
       stopScanning();
     };
-  }, [scanning]);
+  }, [isScanning]);
 
   useEffect(() => {
     if (result) {
-      setScanning(false);
+      setIsScanning(false);
       setShowModalDevice(true);
     }
   }, [result]);
@@ -34,7 +34,7 @@ export const Scanner = () => {
       (result, error) => {
         if (result) {
           setResult(result.getText());
-          setScanning(false);
+          setIsScanning(false);
         }
         if (error && error.name !== "NotFoundException") {
           console.error(error);
@@ -61,18 +61,18 @@ export const Scanner = () => {
 
   const handleScan = () => {
     setResult("");
-    setScanning(true);
+    setIsScanning(true);
   };
 
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={handleScan} loading={scanning}>
+        <Button onClick={handleScan} loading={isScanning}>
           Scan
         </Button>
       </div>
 
-      {scanning && (
+      {isScanning && (
         <div
           style={{
             borderRadius: "30px",

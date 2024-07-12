@@ -28,16 +28,16 @@ export const DetailProduct = () => {
   return (
     <div className="detail-product-container">
       <div className="detail-product-content">
-        <h1 className="detail-product-title">Chi tiết tài sản</h1>
+        <h1 className="detail-product-title">{t("hardware.label.title.detail")}</h1>
         <div className="detail-product-info">
           <div className="detail-info-item">
-            <p className="info-title">ID:</p>
+            <p className="info-title">{t("model.label.field.id")}:</p>
             <p className="info-content" title={id ? id : undefined}>
               {id ? id : "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Trạng Thái:</p>
+            <p className="info-title">{t("hardware.label.field.status")}:</p>
             <p
               className="info-content"
               title={status ? status : undefined}
@@ -54,19 +54,19 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Tên tài sản:</p>
+            <p className="info-title">{t("hardware.label.field.assetName")}:</p>
             <p className="info-content" title={name ? name : undefined}>
               {name ? name : "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Số Sê-ri:</p>
+            <p className="info-title">{t("hardware.label.field.serial")}:</p>
             <p className="info-content" title={serial ? serial : undefined}>
               {serial ? serial : "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Kho:</p>
+            <p className="info-title">{t("hardware.label.field.manufacturer")}:</p>
             <p
               className="info-content"
               title={manufacturer ? manufacturer : undefined}
@@ -76,7 +76,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Thể loại:</p>
+            <p className="info-title">{t("hardware.label.field.category")}:</p>
             <p
               className="info-content"
               title={category ? category : undefined}
@@ -86,7 +86,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Kiểu tài sản:</p>
+            <p className="info-title">{t("hardware.label.field.propertyType")}:</p>
             <p
               className="info-content"
               title={model ? model : undefined}
@@ -96,7 +96,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Ngày mua:</p>
+            <p className="info-title">{t("hardware.label.field.purchase_date")}:</p>
             <p
               className="info-content"
               title={purchase_date ? purchase_date : undefined}
@@ -105,7 +105,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Nhà cung cấp:</p>
+            <p className="info-title">{t("hardware.label.field.supplier")}:</p>
             <p
               className="info-content"
               title={supplier ? supplier : undefined}
@@ -115,7 +115,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Vị trí:</p>
+            <p className="info-title">{t("hardware.label.field.rtd_location")}:</p>
             <p
               className="info-content"
               title={location ? location : undefined}
@@ -125,7 +125,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Đã tạo lúc:</p>
+            <p className="info-title">{t("hardware.label.title.dateCreate")}:</p>
             <p
               className="info-content"
               title={created_at ? created_at : undefined}
@@ -134,7 +134,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Cập nhật tại:</p>
+            <p className="info-title">{t("hardware.label.title.updateAt")}:</p>
             <p
               className="info-content"
               title={updated_at ? updated_at : undefined}
@@ -143,7 +143,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Giá:</p>
+            <p className="info-title">{t("hardware.label.field.purchase_cost")}:</p>
             <p
               className="info-content"
               title={purchase_cost ? purchase_cost : undefined}
@@ -152,7 +152,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Số lần thu hồi:</p>
+            <p className="info-title">{t("hardware.label.field.checkin_counter")}:</p>
             <p
               className="info-content"
               title={checkin_counter ? checkin_counter : undefined}
@@ -161,7 +161,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Số lần cấp phát:</p>
+            <p className="info-title">{t("hardware.label.field.checkout_counter")}:</p>
             <p
               className="info-content"
               title={checkout_counter ? checkout_counter : undefined}
@@ -170,7 +170,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Mô tả:</p>
+            <p className="info-title">{t("hardware.label.field.notes")}:</p>
             <p
               className="info-content"
               title={notes ? notes : undefined}
@@ -179,7 +179,7 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Bảo hành:</p>
+            <p className="info-title">{t("hardware.label.field.insurance")}:</p>
             <p
               className="info-content"
               title={warranty_expires ? warranty_expires : undefined}

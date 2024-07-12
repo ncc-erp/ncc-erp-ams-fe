@@ -61,7 +61,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API
+  HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
@@ -151,8 +151,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("dateTo");
   const searchParam = searchParams.get("search");
   const model_id = searchParams.get("model_id");
-  const manufacturer_id = searchParams.get('manufacturer_id');
-  const supplier_id = searchParams.get('supplier_id');
+  const manufacturer_id = searchParams.get("manufacturer_id");
+  const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
 
@@ -162,112 +162,109 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
+  }, [permissionsData]);
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    IHardwareResponse,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      resource: HARDWARE_API,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        let {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          assigned_to,
+          category,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: searchParam,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+
+          {
+            field: "dateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "dateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "assigned_to",
+            operator: "eq",
+            value: assigned_to,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category ? category : category_id,
+          },
+          {
+            field: "status_id",
+            operator: "eq",
+            value: status_id,
+          },
+          {
+            field: "assigned_status",
+            operator: "eq",
+            value: searchParams.get("assigned_status"),
+          },
+          {
+            field: "model_id",
+            operator: "eq",
+            value: model_id,
+          },
+          {
+            field: "manufacturer_id",
+            operator: "eq",
+            value: manufacturer_id,
+          },
+          {
+            field: "supplier_id",
+            operator: "eq",
+            value: supplier_id,
+          }
+        );
+
+        return filters;
       },
-    ],
-    resource: HARDWARE_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      let {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        assigned_to,
-        category,
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: searchParam,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
-        },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-
-        {
-          field: "dateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "assigned_to",
-          operator: "eq",
-          value: assigned_to,
-        },
-        {
-          field: "category_id",
-          operator: "eq",
-          value: category ? category : category_id,
-        },
-        {
-          field: "status_id",
-          operator: "eq",
-          value: status_id,
-        },
-        {
-          field: "assigned_status",
-          operator: "eq",
-          value: searchParams.get("assigned_status"),
-        },
-        {
-          field: "model_id",
-          operator: "eq",
-          value: model_id,
-        },
-        {
-          field: "manufacturer_id",
-          operator: "eq",
-          value: manufacturer_id,
-        },
-        {
-          field: "supplier_id",
-          operator: "eq",
-          value: supplier_id,
-        },
-      );
-
-      return filters;
-    },
-  });
+    });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
@@ -580,7 +577,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
+  }, [isModalVisible]);
 
   useEffect(() => {
     refreshData();
@@ -642,7 +639,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const { list } = useNavigation();
 
-
   const collumns = useMemo(
     () => [
       {
@@ -689,8 +685,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) =>
-          <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
@@ -746,7 +741,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               list(`location_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -754,11 +750,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name}
+          <TextField
+            value={value && value.name}
             onClick={() => {
               list(`manufactures_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -857,9 +855,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "last_checkout",
         title: t("hardware.label.field.dateCheckout"),
-        render: (value: IHardware) => (value &&
-          <DateField format="LL" value={value ? value.datetime : ""} />
-        ),
+        render: (value: IHardware) =>
+          value && (
+            <DateField format="LL" value={value ? value.datetime : ""} />
+          ),
         defaultSortOrder: getDefaultSortOrder("last_checkout.datetime", sorter),
       },
       // {
@@ -1101,7 +1100,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
-  const rowSelection = {    
+  const rowSelection = {
     selectedRowKeys: initselectedRowKeys.map((item: IHardware) => item.id),
     onChange: onSelectChange,
     onSelect: onSelect,
@@ -1152,29 +1151,25 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   };
   const showQR = (data: IHardwareResponse) => {
     setIsShowModalVisibleQR(true);
-    setDetail(data);    
-  }
-  const handleQRGenerator =()=>{
-    setIsShowModalVisibleQR(true);   
-    setDetail(initselectedRowKeys);     
-  }
+    setDetail(data);
+  };
+  const handleQRGenerator = () => {
+    setIsShowModalVisibleQR(true);
+    setDetail(initselectedRowKeys);
+  };
 
-  const handleScanQR =()=>{
-    setIsShowModalScan(true);   
-  }
-
-
+  const handleScanQR = () => {
+    setIsShowModalScan(true);
+  };
 
   return (
     <List
       title={t("hardware.label.title.asset")}
       pageHeaderProps={{
-        extra: (
-          isAdmin && (
-            <CreateButton onClick={handleCreate}>
-              {t("hardware.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: isAdmin && (
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -1189,15 +1184,15 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
-                    ? [
+                  ? [
                       moment(dateFromParam, dateFormat),
                       moment(dateToParam, dateFormat),
                     ]
-                    : ""
+                  : ""
                 : "",
           }}
           layout="vertical"
@@ -1402,20 +1397,24 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
-      {isShowModalVisibleQR && <MModal
-        title={t("user.label.title.qrCode")}
-        setIsModalVisible={setIsShowModalVisibleQR}
-        isModalVisible={isShowModalVisibleQR}
-      >
-        <QrCodeDetail detail={detail}/>
-      </MModal>}
-      {isShowModalScan && <MModal
-        title={"Scan QR"}
-        setIsModalVisible={setIsShowModalScan}
-        isModalVisible={isShowModalScan}
-      >
-        <Scanner/>
-      </MModal>}
+      {isShowModalVisibleQR && (
+        <MModal
+          title={t("user.label.title.qrCode")}
+          setIsModalVisible={setIsShowModalVisibleQR}
+          isModalVisible={isShowModalVisibleQR}
+        >
+          <QrCodeDetail detail={detail} />
+        </MModal>
+      )}
+      {isShowModalScan && (
+        <MModal
+          title={"Scan QR"}
+          setIsModalVisible={setIsShowModalScan}
+          isModalVisible={isShowModalScan}
+        >
+          <Scanner />
+        </MModal>
+      )}
       <TotalDetail
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
@@ -1433,7 +1432,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               {t("hardware.label.title.checkout")}
             </Button>
           )}
-          
+
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
             {initselectedRowKeys
@@ -1482,29 +1481,29 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         </div>
       </div>
 
-      <div style={{display:'flex', justifyItems:'start'}}>
-      {isAdmin && (
+      <div style={{ display: "flex", justifyItems: "start" }}>
+        {isAdmin && (
+          <>
             <Button
               type="primary"
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleQRGenerator}
               disabled={!selectedCheckout}
-              style={{ marginRight:'20px'}}
+              style={{ marginRight: "20px" }}
             >
               {t("hardware.label.field.qr_code")}
             </Button>
-          )}
-          {isAdmin && (
             <Button
               type="primary"
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleScanQR}
             >
-              {"SCAN QR"}
+                {t("hardware.label.field.scan_qr")}
             </Button>
-          )}
+          </>
+        )}
       </div>
-    
+
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
@@ -1523,10 +1522,14 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
@@ -1587,7 +1590,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       size="small"
                       recordItemId={record.id}
                       onSuccess={() => {
-                        setIsTotalDetailReload(!isTotalDetailReload)
+                        setIsTotalDetailReload(!isTotalDetailReload);
                       }}
                     />
                   </Tooltip>
@@ -1603,8 +1606,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1621,8 +1624,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                        ? false
+                        : true
                     }
                     onClick={() => checkin(record)}
                   >
@@ -1632,7 +1635,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               </Space>
             )}
           />
-              <Table.Column<any>
+          <Table.Column<any>
             title={t("table.qrCode")}
             dataIndex="qrCode"
             render={(_, record) => (
