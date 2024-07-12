@@ -118,9 +118,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const [setDataScan, setSetDataScan] = useState<string>("");
   const [setErrorScan, setSetErrorScan] = useState<string>("");
 
-  console.log("setDataScan", setDataScan);
-  console.log("setErrorScan", setErrorScan);
-
   const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
   const [detailCheckin, setDetailCheckin] =
     useState<IHardwareResponseCheckin>();
@@ -1156,7 +1153,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const showQR = (data: IHardwareResponse) => {
     setIsShowModalVisibleQR(true);
     setDetail(data);    
-    console.log(data);
   }
   const handleQRGenerator =()=>{
     setIsShowModalVisibleQR(true);   
@@ -1437,25 +1433,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               {t("hardware.label.title.checkout")}
             </Button>
           )}
-           {isAdmin && (
-            <Button
-              type="primary"
-              className="btn-select-checkout ant-btn-checkout"
-              onClick={handleQRGenerator}
-              disabled={!selectedCheckout}
-            >
-              {t("hardware.label.field.qr_code")}
-            </Button>
-          )}
-          {isAdmin && (
-            <Button
-              type="primary"
-              className="btn-select-checkout ant-btn-checkout"
-              onClick={handleScanQR}
-            >
-              {"SCAN QR"}
-            </Button>
-          )}
+          
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
             {initselectedRowKeys
@@ -1503,6 +1481,30 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+
+      <div style={{display:'flex', justifyItems:'start'}}>
+      {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleQRGenerator}
+              disabled={!selectedCheckout}
+              style={{ marginRight:'20px'}}
+            >
+              {t("hardware.label.field.qr_code")}
+            </Button>
+          )}
+          {isAdmin && (
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleScanQR}
+            >
+              {"SCAN QR"}
+            </Button>
+          )}
+      </div>
+    
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

@@ -20,8 +20,11 @@ export const DetailProduct = () => {
   const created_at = queryParams.get("created_at");
   const updated_at = queryParams.get("updated_at");
   const purchase_cost = queryParams.get("purchase_cost");
+  const checkin_counter = queryParams.get("checkin_counter");
+  const checkout_counter = queryParams.get("checkout_counter");
+  const notes = queryParams.get("notes");
+  const warranty_expires = queryParams.get("warranty_expires");
   const assigned_to = queryParams.get("assigned_to");
-
   return (
     <div className="detail-product-container">
       <div className="detail-product-content">
@@ -149,12 +152,39 @@ export const DetailProduct = () => {
             </p>
           </div>
           <div className="detail-info-item">
-            <p className="info-title">Assigned to:</p>
+            <p className="info-title">Số lần thu hồi:</p>
             <p
               className="info-content"
-              title={assigned_to ? assigned_to : undefined}
+              title={checkin_counter ? checkin_counter : undefined}
             >
-              {assigned_to ? assigned_to : "n/a"}
+              {checkin_counter ? checkin_counter : "n/a"}
+            </p>
+          </div>
+          <div className="detail-info-item">
+            <p className="info-title">Số lần cấp phát:</p>
+            <p
+              className="info-content"
+              title={checkout_counter ? checkout_counter : undefined}
+            >
+              {checkout_counter ? checkout_counter : "n/a"}
+            </p>
+          </div>
+          <div className="detail-info-item">
+            <p className="info-title">Mô tả:</p>
+            <p
+              className="info-content"
+              title={notes ? notes : undefined}
+            >
+              {notes ? notes : "n/a"}
+            </p>
+          </div>
+          <div className="detail-info-item">
+            <p className="info-title">Bảo hành:</p>
+            <p
+              className="info-content"
+              title={warranty_expires ? warranty_expires : undefined}
+            >
+              {warranty_expires ? warranty_expires : "n/a"}
             </p>
           </div>
         </div>

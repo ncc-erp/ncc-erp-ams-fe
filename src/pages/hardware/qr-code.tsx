@@ -53,6 +53,8 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       updated_at: detail?.updated_at?.formatted ?? "",
       purchase_cost: detail?.purchase_cost ?? "",
       assigned_to: detail?.assigned_to?.name ?? "",
+      checkin_counter: detail?.checkin_counter ?? "",
+      checkout_counter: detail?.checkout_counter ?? "",
     }),
     [detail, qrCodes]
   );
@@ -89,6 +91,10 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       purchase_cost,
       assigned_to,
       status_label,
+      checkin_counter,
+      checkout_counter,
+      notes,
+      warranty_expires
     } = hardware;
     const selectedFields = {
       id: id?.toString() ?? "",
@@ -105,9 +111,11 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       updated_at: updated_at?.formatted?.toString() ?? "",
       purchase_cost: purchase_cost?.toString() ?? "",
       assigned_to: assigned_to?.name?.toString() ?? "",
+      checkin_counter: checkin_counter?.toString() ?? "",
+      checkout_counter: checkout_counter?.toString() ?? "",
+      notes: notes?.toString() ?? "",
+      warranty_expires: warranty_expires?.toString() ?? "",
     };
-    console.log(selectedFields);
-
     const queryParams = Object.entries(selectedFields)
       .map(
         ([key, value]) =>
@@ -118,25 +126,21 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
   };
 
   const renderSelectedFields = useCallback(
-    (model: string, assigned_to: string) => {
+    (model: string) => {
       return selectedFields.map((field) => {
         let value = "";
         if (data.model !== "") {
           if (field === "name") {
             value = data.model;
-          } else if (field === "name_user") {
-            value = `${data?.assigned_to}`;
           }
         } else {
           if (field === "name") {
             value = model.toString();
-          } else if (field === "name_user") {
-            value = assigned_to ?? "";
           }
         }
         return (
           <div key={field} style={{ textAlign: "center", color: "#FF0000" }}>
-            {field === "name" ? "Mã thiết bị" : "Tên"}: {value}
+            {"Mã thiết bị"}: {value}
           </div>
         );
       });
@@ -209,7 +213,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
                   {layout === "above" &&
                     renderSelectedFields(
                       hardware?.model?.name,
-                      hardware?.assigned_to?.name
                     )}
                   <QRCode size={120} value={generateRedirectUrl(hardware)} />
                   <div
@@ -221,7 +224,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
                   {layout === "below" &&
                     renderSelectedFields(
                       hardware?.model?.name,
-                      hardware?.assigned_to?.name
                     )}
                 </div>
               </div>
@@ -252,7 +254,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
                 {layout === "above" &&
                   renderSelectedFields(
                     detail?.model?.name!,
-                    detail?.assigned_to?.name!
                   )}
                 <QRCode
                   size={250}
@@ -262,7 +263,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
                 {layout === "below" &&
                   renderSelectedFields(
                     detail?.model?.name!,
-                    detail?.assigned_to?.name!
                   )}
               </div>
             </div>
@@ -288,12 +288,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
           <div style={{ marginBottom: 16 }}>
             <Checkbox onChange={() => handleFieldChange("name")}>
               {t("user.label.title.codeDevice")}
-            </Checkbox>
-            <Checkbox
-              onChange={() => handleFieldChange("name_user")}
-              style={{ margin: "0px" }}
-            >
-              {t("user.label.title.user_name")}
             </Checkbox>
           </div>
         </div>
