@@ -102,7 +102,7 @@ export const LoginPage: React.FC = () => {
               />
             </div>
             <Card title={CardTitle} headStyle={{ borderBottom: 0 }}>
-              {/*{process.env.REACT_APP_SHOW_MANUAL_LOGIN === "true" && (
+              {process.env.REACT_APP_SHOW_MANUAL_LOGIN === "true" && (
                 <Form<ILoginForm>
                   layout="vertical"
                   form={form}
@@ -163,7 +163,7 @@ export const LoginPage: React.FC = () => {
                     {translate("pages.login.signin", "Sign in")}
                   </Button>
                 </Form>
-              )}*/}
+              )}
 
               <Button
                 data-test-id="signin-google-btn"
