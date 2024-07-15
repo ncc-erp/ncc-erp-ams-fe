@@ -2,9 +2,11 @@ import { Button, Checkbox, Modal, Select } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
 import { IHardwareResponse } from "interfaces/hardware";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 import "../../styles/qr-code.less";
+import SingleQrCard from "./single-qr-card";
+import MultiQrCards from "./muti-qr-cards";
+import QrControlPanel from "./qr-control-panel";
 interface QrCodeDetailProps {
   detail: IHardwareResponse | undefined;
 }
@@ -17,7 +19,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
   const componentRef = useRef<HTMLDivElement>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
-  
+
   const handleDeleteQrCode = (id: number) => {
     setDeleteId(id);
     setIsConfirmModalOpen(true);
@@ -74,7 +76,6 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
   };
 
   const generateRedirectUrl = (hardware: IHardwareResponse) => {
-
     if (!hardware) return "";
     const {
       id,
@@ -94,7 +95,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       checkin_counter,
       checkout_counter,
       notes,
-      warranty_expires
+      warranty_expires,
     } = hardware;
     const selectedFields = {
       id: id?.toString() ?? "",
@@ -129,14 +130,8 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
     (model: string) => {
       return selectedFields.map((field) => {
         let value = "";
-        if (data.model !== "") {
-          if (field === "name") {
-            value = data.model;
-          }
-        } else {
-          if (field === "name") {
-            value = model.toString();
-          }
+        if (field === "name") {
+          value = data.model !== "" ? data.model : model.toString();
         }
         return (
           <div key={field} style={{ textAlign: "center", color: "#FF0000" }}>
@@ -196,112 +191,40 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
         <div className="qr__container" ref={componentRef}>
           {Array.isArray(detail) ? (
             qrCodes.map((hardware) => (
-              <div key={hardware.id}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding: paddingStyle,
-                    border: "1px solid black",
-                    borderRadius: "8px",
-                    position: "relative",
-                    width: "200px",
-                    height: "200px",
-                  }}
-                >
-                  {layout === "above" &&
-                    renderSelectedFields(
-                      hardware?.model?.name,
-                    )}
-                  <QRCode size={120} value={generateRedirectUrl(hardware)} />
-                  <div
-                    onClick={() => handleDeleteQrCode(hardware.id)}
-                    className="delete__qrcode"
-                  >
-                    x
-                  </div>
-                  {layout === "below" &&
-                    renderSelectedFields(
-                      hardware?.model?.name,
-                    )}
-                </div>
-              </div>
+              <MultiQrCards
+                key={hardware.id}
+                hardware={hardware}
+                layout={layout}
+                paddingStyle={paddingStyle}
+                renderSelectedFields={renderSelectedFields}
+                generateRedirectUrl={generateRedirectUrl}
+                handleDeleteQrCode={handleDeleteQrCode}
+              />
             ))
           ) : (
-            <div
-              key={detail?.id}
-              style={{
-                height: 500,
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 16,
-                marginLeft: "12rem",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  padding: paddingStyle,
-                  border: "1px solid black",
-                  borderRadius: "8px",
-                }}
-              >
-                {layout === "above" &&
-                  renderSelectedFields(
-                    detail?.model?.name!,
-                  )}
-                <QRCode
-                  size={250}
-                  value={generateRedirectUrl(detail!)}
-                  style={{ marginBottom: "20px" }}
-                />
-                {layout === "below" &&
-                  renderSelectedFields(
-                    detail?.model?.name!,
-                  )}
-              </div>
-            </div>
+            <SingleQrCard
+              detail={detail!}
+              layout={layout}
+              paddingStyle={paddingStyle}
+              renderSelectedFields={renderSelectedFields}
+              generateRedirectUrl={generateRedirectUrl}
+            />
           )}
         </div>
       </div>
-      <div className="list__acction__qrcode">
-        <div className="select__qrcode">
-          <div style={{ marginBottom: 16 }}>
-            <Select
-              value={layout}
-              onChange={(value) => setLayout(value)}
-              style={{ width: "100%" }}
-            >
-              <Select.Option value="above">
-                {t("user.label.title.above")}
-              </Select.Option>
-              <Select.Option value="below">
-                {t("user.label.title.below")}
-              </Select.Option>
-            </Select>
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <Checkbox onChange={() => handleFieldChange("name")}>
-              {t("user.label.title.codeDevice")}
-            </Checkbox>
-          </div>
-        </div>
-        <Button type="primary" className="gen__qrcode" onClick={handlePrint}>
-          In mã QR
-        </Button>
-      </div>
+      <QrControlPanel
+        layout={layout}
+        setLayout={setLayout}
+        handleFieldChange={handleFieldChange}
+        handlePrint={handlePrint}
+      />
       <Modal
-        title="Xác nhận xóa mã QR"
+        title={t("hardware.label.field.confirmDeleteQr")}
         visible={isConfirmModalOpen}
         onCancel={handleCancelDelete}
         footer={[
           <Button key="cancel" onClick={handleCancelDelete}>
-            Hủy bỏ
+            {t("buttons.cancel")}
           </Button>,
           <Button
             style={{ marginTop: "0px" }}
@@ -310,11 +233,11 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
             danger
             onClick={handleConfirmDelete}
           >
-            Xác nhận xóa
+            {t("hardware.label.field.condition")}
           </Button>,
         ]}
       >
-        Bạn có chắc chắn muốn xóa mã QR này không?
+        {t("hardware.label.field.confirmDeleteQr")}
       </Modal>
     </div>
   );

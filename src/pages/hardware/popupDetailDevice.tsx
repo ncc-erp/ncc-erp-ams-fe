@@ -58,21 +58,23 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
   }, [url]);
   return (
     <Modal
-      title={ t("hardware.label.title.detail")}
+      title={t("hardware.label.title.detail")}
       footer={null}
       visible={true}
       onCancel={onClose}
     >
       <Descriptions bordered column={1}>
-        <Descriptions.Item label={t("model.label.field.id")}>{data.id}</Descriptions.Item>
+        <Descriptions.Item label={t("model.label.field.id")}>
+          {data.id || "n/a"}
+        </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.status")}>
           <div style={{ display: "flex" }}>
             <p>
-              {data.status && data.status === t("hardware.label.field.broken")
-                ? t("hardware.label.detail.broken")
-                : data.status
-                ? t("hardware.label.detail.readyToDeploy")
-                : "n/a"}{" "}
+              {data.status
+                ? data.status === t("hardware.label.field.broken")
+                  ? t("hardware.label.detail.broken")
+                  : t("hardware.label.detail.readyToDeploy")
+                : "n/a"}
             </p>
             <p style={{ color: "blue", marginLeft: "10px" }}>
               {data.assigned_to === null || undefined ? null : data.assigned_to}
@@ -80,55 +82,55 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           </div>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.assetName")}>
-          {data.name ? data.name : "n/a"}
+          {data.name || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.serial")}>
-          {data.serial ? data.serial : "n/a"}
+          {data.serial || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.manufacturer")}>
           <p style={{ color: "blue" }}>
-            {data.manufacturer ? data.manufacturer : "n/a"}
+            {data.manufacturer || "n/a"}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.category")}>
-          {data.category ? data.category : "n/a"}
+          {data.category || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.propertyType")}>
-          {data.model ? data.model : "n/a"}
+          {data.model || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_date")}>
-          {data.purchase_date ? data.purchase_date : "n/a"}
+          {data.purchase_date || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.supplier")}>
           <p style={{ color: "blue" }}>
-            {data.supplier ? data.supplier : "n/a"}
+            {data.supplier || "n/a"}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.rtd_location")}>
           <p style={{ color: "blue" }}>
-            {data.location ? data.location : "n/a"}
+            {data.location || "n/a"}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
-          {data.created_at ? data.created_at : "n/a"}
+          {data.created_at || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.updateAt")}>
-          {data.updated_at ? data.updated_at : "n/a"}
+          {data.updated_at || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_cost")}>
-          {data.purchase_cost ? data.purchase_cost : "n/a"}
+          {data.purchase_cost || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.checkin_counter")}>
-          {data.checkin_counter ? data.checkin_counter : "n/a"}
+          {data.checkin_counter || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
-          {data.checkout_counter ? data.checkout_counter : "n/a"}
+          {data.checkout_counter || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.notes")}>
-          {data.notes ? data.notes : "n/a"}
+          {data.notes || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
-          {data.warranty_expires ? data.warranty_expires : "n/a"}
+          {data.warranty_expires || "n/a"}
         </Descriptions.Item>
       </Descriptions>
     </Modal>
