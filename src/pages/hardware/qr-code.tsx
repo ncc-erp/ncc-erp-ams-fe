@@ -190,17 +190,14 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       <div style={{ maxHeight: "40rem", overflow: "auto" }}>
         <div className="qr__container" ref={componentRef}>
           {Array.isArray(detail) ? (
-            qrCodes.map((hardware) => (
-              <MultiQrCards
-                key={hardware.id}
-                hardware={hardware}
-                layout={layout}
-                paddingStyle={paddingStyle}
-                renderSelectedFields={renderSelectedFields}
-                generateRedirectUrl={generateRedirectUrl}
-                handleDeleteQrCode={handleDeleteQrCode}
-              />
-            ))
+           <MultiQrCards
+           hardwareList={qrCodes}
+           layout={layout}
+           paddingStyle={paddingStyle}
+           renderSelectedFields={renderSelectedFields}
+           generateRedirectUrl={generateRedirectUrl}
+           handleDeleteQrCode={handleDeleteQrCode}
+         />
           ) : (
             <SingleQrCard
               detail={detail!}
