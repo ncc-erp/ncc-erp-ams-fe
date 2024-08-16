@@ -60,10 +60,14 @@ import { ClientHardwareList, ClientHardwareListAssign, ClientHardwareListBroken,
 import { ClientHardwareListWaitingConfirm } from "pages/hardware_client/list-watiting-confirm";
 import { ClientHardwareListExpiration } from "pages/hardware_client/list-expiration";
 import { useRef } from "react";
+import { DetailProduct } from "pages/hardware/detail";
+import { DETAIL_DEVICE_ROUTE } from "constants/route";
 
 function App() {
   const { t, i18n } = useTranslation();
   const notificationRef = useRef(null);
+  const route = window.location.pathname;
+
   notification.config({
     getContainer() {
       return notificationRef.current as unknown as HTMLElement;
@@ -80,7 +84,6 @@ function App() {
   //   dark: `${process.env.PUBLIC_URL}/antd.dark-theme.css`,
   //   light: `${process.env.PUBLIC_URL}/antd.light-theme.css`,
   // };
-
   return (
     // <ThemeSwitcherProvider themeMap={currThemes} defaultTheme="light">
       <>
@@ -94,7 +97,6 @@ function App() {
             can: async ({ resource, action, params }) => {
               let role = await authProvider.getPermissions();
               const enforcer = await newEnforcer(model, adapter);
-
               if (role.branchadmin == EPermissions.BRANCHADMIN) {
                 if (action === "show") {
                   const can = await enforcer.enforce(
@@ -141,6 +143,13 @@ function App() {
                 route: "dashboard",
               },
             },
+            {
+                name: t("resource.detail-device"),
+                list: DetailProduct,
+                options: {
+                  route: "detail-device",
+                },
+              },
             {
               name: t("resource.checkin-checkout"),
               list: ListCheckin_Checkout,
@@ -445,8 +454,8 @@ function App() {
             },
           ]}
           Title={Title}
-          Header={Header}
-          Sider={Sider}
+          Header={route === DETAIL_DEVICE_ROUTE ? undefined : Header}
+          Sider={route === DETAIL_DEVICE_ROUTE ? undefined : Sider}
           Footer={Footer}
           Layout={Layout}
           OffLayoutArea={OffLayoutArea}

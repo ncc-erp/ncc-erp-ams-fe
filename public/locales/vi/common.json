@@ -132,7 +132,8 @@
   "table": {
     "actions": "Actions",
     "search": "Tìm kiếm",
-    "checkAll": "Check all"
+    "checkAll": "Check all",
+    "qrCode":"Mã QR"
   },
   "hardware": {
     "label": {
@@ -183,7 +184,10 @@
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
-        "purchase_cost": "Giá"
+        "purchase_cost": "Giá",
+        "qr_code":"In mã QR",
+        "scan_qr":"SCAN QR",
+        "confirmDeleteQr":"Xác nhận xóa mã QR"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -633,7 +637,12 @@
         "users": "Người dùng",
         "sum-assets": "Tổng số tài sản",
         "detail_tool": "Chi tiết tool của tôi",
-        "detail_tax_token": "Chi tiết token thuế của tôi"
+        "detail_tax_token": "Chi tiết token thuế của tôi",
+        "qrCode": "Mã QR",
+        "above": "Bên trên",
+        "below": "Bên dưới",
+        "codeDevice": "Mã thiết bị",
+        "user_name": "Tên người dùng"
       },
       "field": {
         "notes": "Mô tả",
@@ -760,7 +769,8 @@
         "category": "Loại",
         "assetCount": "Số lượng",
         "sendEmail": "Gửi email",
-        "accept": "Chấp nhận"
+        "accept": "Chấp nhận",
+        "qrCode": "Mã QR"
       },
       "options": {
         "accessory": "Phụ kiện",
