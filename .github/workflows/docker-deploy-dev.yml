@@ -34,6 +34,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Remove old image
+        run: docker rmi ncc-erp-ams-fe:latest || true
+
       - name: Build Docker image
         run: docker build -t ncc-erp-ams-fe:latest .
 
@@ -55,8 +58,8 @@ jobs:
 
       - name: Stop and remove old container
         run: |
-          docker-compose -f ams-dev-docker/docker-compose.yml down
+          docker compose -f /home/nccsoft/ams-dev-docker/docker-compose.dev.yml down
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f ams-dev-docker/docker-compose.yml up -d
+          docker compose -f /home/nccsoft/ams-dev-docker/docker-compose.dev.yml up -d
