@@ -1381,6 +1381,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       <div className="checkout-checkin-multiple">
         <div className="checkout-multiple-asset">

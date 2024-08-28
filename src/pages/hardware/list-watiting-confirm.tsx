@@ -153,6 +153,7 @@ export const HardwareListWaitingConfirm: React.FC<
         status_label,
         purchase_date,
         assigned_to,
+        category,
       } = params;
       filters.push(
         {
@@ -183,6 +184,11 @@ export const HardwareListWaitingConfirm: React.FC<
           value: purchase_date
             ? purchase_date[0].format().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "category",
+          operator: "eq",
+          value: category ? category : undefined,
         },
         {
           field: "dateTo",
@@ -854,6 +860,10 @@ export const HardwareListWaitingConfirm: React.FC<
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
@@ -965,6 +975,10 @@ export const HardwareListWaitingConfirm: React.FC<
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       <div className="list-waiting-confirm">
         <div className="list-users">

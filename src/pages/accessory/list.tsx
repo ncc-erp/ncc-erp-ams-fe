@@ -146,7 +146,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             : undefined,
         },
         {
-          field: "category_id",
+          field: "category",
           operator: "eq",
           value: category ? category : category_id,
         },
@@ -586,6 +586,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
@@ -643,6 +647,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={ACCESSORY_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       {loading ? (
         <>

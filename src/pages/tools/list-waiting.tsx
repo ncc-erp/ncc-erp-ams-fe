@@ -177,6 +177,11 @@ export const ToolListWaitingConfirm: React.FC<
                         : undefined,
                 },
                 {
+                    field: "category",
+                    operator: "eq",
+                    value: category ? category : undefined,
+                },
+                {
                     field: "purchaseDateTo",
                     operator: "eq",
                     value: purchase_date

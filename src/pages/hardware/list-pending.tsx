@@ -161,6 +161,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         status_label,
         purchase_date,
         assigned_to,
+        category
       } = params;
       filters.push(
         {
@@ -179,6 +180,11 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
             status_label,
             assigned_to,
           }),
+        },
+        {
+          field: "category",
+          operator: "eq",
+          value: category ? category : undefined,
         },
         {
           field: "rtd_location_id",
@@ -1140,6 +1146,10 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       {loading ? (
         <>

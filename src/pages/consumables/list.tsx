@@ -163,6 +163,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           operator: "eq",
           value: supplier_id,
         },
+        {
+          field: "category",
+          operator: "eq",
+          value: category ? category : category_id,
+        },
       );
 
       return filters;
@@ -586,6 +591,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
       </div>
       <div className="all-search">
@@ -638,12 +647,17 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
-
-      <TotalDetail
-        filters={filters}
-        links={CONSUMABLE_TOTAL_DETAIL_API}
-        isReload={isTotalDetailReload}
-      ></TotalDetail>
+      <div style={{ marginTop: "12px" }} >
+        <TotalDetail
+          filters={filters}
+          links={CONSUMABLE_TOTAL_DETAIL_API}
+          isReload={isTotalDetailReload}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          searchFormProps={searchFormProps}
+          optionCategory={filterCategory}
+        />
+      </div>
 
       {loading ? (
         <>

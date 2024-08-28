@@ -161,6 +161,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         status_label,
         purchase_date,
         assigned_to,
+        category,
       } = params;
       filters.push(
         {
@@ -191,6 +192,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           value: purchase_date
             ? purchase_date[0].format().substring(0, 10)
             : undefined,
+        },
+        {
+          field: "category",
+          operator: "eq",
+          value: category ? category : undefined,
         },
         {
           field: "dateTo",
@@ -994,6 +1000,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
 
         <div className="all">
@@ -1146,6 +1156,10 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       {loading ? (
         <>

@@ -213,6 +213,11 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                         ? expiration_date[1].format().substring(0, 10)
                         : undefined,
                 },
+                {
+                    field: "category",
+                    operator: "eq",
+                    value: category ? category : undefined,
+                },
             );
             return filters;
         },
@@ -890,6 +895,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                             onCalendarChange={expirationDateChange}
                         />
                     </Form.Item>
+                    <Form.Item
+                        name="category"
+                        style={{ display: "none" }}
+                    />
                 </Form>
                 <div className="all">
                     <TableAction searchFormProps={searchFormProps} />
