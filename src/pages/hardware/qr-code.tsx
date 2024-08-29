@@ -9,9 +9,10 @@ import MultiQrCards from "./muti-qr-cards";
 import QrControlPanel from "./qr-control-panel";
 interface QrCodeDetailProps {
   detail: IHardwareResponse | undefined;
+  closeModal: () => void;
 }
 
-export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
+export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
   const t = useTranslate();
   const [qrCodes, setQrCodes] = useState<IHardwareResponse[]>(
     Array.isArray(detail) ? detail : []
@@ -29,10 +30,15 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
     if (Array.isArray(qrCodes)) {
       const updatedQrCodes = qrCodes.filter((qr) => qr.id !== deleteId);
       setQrCodes(updatedQrCodes);
+      if (!updatedQrCodes.length) {
+        closeModal();
+      }
     }
     setIsConfirmModalOpen(false);
     setDeleteId(null);
   };
+
+
 
   const handleCancelDelete = () => {
     setIsConfirmModalOpen(false);
@@ -62,7 +68,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
   );
 
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
-  const [layout, setLayout] = useState<"above" | "below">("below");
+  const [layout, setLayout] = useState<"above" | "below" | null>(null);
 
   const [isPrinting, setIsPrinting] = useState(false);
   const promiseResolveRef = useRef<any>(null);
@@ -96,6 +102,7 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       checkout_counter,
       notes,
       warranty_expires,
+      requests_counter,
     } = hardware;
     const selectedFields = {
       id: id?.toString() ?? "",
@@ -108,14 +115,15 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       purchase_date: purchase_date?.formatted?.toString() ?? "",
       supplier: supplier?.name?.toString() ?? "",
       location: location?.name?.toString() ?? "",
-      created_at: created_at?.formatted?.toString() ?? "",
-      updated_at: updated_at?.formatted?.toString() ?? "",
+      created_at: created_at?.datetime?.toString() ?? "",
+      updated_at: updated_at?.datetime?.toString() ?? "",
       purchase_cost: purchase_cost?.toString() ?? "",
       assigned_to: assigned_to?.name?.toString() ?? "",
       checkin_counter: checkin_counter?.toString() ?? "",
       checkout_counter: checkout_counter?.toString() ?? "",
       notes: notes?.toString() ?? "",
-      warranty_expires: warranty_expires?.toString() ?? "",
+      warranty_expires: warranty_expires?.date?.toString() ?? "",
+      requests_counter: requests_counter?.toString() ?? "",
     };
     const queryParams = Object.entries(selectedFields)
       .map(
@@ -178,11 +186,11 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
     if (selectedFields.length === 0) return "24px";
     if (layout === "above") {
       return "8px 24px 24px 24px";
-    } else if (layout === "below") {
+    }  
+    if (layout === "below") {
       return "24px 24px 8px 24px";
-    } else {
-      return "24px";
-    }
+    } 
+    return "24px";
   }, [layout, selectedFields]);
 
   return (
@@ -190,14 +198,14 @@ export const QrCodeDetail = ({ detail }: QrCodeDetailProps) => {
       <div style={{ maxHeight: "40rem", overflow: "auto" }}>
         <div className="qr__container" ref={componentRef}>
           {Array.isArray(detail) ? (
-           <MultiQrCards
-           hardwareList={qrCodes}
-           layout={layout}
-           paddingStyle={paddingStyle}
-           renderSelectedFields={renderSelectedFields}
-           generateRedirectUrl={generateRedirectUrl}
-           handleDeleteQrCode={handleDeleteQrCode}
-         />
+            <MultiQrCards
+              hardwareList={qrCodes}
+              layout={layout}
+              paddingStyle={paddingStyle}
+              renderSelectedFields={renderSelectedFields}
+              generateRedirectUrl={generateRedirectUrl}
+              handleDeleteQrCode={handleDeleteQrCode}
+            />
           ) : (
             <SingleQrCard
               detail={detail!}

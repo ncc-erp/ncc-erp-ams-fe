@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Typography, Descriptions } from "@pankod/refine-antd";
+import { Modal, Typography, Descriptions, Tag } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { UserOutlined } from "@ant-design/icons";
+import { getDetailAssetStatusByName } from "untils/assets";
 interface AssetDetailModalProps {
   url: string;
   onClose: () => void;
 }
+const { Text } = Typography;
 
 const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
   url,
@@ -30,6 +34,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
     checkout_counter: "",
     notes: "",
     warranty_expires: "",
+    requests_counter: "",
   });
 
   useEffect(() => {
@@ -54,6 +59,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
       checkout_counter: searchParams.get("checkout_counter") || "",
       notes: searchParams.get("notes") || "",
       warranty_expires: searchParams.get("warranty_expires") || "",
+      requests_counter: searchParams.get("requests_counter") || "",
     });
   }, [url]);
   return (
@@ -68,18 +74,19 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.id || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.status")}>
-          <div style={{ display: "flex" }}>
-            <p>
-              {data.status
-                ? data.status === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : t("hardware.label.detail.readyToDeploy")
-                : "n/a"}
-            </p>
-            <p style={{ color: "blue", marginLeft: "10px" }}>
-              {data.assigned_to === null || undefined ? null : data.assigned_to}
-            </p>
-          </div>
+        <Text>
+            <Tag>{getDetailAssetStatusByName(data.status)}</Tag>
+            {data?.assigned_to ? (
+              <>
+                <UserOutlined />{" "}
+                <span className="show-asset">
+                  {data?.assigned_to ? data?.assigned_to : ""}
+                </span>
+              </>
+            ) : (
+              ""
+            )}
+          </Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.assetName")}>
           {data.name || "n/a"}
@@ -112,10 +119,18 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
-          {data.created_at || "n/a"}
+        {data?.created_at ? (
+            <Text> {data?.created_at && moment(data?.created_at).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+          ) : (
+            "n/a"
+          )}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.updateAt")}>
-          {data.updated_at || "n/a"}
+          {data?.updated_at ? (
+            <Text> {data?.updated_at && moment(data?.updated_at).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+          ) : (
+            "n/a"
+          )}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_cost")}>
           {data.purchase_cost || "n/a"}
@@ -123,14 +138,14 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
         <Descriptions.Item label={t("hardware.label.field.checkin_counter")}>
           {data.checkin_counter || "n/a"}
         </Descriptions.Item>
-        <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
-          {data.checkout_counter || "n/a"}
-        </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.notes")}>
           {data.notes || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
           {data.warranty_expires || "n/a"}
+        </Descriptions.Item>
+        <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
+          <Text>{data?.checkout_counter}</Text>
         </Descriptions.Item>
       </Descriptions>
     </Modal>

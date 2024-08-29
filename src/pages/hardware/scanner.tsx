@@ -3,6 +3,17 @@ import { BrowserMultiFormatReader } from "@zxing/library";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
+
+const urlPattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+  'localhost|' + // localhost
+  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
+
+
 export const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState("");
@@ -21,7 +32,8 @@ export const Scanner = () => {
   }, [isScanning]);
 
   useEffect(() => {
-    if (result) {
+
+    if (result && urlPattern.test(result)) {
       setIsScanning(false);
       setShowModalDevice(true);
     }
@@ -34,7 +46,6 @@ export const Scanner = () => {
       (result, error) => {
         if (result) {
           setResult(result.getText());
-          setIsScanning(false);
         }
         if (error && error.name !== "NotFoundException") {
           console.error(error);
