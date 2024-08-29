@@ -1082,6 +1082,9 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
                 filters={filters}
                 links={TOOLS_TOTAL_DETAIL_API}
                 isReload={isTotalDetailReload}
+                setSearchParams={setSearchParams}
+                searchFormProps={searchFormProps}
+                optionCategory={filterCategory}
             ></TotalDetail>
             <div className="checkout-checkin-multiple">
                 <div className="checkout-multiple-asset">
