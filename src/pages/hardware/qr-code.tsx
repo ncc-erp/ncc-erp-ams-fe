@@ -64,7 +64,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       checkin_counter: detail?.checkin_counter ?? "",
       checkout_counter: detail?.checkout_counter ?? "",
     }),
-    [detail, qrCodes]
+    [detail]
   );
 
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
@@ -103,6 +103,8 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       notes,
       warranty_expires,
       requests_counter,
+      rtd_location,
+      warranty_months
     } = hardware;
     const selectedFields = {
       id: id?.toString() ?? "",
@@ -114,7 +116,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       model: model?.name?.toString() ?? "",
       purchase_date: purchase_date?.formatted?.toString() ?? "",
       supplier: supplier?.name?.toString() ?? "",
-      location: location?.name?.toString() ?? "",
+      location: rtd_location?.name?.toString() ?? "",
       created_at: created_at?.datetime?.toString() ?? "",
       updated_at: updated_at?.datetime?.toString() ?? "",
       purchase_cost: purchase_cost?.toString() ?? "",
@@ -123,6 +125,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       checkout_counter: checkout_counter?.toString() ?? "",
       notes: notes?.toString() ?? "",
       warranty_expires: warranty_expires?.date?.toString() ?? "",
+      warranty_months: warranty_months?.toString() ?? "",
       requests_counter: requests_counter?.toString() ?? "",
     };
     const queryParams = Object.entries(selectedFields)

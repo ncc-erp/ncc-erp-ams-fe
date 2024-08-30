@@ -34,6 +34,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
     checkout_counter: "",
     notes: "",
     warranty_expires: "",
+    warranty_months: "",
     requests_counter: "",
   });
 
@@ -60,6 +61,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
       notes: searchParams.get("notes") || "",
       warranty_expires: searchParams.get("warranty_expires") || "",
       requests_counter: searchParams.get("requests_counter") || "",
+      warranty_months: searchParams.get("warranty_months") || "",
     });
   }, [url]);
   return (
@@ -74,7 +76,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.id || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.status")}>
-        <Text>
+          <Text>
             <Tag>{getDetailAssetStatusByName(data.status)}</Tag>
             {data?.assigned_to ? (
               <>
@@ -119,7 +121,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
-        {data?.created_at ? (
+          {data?.created_at ? (
             <Text> {data?.created_at && moment(data?.created_at).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
           ) : (
             "n/a"
@@ -138,14 +140,19 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
         <Descriptions.Item label={t("hardware.label.field.checkin_counter")}>
           {data.checkin_counter || "n/a"}
         </Descriptions.Item>
+        <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
+          {data.checkout_counter || "n/a"}
+        </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.notes")}>
           {data.notes || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
-          {data.warranty_expires || "n/a"}
+          {data.warranty_months} (
+          {t("hardware.label.field.warranty_expires")}{" "}
+          {data?.warranty_expires ? data?.warranty_expires : ""})
         </Descriptions.Item>
-        <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
-          <Text>{data?.checkout_counter}</Text>
+        <Descriptions.Item label={t("hardware.label.field.requestable")}>
+          {data.requests_counter || "n/a"}
         </Descriptions.Item>
       </Descriptions>
     </Modal>
