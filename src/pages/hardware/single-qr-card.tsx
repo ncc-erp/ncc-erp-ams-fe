@@ -15,8 +15,7 @@ interface SingleQrCardProps {
     renderSelectedFields,
     generateRedirectUrl,
   }) => {
-    console.log(generateRedirectUrl(detail!));
-    
+
   return (
     <div
       key={detail?.id}
