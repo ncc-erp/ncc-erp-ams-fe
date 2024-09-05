@@ -4,13 +4,33 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
 
-const urlPattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-  'localhost|' + // localhost
-  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+const hardwareUrlPattern = new RegExp(
+  '^https?:\\/\\/' + // protocol (http or https)
+  '(?:[a-z\\d](?:[a-z\\d-]*[a-z\\d])*)\\.?[a-z]{2,}(?:\\.[a-z]{2,})?' + // domain name with TLD, including ".vn"
+  '\\/detail-device\\?' + // required path (/detail-device?)
+  'id=[^&]+' + // id field (required)
+  '&name=[^&]*' + // name field (required)
+  '&status=[^&]*' + // status field (required)
+  '&serial=[^&]*' + // serial field (required)
+  '&manufacturer=[^&]*' + // manufacturer field (required)
+  '&category=[^&]*' + // category field (required)
+  '&model=[^&]*' + // model field (required)
+  '&purchase_date=[^&]*' + // purchase_date field (required)
+  '&supplier=[^&]*' + // supplier field (required)
+  '&location=[^&]*' + // location field (required)
+  '&created_at=[^&]*' + // created_at field (required)
+  '&updated_at=[^&]*' + // updated_at field (required)
+  '&purchase_cost=[^&]*' + // purchase_cost field (required)
+  '&assigned_to=[^&]*' + // assigned_to field (required)
+  '&checkin_counter=[^&]*' + // checkin_counter field (required)
+  '&checkout_counter=[^&]*' + // checkout_counter field (required)
+  '&notes=[^&]*' + // notes field (required)
+  '&warranty_expires=[^&]*' + // warranty_expires field (required)
+  '&warranty_months=[^&]*' + // warranty_months field (required)
+  '&requests_counter=[^&]*$', // requests_counter field (required)
+  'i' // case-insensitive flag
+);
+
 
 
 export const Scanner = () => {
@@ -31,7 +51,7 @@ export const Scanner = () => {
   }, [isScanning]);
 
   useEffect(() => {
-    if (result && urlPattern.test(result)) {
+    if (result && hardwareUrlPattern.test(result)) {
       setIsScanning(false);
       setShowModalDevice(true);
     }
