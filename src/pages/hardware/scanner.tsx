@@ -14,20 +14,6 @@ const hardwareUrlPattern = new RegExp(
   '&serial=[^&]*' + // serial field (required)
   '&manufacturer=[^&]*' + // manufacturer field (required)
   '&category=[^&]*' + // category field (required)
-  '&model=[^&]*' + // model field (required)
-  '&purchase_date=[^&]*' + // purchase_date field (required)
-  '&supplier=[^&]*' + // supplier field (required)
-  '&location=[^&]*' + // location field (required)
-  '&created_at=[^&]*' + // created_at field (required)
-  '&updated_at=[^&]*' + // updated_at field (required)
-  '&purchase_cost=[^&]*' + // purchase_cost field (required)
-  '&assigned_to=[^&]*' + // assigned_to field (required)
-  '&checkin_counter=[^&]*' + // checkin_counter field (required)
-  '&checkout_counter=[^&]*' + // checkout_counter field (required)
-  '&notes=[^&]*' + // notes field (required)
-  '&warranty_expires=[^&]*' + // warranty_expires field (required)
-  '&warranty_months=[^&]*' + // warranty_months field (required)
-  '&requests_counter=[^&]*$', // requests_counter field (required)
   'i' // case-insensitive flag
 );
 
