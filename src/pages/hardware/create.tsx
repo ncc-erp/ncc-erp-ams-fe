@@ -507,7 +507,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       {messageErr?.image && (
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
       )}
-      <div className="submit">
+      <div className="submit" >
         <Button type="primary" htmlType="submit" loading={isLoading}>
           {t("hardware.label.button.create")}
         </Button>
