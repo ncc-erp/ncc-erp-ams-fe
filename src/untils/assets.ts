@@ -64,16 +64,16 @@ export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
         ? i18n.t("hardware.label.detail.pending")
         : "";
 
-export const getDetailAssetStatusByName = (value: string) =>
-      value === i18n.t("hardware.label.field.assign")
-        ? i18n.t("hardware.label.detail.assign")
-        : value === i18n.t("hardware.label.field.readyToDeploy")
-        ? i18n.t("hardware.label.detail.readyToDeploy")
-        : value === i18n.t("hardware.label.field.broken")
-        ? i18n.t("hardware.label.detail.broken")
-        : value === i18n.t("hardware.label.field.pending")
-        ? i18n.t("hardware.label.detail.pending")
-        : "";
+export const getDetailAssetStatusByName = (value: string) => {
+  const statusMap: { [key: string]: string } = {
+    [i18n.t("hardware.label.field.assign")]: i18n.t("hardware.label.detail.assign"),
+    [i18n.t("hardware.label.field.readyToDeploy")]: i18n.t("hardware.label.detail.readyToDeploy"),
+    [i18n.t("hardware.label.field.broken")]: i18n.t("hardware.label.detail.broken"),
+    [i18n.t("hardware.label.field.pending")]: i18n.t("hardware.label.detail.pending"),
+  };
+
+  return statusMap[value] || "";
+};
 
 export const filterAssignedStatus = [
   {
