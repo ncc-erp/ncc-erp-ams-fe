@@ -186,7 +186,7 @@
         "confirmStatus": "Trạng thái xác nhận",
         "purchase_cost": "Giá",
         "qr_code":"In mã QR",
-        "scan_qr":"SCAN QR",
+        "scan_qr":"Scan QR",
         "confirmDeleteQr":"Xác nhận xóa mã QR"
       },
       "placeholder": {

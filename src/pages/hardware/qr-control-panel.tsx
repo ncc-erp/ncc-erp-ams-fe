@@ -23,6 +23,7 @@ const QrControlPanel: React.FC<QrControlPanelProps> = ({
     const checked = e.target.checked;
     setIsCheckboxChecked(checked);
     handleFieldChange("name");
+    setLayout("below");
   };
 
   return (

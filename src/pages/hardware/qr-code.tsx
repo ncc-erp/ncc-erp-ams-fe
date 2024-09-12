@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal, Select } from "@pankod/refine-antd";
+import { Button, Modal } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
 import { IHardwareResponse } from "interfaces/hardware";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -92,7 +92,6 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       model,
       purchase_date,
       supplier,
-      location,
       created_at,
       updated_at,
       purchase_cost,
