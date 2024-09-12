@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install package
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env:
+          REACT_APP_API_PROXY: ${{secrets.REACT_APP_API_PROXY}}
+          REACT_APP_AUTH_CLIENT_ID: ${{secrets.REACT_APP_AUTH_CLIENT_ID}}
+          REACT_APP_AUTH_SECRET_KEY: ${{secrets.REACT_APP_AUTH_SECRET_KEY}}
+          REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
+          REACT_APP_SHOW_MANUAL_LOGIN: ${{secrets.REACT_APP_SHOW_MANUAL_LOGIN}}
+          CI: ""
