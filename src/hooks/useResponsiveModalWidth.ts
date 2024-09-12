@@ -1,17 +1,30 @@
 import { useState, useEffect } from "react";
 
+enum WindowSize {
+    Desktop = 1200,
+    Laptop = 992,
+    Tablet = 768,
+  }
+  
+enum ModalSize {
+    Large = 1000,
+    Medium = 800,
+    Small = 600,
+  }
+  
 const getModalWidth = () => {
-  const windowWidth = window.innerWidth;
-  if (windowWidth > 1200) return 1000;
-  if (windowWidth > 992) return 800;
-  if (windowWidth > 768) return 600;
-  return windowWidth - 40; // 20px margin on each side
+    const windowWidth = window.innerWidth;
+  
+    if (windowWidth > WindowSize.Desktop) return ModalSize.Large;
+    if (windowWidth > WindowSize.Laptop) return ModalSize.Medium;
+    if (windowWidth > WindowSize.Tablet) return ModalSize.Small;
+  
+    return windowWidth - 40;
 };
+  
 
 export const useResponsiveModalWidth = () => {
   const [modalWidth, setModalWidth] = useState(getModalWidth());
-    console.log(modalWidth)
-    console.log(window.innerWidth)
   useEffect(() => {
     const handleResize = () => {
       setModalWidth(getModalWidth());
