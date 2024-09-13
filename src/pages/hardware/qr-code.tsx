@@ -37,9 +37,6 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
     setIsConfirmModalOpen(false);
     setDeleteId(null);
   };
-
-
-
   const handleCancelDelete = () => {
     setIsConfirmModalOpen(false);
     setDeleteId(null);
@@ -103,7 +100,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       warranty_expires,
       requests_counter,
       rtd_location,
-      warranty_months
+      warranty_months,
     } = hardware;
     const selectedFields = {
       id: id?.toString() ?? "",
@@ -185,14 +182,15 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
     `,
   });
   const paddingStyle = useMemo(() => {
-    if (selectedFields.length === 0) return "24px";
-    if (layout === "above") {
+    if (selectedFields.length === 0) {
+      return "24px";
+    } else if (layout === "above") {
       return "8px 24px 24px 24px";
-    }  
-    if (layout === "below") {
+    } else if (layout === "below") {
       return "24px 24px 8px 24px";
-    } 
-    return "24px";
+    } else {
+      return "24px";
+    }
   }, [layout, selectedFields]);
 
   return (

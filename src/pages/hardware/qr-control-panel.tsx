@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Select, Checkbox, Button } from "antd";
 import { useTranslation } from "react-i18next";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 interface QrControlPanelProps {
   layout: "above" | "below" | null;
@@ -19,7 +20,7 @@ const QrControlPanel: React.FC<QrControlPanelProps> = ({
   const { t } = useTranslation();
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
-  const handleCheckboxChange = (e: any) => {
+  const handleCheckboxChange = (e:CheckboxChangeEvent) => {
     const checked = e.target.checked;
     setIsCheckboxChecked(checked);
     handleFieldChange("name");

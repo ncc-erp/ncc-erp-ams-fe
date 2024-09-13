@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Typography, Descriptions, Tag } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
-import moment from "moment";
 import { UserOutlined } from "@ant-design/icons";
 import { getDetailAssetStatusByName } from "untils/assets";
+import {formatDateWithTimeZone } from "../../../src/untils/dateUtils"
 interface AssetDetailModalProps {
   url: string;
   onClose: () => void;
@@ -80,7 +80,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
             <Tag>{getDetailAssetStatusByName(data.status)}</Tag>
             {data?.assigned_to ? (
               <>
-                <UserOutlined />{" "}
+                <UserOutlined />
                 <span className="show-asset">
                   {data?.assigned_to ? data?.assigned_to : ""}
                 </span>
@@ -122,14 +122,14 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
           {data?.created_at ? (
-            <Text> {data?.created_at && moment(data?.created_at).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+            <Text> {formatDateWithTimeZone(data?.created_at)}</Text>
           ) : (
             "n/a"
           )}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.updateAt")}>
           {data?.updated_at ? (
-            <Text> {data?.updated_at && moment(data?.updated_at).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+            <Text> {formatDateWithTimeZone(data?.updated_at)}</Text>
           ) : (
             "n/a"
           )}

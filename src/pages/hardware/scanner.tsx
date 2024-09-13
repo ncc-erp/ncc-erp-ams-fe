@@ -3,19 +3,7 @@ import { BarcodeFormat, BrowserMultiFormatReader } from "@zxing/library";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
-
-const hardwareUrlPattern = new RegExp(
-    '^https?:\\/\\/' + 
-    '(?:localhost|[a-z\\d](?:[a-z\\d-]*[a-z\\d])*(?:\\.[a-z]{2,})*)' +
-    '(?::\\d+)?' + 
-    '\\/detail-device\\?' +
-    'id=[^&]+' +
-    '&name=[^&]*' +
-    '&status=[^&]*' +
-    '&serial=[^&]*' +
-    '&manufacturer=[^&]*' +
-    '&category=[^&]*'
-);
+import {hardwareUrlPattern} from "../../constants/urlPatterns"
 
 
 
