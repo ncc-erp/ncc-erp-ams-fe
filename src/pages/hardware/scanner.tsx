@@ -5,16 +5,16 @@ import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
 
 const hardwareUrlPattern = new RegExp(
-  '^https?:\\/\\/' + // protocol (http or https)
-  '(?:[a-z\\d](?:[a-z\\d-]*[a-z\\d])*)\\.?[a-z]{2,}(?:\\.[a-z]{2,})?' + // domain name with TLD, including ".vn"
-  '\\/detail-device\\?' + // required path (/detail-device?)
-  'id=[^&]+' + // id field (required)
-  '&name=[^&]*' + // name field (required)
-  '&status=[^&]*' + // status field (required)
-  '&serial=[^&]*' + // serial field (required)
-  '&manufacturer=[^&]*' + // manufacturer field (required)
-  '&category=[^&]*' + // category field (required)
-  'i' // case-insensitive flag
+    '^https?:\\/\\/' + 
+    '(?:localhost|[a-z\\d](?:[a-z\\d-]*[a-z\\d])*(?:\\.[a-z]{2,})*)' +
+    '(?::\\d+)?' + 
+    '\\/detail-device\\?' +
+    'id=[^&]+' +
+    '&name=[^&]*' +
+    '&status=[^&]*' +
+    '&serial=[^&]*' +
+    '&manufacturer=[^&]*' +
+    '&category=[^&]*'
 );
 
 
