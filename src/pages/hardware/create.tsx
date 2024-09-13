@@ -369,6 +369,20 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status_label}
             </Typography.Text>
           )}
+           <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="customer_label"
+          >
+          <Input
+              type="string"
+              placeholder={t("hardware.label.field.customer")}
+            />
+          </Form.Item>
+          {messageErr?.customer && (
+            <Typography.Text type="danger">
+              {messageErr.customer}
+            </Typography.Text>
+          )}
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -468,14 +482,42 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               placeholder={t("hardware.label.placeholder.cost")}
             />
           </Form.Item>
+          {messageErr?.project && (
+            <Typography.Text type="danger">
+              {messageErr.project}
+            </Typography.Text>
+          )}
+           <Form.Item
+            label={t("hardware.label.field.project")}
+            name="purchase_cost"
+          >
+            <Input
+              type="string"
+              placeholder={t("hardware.label.field.project")}
+            />
+          </Form.Item>
           {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+
+           <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="purchase_cost"
+          >
+            <Input
+              type="string"
+              placeholder={t("hardware.label.field.isCustomerRenting")}
+            />
+          </Form.Item>
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
+            </Typography.Text>
+          )}
         </Col>
       </Row>
-
       <Form.Item
         label={t("hardware.label.field.notes")}
         name="notes"

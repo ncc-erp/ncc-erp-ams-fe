@@ -187,7 +187,10 @@
         "purchase_cost": "Giá",
         "qr_code":"In mã QR",
         "scan_qr":"SCAN QR",
-        "confirmDeleteQr":"Xác nhận xóa mã QR"
+        "confirmDeleteQr":"Xác nhận xóa mã QR",
+        "project": "Dự Án",
+        "customer": "Khách Hàng",
+        "isCustomerRenting": "Khách Hàng Có Thuê Không"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",

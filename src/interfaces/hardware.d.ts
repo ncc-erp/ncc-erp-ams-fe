@@ -48,6 +48,9 @@ export interface IHardwareUpdateRequest {
 
   reason: string;
   assigned_status: number;
+  customer: string;
+  project: string;
+  isCustomerRenting: boolean;
 }
 export interface IHardwareResponse {
   id: number;

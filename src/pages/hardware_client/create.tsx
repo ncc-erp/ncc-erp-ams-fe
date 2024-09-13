@@ -366,6 +366,17 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status_label}
             </Typography.Text>
           )}
+           <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="customer"
+          >
+            <Input placeholder={t("hardware.label.field.customer")} />
+          </Form.Item>
+          {messageErr?.customer && (
+            <Typography.Text type="danger">
+              {messageErr.customer}
+            </Typography.Text>
+          )}
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -468,6 +479,28 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
           {messageErr?.purchase_cost && (
             <Typography.Text type="danger">
               {messageErr.purchase_cost[0]}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.project")}
+            name="project"
+          >
+            <Input placeholder={t("hardware.label.field.project")} />
+          </Form.Item>
+          {messageErr?.project && (
+            <Typography.Text type="danger">
+              {messageErr.project}
+            </Typography.Text>
+          )}
+            <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+          >
+            <Input placeholder={t("hardware.label.field.isCustomerRenting")} />
+          </Form.Item>
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
             </Typography.Text>
           )}
         </Col>
