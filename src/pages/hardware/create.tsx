@@ -504,12 +504,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
            <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
-            name="purchase_cost"
+            name="isCustomerRenting"
           >
-            <Input
-              type="string"
-              placeholder={t("hardware.label.field.isCustomerRenting")}
-            />
+            <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
+                <Select.Option value="yes">{t("hardware.label.field.yes")}</Select.Option>
+                <Select.Option value="no">{t("hardware.label.field.no")}</Select.Option>
+            </Select>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">

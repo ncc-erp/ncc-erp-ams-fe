@@ -190,7 +190,9 @@
         "confirmDeleteQr":"Xác nhận xóa mã QR",
         "project": "Dự Án",
         "customer": "Khách Hàng",
-        "isCustomerRenting": "Khách Hàng Có Thuê Không"
+        "isCustomerRenting": "Khách Hàng Có Thuê Không",
+        "yes": "Có",
+        "no": "Không"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
