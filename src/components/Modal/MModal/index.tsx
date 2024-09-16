@@ -1,5 +1,6 @@
 import { Modal } from "@pankod/refine-antd";
 import { ReactNode } from "react";
+import { useResponsiveModalWidth } from "hooks/useResponsiveModalWidth";
 
 type MModalProps = {
   setIsModalVisible: (data: boolean) => void;
@@ -10,6 +11,7 @@ type MModalProps = {
 
 export const MModal = (props: MModalProps) => {
   const { setIsModalVisible, isModalVisible, children, title } = props;
+  const modalWidth = useResponsiveModalWidth();
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -26,7 +28,8 @@ export const MModal = (props: MModalProps) => {
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
-      width={1000}
+      width={modalWidth}
+      bodyStyle={{ maxHeight: "80vh", overflowY: "auto" }}
     >
       {children}
     </Modal>
