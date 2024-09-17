@@ -991,7 +991,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
-  const [selectedQRCode, setSelectedQRCode] = useState<boolean>(false);
+  const [isSelectedQRCode, setIsSelectedQRCode] = useState<boolean>(false);
 
   const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
   const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
@@ -1048,9 +1048,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     } else {
     }
     if(initselectedRowKeys.length >0){
-        setSelectedQRCode(true)
+        setIsSelectedQRCode(true)
     }else{
-        setSelectedQRCode(false)
+        setIsSelectedQRCode(false)
     }
   }, [initselectedRowKeys]);
   const onSelectChange = (
@@ -1494,7 +1494,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               type="primary"
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleQRGenerator}
-              disabled={!selectedQRCode}
+              disabled={!isSelectedQRCode}
               style={{ marginRight: "20px" }}
             >
               {t("hardware.label.field.qr_code")}
