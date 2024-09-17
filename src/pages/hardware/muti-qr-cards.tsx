@@ -34,7 +34,7 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
               borderRadius: "8px",
               position: "relative",
               width: "85%",
-              margin: "auto"
+              margin: "20px"
             }}
           >
             {layout === "above" && renderSelectedFields(hardware?.model?.name)}
