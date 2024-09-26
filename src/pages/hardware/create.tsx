@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useNotification  } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification, useCustom  } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -41,6 +41,14 @@ type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
 };
+interface Customer {
+    id: number; 
+    name: string;
+  }
+  interface Project {
+    id: number; 
+    name: string;
+  }
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
@@ -51,7 +59,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
-
+  const [customer, setCustomer] = useState<Customer[]>([]);
+  const [project, setProject] = useState<Project[]>([]);
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
@@ -120,12 +129,44 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
+useEffect(() => {
+    const fetchCustomers = async () => {
+        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/customer');
+        const data = await response.json();
+        setCustomer(data);
+    };
+
+    fetchCustomers();
+}, []);
+
+useEffect(() => {
+    const fetchProject = async () => {
+        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/project');
+        const data = await response.json();
+        setProject(data);
+    };
+    fetchProject();
+}, []);
+
   const { mutate, data: createData, isLoading } = useCreate();
 
-  const onFinish = (event: IHardwareUpdateRequest) => {
+  const onFinish = (event: IHardwareUpdateRequest) => {    
+
+  const selectedCustomer = customer.find(c => Number(c.id) === Number(event.customer));
+  const selectedProject = project.find(p => Number(p.id) === Number(event.project));
+
+
     setMessageErr(messageErr);
     const formData = new FormData();
-
+    if (selectedCustomer !== undefined) {
+        formData.append("customer", JSON.stringify(selectedCustomer));
+    }
+      if (selectedProject !== undefined) {
+        formData.append("project", JSON.stringify(selectedProject));
+      }
+    if (event.isCustomerRenting !== undefined) {
+        formData.append("isCustomerRenting", event.isCustomerRenting === "true" ? "true" : "false");
+      }
     if (event.name !== undefined) {
       formData.append("name", event.name);
     }
@@ -371,11 +412,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
            <Form.Item
             label={t("hardware.label.field.customer")}
-            name="customer_label"
+            name="customer"
           >
-          <Input
-              type="string"
+            <Select
               placeholder={t("hardware.label.field.customer")}
+              options={customer?.map(customer => ({
+                label: customer.name,
+                value: customer.id,
+              }))}
             />
           </Form.Item>
           {messageErr?.customer && (
@@ -489,16 +533,19 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           )}
            <Form.Item
             label={t("hardware.label.field.project")}
-            name="purchase_cost"
+            name="project"
           >
-            <Input
-              type="string"
+             <Select
               placeholder={t("hardware.label.field.project")}
+              options={project?.map(project => ({
+                label: project.name,
+                value: project.id,
+              }))}
             />
           </Form.Item>
-          {messageErr?.purchase_cost && (
+          {messageErr?.project && (
             <Typography.Text type="danger">
-              {messageErr.purchase_cost[0]}
+              {messageErr.project}
             </Typography.Text>
           )}
 
@@ -507,8 +554,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="isCustomerRenting"
           >
             <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-                <Select.Option value="yes">{t("hardware.label.field.yes")}</Select.Option>
-                <Select.Option value="no">{t("hardware.label.field.no")}</Select.Option>
+                <Select.Option value="true">{t("hardware.label.field.yes")}</Select.Option>
+                <Select.Option value="false">{t("hardware.label.field.no")}</Select.Option>
             </Select>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
