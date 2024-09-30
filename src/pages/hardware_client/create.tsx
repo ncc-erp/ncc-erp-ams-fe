@@ -404,9 +404,19 @@ useEffect(() => {
            <Form.Item
             label={t("hardware.label.field.customer")}
             name="customer"
+            rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.customer") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
           >
             <Select
               placeholder={t("hardware.label.field.customer")}
+              
               options={customer?.map(customer => ({
                 label: customer.name,
                 value: customer.id,
@@ -525,6 +535,15 @@ useEffect(() => {
           <Form.Item
             label={t("hardware.label.field.project")}
             name="project"
+            rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.project") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
           >
                   <Select
               placeholder={t("hardware.label.field.project")}
@@ -542,10 +561,19 @@ useEffect(() => {
             <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
             name="isCustomerRenting"
+            rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.isCustomerRenting") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
           >
             <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-                <Select.Option value="yes">{t("hardware.label.field.yes")}</Select.Option>
-                <Select.Option value="no">{t("hardware.label.field.no")}</Select.Option>
+                <Select.Option value="true">{t("hardware.label.field.yes")}</Select.Option>
+                <Select.Option value="false">{t("hardware.label.field.no")}</Select.Option>
             </Select>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
