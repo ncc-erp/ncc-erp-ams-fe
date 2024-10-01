@@ -1403,7 +1403,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsShowModalVisibleQR}
           isModalVisible={isShowModalVisibleQR}
         >
-          <QrCodeDetail detail={detail} />
+          <QrCodeDetail closeModal={() => setIsShowModalVisibleQR(false)} detail={detail} />
         </MModal>
       )}
       {isShowModalScan && (

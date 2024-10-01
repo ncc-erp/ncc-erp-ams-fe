@@ -5,7 +5,7 @@ import QRCode from 'react-qr-code';
 
 interface MultiQrCardProps {
   hardwareList: IHardwareResponse[];
-  layout: 'above' | 'below';
+  layout: 'above' | 'below' | null;
   paddingStyle: string;
   renderSelectedFields: (modelName: string) => React.ReactNode;
   generateRedirectUrl: (hardware: IHardwareResponse) => string;
@@ -34,7 +34,6 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
               borderRadius: "8px",
               position: "relative",
               width: "200px",
-              height: "200px",
             }}
           >
             {layout === "above" && renderSelectedFields(hardware?.model?.name)}

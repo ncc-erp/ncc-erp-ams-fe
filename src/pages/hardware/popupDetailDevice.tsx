@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Typography, Descriptions } from "@pankod/refine-antd";
+import { Modal, Typography, Descriptions, Tag } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
+import { UserOutlined } from "@ant-design/icons";
+import { getDetailAssetStatusByName } from "untils/assets";
+import {formatDateWithTimeZone } from "../../../src/untils/dateUtils"
 interface AssetDetailModalProps {
   url: string;
   onClose: () => void;
 }
+const { Text } = Typography;
 
 const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
   url,
@@ -30,6 +34,8 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
     checkout_counter: "",
     notes: "",
     warranty_expires: "",
+    warranty_months: "",
+    requests_counter: "",
   });
 
   useEffect(() => {
@@ -54,6 +60,8 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
       checkout_counter: searchParams.get("checkout_counter") || "",
       notes: searchParams.get("notes") || "",
       warranty_expires: searchParams.get("warranty_expires") || "",
+      requests_counter: searchParams.get("requests_counter") || "",
+      warranty_months: searchParams.get("warranty_months") || "",
     });
   }, [url]);
   return (
@@ -68,18 +76,19 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.id || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.status")}>
-          <div style={{ display: "flex" }}>
-            <p>
-              {data.status
-                ? data.status === t("hardware.label.field.broken")
-                  ? t("hardware.label.detail.broken")
-                  : t("hardware.label.detail.readyToDeploy")
-                : "n/a"}
-            </p>
-            <p style={{ color: "blue", marginLeft: "10px" }}>
-              {data.assigned_to === null || undefined ? null : data.assigned_to}
-            </p>
-          </div>
+          <Text>
+            <Tag>{getDetailAssetStatusByName(data.status)}</Tag>
+            {data?.assigned_to ? (
+              <>
+                <UserOutlined />
+                <span className="show-asset">
+                  {data?.assigned_to ? data?.assigned_to : ""}
+                </span>
+              </>
+            ) : (
+              ""
+            )}
+          </Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.assetName")}>
           {data.name || "n/a"}
@@ -112,10 +121,18 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
-          {data.created_at || "n/a"}
+          {data?.created_at ? (
+            <Text> {formatDateWithTimeZone(data?.created_at)}</Text>
+          ) : (
+            "n/a"
+          )}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.updateAt")}>
-          {data.updated_at || "n/a"}
+          {data?.updated_at ? (
+            <Text> {formatDateWithTimeZone(data?.updated_at)}</Text>
+          ) : (
+            "n/a"
+          )}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_cost")}>
           {data.purchase_cost || "n/a"}
@@ -130,7 +147,12 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.notes || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
-          {data.warranty_expires || "n/a"}
+          {data.warranty_months} (
+          {t("hardware.label.field.warranty_expires")}{" "}
+          {data?.warranty_expires ? data?.warranty_expires : ""})
+        </Descriptions.Item>
+        <Descriptions.Item label={t("hardware.label.field.requestable")}>
+          {data.requests_counter || "n/a"}
         </Descriptions.Item>
       </Descriptions>
     </Modal>

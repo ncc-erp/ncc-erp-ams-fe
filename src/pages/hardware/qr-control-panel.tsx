@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Select, Checkbox, Button } from "antd";
 import { useTranslation } from "react-i18next";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 interface QrControlPanelProps {
-  layout: "above" | "below";
+  layout: "above" | "below" | null;
   setLayout: (value: "above" | "below") => void;
   handleFieldChange: (field: string) => void;
   handlePrint: () => void;
@@ -17,6 +18,14 @@ const QrControlPanel: React.FC<QrControlPanelProps> = ({
   handlePrint,
 }) => {
   const { t } = useTranslation();
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+
+  const handleCheckboxChange = (e:CheckboxChangeEvent) => {
+    const checked = e.target.checked;
+    setIsCheckboxChecked(checked);
+    handleFieldChange("name");
+    setLayout("below");
+  };
 
   return (
     <div className="list__acction__qrcode">
@@ -26,6 +35,7 @@ const QrControlPanel: React.FC<QrControlPanelProps> = ({
             value={layout}
             onChange={(value) => setLayout(value as "above" | "below")}
             style={{ width: "100%" }}
+            disabled={!isCheckboxChecked}
           >
             <Select.Option value="above">
               {t("user.label.title.above")}
@@ -36,7 +46,7 @@ const QrControlPanel: React.FC<QrControlPanelProps> = ({
           </Select>
         </div>
         <div style={{ marginBottom: 16 }}>
-          <Checkbox onChange={() => handleFieldChange("name")}>
+          <Checkbox onChange={handleCheckboxChange}>
             {t("user.label.title.codeDevice")}
           </Checkbox>
         </div>
