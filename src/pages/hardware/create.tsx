@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useNotification, useCustom  } from "@pankod/refine-core";
+import {
+  useTranslate,
+  useCreate,
+  useNotification,
+  useCustom,
+} from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -36,7 +41,7 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-import { useDataContext  } from "providers/assetsProvider";
+import { useDataContext } from "providers/assetsProvider";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
@@ -81,9 +86,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
-  
-  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
-  statusLabelSelectProps.options = filteredProps
+  const filteredProps = statusLabelSelectProps.options?.filter(
+    (props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+  );
+  statusLabelSelectProps.options = filteredProps;
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
@@ -123,23 +129,25 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   const { mutate, data: createData, isLoading } = useCreate();
 
-  const onFinish = (event: IHardwareUpdateRequest) => {    
-
-  const selectedCustomer = customer.find(c => Number(c.id) === Number(event.customer));
-  const selectedProject = project.find(p => Number(p.id) === Number(event.project));
-
+  const onFinish = (event: IHardwareUpdateRequest) => {
+    const selectedCustomer = customer.find(
+      (c) => Number(c.id) === Number(event.customer)
+    );
+    const selectedProject = project.find(
+      (p) => Number(p.id) === Number(event.project)
+    );
 
     setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
-        formData.append("customer", JSON.stringify(selectedCustomer));
+      formData.append("customer", JSON.stringify(selectedCustomer));
     }
-      if (selectedProject !== undefined) {
-        formData.append("project", JSON.stringify(selectedProject));
-      }
+    if (selectedProject !== undefined) {
+      formData.append("project", JSON.stringify(selectedProject));
+    }
     if (event.isCustomerRenting !== undefined) {
-        formData.append("isCustomerRenting", event.isCustomerRenting);
-      }
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
     if (event.name !== undefined) {
       formData.append("name", event.name);
     }
@@ -181,29 +189,32 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   useEffect(() => {
     if (payload) {
-      mutate({
-        resource: HARDWARE_API,
-        values: payload,
-        successNotification: false,
-        errorNotification: false,
-      },
+      mutate(
+        {
+          resource: HARDWARE_API,
+          values: payload,
+          successNotification: false,
+          errorNotification: false,
+        },
         {
           onError: (error) => {
-            let err: { [key: string]: string[] | string } = error?.response.data.messages;
+            let err: { [key: string]: string[] | string } =
+              error?.response.data.messages;
             let message = Object.values(err)[0][0];
             open?.({
-              type: 'error',
-              message: message
+              type: "error",
+              message: message,
             });
             setMessageErr(error?.response.data.messages);
           },
           onSuccess(data, variables, context) {
             open?.({
-                type: 'success',
-                message: data?.data.messages,
-            })
+              type: "success",
+              message: data?.data.messages,
+            });
           },
-        });
+        }
+      );
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
@@ -383,22 +394,22 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status_label}
             </Typography.Text>
           )}
-           <Form.Item
+          <Form.Item
             label={t("hardware.label.field.customer")}
             name="customer"
             rules={[
-                {
-                  required: true,
-                  message:
-                    t("hardware.label.field.customer") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.customer") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
           >
             <Select
               placeholder={t("hardware.label.field.customer")}
-              options={customer?.map(customer => ({
+              options={customer?.map((customer) => ({
                 label: customer.name,
                 value: customer.id,
               }))}
@@ -513,22 +524,22 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.project}
             </Typography.Text>
           )}
-           <Form.Item
+          <Form.Item
             label={t("hardware.label.field.project")}
             name="project"
             rules={[
-                {
-                  required: true,
-                  message:
-                    t("hardware.label.field.project") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.project") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
           >
-             <Select
+            <Select
               placeholder={t("hardware.label.field.project")}
-              options={project?.map(project => ({
+              options={project?.map((project) => ({
                 label: project.name,
                 value: project.id,
               }))}
@@ -539,23 +550,26 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.project}
             </Typography.Text>
           )}
-
-           <Form.Item
+          <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
             name="isCustomerRenting"
             rules={[
-                {
-                  required: true,
-                  message:
-                    t("hardware.label.field.isCustomerRenting") +
-                    " " +
-                    t("hardware.label.message.required"),
-                },
-              ]}
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
           >
             <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-                <Select.Option value="true">{t("hardware.label.field.yes")}</Select.Option>
-                <Select.Option value="false">{t("hardware.label.field.no")}</Select.Option>
+              <Select.Option value="true">
+                {t("hardware.label.field.yes")}
+              </Select.Option>
+              <Select.Option value="false">
+                {t("hardware.label.field.no")}
+              </Select.Option>
             </Select>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
