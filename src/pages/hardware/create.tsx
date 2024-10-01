@@ -36,19 +36,11 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-
+import { useDataContext  } from "providers/assetsProvider";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
 };
-interface Customer {
-    id: number; 
-    name: string;
-  }
-  interface Project {
-    id: number; 
-    name: string;
-  }
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
@@ -59,8 +51,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
-  const [customer, setCustomer] = useState<Customer[]>([]);
-  const [project, setProject] = useState<Project[]>([]);
+
+  const { customer, project } = useDataContext();
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
@@ -129,25 +121,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
-useEffect(() => {
-    const fetchCustomers = async () => {
-        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/customer');
-        const data = await response.json();
-        setCustomer(data);
-    };
-
-    fetchCustomers();
-}, []);
-
-useEffect(() => {
-    const fetchProject = async () => {
-        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/project');
-        const data = await response.json();
-        setProject(data);
-    };
-    fetchProject();
-}, []);
-
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {    
@@ -165,7 +138,7 @@ useEffect(() => {
         formData.append("project", JSON.stringify(selectedProject));
       }
     if (event.isCustomerRenting !== undefined) {
-        formData.append("isCustomerRenting", event.isCustomerRenting === "true" ? "true" : "false");
+        formData.append("isCustomerRenting", event.isCustomerRenting);
       }
     if (event.name !== undefined) {
       formData.append("name", event.name);

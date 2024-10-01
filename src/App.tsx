@@ -3,6 +3,7 @@ import { notification, notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
+import { AssetsProvider } from './providers/assetsProvider';
 import { authProvider } from "./providers/authProvider";
 import {
   HardwareList,
@@ -159,7 +160,11 @@ function App() {
             },
             {
               name: t("resource.assets"),
-              list: HardwareList,
+              list: () =>(
+                <AssetsProvider>
+                    <HardwareList/>
+                </AssetsProvider>
+              ),
               options: {
                 route: "assets",
                 label: 'assets'
@@ -398,7 +403,11 @@ function App() {
             },
             {
               name: t("resource.client-assets"),
-              list: ClientHardwareList,
+              list: () =>(
+                <AssetsProvider>
+                    <ClientHardwareList/>
+                </AssetsProvider>
+              ),
               options: {
                 route: "client-assets",
                 label: 'client-assets'

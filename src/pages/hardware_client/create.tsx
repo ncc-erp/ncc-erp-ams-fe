@@ -36,19 +36,13 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-
+import { useDataContext  } from "providers/assetsProvider";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
 };
-interface Customer {
-    id: number; 
-    name: string;
-  }
-  interface Project {
-    id: number; 
-    name: string;
-  }
+
+
 export const ClientHardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
@@ -58,8 +52,8 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
-  const [customer, setCustomer] = useState<Customer[]>([]);
-  const [project, setProject] = useState<Project[]>([]);
+  const { customer, project } = useDataContext();
+
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
@@ -127,26 +121,8 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
-  useEffect(() => {
-    const fetchCustomers = async () => {
-        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/customer');
-        const data = await response.json();
-        setCustomer(data);
-    };
 
-    fetchCustomers();
-}, []);
-
-useEffect(() => {
-    const fetchProject = async () => {
-        const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/project');
-        const data = await response.json();
-        setProject(data);
-    };
-    fetchProject();
-}, []);
   const { mutate, data: createData, isLoading } = useCreate();
-
   const onFinish = (event: IHardwareUpdateRequest) => {
     const selectedCustomer = customer.find(c => Number(c.id) === Number(event.customer));
     const selectedProject = project.find(p => Number(p.id) === Number(event.project));
