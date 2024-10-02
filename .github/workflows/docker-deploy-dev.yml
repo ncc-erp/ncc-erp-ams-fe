@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ams-dev
 
     steps:
       - name: Checkout repository
@@ -41,7 +41,7 @@ jobs:
         run: docker build -t ncc-erp-ams-fe:latest .
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ams-dev
     needs:
       - build
 
