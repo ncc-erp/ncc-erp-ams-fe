@@ -20,7 +20,6 @@ import {
 
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import {
@@ -30,7 +29,6 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-
 import "../../styles/hardware.less";
 import {
   HARDWARE_API,
@@ -57,7 +55,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { open } = useNotification();
   const t = useTranslate();
 
-  const { customer, project } = useDataContext();
+  const { project, customer } = useDataContext();
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
@@ -73,7 +71,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
-
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
@@ -140,10 +137,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
-      formData.append("customer", JSON.stringify(selectedCustomer));
+      formData.append("customer", JSON.stringify(selectedCustomer.name));
     }
     if (selectedProject !== undefined) {
-      formData.append("project", JSON.stringify(selectedProject));
+      formData.append("project", JSON.stringify(selectedProject.name));
     }
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);

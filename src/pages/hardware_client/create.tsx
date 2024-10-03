@@ -133,16 +133,13 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
-      formData.append("customer", JSON.stringify(selectedCustomer));
+      formData.append("customer", JSON.stringify(selectedCustomer.name));
     }
     if (selectedProject !== undefined) {
-      formData.append("project", JSON.stringify(selectedProject));
+      formData.append("project", JSON.stringify(selectedProject.name));
     }
     if (event.isCustomerRenting !== undefined) {
-      formData.append(
-        "isCustomerRenting",
-        event.isCustomerRenting
-      );
+      formData.append("isCustomerRenting", event.isCustomerRenting);
     }
     if (event.name !== undefined) {
       formData.append("name", event.name);

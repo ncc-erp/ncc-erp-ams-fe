@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import axios from "axios";
+import { TOKEN_KEY } from "../providers/authProvider";
+import { CLIENT_AND_CLIENT_HARDWARE_CREATE } from "../api/baseApi";
 
 interface Customer {
   id: string;
@@ -34,23 +43,20 @@ export const AssetsProvider = ({ children }: DataProviderProps) => {
   const [project, setProject] = useState<Project[]>([]);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/customer');
-      const data = await response.json();
-      setCustomer(data);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(CLIENT_AND_CLIENT_HARDWARE_CREATE, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+          },
+        });
+        setCustomer(response.data.customers.result);
+        setProject(response.data.projects.result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-
-    fetchCustomers();
-  }, []);
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      const response = await fetch('https://66f4ca4977b5e889709a7c0e.mockapi.io/project');
-      const data = await response.json();
-      setProject(data);
-    };
-
-    fetchProject();
+    fetchData();
   }, []);
 
   return (
