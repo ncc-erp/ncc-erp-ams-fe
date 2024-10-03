@@ -3,7 +3,7 @@ import React from "react";
 import QRCode from 'react-qr-code';
 interface SingleQrCardProps {
     detail: IHardwareResponse;
-    layout: 'above' | 'below';
+    layout: 'above' | 'below' | null;
     paddingStyle: string;
     renderSelectedFields: (modelName: string) => React.ReactNode;
     generateRedirectUrl: (detail: IHardwareResponse) => string;
@@ -15,7 +15,7 @@ interface SingleQrCardProps {
     renderSelectedFields,
     generateRedirectUrl,
   }) => {
-    
+
   return (
     <div
       key={detail?.id}
@@ -43,7 +43,6 @@ interface SingleQrCardProps {
         <QRCode
           size={250}
           value={generateRedirectUrl(detail!)}
-          style={{ marginBottom: "20px" }}
         />
         {layout === "below" && renderSelectedFields(detail?.model?.name!)}
       </div>

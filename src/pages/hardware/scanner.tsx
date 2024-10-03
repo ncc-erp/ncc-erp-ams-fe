@@ -1,8 +1,12 @@
 import "../../styles/qr-code.less";
-import { BrowserMultiFormatReader } from "@zxing/library";
+import { BarcodeFormat, BrowserMultiFormatReader } from "@zxing/library";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
+import {hardwareUrlPattern} from "../../constants/urlPatterns"
+
+
+
 export const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState("");
@@ -21,7 +25,7 @@ export const Scanner = () => {
   }, [isScanning]);
 
   useEffect(() => {
-    if (result) {
+    if (result && hardwareUrlPattern.test(result)) {
       setIsScanning(false);
       setShowModalDevice(true);
     }
@@ -33,8 +37,11 @@ export const Scanner = () => {
       videoRef.current,
       (result, error) => {
         if (result) {
-          setResult(result.getText());
-          setIsScanning(false);
+          if (result.getBarcodeFormat() === BarcodeFormat.QR_CODE) {
+            setResult(result.getText());
+          } else {
+            console.warn("Non-QR code scanned");
+          }
         }
         if (error && error.name !== "NotFoundException") {
           console.error(error);
