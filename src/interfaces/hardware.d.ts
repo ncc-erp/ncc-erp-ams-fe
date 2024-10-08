@@ -163,6 +163,9 @@ export interface IHardwareResponse {
   checkout_counter: number;
   requests_counter: number;
   withdraw_from: number;
+  customer?: string;
+  project?: string;
+  isCustomerRenting?: boolean;
 }
 
 export interface IDefaultValue {

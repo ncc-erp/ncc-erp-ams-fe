@@ -34,7 +34,7 @@ import "styles/antd.less";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
@@ -86,6 +86,8 @@ import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { QrCodeDetail } from "./qr-code";
 import { Scanner } from "./scanner";
+import { useDataContext } from "providers/assetsProvider";
+import { useDataFilterContext } from "providers/dataFilterProvider";
 const defaultCheckedList = [
   "id",
   "name",
@@ -155,7 +157,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
-
+  const { project, customer,  } = useDataContext();
+  const { dataFilters, fetchFilterData } = useDataFilterContext();
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
@@ -685,13 +688,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) => <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => <TagField value={value?.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
         key: "category",
         title: t("hardware.label.field.category"),
-        render: (value: IHardwareResponse) => <TextField value={value.name} />,
+        render: (value: IHardwareResponse) => <TextField value={value?.name} />,
         defaultSortOrder: getDefaultSortOrder("category.name", sorter),
         filters: filterCategory,
         onFilter: (value: number, record: IHardwareResponse) => {
@@ -1136,6 +1139,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
+      console.log(searchFormProps.form?.getFieldsValue()?.location);
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1145,6 +1149,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
       );
     }
+    console.log(searchParams);
 
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
@@ -1162,6 +1167,69 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalScan(true);
   };
 
+
+
+
+  const [selectedCustomer, setSelectedCustomer] = useState<string | number>("");
+  const [selectedProject, setSelectedProject] = useState<string | number>("");
+  const [isRenting, setIsRenting] = useState<string | number>("");
+  const [assetId, setAssetId] = useState<string | number>("");
+
+  const handleChangeCustomer = (value: string | number) => {
+    if (value === 0) {
+      handleChangeFilters("", selectedProject, isRenting,assetId);
+      setSelectedCustomer("")
+    }
+    else{
+        setSelectedCustomer(value);
+        handleChangeFilters(value, selectedProject, isRenting, assetId);
+    }
+  };
+
+  const handleChangeProject = (value: string | number) => {
+    if (value === 0) {
+      handleChangeFilters(selectedCustomer, "", isRenting, assetId);
+      setSelectedProject("")
+    }
+    else {
+        setSelectedProject(value);
+        handleChangeFilters(selectedCustomer, value, isRenting, assetId);
+    }
+  };
+
+  const handleChangeCustomerRenting = (value: string | number) => {
+    if(value === 0){
+        handleChangeFilters(selectedCustomer, selectedProject, "", assetId);
+        setIsRenting("")
+    }
+    else{
+        setIsRenting(value);
+        handleChangeFilters(selectedCustomer, selectedProject, value, assetId);
+    }
+  };
+  
+  const handleChangeAssetId = (value: string | number) => {
+    if(value === 0){
+        handleChangeFilters(selectedCustomer, selectedProject, isRenting, "");
+        setAssetId("")
+    }
+    else{
+        setIsRenting(value);
+        handleChangeFilters(selectedCustomer, selectedProject, isRenting, value);
+    }
+  };
+  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
+    setLoading(true);
+    
+    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -1200,6 +1268,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           className="search-month-location"
         >
           <Form.Item
+            style={{ width: "100%" }}
             label={t("hardware.label.title.time")}
             name="purchase_date"
           >
@@ -1222,6 +1291,53 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               {locationSelectProps.options?.map((item: any) => (
                 <Option value={item.value} key={item.value}>
                   {item.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Customer" name="customer_name">
+            <Select placeholder={t("all")} onChange={handleChangeCustomer}>
+              <Option value={0}>{t("all")}</Option>
+              {customer.map((cust) => (
+                <Option key={cust.id} value={cust.name}>
+                  {cust.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Project"
+            name="project_name"
+            style={{ width: "100%" }}
+          >
+            <Select placeholder={t("all")} onChange={handleChangeProject}>
+              <Option value={0}>{t("all")}</Option>
+              {project.map((proj) => (
+                <Option key={proj.id} value={proj.name}>
+                  {proj.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Renting" name="is_customer_renting">
+            <Select
+              placeholder={t("all")}
+              onChange={handleChangeCustomerRenting}
+            >
+              <Option value={0}>{t("all")}</Option>
+              <Option value={true}>True</Option>
+              <Option value={false}>False</Option>
+            </Select>
+          </Form.Item>
+           <Form.Item label="Assets" name="assetName" style={{ minWidth: "100%" }}>
+            <Select
+              placeholder={t("all")}
+              onChange={handleChangeAssetId}
+            >
+              <Option value={0}>{t("all")}</Option>
+              {dataFilters.reverse().map((asset) => (
+                <Option key={asset.id} value={asset.id}>
+                  {asset.asset_tag}
                 </Option>
               ))}
             </Select>
@@ -1403,7 +1519,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsShowModalVisibleQR}
           isModalVisible={isShowModalVisibleQR}
         >
-          <QrCodeDetail closeModal={() => setIsShowModalVisibleQR(false)} detail={detail} />
+          <QrCodeDetail
+            closeModal={() => setIsShowModalVisibleQR(false)}
+            detail={detail}
+          />
         </MModal>
       )}
       {isShowModalScan && (
@@ -1498,7 +1617,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleScanQR}
             >
-                {t("hardware.label.field.scan_qr")}
+              {t("hardware.label.field.scan_qr")}
             </Button>
           </>
         )}
@@ -1515,7 +1634,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-          {...tableProps}
+        {...tableProps}
+          dataSource={dataFilters.length > 0 ? dataFilters.reverse() : []}
           rowKey="id"
           scroll={{ x: 1850 }}
           pagination={{

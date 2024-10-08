@@ -32,24 +32,24 @@ export const getBGAssetAssignedStatusDecription = (value: number) =>
     : "gray";
 
 export const getAssetStatusDecription = (value: IHardwareResponse) =>
-    value.name === i18n.t("hardware.label.field.assign")
+    value?.name === i18n.t("hardware.label.field.assign")
       ? i18n.t("hardware.label.detail.assign")
-      : value.name === i18n.t("hardware.label.field.readyToDeploy")
+      : value?.name === i18n.t("hardware.label.field.readyToDeploy")
       ? i18n.t("hardware.label.detail.readyToDeploy")
-      : value.name === i18n.t("hardware.label.field.broken")
+      : value?.name === i18n.t("hardware.label.field.broken")
       ? i18n.t("hardware.label.detail.broken")
-      : value.name === i18n.t("hardware.label.field.pending")
+      : value?.name === i18n.t("hardware.label.field.pending")
       ? i18n.t("hardware.label.detail.pending")
       : "";
   
 export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
-    value.name === i18n.t("hardware.label.field.assign")
+    value?.name === i18n.t("hardware.label.field.assign")
       ? "#0073b7"
-      : value.name === i18n.t("hardware.label.field.readyToDeploy")
+      : value?.name === i18n.t("hardware.label.field.readyToDeploy")
       ? "#00a65a"
-      : value.name === i18n.t("hardware.label.field.broken")
+      : value?.name === i18n.t("hardware.label.field.broken")
       ? "red"
-      : value.name === i18n.t("hardware.label.field.pending")
+      : value?.name === i18n.t("hardware.label.field.pending")
       ? "#f39c12"
       : "";
 

@@ -50,8 +50,8 @@ export const AssetsProvider = ({ children }: DataProviderProps) => {
             Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
           },
         });
-        setCustomer(response.data.customers.result);
-        setProject(response.data.projects.result);
+        setCustomer(response?.data?.customers?.result);
+        setProject(response?.data?.projects?.result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
