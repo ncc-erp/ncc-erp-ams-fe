@@ -19,7 +19,7 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
   renderSelectedFields,
   generateRedirectUrl,
   handleDeleteQrCode,
-}) => {
+}) => {    
   return (
     <>
       {hardwareList.map((hardware) => (
@@ -37,7 +37,7 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
               margin: "20px"
             }}
           >
-            {layout === "above" && renderSelectedFields(hardware?.model?.name)}
+            {layout === "above" && renderSelectedFields(hardware?.name)}
             <QRCode size={120} value={generateRedirectUrl(hardware)} />
             <div
               onClick={() => handleDeleteQrCode(hardware.id)}
@@ -45,7 +45,7 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
             >
               x
             </div>
-            {layout === "below" && renderSelectedFields(hardware?.model?.name)}
+            {layout === "below" && renderSelectedFields(hardware?.name)}
           </div>
         </div>
       ))}
