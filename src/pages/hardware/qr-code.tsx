@@ -134,11 +134,11 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
   };
 
   const renderSelectedFields = useCallback(
-    (model: string) => {
+    (name: string) => {
       return selectedFields.map((field) => {
         let value = "";
         if (field === "name") {
-          value = data.model !== "" ? data.model : model.toString();
+          value = data.name !== "" ? data.name : name.toString();
         }
         return (
           <div key={field} style={{ textAlign: "center", color: "#FF0000" }}>

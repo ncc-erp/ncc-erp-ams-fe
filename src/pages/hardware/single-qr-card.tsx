@@ -16,13 +16,12 @@ interface SingleQrCardProps {
     renderSelectedFields,
     generateRedirectUrl,
   }) => {
-
   return (
     <div key={detail?.id} className="single-qr-card">
       <div className="qr-card-content" style={{ padding: paddingStyle }}>
-        {layout === "above" && renderSelectedFields(detail?.model?.name!)}
+        {layout === "above" && renderSelectedFields(detail?.name!)}
         <QRCode className="qr-code" value={generateRedirectUrl(detail!)} />
-        {layout === "below" && renderSelectedFields(detail?.model?.name!)}
+        {layout === "below" && renderSelectedFields(detail?.name!)}
       </div>
     </div>
   );
