@@ -3,16 +3,18 @@ import { BarcodeFormat, BrowserMultiFormatReader } from "@zxing/library";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@pankod/refine-antd";
 import PopupDetailDevice from "./popupDetailDevice";
-import {hardwareUrlPattern} from "../../constants/urlPatterns"
-
-
+import { hardwareUrlPattern } from "../../constants/urlPatterns";
+import { MModal } from "components/Modal/MModal";
+import { useTranslate } from "@pankod/refine-core";
 
 export const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [result, setResult] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReader = useRef(new BrowserMultiFormatReader());
   const [showModalDevice, setShowModalDevice] = useState(false);
+  const t = useTranslate();
   useEffect(() => {
     if (isScanning) {
       startScanning();
@@ -41,6 +43,7 @@ export const Scanner = () => {
             setResult(result.getText());
           } else {
             console.warn("Non-QR code scanned");
+            setIsModalVisible(true);
           }
         }
         if (error && error.name !== "NotFoundException") {
@@ -65,7 +68,6 @@ export const Scanner = () => {
     }
   };
 
-
   const handleScan = () => {
     setResult("");
     setIsScanning(true);
@@ -73,6 +75,13 @@ export const Scanner = () => {
 
   return (
     <>
+      <MModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        title="Invalid QR Code"
+      >
+        <p>{t("hardware.label.detail.invalid-qr-code")}</p>
+      </MModal>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button onClick={handleScan} loading={isScanning}>
           Scan
@@ -88,10 +97,20 @@ export const Scanner = () => {
             justifyContent: "center",
           }}
         >
-          <video ref={videoRef} autoPlay playsInline style={{ width:'70%'}}></video>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            style={{ width: "70%" }}
+          ></video>
         </div>
       )}
-      {showModalDevice && <PopupDetailDevice url={result} onClose={() => setShowModalDevice(false)}/>}
+      {showModalDevice && (
+        <PopupDetailDevice
+          url={result}
+          onClose={() => setShowModalDevice(false)}
+        />
+      )}
     </>
   );
 };

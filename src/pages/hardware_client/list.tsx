@@ -84,6 +84,8 @@ import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 
+import { Scanner } from "pages/hardware/scanner";
+import { QrCodeDetail } from "pages/hardware/qr-code";
 const defaultCheckedList = [
   "id",
   "name",
@@ -144,7 +146,8 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const model_id = searchParams.get("model_id");
   const manufacturer_id = searchParams.get('manufacturer_id');
   const supplier_id = searchParams.get('supplier_id');
-
+  const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
+  const [isShowModalScan, setIsShowModalScan] = useState(false);
   const { data: permissionsData } = usePermissions();
 
   useEffect(() => {
@@ -977,6 +980,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+  const [isSelectedQRCode, setIsSelectedQRCode] = useState<boolean>(false);
 
   const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
   const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
@@ -1031,6 +1035,11 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
       setNameCheckin(t("hardware.label.detail.note-checkin"));
       setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
+    }
+    if(initselectedRowKeys.length >0){
+        setIsSelectedQRCode(true)
+    }else{
+        setIsSelectedQRCode(false)
     }
   }, [initselectedRowKeys]);
 
@@ -1136,7 +1145,18 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
+  const showQR = (data: IHardwareResponse) => {
+    setIsShowModalVisibleQR(true);
+    setDetail(data);
+  };
+  const handleQRGenerator = () => {
+    setIsShowModalVisibleQR(true);
+    setDetail(initselectedRowKeys);
+  };
 
+  const handleScanQR = () => {
+    setIsShowModalScan(true);
+  };
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -1374,7 +1394,24 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
-
+      {isShowModalVisibleQR && (
+        <MModal
+          title={t("user.label.title.qrCode")}
+          setIsModalVisible={setIsShowModalVisibleQR}
+          isModalVisible={isShowModalVisibleQR}
+        >
+          <QrCodeDetail closeModal={() => setIsShowModalVisibleQR(false)} detail={detail} />
+        </MModal>
+      )}
+      {isShowModalScan && (
+        <MModal
+          title={"Scan QR"}
+          setIsModalVisible={setIsShowModalScan}
+          isModalVisible={isShowModalScan}
+        >
+          <Scanner />
+        </MModal>
+      )}
       <TotalDetail
         filters={filters}
         links={CLIENT_HARDWARE_TOTAL_DETAIL_API}
@@ -1438,6 +1475,30 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+      
+      <div style={{ display: "flex", justifyItems: "start" }}>
+        {isAdmin && (
+          <>
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleQRGenerator}
+              disabled={!isSelectedQRCode}
+              style={{ marginRight: "20px" }}
+            >
+              {t("hardware.label.field.qr_code")}
+            </Button>
+            <Button
+              type="primary"
+              className="btn-select-checkout ant-btn-checkout"
+              onClick={handleScanQR}
+            >
+                {t("hardware.label.field.scan_qr")}
+            </Button>
+          </>
+        )}
+      </div>
+
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
@@ -1548,6 +1609,25 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
                     {t("hardware.label.button.checkin")}
                   </Button>
                 )}
+              </Space>
+            )}
+          />
+            <Table.Column<any>
+            title={t("table.qrCode")}
+            dataIndex="qrCode"
+            render={(_, record) => (
+              <Space>
+                <Tooltip
+                  title={t("hardware.label.tooltip.viewDetail")}
+                  color={"#108ee9"}
+                >
+                  <ShowButton
+                    hideText
+                    size="small"
+                    recordItemId={record.id}
+                    onClick={() => showQR(record)}
+                  />
+                </Tooltip>
               </Space>
             )}
           />

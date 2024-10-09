@@ -29,11 +29,12 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: paddingStyle,
+              padding: '20px',
               border: "1px solid black",
               borderRadius: "8px",
               position: "relative",
-              width: "200px",
+              width: "85%",
+              margin: "20px"
             }}
           >
             {layout === "above" && renderSelectedFields(hardware?.model?.name)}

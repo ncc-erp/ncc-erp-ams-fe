@@ -31,6 +31,7 @@ import {
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
+import "../../styles/list-hardware.less";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -993,6 +994,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
+  const [isSelectedQRCode, setIsSelectedQRCode] = useState<boolean>(false);
 
   const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
   const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
@@ -1048,8 +1050,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
+    if(initselectedRowKeys.length >0){
+        setIsSelectedQRCode(true)
+    }else{
+        setIsSelectedQRCode(false)
+    }
   }, [initselectedRowKeys]);
-
   const onSelectChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IHardwareResponse[]
@@ -1607,7 +1613,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               type="primary"
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleQRGenerator}
-              disabled={!selectedCheckout}
+              disabled={!isSelectedQRCode}
               style={{ marginRight: "20px" }}
             >
               {t("hardware.label.field.qr_code")}

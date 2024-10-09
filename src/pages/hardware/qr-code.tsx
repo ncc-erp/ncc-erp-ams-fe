@@ -142,7 +142,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
         }
         return (
           <div key={field} style={{ textAlign: "center", color: "#FF0000" }}>
-            {"Mã thiết bị"}: {value}
+            {"Tên Tài Sản"}: {value}
           </div>
         );
       });

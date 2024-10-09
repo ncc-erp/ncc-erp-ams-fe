@@ -279,7 +279,8 @@
         "note-checkout": "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi",
         "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
         "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
-        "list-asset": "Danh sách các thiết bị"
+        "list-asset": "Danh sách các thiết bị",
+        "invalid-qr-code": "Dữ liệu được quét không phải là mã QR hợp lệ. Vui lòng thử lại."
       },
       "option_assigned": {
         "no-checkout": "Chưa checkout",
@@ -647,7 +648,7 @@
         "qrCode": "Mã QR",
         "above": "Bên trên",
         "below": "Bên dưới",
-        "codeDevice": "Mã thiết bị",
+        "codeDevice": "Tên Tài Sản",
         "user_name": "Tên người dùng"
       },
       "field": {

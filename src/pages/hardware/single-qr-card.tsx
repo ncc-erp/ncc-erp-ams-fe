@@ -1,6 +1,7 @@
 import { IHardwareResponse } from "interfaces/hardware";
 import React from "react";
 import QRCode from 'react-qr-code';
+import "../../styles/single-qr-code.less";
 interface SingleQrCardProps {
     detail: IHardwareResponse;
     layout: 'above' | 'below' | null;
@@ -17,33 +18,10 @@ interface SingleQrCardProps {
   }) => {
 
   return (
-    <div
-      key={detail?.id}
-      style={{
-        height: 500,
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 16,
-        marginLeft: "12rem",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: paddingStyle,
-          border: "1px solid black",
-          borderRadius: "8px",
-        }}
-      >
+    <div key={detail?.id} className="single-qr-card">
+      <div className="qr-card-content" style={{ padding: paddingStyle }}>
         {layout === "above" && renderSelectedFields(detail?.model?.name!)}
-        <QRCode
-          size={250}
-          value={generateRedirectUrl(detail!)}
-        />
+        <QRCode className="qr-code" value={generateRedirectUrl(detail!)} />
         {layout === "below" && renderSelectedFields(detail?.model?.name!)}
       </div>
     </div>
