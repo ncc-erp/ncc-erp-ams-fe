@@ -191,9 +191,10 @@
         "project": "Dự Án",
         "customer": "Khách Hàng",
         "isCustomerRenting": "Khách Hàng Có Thuê Không",
+        "customerRenting": "Khách hàng thuê",
         "yes": "Có",
         "no": "Không"
-
+        
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",

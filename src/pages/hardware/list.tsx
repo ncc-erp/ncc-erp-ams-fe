@@ -158,72 +158,48 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
-  const { project, customer  } = useDataContext();
-  const {dataCategory} = useDataFilterContext();
-
-
-
-
-
-
-
-
-  const [selectedCustomer, setSelectedCustomer] = useState<string | number>("");
-  const [selectedProject, setSelectedProject] = useState<string | number>("");
-  const [isRenting, setIsRenting] = useState<string | number>("");
-  const [selectedCategory, setCategoryName] = useState<string | number>("");
-
-
-
-
-
+  const { project, customer } = useDataContext();
+  const { dataCategory } = useDataFilterContext();
 
 
   const handleChangeCustomer = (value: number) => {
     if (value === 0) {
-        searchParams.delete("selectedCustomer");
+      searchParams.delete("selectedCustomer");
     } else {
-        searchParams.set("selectedCustomer", JSON.stringify(value));
+      searchParams.set("selectedCustomer", JSON.stringify(value));
     }
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
-};
-  const handleChangeProject= (value: string | number) => {
+  };
+  const handleChangeProject = (value: string | number) => {
     if (value === 0) {
-        searchParams.delete("selectedProject");
+      searchParams.delete("selectedProject");
     } else {
-    setSelectedProject(value);
       searchParams.set("selectedProject", JSON.stringify(value));
     }
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-  
+
   const handleChangeCustomerRenting = (value: string | number) => {
-    if(value === 0){
-        searchParams.delete("isRenting");
-    }
-    else{        
-        setIsRenting(value);
-        searchParams.set("isRenting", JSON.stringify(value));
+    if (value === 0) {
+      searchParams.delete("isRenting");
+    } else {
+      searchParams.set("isRenting", JSON.stringify(value));
     }
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
   const handleChangeCategoryName = (value: string | number) => {
-    if(value === 0){
-        searchParams.delete("selectedCategory");
-    }
-    else{
-        setCategoryName(value);
-        searchParams.set("selectedCategory", JSON.stringify(value));
+    if (value === 0) {
+      searchParams.delete("selectedCategory");
+    } else {
+      searchParams.set("selectedCategory", JSON.stringify(value));
     }
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
-
 
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
@@ -258,11 +234,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           selectedCustomer,
           selectedProject,
           isRenting,
-          selectedCategory
+          selectedCategory,
         } = params;
         filters.push(
-         
-          
           {
             field: "search",
             operator: "eq",
@@ -271,22 +245,22 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {
             field: "customer",
             operator: "eq",
-            value: selectedCustomer
+            value: selectedCustomer,
           },
           {
             field: "project",
             operator: "eq",
-            value: selectedProject
+            value: selectedProject,
           },
           {
             field: "isCustomerRenting",
             operator: "eq",
-            value: isRenting
+            value: isRenting,
           },
           {
             field: "categoryName",
             operator: "eq",
-            value: selectedCategory
+            value: selectedCategory,
           },
           {
             field: "filter",
@@ -1140,10 +1114,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
-    if(initselectedRowKeys.length >0){
-        setIsSelectedQRCode(true)
-    }else{
-        setIsSelectedQRCode(false)
+    if (initselectedRowKeys.length > 0) {
+      setIsSelectedQRCode(true);
+    } else {
+      setIsSelectedQRCode(false);
     }
   }, [initselectedRowKeys]);
   const onSelectChange = (
@@ -1260,37 +1234,27 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalScan(true);
   };
 
+  //  const handleChangeProject = (value: string | number) => {
+  //if (value === 0) {
+  //  handleChangeFilters(selectedCustomer, "", isRenting, categoryName);
+  //  setSelectedProject("")
+  //}
+  //else {
+  //    setSelectedProject(value);
+  //    handleChangeFilters(selectedCustomer, value, isRenting, categoryName);
+  //}
+  //  };
 
-
-
-
-
-
-
-//  const handleChangeProject = (value: string | number) => {
-    //if (value === 0) {
-    //  handleChangeFilters(selectedCustomer, "", isRenting, categoryName);
-    //  setSelectedProject("")
-    //}
-    //else {
-    //    setSelectedProject(value);
-    //    handleChangeFilters(selectedCustomer, value, isRenting, categoryName);
-    //}
-//  };
-
-
-  
-
-//  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
-//    setLoading(true);
-//    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
-//      .catch((error) => {
-//        console.error(error);
-//      })
-//      .finally(() => {
-//        setLoading(false);
-//      });
-//  };
+  //  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
+  //    setLoading(true);
+  //    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
+  //      .catch((error) => {
+  //        console.error(error);
+  //      })
+  //      .finally(() => {
+  //        setLoading(false);
+  //      });
+  //  };
 
   return (
     <List
@@ -1358,7 +1322,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Khách Hàng" name="selectedCustomer" style={{ minWidth: "30%" }}>
+          <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="selectedCustomer"
+            style={{ minWidth: "30%" }}
+          >
             <Select placeholder={t("all")} onChange={handleChangeCustomer}>
               <Option value={0}>{t("all")}</Option>
               {customer.map((cust) => (
@@ -1369,7 +1337,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
           <Form.Item
-            label="Dự Án"
+            label={t("hardware.label.field.project")}
             name="selectedProject"
             style={{ minWidth: "30%" }}
           >
@@ -1382,21 +1350,26 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Khách hàng thuê ?" name="isRenting" style={{ minWidth: "30%" }}>
+          <Form.Item
+            label={t("hardware.label.field.customerRenting")}
+            name="isRenting"
+            style={{ minWidth: "30%" }}
+          >
             <Select
               placeholder={t("all")}
               onChange={handleChangeCustomerRenting}
             >
               <Option value={0}>{t("all")}</Option>
-              <Option value={true}>Có</Option>
-              <Option value={false}>Không</Option>
+              <Option value={true}>{t("hardware.label.field.yes")}</Option>
+              <Option value={false}>{t("hardware.label.field.no")}</Option>
             </Select>
           </Form.Item>
-           <Form.Item label="Thiết Bị" name="selectedCategory" style={{ minWidth: "30%" }}>
-            <Select
-              placeholder={t("all")}
-              onChange={handleChangeCategoryName}
-            >
+          <Form.Item
+            label={t("hardware.label.field.category")}
+            name="selectedCategory"
+            style={{ minWidth: "30%" }}
+          >
+            <Select placeholder={t("all")} onChange={handleChangeCategoryName}>
               <Option value={0}>{t("all")}</Option>
               {dataCategory.map((category) => (
                 <Option key={category.id} value={category.name}>
@@ -1406,7 +1379,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
         </Form>
-        <div className="all" style={{marginTop:'0px'}}>
+        <div className="all" style={{ marginTop: "0px" }}>
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
             <div className="menu-container" ref={menuRef}>
@@ -1697,7 +1670,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         </>
       ) : (
         <Table
-        {...tableProps}
+          {...tableProps}
           rowKey="id"
           scroll={{ x: 1850 }}
           pagination={{

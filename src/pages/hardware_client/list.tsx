@@ -86,6 +86,8 @@ import { TotalDetail } from "components/elements/TotalDetail";
 
 import { Scanner } from "pages/hardware/scanner";
 import { QrCodeDetail } from "pages/hardware/qr-code";
+import { useDataContext } from "providers/assetsProvider";
+import { useDataFilterContext } from "providers/dataFilterProvider";
 const defaultCheckedList = [
   "id",
   "name",
@@ -149,6 +151,47 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
   const [isShowModalScan, setIsShowModalScan] = useState(false);
   const { data: permissionsData } = usePermissions();
+  const { project, customer } = useDataContext();
+  const { dataCategory } = useDataFilterContext();
+  
+  const handleChangeCustomer = (value: number) => {
+    if (value === 0) {
+      searchParams.delete("selectedCustomer");
+    } else {
+      searchParams.set("selectedCustomer", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+  const handleChangeProject = (value: string | number) => {
+    if (value === 0) {
+      searchParams.delete("selectedProject");
+    } else {
+      searchParams.set("selectedProject", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+
+  const handleChangeCustomerRenting = (value: string | number) => {
+    if (value === 0) {
+      searchParams.delete("isRenting");
+    } else {
+      searchParams.set("isRenting", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+
+  const handleChangeCategoryName = (value: string | number) => {
+    if (value === 0) {
+      searchParams.delete("selectedCategory");
+    } else {
+      searchParams.set("selectedCategory", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
 
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
@@ -183,6 +226,10 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
         purchase_date,
         assigned_to,
         category,
+        selectedCustomer,
+        selectedProject,
+        isRenting,
+        selectedCategory,
       } = params;
       filters.push(
         {
@@ -190,6 +237,26 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           operator: "eq",
           value: searchParam,
         },
+        {
+            field: "customer",
+            operator: "eq",
+            value: selectedCustomer,
+          },
+          {
+            field: "project",
+            operator: "eq",
+            value: selectedProject,
+          },
+          {
+            field: "isCustomerRenting",
+            operator: "eq",
+            value: isRenting,
+          },
+          {
+            field: "categoryName",
+            operator: "eq",
+            value: selectedCategory,
+          },
         {
           field: "filter",
           operator: "eq",
@@ -1197,6 +1264,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           className="search-month-location"
         >
           <Form.Item
+            style={{ minWidth: "40%" }}
             label={t("hardware.label.title.time")}
             name="purchase_date"
           >
@@ -1210,6 +1278,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
             />
           </Form.Item>
           <Form.Item
+            style={{ minWidth: "30%" }}
             label={t("hardware.label.title.location")}
             name="location"
             className={"search-month-location-null"}
@@ -1223,8 +1292,64 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="selectedCustomer"
+            style={{ minWidth: "30%" }}
+          >
+            <Select placeholder={t("all")} onChange={handleChangeCustomer}>
+              <Option value={0}>{t("all")}</Option>
+              {customer.map((cust) => (
+                <Option key={cust.id} value={cust.name}>
+                  {cust.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.project")}
+            name="selectedProject"
+            style={{ minWidth: "30%" }}
+          >
+            <Select placeholder={t("all")} onChange={handleChangeProject}>
+              <Option value={0}>{t("all")}</Option>
+              {project.map((proj) => (
+                <Option key={proj.id} value={proj.name}>
+                  {proj.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.customerRenting")}
+            name="isRenting"
+            style={{ minWidth: "30%" }}
+          >
+            <Select
+              placeholder={t("all")}
+              onChange={handleChangeCustomerRenting}
+            >
+              <Option value={0}>{t("all")}</Option>
+              <Option value={true}>{t("hardware.label.field.yes")}</Option>
+              <Option value={false}>{t("hardware.label.field.no")}</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.category")}
+            name="selectedCategory"
+            style={{ minWidth: "30%" }}
+          >
+            <Select placeholder={t("all")} onChange={handleChangeCategoryName}>
+              <Option value={0}>{t("all")}</Option>
+              {dataCategory.map((category) => (
+                <Option key={category.id} value={category.name}>
+                  {category.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
         </Form>
-        <div className="all">
+        <div className="all" style={{ marginTop: "1px" }}>
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
             <div className="menu-container" ref={menuRef}>
