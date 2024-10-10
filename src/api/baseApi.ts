@@ -95,3 +95,5 @@ export const CLIENT_HARDWARE_TOTAL_DETAIL_API =
   "api/v1/client-hardware/total-detail";
   export const CLIENT_AND_CLIENT_HARDWARE_CREATE =
   "/api/v1/customer-project";
+  export const FILTER_CATEGORY_API =
+  "/api/v1/categories";

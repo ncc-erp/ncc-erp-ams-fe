@@ -35,7 +35,7 @@ import "../../styles/list-hardware.less";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
@@ -158,8 +158,73 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
-  const { project, customer,  } = useDataContext();
-  const { dataFilters, fetchFilterData } = useDataFilterContext();
+  const { project, customer  } = useDataContext();
+  const {dataCategory} = useDataFilterContext();
+
+
+
+
+
+
+
+
+  const [selectedCustomer, setSelectedCustomer] = useState<string | number>("");
+  const [selectedProject, setSelectedProject] = useState<string | number>("");
+  const [isRenting, setIsRenting] = useState<string | number>("");
+  const [selectedCategory, setCategoryName] = useState<string | number>("");
+
+
+
+
+
+
+
+  const handleChangeCustomer = (value: number) => {
+    if (value === 0) {
+        searchParams.delete("selectedCustomer");
+    } else {
+        searchParams.set("selectedCustomer", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+};
+  const handleChangeProject= (value: string | number) => {
+    if (value === 0) {
+        searchParams.delete("selectedProject");
+    } else {
+    setSelectedProject(value);
+      searchParams.set("selectedProject", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+  
+  const handleChangeCustomerRenting = (value: string | number) => {
+    if(value === 0){
+        searchParams.delete("isRenting");
+    }
+    else{        
+        setIsRenting(value);
+        searchParams.set("isRenting", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+
+  const handleChangeCategoryName = (value: string | number) => {
+    if(value === 0){
+        searchParams.delete("selectedCategory");
+    }
+    else{
+        setCategoryName(value);
+        searchParams.set("selectedCategory", JSON.stringify(value));
+    }
+    setSearchParams(searchParams);
+    searchFormProps.form?.submit();
+  };
+
+
+
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
@@ -190,12 +255,38 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           purchase_date,
           assigned_to,
           category,
+          selectedCustomer,
+          selectedProject,
+          isRenting,
+          selectedCategory
         } = params;
         filters.push(
+         
+          
           {
             field: "search",
             operator: "eq",
             value: searchParam,
+          },
+          {
+            field: "customer",
+            operator: "eq",
+            value: selectedCustomer
+          },
+          {
+            field: "project",
+            operator: "eq",
+            value: selectedProject
+          },
+          {
+            field: "isCustomerRenting",
+            operator: "eq",
+            value: isRenting
+          },
+          {
+            field: "categoryName",
+            operator: "eq",
+            value: selectedCategory
           },
           {
             field: "filter",
@@ -265,7 +356,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             value: supplier_id,
           }
         );
-
         return filters;
       },
     });
@@ -1145,7 +1235,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
-      console.log(searchFormProps.form?.getFieldsValue()?.location);
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1155,8 +1244,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
       );
     }
-    console.log(searchParams);
-
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
@@ -1176,66 +1263,35 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
 
 
-  const [selectedCustomer, setSelectedCustomer] = useState<string | number>("");
-  const [selectedProject, setSelectedProject] = useState<string | number>("");
-  const [isRenting, setIsRenting] = useState<string | number>("");
-  const [assetId, setAssetId] = useState<string | number>("");
 
-  const handleChangeCustomer = (value: string | number) => {
-    if (value === 0) {
-      handleChangeFilters("", selectedProject, isRenting,assetId);
-      setSelectedCustomer("")
-    }
-    else{
-        setSelectedCustomer(value);
-        handleChangeFilters(value, selectedProject, isRenting, assetId);
-    }
-  };
 
-  const handleChangeProject = (value: string | number) => {
-    if (value === 0) {
-      handleChangeFilters(selectedCustomer, "", isRenting, assetId);
-      setSelectedProject("")
-    }
-    else {
-        setSelectedProject(value);
-        handleChangeFilters(selectedCustomer, value, isRenting, assetId);
-    }
-  };
 
-  const handleChangeCustomerRenting = (value: string | number) => {
-    if(value === 0){
-        handleChangeFilters(selectedCustomer, selectedProject, "", assetId);
-        setIsRenting("")
-    }
-    else{
-        setIsRenting(value);
-        handleChangeFilters(selectedCustomer, selectedProject, value, assetId);
-    }
-  };
+
+//  const handleChangeProject = (value: string | number) => {
+    //if (value === 0) {
+    //  handleChangeFilters(selectedCustomer, "", isRenting, categoryName);
+    //  setSelectedProject("")
+    //}
+    //else {
+    //    setSelectedProject(value);
+    //    handleChangeFilters(selectedCustomer, value, isRenting, categoryName);
+    //}
+//  };
+
+
   
-  const handleChangeAssetId = (value: string | number) => {
-    if(value === 0){
-        handleChangeFilters(selectedCustomer, selectedProject, isRenting, "");
-        setAssetId("")
-    }
-    else{
-        setIsRenting(value);
-        handleChangeFilters(selectedCustomer, selectedProject, isRenting, value);
-    }
-  };
-  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
-    setLoading(true);
-    
-    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-  
+
+//  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
+//    setLoading(true);
+//    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
+//      .catch((error) => {
+//        console.error(error);
+//      })
+//      .finally(() => {
+//        setLoading(false);
+//      });
+//  };
+
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -1274,7 +1330,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           className="search-month-location"
         >
           <Form.Item
-            style={{ width: "100%" }}
+            style={{ minWidth: "40%" }}
             label={t("hardware.label.title.time")}
             name="purchase_date"
           >
@@ -1291,6 +1347,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             label={t("hardware.label.title.location")}
             name="location"
             className={"search-month-location-null"}
+            style={{ minWidth: "30%" }}
           >
             <Select onChange={handleChangeLocation} placeholder={t("all")}>
               <Option value={0}>{t("all")}</Option>
@@ -1301,7 +1358,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Customer" name="customer_name">
+          <Form.Item label="Khách Hàng" name="selectedCustomer" style={{ minWidth: "30%" }}>
             <Select placeholder={t("all")} onChange={handleChangeCustomer}>
               <Option value={0}>{t("all")}</Option>
               {customer.map((cust) => (
@@ -1312,9 +1369,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
           <Form.Item
-            label="Project"
-            name="project_name"
-            style={{ width: "100%" }}
+            label="Dự Án"
+            name="selectedProject"
+            style={{ minWidth: "30%" }}
           >
             <Select placeholder={t("all")} onChange={handleChangeProject}>
               <Option value={0}>{t("all")}</Option>
@@ -1325,31 +1382,31 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Renting" name="is_customer_renting">
+          <Form.Item label="Khách hàng thuê ?" name="isRenting" style={{ minWidth: "30%" }}>
             <Select
               placeholder={t("all")}
               onChange={handleChangeCustomerRenting}
             >
               <Option value={0}>{t("all")}</Option>
-              <Option value={true}>True</Option>
-              <Option value={false}>False</Option>
+              <Option value={true}>Có</Option>
+              <Option value={false}>Không</Option>
             </Select>
           </Form.Item>
-           <Form.Item label="Assets" name="assetName" style={{ minWidth: "100%" }}>
+           <Form.Item label="Thiết Bị" name="selectedCategory" style={{ minWidth: "30%" }}>
             <Select
               placeholder={t("all")}
-              onChange={handleChangeAssetId}
+              onChange={handleChangeCategoryName}
             >
               <Option value={0}>{t("all")}</Option>
-              {dataFilters.reverse().map((asset) => (
-                <Option key={asset.id} value={asset.id}>
-                  {asset.asset_tag}
+              {dataCategory.map((category) => (
+                <Option key={category.id} value={category.name}>
+                  {category.name}
                 </Option>
               ))}
             </Select>
           </Form.Item>
         </Form>
-        <div className="all">
+        <div className="all" style={{marginTop:'0px'}}>
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
             <div className="menu-container" ref={menuRef}>
@@ -1641,7 +1698,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       ) : (
         <Table
         {...tableProps}
-          dataSource={dataFilters.length > 0 ? dataFilters.reverse() : []}
           rowKey="id"
           scroll={{ x: 1850 }}
           pagination={{

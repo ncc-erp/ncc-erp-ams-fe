@@ -329,6 +329,10 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
+  selectedCustomer: string;
+  selectedProject: string;
+  isRenting: string;
+  selectedCategory: string;
 }
 
 export interface IHardwareRequestMultipleCancel {
