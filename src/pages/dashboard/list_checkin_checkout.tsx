@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
 import {
   Col,
@@ -25,6 +24,7 @@ import { IReport } from "interfaces/report";
 import "styles/antd.less";
 import { CategoryType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
+import moment from "moment";
 
 export interface IReportAsset {
   id: number;
@@ -101,7 +101,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangePickerByMonthCheckIn = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       searchParams.set(
         "from_CheckIn",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -119,7 +119,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangePickerByMonthCheckOut = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       searchParamsCheckOut.set(
         "from_CheckOut",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -142,10 +142,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     dataSource: any,
     is_client = false
   ) => {
-
     let categoryKeyTranslate = category;
     let payloadKey = category.toLowerCase() + "s_statistic";
-    let category_const = (CategoryType as { [key: string]: string })[category.toUpperCase()]
+    const category_const = (CategoryType as { [key: string]: string })[
+      category.toUpperCase()
+    ];
 
     if (category === "Asset" && is_client) {
       payloadKey = "client_" + payloadKey;
@@ -158,7 +159,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       payloadKey = "accessories_statistic";
     }
 
-    let typeSum = {
+    const typeSum = {
       type: translate("dashboard.field.type" + categoryKeyTranslate),
       category_type: category_const,
     } as any;
@@ -169,36 +170,38 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       dataForCalculate = dataCheckOut;
     }
 
-    (dataForCalculate?.data.payload[payloadKey] || []).forEach(
-      (items: any) => {
-
-        let locationAttribute = (category === "Asset") ? `location_${items.rtd_location_id}` : `location_${items.location_id}`;
-        dataSource.forEach((item: any) => {
-          if (
-            item.type === items.category_name &&
-            item.category_type === category_const
-          ) {
-            for (const key of iteLocationKey) {
-              if (key === locationAttribute) {
-
-                if (category === "Asset" && !is_client) {
-                  item[locationAttribute] = (item[locationAttribute] ?? 0) + Number(items[checkType]);
-                  item[`count`] = (item[`count`] ?? 0) + Number(items[checkType]);
-                  break;
-                } else {
-                  typeSum[locationAttribute] = (typeSum[locationAttribute] ?? 0) + Number(items[checkType]);
-                  typeSum[`count`] = (typeSum[`count`] ?? 0) + Number(items[checkType]);
-                  break;
-                }
+    (dataForCalculate?.data.payload[payloadKey] || []).forEach((items: any) => {
+      const locationAttribute =
+        category === "Asset"
+          ? `location_${items.rtd_location_id}`
+          : `location_${items.location_id}`;
+      dataSource.forEach((item: any) => {
+        if (
+          item.type === items.category_name &&
+          item.category_type === category_const
+        ) {
+          for (const key of iteLocationKey) {
+            if (key === locationAttribute) {
+              if (category === "Asset" && !is_client) {
+                item[locationAttribute] =
+                  (item[locationAttribute] ?? 0) + Number(items[checkType]);
+                item[`count`] = (item[`count`] ?? 0) + Number(items[checkType]);
+                break;
+              } else {
+                typeSum[locationAttribute] =
+                  (typeSum[locationAttribute] ?? 0) + Number(items[checkType]);
+                typeSum[`count`] =
+                  (typeSum[`count`] ?? 0) + Number(items[checkType]);
+                break;
               }
             }
           }
-        })
-      }
-    )
+        }
+      });
+    });
 
     return typeSum;
-  }
+  };
 
   const setDefaultValueForLocationNotExist = (type: string, sumTypes: any) => {
     let dataCheckForSet = dataCheckIn;
@@ -209,10 +212,11 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     dataCheckForSet?.data.payload.locations.forEach((location: any) => {
       sumTypes.forEach((sumType: any) => {
-        sumType[`location_${location.id}`] = sumType[`location_${location.id}`] ?? 0;
-      })
+        sumType[`location_${location.id}`] =
+          sumType[`location_${location.id}`] ?? 0;
+      });
     });
-  }
+  };
 
   const getDataSource = (type: string, iteLocationKey: any) => {
     let dataForGet = dataCheckIn;
@@ -223,13 +227,13 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     return (dataForGet?.data.payload.categories || []).map(
       (category: IReport) => {
-        let iteDataSource = {
+        const iteDataSource = {
           type: category.name,
           id: category.id,
           category_type: category.category_type,
         };
         let iteLocation = {};
-        for (let i of dataForGet?.data?.payload?.locations) {
+        for (const i of dataForGet?.data?.payload?.locations) {
           iteLocation = {
             ...iteLocation,
             [`location_${i.id}`]: 0,
@@ -240,9 +244,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
         return { ...iteDataSource, ...iteLocation };
       }
     );
-  }
+  };
 
-  const getUrlForOnClick = (action_type: string, record: IReport, dateFrom: string | null, dateTo: string | null, location_id = "") => {
+  const getUrlForOnClick = (
+    action_type: string,
+    record: IReport,
+    dateFrom: string | null,
+    dateTo: string | null,
+    location_id = ""
+  ) => {
     let url = `report?category_type=${record.category_type}&action_type=${action_type}`;
 
     if (dateFrom && dateTo) {
@@ -258,10 +268,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     }
 
     return list(url);
-  }
+  };
 
   useEffect(() => {
-    let assetNames = (dataCheckIn?.data.payload.assets_statistic || []).map(
+    const assetNames = (dataCheckIn?.data.payload.assets_statistic || []).map(
       (item: any) => item.category_name
     );
 
@@ -272,24 +282,63 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     const type = "checkin";
     let dataResponseCheckIn: any = [];
-    let iteLocationKey: any = [];
-    let dataSource = getDataSource(type, iteLocationKey);
+    const iteLocationKey: any = [];
+    const dataSource = getDataSource(type, iteLocationKey);
 
-    let sumConsumable = calculateSumEachCategory(type, 'Consumable', iteLocationKey, dataSource);
-    let sumClientAsset = calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource, true);
-    let sumAccessory = calculateSumEachCategory(type, 'Accessory', iteLocationKey, dataSource);
-    let sumTool = calculateSumEachCategory(type, 'Tool', iteLocationKey, dataSource);
-    let sumTaxToken = calculateSumEachCategory(type, 'TaxToken', iteLocationKey, dataSource);
-    calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource);
+    const sumConsumable = calculateSumEachCategory(
+      type,
+      "Consumable",
+      iteLocationKey,
+      dataSource
+    );
+    const sumClientAsset = calculateSumEachCategory(
+      type,
+      "Asset",
+      iteLocationKey,
+      dataSource,
+      true
+    );
+    const sumAccessory = calculateSumEachCategory(
+      type,
+      "Accessory",
+      iteLocationKey,
+      dataSource
+    );
+    const sumTool = calculateSumEachCategory(
+      type,
+      "Tool",
+      iteLocationKey,
+      dataSource
+    );
+    const sumTaxToken = calculateSumEachCategory(
+      type,
+      "TaxToken",
+      iteLocationKey,
+      dataSource
+    );
+    calculateSumEachCategory(type, "Asset", iteLocationKey, dataSource);
 
-    setDefaultValueForLocationNotExist(type, [sumConsumable, sumClientAsset, sumAccessory, sumTool, sumTaxToken]);
+    setDefaultValueForLocationNotExist(type, [
+      sumConsumable,
+      sumClientAsset,
+      sumAccessory,
+      sumTool,
+      sumTaxToken,
+    ]);
 
     dataResponseCheckIn = dataSource;
     dataResponseCheckIn = dataResponseCheckIn.filter(
       (item: any) => item.category_type === CategoryType.ASSET
     );
 
-    setDataReportCheckIn([...dataResponseCheckIn, sumAccessory, sumConsumable, sumTool, sumTaxToken, sumClientAsset]);
+    setDataReportCheckIn([
+      ...dataResponseCheckIn,
+      sumAccessory,
+      sumConsumable,
+      sumTool,
+      sumTaxToken,
+      sumClientAsset,
+    ]);
   }, [
     dataCheckIn?.data.payload.assets_statistic || [],
     dataCheckIn?.data.payload.accessories_statistic || [],
@@ -300,7 +349,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   ]);
 
   useEffect(() => {
-    let assetNames = (dataCheckOut?.data.payload.assets_statistic || []).map(
+    const assetNames = (dataCheckOut?.data.payload.assets_statistic || []).map(
       (item: any) => item.category_name
     );
 
@@ -311,17 +360,49 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
     const type = "checkout";
     let dataResponseCheckOut: any = [];
-    let iteLocationKey: any = [];
-    let dataSource = getDataSource(type, iteLocationKey);
+    const iteLocationKey: any = [];
+    const dataSource = getDataSource(type, iteLocationKey);
 
-    let sumConsumable = calculateSumEachCategory(type, 'Consumable', iteLocationKey, dataSource);
-    let sumClientAsset = calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource, true);
-    let sumAccessory = calculateSumEachCategory(type, 'Accessory', iteLocationKey, dataSource);
-    let sumTool = calculateSumEachCategory(type, 'Tool', iteLocationKey, dataSource);
-    let sumTaxToken = calculateSumEachCategory(type, 'TaxToken', iteLocationKey, dataSource);
-    calculateSumEachCategory(type, 'Asset', iteLocationKey, dataSource);
+    const sumConsumable = calculateSumEachCategory(
+      type,
+      "Consumable",
+      iteLocationKey,
+      dataSource
+    );
+    const sumClientAsset = calculateSumEachCategory(
+      type,
+      "Asset",
+      iteLocationKey,
+      dataSource,
+      true
+    );
+    const sumAccessory = calculateSumEachCategory(
+      type,
+      "Accessory",
+      iteLocationKey,
+      dataSource
+    );
+    const sumTool = calculateSumEachCategory(
+      type,
+      "Tool",
+      iteLocationKey,
+      dataSource
+    );
+    const sumTaxToken = calculateSumEachCategory(
+      type,
+      "TaxToken",
+      iteLocationKey,
+      dataSource
+    );
+    calculateSumEachCategory(type, "Asset", iteLocationKey, dataSource);
 
-    setDefaultValueForLocationNotExist(type, [sumConsumable, sumClientAsset, sumAccessory, sumTool, sumTaxToken]);
+    setDefaultValueForLocationNotExist(type, [
+      sumConsumable,
+      sumClientAsset,
+      sumAccessory,
+      sumTool,
+      sumTaxToken,
+    ]);
 
     dataResponseCheckOut = dataSource;
     dataResponseCheckOut = dataResponseCheckOut.filter(
@@ -334,7 +415,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       sumConsumable,
       sumTool,
       sumTaxToken,
-      sumClientAsset
+      sumClientAsset,
     ]);
   }, [
     dataCheckOut?.data.payload.assets_statistic || [],
@@ -353,7 +434,14 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       width: 150,
       render: (text: string, record: IReport) => (
         <strong
-          onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKOUT, record, dateFromCheckOut, dateToCheckOut)}
+          onClick={() =>
+            getUrlForOnClick(
+              TypeAssetHistory.CHECKOUT,
+              record,
+              dateFromCheckOut,
+              dateToCheckOut
+            )
+          }
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
@@ -362,7 +450,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   ];
 
-  let columntypesCheckOut = (dataCheckOut?.data.payload.locations || []).map(
+  const columntypesCheckOut = (dataCheckOut?.data.payload.locations || []).map(
     (item: any) => {
       return {
         title: item.name,
@@ -374,7 +462,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             strong
             type="secondary"
             className="field-category"
-            onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKOUT, record, dateFromCheckOut, dateToCheckOut, item.id)}
+            onClick={() =>
+              getUrlForOnClick(
+                TypeAssetHistory.CHECKOUT,
+                record,
+                dateFromCheckOut,
+                dateToCheckOut,
+                item.id
+              )
+            }
           >
             {text}
           </Typography.Text>
@@ -393,7 +489,14 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       width: 150,
       render: (text: string, record: IReport) => (
         <strong
-          onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKIN, record, dateFromCheckIn, dateToCheckIn)}
+          onClick={() =>
+            getUrlForOnClick(
+              TypeAssetHistory.CHECKIN,
+              record,
+              dateFromCheckIn,
+              dateToCheckIn
+            )
+          }
           style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
@@ -402,7 +505,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     },
   ];
 
-  let columntypesCheckIn = (dataCheckIn?.data.payload.locations || []).map(
+  const columntypesCheckIn = (dataCheckIn?.data.payload.locations || []).map(
     (item: any) => {
       return {
         title: item.name,
@@ -414,7 +517,15 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
             strong
             type="secondary"
             className="field-category"
-            onClick={() => getUrlForOnClick(TypeAssetHistory.CHECKIN, record, dateFromCheckIn, dateToCheckIn, item.id)}
+            onClick={() =>
+              getUrlForOnClick(
+                TypeAssetHistory.CHECKIN,
+                record,
+                dateFromCheckIn,
+                dateToCheckIn,
+                item.id
+              )
+            }
           >
             {text}
           </Typography.Text>
@@ -469,9 +580,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   <Row gutter={16}>
                     <Col sm={10} md={7}>
                       <AssetsSummaryPieChartCheckOut
-                        assets_statistic={
-                          dataReportCheckOut ?? ""
-                        }
+                        assets_statistic={dataReportCheckOut ?? ""}
                       />
                     </Col>
                     <Col sm={24} md={17}>
@@ -525,9 +634,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   <Row gutter={16}>
                     <Col sm={24} md={7}>
                       <AssetsSummaryPieChartCheckIn
-                        assets_statistic={
-                          dataReportCheckIn ?? ""
-                        }
+                        assets_statistic={dataReportCheckIn ?? ""}
                       />
                     </Col>
                     <Col sm={24} md={17}>

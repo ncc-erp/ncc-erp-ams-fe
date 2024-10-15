@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -39,7 +38,7 @@ type HardwareEditProps = {
 
 export const ClientHardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -100,10 +99,7 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: CLIENT_HARDWARE_API + "/" + data?.id,
     method: "post",
     config: {
@@ -112,7 +108,7 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -122,7 +118,6 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
     formData.append("name", event.name);
     if (event.model !== undefined) {
       formData.append("model_id", event.model.toString());
-
     }
     formData.append("serial", event.serial ?? "");
     formData.append("order_number", event.order_number ?? "");
@@ -176,7 +171,8 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
       {
         name: "purchase_cost",
         value:
-          data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
+          data?.purchase_cost &&
+          data?.purchase_cost.toString().split(",").join(""),
       },
       {
         name: "purchase_date",
@@ -194,10 +190,11 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-        let message = Object.values(err)[0][0];
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-          type: 'error',
+          type: "error",
           message: message,
         });
         setMessageErr(response.error?.response.data.messages);
@@ -208,17 +205,22 @@ export const ClientHardwareEdit = (props: HardwareEditProps) => {
       setIsModalVisible(false);
       setMessageErr(null);
       open?.({
-        type: 'success',
+        type: "success",
         message: response.data?.data.messages,
       });
-    }
+    };
     fetch();
   }, [payload]);
 
   const findLabel = (value: number): boolean => {
     if (statusLabelSelectProps.options) {
       statusLabelSelectProps.options?.forEach((item) => {
-        return (value === item.value && (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN || item.label === EStatus.READY_TO_DEPLOY))
+        return (
+          value === item.value &&
+          (item.label === EStatus.PENDING ||
+            item.label === EStatus.ASSIGN ||
+            item.label === EStatus.READY_TO_DEPLOY)
+        );
       });
     }
 

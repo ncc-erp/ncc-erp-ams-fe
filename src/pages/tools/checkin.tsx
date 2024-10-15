@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -18,15 +17,9 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 //   ITaxTokenRequestCheckin,
 //   ITaxTokenResponseCheckin
 // } from "interfaces/tools";
-import {
-    IToolCheckinRequest,
-    IToolResponseCheckin,
-} from "interfaces/tool"
+import { IToolCheckinRequest, IToolResponseCheckin } from "interfaces/tool";
 import { ICompany } from "interfaces/company";
-import {
-  STATUS_LABELS_API,
-  TOOLS_API,
-} from "api/baseApi";
+import { STATUS_LABELS_API, TOOLS_API } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
@@ -38,7 +31,7 @@ type ToolCheckinProps = {
 
 export const ToolCheckin = (props: ToolCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IToolCheckinRequest | null>();
   const { open } = useNotification();
@@ -62,10 +55,7 @@ export const ToolCheckin = (props: ToolCheckinProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: TOOLS_API + "/" + data?.id + "/checkin",
     method: "post",
     config: {
@@ -109,31 +99,32 @@ export const ToolCheckin = (props: ToolCheckinProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-            open?.({
-              type: 'error',
-              description: "Error",
-              message: message
-            }); 
-            setMessageErr(response.error?.response.data.messages);
-            return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            description: 'Success',
-            message: response.data?.data.messages,
-        });        
-    } 
+          type: "error",
+          description: "Error",
+          message: message,
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+      open?.({
+        type: "success",
+        description: "Success",
+        message: response.data?.data.messages,
+      });
+    };
     fetch();
   }, [payload]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -14,9 +13,7 @@ import {
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  ITaxTokenRequestCheckout,
-} from "interfaces/tax_token";
+import { ITaxTokenRequestCheckout } from "interfaces/tax_token";
 import { ICompany } from "interfaces/company";
 import { TAX_TOKEN_API, USERS_API } from "api/baseApi";
 import moment from "moment";
@@ -31,7 +28,8 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
 
-  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout | null>();
+  const [messageErr, setMessageErr] =
+    useState<ITaxTokenRequestCheckout | null>();
   const { open } = useNotification();
   const t = useTranslate();
 
@@ -53,10 +51,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: TAX_TOKEN_API + "/" + data?.id + "/checkout",
     method: "post",
     config: {
@@ -65,7 +60,7 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
 
   const onFinish = (event: ITaxTokenRequestCheckout) => {
@@ -104,11 +99,11 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: string = response.error?.response.data.messages;
+        const err: string = response.error?.response.data.messages;
         open?.({
-          type: 'error',
-          description: 'Error',
-          message: err
+          type: "error",
+          description: "Error",
+          message: err,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -117,11 +112,11 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
       setIsModalVisible(false);
       setMessageErr(null);
       open?.({
-        type: 'success',
-        description: 'Success',
-        message: response.data?.data.messages
+        type: "success",
+        description: "Success",
+        message: response.data?.data.messages,
       });
-    }
+    };
     fetch();
   }, [payload]);
 

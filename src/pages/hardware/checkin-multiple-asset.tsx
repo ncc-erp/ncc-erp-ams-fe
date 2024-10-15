@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -31,7 +30,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] =
     useState<IHardwareRequestMultipleCheckin>();
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
 
   const t = useTranslate();
 
@@ -89,7 +88,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
     }
   }, [dataCheckin, form, setIsModalVisible]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
@@ -131,8 +130,8 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
             name="assets"
           >
             {data &&
-              data?.map((item: any) => (
-                <div>
+              data?.map((item: any, index: number) => (
+                <div key={index}>
                   <span className="show-asset">{item.asset_tag}</span> -{" "}
                   {item.category.name}
                 </div>

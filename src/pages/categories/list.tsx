@@ -1,6 +1,3 @@
-/* eslint-disable no-lone-blocks */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -39,7 +36,7 @@ export enum ECategory {
   ASSET = "Asset",
   CONSUMABLE = "Consumable",
   TAXTOKEN = "Taxtoken",
-  TOOLDOMAIN = "Tool"
+  TOOLDOMAIN = "Tool",
 }
 
 export const CategoryList: React.FC<IResourceComponentsProps> = () => {
@@ -119,18 +116,18 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
             value={value ? value : ""}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
             onClick={() => {
-              {
-                record.category_type === "Asset"
-                  ? list(`assets?category_id=${record.id}`)
-                  : record.category_type === "Consumable"
-                    ? list(`consumables?category_id=${record.id}`)
-                    : record.category_type === "Accessory"
-                      ? list(`accessory?category_id=${record.id}`)
-                      :record.category_type === "Tool"
-                      ? list(`tools-all?category_id=${record.id}`)
-                        : record.category_type === "Taxtoken"
-                        ? list(`tax_token?category_id=${record.id}`)
-                          : list(`assets?category_id=${record.id}`);
+              if (record.category_type === "Asset") {
+                list(`assets?category_id=${record.id}`);
+              } else if (record.category_type === "Consumable") {
+                list(`consumables?category_id=${record.id}`);
+              } else if (record.category_type === "Accessory") {
+                list(`accessory?category_id=${record.id}`);
+              } else if (record.category_type === "Tool") {
+                list(`tools-all?category_id=${record.id}`);
+              } else if (record.category_type === "Taxtoken") {
+                list(`tax_token?category_id=${record.id}`);
+              } else {
+                list(`assets?category_id=${record.id}`);
               }
             }}
           />
@@ -166,7 +163,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                         ? t("category.label.options.taxtoken")
                         : value === ECategory.TOOLDOMAIN
                           ? t("category.label.options.tool")
-                            : ""
+                          : ""
                 : ""
             }
           />
@@ -254,15 +251,15 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<ICategoryResponse>
             title={t("table.actions")}

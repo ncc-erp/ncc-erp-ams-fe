@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Checkbox,
@@ -33,7 +32,7 @@ import {
   CONSUMABLE_API,
   LOCATION_API,
   CONSUMABLE_CATEGORIES_API,
-  CONSUMABLE_TOTAL_DETAIL_API
+  CONSUMABLE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
@@ -101,73 +100,70 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
   const category_id = searchParams.get("category_id");
-  const manufacturer_id = searchParams.get('manufacturer_id');
-  const supplier_id = searchParams.get('supplier_id');
+  const manufacturer_id = searchParams.get("manufacturer_id");
+  const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
 
-  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } = useTable<
-    IConsumablesResponse,
-    HttpError,
-    IConsumablesFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } =
+    useTable<IConsumablesResponse, HttpError, IConsumablesFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      resource: CONSUMABLE_API,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        const { search, location, purchase_date, category } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search ? search : searchParam,
+          },
+
+          {
+            field: "location_id",
+            operator: "eq",
+            value: location ? location : location_id,
+          },
+
+          {
+            field: "date_from",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "date_to",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category ? category : category_id,
+          },
+          {
+            field: "manufacturer_id",
+            operator: "eq",
+            value: manufacturer_id,
+          },
+          {
+            field: "supplier_id",
+            operator: "eq",
+            value: supplier_id,
+          }
+        );
+
+        return filters;
       },
-    ],
-    resource: CONSUMABLE_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      let { search, location, purchase_date, category } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: search ? search : searchParam,
-        },
-
-        {
-          field: "location_id",
-          operator: "eq",
-          value: location ? location : location_id,
-        },
-
-        {
-          field: "date_from",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "date_to",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "category_id",
-          operator: "eq",
-          value: category ? category : category_id,
-        },
-        {
-          field: "manufacturer_id",
-          operator: "eq",
-          value: manufacturer_id,
-        },
-        {
-          field: "supplier_id",
-          operator: "eq",
-          value: supplier_id,
-        },
-      );
-
-      return filters;
-    },
-  });
+    });
 
   const { list } = useNavigation();
 
@@ -187,7 +183,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     return {
       text: item.label,
       value: item.value,
-    }
+    };
   });
 
   const collumns = useMemo(
@@ -205,9 +201,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           <TextField
             value={value ? value : ""}
             onClick={() => {
-              record.id &&
+              if (record.id) {
                 list(`consumable_details?id=${record.id}&name=${record.name}
                 &category_id=${record.category.id}`);
+              }
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
@@ -233,10 +230,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           <TagField
             value={value ? value.name : ""}
             onClick={() => {
-              value &&
+              if (value) {
                 list(`manufactures_details?id=${value.id}&name=${value.name}`);
+              }
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -271,7 +270,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               list(`location_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
@@ -394,7 +394,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
+  }, [isModalVisible]);
 
   useEffect(() => {
     refreshData();
@@ -480,7 +480,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
 
   const handleChangePickerByMonth = (val: any) => {
-    const [from, to] = Array.from(val || []);
+    const [from, to] = Array.from(val || []) as moment.Moment[];
 
     if (val !== null) {
       searchParams.set(
@@ -521,12 +521,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     <List
       title={translate("consumables.label.title.consumables")}
       pageHeaderProps={{
-        extra: (
-          permissionsData.admin === EPermissions.ADMIN && (
-            <CreateButton onClick={handleCreate}>
-              {translate("consumables.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: permissionsData.admin === EPermissions.ADMIN && (
+          <CreateButton onClick={handleCreate}>
+            {translate("consumables.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -548,9 +546,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -582,7 +580,9 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
             >
               <Option value={0}>{translate("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -663,17 +663,22 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col as any} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IConsumablesResponse>
             title={translate("table.actions")}

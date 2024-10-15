@@ -133,7 +133,7 @@
     "actions": "Actions",
     "search": "Tìm kiếm",
     "checkAll": "Check all",
-    "qrCode":"Mã QR"
+    "qrCode": "Mã QR"
   },
   "hardware": {
     "label": {
@@ -185,9 +185,9 @@
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
         "purchase_cost": "Giá",
-        "qr_code":"In mã QR",
-        "scan_qr":"Scan QR",
-        "confirmDeleteQr":"Xác nhận xóa mã QR"
+        "qr_code": "In mã QR",
+        "scan_qr": "Scan QR",
+        "confirmDeleteQr": "Xác nhận xóa mã QR"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
