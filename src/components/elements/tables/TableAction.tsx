@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Icons } from "@pankod/refine-antd";
 import { Button, Checkbox, Col, Dropdown, Form, Input, Menu, Row } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -95,7 +94,7 @@ export interface ITableAction {
     {
       title: string;
       handle: (menu: MenuInfo) => void;
-    }
+    },
   ];
   onSearch?: (keyword: string) => void;
   collumns?: string[];
@@ -121,7 +120,7 @@ export const TableAction = (props: ITableAction) => {
     ),
     [actions]
   );
-  const onSelectCollumn = useCallback(() => { }, []);
+  const onSelectCollumn = useCallback(() => {}, []);
 
   const searchValues = useMemo(() => {
     return localStorage.getItem("search");
@@ -142,8 +141,8 @@ export const TableAction = (props: ITableAction) => {
         searchFormProps.form?.getFieldsValue()?.search
       );
       setSearchParams(searchParams);
-    }, debounceWaitTime)
-  }
+    }, debounceWaitTime);
+  };
 
   useEffect(() => {
     searchFormProps.form.submit();
@@ -174,9 +173,9 @@ export const TableAction = (props: ITableAction) => {
               {...searchFormProps}
               initialValues={{
                 search:
-                  localStorage.getItem("search") !== null ?? searchValues !== ""
+                  localStorage.getItem("search") !== null || searchValues !== ""
                     ? searchValues
-                    : searchParam ?? searchParam,
+                    : searchParam,
               }}
               onChange={() => {
                 debouncedSearch();

@@ -1,5 +1,3 @@
-/* eslint-disable no-lone-blocks */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -176,7 +174,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       resource: HARDWARE_API,
       onSearch: (params) => {
         const filters: CrudFilters = [];
-        let {
+        const {
           search,
           name,
           asset_tag,
@@ -936,13 +934,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
       searchParams.set(
         "dateFrom",
@@ -1047,10 +1045,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setNameCheckout(t("hardware.label.detail.note-checkout"));
     } else {
     }
-    if(initselectedRowKeys.length >0){
-        setIsSelectedQRCode(true)
-    }else{
-        setIsSelectedQRCode(false)
+    if (initselectedRowKeys.length > 0) {
+      setIsSelectedQRCode(true);
+    } else {
+      setIsSelectedQRCode(false);
     }
   }, [initselectedRowKeys]);
   const onSelectChange = (
@@ -1194,11 +1192,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       moment(searchValuesByDateTo),
                     ]
                   : dateFromParam && dateToParam
-                  ? [
-                      moment(dateFromParam, dateFormat),
-                      moment(dateToParam, dateFormat),
-                    ]
-                  : ""
+                    ? [
+                        moment(dateFromParam, dateFormat),
+                        moment(dateToParam, dateFormat),
+                      ]
+                    : ""
                 : "",
           }}
           layout="vertical"
@@ -1409,7 +1407,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           setIsModalVisible={setIsShowModalVisibleQR}
           isModalVisible={isShowModalVisibleQR}
         >
-          <QrCodeDetail closeModal={() => setIsShowModalVisibleQR(false)} detail={detail} />
+          <QrCodeDetail
+            closeModal={() => setIsShowModalVisibleQR(false)}
+            detail={detail}
+          />
         </MModal>
       )}
       {isShowModalScan && (
@@ -1504,7 +1505,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               className="btn-select-checkout ant-btn-checkout"
               onClick={handleScanQR}
             >
-                {t("hardware.label.field.scan_qr")}
+              {t("hardware.label.field.scan_qr")}
             </Button>
           </>
         )}
@@ -1540,7 +1541,12 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}
@@ -1612,8 +1618,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkout(record)}
                   >
@@ -1630,8 +1636,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => checkin(record)}
                   >

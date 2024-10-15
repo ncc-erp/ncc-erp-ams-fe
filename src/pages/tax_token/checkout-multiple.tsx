@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -16,7 +15,10 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import { ICompany } from "interfaces/company";
 import { USERS_API, TAX_TOKEN_CHECKOUT_API } from "api/baseApi";
 import moment from "moment";
-import { ITaxTokenMultipleRequestCheckout, ITaxTokenRequestCheckout } from "interfaces/tax_token";
+import {
+  ITaxTokenMultipleRequestCheckout,
+  ITaxTokenRequestCheckout,
+} from "interfaces/tax_token";
 
 type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;
@@ -25,7 +27,9 @@ type TaxTokenCheckoutMultipleProps = {
   setSelectedRowKeys: any;
 };
 
-export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) => {
+export const TaxTokenCheckoutMultiple = (
+  props: TaxTokenCheckoutMultipleProps
+) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
   const { open } = useNotification();
@@ -50,24 +54,27 @@ export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) =
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
   const onFinish = (event: ITaxTokenMultipleRequestCheckout) => {
-    mutate({
-      resource: TAX_TOKEN_CHECKOUT_API,
-      values: {
-        signatures: event.signatures,
-        checkout_date: event.checkout_date,
-        assigned_to: event.assigned_to,
-        note: event.note !== null ? event.note : "",
+    mutate(
+      {
+        resource: TAX_TOKEN_CHECKOUT_API,
+        values: {
+          signatures: event.signatures,
+          checkout_date: event.checkout_date,
+          assigned_to: event.assigned_to,
+          note: event.note !== null ? event.note : "",
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   const { setFields } = form;
@@ -109,10 +116,9 @@ export const TaxTokenCheckoutMultiple = (props: TaxTokenCheckoutMultipleProps) =
             name="signatures"
           >
             {data &&
-              data?.map((item: any) => (
-                <div>
-                  <span className="show-asset">{item.seri}</span> -{" "}
-                  {item.name}
+              data?.map((item: any, index: number) => (
+                <div key={index}>
+                  <span className="show-asset">{item.seri}</span> - {item.name}
                 </div>
               ))}
           </Form.Item>

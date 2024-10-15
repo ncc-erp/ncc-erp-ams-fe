@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
@@ -37,7 +36,7 @@ type HardwareCheckinProps = {
 
 export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckin>();
 
@@ -96,7 +95,10 @@ export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
     formData.append("name", event.name);
     formData.append("note", event.note ?? "");
     formData.append("status_id", event.status_label);
-    formData.append("checkin_at", moment(new Date()).format("YYYY-MM-DDTHH:mm"));
+    formData.append(
+      "checkin_at",
+      moment(new Date()).format("YYYY-MM-DDTHH:mm")
+    );
     formData.append("model_id", event.model.toString());
     formData.append("assigned_user", event.assigned_to);
 
@@ -143,7 +145,10 @@ export const ClientHardwareCheckin = (props: HardwareCheckinProps) => {
   const findLabel = (value: number): boolean => {
     if (statusLabelSelectProps.options) {
       statusLabelSelectProps.options?.forEach((item) => {
-        return (value === item.value && (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN))
+        return (
+          value === item.value &&
+          (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN)
+        );
       });
     }
 
