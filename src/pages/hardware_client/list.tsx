@@ -86,7 +86,6 @@ import { TotalDetail } from "components/elements/TotalDetail";
 
 import { Scanner } from "pages/hardware/scanner";
 import { QrCodeDetail } from "pages/hardware/qr-code";
-import { useDataContext } from "providers/assetsProvider";
 import { useDataFilterContext } from "providers/dataFilterProvider";
 const defaultCheckedList = [
   "id",

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { IHardwareResponse } from "interfaces/hardware";
 import { axiosInstance } from "./axios";
-import { FILTER_CATEGORY_API } from "api/baseApi";
+import { CATEGORIES_API } from "api/baseApi";
 interface IDataContext {
   dataCategory: IHardwareResponse[];
   fetchCategoryData: () => Promise<void>;
@@ -30,7 +30,7 @@ export const DataFilterProvider = ({ children }: DataProviderProps) => {
   const [dataCategory, setDataCategory] = useState<IHardwareResponse[]>([]);
   const fetchCategoryData = async () => {
     try {
-      const response = await axiosInstance.get(FILTER_CATEGORY_API, {
+      const response = await axiosInstance.get(CATEGORIES_API, {
       });      
       setDataCategory(response?.data?.rows);
     } catch (error) {

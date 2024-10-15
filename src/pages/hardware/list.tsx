@@ -87,7 +87,6 @@ import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { QrCodeDetail } from "./qr-code";
 import { Scanner } from "./scanner";
-import { useDataContext } from "providers/assetsProvider";
 import { useDataFilterContext } from "providers/dataFilterProvider";
 const defaultCheckedList = [
   "id",
