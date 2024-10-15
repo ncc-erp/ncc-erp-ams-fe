@@ -39,7 +39,7 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-import { useDataContext } from "providers/assetsProvider";
+import { useGetProjectData } from "hooks/useGetProjectData";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
@@ -55,7 +55,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { open } = useNotification();
   const t = useTranslate();
 
-  const { project, customer } = useDataContext();
+
+  const { customer ,project} = useGetProjectData();
+
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
   });
@@ -139,9 +141,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (selectedCustomer !== undefined) {
       formData.append("customer", JSON.stringify(selectedCustomer.name));
     }
+    if (selectedCustomer !== undefined) {
+        formData.append("customer_code", JSON.stringify(selectedCustomer.code));
+      }
     if (selectedProject !== undefined) {
       formData.append("project", JSON.stringify(selectedProject.name));
     }
+    if (selectedProject !== undefined) {
+        formData.append("project_code", JSON.stringify(selectedProject.code));
+      }
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);
     }

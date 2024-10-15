@@ -3,7 +3,6 @@ import { notification, notificationProvider } from "@pankod/refine-antd";
 import routerProvider from "@pankod/refine-react-router-v6";
 import "styles/antd.less";
 import dataProvider from "./providers/dataProvider";
-import { AssetsProvider } from "./providers/assetsProvider";
 import { authProvider } from "./providers/authProvider";
 import {
   HardwareList,
@@ -130,7 +129,6 @@ function App() {
               );
               return Promise.resolve({ can });
             }
-
             if (action === "field") {
               const can = await enforcer.enforce(
                 role.admin,
@@ -168,11 +166,9 @@ function App() {
           {
             name: t("resource.assets"),
             list: () => (
-              <AssetsProvider>
                 <DataFilterProvider>
                   <HardwareList />
                 </DataFilterProvider>
-              </AssetsProvider>
             ),
             options: {
               route: "assets",
@@ -413,11 +409,9 @@ function App() {
           {
             name: t("resource.client-assets"),
             list: () => (
-              <AssetsProvider>
                 <DataFilterProvider>
                   <ClientHardwareList />
                 </DataFilterProvider>
-              </AssetsProvider>
             ),
             options: {
               route: "client-assets",

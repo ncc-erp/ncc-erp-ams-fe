@@ -36,7 +36,7 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-import { useDataContext } from "providers/assetsProvider";
+import { useGetProjectData } from "hooks/useGetProjectData";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
@@ -51,7 +51,7 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
-  const { customer, project } = useDataContext();
+  const { customer ,project} = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -133,11 +133,17 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
-      formData.append("customer", JSON.stringify(selectedCustomer.name));
-    }
-    if (selectedProject !== undefined) {
-      formData.append("project", JSON.stringify(selectedProject.name));
-    }
+        formData.append("customer", JSON.stringify(selectedCustomer.name));
+      }
+      if (selectedCustomer !== undefined) {
+          formData.append("customer_code", JSON.stringify(selectedCustomer.code));
+        }
+      if (selectedProject !== undefined) {
+        formData.append("project", JSON.stringify(selectedProject.name));
+      }
+      if (selectedProject !== undefined) {
+          formData.append("project_code", JSON.stringify(selectedProject.code));
+        }
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);
     }
