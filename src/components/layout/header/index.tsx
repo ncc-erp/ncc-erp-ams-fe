@@ -17,13 +17,17 @@ import {
   Typography,
   // Switch,
 } from "@pankod/refine-antd";
+import { IoQrCodeSharp } from "react-icons/io5";
 import { useGoogleLogout } from "react-google-login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dataProvider from "providers/dataProvider";
 import { SYNC_USER_API } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
 import { useThemeSwitcher } from "react-css-theme-switcher";
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun } from "react-icons/fa";
+import { MModal } from "components/Modal/MModal";
+import { Scanner } from "pages/hardware/scanner";
+import "../../../styles/qr-code.less";
 const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
@@ -37,6 +41,16 @@ export const Header: React.FC = () => {
   const currentLocale = locale();
   const { push } = useNavigation();
   const [hrmLoading, setHrmLoading] = useState(false);
+  const [isShowModalScan, setIsShowModalScan] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { data: permissionsData } = usePermissions();
+  useEffect(() => {
+    if (permissionsData?.admin === EPermissions.ADMIN) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [permissionsData]);
 
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
     ? process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -50,13 +64,14 @@ export const Header: React.FC = () => {
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
-    custom &&
+    if (custom) {
       custom({
         url: SYNC_USER_API,
         method: "get",
       }).then((x) => {
         setHrmLoading(false);
       });
+    }
   };
 
   const logoutAccount = () => {
@@ -82,7 +97,6 @@ export const Header: React.FC = () => {
   );
 
   const { data: userIdentity } = useGetIdentity<string>();
-  const { data: permissionsData } = usePermissions();
   // const [isDarkMode, setIsDarkMode] = useState<boolean>();
   // const { switcher, themes } = useThemeSwitcher();
 
@@ -91,52 +105,82 @@ export const Header: React.FC = () => {
   //   switcher({ theme: isChecked ? themes.dark : themes.light });
   // };
 
+  const handleScanQR = () => {
+    setIsShowModalScan(true);
+  };
   return (
-    <AntdLayout.Header
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        padding: "0px 24px",
-        height: "64px",
-        backgroundColor: "#FFF",
-      }}
-    >
-      <Text
-        data-test-id="username"
-       style={{ fontWeight: "500", fontSize: "16px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text>
-      {/* <Switch
+    <>
+      {isShowModalScan && (
+        <MModal
+          title={"Scan QR"}
+          setIsModalVisible={setIsShowModalScan}
+          isModalVisible={isShowModalScan}
+        >
+          <Scanner />
+        </MModal>
+      )}
+      <AntdLayout.Header
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: "0px 24px",
+          height: "64px",
+          backgroundColor: "#FFF",
+        }}
+      >
+        {isAdmin && (
+          <>
+            <IoQrCodeSharp
+              className="qr-icon"
+              style={{
+                marginRight: "25px",
+                backgroundColor: "none",
+                border: "none",
+              }}
+              size={45}
+              onClick={handleScanQR}
+            />
+          </>
+        )}
+        <Text
+          data-test-id="username"
+          style={{ fontWeight: "500", fontSize: "16px" }}
+        >
+          {userIdentity?.slice(1, userIdentity.length - 1)}
+        </Text>
+        {/* <Switch
         checkedChildren={<FaMoon style={{fontSize: "17px", paddingTop: "3px"}}/>}
         unCheckedChildren={<FaSun style={{color: "white", fontSize: "17px", paddingTop: "3px"}}/>}
         checked={isDarkMode}
         onChange={toggleTheme}
       />
       <Text style={{ fontWeight: "500", fontSize: "16px", marginLeft: "20px" }}>{userIdentity?.slice(1, userIdentity.length - 1)}</Text> */}
-      {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
-        <Button
-          type="link"
-          loading={hrmLoading}
-          onClick={syncHrm}
-          data-test-id="sync-hrm-btn"
-        >
-          <SyncOutlined />
-        </Button>
-      )}
+        {permissionsData && permissionsData.admin === EPermissions.ADMIN && (
+          <Button
+            type="link"
+            loading={hrmLoading}
+            onClick={syncHrm}
+            data-test-id="sync-hrm-btn"
+          >
+            <SyncOutlined />
+          </Button>
+        )}
 
-      {/* <Button type="link" onClick={() => {
+        {/* <Button type="link" onClick={() => {
         logoutAccount()
       }}>
       </Button> */}
-      <Button
-        type="link"
-        onClick={() => {
-          logoutAccount();
-        }}
-        data-test-id="logout-btn"
-      >
-        <LogoutOutlined />
-      </Button>
-      {/* <Dropdown overlay={menu}>
+        <Button
+          type="link"
+          onClick={() => {
+            logoutAccount();
+          }}
+          data-test-id="logout-btn"
+        >
+          <LogoutOutlined />
+        </Button>
+        {/* <Dropdown overlay={menu}>
         <Button type="link">
           <Space>
             <Avatar size={16} src={`/images/flags/${currentLocale}.svg`} />
@@ -149,14 +193,15 @@ export const Header: React.FC = () => {
           </Space>
         </Button>
       </Dropdown> */}
-      <Space style={{ marginLeft: "8px" }}>
-        {user?.name && (
-          <Text ellipsis strong>
-            {user.name}
-          </Text>
-        )}
-        {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}
-      </Space>
-    </AntdLayout.Header>
+        <Space style={{ marginLeft: "8px" }}>
+          {user?.name && (
+            <Text ellipsis strong>
+              {user.name}
+            </Text>
+          )}
+          {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}
+        </Space>
+      </AntdLayout.Header>
+    </>
   );
 };

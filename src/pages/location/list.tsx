@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -94,7 +93,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       tools_count: data?.tools_count,
       accessories_count: data?.accessories_count,
       consumables_count: data?.assets_count,
-      digital_signatures_count: data?.digital_signatures_count
+      digital_signatures_count: data?.digital_signatures_count,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -113,14 +112,17 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("location.label.field.name"),
-        render: (value: IHardware, record: any) =>
+        render: (value: IHardware, record: any) => (
           <TextField
             value={value ? value : ""}
             onClick={() => {
-              record.id &&
+              if (record.id) {
                 list(`location_details?id=${record.id}&name=${record.name}`);
+              }
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -145,7 +147,10 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         key: "digital_signatures_count",
         title: t("location.label.field.tax_tokens_count"),
         render: (value: number) => <TagField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("digital_signatures_count", sorter),
+        defaultSortOrder: getDefaultSortOrder(
+          "digital_signatures_count",
+          sorter
+        ),
       },
       {
         key: "accessories_count",
@@ -247,16 +252,16 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
           scroll={{ x: 1100 }}
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<ILocationResponse>
             title={t("table.actions")}

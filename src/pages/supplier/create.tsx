@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
@@ -49,29 +48,32 @@ export const SupplierCreate = (props: SupplierCreateProps) => {
 
   useEffect(() => {
     if (payload) {
-      mutate({
-        resource: SUPPLIERS_API,
-        values: payload,
-        successNotification: false,
-        errorNotification: false,
-      },
-      {
-        onError: (error) => {
-          let err: { [key: string]: string[] | string } = error?.response.data.messages;
-          let message = Object.values(err)[0][0];
-          open?.({
-            type: 'error',
-            message: message
-          });
-          setMessageErr(error?.response.data.messages);
+      mutate(
+        {
+          resource: SUPPLIERS_API,
+          values: payload,
+          successNotification: false,
+          errorNotification: false,
         },
-        onSuccess(data, variables, context) {
-          open?.({
-              type: 'success',
+        {
+          onError: (error) => {
+            const err: { [key: string]: string[] | string } =
+              error?.response.data.messages;
+            const message = Object.values(err)[0][0];
+            open?.({
+              type: "error",
+              message: message,
+            });
+            setMessageErr(error?.response.data.messages);
+          },
+          onSuccess(data, variables, context) {
+            open?.({
+              type: "success",
               message: data?.data.messages,
-          })
-        },
-      });
+            });
+          },
+        }
+      );
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);

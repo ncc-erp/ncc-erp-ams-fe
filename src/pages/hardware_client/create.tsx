@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
@@ -45,13 +45,13 @@ type HardWareCreateProps = {
 export const ClientHardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
-  const { customer ,project} = useGetProjectData();
+  const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -82,7 +82,7 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-    (props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
   );
   statusLabelSelectProps.options = filteredProps;
 
@@ -133,17 +133,17 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
-        formData.append("customer", selectedCustomer.name);
-      }
-      if (selectedCustomer !== undefined) {
-          formData.append("customer_code", selectedCustomer.code);
-        }
-      if (selectedProject !== undefined) {
-        formData.append("project", selectedProject.name);
-      }
-      if (selectedProject !== undefined) {
-          formData.append("project_code", selectedProject.code);
-        }
+      formData.append("customer", selectedCustomer.name);
+    }
+    if (selectedCustomer !== undefined) {
+      formData.append("customer_code", selectedCustomer.code);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project", selectedProject.name);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project_code", selectedProject.code);
+    }
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);
     }
@@ -197,9 +197,9 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
         },
         {
           onError: (error) => {
-            let err: { [key: string]: string[] | string } =
+            const err: { [key: string]: string[] | string } =
               error?.response.data.messages;
-            let message = Object.values(err)[0][0];
+            const message = Object.values(err)[0][0];
             open?.({
               type: "error",
               message: message,

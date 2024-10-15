@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { TreeSelect } from "@pankod/refine-antd";
 import { useCustom } from "@pankod/refine-core";
 import { FINFAST_ENTRY_TYPE_API } from "api/baseApi";
@@ -26,12 +25,12 @@ export const TreeSelectComponent = (props: TreeSelectComponentProps) => {
     list: IEntryType[],
     parentId: number | null = null
   ): any => {
-    let map: ITreeEntryType[] = [];
+    const map: ITreeEntryType[] = [];
     list.forEach((element: IEntryType) => {
-      let elementTree: ITreeEntryType = element;
+      const elementTree: ITreeEntryType = element;
       if (element.parentId === parentId) {
-        let children = buildTree(list, element.id);
-        if (children !== []) {
+        const children = buildTree(list, element.id);
+        if (children.length > 0) {
           elementTree.children = children;
         }
         map.push(elementTree);

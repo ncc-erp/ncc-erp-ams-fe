@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from "antd";
 import {
   useTranslate,
@@ -186,7 +185,7 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
           }
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<IDepartmentResponse>
             title={t("table.actions")}
