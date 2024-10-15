@@ -1,33 +1,28 @@
 import { useCustom } from "@pankod/refine-core";
 import { CATEGORIES_API } from "api/baseApi";
 interface Categories {
+  id: number;
   name: string;
 }
-
+interface CategoriesResponse {
+    total: number;
+    rows: Categories[];
+  }
 export const useGetCaterogyData = () => {
-  const { data, refetch, isFetching } = useCustom<Categories>({
+  const { data, refetch, isFetching } = useCustom<CategoriesResponse>({
     url: CATEGORIES_API,
     method: "get",
     queryOptions: {
       enabled: true,
     },
   });
-  const customer: Categories[] =
-    data?.data?.customers.result?.map((customer) => ({
-      id: customer.id,
-      name: customer.name,
-      code: customer.code,
-    })) || [];
-
-  const project: Project[] =
-    data?.data?.projects.result?.map((project) => ({
-      id: project.id,
-      name: project.name,
-      code: project.code,
-    })) || [];
+  const dataCategory: Categories[] =
+  data?.data?.rows?.map((category) => ({
+    id: category.id,
+    name: category.name,
+  })) || [];
   return {
-    customer,
-    project,
+    dataCategory,
     refetch,
     isFetching,
   };

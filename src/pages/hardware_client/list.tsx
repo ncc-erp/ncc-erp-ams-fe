@@ -86,7 +86,8 @@ import { TotalDetail } from "components/elements/TotalDetail";
 
 import { Scanner } from "pages/hardware/scanner";
 import { QrCodeDetail } from "pages/hardware/qr-code";
-import { useDataFilterContext } from "providers/dataFilterProvider";
+import { useGetProjectData } from "hooks/useGetProjectData";
+import { useGetCaterogyData } from "hooks/useGetCaterogyData";
 const defaultCheckedList = [
   "id",
   "name",
@@ -150,8 +151,8 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
   const [isShowModalScan, setIsShowModalScan] = useState(false);
   const { data: permissionsData } = usePermissions();
-  const { project, customer } = useDataContext();
-  const { dataCategory } = useDataFilterContext();
+  const { customer ,project} = useGetProjectData();
+  const { dataCategory } = useGetCaterogyData();
   
   const handleChangeCustomer = (value: number) => {
     if (value === 0) {

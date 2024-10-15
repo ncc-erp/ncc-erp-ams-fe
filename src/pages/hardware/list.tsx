@@ -87,7 +87,8 @@ import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { QrCodeDetail } from "./qr-code";
 import { Scanner } from "./scanner";
-import { useDataFilterContext } from "providers/dataFilterProvider";
+import { useGetProjectData } from "hooks/useGetProjectData";
+import { useGetCaterogyData } from "hooks/useGetCaterogyData";
 const defaultCheckedList = [
   "id",
   "name",
@@ -157,8 +158,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
-  const { project, customer } = useDataContext();
-  const { dataCategory } = useDataFilterContext();
+  const { customer ,project} = useGetProjectData();
+  const { dataCategory } = useGetCaterogyData();
 
 
   const handleChangeCustomer = (value: number) => {
@@ -1233,28 +1234,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalScan(true);
   };
 
-  //  const handleChangeProject = (value: string | number) => {
-  //if (value === 0) {
-  //  handleChangeFilters(selectedCustomer, "", isRenting, categoryName);
-  //  setSelectedProject("")
-  //}
-  //else {
-  //    setSelectedProject(value);
-  //    handleChangeFilters(selectedCustomer, value, isRenting, categoryName);
-  //}
-  //  };
-
-  //  const handleChangeFilters = (selectedCustomer: string | number, selectedProject: string | number, isRenting: string | number, assetName: string | number): Promise<void> => {
-  //    setLoading(true);
-  //    return fetchFilterData(selectedCustomer, selectedProject, isRenting, assetName)
-  //      .catch((error) => {
-  //        console.error(error);
-  //      })
-  //      .finally(() => {
-  //        setLoading(false);
-  //      });
-  //  };
-
   return (
     <List
       title={t("hardware.label.title.asset")}
@@ -1328,7 +1307,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           >
             <Select placeholder={t("all")} onChange={handleChangeCustomer}>
               <Option value={0}>{t("all")}</Option>
-              {customer.map((cust) => (
+              {customer.map((cust: any) => (
                 <Option key={cust.id} value={cust.name}>
                   {cust.name}
                 </Option>
@@ -1342,7 +1321,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           >
             <Select placeholder={t("all")} onChange={handleChangeProject}>
               <Option value={0}>{t("all")}</Option>
-              {project.map((proj) => (
+              {project.map((proj: any) => (
                 <Option key={proj.id} value={proj.name}>
                   {proj.name}
                 </Option>

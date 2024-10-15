@@ -68,8 +68,6 @@ import { ClientHardwareListExpiration } from "pages/hardware_client/list-expirat
 import { useRef } from "react";
 import { DetailProduct } from "pages/hardware/detail";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
-import { DataFilterProvider } from "providers/dataFilterProvider";
-
 function App() {
   const { t, i18n } = useTranslation();
   const notificationRef = useRef(null);
