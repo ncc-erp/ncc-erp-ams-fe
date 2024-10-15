@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
@@ -21,7 +20,8 @@ type HardwareEditProps = {
 };
 
 export const CancleAsset = (props: HardwareEditProps) => {
-  const { setIsModalVisible, data, isModalVisible, ApiLink, refreshData } = props;
+  const { setIsModalVisible, data, isModalVisible, ApiLink, refreshData } =
+    props;
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest>();
   const { open } = useNotification();
@@ -45,7 +45,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -69,11 +69,12 @@ export const CancleAsset = (props: HardwareEditProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-        let message = Object.values(err)[0][0];
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-          type: 'error',
-          description: 'Error',
+          type: "error",
+          description: "Error",
           message: message,
         });
         setMessageErr(response.error?.response.data.messages);
@@ -82,14 +83,14 @@ export const CancleAsset = (props: HardwareEditProps) => {
       form.resetFields();
       setIsModalVisible(false);
       open?.({
-        type: 'success',
-        description: 'Success',
+        type: "success",
+        description: "Success",
         message: response.data?.data.messages,
       });
-      if(refreshData) {
+      if (refreshData) {
         refreshData();
       }
-    }
+    };
     fetch();
   }, [payload]);
 

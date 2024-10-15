@@ -1,6 +1,7 @@
-const { createProxyMiddleware } = require("http-proxy-middleware");
+import { createProxyMiddleware } from "http-proxy-middleware";
+import { Application } from "express";
 
-module.exports = function (app) {
+export default function (app: Application) {
   app.use(
     "/oauth/token",
     createProxyMiddleware({
@@ -16,4 +17,4 @@ module.exports = function (app) {
       // pathRewrite: { "^/api": "" },
     })
   );
-};
+}

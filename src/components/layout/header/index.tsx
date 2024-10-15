@@ -27,7 +27,7 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MModal } from "components/Modal/MModal";
 import { Scanner } from "pages/hardware/scanner";
-import '../../../styles/qr-code.less';
+import "../../../styles/qr-code.less";
 const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
@@ -64,13 +64,14 @@ export const Header: React.FC = () => {
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
-    custom &&
+    if (custom) {
       custom({
         url: SYNC_USER_API,
         method: "get",
       }).then((x) => {
         setHrmLoading(false);
       });
+    }
   };
 
   const logoutAccount = () => {
@@ -128,17 +129,20 @@ export const Header: React.FC = () => {
           backgroundColor: "#FFF",
         }}
       >
-
-          {isAdmin && (
-            <>
-            <IoQrCodeSharp 
-             className="qr-icon"
-             style={{ marginRight:'25px', backgroundColor:'none', border:'none' }}
-             size={45}
-             onClick={handleScanQR}
+        {isAdmin && (
+          <>
+            <IoQrCodeSharp
+              className="qr-icon"
+              style={{
+                marginRight: "25px",
+                backgroundColor: "none",
+                border: "none",
+              }}
+              size={45}
+              onClick={handleScanQR}
             />
-            </>
-          )}
+          </>
+        )}
         <Text
           data-test-id="username"
           style={{ fontWeight: "500", fontSize: "16px" }}

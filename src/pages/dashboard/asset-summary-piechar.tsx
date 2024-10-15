@@ -20,11 +20,13 @@ export const AssetsSummaryPieChartCheckOut = (
 
   useEffect(() => {
     let dataClone = { ...dataCheckOutActive };
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       dataClone = {
         ...dataClone,
         [data[i].type]:
-        data.slice(0, 6)[i] && data.slice(0, 6)[i].count > 0 && data.slice(0, 6)[i].category_type === CategoryType.ASSET
+          data.slice(0, 6)[i] &&
+          data.slice(0, 6)[i].count > 0 &&
+          data.slice(0, 6)[i].category_type === CategoryType.ASSET
             ? true
             : false,
       };
@@ -61,7 +63,7 @@ export const AssetsSummaryPieChartCheckOut = (
       },
     ],
     statistic: {
-      title: false,
+      title: undefined,
       content: {
         style: {
           whiteSpace: "pre-wrap",
@@ -88,11 +90,13 @@ export const AssetsSummaryPieChartCheckIn = (
 
   useEffect(() => {
     let dataClone = { ...dataCheckInActive };
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       dataClone = {
         ...dataClone,
         [data[i].type]:
-        data.slice(0, 6)[i] && data.slice(0, 6)[i].count > 0 && data.slice(0, 6)[i].category_type === CategoryType.ASSET
+          data.slice(0, 6)[i] &&
+          data.slice(0, 6)[i].count > 0 &&
+          data.slice(0, 6)[i].category_type === CategoryType.ASSET
             ? true
             : false,
       };
@@ -129,7 +133,7 @@ export const AssetsSummaryPieChartCheckIn = (
       },
     ],
     statistic: {
-      title: false,
+      title: undefined,
       content: {
         style: {
           whiteSpace: "pre-wrap",

@@ -30,7 +30,7 @@ export const MModal = (props: MModalProps) => {
       footer={null}
       width={modalWidth}
       bodyStyle={{ maxHeight: "80vh", overflow: "auto" }}
-      style={{ top: '60px' }}
+      style={{ top: "60px" }}
     >
       {children}
     </Modal>

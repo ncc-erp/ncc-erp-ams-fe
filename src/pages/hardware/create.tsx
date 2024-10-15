@@ -1,11 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import {
-  useTranslate,
-  useCreate,
-  useNotification,
-  useCustom,
-} from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -48,7 +43,7 @@ type HardWareCreateProps = {
 export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -56,7 +51,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const t = useTranslate();
 
 
-  const { customer ,project} = useGetProjectData();
+  const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -86,7 +81,11 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
+<<<<<<< HEAD
     (props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+=======
+    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+>>>>>>> aba2dbd31ef41c80c439148298d22d193e8c0391
   );
   statusLabelSelectProps.options = filteredProps;
 
@@ -142,14 +141,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       formData.append("customer", selectedCustomer.name);
     }
     if (selectedCustomer !== undefined) {
-        formData.append("customer_code", selectedCustomer.code);
-      }
+      formData.append("customer_code", selectedCustomer.code);
+    }
     if (selectedProject !== undefined) {
       formData.append("project", selectedProject.name);
     }
     if (selectedProject !== undefined) {
-        formData.append("project_code", selectedProject.code);
-      }
+      formData.append("project_code", selectedProject.code);
+    }
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);
     }
@@ -203,9 +202,15 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         },
         {
           onError: (error) => {
+<<<<<<< HEAD
             let err: { [key: string]: string[] | string } =
               error?.response.data.messages;
             let message = Object.values(err)[0][0];
+=======
+            const err: { [key: string]: string[] | string } =
+              error?.response.data.messages;
+            const message = Object.values(err)[0][0];
+>>>>>>> aba2dbd31ef41c80c439148298d22d193e8c0391
             open?.({
               type: "error",
               message: message,
@@ -235,7 +240,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
   }, [createData]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
@@ -615,7 +620,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       {messageErr?.image && (
         <Typography.Text type="danger">{messageErr.image[0]}</Typography.Text>
       )}
-      <div className="submit" >
+      <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>
           {t("hardware.label.button.create")}
         </Button>

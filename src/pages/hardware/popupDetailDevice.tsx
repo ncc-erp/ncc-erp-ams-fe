@@ -3,7 +3,7 @@ import { Modal, Typography, Descriptions, Tag } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
 import { UserOutlined } from "@ant-design/icons";
 import { getDetailAssetStatusByName } from "untils/assets";
-import {formatDateWithTimeZone } from "../../../src/untils/dateUtils"
+import { formatDateWithTimeZone } from "../../../src/untils/dateUtils";
 interface AssetDetailModalProps {
   url: string;
   onClose: () => void;
@@ -97,9 +97,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.serial || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.manufacturer")}>
-          <p style={{ color: "blue" }}>
-            {data.manufacturer || "n/a"}
-          </p>
+          <p style={{ color: "blue" }}>{data.manufacturer || "n/a"}</p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.category")}>
           {data.category || "n/a"}
@@ -111,14 +109,10 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.purchase_date || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.supplier")}>
-          <p style={{ color: "blue" }}>
-            {data.supplier || "n/a"}
-          </p>
+          <p style={{ color: "blue" }}>{data.supplier || "n/a"}</p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.rtd_location")}>
-          <p style={{ color: "blue" }}>
-            {data.location || "n/a"}
-          </p>
+          <p style={{ color: "blue" }}>{data.location || "n/a"}</p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
           {data?.created_at ? (
@@ -147,8 +141,7 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
           {data.notes || "n/a"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
-          {data.warranty_months} (
-          {t("hardware.label.field.warranty_expires")}{" "}
+          {data.warranty_months} ({t("hardware.label.field.warranty_expires")}{" "}
           {data?.warranty_expires ? data?.warranty_expires : ""})
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.requestable")}>

@@ -31,7 +31,7 @@ import {
   ACCESSORY_API,
   LOCATION_API,
   ACCESSORY_CATEGORIES_API,
-  ACCESSORY_TOTAL_DETAIL_API
+  ACCESSORY_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
@@ -100,71 +100,68 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const dateFromParam = searchParams.get("date_from");
   const dateToParam = searchParams.get("date_to");
   const searchParam = searchParams.get("search");
-  const supplier_id = searchParams.get('supplier_id');
-  const manufacturer_id = searchParams.get('manufacturer_id');
+  const supplier_id = searchParams.get("supplier_id");
+  const manufacturer_id = searchParams.get("manufacturer_id");
 
   const { data: permissionsData } = usePermissions();
 
-  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } = useTable<
-    IAccesstoryResponse,
-    HttpError,
-    IAccessoryFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
-      },
-    ],
-    resource: ACCESSORY_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      let { search, location, purchase_date, category } = params;
-      filters.push(
+  const { tableProps, searchFormProps, sorter, tableQueryResult, filters } =
+    useTable<IAccesstoryResponse, HttpError, IAccessoryFilterVariables>({
+      initialSorter: [
         {
-          field: "search",
-          operator: "eq",
-          value: search ? search : searchParam,
+          field: "id",
+          order: "desc",
         },
-        {
-          field: "location_id",
-          operator: "eq",
-          value: location ? location : location_id,
-        },
-        {
-          field: "date_from",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "date_to",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "category_id",
-          operator: "eq",
-          value: category ? category : category_id,
-        },
-        {
-          field: "supplier_id",
-          operator: "eq",
-          value: supplier_id,
-        },
-        {
-          field: "manufacturer_id",
-          operator: "eq",
-          value: manufacturer_id,
-        },
-      );
+      ],
+      resource: ACCESSORY_API,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        const { search, location, purchase_date, category } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search ? search : searchParam,
+          },
+          {
+            field: "location_id",
+            operator: "eq",
+            value: location ? location : location_id,
+          },
+          {
+            field: "date_from",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "date_to",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category ? category : category_id,
+          },
+          {
+            field: "supplier_id",
+            operator: "eq",
+            value: supplier_id,
+          },
+          {
+            field: "manufacturer_id",
+            operator: "eq",
+            value: manufacturer_id,
+          }
+        );
 
-      return filters;
-    },
-  });
+        return filters;
+      },
+    });
 
   const { list } = useNavigation();
 
@@ -184,7 +181,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     return {
       text: item.label,
       value: item.value,
-    }
+    };
   });
 
   const collumns = useMemo(
@@ -202,9 +199,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           <TextField
             value={value ? value : ""}
             onClick={() => {
-              record.id &&
+              if (record.id) {
                 list(`accessory_details?id=${record.id}&name=${record.name}
                 &category_id=${record.category.id}`);
+              }
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           ></TextField>
@@ -257,11 +255,13 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: translate("accessory.label.field.supplier"),
         render: (value: IAccesstoryRequest) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
             onClick={() => {
               list(`supplier_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
       },
@@ -274,7 +274,8 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             onClick={() => {
               list(`location_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
@@ -396,7 +397,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
+  }, [isModalVisible]);
 
   useEffect(() => {
     refreshData();
@@ -489,7 +490,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleDateChange = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
+    const [from, to] = Array.from(val || []) as moment.Moment[];
 
     if (val !== null) {
       searchParams.set(
@@ -524,12 +525,10 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     <List
       title={translate("accessory.label.title.accessory")}
       pageHeaderProps={{
-        extra: (
-          permissionsData.admin === EPermissions.ADMIN && (
-            <CreateButton onClick={handleCreate}>
-              {translate("accessory.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: permissionsData.admin === EPermissions.ADMIN && (
+          <CreateButton onClick={handleCreate}>
+            {translate("accessory.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -551,9 +550,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, "YYYY/MM/DD"),
-                  moment(dateToParam, "YYYY/MM/DD"),
-                ]
+                    moment(dateFromParam, "YYYY/MM/DD"),
+                    moment(dateToParam, "YYYY/MM/DD"),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -582,7 +581,9 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
             <Select onChange={handleLocationChange} placeholder="Vị trí">
               <Option value={0}>{translate("all")}</Option>
               {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+                <Option value={item.value} key={item.value}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -662,17 +663,22 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col as any} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IAccesstoryResponse>
             title={translate("table.actions")}

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import { Form, Input, useForm, Button } from "@pankod/refine-antd";
@@ -8,7 +6,7 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import {
   ITaxTokenRequestCheckout,
   ITaxTokenRequestMultipleCancel,
-  ITaxTokenRequestMultipleCheckout
+  ITaxTokenRequestMultipleCheckout,
 } from "interfaces/tax_token";
 import { TAX_TOKEN_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
@@ -33,23 +31,26 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
   const { mutate, data: dataCancel, isLoading } = useCreate();
 
   const onFinish = (event: ITaxTokenRequestMultipleCancel) => {
-    mutate({
-      resource: TAX_TOKEN_API + "?_method=PUT",
-      values: {
-        tax_tokens: event.tax_tokens,
-        assigned_status: ASSIGNED_STATUS.REFUSE,
-        reason: event.reason,
+    mutate(
+      {
+        resource: TAX_TOKEN_API + "?_method=PUT",
+        values: {
+          tax_tokens: event.tax_tokens,
+          assigned_status: ASSIGNED_STATUS.REFUSE,
+          reason: event.reason,
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   const { setFields } = form;
@@ -79,10 +80,13 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
         onFinish(event);
       }}
     >
-      <Form.Item label={t("tax_token.label.field.list_tax_token")} name="tax_tokens">
+      <Form.Item
+        label={t("tax_token.label.field.list_tax_token")}
+        name="tax_tokens"
+      >
         {data &&
-          data?.map((item: any) => (
-            <div>
+          data?.map((item: any, index: number) => (
+            <div key={index}>
               {item.name} - {item.seri}
             </div>
           ))}

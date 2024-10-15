@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTranslate, useCustom, useNotification } from "@pankod/refine-core";
 import {
@@ -86,10 +85,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: CONSUMABLE_API + "/" + data?.id,
     method: "post",
     config: {
@@ -98,7 +94,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
   const onFinish = (event: IConsumablesRequest) => {
     setMessageErr(messageErr);
@@ -151,7 +147,9 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       { name: "supplier_id", value: data?.supplier.id },
       {
         name: "purchase_cost",
-        value: data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
+        value:
+          data?.purchase_cost &&
+          data?.purchase_cost.toString().split(",").join(""),
       },
       {
         name: "warranty_months",
@@ -163,25 +161,26 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-          let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-          let message = Object.values(err)[0][0];
-          open?.({
-            type: 'error',
-            message: message,
-          }); 
-          setMessageErr(response.error?.response.data.messages);
-          return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            message: response.data?.data.messages,
-        });        
-    } 
+          type: "error",
+          message: message,
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setMessageErr(null);
+      open?.({
+        type: "success",
+        message: response.data?.data.messages,
+      });
+    };
     fetch();
   }, [payload]);
 

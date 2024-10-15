@@ -110,7 +110,7 @@ export interface IToolCheckoutRequest {
     datetime: string;
     formatted: string;
   };
-  notes: string
+  notes: string;
 }
 
 export interface IToolMultiCheckoutRequest {
@@ -122,7 +122,7 @@ export interface IToolMultiCheckoutRequest {
     datetime: string;
     formatted: string;
   };
-  notes: string
+  notes: string;
 }
 
 export interface IToolCheckoutMessageResponse {
@@ -150,7 +150,7 @@ export interface IToolMultiCheckinRequest {
     datetime: string;
     formatted: string;
   };
-  notes: string
+  notes: string;
 }
 
 export interface IToolCheckinMessageResponse {
@@ -222,7 +222,7 @@ export interface IToolUpdateRequest {
 }
 
 export interface IToolRequestMultipleCancel {
-  tools: {}[];
+  tools: any[];
   reason: string;
   assigned_status: number;
 }

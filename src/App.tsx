@@ -160,18 +160,15 @@ function App() {
             options: {
               route: "checkin_checkout",
             },
-        },
-            {
-              name: t("resource.assets"),
-              list: () =>(
-                    <HardwareList/>
-              ),
-              options: {
-                route: "assets",
-                label: 'assets'
-              },
+          },
+          {
+            name: t("resource.assets"),
+            list: HardwareList,
+            options: {
+              route: "assets",
+              label: "assets",
             },
-        
+          },
           {
             name: t("resource.assets-assign"),
             list: HardwareListAssign,
@@ -402,17 +399,15 @@ function App() {
               route: "tax_token_waiting",
               label: "tax_token",
             },
-        },
-            {
-              name: t("resource.client-assets"),
-              list: () =>(
-                    <ClientHardwareList/>
-              ),
-              options: {
-                route: "client-assets",
-                label: 'client-assets'
-              },
+          },
+          {
+            name: t("resource.client-assets"),
+            list: ClientHardwareList,
+            options: {
+              route: "client-assets",
+              label: "client-assets",
             },
+          },
           {
             name: t("resource.client-asset-assigned"),
             list: ClientHardwareListAssign,
