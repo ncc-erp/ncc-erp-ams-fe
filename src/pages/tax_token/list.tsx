@@ -166,7 +166,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
                 seri,
                 supplier,
                 purchase_date,
-                expiration_date
+                expiration_date,
             } = params;
             filters.push(
                 {

@@ -724,7 +724,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={TAX_TOKEN_TOTAL_DETAIL_API}
         additional_filter="user_list=true"
-      ></TotalDetail>
+      />
       <div className="checkout-checkin-multiple">
 
       </div>

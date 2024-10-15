@@ -171,7 +171,6 @@ export const HardwareListReadyToDeploy: React.FC<
         value: STATUS_LABELS.READY_TO_DEPLOY,
       },
     ],
-
     resource: HARDWARE_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
@@ -185,6 +184,7 @@ export const HardwareListReadyToDeploy: React.FC<
         status_label,
         purchase_date,
         assigned_to,
+        category
       } = params;
       filters.push(
         {
@@ -243,6 +243,14 @@ export const HardwareListReadyToDeploy: React.FC<
           operator: "eq",
           value: category_id,
         });
+      }
+      if (category) {
+        filters.push({
+          field: "category",
+          operator: "eq",
+          value: category ? category : category_id,
+
+        })
       }
       if (dateFromParam && dateToParam) {
         filters.push({
@@ -1201,6 +1209,10 @@ export const HardwareListReadyToDeploy: React.FC<
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
 
         <div className="all">
@@ -1377,6 +1389,10 @@ export const HardwareListReadyToDeploy: React.FC<
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       <div className="checkout-checkin-multiple">
         <div className="checkout-multiple-asset">

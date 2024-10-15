@@ -174,6 +174,13 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         },
       ],
       resource: HARDWARE_API,
+      initialFilter: [
+        {
+          field: "rtd_location_id",
+          operator: "eq",
+          value: rtd_location_id,
+        }
+      ],
       onSearch: (params) => {
         const filters: CrudFilters = [];
         let {
@@ -192,7 +199,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
           {
             field: "search",
             operator: "eq",
-            value: searchParam,
+            value: search ? search : searchParam,
           },
           {
             field: "filter",
@@ -232,7 +239,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
             value: assigned_to,
           },
           {
-            field: "category_id",
+            field: "category",
             operator: "eq",
             value: category ? category : category_id,
           },
@@ -1232,6 +1239,10 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
@@ -1425,7 +1436,11 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
-      ></TotalDetail>
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
+      />
       <div className="checkout-checkin-multiple">
         <div className="checkout-multiple-asset">
           {isAdmin && (

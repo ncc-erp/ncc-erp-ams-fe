@@ -227,7 +227,7 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
           value: assigned_to,
         },
         {
-          field: "category_id",
+          field: "category",
           operator: "eq",
           value: category ? category : category_id,
         },
@@ -1210,6 +1210,10 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="category"
+            style={{ display: "none" }}
+          />
         </Form>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
@@ -1386,6 +1390,11 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
         isReload={isTotalDetailReload}
+        additional_filter=""
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        searchFormProps={searchFormProps}
+        optionCategory={filterCategory}
       ></TotalDetail>
       <div className="checkout-checkin-multiple">
         <div className="checkout-multiple-asset">
