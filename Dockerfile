@@ -5,7 +5,6 @@ WORKDIR /opt/web
 
 COPY ./package.json ./
 COPY ./package-lock.json ./
-COPY ./yarn.lock ./
 
 RUN npm install --legacy-peer-deps
 
