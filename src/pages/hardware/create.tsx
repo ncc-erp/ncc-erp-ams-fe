@@ -50,7 +50,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { open } = useNotification();
   const t = useTranslate();
 
-
   const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
@@ -198,9 +197,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         },
         {
           onError: (error) => {
-            let err: { [key: string]: string[] | string } =
+            const err: { [key: string]: string[] | string } =
               error?.response.data.messages;
-            let message = Object.values(err)[0][0];
+            const message = Object.values(err)[0][0];
             open?.({
               type: "error",
               message: message,

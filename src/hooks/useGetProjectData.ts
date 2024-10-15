@@ -1,7 +1,7 @@
 import { useCustom } from "@pankod/refine-core";
 import { CLIENT_HARDWARE_CREATE } from "api/baseApi";
 interface Customer {
-    id: number;
+  id: number;
   name: string;
   code: string;
 }

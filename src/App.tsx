@@ -128,6 +128,7 @@ function App() {
               );
               return Promise.resolve({ can });
             }
+
             if (action === "field") {
               const can = await enforcer.enforce(
                 role.admin,
@@ -218,14 +219,18 @@ function App() {
               label: "tools",
             },
           },
+          // {
+          //   name: t("resource.softwares"),
+          //   list: SoftwareList,
+          //   options: {
+          //     route: "softwares",
+          //   },
+          // },
           {
-            name: t("resource.client-assets"),
-            list: () => (
-              <ClientHardwareList />
-            ),
+            name: t("resource.licenses"),
+            list: LicensesList,
             options: {
-              route: "client-assets",
-              label: 'client-assets'
+              route: "licenses",
             },
           },
           {
