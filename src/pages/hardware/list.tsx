@@ -156,9 +156,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
   const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
-  const { customer ,project} = useGetProjectData();
+  const { customer, project } = useGetProjectData();
   const { dataCategory } = useGetCaterogyData();
-
 
   const handleChangeCustomer = (value: number) => {
     if (value === 0) {

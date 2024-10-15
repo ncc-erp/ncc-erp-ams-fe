@@ -1219,14 +1219,14 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
                     ? [
-                      moment(dateFromParam, dateFormat),
-                      moment(dateToParam, dateFormat),
-                    ]
+                        moment(dateFromParam, dateFormat),
+                        moment(dateToParam, dateFormat),
+                      ]
                     : ""
                 : "",
           }}
@@ -1619,9 +1619,9 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           rowSelection={
             isAdmin
               ? {
-                type: "checkbox",
-                ...rowSelection,
-              }
+                  type: "checkbox",
+                  ...rowSelection,
+                }
               : undefined
           }
         >

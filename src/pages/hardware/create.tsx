@@ -50,7 +50,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { open } = useNotification();
   const t = useTranslate();
 
-
   const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
@@ -81,11 +80,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-<<<<<<< HEAD
-    (props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY
-=======
     (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
->>>>>>> aba2dbd31ef41c80c439148298d22d193e8c0391
   );
   statusLabelSelectProps.options = filteredProps;
 
@@ -202,15 +197,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
         },
         {
           onError: (error) => {
-<<<<<<< HEAD
-            let err: { [key: string]: string[] | string } =
-              error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-=======
             const err: { [key: string]: string[] | string } =
               error?.response.data.messages;
             const message = Object.values(err)[0][0];
->>>>>>> aba2dbd31ef41c80c439148298d22d193e8c0391
             open?.({
               type: "error",
               message: message,

@@ -5,9 +5,9 @@ interface Categories {
   name: string;
 }
 interface CategoriesResponse {
-    total: number;
-    rows: Categories[];
-  }
+  total: number;
+  rows: Categories[];
+}
 export const useGetCaterogyData = () => {
   const { data, refetch, isFetching } = useCustom<CategoriesResponse>({
     url: CATEGORIES_API,
@@ -17,10 +17,10 @@ export const useGetCaterogyData = () => {
     },
   });
   const dataCategory: Categories[] =
-  data?.data?.rows?.map((category) => ({
-    id: category.id,
-    name: category.name,
-  })) || [];
+    data?.data?.rows?.map((category) => ({
+      id: category.id,
+      name: category.name,
+    })) || [];
   return {
     dataCategory,
     refetch,

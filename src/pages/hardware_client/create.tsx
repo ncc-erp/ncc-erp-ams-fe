@@ -197,15 +197,9 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
         },
         {
           onError: (error) => {
-<<<<<<< HEAD
-            let err: { [key: string]: string[] | string } =
-              error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-=======
             const err: { [key: string]: string[] | string } =
               error?.response.data.messages;
             const message = Object.values(err)[0][0];
->>>>>>> aba2dbd31ef41c80c439148298d22d193e8c0391
             open?.({
               type: "error",
               message: message,
