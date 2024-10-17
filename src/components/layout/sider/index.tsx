@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, CSSProperties } from "react";
 
 import {
@@ -38,7 +37,7 @@ export const Sider: React.FC = () => {
 
   const dashboardItemList = [
     translate("resource.dashboard"),
-    translate("resource.checkin-checkout")
+    translate("resource.checkin-checkout"),
   ];
 
   const assetItemList = [
@@ -48,26 +47,22 @@ export const Sider: React.FC = () => {
     translate("resource.assets-pending"),
     translate("resource.assets-broken"),
     translate("resource.assets-waiting-confirm"),
-    translate("resource.assets-expires")
+    translate("resource.assets-expires"),
   ];
 
   const toolItemList = [
     translate("resource.tools-all"),
-    translate("resource.tools-waiting")
+    translate("resource.tools-waiting"),
   ];
 
-  const consumableItemList = [
-    translate("resource.consumables")
-  ];
+  const consumableItemList = [translate("resource.consumables")];
 
-  const accessoryItemList = [
-    translate("resource.accessory")
-  ];
+  const accessoryItemList = [translate("resource.accessory")];
 
   const taxTokenItemList = [
     translate("resource.tax_token"),
     translate("resource.tax_token_assign"),
-    translate("resource.tax_token_waiting")
+    translate("resource.tax_token_waiting"),
   ];
 
   const settingItemList = [
@@ -75,7 +70,7 @@ export const Sider: React.FC = () => {
     translate("resource.category"),
     translate("resource.manufactures"),
     translate("resource.suppliers"),
-    translate("resource.location")
+    translate("resource.location"),
   ];
 
   const userAssetItemList = [
@@ -83,16 +78,12 @@ export const Sider: React.FC = () => {
     translate("resource.users_licenses"),
     translate("resource.users-tools"),
     translate("resource.users-tax-tokens"),
-    translate("resource.request")
+    translate("resource.request"),
   ];
 
-  const reportItemList = [
-    translate("resource.report"),
-  ];
+  const reportItemList = [translate("resource.report")];
 
-  const userManagerList = [
-    translate("resource.manager_user")
-  ];
+  const userManagerList = [translate("resource.manager_user")];
 
   const clientAssetList = [
     translate("resource.client-assets"),
@@ -101,12 +92,13 @@ export const Sider: React.FC = () => {
     translate("resource.client-asset-pending"),
     translate("resource.client-asset-broken"),
     translate("resource.client-asset-waitingConfirm"),
-    translate("resource.client-asset-expires")
-  ]
+    translate("resource.client-asset-expires"),
+  ];
 
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;
-  const userIsBranchAdmin = permissionsData?.branchadmin === EPermissions.BRANCHADMIN;
+  const userIsBranchAdmin =
+    permissionsData?.branchadmin === EPermissions.BRANCHADMIN;
 
   return (
     <AntdLayout.Sider
@@ -215,7 +207,7 @@ export const Sider: React.FC = () => {
           />
         )}
 
-        {permissionsData && (userIsAdmin || userIsBranchAdmin) &&
+        {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
           <SideBarMenuItem
             collapsed={collapsed}
             label={""}
@@ -223,9 +215,9 @@ export const Sider: React.FC = () => {
             itemList={accessoryItemList}
             key={"accessory-menu"}
           />
-        }
+        )}
 
-        {permissionsData && (userIsAdmin || userIsBranchAdmin) &&
+        {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
           <SideBarMenuItem
             collapsed={collapsed}
             label={""}
@@ -233,7 +225,7 @@ export const Sider: React.FC = () => {
             itemList={consumableItemList}
             key={"consumable-menu"}
           />
-        }
+        )}
 
         {permissionsData && userIsAdmin && (
           <SideBarSubMenuItem
@@ -268,7 +260,7 @@ export const Sider: React.FC = () => {
           />
         )}
 
-        {permissionsData && userIsAdmin &&
+        {permissionsData && userIsAdmin && (
           <SideBarMenuItem
             collapsed={collapsed}
             label={""}
@@ -276,10 +268,9 @@ export const Sider: React.FC = () => {
             itemList={reportItemList}
             key={"report-menu"}
           />
+        )}
 
-        }
-
-        {permissionsData && userIsAdmin &&
+        {permissionsData && userIsAdmin && (
           <SideBarMenuItem
             collapsed={collapsed}
             label={""}
@@ -287,8 +278,7 @@ export const Sider: React.FC = () => {
             itemList={userManagerList}
             key={"user-manager-menu"}
           />
-        }
-
+        )}
       </Menu>
     </AntdLayout.Sider>
   );

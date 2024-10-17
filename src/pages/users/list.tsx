@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -186,7 +184,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   };
 
   useEffect(() => {
-    let arr = [...isLoadingArr];
+    const arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
     setIsLoadingArr(arr);
     refreshData();
@@ -378,7 +376,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     }, 2000);
   };
 
-  const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
+  const confirmMultipleHardware = (assets: any[], assigned_status: number) => {
     mutate({
       resource: HARDWARE_API + "?_method=PUT",
       values: {
@@ -548,9 +546,10 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           }}
           // scroll={{ x: 1550 }}
         >
-          {collumns.map((col) => (
+          {collumns.map((col, index) => (
             <Table.Column
               dataIndex={col.key}
+              key={index}
               {...(col as ColumnsType)}
               sorter
             />
@@ -591,8 +590,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                             isLoadingArr[record.id] === undefined
                               ? false
                               : isLoadingArr[record.id] === false
-                              ? false
-                              : true
+                                ? false
+                                : true
                           }
                         >
                           {t("hardware.label.button.accept_checkout")}
@@ -620,8 +619,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                             isLoadingArr[record.id] === undefined
                               ? false
                               : isLoadingArr[record.id] === false
-                              ? false
-                              : true
+                                ? false
+                                : true
                           }
                         >
                           {t("hardware.label.button.accept_checkin")}
@@ -640,8 +639,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >
@@ -658,8 +657,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                       isLoadingArr[record.id] === undefined
                         ? false
                         : isLoadingArr[record.id] === false
-                        ? false
-                        : true
+                          ? false
+                          : true
                     }
                     onClick={() => cancle(record)}
                   >

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -125,7 +124,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
   }, [idSend, mutate]);
 
   useEffect(() => {
-    let arr = [...isLoadingArr];
+    const arr = [...isLoadingArr];
     arr[idSend] = isLoadingSendRequest;
     setIsLoadingArr(arr);
     tableQueryResult.refetch();
@@ -188,8 +187,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                 value === "Sent"
                   ? "#0073b7"
                   : value === "Approved"
-                  ? "red"
-                  : "#f39c12",
+                    ? "red"
+                    : "#f39c12",
               color: "white",
               border: "none",
             }}
@@ -340,7 +339,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
         {collumns
           .filter((collumn) => collumnSelected.includes(collumn.key))
           .map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
 
         <Table.Column
@@ -389,8 +388,8 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                         isLoadingArr[record.id] === undefined
                           ? false
                           : isLoadingArr[record.id] === false
-                          ? false
-                          : true
+                            ? false
+                            : true
                       }
                     >
                       {t("request.label.button.send")}

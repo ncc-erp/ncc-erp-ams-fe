@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { LayoutProps } from "@pankod/refine-core";
 import { AntdLayout, Grid } from "@pankod/refine-antd";
 

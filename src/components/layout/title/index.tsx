@@ -9,7 +9,7 @@ const logo: CSSProperties = {
   position: "relative",
   transform: "translateX(-50%)",
   marginTop: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
 };
 
 export const Title: React.FC<TitleProps> = ({ collapsed }) => (

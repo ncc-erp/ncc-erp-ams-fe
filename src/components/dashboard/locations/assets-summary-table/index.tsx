@@ -1,5 +1,3 @@
-/* eslint-disable no-lone-blocks */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
 import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
@@ -27,11 +25,17 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
 
   const response = data?.data.payload || [];
 
-  const sumEachCategoryByLocation = (type: string, arrNameAsset: any, index: any, is_client = false) => {
-
-    let dataAll = [] as any;
+  const sumEachCategoryByLocation = (
+    type: string,
+    arrNameAsset: any,
+    index: any,
+    is_client = false
+  ) => {
+    const dataAll = [] as any;
     let categoryKeyTranslate = type;
-    let category_const = (CategoryType as { [key: string]: string })[type.toUpperCase()]
+    const category_const = (CategoryType as { [key: string]: string })[
+      type.toUpperCase()
+    ];
     let columnCount = type.toLowerCase() + "s_count";
 
     if (type === "Asset" && is_client) {
@@ -45,13 +49,13 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       columnCount = "accessories_count";
     }
 
-    let sumCategory = {
+    const sumCategory = {
       type: t("dashboard.field.type" + categoryKeyTranslate),
       category_type: category_const,
     } as any;
 
     arrNameAsset?.forEach((nameAsset: any) => {
-      let categoryType = {} as any;
+      const categoryType = {} as any;
       let category = "" as ICategoryAsset | string | undefined;
       categoryType.type = nameAsset;
 
@@ -61,20 +65,23 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
         );
 
         if (category?.category_type === category_const) {
-
           if (type === "Asset" && !is_client) {
-            categoryType["rtd_location_" + item?.id] = category && category?.[columnCount];
+            categoryType["rtd_location_" + item?.id] =
+              category && category?.[columnCount];
             categoryType["category_id"] = category && category?.id;
             categoryType["category_type"] = category && category?.category_type;
           } else {
-            sumCategory["rtd_location_" + item?.id] = (sumCategory["rtd_location_" + item?.id] ?? 0) + category?.[columnCount];
+            sumCategory["rtd_location_" + item?.id] =
+              (sumCategory["rtd_location_" + item?.id] ?? 0) +
+              category?.[columnCount];
           }
-
         }
-      })
+      });
 
       if (type === "Asset" && !is_client) {
-        const dataAsset = (response[index !== -1 ? index : 0]?.categories).filter(
+        const dataAsset = (response[
+          index !== -1 ? index : 0
+        ]?.categories).filter(
           (item: ICategoryAsset) => item.category_type === CategoryType.ASSET
         );
 
@@ -90,18 +97,22 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     }
 
     return sumCategory;
-  }
+  };
 
-  const getUrlForOnClick = (record: DataTable, dateFrom: string | null, dateTo: string | null, item = {} as ILocation) => {
+  const getUrlForOnClick = (
+    record: DataTable,
+    dateFrom: string | null,
+    dateTo: string | null,
+    item = {} as ILocation
+  ) => {
     let url = "";
-    console.log(record)
+    console.log(record);
 
     switch (record.category_type) {
       case CategoryType.ASSET:
         if (record.type === t("dashboard.field.typeClientAsset")) {
           url += `client-assets?`;
-        }
-        else {
+        } else {
           url += `assets?category_id=${record.category_id}&`;
         }
         break;
@@ -129,15 +140,14 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       } else {
         url += `location_id=${item?.id}&`;
       }
-
     }
 
     if (dateFrom && dateTo) {
-      url += `date_from=${dateFrom}&date_to=${dateTo}`
+      url += `date_from=${dateFrom}&date_to=${dateTo}`;
     }
 
     return list(url);
-  }
+  };
 
   useEffect(() => {
     const index = response.findIndex(
@@ -147,14 +157,38 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       (item: ICategoryAsset) => item.name
     );
 
-    let sumConsumable = sumEachCategoryByLocation("Consumable", arrNameAsset, index);
-    let sumAccessory = sumEachCategoryByLocation("Accessory", arrNameAsset, index);
-    let sumTool = sumEachCategoryByLocation("Tool", arrNameAsset, index);
-    let sumTaxToken = sumEachCategoryByLocation("TaxToken", arrNameAsset, index);
-    let sumClientAsset = sumEachCategoryByLocation("Asset", arrNameAsset, index, true);
-    let dataAll = sumEachCategoryByLocation("Asset", arrNameAsset, index);
+    const sumConsumable = sumEachCategoryByLocation(
+      "Consumable",
+      arrNameAsset,
+      index
+    );
+    const sumAccessory = sumEachCategoryByLocation(
+      "Accessory",
+      arrNameAsset,
+      index
+    );
+    const sumTool = sumEachCategoryByLocation("Tool", arrNameAsset, index);
+    const sumTaxToken = sumEachCategoryByLocation(
+      "TaxToken",
+      arrNameAsset,
+      index
+    );
+    const sumClientAsset = sumEachCategoryByLocation(
+      "Asset",
+      arrNameAsset,
+      index,
+      true
+    );
+    const dataAll = sumEachCategoryByLocation("Asset", arrNameAsset, index);
 
-    setDataAllLocation([...dataAll, sumConsumable, sumAccessory, sumTool, sumTaxToken, sumClientAsset]);
+    setDataAllLocation([
+      ...dataAll,
+      sumConsumable,
+      sumAccessory,
+      sumTool,
+      sumTaxToken,
+      sumClientAsset,
+    ]);
   }, [response]);
 
   let columnSum = [
@@ -176,8 +210,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     },
   ];
 
-
-  let columnTypes = response.map((item: ILocation) => {
+  const columnTypes = response.map((item: ILocation) => {
     return {
       title: item.name,
       dataIndex: "rtd_location_" + item.id,
@@ -202,7 +235,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       columns={id === 99999 ? columnSum : []}
       dataSource={id === 99999 ? dataAllLocation : []}
       pagination={false}
-      scroll={{ x: 'calc(500px + 50%)', y: 400 }}
+      scroll={{ x: "calc(500px + 50%)", y: 400 }}
     />
   );
 };

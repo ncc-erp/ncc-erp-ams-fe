@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { IModel } from "@antv/l7-core";
 import { Tooltip } from "antd";
 import {
@@ -41,7 +40,7 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const [detailClone, setDetailClone] = useState<IModelResponse>();
 
   const [searchParms] = useSearchParams();
-  const model_id = searchParms.get('model_id');
+  const model_id = searchParms.get("model_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IModel>({
@@ -64,28 +63,31 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           {
             field: "model_id",
             operator: "eq",
-            value: model_id
-          });
+            value: model_id,
+          }
+        );
         return filters;
       },
     });
 
   const { list } = useNavigation();
 
-
   const collumns = useMemo(
     () => [
       {
         key: "name",
         title: t("model.label.field.name"),
-        render: (value: IModel, record: IModelResponse) =>
-          <TextField value={value}
+        render: (value: IModel, record: IModelResponse) => (
+          <TextField
+            value={value}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
             onClick={() => {
               {
-                list(`assets?model_id=${record.id}`)
+                list(`assets?model_id=${record.id}`);
               }
-            }} />,
+            }}
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -245,7 +247,7 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           }}
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<IModelResponse>
             title={t("table.actions")}

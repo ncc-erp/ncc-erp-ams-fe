@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
@@ -20,7 +19,11 @@ import {
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
-import { CLIENT_HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import {
+  CLIENT_HARDWARE_API,
+  MODELS_SELECT_LIST_API,
+  USERS_API,
+} from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
@@ -270,7 +273,11 @@ export const ClientHardwareCheckout = (props: HardwareCheckoutProps) => {
           type="primary"
           htmlType="submit"
           loading={isLoading}
-          style={{ backgroundColor: "#0073B7", color: "white", borderColor: "#0073B7" }}
+          style={{
+            backgroundColor: "#0073B7",
+            color: "white",
+            borderColor: "#0073B7",
+          }}
         >
           {t("hardware.label.button.checkout")}
         </Button>

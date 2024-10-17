@@ -73,23 +73,21 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
     {
       key: "software",
       title: t("licenses.label.field.software"),
-      render: (value: IModelSoftware) => <TextField value={value ? value.name : ""} />,
+      render: (value: IModelSoftware) => (
+        <TextField value={value ? value.name : ""} />
+      ),
       defaultSortOrder: getDefaultSortOrder("software", sorter),
     },
     {
       key: "category",
       title: t("licenses.label.field.category"),
-      render: (value: IModel) => (
-        <TagField value={value ? value.name : ""} />
-      ),
+      render: (value: IModel) => <TagField value={value ? value.name : ""} />,
       defaultSortOrder: getDefaultSortOrder("category", sorter),
     },
     {
       key: "manufacturer",
       title: t("licenses.label.field.manufacturer"),
-      render: (value: IModel) => (
-        <TagField value={value ? value.name : ""} />
-      ),
+      render: (value: IModel) => <TagField value={value ? value.name : ""} />,
       defaultSortOrder: getDefaultSortOrder("manufacturer", sorter),
     },
     {
@@ -109,15 +107,15 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
     {
       key: "checkout_at",
       title: t("licenses.label.field.checkout_at"),
-      render: (value: any) =>
-        <DateField format="LLL" value={value ? value.datetime : ""} />,
+      render: (value: any) => (
+        <DateField format="LLL" value={value ? value.datetime : ""} />
+      ),
       defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
     },
     {
       key: "notes",
       title: t("licenses.label.field.notes"),
-      render: (value: any) =>
-        <TextField value={value ? value : ""} />,
+      render: (value: any) => <TextField value={value ? value : ""} />,
       defaultSortOrder: getDefaultSortOrder("notes", sorter),
     },
   ];
@@ -150,8 +148,7 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
       <div className="users">
         <div
           className={pageTotal === 0 ? "list-users-noTotalPage" : "list-users"}
-        >
-        </div>
+        ></div>
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
           <div className="other_function">
@@ -170,7 +167,8 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
                   >
                     <SyncOutlined
                       onClick={handleRefresh}
-                      style={{ color: "black" }} />
+                      style={{ color: "black" }}
+                    />
                   </Tooltip>
                 </button>
               </div>
@@ -187,7 +185,8 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
         <LicensesUserShow
           setIsModalVisible={setIsShowModalVisible}
           detail={detail}
-          isModalVisible={isShowModalVisible} />
+          isModalVisible={isShowModalVisible}
+        />
       </MModal>
 
       {loading ? (
@@ -206,15 +205,16 @@ export const UserListLicenses: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
-          {collumns.map((col) => (
+          {collumns.map((col, index) => (
             <Table.Column
+              key={index}
               dataIndex={col.key}
               {...(col as ColumnsType)}
               sorter

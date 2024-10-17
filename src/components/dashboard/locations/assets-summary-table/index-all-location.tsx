@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-redeclare */
-/* eslint-disable no-lone-blocks */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
 import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
@@ -30,9 +26,11 @@ export const AssetsSummaryTableAllLocation = (
   const rtd_location_id = searchParams.get("rtd_location_id");
 
   const sumEachCategoryByLocation = (type: string, is_client = false) => {
-    let dataAllCategory = [] as any;
+    const dataAllCategory = [] as any;
     let categoryKeyTranslate = type;
-    let categoryType = (CategoryType as { [key: string]: string })[type.toUpperCase()];
+    const categoryType = (CategoryType as { [key: string]: string })[
+      type.toUpperCase()
+    ];
     let columnCount = type.toLowerCase() + "s_count";
 
     if (type === "Asset" && is_client) {
@@ -46,14 +44,13 @@ export const AssetsSummaryTableAllLocation = (
       columnCount = "accessories_count";
     }
 
-    let sumCategoryByLocation = {
+    const sumCategoryByLocation = {
       name: t("dashboard.field.type" + categoryKeyTranslate),
       category_type: categoryType,
-    } as any
+    } as any;
 
     categories.forEach((category: ICategoryAsset) => {
       if (category.category_type === categoryType) {
-
         sumCategoryByLocation.category_id = category.id;
         sumCategoryByLocation.rtd_location_id = id;
 
@@ -69,58 +66,74 @@ export const AssetsSummaryTableAllLocation = (
         }
 
         category.status_labels.forEach((status_label) => {
-
           switch (status_label.name) {
             case EStatus.ASSIGN:
-              sumCategoryByLocation.assign = (type === "Asset" && is_client)
-                ? (sumCategoryByLocation.assign ?? 0) + Number(status_label[columnCount])
-                : Number(status_label[columnCount])
+              sumCategoryByLocation.assign =
+                type === "Asset" && is_client
+                  ? (sumCategoryByLocation.assign ?? 0) +
+                    Number(status_label[columnCount])
+                  : Number(status_label[columnCount]);
               break;
 
             case EStatus.BROKEN:
-              sumCategoryByLocation.broken = (type === "Asset" && is_client)
-                ? (sumCategoryByLocation.broken ?? 0) + Number(status_label[columnCount])
-                : Number(status_label[columnCount])
+              sumCategoryByLocation.broken =
+                type === "Asset" && is_client
+                  ? (sumCategoryByLocation.broken ?? 0) +
+                    Number(status_label[columnCount])
+                  : Number(status_label[columnCount]);
               break;
 
             case EStatus.PENDING:
-              sumCategoryByLocation.pending = (type === "Asset" && is_client)
-                ? (sumCategoryByLocation.pending ?? 0) + Number(status_label[columnCount])
-                : Number(status_label[columnCount])
+              sumCategoryByLocation.pending =
+                type === "Asset" && is_client
+                  ? (sumCategoryByLocation.pending ?? 0) +
+                    Number(status_label[columnCount])
+                  : Number(status_label[columnCount]);
               break;
 
             case EStatus.READY_TO_DEPLOY:
-              sumCategoryByLocation.ready_to_deploy = (type === "Asset" && is_client)
-                ? (sumCategoryByLocation.ready_to_deploy ?? 0) + Number(status_label[columnCount])
-                : Number(status_label[columnCount])
+              sumCategoryByLocation.ready_to_deploy =
+                type === "Asset" && is_client
+                  ? (sumCategoryByLocation.ready_to_deploy ?? 0) +
+                    Number(status_label[columnCount])
+                  : Number(status_label[columnCount]);
               break;
           }
         });
 
         if (!(type === "Asset" && !is_client)) {
-          sumCategoryByLocation.type = (sumCategoryByLocation.type ?? 0) + Number(category[columnCount]);
+          sumCategoryByLocation.type =
+            (sumCategoryByLocation.type ?? 0) + Number(category[columnCount]);
         }
       }
 
-      if (category.category_type === CategoryType.ASSET && !is_client && type === "Asset") {
+      if (
+        category.category_type === CategoryType.ASSET &&
+        !is_client &&
+        type === "Asset"
+      ) {
         dataAllCategory.push({ ...sumCategoryByLocation });
       }
-    })
+    });
 
     if (!is_client && type === "Asset") {
       return dataAllCategory;
     }
     return sumCategoryByLocation;
-  }
+  };
 
-  const getUrlForOnClick = (record: DataTable, dateFrom: string | null, dateTo: string | null, status_id = -1) => {
+  const getUrlForOnClick = (
+    record: DataTable,
+    dateFrom: string | null,
+    dateTo: string | null,
+    status_id = -1
+  ) => {
     let url = "";
     switch (record.category_type) {
       case CategoryType.ASSET:
         if (record.name === t("dashboard.field.typeClientAsset")) {
           url += `client-assets?`;
-        }
-        else {
+        } else {
           url += `assets?category_id=${record.category_id}&`;
         }
         break;
@@ -143,32 +156,30 @@ export const AssetsSummaryTableAllLocation = (
     }
 
     if (record.rtd_location_id !== 99999) {
-
       if (record.category_type === CategoryType.ASSET) {
         url += `rtd_location_id=${rtd_location_id}&`;
       } else {
         url += `location_id=${rtd_location_id}&`;
       }
-
     }
 
     if (status_id !== -1) {
-      url += `status_id=${status_id}&`
+      url += `status_id=${status_id}&`;
     }
 
     if (dateFrom && dateTo) {
-      url += `date_from=${dateFrom}&date_to=${dateTo}`
+      url += `date_from=${dateFrom}&date_to=${dateTo}`;
     }
 
     return list(url);
-  }
+  };
 
   useEffect(() => {
-    let sumConsumableByLocation = sumEachCategoryByLocation("Consumable");
-    let sumAccessoryByLocation = sumEachCategoryByLocation("Accessory");
-    let sumToolByLocation = sumEachCategoryByLocation("Tool");
-    let sumTaxTokenByLocation = sumEachCategoryByLocation("TaxToken");
-    let sumClientAssetByLocation = sumEachCategoryByLocation("Asset", true);
+    const sumConsumableByLocation = sumEachCategoryByLocation("Consumable");
+    const sumAccessoryByLocation = sumEachCategoryByLocation("Accessory");
+    const sumToolByLocation = sumEachCategoryByLocation("Tool");
+    const sumTaxTokenByLocation = sumEachCategoryByLocation("TaxToken");
+    const sumClientAssetByLocation = sumEachCategoryByLocation("Asset", true);
     let dataAllCategory = sumEachCategoryByLocation("Asset", false);
 
     dataAllCategory = dataAllCategory.filter(
@@ -184,7 +195,6 @@ export const AssetsSummaryTableAllLocation = (
       sumClientAssetByLocation,
     ]);
   }, [categories]);
-
 
   const columns = [
     {
@@ -291,8 +301,7 @@ export const AssetsSummaryTableAllLocation = (
       columns={columns}
       dataSource={dataCategory}
       pagination={false}
-      scroll={{ x: 'calc(400px + 50%)', y: 400 }}
-
+      scroll={{ x: "calc(400px + 50%)", y: 400 }}
     />
   );
 };

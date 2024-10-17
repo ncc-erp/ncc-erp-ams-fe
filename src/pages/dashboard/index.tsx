@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Row, Col, Select, Form, List, Spin } from "@pankod/refine-antd";
 import { DatePicker } from "antd";
 import "styles/antd.less";
@@ -80,7 +79,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
+    const [from, to] = Array.from(val || []) as moment.Moment[];
     localStorage.setItem(
       "purchase_date",
       formatString !== undefined ? formatString : ""
@@ -102,7 +101,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   };
 
   const handleChangePickerByMonthByCategory = (val: any, formatString: any) => {
-    const [from, to] = Array.from(val || []);
+    const [from, to] = Array.from(val || []) as moment.Moment[];
     localStorage.setItem(
       "purchase_date",
       formatString !== undefined ? formatString : ""

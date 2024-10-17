@@ -32,7 +32,13 @@ export const UserShow = (props: UserShowProps) => {
       <Title level={5}>{t("user.label.field.insurance")}</Title>
       <Text>{detail?.warranty_months}</Text>
       <Title level={5}>{t("user.label.field.notes")}</Title>
-      <Text>{React.createElement("div", { dangerouslySetInnerHTML: { __html: `<span>${detail?.notes ? detail?.notes : ""}</span>` } })}</Text>
+      <Text>
+        {React.createElement("div", {
+          dangerouslySetInnerHTML: {
+            __html: `<span>${detail?.notes ? detail?.notes : ""}</span>`,
+          },
+        })}
+      </Text>
     </>
   );
 };

@@ -8,9 +8,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 // font
-@font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
-  Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@font-family:
+  "Montserrat",
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Roboto,
+  "Helvetica Neue",
+  Arial,
+  "Noto Sans",
+  sans-serif,
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji";
 
 // base variables
 @border-radius-base: 6px;
@@ -82,8 +93,8 @@
 .search {
   display: flex;
   gap: 1rem;
-  justify-content: space-between;
   margin-top: 15px;
+  flex-direction: column;
 }
 
 .menu-container {
@@ -145,9 +156,8 @@
   margin-top: 0.65rem;
 }
 .search-month-location {
-  display: flex;
-  gap: 1rem;
-  width: 66%;
+  width: 100%;
+  max-width: 600px;
 }
 .search-month-location-null {
   display: flex;
@@ -222,10 +232,9 @@
 }
 .search-all-location {
   display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  margin-bottom: -85px;
-  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .report_assets {
@@ -266,15 +275,14 @@ a {
 
 .title-sum-location {
   font-size: 18px;
-  margin-top: -2.5rem;
-  width: 50%;
+  margin-top: 20px;
+  text-align: center;
   font-weight: 700;
 }
 .title-sum-category {
   font-size: 17px;
-  margin-top: -2.5rem;
-  width: 50%;
   font-weight: 700;
+  text-align: center;
 }
 .sum-assets {
   font-size: 18px;
@@ -636,4 +644,47 @@ a {
 
 .custom-overflow-y::-webkit-scrollbar-track {
   background-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .search-all-location {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .search-month-location {
+    width: 50%;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .title-sum-location {
+    width: 50%;
+    text-align: left;
+    margin-top: 0;
+  }
+
+  .search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .search-all-location {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-month-location {
+    width: 100%;
+  }
+
+  .title-sum-location {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+  }
 }

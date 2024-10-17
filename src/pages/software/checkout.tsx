@@ -12,9 +12,7 @@ import {
   Typography,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  ISoftwareRequestMultipleCheckout,
-} from "interfaces/software"
+import { ISoftwareRequestMultipleCheckout } from "interfaces/software";
 import { USERS_API, SOFTWARE_CHECKOUT_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
@@ -23,15 +21,16 @@ type SoftwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-setSelectedRowKeys: any;
+  setSelectedRowKeys: any;
 };
 
 export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
-  const [messageErr, setMessageErr] = useState<ISoftwareRequestMultipleCheckout>();
+  const [messageErr, setMessageErr] =
+    useState<ISoftwareRequestMultipleCheckout>();
   const t = useTranslate();
   const { mutate, data: dataCheckout, isLoading } = useCreate();
-  
+
   const { formProps, form } = useForm<ISoftwareRequestMultipleCheckout>({
     action: "create",
   });
@@ -50,7 +49,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
     ],
   });
 
-  const onFinish = (event: ISoftwareRequestMultipleCheckout) => {  
+  const onFinish = (event: ISoftwareRequestMultipleCheckout) => {
     mutate({
       resource: SOFTWARE_CHECKOUT_API,
       values: {
@@ -82,7 +81,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
       setMessageErr(undefined);
       setSelectedRowKeys([]);
       localStorage.removeItem("selectedSoftwareRowKeys");
-    }else{
+    } else {
       setMessageErr(dataCheckout?.data.messages);
     }
   }, [dataCheckout, form, setIsModalVisible]);
@@ -102,15 +101,15 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
             name="softwares"
           >
             {data &&
-              data?.map((item: any) => (
-                <div>
+              data?.map((item: any, index: number) => (
+                <div key={index}>
                   <span className="show-asset">{item.software_tag}</span> -{" "}
                   {item.name}
                 </div>
               ))}
           </Form.Item>
           {messageErr?.software && (
-          <Typography.Text type="danger">
+            <Typography.Text type="danger">
               {messageErr.software}
             </Typography.Text>
           )}

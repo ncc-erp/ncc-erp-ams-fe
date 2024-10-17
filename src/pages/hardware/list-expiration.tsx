@@ -1,5 +1,3 @@
-/* eslint-disable no-lone-blocks */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -61,7 +59,7 @@ import {
   HARDWARE_EXPIRATION_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API
+  HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { HardwareSearch } from "./search";
 import { Spin } from "antd";
@@ -100,7 +98,9 @@ interface ICheckboxChange {
   key: string;
 }
 
-export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => {
+export const HardwareListExpiration: React.FC<
+  IResourceComponentsProps
+> = () => {
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -144,8 +144,8 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
   const dateToParam = searchParams.get("dateTo");
   const searchParam = searchParams.get("search");
   const model_id = searchParams.get("model_id");
-  const manufacturer_id = searchParams.get('manufacturer_id');
-  const supplier_id = searchParams.get('supplier_id');
+  const manufacturer_id = searchParams.get("manufacturer_id");
+  const supplier_id = searchParams.get("supplier_id");
 
   const { data: permissionsData } = usePermissions();
 
@@ -155,112 +155,109 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
+  }, [permissionsData]);
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    IHardwareResponse,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      resource: HARDWARE_EXPIRATION_API,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        const {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          assigned_to,
+          category,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: searchParam,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+
+          {
+            field: "dateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "dateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "assigned_to",
+            operator: "eq",
+            value: assigned_to,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category ? category : category_id,
+          },
+          {
+            field: "status_id",
+            operator: "eq",
+            value: status_id,
+          },
+          {
+            field: "assigned_status",
+            operator: "eq",
+            value: searchParams.get("assigned_status"),
+          },
+          {
+            field: "model_id",
+            operator: "eq",
+            value: model_id,
+          },
+          {
+            field: "manufacturer_id",
+            operator: "eq",
+            value: manufacturer_id,
+          },
+          {
+            field: "supplier_id",
+            operator: "eq",
+            value: supplier_id,
+          }
+        );
+
+        return filters;
       },
-    ],
-    resource: HARDWARE_EXPIRATION_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      let {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        assigned_to,
-        category,
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: searchParam,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
-        },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-
-        {
-          field: "dateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "assigned_to",
-          operator: "eq",
-          value: assigned_to,
-        },
-        {
-          field: "category_id",
-          operator: "eq",
-          value: category ? category : category_id,
-        },
-        {
-          field: "status_id",
-          operator: "eq",
-          value: status_id,
-        },
-        {
-          field: "assigned_status",
-          operator: "eq",
-          value: searchParams.get("assigned_status"),
-        },
-        {
-          field: "model_id",
-          operator: "eq",
-          value: model_id,
-        },
-        {
-          field: "manufacturer_id",
-          operator: "eq",
-          value: manufacturer_id,
-        },
-        {
-          field: "supplier_id",
-          operator: "eq",
-          value: supplier_id,
-        },
-      );
-
-      return filters;
-    },
-  });
+    });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
@@ -573,7 +570,7 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
+  }, [isModalVisible]);
 
   useEffect(() => {
     refreshData();
@@ -635,7 +632,6 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
 
   const { list } = useNavigation();
 
-
   const collumns = useMemo(
     () => [
       {
@@ -682,8 +678,7 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
       {
         key: "model",
         title: t("hardware.label.field.propertyType"),
-        render: (value: IHardwareResponse) =>
-          <TagField value={value.name} />,
+        render: (value: IHardwareResponse) => <TagField value={value.name} />,
         defaultSortOrder: getDefaultSortOrder("model.name", sorter),
       },
       {
@@ -739,7 +734,8 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
             onClick={() => {
               list(`location_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -747,11 +743,13 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
         key: "manufacturer",
         title: t("hardware.label.field.manufacturer"),
         render: (value: IHardwareResponse) => (
-          <TextField value={value && value.name}
+          <TextField
+            value={value && value.name}
             onClick={() => {
               list(`manufactures_details?id=${value.id}&name=${value.name}`);
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -850,9 +848,10 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
       {
         key: "last_checkout",
         title: t("hardware.label.field.dateCheckout"),
-        render: (value: IHardware) => (value &&
-          <DateField format="LL" value={value ? value.datetime : ""} />
-        ),
+        render: (value: IHardware) =>
+          value && (
+            <DateField format="LL" value={value ? value.datetime : ""} />
+          ),
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
       },
       // {
@@ -929,13 +928,13 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
     return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
       searchParams.set(
         "dateFrom",
@@ -1148,12 +1147,10 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
     <List
       title={t("hardware.label.title.list-expiration")}
       pageHeaderProps={{
-        extra: (
-          isAdmin && (
-            <CreateButton onClick={handleCreate}>
-              {t("hardware.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: isAdmin && (
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -1168,14 +1165,14 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
                     ? [
-                      moment(dateFromParam, dateFormat),
-                      moment(dateToParam, dateFormat),
-                    ]
+                        moment(dateFromParam, dateFormat),
+                        moment(dateToParam, dateFormat),
+                      ]
                     : ""
                 : "",
           }}
@@ -1465,15 +1462,24 @@ export const HardwareListExpiration: React.FC<IResourceComponentsProps> = () => 
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}

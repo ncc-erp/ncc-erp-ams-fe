@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -40,7 +40,7 @@ type HardwareCloneProps = {
 
 export const ClientHardwareClone = (props: HardwareCloneProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<any>(null);
@@ -77,8 +77,10 @@ export const ClientHardwareClone = (props: HardwareCloneProps) => {
     ],
   });
 
-  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
-  statusLabelSelectProps.options = filteredProps
+  const filteredProps = statusLabelSelectProps.options?.filter(
+    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+  );
+  statusLabelSelectProps.options = filteredProps;
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -167,8 +169,7 @@ export const ClientHardwareClone = (props: HardwareCloneProps) => {
       { name: "order_number", value: data?.order_number },
       {
         name: "notes",
-        value:
-          data?.notes ? data?.notes : "",
+        value: data?.notes ? data?.notes : "",
       },
       { name: "asset_tag", value: "" },
       {
@@ -178,7 +179,8 @@ export const ClientHardwareClone = (props: HardwareCloneProps) => {
       {
         name: "purchase_cost",
         value:
-          data?.purchase_cost && data?.purchase_cost.toString().split(",").join(""),
+          data?.purchase_cost &&
+          data?.purchase_cost.toString().split(",").join(""),
       },
       {
         name: "purchase_date",
@@ -207,7 +209,10 @@ export const ClientHardwareClone = (props: HardwareCloneProps) => {
   const findLabel = (value: number): boolean => {
     if (statusLabelSelectProps.options) {
       statusLabelSelectProps.options?.forEach((item) => {
-        return (value === item.value && (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN))
+        return (
+          value === item.value &&
+          (item.label === EStatus.PENDING || item.label === EStatus.ASSIGN)
+        );
       });
     }
 

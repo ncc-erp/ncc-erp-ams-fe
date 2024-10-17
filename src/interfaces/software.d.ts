@@ -68,7 +68,7 @@ export interface IModelSoftware {
 }
 
 export interface ISoftwareRequestMultipleCheckout {
-  softwares: {}[];
+  softwares: any[];
   assigned_users: string;
   checkout_at: string;
   notes: string;
@@ -87,5 +87,5 @@ export interface ISoftwareUsesResponse {
     department: string;
     location: string;
   };
-  checkout_at: string
+  checkout_at: string;
 }

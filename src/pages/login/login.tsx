@@ -14,7 +14,7 @@ import {
 import { Icons } from "@pankod/refine-antd";
 
 import { useLogin, useNavigation, useTranslate } from "@pankod/refine-core";
-import { gapi } from 'gapi-script';
+import { gapi } from "gapi-script";
 
 import {
   layoutStyles,
@@ -77,10 +77,10 @@ export const LoginPage: React.FC = () => {
     function start() {
       gapi.client.init({
         clientId: clientId,
-        scope: 'email',
+        scope: "email",
       });
     }
-    gapi.load('client:auth2', start);
+    gapi.load("client:auth2", start);
   }, []);
 
   return (
@@ -142,7 +142,12 @@ export const LoginPage: React.FC = () => {
                     />
                   </Form.Item>
                   <div style={{ marginBottom: "12px" }}>
-                    <Form.Item data-test-id="remember" name="remember" valuePropName="checked" noStyle>
+                    <Form.Item
+                      data-test-id="remember"
+                      name="remember"
+                      valuePropName="checked"
+                      noStyle
+                    >
                       <Checkbox
                         style={{
                           fontSize: "12px",

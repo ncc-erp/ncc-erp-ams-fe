@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -30,7 +29,9 @@ type HardwareCheckoutProps = {
   setSelectedRowKeys: any;
 };
 
-export const ClientHardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
+export const ClientHardwareCheckoutMultipleAsset = (
+  props: HardwareCheckoutProps
+) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
@@ -113,8 +114,8 @@ export const ClientHardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps
             name="assets"
           >
             {data &&
-              data?.map((item: any) => (
-                <div>
+              data?.map((item: any, index: number) => (
+                <div key={index}>
                   <span className="show-asset">{item.asset_tag}</span> -{" "}
                   {item.category.name}
                 </div>

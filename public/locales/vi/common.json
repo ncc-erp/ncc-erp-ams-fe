@@ -132,7 +132,8 @@
   "table": {
     "actions": "Actions",
     "search": "Tìm kiếm",
-    "checkAll": "Check all"
+    "checkAll": "Check all",
+    "qrCode": "Mã QR"
   },
   "hardware": {
     "label": {
@@ -183,7 +184,10 @@
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
-        "purchase_cost": "Giá"
+        "purchase_cost": "Giá",
+        "qr_code": "In mã QR",
+        "scan_qr": "Scan QR",
+        "confirmDeleteQr": "Xác nhận xóa mã QR"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -269,7 +273,8 @@
         "note-checkout": "Những tài sản này không được phép cấp phát. Hãy xóa chúng khỏi danh sách đi",
         "not-confirm-refuse": "Những tài sản này không được phép xác nhận và từ chối. Hãy xóa chúng khỏi danh sách đi",
         "confirm-refuse": "Những tài sản này được phép xác nhận hoặc từ chối",
-        "list-asset": "Danh sách các thiết bị"
+        "list-asset": "Danh sách các thiết bị",
+        "invalid-qr-code": "Dữ liệu được quét không phải là mã QR hợp lệ. Vui lòng thử lại."
       },
       "option_assigned": {
         "no-checkout": "Chưa checkout",
@@ -633,7 +638,12 @@
         "users": "Người dùng",
         "sum-assets": "Tổng số tài sản",
         "detail_tool": "Chi tiết tool của tôi",
-        "detail_tax_token": "Chi tiết token thuế của tôi"
+        "detail_tax_token": "Chi tiết token thuế của tôi",
+        "qrCode": "Mã QR",
+        "above": "Bên trên",
+        "below": "Bên dưới",
+        "codeDevice": "Tên Tài Sản",
+        "user_name": "Tên người dùng"
       },
       "field": {
         "notes": "Mô tả",
@@ -760,7 +770,8 @@
         "category": "Loại",
         "assetCount": "Số lượng",
         "sendEmail": "Gửi email",
-        "accept": "Chấp nhận"
+        "accept": "Chấp nhận",
+        "qrCode": "Mã QR"
       },
       "options": {
         "accessory": "Phụ kiện",

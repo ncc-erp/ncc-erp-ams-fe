@@ -85,9 +85,9 @@
   },
   "hardware": {
     "label": {
-        "field": {
-          "checkoutTo": "Cấp phát đến"
-        }
+      "field": {
+        "checkoutTo": "Cấp phát đến"
+      }
     }
   }
 }

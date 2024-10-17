@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -54,7 +53,7 @@ import {
   HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API
+  HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import {
   MenuOutlined,
@@ -150,112 +149,109 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
+  }, [permissionsData]);
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    IHardwareResponse,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
-      },
-    ],
-    initialFilter: [
-      {
-        field: "status.id",
-        operator: "eq",
-        value: STATUS_LABELS.ASSIGN,
-      },
-    ],
-    resource: HARDWARE_API,
-    onSearch: (params: any) => {
-      const filters: CrudFilters = [];
-      const {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        last_checkout,
-        assigned_to,
-      } = params;
-      filters.push(
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
+      initialSorter: [
         {
-          field: "search",
-          operator: "eq",
-          value: search ? search : searchParam,
+          field: "id",
+          order: "desc",
         },
+      ],
+      initialFilter: [
         {
-          field: "filter",
+          field: "status.id",
           operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
+          value: STATUS_LABELS.ASSIGN,
         },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-        {
-          field: "dateCheckoutFrom",
-          operator: "eq",
-          value: last_checkout
-            ? last_checkout[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "dateCheckoutTo",
-          operator: "eq",
-          value: last_checkout
-            ? last_checkout[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "category_id",
-          operator: "eq",
-          value: category_id,
-        },
-        {
-          field: "status_id",
-          operator: "eq",
-          value: status_id,
-        },
-        {
-          field: "assigned_status",
-          operator: "eq",
-          value: searchParams.get("assigned_status"),
+      ],
+      resource: HARDWARE_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          last_checkout,
+          assigned_to,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search ? search : searchParam,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+          {
+            field: "dateCheckoutFrom",
+            operator: "eq",
+            value: last_checkout
+              ? last_checkout[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "dateCheckoutTo",
+            operator: "eq",
+            value: last_checkout
+              ? last_checkout[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "category_id",
+            operator: "eq",
+            value: category_id,
+          },
+          {
+            field: "status_id",
+            operator: "eq",
+            value: status_id,
+          },
+          {
+            field: "assigned_status",
+            operator: "eq",
+            value: searchParams.get("assigned_status"),
+          }
+        );
+
+        if (type) {
+          filters.push({
+            field: "type",
+            operator: "eq",
+            value: type,
+          });
         }
-      );
-
-      if (type) {
-        filters.push({
-          field: "type",
-          operator: "eq",
-          value: type,
-        });
-      }
-      if (category_id) {
-        filters.push({
-          field: "category_id",
-          operator: "eq",
-          value: category_id,
-        });
-      }
-      return filters;
-    },
-  });
+        if (category_id) {
+          filters.push({
+            field: "category_id",
+            operator: "eq",
+            value: category_id,
+          });
+        }
+        return filters;
+      },
+    });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
@@ -670,14 +666,16 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       {
         key: "rtd_location",
         title: t("hardware.label.field.locationFix"),
-        render: (value: IHardwareResponse, record: any) =>
-        (
+        render: (value: IHardwareResponse, record: any) => (
           <TextField
             value={value && value.name}
             onClick={() => {
-              list(`location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -688,9 +686,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           <TextField
             value={value && value.name}
             onClick={() => {
-              list(`manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -698,9 +699,12 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         key: "supplier",
         title: t("hardware.label.field.supplier"),
         render: (value: IHardwareResponse, record: IHardwareResponse) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
             onClick={() => {
-              list(`supplier_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `supplier_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
@@ -837,7 +841,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible])
+  }, [isModalVisible]);
 
   useEffect(() => {
     refreshData();
@@ -923,13 +927,13 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     return localStorage.getItem("last_checkout")?.substring(11, 21);
   }, [localStorage.getItem("last_checkout")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("last_checkout", formatString ?? "");
       searchParams.set(
         "dateCheckoutFrom",
@@ -1146,12 +1150,10 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     <List
       title={t("hardware.label.title.list-assign")}
       pageHeaderProps={{
-        extra: (
-          isAdmin && (
-            <CreateButton onClick={handleCreate}>
-              {t("hardware.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: isAdmin && (
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -1164,13 +1166,17 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
               : Number(rtd_location_id),
             last_checkout:
               localStorage.getItem("last_checkout") !== null
-                ? searchValuesByDateCheckoutFrom !== "" && searchValuesByDateCheckoutTo !== ""
+                ? searchValuesByDateCheckoutFrom !== "" &&
+                  searchValuesByDateCheckoutTo !== ""
                   ? [
-                    moment(searchValuesByDateCheckoutFrom),
-                    moment(searchValuesByDateCheckoutTo),
-                  ]
+                      moment(searchValuesByDateCheckoutFrom),
+                      moment(searchValuesByDateCheckoutTo),
+                    ]
                   : dateCheckoutFromParam && dateCheckoutToParam
-                    ? [moment(dateCheckoutFromParam), moment(dateCheckoutToParam)]
+                    ? [
+                        moment(dateCheckoutFromParam),
+                        moment(dateCheckoutToParam),
+                      ]
                     : ""
                 : "",
           }}
@@ -1376,7 +1382,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
-
       <TotalDetail
         filters={filters}
         links={HARDWARE_TOTAL_DETAIL_API}
@@ -1462,15 +1467,24 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
             position: ["topRight", "bottomRight"],
             total: pageTotal ? pageTotal : 0,
           }}
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}

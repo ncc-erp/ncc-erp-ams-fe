@@ -1,0 +1,20 @@
+export interface IDeviceDetailQr {
+  id: string | null;
+  name: string | null;
+  status: string | null;
+  serial: string | null;
+  manufacturer: string | null;
+  category: string | null;
+  model: string | null;
+  purchase_date: string | null;
+  supplier: string | null;
+  location: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  purchase_cost: string | null;
+  checkin_counter: string | null;
+  checkout_counter: string | null;
+  notes: string | null;
+  warranty_expires: string | null;
+  assigned_to: string | null;
+}

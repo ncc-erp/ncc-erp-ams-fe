@@ -184,7 +184,7 @@ export interface IHardwareRequestCheckout {
   user_can_checkout: boolean;
 }
 export interface IHardwareRequestMultipleCheckout {
-  assets: {}[];
+  assets: any[];
   assigned_asset: string;
   assigned_location: string;
   assigned_user: string;
@@ -197,7 +197,7 @@ export interface IHardwareRequestMultipleCheckout {
 }
 
 export interface IHardwareRequestMultipleCheckin {
-  assets: {}[];
+  assets: any[];
   status_label: string;
   status_id: string;
   checkin_at: string;
@@ -248,11 +248,11 @@ export interface IHardwareResponseCheckout {
 
 export interface IHardwareList {
   data:
-  | {
-    data: IHardwareCreateRequest;
-  }
-  | undefined;
-  refetch: Function;
+    | {
+        data: IHardwareCreateRequest;
+      }
+    | undefined;
+  refetch: () => void;
 }
 
 export interface IHardwareRequestCheckin {
@@ -321,7 +321,7 @@ export interface IHardwareFilterVariables {
 }
 
 export interface IHardwareRequestMultipleCancel {
-  assets: {}[];
+  assets: any[];
   reason: string;
   assigned_status: number;
 }

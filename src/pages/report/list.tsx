@@ -18,7 +18,11 @@ import {
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
 import { IReport, IReportResponse } from "interfaces/report";
-import { ASSET_HISTORY_API, LOCATION_API, ASSET_HISTORY_TOTAL_DETAIL_API } from "api/baseApi";
+import {
+  ASSET_HISTORY_API,
+  LOCATION_API,
+  ASSET_HISTORY_TOTAL_DETAIL_API,
+} from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
@@ -62,7 +66,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     resource: ASSET_HISTORY_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
-      let { search, location_id, date_from, date_to, action_type } = params;
+      const { search, location_id, date_from, date_to, action_type } = params;
       filters.push(
         {
           field: "search",
@@ -152,14 +156,14 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
             value={value ? value.name : ""}
             onClick={() => {
-              {
-                record.item.type === CategoryType.ASSET
-                  ? onClickAssetReport(value.name)
-                  : record.item.type === CategoryType.CONSUMABLE
-                    ? onClickConsumableReport(value.name)
-                    : record.item.type === CategoryType.ACCESSORY
-                      ? onClickAccessoryReport(value.name)
-                      : onClickAssetReport(value.name);
+              if (record.item.type === CategoryType.ASSET) {
+                onClickAssetReport(value.name);
+              } else if (record.item.type === CategoryType.CONSUMABLE) {
+                onClickConsumableReport(value.name);
+              } else if (record.item.type === CategoryType.ACCESSORY) {
+                onClickAccessoryReport(value.name);
+              } else {
+                onClickAssetReport(value.name);
               }
             }}
           />
@@ -254,7 +258,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (value: any) => {
     if (value !== null) {
-      const [from, to] = Array.from(value || []);
+      const [from, to] = Array.from(value || []) as moment.Moment[];
       searchParams.set(
         "date_from",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -289,9 +293,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             created_at:
               dateFromParam && dateToParam
                 ? [
-                  moment(dateFromParam, dateFormat),
-                  moment(dateToParam, dateFormat),
-                ]
+                    moment(dateFromParam, dateFormat),
+                    moment(dateToParam, dateFormat),
+                  ]
                 : "",
             type: searchParams.get("action_type")
               ? assetHistoryType
@@ -320,8 +324,10 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
           >
             <Select onChange={handleLocationChange} placeholder="Vị trí">
               <Option value={"all"}>{translate("all")}</Option>
-              {locationSelectProps.options?.map((item: any) => (
-                <Option value={item.value}>{item.label}</Option>
+              {locationSelectProps.options?.map((item: any, index: number) => (
+                <Option value={item.value} key={index}>
+                  {item.label}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -338,7 +344,11 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               <Option value={"all"}>{translate("all")}</Option>
               {Object.entries(ActionType).map(([key, value]) => {
                 if (key !== "create new") {
-                  return <Option value={key}>{value}</Option>;
+                  return (
+                    <Option value={key} key={key}>
+                      {value}
+                    </Option>
+                  );
                 }
               })}
             </Select>
@@ -364,7 +374,12 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
         }}
       >
         {collumns.map((col) => (
-          <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+          <Table.Column
+            dataIndex={col.key}
+            {...(col as any)}
+            key={col.key}
+            sorter
+          />
         ))}
       </Table>
     </List>

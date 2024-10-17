@@ -6,11 +6,11 @@ export const antLayoutSider: CSSProperties = {
   overflowY: "auto",
   top: 0,
   border: "none",
-  overflowX: "hidden"
+  overflowX: "hidden",
 };
 export const antLayoutSiderMobile: CSSProperties = {
   position: "fixed",
   height: "100vh",
   zIndex: 999,
-  border: "none"
+  border: "none",
 };

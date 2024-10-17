@@ -12,52 +12,61 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 import { TOOLS_MULTI_CHECKIN_API } from "api/baseApi";
 import moment from "moment";
-import { IToolCheckinMessageResponse, IToolMultiCheckinRequest, IToolResponse } from "interfaces/tool";
+import {
+  IToolCheckinMessageResponse,
+  IToolMultiCheckinRequest,
+  IToolResponse,
+} from "interfaces/tool";
 
 type ToolMultiCheckinProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-setSelectedRowKeys: any;
+  setSelectedRowKeys: any;
 };
 
 export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<IToolCheckinMessageResponse>();
-  const [assigned_users, setAssignedUsers] = useState([])
+  const [assigned_users, setAssignedUsers] = useState([]);
   const t = useTranslate();
   const { open } = useNotification();
   const { mutate, data: dataCheckin, isLoading } = useCreate();
-  
+
   const { formProps, form } = useForm<IToolMultiCheckinRequest>({
     action: "create",
   });
 
   const { setFields } = form;
 
-  const onFinish = (event: IToolMultiCheckinRequest) => {  
-    mutate({
-      resource: TOOLS_MULTI_CHECKIN_API,
-      values: {
-        tools: event.tools,
-        checkin_at: event.checkin_at,
-        assigned_users: assigned_users,
-        notes: event.notes !== null ? event.notes : "",
+  const onFinish = (event: IToolMultiCheckinRequest) => {
+    mutate(
+      {
+        resource: TOOLS_MULTI_CHECKIN_API,
+        values: {
+          tools: event.tools,
+          checkin_at: event.checkin_at,
+          assigned_users: assigned_users,
+          notes: event.notes !== null ? event.notes : "",
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   useEffect(() => {
-    const assignedToIds: [] = data.map((item : IToolResponse) => item.assigned_to.id);
+    const assignedToIds: [] = data.map(
+      (item: IToolResponse) => item.assigned_to.id
+    );
     setAssignedUsers(assignedToIds);
     form.resetFields();
     setFields([
@@ -78,7 +87,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
       setMessageErr(undefined);
       setSelectedRowKeys([]);
       localStorage.removeItem("selectedToolsCheckinRowKeys");
-    }else{
+    } else {
       setMessageErr(dataCheckin?.data.messages);
     }
   }, [dataCheckin, form, setIsModalVisible]);
@@ -93,22 +102,19 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("tools.label.title.name")}
-            name="tools"
-          >
+          <Form.Item label={t("tools.label.title.name")} name="tools">
             {data &&
-              data?.map((item: any) => (
-                <div>
+              data?.map((item: any, index: number) => (
+                <div key={index}>
                   <span className="show-asset">{item.tool_id}</span> -{" "}
-                  {item.name} {"("}{item.assigned_to.name}{")"}
+                  {item.name} {"("}
+                  {item.assigned_to.name}
+                  {")"}
                 </div>
               ))}
           </Form.Item>
           {messageErr?.name && (
-          <Typography.Text type="danger">
-              {messageErr.name}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.name}</Typography.Text>
           )}
         </Col>
         <Col className="gutter-row" span={12}>

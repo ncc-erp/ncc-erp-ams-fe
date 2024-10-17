@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
@@ -39,7 +38,7 @@ type HardwareCheckinProps = {
 
 export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckin>();
 
@@ -164,7 +163,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
     }
   }, [updateData]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {

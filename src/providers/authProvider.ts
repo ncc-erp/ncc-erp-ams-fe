@@ -3,6 +3,7 @@ import dataProvider from "providers/dataProvider";
 import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "untils/assets";
+import { DETAIL_DEVICE_ROUTE } from "constants/route";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -43,8 +44,9 @@ export const authProvider: AuthProvider = {
   },
   checkError: () => Promise.resolve(),
   checkAuth: () => {
+    const route = window.location.pathname;
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
+    if (token || route === DETAIL_DEVICE_ROUTE) {
       return Promise.resolve();
     }
 
@@ -62,23 +64,20 @@ export const authProvider: AuthProvider = {
     }
     return Promise.reject();
   },
-  getPermissions: function() {
+  getPermissions: function () {
     const scopes = parseJwt(localStorage.getItem(TOKEN_KEY))?.scopes;
-    
+
     let permissions = {} as any;
-    scopes?.forEach((item: any) =>{
+    scopes?.forEach((item: any) => {
       permissions[item] = "1";
-    })
-    if(!permissions['admin']){
-      permissions['admin'] = '0';
-      if(permissions['branchadmin']){
-        permissions['branchadmin'] = "2";
+    });
+    if (!permissions["admin"]) {
+      permissions["admin"] = "0";
+      if (permissions["branchadmin"]) {
+        permissions["branchadmin"] = "2";
       }
     }
     permissions = JSON.stringify(permissions);
     return Promise.resolve(JSON.parse(permissions as string));
   },
-
 };
-
-

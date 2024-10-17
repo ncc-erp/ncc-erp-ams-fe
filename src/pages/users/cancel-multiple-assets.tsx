@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import { Form, Input, useForm, Button } from "@pankod/refine-antd";
@@ -72,8 +70,8 @@ export const HardwareCancelMultipleAsset = (props: HardwareCancelProps) => {
     >
       <Form.Item label={t("user.label.field.list_assets")} name="assets">
         {data &&
-          data?.map((item: any) => (
-            <div>
+          data?.map((item: any, index: number) => (
+            <div key={index}>
               {item.asset_tag} - {item.model.name}
             </div>
           ))}

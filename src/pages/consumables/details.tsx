@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   DateField,
@@ -43,7 +42,8 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
   const [detailShow, setDetailShow] = useState<IConsumablesResponse>();
 
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-  const [detailCheckout, setDetailCheckout] = useState<IConsumablesResponseCheckout>();
+  const [detailCheckout, setDetailCheckout] =
+    useState<IConsumablesResponseCheckout>();
 
   const [searchParams] = useSearchParams();
   const nameConsumable = searchParams.get("name");
@@ -66,9 +66,10 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
     resource: `api/v1/consumables/view/${searchParams.get("id")}/users`,
   });
 
-  const { tableProps: tableDetails, tableQueryResult: tableDetailsQueryResult } = useTable<
-    IConsumablesFilterVariables
-  >({
+  const {
+    tableProps: tableDetails,
+    tableQueryResult: tableDetailsQueryResult,
+  } = useTable<IConsumablesFilterVariables>({
     resource: `api/v1/consumables?category_id=${category_id}&consumable_id=${consumable_id}`,
   });
 
@@ -78,8 +79,12 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "name",
         title: translate("consumables.label.field.users"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />
-        )
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `<span>${value ? value : ""}</span>`,
+            }}
+          />
+        ),
       },
 
       {
@@ -90,14 +95,18 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
             <DateField format="LLL" value={value ? value.datetime : ""} />
           ) : (
             ""
-          )
+          ),
       },
       {
         key: "admin",
         title: translate("consumables.label.field.admin"),
         render: (value: string) => (
-          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />
-        )
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `<span>${value ? value : ""}</span>`,
+            }}
+          />
+        ),
       },
     ],
     []
@@ -109,9 +118,11 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         key: "category",
         title: translate("consumables.label.field.category"),
         render: (value: IConsumablesRequest) => (
-          <TextField value={value ? value.name : ""}
+          <TextField
+            value={value ? value.name : ""}
             onClick={() => list(`consumables?category_id=${value.id}`)}
-            style={{ cursor: "pointer", color: "#3c8dbc" }} />
+            style={{ cursor: "pointer", color: "#3c8dbc" }}
+          />
         ),
       },
       {
@@ -168,7 +179,9 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="list-access-cons">
         <div className="table-checkouted-access-cons">
-          <Title level={5} className="box-header">{nameConsumable}</Title>
+          <Title level={5} className="box-header">
+            {nameConsumable}
+          </Title>
           <Table
             className="list-table"
             {...tableProps}
@@ -176,34 +189,28 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
             pagination={
               (pageTotal as number) > 10
                 ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                    position: ["topRight", "bottomRight"],
+                    total: pageTotal ? pageTotal : 0,
+                    showSizeChanger: true,
+                  }
                 : false
             }
           >
             {collumns.map((col) => (
-              <Table.Column dataIndex={col.key} {...col} />
+              <Table.Column dataIndex={col.key} {...col} key={col.key} />
             ))}
           </Table>
         </div>
         <div className="table-details-access-cons">
           <div className="list-user-checkout">
-            <Table
-              {...tableDetails}
-              pagination={false}
-            >
+            <Table {...tableDetails} pagination={false}>
               {collumnsDetails.map((col) => (
-                <Table.Column dataIndex={col.key} {...col} />
+                <Table.Column dataIndex={col.key} {...col} key={col.key} />
               ))}
             </Table>
           </div>
           <div className="details-checkout">
-            <Table
-              {...tableDetails}
-              pagination={false}
-            >
+            <Table {...tableDetails} pagination={false}>
               <Table.Column<IConsumablesResponse>
                 dataIndex="actions"
                 render={(_, record) => (
@@ -259,7 +266,6 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
                         </Button>
                       )}
                     </Space>
-
                   </>
                 )}
               />
@@ -288,6 +294,6 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
           data={detailCheckout}
         />
       </MModal>
-    </List >
+    </List>
   );
 };

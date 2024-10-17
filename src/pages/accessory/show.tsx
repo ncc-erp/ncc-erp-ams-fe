@@ -78,7 +78,11 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
         <Col span={18}>
           {detail?.supplier ? (
             <>
-            <div dangerouslySetInnerHTML={{__html: `${detail?.supplier ? detail?.supplier.name : ""}`}}></div>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: `${detail?.supplier ? detail?.supplier.name : ""}`,
+                }}
+              ></div>
             </>
           ) : (
             ""
@@ -125,7 +129,11 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
           <Title level={5}>{translate("accessory.label.field.notes")}</Title>
         </Col>
         <Col span={18}>
-          <div dangerouslySetInnerHTML={{__html: `${detail?.notes ? detail?.notes : ""}`}} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `${detail?.notes ? detail?.notes : ""}`,
+            }}
+          />
         </Col>
       </Row>
       <Row gutter={16}>
@@ -136,7 +144,13 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
         </Col>
         <Col span={18}>
           {detail?.created_at ? (
-             <Text> {detail?.created_at && moment(detail?.created_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+            <Text>
+              {" "}
+              {detail?.created_at &&
+                moment(detail?.created_at.datetime)
+                  .add(moment.duration(moment().format("Z")))
+                  .format("ddd MMM D, YYYY h:mmA")}
+            </Text>
           ) : (
             ""
           )}
@@ -149,7 +163,13 @@ export const AccessoryShow = (props: AccessoryShowProps) => {
           </Title>
         </Col>
         <Col span={18}>
-          <Text> {detail?.updated_at && moment(detail?.updated_at.datetime).add(moment.duration(moment().format('Z'))).format('ddd MMM D, YYYY h:mmA')}</Text>
+          <Text>
+            {" "}
+            {detail?.updated_at &&
+              moment(detail?.updated_at.datetime)
+                .add(moment.duration(moment().format("Z")))
+                .format("ddd MMM D, YYYY h:mmA")}
+          </Text>
         </Col>
       </Row>
       <Row gutter={16}>

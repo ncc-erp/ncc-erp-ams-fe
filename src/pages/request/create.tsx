@@ -89,7 +89,7 @@ export const RequestCreate = (props: RequestCreateProps) => {
     const array = assetSelectProps?.data?.rows;
 
     const assets_choose = selectedItems.map((item: number, index: number) => {
-      let arrayItem: ISelectItem = {
+      const arrayItem: ISelectItem = {
         key: 0,
         map: undefined,
         asset: [],

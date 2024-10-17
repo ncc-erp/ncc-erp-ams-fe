@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Image, Tooltip } from "antd";
 import {
   useTranslate,
@@ -63,10 +62,12 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         key: "name",
         title: t("supplier.label.field.name"),
         render: (value: ISupplier, record: any) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }}
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }}
             onClick={() => {
-              record.id &&
+              if (record.id) {
                 list(`supplier_details?id=${record.id}&name=${record.name}`);
+              }
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
@@ -200,15 +201,15 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<ISupplierRequest>
             title={t("table.actions")}

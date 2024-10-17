@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -7,7 +5,7 @@ import {
   useCreate,
   HttpError,
   usePermissions,
-  useNotification
+  useNotification,
 } from "@pankod/refine-core";
 import {
   List,
@@ -43,7 +41,7 @@ import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
   TAX_TOKEN_API,
-  TAX_TOKEN_TOTAL_DETAIL_API
+  TAX_TOKEN_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -66,7 +64,12 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { IModel } from "interfaces/model";
 import { IAssetsWaiting } from "interfaces/hardware";
-import { getBGTaxTokenAssignedStatusDecription, getBGTaxTokenStatusDecription, getTaxTokenAssignedStatusDecription, getTaxTokenStatusDecription } from "untils/tax_token";
+import {
+  getBGTaxTokenAssignedStatusDecription,
+  getBGTaxTokenStatusDecription,
+  getTaxTokenAssignedStatusDecription,
+  getTaxTokenStatusDecription,
+} from "untils/tax_token";
 import { TotalDetail } from "components/elements/TotalDetail";
 
 export const TaxTokenListWaitingConfirm: React.FC<
@@ -90,8 +93,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
-
+  }, [permissionsData]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
@@ -115,100 +117,96 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    any,
-    HttpError,
-    ITaxTokenFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<any, HttpError, ITaxTokenFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "WAITING_CHECKOUT",
+          operator: "eq",
+          value: ASSIGNED_STATUS.WAITING_CHECKOUT,
+        },
+        {
+          field: "WAITING_CHECKIN",
+          operator: "eq",
+          value: ASSIGNED_STATUS.WAITING_CHECKIN,
+        },
+      ],
+      resource: TAX_TOKEN_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          expiration_date,
+          assigned_to,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+          {
+            field: "purchaseDateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "purchaseDateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "expirationDateFrom",
+            operator: "eq",
+            value: expiration_date
+              ? expiration_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "expirationDateTo",
+            operator: "eq",
+            value: expiration_date
+              ? expiration_date[1].format().substring(0, 10)
+              : undefined,
+          }
+        );
+        return filters;
       },
-    ],
-    initialFilter: [
-      {
-        field: "WAITING_CHECKOUT",
-        operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKOUT,
-      },
-      {
-        field: "WAITING_CHECKIN",
-        operator: "eq",
-        value: ASSIGNED_STATUS.WAITING_CHECKIN,
-      },
-    ],
-    resource: TAX_TOKEN_API,
-    onSearch: (params: any) => {
-      const filters: CrudFilters = [];
-      const {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        expiration_date,
-        assigned_to,
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: search,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
-        },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-        {
-          field: "purchaseDateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "purchaseDateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "expirationDateFrom",
-          operator: "eq",
-          value: expiration_date
-            ? expiration_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "expirationDateTo",
-          operator: "eq",
-          value: expiration_date
-            ? expiration_date[1].format().substring(0, 10)
-            : undefined,
-        },
-      );
-      return filters;
-    },
-  });
-
+    });
 
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
@@ -264,19 +262,13 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "name",
         title: t("tax_token.label.field.name"),
-        render: (value: string, record: any) => (
-          <TextField
-            value={value}
-          />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "seri",
         title: t("tax_token.label.field.seri"),
-        render: (value: string, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seri", sorter),
       },
       {
@@ -314,11 +306,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "purchase_cost",
         title: t("tax_token.label.field.purchase_cost"),
-        render: (value: string, record: any) => (
-          <TextField
-            value={value}
-          />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -360,7 +348,9 @@ export const TaxTokenListWaitingConfirm: React.FC<
         key: "assigned_to",
         title: t("tax_token.label.field.checkoutTo"),
         render: (value: string, record: ITaxTokenResponse) => (
-          <TextField value={record.assigned_to ? record.assigned_to.username : ''} />
+          <TextField
+            value={record.assigned_to ? record.assigned_to.username : ""}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
       },
@@ -378,34 +368,30 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "checkout_counter",
         title: t("tax_token.label.field.checkout_counter"),
-        render: (value: number, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: number, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tax_token.label.field.checkin_counter"),
-        render: (value: number, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: number, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "note",
         title: t("tax_token.label.field.note"),
-        render: (value: string, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("note", sorter),
       },
     ],
     [filterSuppliers]
-  )
+  );
 
-
-  const { mutate, isLoading: isLoadingSendRequest, isSuccess: isMutateSuccess } =
-    useCreate<ITaxTokenCreateRequest>();
+  const {
+    mutate,
+    isLoading: isLoadingSendRequest,
+    isSuccess: isMutateSuccess,
+  } = useCreate<ITaxTokenCreateRequest>();
 
   const cancle = (data: ITaxTokenResponse) => {
     setIsCancleModalVisible(true);
@@ -417,21 +403,24 @@ export const TaxTokenListWaitingConfirm: React.FC<
   };
 
   const confirmTaxToken = (id: number, assigned_status: number) => {
-    mutate({
-      resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
-      values: {
-        assigned_status: assigned_status,
+    mutate(
+      {
+        resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
+        values: {
+          assigned_status: assigned_status,
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   const refreshData = () => {
@@ -439,7 +428,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
   };
 
   useEffect(() => {
-    let arr = [...isLoadingArr];
+    const arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
     setIsLoadingArr(arr);
     refreshData();
@@ -485,7 +474,8 @@ export const TaxTokenListWaitingConfirm: React.FC<
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 && isAdmin
+      ).length > 0 &&
+      isAdmin
     ) {
       setSelectedNotAcceptAndRefuse(true);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
@@ -499,7 +489,8 @@ export const TaxTokenListWaitingConfirm: React.FC<
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-      ).length > 0 && isAdmin
+      ).length > 0 &&
+      isAdmin
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
@@ -522,7 +513,8 @@ export const TaxTokenListWaitingConfirm: React.FC<
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 && isAdmin &&
+      ).length > 0 &&
+      isAdmin &&
       initselectedRowKeys.filter(
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -553,7 +545,9 @@ export const TaxTokenListWaitingConfirm: React.FC<
         "selectedRow_AcceptRefuse",
         JSON.stringify(newSelectRow)
       );
-      setSelectedRowKeys(newSelectRow.map((item: ITaxTokenResponse) => item.id));
+      setSelectedRowKeys(
+        newSelectRow.map((item: ITaxTokenResponse) => item.id)
+      );
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
@@ -599,7 +593,9 @@ export const TaxTokenListWaitingConfirm: React.FC<
   };
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: ITaxTokenResponse) => item.id),
+    selectedRowKeys: initselectedRowKeys.map(
+      (item: ITaxTokenResponse) => item.id
+    ),
     onChange: onSelectChange,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
@@ -630,23 +626,29 @@ export const TaxTokenListWaitingConfirm: React.FC<
     }, 1300);
   };
 
-  const confirmMultipleTaxToken = (tax_tokens: {}[], assigned_status: number) => {
-    mutate({
-      resource: TAX_TOKEN_API + "?_method=PUT",
-      values: {
-        tax_tokens: tax_tokens,
-        assigned_status: assigned_status,
+  const confirmMultipleTaxToken = (
+    tax_tokens: any[],
+    assigned_status: number
+  ) => {
+    mutate(
+      {
+        resource: TAX_TOKEN_API + "?_method=PUT",
+        values: {
+          tax_tokens: tax_tokens,
+          assigned_status: assigned_status,
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
     handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRow_AcceptRefuse");
@@ -667,7 +669,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
     return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
@@ -675,7 +677,11 @@ export const TaxTokenListWaitingConfirm: React.FC<
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const handleDateChange = (val: any, dateFrom: string, dateTo: string) => {
+  const handleDateChange = (
+    val: moment.Moment[] | null,
+    dateFrom: string,
+    dateTo: string
+  ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       // localStorage.setItem("purchase_date", formatString ?? "");
@@ -702,14 +708,14 @@ export const TaxTokenListWaitingConfirm: React.FC<
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
-  }
+  };
 
   const expirationDateChange = (val: any, formatString: any) => {
     localStorage.setItem("purchase_date", formatString ?? "");
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);
-  }
+  };
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -753,7 +759,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible])
+  }, [isMutateSuccess, isCancleModalVisible, isCancelManyAssetModalVisible]);
 
   return (
     <List title={t("hardware.label.title.list-waiting-confirm")}>
@@ -768,19 +774,22 @@ export const TaxTokenListWaitingConfirm: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : purchaseDateFromParam && purchaseDateToParam
-                    ? [moment(purchaseDateFromParam), moment(purchaseDateToParam)]
+                    ? [
+                        moment(purchaseDateFromParam),
+                        moment(purchaseDateToParam),
+                      ]
                     : ""
                 : "",
             expiration_date:
               expirationDateFromParam && expirationDateToParam
                 ? [
-                  moment(expirationDateFromParam, "YYYY/MM/DD"),
-                  moment(expirationDateToParam, "YYYY/MM/DD"),
-                ]
+                    moment(expirationDateFromParam, "YYYY/MM/DD"),
+                    moment(expirationDateToParam, "YYYY/MM/DD"),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -963,23 +972,24 @@ export const TaxTokenListWaitingConfirm: React.FC<
             className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
-            {isAdmin && initselectedRowKeys
-              .filter(
-                (item: IAssetsWaiting) =>
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-              )
-              .map((item: ITaxTokenResponse) => (
-                <span className="list-checkin" key={item.id}>
-                  <span className="name-checkin">{item.name}</span>
-                  <span
-                    className="delete-users-accept-refuse"
-                    onClick={() => handleRemoveItem(item.id)}
-                  >
-                    <CloseOutlined />
+            {isAdmin &&
+              initselectedRowKeys
+                .filter(
+                  (item: IAssetsWaiting) =>
+                    item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+                    item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
+                )
+                .map((item: ITaxTokenResponse) => (
+                  <span className="list-checkin" key={item.id}>
+                    <span className="name-checkin">{item.name}</span>
+                    <span
+                      className="delete-users-accept-refuse"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      <CloseOutlined />
+                    </span>
                   </span>
-                </span>
-              ))}
+                ))}
           </div>
 
           <div
@@ -1025,22 +1035,31 @@ export const TaxTokenListWaitingConfirm: React.FC<
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
           scroll={{ x: 1800 }}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
-            .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+            .map((col, index) => (
+              <Table.Column
+                key={index}
+                dataIndex={col.key}
+                {...(col as any)}
+                sorter
+              />
             ))}
           <Table.Column<ITaxTokenResponse>
             title={t("table.actions")}
@@ -1052,7 +1071,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
                   isAdmin &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -1084,7 +1103,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
                   record.assigned_to.id === record.withdraw_from &&
                   isAdmin &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKIN && (
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -1111,8 +1130,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT &&
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT &&
                   isAdmin && (
                     <Button
                       type="primary"
@@ -1131,23 +1149,24 @@ export const TaxTokenListWaitingConfirm: React.FC<
                     </Button>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && isAdmin && (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={
-                      isLoadingArr[record.id] === undefined
-                        ? false
-                        : isLoadingArr[record.id] === false
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN &&
+                  isAdmin && (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={
+                        isLoadingArr[record.id] === undefined
                           ? false
-                          : true
-                    }
-                    onClick={() => cancle(record)}
-                  >
-                    {t("hardware.label.button.rejectCheckin")}
-                  </Button>
-                )}
+                          : isLoadingArr[record.id] === false
+                            ? false
+                            : true
+                      }
+                      onClick={() => cancle(record)}
+                    >
+                      {t("hardware.label.button.rejectCheckin")}
+                    </Button>
+                  )}
               </Space>
             )}
           />

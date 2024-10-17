@@ -45,20 +45,20 @@ export const ActionType = {
   delete: "Xóa",
   "create new": "Tạo mới",
   create: "Tạo mới",
+  QRCode: "In Mã QR",
 };
 
 export const dateFormat = "YYYY/MM/DD";
 
 export const requestable = {
-  REQUIRED : "1",
-  REFUSE: "0"
-}
+  REQUIRED: "1",
+  REFUSE: "0",
+};
 
 export const CategoryType = {
   ASSET: "asset",
-  CONSUMABLE : "consumable",
+  CONSUMABLE: "consumable",
   ACCESSORY: "accessory",
   TAXTOKEN: "taxtoken",
-  TOOL: "tool"
-}
-
+  TOOL: "tool",
+};

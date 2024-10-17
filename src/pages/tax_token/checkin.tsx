@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -16,13 +15,10 @@ import {
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
   ITaxTokenRequestCheckin,
-  ITaxTokenResponseCheckin
+  ITaxTokenResponseCheckin,
 } from "interfaces/tax_token";
 import { ICompany } from "interfaces/company";
-import {
-  STATUS_LABELS_API,
-  TAX_TOKEN_API,
-} from "api/baseApi";
+import { STATUS_LABELS_API, TAX_TOKEN_API } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
@@ -34,9 +30,10 @@ type TaxTokenCheckinProps = {
 
 export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckin | null>();
+  const [messageErr, setMessageErr] =
+    useState<ITaxTokenRequestCheckin | null>();
   const { open } = useNotification();
   const t = useTranslate();
 
@@ -58,10 +55,7 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: TAX_TOKEN_API + "/" + data?.id + "/checkin",
     method: "post",
     config: {
@@ -107,12 +101,13 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-        let message = Object.values(err)[0][0];
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-          type: 'error',
-          description: 'Error',
-          message: message
+          type: "error",
+          description: "Error",
+          message: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -121,15 +116,15 @@ export const TaxTokenCheckin = (props: TaxTokenCheckinProps) => {
       setIsModalVisible(false);
       setMessageErr(null);
       open?.({
-        type: 'success',
-        description: 'Success',
-        message: response.data?.data.messages
+        type: "success",
+        description: "Success",
+        message: response.data?.data.messages,
       });
-    }
+    };
     fetch();
   }, [payload]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {

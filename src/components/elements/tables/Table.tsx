@@ -1,5 +1,3 @@
 export const Table = () => {
-
-    return <div>ABC
-        </div>
-}
+  return <div>ABC</div>;
+};

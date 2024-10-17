@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Button,
   Checkbox,
@@ -96,7 +94,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
-    custom &&
+    if (custom) {
       custom({
         url: SYNC_USER_API,
         method: "get",
@@ -104,6 +102,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         setHrmLoading(false);
         tableQueryResult.refetch();
       });
+    }
   };
 
   const collumns = useMemo(
@@ -146,7 +145,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "permissions",
         title: translate("user.label.field.role"),
-        render: (value: any) => <TextField value={getPermissionsUser(value)}/>,
+        render: (value: any) => <TextField value={getPermissionsUser(value)} />,
       },
       {
         key: "email",
@@ -198,8 +197,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "location",
         title: translate("user.label.field.locations"),
-        render: (value: IUser) =>
-          <TextField value={value ? value.name : ""} />,
+        render: (value: IUser) => <TextField value={value ? value.name : ""} />,
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
@@ -259,7 +257,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
 
   // console.log(tableProps, "?tableProps");
 
-
   const handleCreate = () => {
     handleOpenModel();
   };
@@ -309,7 +306,8 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       password: data?.password,
       password_confirmation: data?.password_confirmation,
       permissions: data?.permissions !== null ? data?.permissions : "",
-      manager_location: data?.manager_location !== null ? data?.manager_location : "",
+      manager_location:
+        data?.manager_location !== null ? data?.manager_location : "",
     };
 
     setDetail(dataConvert);
@@ -464,7 +462,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} sorter />
+              <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
             ))}
           <Table.Column<IUserResponse>
             title={translate("table.actions")}

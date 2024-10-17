@@ -4,7 +4,7 @@ import {
   CrudFilters,
   HttpError,
   useCreate,
-  useNotification
+  useNotification,
 } from "@pankod/refine-core";
 import {
   List,
@@ -21,7 +21,7 @@ import {
   useSelect,
   TagField,
   Popconfirm,
-  Button
+  Button,
 } from "@pankod/refine-antd";
 import {
   MenuOutlined,
@@ -37,7 +37,7 @@ import {
   TAX_TOKEN_ASSIGN_API,
   STATUS_LABELS_API,
   TAX_TOKEN_TOTAL_DETAIL_API,
-  TAX_TOKEN_API
+  TAX_TOKEN_API,
 } from "api/baseApi";
 import { Spin } from "antd";
 import { DatePicker } from "antd";
@@ -51,13 +51,13 @@ import {
   ITaxToken,
   ITaxTokenFilterVariables,
   ITaxTokenResponse,
-  ITaxTokenCreateRequest
+  ITaxTokenCreateRequest,
 } from "interfaces/tax_token";
 import {
   getBGTaxTokenAssignedStatusDecription,
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
-  getTaxTokenStatusDecription
+  getTaxTokenStatusDecription,
 } from "untils/tax_token";
 
 import { TaxTokenShow } from "pages/tax_token/show";
@@ -123,74 +123,65 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     });
   };
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    ITaxTokenResponse,
-    HttpError,
-    ITaxTokenFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<ITaxTokenResponse, HttpError, ITaxTokenFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      resource: TAX_TOKEN_ASSIGN_API,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        const { name, seri, supplier, purchase_date, expiration_date } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: searchParam,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              seri,
+              supplier,
+            }),
+          },
+          {
+            field: "purchaseDateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "purchaseDateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "expirationDateFrom",
+            operator: "eq",
+            value: expiration_date
+              ? expiration_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "expirationDateTo",
+            operator: "eq",
+            value: expiration_date
+              ? expiration_date[1].format().substring(0, 10)
+              : undefined,
+          }
+        );
+        return filters;
       },
-    ],
-    resource: TAX_TOKEN_ASSIGN_API,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      let {
-        name,
-        seri,
-        supplier,
-        purchase_date,
-        expiration_date
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: searchParam,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            seri,
-            supplier,
-          }),
-        },
-        {
-          field: "purchaseDateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "purchaseDateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "expirationDateFrom",
-          operator: "eq",
-          value: expiration_date
-            ? expiration_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "expirationDateTo",
-          operator: "eq",
-          value: expiration_date
-            ? expiration_date[1].format().substring(0, 10)
-            : undefined,
-        },
-      );
-      return filters;
-    },
-  });
+    });
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
@@ -239,19 +230,13 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("tax_token.label.field.name"),
-        render: (value: string, record: any) => (
-          <TextField
-            value={value}
-          />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "seri",
         title: t("tax_token.label.field.seri"),
-        render: (value: string, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seri", sorter),
       },
       {
@@ -267,9 +252,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "location",
         title: t("tax_token.label.field.location"),
-        render: (value: ITaxToken) => (
-          <TextField value={value && value.name} />
-        ),
+        render: (value: ITaxToken) => <TextField value={value && value.name} />,
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
       },
       {
@@ -305,11 +288,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("tax_token.label.field.purchase_cost"),
-        render: (value: string, record: any) => (
-          <TextField
-            value={value}
-          />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -363,37 +342,33 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         key: "assigned_to",
         title: t("tax_token.label.field.checkoutTo"),
         render: (value: string, record: ITaxTokenResponse) => (
-          <TextField value={record.assigned_to ? record.assigned_to.username : ''} />
+          <TextField
+            value={record.assigned_to ? record.assigned_to.username : ""}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("assigned_to", sorter),
       },
       {
         key: "checkout_counter",
         title: t("tax_token.label.field.checkout_counter"),
-        render: (value: number, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: number, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tax_token.label.field.checkin_counter"),
-        render: (value: number, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: number, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "note",
         title: t("tax_token.label.field.note"),
-        render: (value: string, record: any) => (
-          <TextField value={value} />
-        ),
+        render: (value: string, record: any) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("note", sorter),
       },
     ],
     [filterSuppliers]
-  )
+  );
 
   const { mutate, isLoading: isLoadingSendRequest } =
     useCreate<ITaxTokenCreateRequest>();
@@ -419,11 +394,12 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     setDetailEdit(data);
   };
 
-
   const initselectedRowKeys = useMemo(() => {
-    return JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) || [];
+    return (
+      JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) ||
+      []
+    );
   }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
-
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | ITaxTokenResponse[]
@@ -441,7 +417,10 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       const newSelectRow = initselectedRowKeys.filter(
         (item: ITaxToken) => item.id !== record.id
       );
-      localStorage.setItem("selectedTaxTokenRowKeys", JSON.stringify(newSelectRow));
+      localStorage.setItem(
+        "selectedTaxTokenRowKeys",
+        JSON.stringify(newSelectRow)
+      );
       setSelectedRowKeys(newSelectRow.map((item: ITaxToken) => item.id));
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
@@ -471,7 +450,10 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         (item: any) => !unSelectIds.includes(item.id)
       );
 
-      localStorage.setItem("selectedTaxTokenRowKeys", JSON.stringify(newSelectedRows));
+      localStorage.setItem(
+        "selectedTaxTokenRowKeys",
+        JSON.stringify(newSelectedRows)
+      );
     } else {
       selectedRows = selectedRows.filter((item: ITaxTokenResponse) => item);
       localStorage.setItem(
@@ -502,7 +484,11 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     }, 300);
   };
 
-  const handleDateChange = (val: any, dateFrom: string, dateTo: string) => {
+  const handleDateChange = (
+    val: moment.Moment[] | null,
+    dateFrom: string,
+    dateTo: string
+  ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       searchParams.set(
@@ -525,20 +511,23 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
-  }
+  };
 
   const expirationDateChange = (val: any, formatString: any) => {
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);
-  }
+  };
 
   useEffect(() => {
-    localStorage.setItem("item_tax_token_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      "item_tax_token_selected",
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   useEffect(() => {
-    let arr = [...isLoadingArr];
+    const arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
     setIsLoadingArr(arr);
     refreshData();
@@ -560,22 +549,25 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     confirmTaxToken(id, assigned_status);
   };
   const confirmTaxToken = (id: number, assigned_status: number) => {
-    mutate({
-      resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
-      values: {
-        send_accept: id,
-        assigned_status: assigned_status,
+    mutate(
+      {
+        resource: TAX_TOKEN_API + "/" + id + "?_method=PUT",
+        values: {
+          send_accept: id,
+          assigned_status: assigned_status,
+        },
+        successNotification: false,
       },
-      successNotification: false
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
     handleRefresh();
   };
 
@@ -589,9 +581,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
   }, [isCancleModalVisible]);
 
   return (
-    <List
-      title={t("tax_token.label.title.my-tax-token")}
-    >
+    <List title={t("tax_token.label.title.my-tax-token")}>
       <div className="search">
         <Form
           {...searchFormProps}
@@ -599,16 +589,16 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
             purchase_date:
               purchaseDateFromParam && purchaseDateToParam
                 ? [
-                  moment(purchaseDateFromParam, "YYYY/MM/DD"),
-                  moment(purchaseDateToParam, "YYYY/MM/DD"),
-                ]
+                    moment(purchaseDateFromParam, "YYYY/MM/DD"),
+                    moment(purchaseDateToParam, "YYYY/MM/DD"),
+                  ]
                 : "",
             expiration_date:
               expirationDateFromParam && expirationDateToParam
                 ? [
-                  moment(expirationDateFromParam, "YYYY/MM/DD"),
-                  moment(expirationDateToParam, "YYYY/MM/DD"),
-                ]
+                    moment(expirationDateFromParam, "YYYY/MM/DD"),
+                    moment(expirationDateToParam, "YYYY/MM/DD"),
+                  ]
                 : "",
           }}
           layout="vertical"
@@ -690,8 +680,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
                 </div>
               </nav>
             </div>
-            <div>
-            </div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -704,7 +693,8 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         <TaxTokenShow
           setIsModalVisible={setIsShowModalVisible}
           detail={detailEdit}
-          isModalVisible={isShowModalVisible} />
+          isModalVisible={isShowModalVisible}
+        />
       </MModal>
       <MModal
         title={t("user.label.title.cancle")}
@@ -725,9 +715,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         links={TAX_TOKEN_TOTAL_DETAIL_API}
         additional_filter="user_list=true"
       ></TotalDetail>
-      <div className="checkout-checkin-multiple">
-
-      </div>
+      <div className="checkout-checkin-multiple"></div>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
@@ -753,8 +741,13 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
-            .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+            .map((col, index) => (
+              <Table.Column
+                key={index}
+                dataIndex={col.key}
+                {...(col as any)}
+                sorter
+              />
             ))}
           <Table.Column<any>
             title={t("table.actions")}
@@ -775,7 +768,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
                 {record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -804,7 +797,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
                 {record.assigned_to.id === record.withdraw_from &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKIN && (
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -833,22 +826,22 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
                 {record.assigned_status ===
                   ASSIGNED_STATUS.WAITING_CHECKOUT && (
-                    <Button
-                      type="primary"
-                      shape="round"
-                      size="small"
-                      loading={
-                        isLoadingArr[record.id] === undefined
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    loading={
+                      isLoadingArr[record.id] === undefined
+                        ? false
+                        : isLoadingArr[record.id] === false
                           ? false
-                          : isLoadingArr[record.id] === false
-                            ? false
-                            : true
-                      }
-                      onClick={() => cancle(record)}
-                    >
-                      {t("hardware.label.button.rejectCheckout")}
-                    </Button>
-                  )}
+                          : true
+                    }
+                    onClick={() => cancle(record)}
+                  >
+                    {t("hardware.label.button.rejectCheckout")}
+                  </Button>
+                )}
 
                 {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && (
                   <Button
@@ -873,5 +866,5 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         </Table>
       )}
     </List>
-  )
-}
+  );
+};

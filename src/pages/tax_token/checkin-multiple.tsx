@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -16,7 +15,10 @@ import { ICompany } from "interfaces/company";
 import { STATUS_LABELS_API, TAX_TOKEN_CHECKIN_API } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
-import { ITaxTokenMultipleRequestCheckin, ITaxTokenRequestCheckout } from "interfaces/tax_token";
+import {
+  ITaxTokenMultipleRequestCheckin,
+  ITaxTokenRequestCheckout,
+} from "interfaces/tax_token";
 
 type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;
@@ -25,10 +27,12 @@ type TaxTokenCheckoutMultipleProps = {
   setSelectedRowKeys: any;
 };
 
-export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) => {
+export const TaxTokenCheckinMultiple = (
+  props: TaxTokenCheckoutMultipleProps
+) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
-  const [, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const { open } = useNotification();
   const t = useTranslate();
 
@@ -51,23 +55,26 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
   const onFinish = (event: ITaxTokenMultipleRequestCheckin) => {
-    mutate({
-      resource: TAX_TOKEN_CHECKIN_API,
-      values: {
-        signatures: event.signatures,
-        checkin_at: event.checkin_at,
-        note: event.note !== null ? event.note : "",
+    mutate(
+      {
+        resource: TAX_TOKEN_CHECKIN_API,
+        values: {
+          signatures: event.signatures,
+          checkin_at: event.checkin_at,
+          note: event.note !== null ? event.note : "",
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   const { setFields } = form;
@@ -83,7 +90,7 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
     ]);
   }, [data, form, isModalVisible, setFields]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = true;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
@@ -136,10 +143,9 @@ export const TaxTokenCheckinMultiple = (props: TaxTokenCheckoutMultipleProps) =>
             name="signatures"
           >
             {data &&
-              data?.map((item: any) => (
-                <div>
-                  <span className="show-asset">{item.seri}</span> -{" "}
-                  {item.name}
+              data?.map((item: any, index: number) => (
+                <div key={index}>
+                  <span className="show-asset">{item.seri}</span> - {item.name}
                 </div>
               ))}
           </Form.Item>

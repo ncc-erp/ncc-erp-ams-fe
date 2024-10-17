@@ -1,7 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
-import { Form, Input, useForm, Button, Typography, Switch } from "@pankod/refine-antd";
+import {
+  Form,
+  Input,
+  useForm,
+  Button,
+  Typography,
+  Switch,
+} from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { UploadImage } from "components/elements/uploadImage";
@@ -28,10 +34,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
 
   const { setFields } = form;
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: CATEGORIES_API + "/" + data?.id,
     method: "post",
     config: {
@@ -40,7 +43,7 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
 
   const onFinish = (event: ICategoryRequest) => {
@@ -86,10 +89,11 @@ export const CategoryEdit = (props: CategoryEditProps) => {
     const fetch = async () => {
       const response = await refetch();
       if (response.isError === true) {
-        let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-        let message = Object.values(err)[0][0];
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-          type: 'error',
+          type: "error",
           message: message,
         });
         setMessageErr(response.error?.response.data.messages);
@@ -99,10 +103,10 @@ export const CategoryEdit = (props: CategoryEditProps) => {
       setIsModalVisible(false);
       setMessageErr(null);
       open?.({
-        type: 'success',
+        type: "success",
         message: response.data?.data.messages,
       });
-    }
+    };
     fetch();
   }, [payload]);
 
