@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -54,7 +53,7 @@ import {
   CLIENT_HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  CLIENT_HARDWARE_TOTAL_DETAIL_API
+  CLIENT_HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { ClientHardwareSearch } from "./search";
 import {
@@ -143,121 +142,117 @@ export const ClientHardwareListReadyToDeploy: React.FC<
 
   const { data: permissionsData } = usePermissions();
 
-
   useEffect(() => {
     if (permissionsData.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
+  }, [permissionsData]);
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    IHardwareResponse,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
-      },
-    ],
-    initialFilter: [
-      {
-        field: "status.id",
-        operator: "eq",
-        value: STATUS_LABELS.READY_TO_DEPLOY,
-      },
-    ],
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "status.id",
+          operator: "eq",
+          value: STATUS_LABELS.READY_TO_DEPLOY,
+        },
+      ],
 
-    resource: CLIENT_HARDWARE_API,
-    onSearch: (params: any) => {
-      const filters: CrudFilters = [];
-      const {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        assigned_to,
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: search ? search : searchParam,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
-        },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-        {
-          field: "dateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "assigned_status",
-          operator: "eq",
-          value: searchParams.get("assigned_status"),
+      resource: CLIENT_HARDWARE_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          assigned_to,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search ? search : searchParam,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+          {
+            field: "dateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "dateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "assigned_status",
+            operator: "eq",
+            value: searchParams.get("assigned_status"),
+          }
+        );
+
+        if (type) {
+          filters.push({
+            field: "type",
+            operator: "eq",
+            value: type,
+          });
         }
-      );
-
-      if (type) {
-        filters.push({
-          field: "type",
-          operator: "eq",
-          value: type,
-        });
-      }
-      if (category_id) {
-        filters.push({
-          field: "category_id",
-          operator: "eq",
-          value: category_id,
-        });
-      }
-      if (dateFromParam && dateToParam) {
-        filters.push({
-          field: "from",
-          operator: "eq",
-          value: dateFromParam,
-        });
-        filters.push({
-          field: "to",
-          operator: "eq",
-          value: dateToParam,
-        });
-      }
-      return filters;
-    },
-  });
+        if (category_id) {
+          filters.push({
+            field: "category_id",
+            operator: "eq",
+            value: category_id,
+          });
+        }
+        if (dateFromParam && dateToParam) {
+          filters.push({
+            field: "from",
+            operator: "eq",
+            value: dateFromParam,
+          });
+          filters.push({
+            field: "to",
+            operator: "eq",
+            value: dateToParam,
+          });
+        }
+        return filters;
+      },
+    });
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
@@ -676,9 +671,12 @@ export const ClientHardwareListReadyToDeploy: React.FC<
           <TextField
             value={value && value.name}
             onClick={() => {
-              list(`location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `location_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("rtd_location.name", sorter),
       },
@@ -689,9 +687,12 @@ export const ClientHardwareListReadyToDeploy: React.FC<
           <TextField
             value={value && value.name}
             onClick={() => {
-              list(`manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `manufactures_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
         ),
         defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
       },
@@ -699,9 +700,12 @@ export const ClientHardwareListReadyToDeploy: React.FC<
         key: "supplier",
         title: t("hardware.label.field.supplier"),
         render: (value: IHardwareResponse, record: IHardwareResponse) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
             onClick={() => {
-              list(`supplier_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`);
+              list(
+                `supplier_details?id=${value.id}&name=${value.name}&status_id=${record.status_label.id}`
+              );
             }}
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
@@ -908,7 +912,7 @@ export const ClientHardwareListReadyToDeploy: React.FC<
     return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
@@ -918,7 +922,7 @@ export const ClientHardwareListReadyToDeploy: React.FC<
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
       searchParams.set(
         "dateFrom",
@@ -1132,12 +1136,10 @@ export const ClientHardwareListReadyToDeploy: React.FC<
     <List
       title={t("hardware.label.title.list-readyToDeploy")}
       pageHeaderProps={{
-        extra: (
-          isAdmin && (
-            <CreateButton onClick={handleCreate}>
-              {t("hardware.label.tooltip.create")}
-            </CreateButton>
-          )
+        extra: isAdmin && (
+          <CreateButton onClick={handleCreate}>
+            {t("hardware.label.tooltip.create")}
+          </CreateButton>
         ),
       }}
     >
@@ -1152,9 +1154,9 @@ export const ClientHardwareListReadyToDeploy: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
                     ? [moment(dateFromParam), moment(dateToParam)]
                     : ""
@@ -1366,7 +1368,6 @@ export const ClientHardwareListReadyToDeploy: React.FC<
           setSelectedRowKeys={setSelectedRowKeys}
         />
       </MModal>
-
       <TotalDetail
         filters={filters}
         links={CLIENT_HARDWARE_TOTAL_DETAIL_API}
@@ -1453,15 +1454,24 @@ export const ClientHardwareListReadyToDeploy: React.FC<
             total: pageTotal ? pageTotal : 0,
             showSizeChanger: true,
           }}
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}

@@ -35,7 +35,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
   const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
-  const [detailCheckin, setDetailCheckin] = useState<IAccessoryResponseCheckin>();
+  const [detailCheckin, setDetailCheckin] =
+    useState<IAccessoryResponseCheckin>();
 
   const [isLoadingArr] = useState<boolean[]>([]);
 
@@ -43,7 +44,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
   const [detailShow, setDetailShow] = useState<IAccesstoryResponse>();
 
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-  const [detailCheckout, setDetailCheckout] = useState<IAccessoryResponseCheckout>();
+  const [detailCheckout, setDetailCheckout] =
+    useState<IAccessoryResponseCheckout>();
 
   const [searchParams] = useSearchParams();
   const nameAccessary = searchParams.get("name");
@@ -68,10 +70,11 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
     resource: `api/v1/accessories/${accessory_id}/checkedout`,
   });
 
-  const { tableProps: tableDetails, tableQueryResult: tableDetailsQueryResult } = useTable<
-    IAccesstoryResponse
-  >({
-    resource: `api/v1/accessories/accessories?category_id=${category_id}&accessory_id=${accessory_id}`
+  const {
+    tableProps: tableDetails,
+    tableQueryResult: tableDetailsQueryResult,
+  } = useTable<IAccesstoryResponse>({
+    resource: `api/v1/accessories/accessories?category_id=${category_id}&accessory_id=${accessory_id}`,
   });
 
   const collumns = useMemo(
@@ -94,8 +97,13 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_notes",
         title: translate("accessory.label.field.notes"),
-        render: (value: string) =>
-          <div dangerouslySetInnerHTML={{ __html: `<span>${value ? value : ""}</span>` }} />,
+        render: (value: string) => (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `<span>${value ? value : ""}</span>`,
+            }}
+          />
+        ),
       },
     ],
     []
@@ -107,9 +115,11 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
         key: "category",
         title: translate("accessory.label.field.category"),
         render: (value: IAccesstoryRequest) => (
-          <TextField value={value ? value.name : ""}
+          <TextField
+            value={value ? value.name : ""}
             onClick={() => list(`accessory?category_id=${value.id}`)}
-            style={{ cursor: "pointer", color: "#3c8dbc" }} />
+            style={{ cursor: "pointer", color: "#3c8dbc" }}
+          />
         ),
       },
       {
@@ -184,15 +194,15 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
             pagination={
               (pageTotal as number) > 10
                 ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                    position: ["topRight", "bottomRight"],
+                    total: pageTotal ? pageTotal : 0,
+                    showSizeChanger: true,
+                  }
                 : false
             }
           >
             {collumns.map((col) => (
-              <Table.Column dataIndex={col.key} {...col} />
+              <Table.Column dataIndex={col.key} {...col} key={col.key} />
             ))}
             <Table.Column<IAccesstoryResponse>
               title={translate("table.actions")}
@@ -214,7 +224,8 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
                       onClick={() => checkin(record)}
                     >
                       {translate("accessory.label.button.checkin")}
-                    </Button>)}
+                    </Button>
+                  )}
                 </Space>
               )}
             />
@@ -223,22 +234,14 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
 
         <div className="table-details-access-cons">
           <div className="list-user-checkout">
-            <Table
-              className="list-table"
-              {...tableDetails}
-              pagination={false}
-            >
+            <Table className="list-table" {...tableDetails} pagination={false}>
               {collumnsDetails.map((col) => (
-                <Table.Column dataIndex={col.key} {...col} />
+                <Table.Column dataIndex={col.key} {...col} key={col.key} />
               ))}
             </Table>
           </div>
           <div className="details-checkout">
-            <Table
-              className="list-table"
-              {...tableDetails}
-              pagination={false}
-            >
+            <Table className="list-table" {...tableDetails} pagination={false}>
               <Table.Column<IAccesstoryResponse>
                 dataIndex="actions"
                 render={(_, record) => (

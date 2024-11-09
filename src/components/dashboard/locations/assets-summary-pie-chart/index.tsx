@@ -21,7 +21,9 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   const t = useTranslate();
 
   const sumEachCategory = (category: string, is_client = false) => {
-    let category_const = (CategoryType as { [key: string]: string })[category.toUpperCase()];
+    const category_const = (CategoryType as { [key: string]: string })[
+      category.toUpperCase()
+    ];
     let columnCount = category.toLowerCase() + "s_count";
 
     if (category === "Asset" && is_client) {
@@ -41,33 +43,32 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       if (item?.category_type === category_const) {
         dataCategory = categories.filter(
           (item1) => item1?.category_type === category_const
-        )
+        );
 
-        sumCategory = dataCategory.reduce(
-          (total: number, object: any) => {
-            return total + Number(object[columnCount])
-          },
-          0
-        )
+        sumCategory = dataCategory.reduce((total: number, object: any) => {
+          return total + Number(object[columnCount]);
+        }, 0);
       }
-    })
+    });
 
     return sumCategory;
-  }
+  };
 
   useEffect(() => {
     let dataClone = { ...dataActive };
 
-    let sumConsumable = sumEachCategory("Consumable");
-    let sumAccessory = sumEachCategory("Accessory");
-    let sumTool = sumEachCategory("Tool");
-    let sumTaxToken = sumEachCategory("TaxToken");
-    let sumClientAsset = sumEachCategory("Asset", true);
+    const sumConsumable = sumEachCategory("Consumable");
+    const sumAccessory = sumEachCategory("Accessory");
+    const sumTool = sumEachCategory("Tool");
+    const sumTaxToken = sumEachCategory("TaxToken");
+    const sumClientAsset = sumEachCategory("Asset", true);
 
     for (let i = 0; i < data.length; i++) {
       dataClone = {
         ...dataClone,
-        [data[i].name]: !!(data.slice(0, 6)[i] && data.slice(0, 6)[i].assets_count > 0),
+        [data[i].name]: !!(
+          data.slice(0, 6)[i] && data.slice(0, 6)[i].assets_count > 0
+        ),
       };
     }
 
@@ -78,17 +79,17 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       [t("dashboard.field.typeTool")]: sumTool ? true : false,
       [t("dashboard.field.typeTaxToken")]: sumTaxToken ? true : false,
       [t("dashboard.field.typeClientAsset")]: sumClientAsset ? true : false,
-    }
+    };
 
     setDataActive(dataClone);
   }, []);
 
   useEffect(() => {
-    let consumable = { label: t("dashboard.field.typeConsumable") } as any;
-    let accessory = { label: t("dashboard.field.typeAccessory") } as any;
-    let tool = { label: t("dashboard.field.typeTool") } as any;
-    let taxtoken = { label: t("dashboard.field.typeTaxToken") } as any;
-    let clientAsset = { label: t("dashboard.field.typeClientAsset") } as any;
+    const consumable = { label: t("dashboard.field.typeConsumable") } as any;
+    const accessory = { label: t("dashboard.field.typeAccessory") } as any;
+    const tool = { label: t("dashboard.field.typeTool") } as any;
+    const taxtoken = { label: t("dashboard.field.typeTaxToken") } as any;
+    const clientAsset = { label: t("dashboard.field.typeClientAsset") } as any;
 
     consumable.value = sumEachCategory("Consumable");
     accessory.value = sumEachCategory("Accessory");
@@ -96,10 +97,10 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
     taxtoken.value = sumEachCategory("TaxToken");
     clientAsset.value = sumEachCategory("Asset", true);
 
-    let dataAsset = [] as any;
+    const dataAsset = [] as any;
 
     data.forEach((item: any) => {
-      let asset = {} as any;
+      const asset = {} as any;
 
       if (item.category_type === CategoryType.ASSET) {
         asset.label = item.name;
@@ -108,7 +109,14 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
 
       dataAsset.push(asset);
     });
-    setDataPie([...dataAsset, consumable, accessory, tool, taxtoken, clientAsset]);
+    setDataPie([
+      ...dataAsset,
+      consumable,
+      accessory,
+      tool,
+      taxtoken,
+      clientAsset,
+    ]);
   }, [data]);
 
   const config: PieConfig = {

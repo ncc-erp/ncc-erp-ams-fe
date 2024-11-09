@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useTranslate } from "@pankod/refine-core";
 import { Form, Input, Button, FormProps } from "@pankod/refine-antd";
 

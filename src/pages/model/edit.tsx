@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
@@ -72,10 +71,7 @@ export const ModelEdit = (props: ModelEditProps) => {
     ],
   });
 
-  const {
-    refetch,
-    isFetching,
-  } = useCustom({
+  const { refetch, isFetching } = useCustom({
     url: MODELS_API + "/" + data?.id,
     method: "post",
     config: {
@@ -84,7 +80,7 @@ export const ModelEdit = (props: ModelEditProps) => {
     queryOptions: {
       enabled: false,
     },
-    errorNotification: false
+    errorNotification: false,
   });
 
   const onFinish = (event: IModelRequest) => {
@@ -128,26 +124,27 @@ export const ModelEdit = (props: ModelEditProps) => {
   useEffect(() => {
     if (!payload) return;
     const fetch = async () => {
-        const response = await refetch();
-        if (response.isError === true) {
-            let err: { [key: string]: string[] | string } = response.error?.response.data.messages;
-            let message = Object.values(err)[0][0];
-            open?.({
-              type: 'error',
-              message: message,
-            });  
-            setMessageErr(response.error?.response.data.messages);
-            return;
-        }
-        form.resetFields();
-        setIsModalVisible(false);
-        setFile(undefined);
-        setMessageErr(null);
+      const response = await refetch();
+      if (response.isError === true) {
+        const err: { [key: string]: string[] | string } =
+          response.error?.response.data.messages;
+        const message = Object.values(err)[0][0];
         open?.({
-            type: 'success',
-            message: response.data?.data.messages,
-        });        
-    } 
+          type: "error",
+          message: message,
+        });
+        setMessageErr(response.error?.response.data.messages);
+        return;
+      }
+      form.resetFields();
+      setIsModalVisible(false);
+      setFile(undefined);
+      setMessageErr(null);
+      open?.({
+        type: "success",
+        message: response.data?.data.messages,
+      });
+    };
     fetch();
   }, [payload]);
 

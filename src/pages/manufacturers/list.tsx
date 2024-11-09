@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -40,7 +39,7 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IManufacturesResponse>();
   const [searchParams] = useSearchParams();
-  const manufacturer_id = searchParams.get('manufacturer_id');
+  const manufacturer_id = searchParams.get("manufacturer_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<IManufacturesResponse>({
@@ -61,9 +60,9 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
             value: search,
           },
           {
-            field: 'manufacturer_id',
-            operator: 'eq',
-            value: manufacturer_id
+            field: "manufacturer_id",
+            operator: "eq",
+            value: manufacturer_id,
           }
         );
         return filters;
@@ -99,14 +98,19 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("manufactures.label.field.name"),
-        render: (value: IHardware, record: IManufacturesResponse) =>
+        render: (value: IHardware, record: IManufacturesResponse) => (
           <TextField
             value={value ? value : ""}
             onClick={() => {
-              record.id &&
-                list(`manufactures_details?id=${record.id}&name=${record.name}`);
+              if (record.id) {
+                list(
+                  `manufactures_details?id=${record.id}&name=${record.name}`
+                );
+              }
             }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }} />,
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
+        ),
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -221,16 +225,16 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
           scroll={{ x: 1100 }}
         >
           {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} sorter />
+            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
           ))}
           <Table.Column<IManufacturesResponse>
             title={t("table.actions")}

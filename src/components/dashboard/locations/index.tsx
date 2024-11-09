@@ -12,7 +12,6 @@ type LocationProps = {
 export const Locations = (props: LocationProps) => {
   const { location, data } = props;
 
-  
   return (
     <div className="locationContainer">
       <Row gutter={16}>

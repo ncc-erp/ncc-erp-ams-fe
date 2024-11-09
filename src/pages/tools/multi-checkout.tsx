@@ -15,7 +15,10 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import { USERS_API, TOOLS_MULTI_CHECKOUT_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
-import { IToolCheckoutMessageResponse, IToolMultiCheckoutRequest } from "interfaces/tool";
+import {
+  IToolCheckoutMessageResponse,
+  IToolMultiCheckoutRequest,
+} from "interfaces/tool";
 
 type ToolMultiCheckoutProps = {
   isModalVisible: boolean;
@@ -50,24 +53,27 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
   });
 
   const onFinish = (event: IToolMultiCheckoutRequest) => {
-    mutate({
-      resource: TOOLS_MULTI_CHECKOUT_API,
-      values: {
-        tools: event.tools,
-        checkout_at: event.checkout_at,
-        assigned_to: event.assigned_to,
-        notes: event.notes !== null ? event.notes : "",
+    mutate(
+      {
+        resource: TOOLS_MULTI_CHECKOUT_API,
+        values: {
+          tools: event.tools,
+          checkout_at: event.checkout_at,
+          assigned_to: event.assigned_to,
+          notes: event.notes !== null ? event.notes : "",
+        },
+        successNotification: false,
       },
-      successNotification: false,
-    }, {
-      onSuccess(data, variables, context) {
-        open?.({
-          type: 'success',
-          description: 'Success',
-          message: data?.data.messages
-        })
-      },
-    });
+      {
+        onSuccess(data, variables, context) {
+          open?.({
+            type: "success",
+            description: "Success",
+            message: data?.data.messages,
+          });
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -105,22 +111,16 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
-          <Form.Item
-            label={t("tools.label.title.name")}
-            name="tools"
-          >
+          <Form.Item label={t("tools.label.title.name")} name="tools">
             {data &&
-              data?.map((item: any) => (
-                <div>
-                  <span className="show-asset">{item.id}</span> -{" "}
-                  {item.name}
+              data?.map((item: any, index: number) => (
+                <div key={index}>
+                  <span className="show-asset">{item.id}</span> - {item.name}
                 </div>
               ))}
           </Form.Item>
           {messageErr?.name && (
-            <Typography.Text type="danger">
-              {messageErr.name}
-            </Typography.Text>
+            <Typography.Text type="danger">{messageErr.name}</Typography.Text>
           )}
         </Col>
         <Col className="gutter-row" span={12}>

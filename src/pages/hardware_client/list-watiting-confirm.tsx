@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -43,7 +41,7 @@ import {
   CLIENT_HARDWARE_API,
   LOCATION_API,
   STATUS_LABELS_API,
-  CLIENT_HARDWARE_TOTAL_DETAIL_API
+  CLIENT_HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import {
   CloseOutlined,
@@ -93,8 +91,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     } else {
       setIsAdmin(false);
     }
-  }, [permissionsData])
-
+  }, [permissionsData]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected") !== null
@@ -116,80 +113,76 @@ export const ClientHardwareListWaitingConfirm: React.FC<
 
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } = useTable<
-    any,
-    HttpError,
-    IHardwareFilterVariables
-  >({
-    initialSorter: [
-      {
-        field: "id",
-        order: "desc",
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
+    useTable<any, HttpError, IHardwareFilterVariables>({
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "IS_WAITING_PAGE",
+          operator: "eq",
+          value: true,
+        },
+      ],
+      resource: CLIENT_HARDWARE_API,
+      onSearch: (params: any) => {
+        const filters: CrudFilters = [];
+        const {
+          search,
+          name,
+          asset_tag,
+          serial,
+          model,
+          location,
+          status_label,
+          purchase_date,
+          assigned_to,
+        } = params;
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              asset_tag,
+              serial,
+              model,
+              status_label,
+              assigned_to,
+            }),
+          },
+          {
+            field: "rtd_location_id",
+            operator: "eq",
+            value: location ? location : rtd_location_id,
+          },
+          {
+            field: "dateFrom",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[0].format().substring(0, 10)
+              : undefined,
+          },
+          {
+            field: "dateTo",
+            operator: "eq",
+            value: purchase_date
+              ? purchase_date[1].format().substring(0, 10)
+              : undefined,
+          }
+        );
+        return filters;
       },
-    ],
-    initialFilter: [
-      {
-        field: "IS_WAITING_PAGE",
-        operator: "eq",
-        value: true,
-      },
-    ],
-    resource: CLIENT_HARDWARE_API,
-    onSearch: (params: any) => {
-      const filters: CrudFilters = [];
-      const {
-        search,
-        name,
-        asset_tag,
-        serial,
-        model,
-        location,
-        status_label,
-        purchase_date,
-        assigned_to,
-      } = params;
-      filters.push(
-        {
-          field: "search",
-          operator: "eq",
-          value: search,
-        },
-        {
-          field: "filter",
-          operator: "eq",
-          value: JSON.stringify({
-            name,
-            asset_tag,
-            serial,
-            model,
-            status_label,
-            assigned_to,
-          }),
-        },
-        {
-          field: "rtd_location_id",
-          operator: "eq",
-          value: location ? location : rtd_location_id,
-        },
-        {
-          field: "dateFrom",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[0].format().substring(0, 10)
-            : undefined,
-        },
-        {
-          field: "dateTo",
-          operator: "eq",
-          value: purchase_date
-            ? purchase_date[1].format().substring(0, 10)
-            : undefined,
-        }
-      );
-      return filters;
-    },
-  });
-
+    });
 
   const handleOpenModel = () => {
     setIsModalVisible(!isModalVisible);
@@ -342,7 +335,8 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         key: "supplier",
         title: t("hardware.label.field.supplier"),
         render: (value: IHardwareResponse) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
           />
         ),
         defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
@@ -426,7 +420,15 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         title: t("hardware.label.field.dateCreate"),
         render: (value: IHardware) =>
           value ? (
-            <DateField format="LLL" value={value && moment(value.datetime).add(moment.duration(moment().format('Z'))).toDate()} />
+            <DateField
+              format="LLL"
+              value={
+                value &&
+                moment(value.datetime)
+                  .add(moment.duration(moment().format("Z")))
+                  .toDate()
+              }
+            />
           ) : (
             ""
           ),
@@ -463,7 +465,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   };
 
   useEffect(() => {
-    let arr = [...isLoadingArr];
+    const arr = [...isLoadingArr];
     arr[idConfirm] = isLoadingSendRequest;
     setIsLoadingArr(arr);
     refreshData();
@@ -509,7 +511,8 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 && isAdmin
+      ).length > 0 &&
+      isAdmin
     ) {
       setSelectedNotAcceptAndRefuse(true);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
@@ -523,7 +526,8 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-      ).length > 0 && isAdmin
+      ).length > 0 &&
+      isAdmin
     ) {
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
@@ -546,7 +550,8 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
-      ).length > 0 && isAdmin &&
+      ).length > 0 &&
+      isAdmin &&
       initselectedRowKeys.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -654,14 +659,14 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     }, 4000);
   };
 
-  const confirmMultipleHardware = (assets: {}[], assigned_status: number) => {
+  const confirmMultipleHardware = (assets: any[], assigned_status: number) => {
     mutate({
       resource: CLIENT_HARDWARE_API + "?_method=PUT",
       values: {
         assets: assets,
         assigned_status: assigned_status,
       },
-    });;
+    });
     handleRefresh();
     setSelectedRowKeys([]);
     localStorage.removeItem("selectedRow_AcceptRefuse");
@@ -682,7 +687,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     return localStorage.getItem("purchase_date")?.substring(11, 21);
   }, [localStorage.getItem("purchase_date")]);
 
-  let searchValuesLocation = useMemo(() => {
+  const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
@@ -692,7 +697,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
-      const [from, to] = Array.from(val || []);
+      const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
       searchParams.set(
         "dateFrom",
@@ -800,9 +805,9 @@ export const ClientHardwareListWaitingConfirm: React.FC<
               localStorage.getItem("purchase_date") !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
-                    moment(searchValuesByDateFrom),
-                    moment(searchValuesByDateTo),
-                  ]
+                      moment(searchValuesByDateFrom),
+                      moment(searchValuesByDateTo),
+                    ]
                   : dateFromParam && dateToParam
                     ? [moment(dateFromParam), moment(dateToParam)]
                     : ""
@@ -992,23 +997,24 @@ export const ClientHardwareListWaitingConfirm: React.FC<
             className={nameAcceptAndRefuse ? "list-asset-waiting-confirm" : ""}
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
-            {isAdmin && initselectedRowKeys
-              .filter(
-                (item: IAssetsWaiting) =>
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
-                  item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
-              )
-              .map((item: IHardwareResponse) => (
-                <span className="list-checkin" key={item.id}>
-                  <span className="name-checkin">{item.asset_tag}</span>
-                  <span
-                    className="delete-users-accept-refuse"
-                    onClick={() => handleRemoveItem(item.id)}
-                  >
-                    <CloseOutlined />
+            {isAdmin &&
+              initselectedRowKeys
+                .filter(
+                  (item: IAssetsWaiting) =>
+                    item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
+                    item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
+                )
+                .map((item: IHardwareResponse) => (
+                  <span className="list-checkin" key={item.id}>
+                    <span className="name-checkin">{item.asset_tag}</span>
+                    <span
+                      className="delete-users-accept-refuse"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      <CloseOutlined />
+                    </span>
                   </span>
-                </span>
-              ))}
+                ))}
           </div>
 
           <div
@@ -1054,22 +1060,31 @@ export const ClientHardwareListWaitingConfirm: React.FC<
           pagination={
             (pageTotal as number) > 10
               ? {
-                position: ["topRight", "bottomRight"],
-                total: pageTotal ? pageTotal : 0,
-                showSizeChanger: true,
-              }
+                  position: ["topRight", "bottomRight"],
+                  total: pageTotal ? pageTotal : 0,
+                  showSizeChanger: true,
+                }
               : false
           }
-          rowSelection={isAdmin ? {
-            type: "checkbox",
-            ...rowSelection,
-          } : undefined}
+          rowSelection={
+            isAdmin
+              ? {
+                  type: "checkbox",
+                  ...rowSelection,
+                }
+              : undefined
+          }
           scroll={{ x: 1800 }}
         >
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                dataIndex={col.key}
+                {...(col as any)}
+                key={col.key}
+                sorter
+              />
             ))}
           <Table.Column<IHardwareResponse>
             title={t("table.actions")}
@@ -1081,7 +1096,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                   isAdmin &&
                   record.assigned_to.id !== record.withdraw_from &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT && (
+                    ASSIGNED_STATUS.WAITING_CHECKOUT && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkout")}
                       onConfirm={() =>
@@ -1113,7 +1128,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                   record.assigned_to.id === record.withdraw_from &&
                   isAdmin &&
                   record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKIN && (
+                    ASSIGNED_STATUS.WAITING_CHECKIN && (
                     <Popconfirm
                       title={t("hardware.label.button.accept_checkin")}
                       onConfirm={() =>
@@ -1140,8 +1155,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                     </Popconfirm>
                   )}
 
-                {record.assigned_status ===
-                  ASSIGNED_STATUS.WAITING_CHECKOUT &&
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT &&
                   isAdmin && (
                     <Button
                       type="primary"
@@ -1154,17 +1168,18 @@ export const ClientHardwareListWaitingConfirm: React.FC<
                     </Button>
                   )}
 
-                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN && isAdmin && (
-                  <Button
-                    type="primary"
-                    shape="round"
-                    size="small"
-                    loading={isLoadingArr[record.id] ? true : false}
-                    onClick={() => cancle(record)}
-                  >
-                    {t("hardware.label.button.rejectCheckin")}
-                  </Button>
-                )}
+                {record.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN &&
+                  isAdmin && (
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="small"
+                      loading={isLoadingArr[record.id] ? true : false}
+                      onClick={() => cancle(record)}
+                    >
+                      {t("hardware.label.button.rejectCheckin")}
+                    </Button>
+                  )}
               </Space>
             )}
           />

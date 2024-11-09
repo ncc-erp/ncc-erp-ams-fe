@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {

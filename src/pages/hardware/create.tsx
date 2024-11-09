@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useNotification  } from "@pankod/refine-core";
+import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -45,7 +45,7 @@ type HardWareCreateProps = {
 export const HardwareCreate = (props: HardWareCreateProps) => {
   const { setIsModalVisible } = props;
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<Boolean>(false);
+  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -80,9 +80,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
-  
-  const filteredProps = statusLabelSelectProps.options?.filter((props: any) => props.value === STATUS_LABELS.READY_TO_DEPLOY);
-  statusLabelSelectProps.options = filteredProps
+  const filteredProps = statusLabelSelectProps.options?.filter(
+    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+  );
+  statusLabelSelectProps.options = filteredProps;
 
   const { selectProps: userSelectProps } = useSelect<ICompany>({
     resource: USERS_API,
@@ -167,29 +168,32 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
 
   useEffect(() => {
     if (payload) {
-      mutate({
-        resource: HARDWARE_API,
-        values: payload,
-        successNotification: false,
-        errorNotification: false,
-      },
+      mutate(
+        {
+          resource: HARDWARE_API,
+          values: payload,
+          successNotification: false,
+          errorNotification: false,
+        },
         {
           onError: (error) => {
-            let err: { [key: string]: string[] | string } = error?.response.data.messages;
-            let message = Object.values(err)[0][0];
+            const err: { [key: string]: string[] | string } =
+              error?.response.data.messages;
+            const message = Object.values(err)[0][0];
             open?.({
-              type: 'error',
-              message: message
+              type: "error",
+              message: message,
             });
             setMessageErr(error?.response.data.messages);
           },
           onSuccess(data, variables, context) {
             open?.({
-                type: 'success',
-                message: data?.data.messages,
-            })
+              type: "success",
+              message: data?.data.messages,
+            });
           },
-        });
+        }
+      );
       if (createData?.data.message) form.resetFields();
     }
   }, [payload]);
@@ -205,7 +209,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
   }, [createData]);
 
-  const findLabel = (value: number): Boolean => {
+  const findLabel = (value: number): boolean => {
     let check = false;
     statusLabelSelectProps.options?.forEach((item) => {
       if (value === item.value) {
