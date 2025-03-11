@@ -13,7 +13,7 @@ import {
 
 import { Icons } from "@pankod/refine-antd";
 
-import { useLogin, useNavigation, useTranslate } from "@pankod/refine-core";
+import { useLogin, useTranslate } from "@pankod/refine-core";
 import { gapi } from "gapi-script";
 
 import {
@@ -23,15 +23,16 @@ import {
   imageContainer,
   logo,
   buttonLoginGoogle,
-  forgotPass,
 } from "./styles";
 import "styles/antd.less";
 
 import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
+import dataProvider from "providers/dataProvider";
+import useLoginWithMezon from "hooks/useLoginWithMezon";
 
 const { GoogleOutlined } = Icons;
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 export interface ILoginForm {
   username: string;
@@ -48,8 +49,9 @@ export const LoginPage: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
   const translate = useTranslate();
 
+  useLoginWithMezon();
+
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
-  const { list } = useNavigation();
 
   const CardTitle = (
     <Title level={3} style={titleStyles} data-test-id="title">
@@ -82,6 +84,20 @@ export const LoginPage: React.FC = () => {
     }
     gapi.load("client:auth2", start);
   }, []);
+
+  const getMezonAuthUrl = async () => {
+    try {
+      const { post } = dataProvider;
+      const url = "api/v1/auth/mezon-auth-url";
+      const data = await post({
+        url: url,
+        payload: {},
+      });
+      window.location.href = data.data.url;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Layout style={layoutStyles}>
@@ -182,6 +198,26 @@ export const LoginPage: React.FC = () => {
                 className="btn-login-google"
               >
                 {translate("pages.login.signinGoogle", "Sign in with google")}
+              </Button>
+
+              <Button
+                data-test-id="signin-mezon-btn"
+                type="primary"
+                size="large"
+                block
+                icon={
+                  <img
+                    width={20}
+                    style={{ marginRight: 10 }}
+                    src="/images/svg/mezon-logo-black.svg"
+                  />
+                }
+                loading={isLoadingGoogle}
+                onClick={() => getMezonAuthUrl()}
+                style={buttonLoginGoogle}
+                className="btn-login-mezon"
+              >
+                {translate("pages.login.signinMezon", "Sign in with Mezon")}
               </Button>
             </Card>
           </div>
