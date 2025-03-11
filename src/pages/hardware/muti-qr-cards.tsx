@@ -32,19 +32,24 @@ const MultiQrCards: React.FC<MultiQrCardProps> = ({
               border: "1px solid black",
               borderRadius: "8px",
               position: "relative",
-              width: "85%",
+              width: "fit-content",
               margin: "20px",
             }}
           >
             {layout === "above" && renderSelectedFields(hardware?.name)}
-            <QRCode size={120} value={generateRedirectUrl(hardware)} />
+            <QRCode
+              size={120}
+              value={`${window.location.href}?search=${hardware?.name}`}
+            />
             <div
               onClick={() => handleDeleteQrCode(hardware.id)}
               className="delete__qrcode"
             >
               x
             </div>
-            {layout === "below" && renderSelectedFields(hardware?.name)}
+            <b className="qr__name" style={{ marginTop: "8px" }}>
+              {layout === "below" && renderSelectedFields(hardware?.name)}
+            </b>
           </div>
         </div>
       ))}

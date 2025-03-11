@@ -176,8 +176,13 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
         overflow: hidden !important;
        
         }
-         .delete__qrcode{
-        display:none;
+        .delete__qrcode{
+          display:none;
+        }
+        .qr__name {
+          font-size: 20px;
+          font-weight: 900;
+          margin-top: 8px;
         }
     `,
   });
