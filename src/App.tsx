@@ -143,6 +143,14 @@ function App() {
         }}
         resources={[
           {
+            name: t("resource.users"),
+            list: UserList,
+            options: {
+              route: "users",
+              label: "users",
+            },
+          },
+          {
             name: t("resource.dashboard"),
             list: DashboardPage,
             options: {
@@ -231,14 +239,6 @@ function App() {
             list: LicensesList,
             options: {
               route: "licenses",
-            },
-          },
-          {
-            name: t("resource.users"),
-            list: UserList,
-            options: {
-              route: "users",
-              label: "users",
             },
           },
           {
