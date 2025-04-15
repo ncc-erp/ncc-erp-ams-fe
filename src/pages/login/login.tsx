@@ -80,7 +80,6 @@ export const LoginPage: React.FC = () => {
       });
       window.location.href = data.data.url;
     } catch (err) {
-      setIsLoadingMezon(false);
       console.error(err);
     } finally {
       setIsLoadingMezon(false);
