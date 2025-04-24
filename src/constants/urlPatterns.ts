@@ -3,10 +3,5 @@ export const hardwareUrlPattern = new RegExp(
     "(?:localhost|[a-z\\d](?:[a-z\\d-]*[a-z\\d])*(?:\\.[a-z]{2,})*)" +
     "(?::\\d+)?" +
     "\\/detail-device\\?" +
-    "id=[^&]+" +
-    "&name=[^&]*" +
-    "&status=[^&]*" +
-    "&serial=[^&]*" +
-    "&manufacturer=[^&]*" +
-    "&category=[^&]*"
+    "id=[^&]"
 );

@@ -130,7 +130,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
           `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
       )
       .join("&");
-    return `${window.location.origin}/detail-device?${queryParams}`;
+    return `${window.location.origin}/detail-device?id=${hardware.id}`;
   };
 
   const renderSelectedFields = useCallback(
@@ -141,7 +141,15 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
           value = data.name !== "" ? data.name : name.toString();
         }
         return (
-          <div key={field} style={{ textAlign: "center", color: "#FF0000" }}>
+          <div
+            key={field}
+            style={{
+              textAlign: "center",
+              color: "#FF0000",
+              fontSize: "19px",
+              fontWeight: "bold",
+            }}
+          >
             {value}
           </div>
         );

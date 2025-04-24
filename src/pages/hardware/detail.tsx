@@ -1,42 +1,31 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import { HARDWARE_API } from "api/baseApi";
 import { useLocation } from "react-router-dom";
 import "../../styles/detailProductQR.less";
-import { useTranslate } from "@pankod/refine-core";
+import { useTranslate, useCustom } from "@pankod/refine-core";
 import { IDeviceDetailQr } from "interfaces/deviceDetailQr";
 export const DetailProduct = () => {
   const locationURL = useLocation();
   const queryParams = new URLSearchParams(locationURL.search);
-  const t = useTranslate();
-  const paramNames = [
-    "id",
-    "name",
-    "status",
-    "serial",
-    "manufacturer",
-    "category",
-    "model",
-    "purchase_date",
-    "supplier",
-    "location",
-    "created_at",
-    "updated_at",
-    "purchase_cost",
-    "checkin_counter",
-    "checkout_counter",
-    "notes",
-    "warranty_expires",
-    "assigned_to",
-  ];
+  const id = queryParams.get("id");
 
-  const params: IDeviceDetailQr = paramNames.reduce((acc, param) => {
-    acc[param as keyof IDeviceDetailQr] = queryParams.get(param);
-    return acc;
-  }, {} as IDeviceDetailQr);
+  const t = useTranslate();
+  const [device, setDevice] = useState<IDeviceDetailQr | null>(null);
+  const url = `${HARDWARE_API}/${id}`;
+  const { data } = useCustom({
+    url: url,
+    method: "get",
+  });
+  useEffect(() => {
+    if (data?.data) {
+      setDevice(data.data as IDeviceDetailQr);
+    }
+  }, [data]);
 
   const {
-    id,
     name,
-    status,
+    status_label,
     serial,
     manufacturer,
     category,
@@ -52,8 +41,7 @@ export const DetailProduct = () => {
     notes,
     warranty_expires,
     assigned_to,
-  } = params;
-
+  } = device || {};
   return (
     <div className="detail-product-container">
       <div className="detail-product-content">
@@ -71,16 +59,18 @@ export const DetailProduct = () => {
             <p className="info-title">{t("hardware.label.field.status")}:</p>
             <p
               className="info-content"
-              title={status ? status : undefined}
+              title={status_label?.name ? status_label?.name : undefined}
               style={{ display: "flex" }}
             >
-              {status
-                ? status === t("hardware.label.field.broken")
+              {status_label?.name
+                ? status_label?.name === t("hardware.label.field.broken")
                   ? t("hardware.label.detail.broken")
                   : t("hardware.label.detail.readyToDeploy")
                 : "n/a"}
               <p style={{ color: "blue", marginLeft: "10px" }}>
-                {assigned_to === null || undefined ? null : assigned_to}
+                {assigned_to?.name === null || undefined
+                  ? null
+                  : assigned_to?.name}
               </p>
             </p>
           </div>
@@ -102,20 +92,20 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={manufacturer ? manufacturer : undefined}
+              title={manufacturer?.name ? manufacturer?.name : undefined}
               style={{ color: "blue" }}
             >
-              {manufacturer || "n/a"}
+              {manufacturer?.name || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
             <p className="info-title">{t("hardware.label.field.category")}:</p>
             <p
               className="info-content"
-              title={category ? category : undefined}
+              title={category?.name ? category?.name : undefined}
               style={{ color: "blue" }}
             >
-              {category || "n/a"}
+              {category?.name || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -124,10 +114,10 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={model ? model : undefined}
+              title={model?.name ? model?.name : undefined}
               style={{ color: "blue" }}
             >
-              {model || "n/a"}
+              {model?.name || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -136,9 +126,11 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={purchase_date ? purchase_date : undefined}
+              title={
+                purchase_date?.formatted ? purchase_date?.formatted : undefined
+              }
             >
-              {purchase_date || "n/a"}
+              {purchase_date?.formatted || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -157,10 +149,10 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={location ? location : undefined}
+              title={location?.name ? location?.name : undefined}
               style={{ color: "blue" }}
             >
-              {location || "n/a"}
+              {location?.name || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -169,18 +161,18 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={created_at ? created_at : undefined}
+              title={created_at?.formatted ? created_at?.formatted : undefined}
             >
-              {created_at || "n/a"}
+              {created_at?.formatted || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
             <p className="info-title">{t("hardware.label.title.updateAt")}:</p>
             <p
               className="info-content"
-              title={updated_at ? updated_at : undefined}
+              title={updated_at?.formatted ? updated_at?.formatted : undefined}
             >
-              {updated_at || "n/a"}
+              {updated_at?.formatted || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -189,9 +181,11 @@ export const DetailProduct = () => {
             </p>
             <p
               className="info-content"
-              title={purchase_cost ? purchase_cost : undefined}
+              title={
+                purchase_cost?.formatted ? purchase_cost?.formatted : undefined
+              }
             >
-              {purchase_cost || "n/a"}
+              {purchase_cost?.formatted || "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -202,7 +196,7 @@ export const DetailProduct = () => {
               className="info-content"
               title={checkin_counter ? checkin_counter : undefined}
             >
-              {checkin_counter || "n/a"}
+              {checkin_counter}
             </p>
           </div>
           <div className="detail-info-item">
@@ -213,7 +207,7 @@ export const DetailProduct = () => {
               className="info-content"
               title={checkout_counter ? checkout_counter : undefined}
             >
-              {checkout_counter || "n/a"}
+              {checkout_counter}
             </p>
           </div>
           <div className="detail-info-item">
@@ -226,9 +220,13 @@ export const DetailProduct = () => {
             <p className="info-title">{t("hardware.label.field.insurance")}:</p>
             <p
               className="info-content"
-              title={warranty_expires ? warranty_expires : undefined}
+              title={
+                warranty_expires?.formatted
+                  ? warranty_expires?.formatted
+                  : undefined
+              }
             >
-              {warranty_expires || "n/a"}
+              {warranty_expires?.formatted || "n/a"}
             </p>
           </div>
         </div>
