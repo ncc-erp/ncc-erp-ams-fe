@@ -45,9 +45,17 @@ export interface IHardwareUpdateRequest {
   location: number;
   physical: number;
   requestable: number;
-
   reason: string;
   assigned_status: number;
+  customer: {
+    id: number;
+    name: string;
+  };
+  project: {
+    id: number;
+    name: string;
+  };
+  isCustomerRenting: "true" | "false";
 }
 export interface IHardwareResponse {
   id: number;
@@ -155,6 +163,9 @@ export interface IHardwareResponse {
   checkout_counter: number;
   requests_counter: number;
   withdraw_from: number;
+  customer?: string;
+  project?: string;
+  isCustomerRenting?: boolean;
 }
 
 export interface IDefaultValue {
@@ -318,6 +329,10 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
+  selectedCustomer: string;
+  selectedProject: string;
+  isRenting: string;
+  selectedCategory: string;
 }
 
 export interface IHardwareRequestMultipleCancel {
