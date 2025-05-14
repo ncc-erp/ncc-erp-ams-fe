@@ -159,6 +159,14 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes ?? "");
+    formData.append(
+      "maintenance",
+      event.maintenance === "0" ? "" : (event.maintenance ?? "")
+    );
+    formData.append(
+      "maintenance_cycle",
+      event.maintenance_cycle === "0" ? "" : (event.maintenance_cycle ?? "")
+    );
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
@@ -373,6 +381,33 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status_label}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_cycle") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+            />
+          </Form.Item>
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -477,6 +512,33 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance")}
+            name="maintenance"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.month")}
+              placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
         </Col>
       </Row>
 

@@ -22,6 +22,7 @@ export interface IHardwareCreateRequest {
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
+  maintenance: string;
 }
 
 export interface IHardwareUpdateRequest {
@@ -48,6 +49,8 @@ export interface IHardwareUpdateRequest {
 
   reason: string;
   assigned_status: number;
+  maintenance: string;
+  maintenance_cycle: string;
 }
 export interface IHardwareResponse {
   id: number;
@@ -155,6 +158,11 @@ export interface IHardwareResponse {
   checkout_counter: number;
   requests_counter: number;
   withdraw_from: number;
+  maintenance_date?: {
+    date: string;
+    formatted: string;
+  };
+  maintenance_cycle?: string;
 }
 
 export interface IDefaultValue {

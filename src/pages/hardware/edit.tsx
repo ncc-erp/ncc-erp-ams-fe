@@ -133,6 +133,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("location_id", event.rtd_location.toString());
+    formData.append("maintenance", event.maintenance ?? "");
+    formData.append("maintenance_cycle", event.maintenance_cycle ?? "");
 
     if (event.supplier !== undefined) {
       formData.append("supplier_id", event.supplier.toString());
@@ -153,6 +155,16 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.resetFields();
     setFile(undefined);
     setMessageErr(null);
+    if (!data) return;
+
+    const purchaseDate =
+      data.purchase_date?.date ?? new Date().toISOString().split("T")[0];
+    const maintenanceDate = data.maintenance_date?.date;
+
+    const maintenanceMonths = maintenanceDate
+      ? convertToMonth(purchaseDate, maintenanceDate)
+      : "";
+
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
@@ -182,6 +194,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "image", value: data?.image },
+      { name: "maintenance", value: maintenanceMonths },
+      {
+        name: "maintenance_cycle",
+        value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
+      },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -242,6 +259,16 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     );
     statusLabelSelectProps.options = optionsFiltered;
     return statusLabelSelectProps;
+  };
+
+  const convertToMonth = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return (
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth())
+    );
   };
 
   useEffect(() => {
@@ -412,6 +439,39 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_cycle") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+            initialValue={
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+              value={
+                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              }
+            />
+          </Form.Item>
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -502,6 +562,33 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance")}
+            name="maintenance"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.month")}
+              placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Form.Item

@@ -10,6 +10,7 @@ import {
   HardwareListBroken,
   HardwareListPending,
   HardwareListReadyToDeploy,
+  HardwareListMaintenance,
 } from "pages/hardware";
 
 import {
@@ -208,6 +209,14 @@ function App() {
             list: HardwareListBroken,
             options: {
               route: "assets-broken",
+              label: "assets",
+            },
+          },
+          {
+            name: t("resource.assets-maintenance"),
+            list: HardwareListMaintenance,
+            options: {
+              route: "assets-maintenance",
               label: "assets",
             },
           },

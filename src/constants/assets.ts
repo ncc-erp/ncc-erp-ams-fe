@@ -26,6 +26,11 @@ export const STATUS_LABELS = {
   READY_TO_DEPLOY: 5,
 };
 
+export const STATUS_MAINTENANCE = {
+  PENDING: "Pending",
+  OVERDUE: "Overdue",
+};
+
 export enum EStatus {
   PENDING = "Pending",
   BROKEN = "Broken",
