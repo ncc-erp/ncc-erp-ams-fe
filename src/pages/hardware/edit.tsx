@@ -29,6 +29,7 @@ import {
   SUPPLIERS_SELECT_LIST_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -261,14 +262,15 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     return statusLabelSelectProps;
   };
 
-  const convertToMonth = (start: string, end: string) => {
+  const convertToMonth = (start: string, end: string): number => {
     if (!start || !end) return 0;
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return (
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      (endDate.getMonth() - startDate.getMonth())
-    );
+
+    const startDate = moment(start);
+    const endDate = moment(end);
+
+    if (!startDate.isValid() || !endDate.isValid()) return 0;
+
+    return endDate.diff(startDate, "months");
   };
 
   useEffect(() => {
