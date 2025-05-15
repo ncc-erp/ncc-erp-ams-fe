@@ -245,9 +245,9 @@ export const HardwareListMaintenance: React.FC<
     }, 300);
   };
 
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
+  // useEffect(() => {
+  //   searchFormProps.form?.submit();
+  // }, []);
 
   return (
     <List

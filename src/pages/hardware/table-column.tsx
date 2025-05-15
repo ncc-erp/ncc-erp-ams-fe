@@ -13,6 +13,7 @@ import {
   getAssetAssignedStatusDecription,
   getBGAssetAssignedStatusDecription,
 } from "untils/assets";
+import moment from "moment";
 
 export const useHardwareColumns = ({
   sorter,
@@ -101,13 +102,10 @@ export const useHardwareColumns = ({
         key: "status_label",
         title: t("hardware.label.field.status"),
         render: (_: string, record: IHardwareResponse) => {
-          const maintenanceTime = new Date(
-            record.maintenance_date?.date as string
-          );
-          const now = new Date();
+          const maintenanceTime = moment(record.maintenance_date?.date);
+          const now = moment();
 
-          const diffInMs = maintenanceTime.getTime() - now.getTime();
-          const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+          const diffInDays = maintenanceTime.diff(now, "days");
 
           let background = "";
           let label = "";
