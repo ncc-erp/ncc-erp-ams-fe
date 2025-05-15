@@ -8,6 +8,7 @@ import {
   DeleteButton,
 } from "@pankod/refine-antd";
 import { IHardwareResponse, ITableProps } from "interfaces/hardware";
+import { useTranslate } from "@pankod/refine-core";
 
 export const HardwareTable: React.FC<ITableProps> = ({
   columns,
@@ -16,10 +17,11 @@ export const HardwareTable: React.FC<ITableProps> = ({
   onShow,
   onEdit,
   onDeleteSuccess,
-  pageTotal,
-  t,
-  resourceName = "hardwares",
+  resourceName,
 }) => {
+  const t = useTranslate();
+  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+
   return (
     <Table
       className={

@@ -3,6 +3,7 @@ import {
   MenuOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons";
+import { useTranslate } from "@pankod/refine-core";
 import { Checkbox, Tooltip } from "antd";
 import { IToolBarProps } from "interfaces/hardware";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,8 +14,9 @@ export const ToolbarActions: React.FC<IToolBarProps> = ({
   onToggleColumn,
   onRefresh,
   onOpenSearch,
-  t,
 }) => {
+  const t = useTranslate();
+
   const [isActive, setIsActive] = useState(false);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);

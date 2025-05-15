@@ -3,105 +3,46 @@ import { MModal } from "components/Modal/MModal";
 import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareShow } from "./show";
-import { HardwareCheckout } from "./checkout";
-import { HardwareCheckin } from "./checkin";
 import { HardwareSearch } from "./search";
-import {
-  IHardwareResponse,
-  IHardwareResponseCheckin,
-  IHardwareResponseCheckout,
-  IModalPropsProps,
-} from "interfaces/hardware";
+import { IModalPropsProps } from "interfaces/hardware";
+import { HardWareModalType } from "constants/assets";
 
 export const ModalsWrapper: React.FC<IModalPropsProps> = ({
   t,
-  isModalVisible,
-  setIsModalVisible,
-  isEditModalVisible,
-  setIsEditModalVisible,
-  isShowModalVisible,
-  setIsShowModalVisible,
-  isSearchModalVisible,
-  setIsSearchModalVisible,
-  isCheckoutModalVisible,
-  setIsCheckoutModalVisible,
-  isCheckinModalVisible,
-  setIsCheckinModalVisible,
+  modalState,
+  setModalState,
   detail,
-  detailCheckin,
-  detailCheckout,
   searchFormProps,
 }) => {
+  const handleClose = () => setModalState({ type: null, isVisible: false });
+
   return (
     <>
       <MModal
-        title={t("hardware.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
-        isModalVisible={isModalVisible}
+        title={t(`hardware.label.title.${modalState.type}`)}
+        setIsModalVisible={handleClose}
+        isModalVisible={modalState.isVisible}
       >
-        <HardwareCreate
-          setIsModalVisible={setIsModalVisible}
-          isModalVisible={isModalVisible}
-        />
-      </MModal>
-
-      <MModal
-        title={t("hardware.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <HardwareEdit
-          isModalVisible={isEditModalVisible}
-          setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
-
-      <MModal
-        title={t("hardware.label.title.detail")}
-        setIsModalVisible={setIsShowModalVisible}
-        isModalVisible={isShowModalVisible}
-      >
-        <HardwareShow
-          setIsModalVisible={setIsShowModalVisible}
-          detail={detail}
-        />
-      </MModal>
-
-      <MModal
-        title={t("hardware.label.title.checkout")}
-        setIsModalVisible={setIsCheckoutModalVisible}
-        isModalVisible={isCheckoutModalVisible}
-      >
-        <HardwareCheckout
-          isModalVisible={isCheckoutModalVisible}
-          setIsModalVisible={setIsCheckoutModalVisible}
-          data={detailCheckout}
-        />
-      </MModal>
-
-      <MModal
-        title={t("hardware.label.title.checkin")}
-        setIsModalVisible={setIsCheckinModalVisible}
-        isModalVisible={isCheckinModalVisible}
-      >
-        <HardwareCheckin
-          isModalVisible={isCheckinModalVisible}
-          setIsModalVisible={setIsCheckinModalVisible}
-          data={detailCheckin}
-        />
-      </MModal>
-
-      <MModal
-        title={t("hardware.label.title.search_advanced")}
-        setIsModalVisible={setIsSearchModalVisible}
-        isModalVisible={isSearchModalVisible}
-      >
-        <HardwareSearch
-          isModalVisible={isSearchModalVisible}
-          setIsModalVisible={setIsSearchModalVisible}
-          searchFormProps={searchFormProps}
-        />
+        {modalState.type === HardWareModalType.CREATE && (
+          <HardwareCreate setIsModalVisible={handleClose} isModalVisible />
+        )}
+        {modalState.type === HardWareModalType.EDIT && (
+          <HardwareEdit
+            setIsModalVisible={handleClose}
+            isModalVisible
+            data={detail}
+          />
+        )}
+        {modalState.type === HardWareModalType.SHOW && (
+          <HardwareShow setIsModalVisible={handleClose} detail={detail} />
+        )}
+        {modalState.type === HardWareModalType.SEARCH && (
+          <HardwareSearch
+            setIsModalVisible={handleClose}
+            isModalVisible
+            searchFormProps={searchFormProps}
+          />
+        )}
       </MModal>
     </>
   );

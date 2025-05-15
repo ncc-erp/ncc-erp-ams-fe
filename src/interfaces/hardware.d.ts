@@ -358,15 +358,6 @@ export interface IAssetsWaiting {
 
 export interface ISearchFormProps {
   searchFormProps: any;
-  locationSelectProps: any;
-  handleChangePickerByMonth: (val: any, formatString: any) => void;
-  handleChangeLocation: (value: number) => void;
-  searchValuesLocation: number;
-  searchValuesByDateFrom: string | undefined;
-  searchValuesByDateTo: string | undefined;
-  rtd_location_id: string | null;
-  dateFromParam: string | null;
-  dateToParam: string | null;
 }
 
 export interface ITableProps {
@@ -376,8 +367,6 @@ export interface ITableProps {
   onShow: (record: IHardwareResponse) => void;
   onEdit: (record: IHardwareResponse) => void;
   onDeleteSuccess: () => void;
-  pageTotal: number | false | undefined;
-  t: any;
   resourceName?: string;
 }
 
@@ -387,33 +376,20 @@ export interface IToolBarProps {
   onToggleColumn: (col: ColumnItem) => void;
   onRefresh: () => void;
   onOpenSearch: () => void;
-  t: any;
 }
 
 export interface IModalPropsProps {
   t: any;
-
-  isModalVisible: boolean;
-  setIsModalVisible: (val: boolean) => void;
-
-  isEditModalVisible: boolean;
-  setIsEditModalVisible: (val: boolean) => void;
-
-  isShowModalVisible: boolean;
-  setIsShowModalVisible: (val: boolean) => void;
-
-  isSearchModalVisible: boolean;
-  setIsSearchModalVisible: (val: boolean) => void;
-
-  isCheckoutModalVisible: boolean;
-  setIsCheckoutModalVisible: (val: boolean) => void;
-
-  isCheckinModalVisible: boolean;
-  setIsCheckinModalVisible: (val: boolean) => void;
-
-  detail: IHardwareResponse | undefined;
-  detailCheckin: IHardwareResponseCheckin | undefined;
-  detailCheckout: IHardwareResponseCheckout | undefined;
-
+  modalState: {
+    type: HardwareModalType | null;
+    isVisible: boolean;
+  };
+  setModalState: React.Dispatch<
+    React.SetStateAction<{
+      type: HardwareModalType | null;
+      isVisible: boolean;
+    }>
+  >;
+  detail: any;
   searchFormProps: any;
 }

@@ -11,7 +11,6 @@ import { Spin } from "antd";
 import "styles/antd.less";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import moment from "moment";
 
 import { TableAction } from "components/elements/tables/TableAction";
 
@@ -20,17 +19,13 @@ import { TotalDetail } from "components/elements/TotalDetail";
 import {
   IHardwareFilterVariables,
   IHardwareResponse,
-  IHardwareResponseCheckin,
-  IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import {
   CATEGORIES_API,
   HARDWARE_API,
-  LOCATION_API,
   STATUS_LABELS_API,
   HARDWARE_TOTAL_DETAIL_API,
 } from "api/baseApi";
-import { ICompany } from "interfaces/company";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
@@ -40,6 +35,7 @@ import { ToolbarActions } from "./tool-bar";
 import { HardwareTable } from "./table";
 import { ModalsWrapper } from "./modal";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
+import { HardWareModalType } from "constants/assets";
 
 const defaultCheckedList = [
   "id",
@@ -56,34 +52,27 @@ export const HardwareListMaintenance: React.FC<
   IResourceComponentsProps
 > = () => {
   const t = useTranslate();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
-  const [detailCheckout, setDetailCheckout] =
-    useState<IHardwareResponseCheckout>();
-  const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
-  const [isShowModalVisible, setIsShowModalVisible] = useState(false);
-  const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
-  const [detailCheckin, setDetailCheckin] =
-    useState<IHardwareResponseCheckin>();
+  const [searchParams] = useSearchParams();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected_maintenance") !== null
       ? JSON.parse(localStorage.getItem("item_selected_maintenance") as any)
       : defaultCheckedList
   );
-  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
+  const [modalState, setModalState] = useState<{
+    type: HardWareModalType | null;
+    isVisible: boolean;
+  }>({ type: null, isVisible: false });
   const { data: permissionsData } = usePermissions();
 
   const isAdmin = useMemo(
     () => permissionsData?.admin === EPermissions.ADMIN,
     [permissionsData]
   );
+  const searchParam = searchParams.get("search");
+  const rtd_location_id = searchParams.get("rtd_location_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
@@ -164,7 +153,7 @@ export const HardwareListMaintenance: React.FC<
   const edit = (data: IHardwareResponse) => {
     const dataConvert = convertHardwareToEditData(data);
     setDetail(dataConvert);
-    setIsEditModalVisible(true);
+    setModalState({ type: HardWareModalType.EDIT, isVisible: true });
   };
 
   const { selectProps: categorySelectProps } = useSelect<ICategory>({
@@ -216,17 +205,17 @@ export const HardwareListMaintenance: React.FC<
   };
 
   const show = (data: IHardwareResponse) => {
-    setIsShowModalVisible(true);
+    setModalState({ type: HardWareModalType.SHOW, isVisible: true });
     setDetail(data);
   };
 
   useEffect(() => {
     setIsTotalDetailReload(!isTotalDetailReload);
-  }, [isModalVisible]);
+  }, [modalState.isVisible]);
 
   useEffect(() => {
     refreshData();
-  }, [isEditModalVisible]);
+  }, [modalState.isVisible]);
 
   const onCheckItem = (value: any) => {
     if (collumnSelected.includes(value.key)) {
@@ -256,103 +245,27 @@ export const HardwareListMaintenance: React.FC<
     }, 300);
   };
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
-
-  const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date_maintenance")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date_maintenance")]);
-
-  const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date_maintenance")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date_maintenance")]);
-
-  const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id_maintenance"));
-  }, [localStorage.getItem("rtd_location_id_maintenance")]);
-
-  const handleChangePickerByMonth = (val: any, formatString: any) => {
-    if (val !== null) {
-      const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date_maintenance", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
-    } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date_maintenance", formatString ?? "");
-    }
-    setSearchParams(searchParams);
-    searchFormProps.form?.submit();
-  };
-
   useEffect(() => {
     searchFormProps.form?.submit();
   }, [window.location.reload]);
-
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
-    optionLabel: "name",
-    optionValue: "id",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const handleChangeLocation = (value: number) => {
-    if (value === 0) {
-      searchParams.delete("rtd_location_id");
-      localStorage.setItem(
-        "rtd_location_id_maintenance",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
-      );
-    } else {
-      localStorage.setItem(
-        "rtd_location_id_maintenance",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
-      );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
-    }
-    setSearchParams(searchParams);
-    searchFormProps.form?.submit();
-  };
 
   return (
     <List
       title={t("hardware.label.title.list-maintenance")}
       pageHeaderProps={{
         extra: isAdmin && (
-          <CreateButton onClick={() => setIsModalVisible(true)}>
+          <CreateButton
+            onClick={() =>
+              setModalState({ type: HardWareModalType.CREATE, isVisible: true })
+            }
+          >
             {t("hardware.label.tooltip.create")}
           </CreateButton>
         ),
       }}
     >
       <div className="search">
-        <SearchFilterForm
-          searchFormProps={searchFormProps}
-          locationSelectProps={locationSelectProps}
-          handleChangePickerByMonth={handleChangePickerByMonth}
-          handleChangeLocation={handleChangeLocation}
-          searchValuesLocation={searchValuesLocation}
-          searchValuesByDateFrom={searchValuesByDateFrom}
-          searchValuesByDateTo={searchValuesByDateTo}
-          rtd_location_id={rtd_location_id}
-          dateFromParam={dateFromParam}
-          dateToParam={dateToParam}
-        />
+        <SearchFilterForm searchFormProps={searchFormProps} />
 
         <div className="all">
           <TableAction searchFormProps={searchFormProps} />
@@ -361,28 +274,17 @@ export const HardwareListMaintenance: React.FC<
             selectedColumns={collumnSelected}
             onToggleColumn={onCheckItem}
             onRefresh={handleRefresh}
-            onOpenSearch={() => setIsSearchModalVisible(true)}
-            t={t}
+            onOpenSearch={() =>
+              setModalState({ type: HardWareModalType.SEARCH, isVisible: true })
+            }
           />
         </div>
       </div>
       <ModalsWrapper
         t={t}
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        isEditModalVisible={isEditModalVisible}
-        setIsEditModalVisible={setIsEditModalVisible}
-        isShowModalVisible={isShowModalVisible}
-        setIsShowModalVisible={setIsShowModalVisible}
-        isSearchModalVisible={isSearchModalVisible}
-        setIsSearchModalVisible={setIsSearchModalVisible}
-        isCheckoutModalVisible={isCheckoutModalVisible}
-        setIsCheckoutModalVisible={setIsCheckoutModalVisible}
-        isCheckinModalVisible={isCheckinModalVisible}
-        setIsCheckinModalVisible={setIsCheckinModalVisible}
+        modalState={modalState}
+        setModalState={setModalState}
         detail={detail}
-        detailCheckin={detailCheckin}
-        detailCheckout={detailCheckout}
         searchFormProps={searchFormProps}
       />
 
@@ -406,8 +308,6 @@ export const HardwareListMaintenance: React.FC<
           onShow={show}
           onEdit={edit}
           onDeleteSuccess={() => setIsTotalDetailReload(!isTotalDetailReload)}
-          pageTotal={pageTotal}
-          t={t}
           resourceName={HARDWARE_API}
         />
       )}
