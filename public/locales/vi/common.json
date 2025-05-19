@@ -189,11 +189,10 @@
         "qr_code": "In mã QR",
         "scan_qr": "Scan QR",
         "confirmDeleteQr": "Xác nhận xóa mã QR",
-        "maintenance": "Thời gian bảo trì",
         "maintenance_cycle": "Chu kỳ bảo trì",
         "months_per_time": "Tháng / Lần",
         "maintenance_date": "Ngày bảo trì",
-        "overdue": "Overdue"
+        "expired": "Expired"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",

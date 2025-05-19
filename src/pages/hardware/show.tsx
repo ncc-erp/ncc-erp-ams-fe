@@ -238,7 +238,7 @@ export const HardwareShow = (props: HardwareShowProps) => {
       </Row>
       <Row gutter={16}>
         <Col className="gutter-row" span={4}>
-          <Title level={5}>{t("hardware.label.field.maintenance")}</Title>
+          <Title level={5}>{t("hardware.label.field.maintenance_date")}</Title>
         </Col>
         <Col span={18}>
           <Text>

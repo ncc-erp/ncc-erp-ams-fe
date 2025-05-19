@@ -19,6 +19,7 @@ import ReactMde from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import {
+  FormValues,
   IHardwareCreateRequest,
   IHardwareUpdateRequest,
 } from "interfaces/hardware";
@@ -36,6 +37,7 @@ import {
   USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
@@ -159,10 +161,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes ?? "");
-    formData.append(
-      "maintenance",
-      event.maintenance === "0" ? "" : (event.maintenance ?? "")
-    );
+    if (event.purchase_date !== undefined)
+      formData.append("maintenance", event.maintenance);
     formData.append(
       "maintenance_cycle",
       event.maintenance_cycle === "0" ? "" : (event.maintenance_cycle ?? "")
@@ -246,6 +246,28 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle } = allValues;
+
+          if (
+            purchase_date &&
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            moment(purchase_date, "YYYY-MM-DD", true).isValid()
+          ) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+            form.setFieldsValue({ maintenance: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -382,20 +404,20 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.maintenance_cycle")}
-            name="maintenance_cycle"
+            label={t("hardware.label.field.maintenance_date")}
+            name="maintenance"
             rules={[
               {
                 required: false,
                 message:
-                  t("hardware.label.field.maintenance_cycle") +
+                  t("hardware.label.field.maintenance_date") +
                   " " +
                   t("hardware.label.message.required"),
               },
               ({ getFieldValue, setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
-                    setFieldsValue({ maintenance_cycle: 0 });
+                    setFieldsValue({ maintenance: 0 });
                   }
                   return Promise.resolve();
                 },
@@ -403,11 +425,11 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             ]}
           >
             <Input
-              type="number"
-              addonAfter={t("hardware.label.field.months_per_time")}
-              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+              type="date"
+              placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
+
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -437,7 +459,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="name"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("hardware.label.field.assetName") +
                   " " +
@@ -513,20 +535,20 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.maintenance")}
-            name="maintenance"
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
             rules={[
               {
                 required: false,
                 message:
-                  t("hardware.label.field.maintenance") +
+                  t("hardware.label.field.maintenance_cycle") +
                   " " +
                   t("hardware.label.message.required"),
               },
               ({ getFieldValue, setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
-                    setFieldsValue({ maintenance: 0 });
+                    setFieldsValue({ maintenance_cycle: 0 });
                   }
                   return Promise.resolve();
                 },
@@ -535,8 +557,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           >
             <Input
               type="number"
-              addonAfter={t("hardware.label.field.month")}
-              placeholder={t("hardware.label.placeholder.maintenance")}
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
             />
           </Form.Item>
         </Col>

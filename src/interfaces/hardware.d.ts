@@ -393,3 +393,7 @@ export interface IModalPropsProps {
   detail: any;
   searchFormProps: any;
 }
+export interface FormValues {
+  purchase_date?: string;
+  maintenance_cycle?: number;
+}

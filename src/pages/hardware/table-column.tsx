@@ -6,7 +6,7 @@ import {
 } from "@pankod/refine-antd";
 import { IHardware } from "interfaces";
 import { useMemo } from "react";
-import { Image } from "antd";
+import { Image, Tag } from "antd";
 import { IHardwareResponse } from "interfaces/hardware";
 import {
   filterAssignedStatus,
@@ -104,29 +104,23 @@ export const useHardwareColumns = ({
         render: (_: string, record: IHardwareResponse) => {
           const maintenanceTime = moment(record.maintenance_date?.date);
           const now = moment();
-
-          const diffInDays = maintenanceTime.diff(now, "days");
+          const daysToMaintenance = maintenanceTime.diff(now, "days");
 
           let background = "";
           let label = "";
 
-          if (diffInDays < 0) {
+          if (daysToMaintenance < 0) {
             background = "red";
-            label = t("hardware.label.field.overdue");
-          } else if (diffInDays <= 10) {
+            label = t("hardware.label.field.expired");
+          } else if (daysToMaintenance <= 10) {
             background = "yellow";
             label = t("hardware.label.field.pending");
+          } else if (daysToMaintenance > 10) {
+            background = "green";
+            label = `${daysToMaintenance} days`;
           }
 
-          return (
-            <TagField
-              value={label}
-              style={{
-                background,
-                color: background === "yellow" ? "black" : "white",
-              }}
-            />
-          );
+          return <Tag color={background}>{label}</Tag>;
         },
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
         filters: filterStatus_Label,

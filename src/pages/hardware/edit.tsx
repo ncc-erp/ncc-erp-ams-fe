@@ -13,6 +13,7 @@ import {
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
+  FormValues,
   IHardwareCreateRequest,
   IHardwareResponse,
   IHardwareUpdateRequest,
@@ -156,15 +157,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.resetFields();
     setFile(undefined);
     setMessageErr(null);
-    if (!data) return;
-
-    const purchaseDate =
-      data.purchase_date?.date ?? new Date().toISOString().split("T")[0];
-    const maintenanceDate = data.maintenance_date?.date;
-
-    const maintenanceMonths = maintenanceDate
-      ? convertToMonth(purchaseDate, maintenanceDate)
-      : "";
 
     setFields([
       { name: "name", value: data?.name },
@@ -195,7 +187,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "image", value: data?.image },
-      { name: "maintenance", value: maintenanceMonths },
+      { name: "maintenance", value: data?.maintenance_date?.date },
       {
         name: "maintenance_cycle",
         value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
@@ -262,17 +254,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     return statusLabelSelectProps;
   };
 
-  const convertToMonth = (start: string, end: string): number => {
-    if (!start || !end) return 0;
-
-    const startDate = moment(start);
-    const endDate = moment(end);
-
-    if (!startDate.isValid() || !endDate.isValid()) return 0;
-
-    return endDate.diff(startDate, "months");
-  };
-
   useEffect(() => {
     form.setFieldsValue({
       image: file,
@@ -285,6 +266,28 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle } = allValues;
+
+          if (
+            purchase_date &&
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            moment(purchase_date, "YYYY-MM-DD", true).isValid()
+          ) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+            form.setFieldsValue({ maintenance: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -442,36 +445,21 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.maintenance_cycle")}
-            name="maintenance_cycle"
+            label={t("hardware.label.field.maintenance_date")}
+            name="maintenance"
             rules={[
               {
                 required: false,
                 message:
-                  t("hardware.label.field.maintenance_cycle") +
+                  t("hardware.label.field.maintenance_date") +
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
-                validator(_, value) {
-                  if (value < 0) {
-                    setFieldsValue({ maintenance_cycle: 0 });
-                  }
-                  return Promise.resolve();
-                },
-              }),
             ]}
-            initialValue={
-              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
-            }
           >
             <Input
-              type="number"
-              addonAfter={t("hardware.label.field.months_per_time")}
-              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
-              value={
-                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
-              }
+              type="date"
+              placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
         </Col>
@@ -565,30 +553,36 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             </Typography.Text>
           )}
           <Form.Item
-            label={t("hardware.label.field.maintenance")}
-            name="maintenance"
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
             rules={[
               {
                 required: false,
                 message:
-                  t("hardware.label.field.maintenance") +
+                  t("hardware.label.field.maintenance_cycle") +
                   " " +
                   t("hardware.label.message.required"),
               },
               ({ getFieldValue, setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
-                    setFieldsValue({ maintenance: 0 });
+                    setFieldsValue({ maintenance_cycle: 0 });
                   }
                   return Promise.resolve();
                 },
               }),
             ]}
+            initialValue={
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+            }
           >
             <Input
               type="number"
-              addonAfter={t("hardware.label.field.month")}
-              placeholder={t("hardware.label.placeholder.maintenance")}
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+              value={
+                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              }
             />
           </Form.Item>
         </Col>
