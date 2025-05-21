@@ -196,7 +196,7 @@ export const DetailProduct = () => {
               className="info-content"
               title={checkin_counter ? checkin_counter : undefined}
             >
-              {checkin_counter}
+              {checkin_counter ?? "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
@@ -207,7 +207,7 @@ export const DetailProduct = () => {
               className="info-content"
               title={checkout_counter ? checkout_counter : undefined}
             >
-              {checkout_counter}
+              {checkout_counter ?? "n/a"}
             </p>
           </div>
           <div className="detail-info-item">
