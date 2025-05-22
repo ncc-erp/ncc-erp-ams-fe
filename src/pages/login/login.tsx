@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -10,8 +10,6 @@ import {
   Button,
   Checkbox,
 } from "antd";
-
-import { Icons } from "@pankod/refine-antd";
 
 import { useLogin, useTranslate } from "@pankod/refine-core";
 import { gapi } from "gapi-script";
@@ -26,12 +24,9 @@ import {
 } from "./styles";
 import "styles/antd.less";
 
-import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
 import dataProvider from "providers/dataProvider";
 import useLoginWithMezon from "hooks/useLoginWithMezon";
 import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
-
-const { GoogleOutlined } = Icons;
 
 const { Title } = Typography;
 
@@ -49,6 +44,7 @@ export interface ILoginForm {
 export const LoginPage: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
   const translate = useTranslate();
+  const [isLoadingMezon, setIsLoadingMezon] = useState<boolean>(false);
 
   useLoginWithMezon();
   useMezonLoginByHash();
@@ -65,18 +61,6 @@ export const LoginPage: React.FC = () => {
     ? process.env.REACT_APP_GOOGLE_CLIENT_ID
     : "773310957148-o1bk15p279jst37itlfqmfulglnh4t1k.apps.googleusercontent.com";
 
-  const { mutate: loginGoogle, isLoading: isLoadingGoogle } =
-    useLogin<GoogleLoginResponse>();
-
-  const { signIn } = useGoogleLogin({
-    onSuccess: (response) => {
-      loginGoogle(response as GoogleLoginResponse);
-    },
-    clientId,
-    isSignedIn: false,
-    cookiePolicy: "single_host_origin",
-  });
-
   useEffect(() => {
     function start() {
       gapi.client.init({
@@ -89,6 +73,7 @@ export const LoginPage: React.FC = () => {
 
   const getMezonAuthUrl = async () => {
     try {
+      setIsLoadingMezon(true);
       const { post } = dataProvider;
       const url = "api/v1/auth/mezon-auth-url";
       const data = await post({
@@ -98,6 +83,8 @@ export const LoginPage: React.FC = () => {
       window.location.href = data.data.url;
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoadingMezon(false);
     }
   };
 
@@ -187,21 +174,6 @@ export const LoginPage: React.FC = () => {
                   </Button>
                 </Form>
               )}
-
-              <Button
-                data-test-id="signin-google-btn"
-                type="primary"
-                size="large"
-                block
-                icon={<GoogleOutlined />}
-                loading={isLoadingGoogle}
-                onClick={() => signIn()}
-                style={buttonLoginGoogle}
-                className="btn-login-google"
-              >
-                {translate("pages.login.signinGoogle", "Sign in with google")}
-              </Button>
-
               <Button
                 data-test-id="signin-mezon-btn"
                 type="primary"
@@ -214,7 +186,7 @@ export const LoginPage: React.FC = () => {
                     src="/images/svg/mezon-logo-black.svg"
                   />
                 }
-                loading={isLoadingGoogle}
+                loading={isLoadingMezon}
                 onClick={() => getMezonAuthUrl()}
                 style={buttonLoginGoogle}
                 className="btn-login-mezon"
