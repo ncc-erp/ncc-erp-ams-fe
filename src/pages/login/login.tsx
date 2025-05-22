@@ -29,6 +29,7 @@ import "styles/antd.less";
 import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
 import dataProvider from "providers/dataProvider";
 import useLoginWithMezon from "hooks/useLoginWithMezon";
+import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
 
 const { GoogleOutlined } = Icons;
 
@@ -50,6 +51,7 @@ export const LoginPage: React.FC = () => {
   const translate = useTranslate();
 
   useLoginWithMezon();
+  useMezonLoginByHash();
 
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
 
