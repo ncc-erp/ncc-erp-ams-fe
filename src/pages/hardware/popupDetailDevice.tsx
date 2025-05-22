@@ -1,69 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Typography, Descriptions, Tag } from "@pankod/refine-antd";
+import { Modal, Typography, Descriptions } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
 import { UserOutlined } from "@ant-design/icons";
-import { getDetailAssetStatusByName } from "untils/assets";
-import { formatDateWithTimeZone } from "../../../src/untils/dateUtils";
+import { HARDWARE_API } from "api/baseApi";
+import { useCustom } from "@pankod/refine-core";
+import { IDeviceDetailQr } from "interfaces/deviceDetailQr";
 interface AssetDetailModalProps {
-  url: string;
+  id: string;
   onClose: () => void;
 }
 const { Text } = Typography;
 
 const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
-  url,
+  id,
   onClose,
 }) => {
   const t = useTranslate();
-  const [data, setData] = useState({
-    id: "",
-    name: "",
-    status: "",
-    serial: "",
-    manufacturer: "",
-    category: "",
-    model: "",
-    purchase_date: "",
-    supplier: "",
-    location: "",
-    created_at: "",
-    updated_at: "",
-    purchase_cost: "",
-    assigned_to: "",
-    checkin_counter: "",
-    checkout_counter: "",
-    notes: "",
-    warranty_expires: "",
-    warranty_months: "",
-    requests_counter: "",
+  const [device, setDevice] = useState<IDeviceDetailQr | null>(null);
+  const url = `${HARDWARE_API}/${id}`;
+  const { data, isLoading } = useCustom({
+    url: url,
+    method: "get",
   });
 
   useEffect(() => {
-    const parsedUrl = new URL(url);
-    const searchParams = new URLSearchParams(parsedUrl.search);
-    setData({
-      id: searchParams.get("id") || "",
-      name: searchParams.get("name") || "",
-      status: searchParams.get("status") || "",
-      serial: searchParams.get("serial") || "",
-      manufacturer: searchParams.get("manufacturer") || "",
-      category: searchParams.get("category") || "",
-      model: searchParams.get("model") || "",
-      purchase_date: searchParams.get("purchase_date") || "",
-      supplier: searchParams.get("supplier") || "",
-      location: searchParams.get("location") || "",
-      created_at: searchParams.get("created_at") || "",
-      updated_at: searchParams.get("updated_at") || "",
-      purchase_cost: searchParams.get("purchase_cost") || "",
-      assigned_to: searchParams.get("assigned_to") || "",
-      checkin_counter: searchParams.get("checkin_counter") || "",
-      checkout_counter: searchParams.get("checkout_counter") || "",
-      notes: searchParams.get("notes") || "",
-      warranty_expires: searchParams.get("warranty_expires") || "",
-      requests_counter: searchParams.get("requests_counter") || "",
-      warranty_months: searchParams.get("warranty_months") || "",
-    });
-  }, [url]);
+    if (data?.data) {
+      setDevice(data.data as IDeviceDetailQr);
+    }
+  }, [device, data]);
+
+  const renderField = (value: any, fallback = "n/a") => {
+    return isLoading
+      ? "Loading..."
+      : value !== null && value !== undefined && value !== ""
+        ? value
+        : fallback;
+  };
+
   return (
     <Modal
       title={t("hardware.label.title.detail")}
@@ -73,79 +46,81 @@ const PopupDetailDevice: React.FC<AssetDetailModalProps> = ({
     >
       <Descriptions bordered column={1}>
         <Descriptions.Item label={t("model.label.field.id")}>
-          {data.id || "n/a"}
+          {renderField(device?.id)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.status")}>
           <Text>
-            <Tag>{getDetailAssetStatusByName(data.status)}</Tag>
-            {data?.assigned_to ? (
+            {isLoading
+              ? "Loading..."
+              : device?.status_label?.name
+                ? device.status_label.name === t("hardware.label.field.broken")
+                  ? t("hardware.label.detail.broken")
+                  : t("hardware.label.detail.readyToDeploy")
+                : "n/a"}
+            {device?.assigned_to && !isLoading ? (
               <>
                 <UserOutlined />
                 <span className="show-asset">
-                  {data?.assigned_to ? data?.assigned_to : ""}
+                  {renderField(device?.assigned_to?.name)}
                 </span>
               </>
-            ) : (
-              ""
-            )}
+            ) : null}
           </Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.assetName")}>
-          {data.name || "n/a"}
+          {renderField(device?.name)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.serial")}>
-          {data.serial || "n/a"}
+          {renderField(device?.serial)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.manufacturer")}>
-          <p style={{ color: "blue" }}>{data.manufacturer || "n/a"}</p>
+          <p style={{ color: "blue" }}>
+            {renderField(device?.manufacturer?.name)}
+          </p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.category")}>
-          {data.category || "n/a"}
+          {renderField(device?.category?.name)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.propertyType")}>
-          {data.model || "n/a"}
+          {renderField(device?.model?.name)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_date")}>
-          {data.purchase_date || "n/a"}
+          {renderField(device?.purchase_date?.formatted)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.supplier")}>
-          <p style={{ color: "blue" }}>{data.supplier || "n/a"}</p>
+          <p style={{ color: "blue" }}>{renderField(device?.supplier)}</p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.rtd_location")}>
-          <p style={{ color: "blue" }}>{data.location || "n/a"}</p>
+          <p style={{ color: "blue" }}>{renderField(device?.location?.name)}</p>
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.dateCreate")}>
-          {data?.created_at ? (
-            <Text> {formatDateWithTimeZone(data?.created_at)}</Text>
-          ) : (
-            "n/a"
-          )}
+          {renderField(device?.created_at?.formatted)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.title.updateAt")}>
-          {data?.updated_at ? (
-            <Text> {formatDateWithTimeZone(data?.updated_at)}</Text>
-          ) : (
-            "n/a"
-          )}
+          {renderField(device?.updated_at?.formatted)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.purchase_cost")}>
-          {data.purchase_cost || "n/a"}
+          {renderField(device?.purchase_cost?.formatted)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.checkin_counter")}>
-          {data.checkin_counter || "n/a"}
+          {renderField(device?.checkin_counter)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.checkout_counter")}>
-          {data.checkout_counter || "n/a"}
+          {renderField(device?.checkout_counter)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.notes")}>
-          {data.notes || "n/a"}
+          {renderField(device?.notes)}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.insurance")}>
-          {data.warranty_months} ({t("hardware.label.field.warranty_expires")}{" "}
-          {data?.warranty_expires ? data?.warranty_expires : ""})
+          {renderField(device?.warranty_months)}
+          {" ("}
+          {t("hardware.label.field.warranty_expires")}
+          {": "}
+          {renderField(device?.warranty_expires?.formatted)}
+          {")"}
         </Descriptions.Item>
         <Descriptions.Item label={t("hardware.label.field.requestable")}>
-          {data.requests_counter || "n/a"}
+          {renderField(device?.requests_counter)}
         </Descriptions.Item>
       </Descriptions>
     </Modal>

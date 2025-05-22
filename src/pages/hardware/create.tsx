@@ -15,7 +15,6 @@ import {
 
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import {
@@ -26,7 +25,6 @@ import {
 import { IModel } from "interfaces/model";
 import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
-
 import "../../styles/hardware.less";
 import {
   HARDWARE_API,
@@ -39,6 +37,7 @@ import {
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
+import { useGetProjectData } from "hooks/useGetProjectData";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
@@ -53,6 +52,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
+
+  const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -69,7 +70,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
-
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
@@ -126,9 +126,30 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
+    const selectedCustomer = customer.find(
+      (c) => Number(c.id) === Number(event.customer)
+    );
+    const selectedProject = project.find(
+      (p) => Number(p.id) === Number(event.project)
+    );
+
     setMessageErr(messageErr);
     const formData = new FormData();
-
+    if (selectedCustomer !== undefined) {
+      formData.append("customer", selectedCustomer.name);
+    }
+    if (selectedCustomer !== undefined) {
+      formData.append("customer_code", selectedCustomer.code);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project", selectedProject.name);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project_code", selectedProject.code);
+    }
+    if (event.isCustomerRenting !== undefined) {
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
     if (event.name !== undefined) {
       formData.append("name", event.name);
     }
@@ -429,7 +450,32 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
-
+          <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="customer"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.customer") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t("hardware.label.field.customer")}
+              options={customer?.map((customer) => ({
+                label: customer.name,
+                value: customer.id,
+              }))}
+            />
+          </Form.Item>
+          {messageErr?.customer && (
+            <Typography.Text type="danger">
+              {messageErr.customer}
+            </Typography.Text>
+          )}
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -529,9 +575,62 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               placeholder={t("hardware.label.placeholder.cost")}
             />
           </Form.Item>
-          {messageErr?.purchase_cost && (
+          {messageErr?.project && (
             <Typography.Text type="danger">
-              {messageErr.purchase_cost[0]}
+              {messageErr.project}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.project")}
+            name="project"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.project") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t("hardware.label.field.project")}
+              options={project?.map((project) => ({
+                label: project.name,
+                value: project.id,
+              }))}
+            />
+          </Form.Item>
+          {messageErr?.project && (
+            <Typography.Text type="danger">
+              {messageErr.project}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
+              <Select.Option value="true">
+                {t("hardware.label.field.yes")}
+              </Select.Option>
+              <Select.Option value="false">
+                {t("hardware.label.field.no")}
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
             </Typography.Text>
           )}
           <Form.Item
@@ -563,7 +662,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           </Form.Item>
         </Col>
       </Row>
-
       <Form.Item
         label={t("hardware.label.field.notes")}
         name="notes"

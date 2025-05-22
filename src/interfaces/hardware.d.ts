@@ -46,11 +46,19 @@ export interface IHardwareUpdateRequest {
   location: number;
   physical: number;
   requestable: number;
-
   reason: string;
   assigned_status: number;
   maintenance: string;
   maintenance_cycle: string;
+  customer: {
+    id: number;
+    name: string;
+  };
+  project: {
+    id: number;
+    name: string;
+  };
+  isCustomerRenting: "true" | "false";
 }
 export interface IHardwareResponse {
   id: number;

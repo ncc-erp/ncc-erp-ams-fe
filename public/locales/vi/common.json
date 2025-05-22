@@ -192,7 +192,12 @@
         "maintenance_cycle": "Chu kỳ bảo trì",
         "months_per_time": "Tháng / Lần",
         "maintenance_date": "Ngày bảo trì",
-        "expired": "Expired"
+        "expired": "Expired",
+        "project": "Dự Án",
+        "customer": "Khách Hàng",
+        "isCustomerRenting": "Khách Hàng Có Thuê Không",
+        "yes": "Có",
+        "no": "Không"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
