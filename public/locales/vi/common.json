@@ -186,9 +186,15 @@
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
         "purchase_cost": "Giá",
-        "qr_code": "In mã QR",
-        "scan_qr": "Scan QR",
-        "confirmDeleteQr": "Xác nhận xóa mã QR"
+        "qr_code":"In mã QR",
+        "scan_qr":"SCAN QR",
+        "confirmDeleteQr":"Xác nhận xóa mã QR",
+        "project": "Dự Án",
+        "customer": "Khách Hàng",
+        "isCustomerRenting": "Khách Hàng Có Thuê Không",
+        "yes": "Có",
+        "no": "Không"
+
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
