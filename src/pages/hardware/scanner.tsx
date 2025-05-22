@@ -107,7 +107,7 @@ export const Scanner = () => {
       )}
       {showModalDevice && (
         <PopupDetailDevice
-          url={result}
+          id={new URL(result).searchParams.get("id") || ""}
           onClose={() => setShowModalDevice(false)}
         />
       )}
