@@ -109,15 +109,16 @@ export const useHardwareColumns = ({
           let background = "";
           let label = "";
 
+          const labelDaysLeft = `${daysToMaintenance} days`;
           if (daysToMaintenance < 0) {
             background = "red";
             label = t("hardware.label.field.expired");
           } else if (daysToMaintenance <= 10) {
             background = "yellow";
-            label = t("hardware.label.field.pending");
+            label = labelDaysLeft;
           } else if (daysToMaintenance > 10) {
             background = "green";
-            label = `${daysToMaintenance} days`;
+            label = labelDaysLeft;
           }
 
           return <Tag color={background}>{label}</Tag>;
