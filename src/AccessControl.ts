@@ -63,6 +63,10 @@ p, 1, ${i18n.t("resource.assets-broken")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets-broken")}/*, (edit)|(show)|(clone)|(checkout)
 
+p, 1, ${i18n.t("resource.assets-maintenance")}, (list)|(create)
+p, 1, ${HARDWARE_API}/*, (delete)
+p, 1, ${i18n.t("resource.assets-maintenance")}/*, (edit)|(show)|(clone)|(checkout)
+
 p, 1, ${i18n.t("resource.assets-expires")}, (list)|(create)
 p, 1, ${HARDWARE_API}/*, (delete)
 p, 1, ${i18n.t("resource.assets-expires")}/*, (edit)|(show)|(clone)|(checkout)
@@ -250,6 +254,9 @@ p, 2, ${i18n.t("resource.assets-pending")}/*, (show)
 
 p, 2, ${i18n.t("resource.assets-broken")}, (list)
 p, 2, ${i18n.t("resource.assets-broken")}/*,(show)
+
+p, 2, ${i18n.t("resource.assets-maintenance")}, (list)
+p, 2, ${i18n.t("resource.assets-maintenance")}/*, (show)
 
 p, 2, ${i18n.t("resource.assets-expires")}, (list)
 p, 2, ${i18n.t("resource.assets-expires")}/*,(show)

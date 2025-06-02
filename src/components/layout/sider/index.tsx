@@ -48,6 +48,7 @@ export const Sider: React.FC = () => {
     translate("resource.assets-broken"),
     translate("resource.assets-waiting-confirm"),
     translate("resource.assets-expires"),
+    translate("resource.assets-maintenance"),
   ];
 
   const toolItemList = [

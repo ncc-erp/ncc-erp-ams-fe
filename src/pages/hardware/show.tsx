@@ -236,6 +236,37 @@ export const HardwareShow = (props: HardwareShowProps) => {
           <Text>{detail?.purchase_cost && detail?.purchase_cost}</Text>
         </Col>
       </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={4}>
+          <Title level={5}>{t("hardware.label.field.maintenance_date")}</Title>
+        </Col>
+        <Col span={18}>
+          <Text>
+            {" "}
+            {detail?.maintenance_date &&
+              moment(detail?.maintenance_date.date)
+                .add(moment.duration(moment().format("Z")))
+                .format("ddd MMM D, YYYY")}
+          </Text>
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={4}>
+          <Title level={5}>{t("hardware.label.field.maintenance_cycle")}</Title>
+        </Col>
+        <Col span={18}>
+          {detail?.maintenance_cycle ? (
+            <>
+              <Text>
+                {"Every "}
+                {detail?.maintenance_cycle && detail?.maintenance_cycle}
+              </Text>
+            </>
+          ) : (
+            ""
+          )}
+        </Col>
+      </Row>
     </>
   );
 };

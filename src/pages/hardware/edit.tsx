@@ -13,6 +13,7 @@ import {
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
+  FormValues,
   IHardwareCreateRequest,
   IHardwareResponse,
   IHardwareUpdateRequest,
@@ -29,6 +30,7 @@ import {
   SUPPLIERS_SELECT_LIST_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import moment from "moment";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -133,6 +135,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("location_id", event.rtd_location.toString());
+    formData.append("maintenance", event.maintenance ?? "");
+    formData.append("maintenance_cycle", event.maintenance_cycle ?? "");
 
     if (event.supplier !== undefined) {
       formData.append("supplier_id", event.supplier.toString());
@@ -153,6 +157,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.resetFields();
     setFile(undefined);
     setMessageErr(null);
+
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
@@ -182,6 +187,11 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "image", value: data?.image },
+      { name: "maintenance", value: data?.maintenance_date?.date },
+      {
+        name: "maintenance_cycle",
+        value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
+      },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -256,6 +266,28 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle } = allValues;
+
+          if (
+            purchase_date &&
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            moment(purchase_date, "YYYY-MM-DD", true).isValid()
+          ) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+            form.setFieldsValue({ maintenance: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -412,6 +444,24 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_date")}
+            name="maintenance"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_date") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Input
+              type="date"
+              placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -502,6 +552,39 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_cycle") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ getFieldValue, setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+            initialValue={
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+              value={
+                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              }
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Form.Item

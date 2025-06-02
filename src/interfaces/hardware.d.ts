@@ -22,6 +22,7 @@ export interface IHardwareCreateRequest {
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
+  maintenance: string;
 }
 
 export interface IHardwareUpdateRequest {
@@ -47,6 +48,8 @@ export interface IHardwareUpdateRequest {
   requestable: number;
   reason: string;
   assigned_status: number;
+  maintenance: string;
+  maintenance_cycle: string;
   customer: {
     id: number;
     name: string;
@@ -163,6 +166,11 @@ export interface IHardwareResponse {
   checkout_counter: number;
   requests_counter: number;
   withdraw_from: number;
+  maintenance_date?: {
+    date: string;
+    formatted: string;
+  };
+  maintenance_cycle?: string;
 }
 
 export interface IDefaultValue {
@@ -354,4 +362,46 @@ export interface IAssetsWaiting {
   last_audit_date: string;
   location_id: number;
   assigned_status: number;
+}
+
+export interface ISearchFormProps {
+  searchFormProps: any;
+}
+
+export interface ITableProps {
+  columns: any[];
+  selectedColumns: string[];
+  tableProps: any;
+  onShow: (record: IHardwareResponse) => void;
+  onEdit: (record: IHardwareResponse) => void;
+  onDeleteSuccess: () => void;
+  resourceName?: string;
+}
+
+export interface IToolBarProps {
+  columns: ColumnItem[];
+  selectedColumns: string[];
+  onToggleColumn: (col: ColumnItem) => void;
+  onRefresh: () => void;
+  onOpenSearch: () => void;
+}
+
+export interface IModalPropsProps {
+  t: any;
+  modalState: {
+    type: HardwareModalType | null;
+    isVisible: boolean;
+  };
+  setModalState: React.Dispatch<
+    React.SetStateAction<{
+      type: HardwareModalType | null;
+      isVisible: boolean;
+    }>
+  >;
+  detail: any;
+  searchFormProps: any;
+}
+export interface FormValues {
+  purchase_date?: string;
+  maintenance_cycle?: number;
 }

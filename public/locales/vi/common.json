@@ -186,15 +186,18 @@
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
         "purchase_cost": "Giá",
-        "qr_code":"In mã QR",
-        "scan_qr":"SCAN QR",
-        "confirmDeleteQr":"Xác nhận xóa mã QR",
+        "qr_code": "In mã QR",
+        "scan_qr": "Scan QR",
+        "confirmDeleteQr": "Xác nhận xóa mã QR",
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "months_per_time": "Tháng / Lần",
+        "maintenance_date": "Ngày bảo trì",
+        "expired": "Expired",
         "project": "Dự Án",
         "customer": "Khách Hàng",
         "isCustomerRenting": "Khách Hàng Có Thuê Không",
         "yes": "Có",
         "no": "Không"
-
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -212,7 +215,9 @@
         "orderNumber": "Mã đơn hàng",
         "cost": "Chi phí mua hàng",
         "insurance": "Bảo hành",
-        "choiceAsset": "Lựa chọn tài sản"
+        "choiceAsset": "Lựa chọn tài sản",
+        "maintenance": "Bảo trì",
+        "maintenance_cycle": "Chu kỳ bảo trì"
       },
       "message": {
         "required": "bắt buộc"
@@ -253,7 +258,8 @@
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
         "confirmStatus": "Trạng thái xác nhận",
-        "timeCheckout": "Ngày cấp phát"
+        "timeCheckout": "Ngày cấp phát",
+        "list-maintenance": "Danh sách bảo trì"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -918,6 +924,7 @@
     "assets-broken": "Hỏng",
     "assets-waiting-confirm": "Đang chờ xác nhận",
     "assets-expires": "Sắp hết hạn",
+    "assets-maintenance": "Bảo trì",
     "report": "Báo cáo",
     "asset-category-PC": "Tất cả máy tính",
     "asset-category-Monitor": "Tất cả màn hình",
