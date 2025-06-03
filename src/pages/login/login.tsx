@@ -53,7 +53,7 @@ export const LoginPage: React.FC = () => {
 
   const CardTitle = (
     <Title level={3} style={titleStyles} data-test-id="title">
-      {translate("pages.login.title", "Sign in your account")}
+      Login in your account
     </Title>
   );
 
