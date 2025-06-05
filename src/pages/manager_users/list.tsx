@@ -274,6 +274,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       first_name: data.first_name,
       last_name: data.last_name,
+      mezon_id: data.mezon_id,
       username: data.username,
       manager: {
         id: data?.manager?.id,
