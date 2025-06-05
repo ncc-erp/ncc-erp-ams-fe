@@ -335,12 +335,9 @@ export const UserCreate = (props: UserCreateProps) => {
               )}
             </Col>
             <Col className="gutter-row" span={12}>
-                <Form.Item
-                    label={t("user.label.field.mezon_id")}
-                    name="mezon_id"
-                >
-                    <Input placeholder={t("user.label.placeholder.mezon_id")} />
-                </Form.Item>
+              <Form.Item label={t("user.label.field.mezon_id")} name="mezon_id">
+                <Input placeholder={t("user.label.placeholder.mezon_id")} />
+              </Form.Item>
               {/* <Form.Item
                 label={t("user.label.field.user_manager")}
                 name="manager"
