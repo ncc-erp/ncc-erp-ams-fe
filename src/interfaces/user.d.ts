@@ -6,6 +6,7 @@ export interface IUser {
 export interface IUserCreateRequest {
   id: number;
   name: string;
+  mezon_id: string;
   first_name: string;
   username: string;
   email: string;

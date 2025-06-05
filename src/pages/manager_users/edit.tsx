@@ -153,6 +153,9 @@ export const UserEdit = (props: UserCreateProps) => {
         if (event.first_name !== undefined) {
             formData.append("first_name", event.first_name);
         }
+        if (event.mezon_id !== undefined) {
+            formData.append("mezon_id", event.mezon_id);
+        }
         if (event.last_name !== undefined) {
             formData.append("last_name", event.last_name);
         }
@@ -207,6 +210,7 @@ export const UserEdit = (props: UserCreateProps) => {
         setFile(undefined);
         setMessageErr(null);
         setFields([
+            { name: "mezon_id", value: data?.mezon_id },
             { name: "first_name", value: data?.first_name },
             { name: "last_name", value: data?.last_name },
             { name: "username", value: data?.username },
@@ -353,6 +357,15 @@ export const UserEdit = (props: UserCreateProps) => {
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
+                                label={t("user.label.field.mezon_id")}
+                                name="mezon_id"
+                                initialValue={data?.mezon_id}
+                            >
+                                <Input
+                                    placeholder={t("user.label.placeholder.mezon_id")}
+                                />
+                            </Form.Item>
+                            {/* <Form.Item
                                 label={t("user.label.field.user_manager")}
                                 name="manager"
                                 initialValue={data?.manager.id}
@@ -366,7 +379,7 @@ export const UserEdit = (props: UserCreateProps) => {
                                 <Typography.Text type="danger">
                                     {messageErr.manager}
                                 </Typography.Text>
-                            )}
+                            )} */}
 
                             <Form.Item
                                 label={t("user.label.field.locations")}
