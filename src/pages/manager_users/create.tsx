@@ -124,6 +124,9 @@ export const UserCreate = (props: UserCreateProps) => {
     formData.append("password", event.password);
     formData.append("password_confirmation", event.password_confirmation);
 
+    if (event.mezon_id !== undefined) {
+      formData.append("mezon_id", event.mezon_id);
+    }
     if (event.last_name !== undefined) {
       formData.append("last_name", event.last_name);
     }
@@ -332,7 +335,13 @@ export const UserCreate = (props: UserCreateProps) => {
               )}
             </Col>
             <Col className="gutter-row" span={12}>
-              <Form.Item
+                <Form.Item
+                    label={t("user.label.field.mezon_id")}
+                    name="mezon_id"
+                >
+                    <Input placeholder={t("user.label.placeholder.mezon_id")} />
+                </Form.Item>
+              {/* <Form.Item
                 label={t("user.label.field.user_manager")}
                 name="manager"
               >
@@ -345,7 +354,7 @@ export const UserCreate = (props: UserCreateProps) => {
                 <Typography.Text type="danger">
                   {messageErr.manager}
                 </Typography.Text>
-              )}
+              )} */}
 
               <Form.Item
                 label={t("user.label.field.locations")}
