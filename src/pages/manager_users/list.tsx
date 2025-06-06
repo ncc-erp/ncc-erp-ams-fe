@@ -500,15 +500,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           </Col>
         </>
       ) : (
-        <Table
-          {...tableProps}
-          loading={isLoading}
-          rowKey="id"
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
+        <Table {...tableProps} loading={isLoading} rowKey="id">
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
