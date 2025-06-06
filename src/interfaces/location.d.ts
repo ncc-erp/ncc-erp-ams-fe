@@ -39,18 +39,9 @@ export interface ILocationRequest {
   country: string;
   currency: number;
   image: string;
-
-<<<<<<< HEAD
   assets_count: number;
   assigned_assets_count: number;
   users_count: number;
   ldap_ou: string;
+  branch_code: string;
 }
-=======
-    assets_count:number;
-    assigned_assets_count: number;
-    users_count : number;
-    ldap_ou: string;
-    branch_code: string;
-}
->>>>>>> 6d82004a39a2bcfd337c36ab21c3206de9fd2a25
