@@ -35,6 +35,15 @@ export interface ICheckboxChange {
     checked: boolean;
   };
 }
+
+export interface IUserType {
+  name: string;
+}
+
+export interface IJobPosition {
+  name: string;
+}
+
 export interface ITotalDetail {
   name: string;
   total: number;
