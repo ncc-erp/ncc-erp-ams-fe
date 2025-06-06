@@ -512,7 +512,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...(col as any)} sorter />
+              <Table.Column
+                key={col.key}
+                dataIndex={col.key}
+                {...(col as any)}
+                sorter
+              />
             ))}
           <Table.Column<IUserResponse>
             title={translate("table.actions")}
