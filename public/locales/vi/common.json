@@ -1339,7 +1339,11 @@
         "updated_at": "Cập nhật tại",
         "warranty_expires": "Hết hạn",
         "qty": "Số lượng văn phòng phẩm được cấp phát",
-        "user": "Lựa chọn một người dùng"
+        "user": "Lựa chọn một người dùng",
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "maintenance_date": "Ngày bảo trì",
+        "months_per_time": "Tháng / Lần",
+        "maintenance_status": "Trạng thái bảo trì"
       },
       "message": {
         "required": "bắt buộc"
@@ -1377,7 +1381,9 @@
         "notes": "Ghi chú",
         "user": "Lựa chọn một người dùng",
         "supplier": "Lựa chọn nhà cung cấp",
-        "purchase_cost": "Chi phí mua hàng"
+        "purchase_cost": "Chi phí mua hàng",
+        "maintenance_cycle": "Nhập chu kỳ bảo trì",
+        "maintenance_date": "Nhập ngày bảo trì"
       }
     }
   }
