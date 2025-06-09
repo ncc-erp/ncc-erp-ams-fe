@@ -69,6 +69,7 @@ import { ClientHardwareListExpiration } from "pages/hardware_client/list-expirat
 import { useRef } from "react";
 import { DetailProduct } from "pages/hardware/detail";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
+import { ConsumablesMainternanceList } from "pages/consumables/list-maintenance";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -343,6 +344,15 @@ function App() {
             list: ConsumablesList,
             options: {
               route: "consumables",
+              label: "consumables",
+            },
+          },
+          {
+            name: t("resource.consumables-maintenance"),
+            list: ConsumablesMainternanceList,
+            options: {
+              route: "consumables-maintenance",
+              label: "consumables",
             },
           },
           {

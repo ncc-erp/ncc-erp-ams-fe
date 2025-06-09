@@ -174,12 +174,13 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
         ) {
           const { purchase_date, maintenance_cycle } = allValues;
 
-          if (
+          const isValidMaintenanceInfo =
             purchase_date &&
             maintenance_cycle &&
             !isNaN(Number(maintenance_cycle)) &&
-            moment(purchase_date, "YYYY-MM-DD", true).isValid()
-          ) {
+            moment(purchase_date, "YYYY-MM-DD", true).isValid();
+
+          if (isValidMaintenanceInfo) {
             const nextMaintenance = moment(purchase_date)
               .add(Number(maintenance_cycle), "months")
               .format("YYYY-MM-DD");

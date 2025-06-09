@@ -56,18 +56,14 @@ import { useComsumableColumns } from "./table-column";
 const defaultCheckedList = [
   "id",
   "name",
-  "category",
-  "purchase_date",
-  "supplier",
-  "location",
-  "qty",
-  "notes",
   "maintenance_date",
   "maintenance_cycle",
   "maintenance_status",
 ];
 
-export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
+export const ConsumablesMainternanceList: React.FC<
+  IResourceComponentsProps
+> = () => {
   const translate = useTranslate();
 
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
@@ -84,8 +80,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_consumables_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_consumables_selected") as string)
+    localStorage.getItem("item_consumables_maintenance_selected") !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            "item_consumables_maintenance_selected"
+          ) as string
+        )
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -110,6 +110,13 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         {
           field: "id",
           order: "desc",
+        },
+      ],
+      initialFilter: [
+        {
+          field: "maintenance_date",
+          operator: "eq",
+          value: 1,
         },
       ],
       resource: CONSUMABLE_API,
@@ -235,8 +242,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
       },
       remaining: 0,
       maintenance_date: {
-        date: data?.maintenance_date?.date ?? "",
-        formatted: data?.maintenance_date?.formatted ?? "",
+        date: data?.maintenance_date != null ? data?.maintenance_date.date : "",
+        formatted:
+          data?.maintenance_date != null
+            ? data?.maintenance_date.formatted
+            : "",
       },
       maintenance_cycle: data?.maintenance_cycle,
     };
@@ -306,7 +316,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_consumables_selected",
+      "item_consumables_maintenance_selected",
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

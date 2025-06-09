@@ -56,7 +56,10 @@ export const Sider: React.FC = () => {
     translate("resource.tools-waiting"),
   ];
 
-  const consumableItemList = [translate("resource.consumables")];
+  const consumableItemList = [
+    translate("resource.consumables"),
+    translate("resource.consumables-maintenance"),
+  ];
 
   const accessoryItemList = [translate("resource.accessory")];
 
@@ -219,12 +222,13 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
-          <SideBarMenuItem
+          <SideBarSubMenuItem
+            title={translate("resource.consumable")}
+            label={"consumables"}
+            key={"consumable"}
+            hasItemIcon={false}
             collapsed={collapsed}
-            label={""}
-            hasItemIcon={true}
             itemList={consumableItemList}
-            key={"consumable-menu"}
           />
         )}
 
