@@ -162,7 +162,8 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       { name: "maintenance_date", value: data?.maintenance_date?.date },
       {
         name: "maintenance_cycle",
-        value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
+        value:
+          data?.maintenance_cycle && data?.maintenance_cycle.split(" ")?.[0],
       },
     ]);
   }, [data, form, isModalVisible]);
@@ -332,7 +333,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
             label={t("consumables.label.field.maintenance_cycle")}
             name="maintenance_cycle"
             initialValue={
-              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")?.[0]
             }
           >
             <Input
@@ -340,7 +341,8 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
               addonAfter={t("consumables.label.field.months_per_time")}
               placeholder={t("consumables.label.placeholder.maintenance_cycle")}
               value={
-                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+                data?.maintenance_cycle &&
+                data?.maintenance_cycle.split(" ")?.[0]
               }
             />
           </Form.Item>
