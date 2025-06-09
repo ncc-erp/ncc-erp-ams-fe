@@ -40,6 +40,7 @@ const defaultCheckedList = [
   "category",
   "email",
   "phone",
+  "mezon_id",
 ];
 
 export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
@@ -250,6 +251,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
+      },
+      {
+        key: "mezon_id",
+        title: translate("user.label.field.mezon_id"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("mezon_id", sorter),
       },
     ],
     []

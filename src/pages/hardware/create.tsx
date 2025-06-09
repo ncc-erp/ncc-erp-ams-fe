@@ -440,6 +440,38 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             </Typography.Text>
           )}
           <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="customer"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.customer") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t("hardware.label.field.customer")}
+              options={customer?.map((customer) => ({
+                label: customer.name,
+                value: customer.id,
+              }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          {messageErr?.customer && (
+            <Typography.Text type="danger">
+              {messageErr.customer}
+            </Typography.Text>
+          )}
+          <Form.Item
             label={t("hardware.label.field.maintenance_date")}
             name="maintenance"
             rules={[
@@ -465,32 +497,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
-          <Form.Item
-            label={t("hardware.label.field.customer")}
-            name="customer"
-            rules={[
-              {
-                required: true,
-                message:
-                  t("hardware.label.field.customer") +
-                  " " +
-                  t("hardware.label.message.required"),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t("hardware.label.field.customer")}
-              options={customer?.map((customer) => ({
-                label: customer.name,
-                value: customer.id,
-              }))}
-            />
-          </Form.Item>
-          {messageErr?.customer && (
-            <Typography.Text type="danger">
-              {messageErr.customer}
-            </Typography.Text>
-          )}
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -609,11 +615,17 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             ]}
           >
             <Select
+              showSearch
               placeholder={t("hardware.label.field.project")}
               options={project?.map((project) => ({
                 label: project.name,
                 value: project.id,
               }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
             />
           </Form.Item>
           {messageErr?.project && (
