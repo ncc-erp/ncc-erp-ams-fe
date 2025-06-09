@@ -404,11 +404,17 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
             ]}
           >
             <Select
+              showSearch
               placeholder={t("hardware.label.field.customer")}
               options={customer?.map((customer) => ({
                 label: customer.name,
                 value: customer.id,
               }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
             />
           </Form.Item>
           {messageErr?.customer && (
@@ -534,11 +540,17 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
             ]}
           >
             <Select
+              showSearch
               placeholder={t("hardware.label.field.project")}
               options={project?.map((project) => ({
                 label: project.name,
                 value: project.id,
               }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
             />
           </Form.Item>
           {messageErr?.project && (
