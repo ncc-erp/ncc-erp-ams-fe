@@ -172,18 +172,33 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
           "purchase_date" in changedValues ||
           "maintenance_cycle" in changedValues
         ) {
-          const { purchase_date, maintenance_cycle } = allValues;
+          const { purchase_date, maintenance_cycle, maintenance_date } =
+            allValues;
 
-          const isValidMaintenanceInfo =
-            purchase_date &&
+          const isValidCycle =
             maintenance_cycle &&
             !isNaN(Number(maintenance_cycle)) &&
-            moment(purchase_date, "YYYY-MM-DD", true).isValid();
+            Number(maintenance_cycle) > 0;
 
-          if (isValidMaintenanceInfo) {
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance_date) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
             const nextMaintenance = moment(purchase_date)
               .add(Number(maintenance_cycle), "months")
               .format("YYYY-MM-DD");
+
             form.setFieldsValue({ maintenance_date: nextMaintenance });
           } else {
             form.setFieldsValue({ maintenance_date: "" });
@@ -279,6 +294,16 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
           <Form.Item
             label={t("consumables.label.field.maintenance_cycle")}
             name="maintenance_cycle"
+            rules={[
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
             <Input
               type="number"

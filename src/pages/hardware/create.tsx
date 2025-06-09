@@ -273,17 +273,32 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
           "purchase_date" in changedValues ||
           "maintenance_cycle" in changedValues
         ) {
-          const { purchase_date, maintenance_cycle } = allValues;
+          const { purchase_date, maintenance_cycle, maintenance } = allValues;
 
-          if (
-            purchase_date &&
+          const isValidCycle =
             maintenance_cycle &&
             !isNaN(Number(maintenance_cycle)) &&
-            moment(purchase_date, "YYYY-MM-DD", true).isValid()
-          ) {
+            Number(maintenance_cycle) > 0;
+
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
             const nextMaintenance = moment(purchase_date)
               .add(Number(maintenance_cycle), "months")
               .format("YYYY-MM-DD");
+
             form.setFieldsValue({ maintenance: nextMaintenance });
           } else {
             form.setFieldsValue({ maintenance: "" });
