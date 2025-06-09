@@ -80,8 +80,12 @@ export const ConsumablesMainternanceList: React.FC<
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_consumables_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_consumables_selected") as string)
+    localStorage.getItem("item_consumables_maintenance_selected") !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            "item_consumables_maintenance_selected"
+          ) as string
+        )
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -312,7 +316,7 @@ export const ConsumablesMainternanceList: React.FC<
 
   useEffect(() => {
     localStorage.setItem(
-      "item_consumables_selected",
+      "item_consumables_maintenance_selected",
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
