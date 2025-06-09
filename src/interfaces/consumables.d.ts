@@ -126,4 +126,5 @@ export interface IConsumablesFilterVariables {
 export interface FormValues {
   purchase_date?: string;
   maintenance_cycle?: number;
+  maintenance_date?: string;
 }

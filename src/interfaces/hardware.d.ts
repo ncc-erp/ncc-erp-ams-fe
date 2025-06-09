@@ -404,4 +404,5 @@ export interface IModalPropsProps {
 export interface FormValues {
   purchase_date?: string;
   maintenance_cycle?: number;
+  maintenance?: string;
 }
