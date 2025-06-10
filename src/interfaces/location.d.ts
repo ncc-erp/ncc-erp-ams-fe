@@ -25,6 +25,7 @@ export interface ILocationResponse {
   accessories_count: number;
   consumables_count: number;
   digital_signatures_count: number;
+  branch_code: string;
 }
 export interface ILocationRequest {
   id: number;
@@ -38,9 +39,9 @@ export interface ILocationRequest {
   country: string;
   currency: number;
   image: string;
-
   assets_count: number;
   assigned_assets_count: number;
   users_count: number;
   ldap_ou: string;
+  branch_code: string;
 }

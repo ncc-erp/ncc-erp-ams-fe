@@ -68,6 +68,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
+    formData.append("branch_code", event.branch_code);
     if (event.parent !== undefined) {
       formData.append("parent_id", event.parent.toString());
     }
@@ -154,6 +155,26 @@ export const LocationCreate = (props: LocationCreateProps) => {
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
           <Form.Item
+            label={t("location.label.field.branch_code")}
+            name="branch_code"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("location.label.field.branch_code") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+          >
+            <Input placeholder={t("location.label.field.branch_code")} />
+          </Form.Item>
+          {messageErr?.branch_code && (
+            <Typography.Text type="danger">
+              {messageErr.branch_code[0]}
+            </Typography.Text>
+          )}
+          <Form.Item
             label={t("location.label.field.name")}
             name="name"
             rules={[
@@ -173,7 +194,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
               {messageErr.name[0]}
             </Typography.Text>
           )}
-
           <Form.Item
             label={t("location.label.field.manager")}
             name="manager"

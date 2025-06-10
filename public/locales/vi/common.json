@@ -714,7 +714,9 @@
         "information": "Thông tin",
         "download_picter": "Tải hình",
         "permission": "Phân quyền",
-        "role": "Vai trò"
+        "role": "Vai trò",
+        "job_position": "Vị trí làm việc",
+        "user_type": "Bậc người dùng"
       },
       "message": {
         "required": "bắt buộc"
@@ -877,7 +879,8 @@
         "tax_tokens_count": "Token thuế",
         "assetAssign": "Thiết bị đã cấp phát",
         "dateCreate": "Ngày tạo",
-        "users_count": "Thành viên"
+        "users_count": "Thành viên",
+        "branch_code": "Mã văn phòng"
       },
       "placeholder": {
         "parent": "Lựa chọn một văn phòng",
