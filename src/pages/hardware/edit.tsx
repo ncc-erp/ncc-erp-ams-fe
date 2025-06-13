@@ -28,6 +28,7 @@ import {
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
@@ -100,6 +101,17 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { refetch, isFetching } = useCustom({
     url: HARDWARE_API + "/" + data?.id,
@@ -140,6 +152,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
 
     if (event.supplier !== undefined) {
       formData.append("supplier_id", event.supplier.toString());
+    }
+    if (event.webhook !== undefined) {
+      formData.append("webhook_id", event.webhook.toString());
     }
 
     if (
@@ -184,6 +199,8 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         value: data?.purchase_date.date ?? "",
       },
       { name: "supplier_id", value: data?.supplier.id },
+      { name: "webhook", value: data?.webhook?.id ?? "" },
+
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "image", value: data?.image },
@@ -597,6 +614,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               placeholder={t("hardware.label.placeholder.maintenance_cycle")}
               value={
                 data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              }
+            />
+          </Form.Item>
+          <Form.Item label={t("hardware.label.field.webhook")} name="webhook">
+            <Select
+              showSearch
+              placeholder={t("hardware.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
               }
             />
           </Form.Item>

@@ -95,3 +95,5 @@ export const CLIENT_HARDWARE_CHECKIN_API = "api/v1/client-hardware/checkin";
 export const CLIENT_HARDWARE_TOTAL_DETAIL_API =
   "api/v1/client-hardware/total-detail";
 export const CLIENT_HARDWARE_CREATE = "api/v1/customer-project";
+
+export const WEBHOOK_API = "api/v1/webhooks";

@@ -197,7 +197,8 @@
         "customer": "Khách Hàng",
         "isCustomerRenting": "Khách Hàng Có Thuê Không",
         "yes": "Có",
-        "no": "Không"
+        "no": "Không",
+        "webhook": "Webhook"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -217,7 +218,8 @@
         "insurance": "Bảo hành",
         "choiceAsset": "Lựa chọn tài sản",
         "maintenance": "Bảo trì",
-        "maintenance_cycle": "Chu kỳ bảo trì"
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "webhook": "Chọn Mezon webhook"
       },
       "message": {
         "required": "bắt buộc"
@@ -897,6 +899,35 @@
       }
     }
   },
+  "webhook": {
+    "label": {
+      "field": {
+        "name": "Tên webhook",
+        "url": "URL",
+        "created_at": "Ngày tạo",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa"
+      },
+      "title": {
+        "nameTitle": "Webhook",
+        "create": "Tạo webhook",
+        "edit": "Cập nhật webhook",
+        "detail": "Chi tiết webhook"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Refresh",
+        "viewDetail": "Xem chi tiết"
+      }
+    }
+  },
   "resource": {
     "dashboard": "Thống kê",
     "asset": "Thiết bị",
@@ -959,7 +990,9 @@
     "client-asset-pending": "Bảo hành-Check lại",
     "client-asset-broken": "Hỏng",
     "client-asset-waitingConfirm": "Đang chờ xác nhận",
-    "client-asset-expires": "Sắp hết hạn"
+    "client-asset-expires": "Sắp hết hạn",
+    "webhook": "Webhook",
+    "webhook_details": "Chi tiết webhook"
   },
   "model": {
     "label": {

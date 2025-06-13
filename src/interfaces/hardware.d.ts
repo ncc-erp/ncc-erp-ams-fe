@@ -40,6 +40,7 @@ export interface IHardwareUpdateRequest {
   purchase_date: string;
   rtd_location: number;
   supplier: number;
+  webhook: number;
   image: string;
   user_id: number;
   assigned_to: number;
@@ -91,6 +92,10 @@ export interface IHardwareResponse {
   notes: string;
   order_number: string;
   location: {
+    id: number;
+    name: string;
+  };
+  webhook?: {
     id: number;
     name: string;
   };
