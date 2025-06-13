@@ -906,7 +906,8 @@
         "url": "URL",
         "created_at": "Ngày tạo",
         "create": "Tạo mới",
-        "edit": "Chỉnh sửa"
+        "edit": "Chỉnh sửa",
+        "type": "Loại Webhook"
       },
       "title": {
         "nameTitle": "Webhook",

@@ -3,6 +3,7 @@ import { Typography, Row, Col } from "@pankod/refine-antd";
 import "styles/hardware.less";
 import moment from "moment";
 import { IWebhookResponse } from "interfaces/webhook";
+import { WebhookEventType } from "constants/webhook";
 const { Title, Text } = Typography;
 
 type HardwareShowProps = {
@@ -46,6 +47,24 @@ export const WebhookShow = (props: HardwareShowProps) => {
             </Text>
           ) : (
             ""
+          )}
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={4}>
+          <Title level={5}>{t("webhook.label.field.type")}</Title>
+        </Col>
+        <Col span={18}>
+          {detail?.type && detail?.type.length > 0 ? (
+            detail?.type.map((item: string, index: number) => (
+              <Text key={index}>
+                {WebhookEventType[item as keyof typeof WebhookEventType] ||
+                  item}
+                {index < detail.type.length - 1 && ", "}
+              </Text>
+            ))
+          ) : (
+            <Text>N/A</Text>
           )}
         </Col>
       </Row>

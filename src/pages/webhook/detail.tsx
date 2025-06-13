@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import "../../styles/detailWebhook.less";
 import { useTranslate, useCustom } from "@pankod/refine-core";
 import { IWebhook } from "interfaces/webhook";
+import { WebhookEventType } from "constants/webhook";
 export const WebhookDetail = () => {
   const locationURL = useLocation();
   const queryParams = new URLSearchParams(locationURL.search);
@@ -65,6 +66,21 @@ export const WebhookDetail = () => {
               title={created_at?.formatted ? created_at?.formatted : undefined}
             >
               {created_at?.formatted || "n/a"}
+            </p>
+          </div>
+          <div className="webhook-info-item">
+            <p className="info-title">{t("webhook.label.field.type")}:</p>
+            <p className="info-content">
+              {webhook?.type && webhook?.type.length > 0
+                ? webhook.type.map((item: string, index: number) => (
+                    <span key={index} className="webhook-type-item">
+                      {WebhookEventType[
+                        item as keyof typeof WebhookEventType
+                      ] || item}
+                      {index < webhook.type.length - 1 && ", "}
+                    </span>
+                  ))
+                : "n/a"}
             </p>
           </div>
         </div>

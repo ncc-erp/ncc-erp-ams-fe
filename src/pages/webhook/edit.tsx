@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
-import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
+import {
+  Form,
+  Input,
+  useForm,
+  Button,
+  Typography,
+  Checkbox,
+} from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { WEBHOOK_API } from "api/baseApi";
 import { IWebhookRequest, IWebhookResponse } from "interfaces/webhook";
+import { WebhookEventType } from "constants/webhook";
 
 type WebhookEditProps = {
   isModalVisible: boolean;
@@ -44,6 +52,9 @@ export const WebhookEdit = (props: WebhookEditProps) => {
 
     formData.append("name", event.name);
     formData.append("url", event.url);
+    event.type.forEach((item: string) => {
+      formData.append("type[]", item);
+    });
 
     formData.append("_method", "PATCH");
     setPayload(formData);
@@ -56,6 +67,7 @@ export const WebhookEdit = (props: WebhookEditProps) => {
     setFields([
       { name: "name", value: data?.name },
       { name: "url", value: data?.url },
+      { name: "type", value: data?.type || [] },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -90,7 +102,12 @@ export const WebhookEdit = (props: WebhookEditProps) => {
       image: file,
     });
   }, [file]);
-
+  const webhookEventOptions = Object.entries(WebhookEventType).map(
+    ([key, value]) => ({
+      label: value,
+      value: key,
+    })
+  );
   return (
     <Form
       {...formProps}
@@ -134,6 +151,21 @@ export const WebhookEdit = (props: WebhookEditProps) => {
         initialValue={data?.url ? data?.url : ""}
       >
         <Input.TextArea placeholder={t("webhook.label.field.url")} rows={4} />
+      </Form.Item>
+      <Form.Item
+        label={t("webhook.label.field.type")}
+        name="type"
+        rules={[
+          {
+            required: true,
+            message:
+              t("webhook.label.field.type") +
+              " " +
+              t("webhook.label.message.required"),
+          },
+        ]}
+      >
+        <Checkbox.Group options={webhookEventOptions} />
       </Form.Item>
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isFetching}>

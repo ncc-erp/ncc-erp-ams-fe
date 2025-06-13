@@ -6,11 +6,13 @@ export interface IWebhookResponse {
     datetime: string;
     formatted: string;
   };
+  type: array;
 }
 export interface IWebhookRequest {
   id: number;
   name: string;
   url: string;
+  type: array;
 }
 export interface IWebhook {
   id: string;
@@ -20,4 +22,5 @@ export interface IWebhook {
     datetime: string;
     formatted: string;
   };
+  type: array;
 }

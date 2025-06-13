@@ -77,6 +77,7 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       name: data.name,
       url: data.url,
+      type: data.type,
     };
 
     setDetail(dataConvert);

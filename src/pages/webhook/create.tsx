@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
-import { Form, Input, useForm, Button, Typography } from "@pankod/refine-antd";
+import {
+  Form,
+  Input,
+  useForm,
+  Button,
+  Typography,
+  Checkbox,
+} from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import "../../styles/hardware.less";
 import { WEBHOOK_API } from "api/baseApi";
 import { IWebhookRequest } from "interfaces/webhook";
+import { WebhookEventType } from "constants/webhook";
 
 type WebhookCreateProps = {
   isModalVisible: boolean;
@@ -33,6 +41,9 @@ export const WebhookCreate = (props: WebhookCreateProps) => {
 
     formData.append("name", event.name);
     formData.append("url", event.url);
+    event.type.forEach((item: string) => {
+      formData.append("type[]", item);
+    });
     setPayload(formData);
   };
 
@@ -85,6 +96,13 @@ export const WebhookCreate = (props: WebhookCreateProps) => {
     });
   }, [file]);
 
+  const webhookEventOptions = Object.entries(WebhookEventType).map(
+    ([key, value]) => ({
+      label: value,
+      value: key,
+    })
+  );
+
   return (
     <Form
       {...formProps}
@@ -126,6 +144,21 @@ export const WebhookCreate = (props: WebhookCreateProps) => {
         ]}
       >
         <Input.TextArea placeholder={t("webhook.label.field.url")} rows={4} />
+      </Form.Item>
+      <Form.Item
+        label={t("webhook.label.field.type")}
+        name="type"
+        rules={[
+          {
+            required: true,
+            message:
+              t("webhook.label.field.type") +
+              " " +
+              t("webhook.label.message.required"),
+          },
+        ]}
+      >
+        <Checkbox.Group options={webhookEventOptions} />
       </Form.Item>
       <div className="submit">
         <Button type="primary" htmlType="submit" loading={isLoading}>
