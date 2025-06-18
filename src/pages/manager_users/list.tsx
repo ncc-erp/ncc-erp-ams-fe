@@ -306,7 +306,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "mezon_id",
         title: translate("user.label.field.mezon_id"),
-        render: (value: number) => <TextField value={value ? value : ""} />,
+        render: (value: string) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("mezon_id", sorter),
       },
     ],
