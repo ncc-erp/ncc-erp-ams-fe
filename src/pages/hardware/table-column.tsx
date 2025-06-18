@@ -87,7 +87,7 @@ export const useHardwareColumns = ({
             style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
           />
         ),
-        defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
+        defaultSortOrder: getDefaultSortOrder("webhook", sorter),
       },
     ],
     [filterCategory, filterStatus_Label]

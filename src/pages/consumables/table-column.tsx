@@ -190,6 +190,20 @@ export const useComsumableColumns = ({
         },
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
       },
+      {
+        key: "webhook",
+        title: translate("consumables.label.field.webhook"),
+        render: (value: IConsumablesResponse) => (
+          <div
+            dangerouslySetInnerHTML={{ __html: `${value ? value.name : ""}` }}
+            onClick={() => {
+              list(`webhook_details?id=${value.id}&name=${value.name}`);
+            }}
+            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
+          />
+        ),
+        defaultSortOrder: getDefaultSortOrder("webhook", sorter),
+      },
     ],
     [filterCategory]
   );

@@ -193,6 +193,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   const edit = (data: IConsumablesResponse) => {
     const dataConvert: IConsumablesResponse = {
+      ...data,
       id: data.id,
       name: data.name,
       category: {

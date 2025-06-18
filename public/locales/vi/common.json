@@ -1382,7 +1382,8 @@
         "maintenance_cycle": "Chu kỳ bảo trì",
         "maintenance_date": "Ngày bảo trì",
         "months_per_time": "Tháng / Lần",
-        "maintenance_status": "Trạng thái bảo trì"
+        "maintenance_status": "Trạng thái bảo trì",
+        "webhook": "Webhook"
       },
       "message": {
         "required": "bắt buộc"
@@ -1422,7 +1423,8 @@
         "supplier": "Lựa chọn nhà cung cấp",
         "purchase_cost": "Chi phí mua hàng",
         "maintenance_cycle": "Nhập chu kỳ bảo trì",
-        "maintenance_date": "Nhập ngày bảo trì"
+        "maintenance_date": "Nhập ngày bảo trì",
+        "webhook": "Lựa chọn webhook"
       }
     }
   }
