@@ -267,6 +267,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const edit = (data: IHardwareResponse) => {
     const dataConvert: IHardwareResponse = {
+      ...data,
       id: data.id,
       name: data.name,
       asset_tag: data.asset_tag,
