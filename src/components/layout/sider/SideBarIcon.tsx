@@ -52,8 +52,8 @@ export const SideBarIcon = (props: SideBarIconProps) => {
       icon: <InsertRowBelowOutlined />,
     },
     {
-      title: translate("resource.consumables"),
-      type: "item",
+      title: translate("resource.consumable"),
+      type: "title",
       icon: <CopyOutlined />,
     },
     {
