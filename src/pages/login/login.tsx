@@ -57,20 +57,6 @@ export const LoginPage: React.FC = () => {
     </Title>
   );
 
-  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
-    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
-    : "773310957148-o1bk15p279jst37itlfqmfulglnh4t1k.apps.googleusercontent.com";
-
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "email",
-      });
-    }
-    gapi.load("client:auth2", start);
-  }, []);
-
   const getMezonAuthUrl = async () => {
     try {
       setIsLoadingMezon(true);
