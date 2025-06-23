@@ -25,11 +25,18 @@
 
 // base variables
 @border-radius-base: 6px;
+@border-radius-small: 3px;
+@border-radius-medium: 5px;
+@border-radius-large: 8px;
 
 // colors
 @primary-color: #ed1b23;
 @error-color: #fa541c;
 @text-color: #626262;
+@success-color: #00a65a;
+@success-color-hover: #25b977;
+@checkout-color: #0073b7;
+@danger-color: #fa541c;
 
 // sider
 @layout-sider-background: black;
@@ -60,20 +67,20 @@
   min-width: 10px;
 }
 .ant-btn-checkout {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:focus {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:hover {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:active {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 
 .ant-menu-sub.ant-menu-inline {
@@ -357,12 +364,15 @@ a {
 .checkout-multiple-asset {
   display: flex;
   gap: 10px;
-  width: 45%;
+  flex-wrap: wrap
 }
 .checkin-multiple-asset {
   display: flex;
   gap: 10px;
-  width: 45%;
+}
+.checkin-multiple-asset-wrap {
+  display: flex;
+  justify-content: space-between;
 }
 .list-checkouts {
   display: flex;
@@ -392,6 +402,7 @@ a {
   display: flex;
   gap: 10px;
   padding: 15px 0px;
+  flex-wrap: wrap;
 }
 .list-checkin {
   display: flex;
@@ -492,7 +503,6 @@ a {
   display: flex;
   gap: 1rem;
   margin-right: 1rem;
-  margin-left: 8rem;
 }
 
 .list-table {
@@ -694,5 +704,15 @@ a {
     width: 100%;
     text-align: center;
     margin-top: 20px;
+  }
+
+  .ant-picker-panel-container .ant-picker-panels {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+  }
+  
+  .ant-picker-range {
+    width: 100% !important;
   }
 }
