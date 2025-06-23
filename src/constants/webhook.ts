@@ -1,0 +1,18 @@
+export const WebhookEventType = {
+  ASSET_MAINTENANCE: "Bảo trì thiết bị",
+  CONSUMABLE_MAINTENANCE: "Bảo trì văn phòng phẩm",
+  CHECKOUT_ASSET: "Cấp phát thiết bị",
+  CHECKOUT_CONSUMABLE: "Cấp phát văn phòng phẩm",
+  CHECKOUT_CLIENT_ASSET: "Cấp phát thiết bị khách hàng",
+  CHECKOUT_TOOL: "Cấp phát Tool & Domain",
+  CHECKOUT_ACCESSORY: "Cấp phát phụ kiện",
+  CHECKOUT_TAX_TOKEN: "Cấp phát token thuế",
+  CHECKIN_ASSET: "Thu hồi thiết bị",
+  CHECKIN_CLIENT_ASSET: "Thu hồi thiết bị khách hàng",
+  CHECKIN_TOOL: "Thu hồi Tool & Domain",
+  CHECKIN_TAX_TOKEN: "Thu hồi token thuế",
+  CONFIRM_CHECKOUT: "Xác nhận cấp phát",
+  CONFIRM_CHECKIN: "Xác nhận thu hồi",
+  REJECT_CHECKOUT: "Từ chối cấp phát",
+  REJECT_CHECKIN: "Từ chối thu hồi",
+};

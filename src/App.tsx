@@ -70,6 +70,8 @@ import { useRef } from "react";
 import { DetailProduct } from "pages/hardware/detail";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { ConsumablesMainternanceList } from "pages/consumables/list-maintenance";
+import { WebhookList } from "pages/webhook/list";
+import { WebhookDetail } from "pages/webhook/detail";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -316,6 +318,22 @@ function App() {
               route: "location",
             },
           },
+
+          {
+            name: t("resource.tax_token_assign"),
+            list: TaxTokenListWaitingConfirm,
+            options: {
+              route: "tax_token_assign",
+              label: "tax_token",
+            },
+          },
+          {
+            name: t("resource.request"),
+            list: RequestList,
+            options: {
+              route: "request",
+            },
+          },
           {
             name: t("resource.report"),
             list: ReportList,
@@ -398,6 +416,13 @@ function App() {
             },
           },
           {
+            name: t("resource.webhook_details"),
+            list: WebhookDetail,
+            options: {
+              route: "webhook_details",
+            },
+          },
+          {
             name: t("resource.assets-expires"),
             list: HardwareListExpiration,
             options: {
@@ -475,6 +500,13 @@ function App() {
             options: {
               route: "client-assets-expires",
               label: "client-assets",
+            },
+          },
+          {
+            name: t("resource.webhook"),
+            list: WebhookList,
+            options: {
+              route: "webhook",
             },
           },
         ]}

@@ -23,6 +23,7 @@ import {
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import {
   FormValues,
@@ -32,6 +33,7 @@ import {
 import { ILocation } from "interfaces/dashboard";
 import { ISupplier } from "interfaces/supplier";
 import moment from "moment";
+import { ICompany } from "interfaces/company";
 
 type ConsumablesEditProps = {
   isModalVisible: boolean;
@@ -86,6 +88,17 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { refetch, isFetching } = useCustom({
     url: CONSUMABLE_API + "/" + data?.id,
@@ -123,7 +136,9 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     formData.append("warranty_months", event.warranty_months);
     formData.append("maintenance_date", event.maintenance_date ?? "");
     formData.append("maintenance_cycle", event.maintenance_cycle ?? "");
-
+    if (event.webhook !== undefined) {
+      formData.append("webhook_id", event.webhook.toString());
+    }
     formData.append("_method", "PATCH");
     setPayload(formData);
   };
@@ -165,6 +180,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
         value:
           data?.maintenance_cycle && data?.maintenance_cycle.split(" ")?.[0],
       },
+      { name: "webhook", value: data?.webhook?.id ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -369,6 +385,22 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
               value={
                 data?.maintenance_cycle &&
                 data?.maintenance_cycle.split(" ")?.[0]
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("consumables.label.field.webhook")}
+            name="webhook"
+          >
+            <Select
+              showSearch
+              placeholder={t("consumables.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
               }
             />
           </Form.Item>

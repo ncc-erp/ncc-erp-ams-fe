@@ -27,6 +27,7 @@ export interface IConsumablesRequest {
   warranty_months: string;
   maintenance_date: string;
   maintenance_cycle: string;
+  webhook: number;
 }
 export interface IConsumablesResponse {
   id: number;
@@ -48,6 +49,10 @@ export interface IConsumablesResponse {
     name: string;
   };
   location: {
+    id: number;
+    name: string;
+  };
+  webhook?: {
     id: number;
     name: string;
   };

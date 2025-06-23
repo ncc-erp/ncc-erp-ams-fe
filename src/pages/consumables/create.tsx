@@ -23,12 +23,14 @@ import {
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import { IConsumablesRequest } from "interfaces/consumables";
 import { ILocation } from "interfaces/dashboard";
 import { ISupplier } from "interfaces/supplier";
 import moment from "moment";
 import { FormValues } from "interfaces/consumables";
+import { ICompany } from "interfaces/company";
 
 type ConsumablesCreateProps = {
   isModalVisible: boolean;
@@ -83,6 +85,17 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { mutate, data: createData, isLoading } = useCreate();
 
@@ -116,6 +129,8 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       "maintenance_cycle",
       event.maintenance_cycle === "0" ? "" : (event.maintenance_cycle ?? "")
     );
+    if (event.webhook !== undefined)
+      formData.append("webhook_id", event.webhook.toString());
 
     setPayload(formData);
   };
@@ -309,6 +324,22 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
               type="number"
               addonAfter={t("consumables.label.field.months_per_time")}
               placeholder={t("consumables.label.placeholder.maintenance_cycle")}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("consumables.label.field.webhook")}
+            name="webhook"
+          >
+            <Select
+              showSearch
+              placeholder={t("consumables.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
             />
           </Form.Item>
         </Col>

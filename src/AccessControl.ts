@@ -10,6 +10,7 @@ import {
   SOFTWARE_API,
   TAX_TOKEN_API,
   CLIENT_HARDWARE_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -279,6 +280,17 @@ p, 2, ${i18n.t("resource.accessory_details")}/*, (show)
 
 p, 2, ${i18n.t("resource.location_details")}, (list) 
 p, 2, ${i18n.t("resource.location_details")}/*,(show)
+
+p, 1, ${i18n.t("resource.webhook")}, (list)|(create)
+p, 1, ${WEBHOOK_API}/*, (delete)
+p, 1, ${i18n.t("resource.webhook")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 2, ${i18n.t("resource.webhook")}, (list)
+p, 2, ${i18n.t("resource.webhook")}/*, (show)
+p, 1, ${i18n.t("resource.webhook_details")}, (list) 
+p, 1, ${i18n.t(
+  "resource.webhook_details"
+)}/*, (edit)|(show)|(clone)|(checkout)|(checkin)
 
 p, 2, ${i18n.t("resource.report")}, (list)
 

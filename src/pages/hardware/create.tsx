@@ -38,6 +38,7 @@ import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
 
 import { useGetProjectData } from "hooks/useGetProjectData";
+import { WEBHOOK_API } from "../../api/baseApi";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
@@ -123,6 +124,18 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
@@ -132,8 +145,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     const selectedProject = project.find(
       (p) => Number(p.id) === Number(event.project)
     );
-
-    setMessageErr(messageErr);
     const formData = new FormData();
     if (selectedCustomer !== undefined) {
       formData.append("customer", selectedCustomer.name);
@@ -191,6 +202,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
     }
+    if (event.webhook !== undefined)
+      formData.append("webhook_id", event.webhook.toString());
 
     setPayload(formData);
   };
@@ -495,6 +508,19 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             <Input
               type="date"
               placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
+          <Form.Item label={t("hardware.label.field.webhook")} name="webhook">
+            <Select
+              showSearch
+              placeholder={t("hardware.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
             />
           </Form.Item>
           {isReadyToDeploy && (
