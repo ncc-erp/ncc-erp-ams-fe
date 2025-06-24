@@ -566,9 +566,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div style={{ marginTop: "6rem" }}>
+          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
-              <Col sm={24} md={24}>
+              <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckout ? (
                   <Row gutter={16} className="dashboard-loading">
                     <Spin
@@ -578,12 +578,12 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={10} md={7}>
+                    <Col xs={24} sm={24} md={7}>
                       <AssetsSummaryPieChartCheckOut
                         assets_statistic={dataReportCheckOut ?? ""}
                       />
                     </Col>
-                    <Col sm={24} md={17}>
+                    <Col xs={24} sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckOut}
@@ -620,9 +620,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div style={{ marginTop: "6rem" }}>
+          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
-              <Col sm={24} md={24}>
+              <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckin ? (
                   <Row gutter={16} className="dashboard-loading">
                     <Spin
@@ -632,12 +632,12 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={24} md={7}>
+                    <Col xs={24} sm={24} md={7}>
                       <AssetsSummaryPieChartCheckIn
                         assets_statistic={dataReportCheckIn ?? ""}
                       />
                     </Col>
-                    <Col sm={24} md={17}>
+                    <Col xs={24} sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckIn}
