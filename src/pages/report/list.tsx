@@ -284,7 +284,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List title={translate("report.label.title.name")}>
-      <div className="search" style={{ marginBottom: "20px" }}>
+      <div className="search">
         <Form
           layout="vertical"
           className="search-month-location"
@@ -301,6 +301,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
               ? assetHistoryType
               : translate("all"),
           }}
+          onValuesChange={() => searchFormProps.form?.submit()}
         >
           <Form.Item
             label={translate("dashboard.placeholder.searchToDate")}
@@ -354,16 +355,16 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
             </Select>
           </Form.Item>
         </Form>
-      </div>
-      <div className="report">
-        <TotalDetail
-          filters={filters}
-          links={ASSET_HISTORY_TOTAL_DETAIL_API}
-        ></TotalDetail>
-        <div className="search-report">
+        <div className="all">
           <TableAction searchFormProps={searchFormProps} />
         </div>
       </div>
+
+      <TotalDetail
+        filters={filters}
+        links={ASSET_HISTORY_TOTAL_DETAIL_API}
+      ></TotalDetail>
+
       <Table
         {...tableProps}
         rowKey="id"

@@ -43,11 +43,7 @@ export const SelectTableCol = (props: ISelectTableCol) => {
 
   const list = useMemo(
     () => (
-      <div
-        style={{
-          background: "white",
-        }}
-      >
+      <div className="select-table-col-dropdown">
         <Row>
           <Col span={24}>
             <Checkbox onChange={onCheckAllChange} checked={checkAll}>
@@ -66,7 +62,6 @@ export const SelectTableCol = (props: ISelectTableCol) => {
         </Row>
       </div>
     ),
-
     [plainOptions]
   );
 
@@ -151,8 +146,8 @@ export const TableAction = (props: ITableAction) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchParam = searchParams.get("search");
   return (
-    <Row style={{ marginBottom: "10px" }}>
-      <Col xs={12}>
+    <div className="table-action-container">
+      <div>
         {actions && (
           <Dropdown overlay={menu} trigger={["click"]}>
             <Button>
@@ -160,51 +155,45 @@ export const TableAction = (props: ITableAction) => {
             </Button>
           </Dropdown>
         )}
-      </Col>
-      <Col xs={12}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "end",
-          }}
-        >
-          {searchFormProps && (
-            <Form
-              {...searchFormProps}
-              initialValues={{
-                search:
-                  localStorage.getItem("search") !== null || searchValues !== ""
-                    ? searchValues
-                    : searchParam,
-              }}
-              onChange={() => {
-                debouncedSearch();
-              }}
-            >
-              <Form.Item name={"search"}>
-                <Search
-                  placeholder={t("table.search")}
-                  onSearch={(key) => {
-                    localStorage.setItem(
-                      "search",
-                      searchFormProps.form.getFieldsValue().search
-                    );
-                    searchFormProps.form.submit();
-                  }}
-                  style={{ width: 200 }}
-                />
-              </Form.Item>
-            </Form>
-          )}
-          {collumns && defaultCollumns && (
-            <SelectTableCol
-              options={collumns}
-              defaultValue={defaultCollumns}
-              onChange={onSelectCollumn}
-            ></SelectTableCol>
-          )}
-        </div>
-      </Col>
-    </Row>
+      </div>
+      <div className="table-action-right-section">
+        {searchFormProps && (
+          <Form
+            className="table-action-search-form"
+            {...searchFormProps}
+            initialValues={{
+              search:
+                localStorage.getItem("search") !== null || searchValues !== ""
+                  ? searchValues
+                  : searchParam,
+            }}
+            onChange={() => {
+              debouncedSearch();
+            }}
+          >
+            <Form.Item name={"search"}>
+              <Search
+                placeholder={t("table.search")}
+                onSearch={(key) => {
+                  localStorage.setItem(
+                    "search",
+                    searchFormProps.form.getFieldsValue().search
+                  );
+                  searchFormProps.form.submit();
+                }}
+                className="table-action-search-input"
+              />
+            </Form.Item>
+          </Form>
+        )}
+        {collumns && defaultCollumns && (
+          <SelectTableCol
+            options={collumns}
+            defaultValue={defaultCollumns}
+            onChange={onSelectCollumn}
+          ></SelectTableCol>
+        )}
+      </div>
+    </div>
   );
 };
