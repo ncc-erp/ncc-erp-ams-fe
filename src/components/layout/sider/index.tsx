@@ -280,33 +280,47 @@ export const Sider: React.FC = () => {
   );
 
   return (
-    <AntdLayout.Sider
-      collapsible
-      collapsed={collapsed}
-      onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
-      collapsedWidth={isMobile ? 0 : 80}
-      breakpoint="lg"
-      style={isMobile ? antLayoutSiderMobile : antLayoutSider}
-      width="230px"
-      className="custom-overflow-y"
-      data-test-id="sidebar"
-    >
-      {isMobile ? (
-        <div style={{ height: "100%", display: "flex" }}>
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              overflowX: "hidden",
-            }}
-            className="sider-overflow-y"
-          >
-            {renderMenuContent()}
-          </div>
-        </div>
-      ) : (
-        renderMenuContent()
+    <>
+      {isMobile && !collapsed && (
+        <div
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.6)",
+            zIndex: 998,
+          }}
+          onClick={() => setCollapsed(true)}
+        />
       )}
-    </AntdLayout.Sider>
+      <AntdLayout.Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
+        collapsedWidth={isMobile ? 0 : 80}
+        breakpoint="lg"
+        style={isMobile ? antLayoutSiderMobile : antLayoutSider}
+        width="230px"
+        className="custom-overflow-y"
+        data-test-id="sidebar"
+      >
+        {isMobile ? (
+          <div style={{ height: "100%", display: "flex" }}>
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+              className="sider-overflow-y"
+            >
+              {renderMenuContent()}
+            </div>
+          </div>
+        ) : (
+          renderMenuContent()
+        )}
+      </AntdLayout.Sider>
+    </>
   );
 };
