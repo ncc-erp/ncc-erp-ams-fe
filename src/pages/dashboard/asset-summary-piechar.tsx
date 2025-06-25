@@ -35,13 +35,15 @@ export const AssetsSummaryPieChartCheckOut = (
   }, [data]);
 
   const config = {
-    appendPadding: 10,
+    appendPadding: [10, 10, 45, 10],
     data,
     angleField: "count",
     colorField: "type",
     color: ["#3c8dbc", "#00a65a", "#dd4b39", "#f39c12", "#00c0ef", "#605ca8"],
     radius: 1,
     innerRadius: 0.6,
+    autoFit: true,
+    height: 340,
     label: {
       type: "inner",
       offset: "-50%",
@@ -53,6 +55,19 @@ export const AssetsSummaryPieChartCheckOut = (
     },
     legend: {
       selected: dataCheckOutActive,
+      position: "bottom" as const,
+      layout: "horizontal" as const,
+      itemSpacing: 4,
+      itemWidth: 90,
+      flipPage: false,
+      offsetY: -20,
+      itemName: {
+        style: {
+          fontSize: 12,
+          fill: "#666",
+        },
+      },
+      maxRow: 2,
     },
     interactions: [
       {
@@ -105,13 +120,15 @@ export const AssetsSummaryPieChartCheckIn = (
   }, [data]);
 
   const config = {
-    appendPadding: 10,
+    appendPadding: [10, 10, 45, 10],
     data,
     angleField: "count",
     colorField: "type",
     color: ["#3c8dbc", "#00a65a", "#dd4b39", "#f39c12", "#00c0ef", "#605ca8"],
     radius: 1,
     innerRadius: 0.6,
+    autoFit: true,
+    height: 340,
     label: {
       type: "inner",
       offset: "-50%",
@@ -123,6 +140,19 @@ export const AssetsSummaryPieChartCheckIn = (
     },
     legend: {
       selected: dataCheckInActive,
+      position: "bottom" as const,
+      layout: "horizontal" as const,
+      itemSpacing: 4,
+      itemWidth: 90,
+      flipPage: false,
+      offsetY: -20,
+      itemName: {
+        style: {
+          fontSize: 12,
+          fill: "#666",
+        },
+      },
+      maxRow: 2,
     },
     interactions: [
       {

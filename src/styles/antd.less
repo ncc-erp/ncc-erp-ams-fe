@@ -25,11 +25,18 @@
 
 // base variables
 @border-radius-base: 6px;
+@border-radius-small: 3px;
+@border-radius-medium: 5px;
+@border-radius-large: 8px;
 
 // colors
 @primary-color: #ed1b23;
 @error-color: #fa541c;
 @text-color: #626262;
+@success-color: #00a65a;
+@success-color-hover: #25b977;
+@checkout-color: #0073b7;
+@danger-color: #fa541c;
 
 // sider
 @layout-sider-background: black;
@@ -60,20 +67,20 @@
   min-width: 10px;
 }
 .ant-btn-checkout {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:focus {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:hover {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 .ant-btn-checkout:active {
-  background: #0073b7;
-  border-color: #0073b7;
+  background: @checkout-color;
+  border-color: @checkout-color;
 }
 
 .ant-menu-sub.ant-menu-inline {
@@ -153,6 +160,7 @@
 
 .other_function {
   display: flex;
+  margin-bottom: 8px;
 }
 .ant-row {
   margin-top: 8px !important;
@@ -203,7 +211,6 @@
 .all {
   display: flex;
   float: right;
-  margin-top: -10px;
 }
 .all-search {
   display: flex;
@@ -292,13 +299,14 @@ a {
   text-align: center;
 }
 .sum-assets {
-  font-size: 18px;
+  font-size: 14px;
+  margin-top: 10px;
 }
 .name-sum-assets {
   font-weight: 600;
 }
 .total-sum-assets {
-  font-size: 16px;
+  font-size: 14px;
   padding: 0% 6px;
 }
 
@@ -331,7 +339,6 @@ a {
 .title_permission {
   font-weight: bold;
   color: #333;
-  margin-left: 1rem;
 }
 
 .radio_level_group {
@@ -364,12 +371,16 @@ a {
 .checkout-multiple-asset {
   display: flex;
   gap: 10px;
-  width: 45%;
+  flex-wrap: wrap
 }
 .checkin-multiple-asset {
   display: flex;
   gap: 10px;
-  width: 45%;
+  flex-wrap: wrap;
+}
+.checkin-multiple-asset-wrap {
+  display: flex;
+  justify-content: space-between;
 }
 .list-checkouts {
   display: flex;
@@ -399,6 +410,7 @@ a {
   display: flex;
   gap: 10px;
   padding: 15px 0px;
+  flex-wrap: wrap;
 }
 .list-checkin {
   display: flex;
@@ -457,6 +469,8 @@ a {
 .users {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .sum-report {
@@ -499,7 +513,6 @@ a {
   display: flex;
   gap: 1rem;
   margin-right: 1rem;
-  margin-left: 8rem;
 }
 
 .list-table {
@@ -664,6 +677,9 @@ a {
 .sider-overflow-y {
   overflow-y: auto;
   overflow-x: hidden;
+  
+.menu-dropdown .checkbox {
+  width: 90% !important;
 }
 
 @media (min-width: 768px) {
@@ -693,9 +709,15 @@ a {
   }
 }
 @media screen and (max-width: 768px) {
+
   .search-all-location {
     flex-direction: column;
     align-items: center;
+  }
+
+  .all {
+    margin-top: -30px;
+    width: 100%;
   }
 
   .search-month-location {
@@ -707,4 +729,100 @@ a {
     text-align: center;
     margin-top: 20px;
   }
+
+  // Date picker responsive styles
+  .ant-picker-panels {
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 400px;
+  }
+
+  .ant-picker-panel-container {
+    margin-left: 0 !important;
+  }
+
+  .ant-picker-range-wrapper {
+    min-width: 100% !important;
+  }
+
+  .ant-picker-range,
+  .ant-input-group-wrapper {
+    width: 100% !important;
+  }
+
+  .ant-picker-input > input {
+    width: 100% !important;
+  }
+
+  .search-month-location {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .search-month-location-null {
+    width: 100% !important;
+    gap: 0.5rem;
+  }
+
+  .ant-page-header-content {
+    margin-top: -10px;
+  }
+
+  .ant-calendar-range {
+    width: 320px;
+  }
+  .ant-calendar-range-part {
+      width: 100%;
+  }
+
+  .checkbox {
+    width: 45% !important;
+  }
+
+  .table-action-container {
+    flex: 1;
+  }
+
+  .report-asset-container {
+    margin-top: 1rem !important;
+  }
+
+  .reportAssetContainer {
+    padding: 15px;
+  }
+
+  .list-users {
+    flex-wrap: wrap;
+  }
+  .list-asset-waiting-confirm {
+    margin-left: 0;
+  }
+}
+
+.table-action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-action-right-section {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.table-action-search-form {
+  width: 100%;
+}
+
+.table-action-search-input {
+  width: 200px;
+}
+
+.select-table-col-dropdown {
+  background: white;
+}
+
+.report-asset-container {
+  margin-top: 2rem !important;
 }
