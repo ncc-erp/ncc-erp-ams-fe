@@ -1400,7 +1400,8 @@
         "edit": "Cập nhật văn phòng phẩm",
         "date": "Thời gian",
         "checkout": "Cấp phát",
-        "detail": "Chi tiết văn phòng phẩm"
+        "detail": "Chi tiết văn phòng phẩm",
+        "maintenance": "Bảo trì văn phòng phẩm"
       },
       "tooltip": {
         "create": "Thêm mới",

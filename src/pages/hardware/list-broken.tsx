@@ -934,7 +934,11 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
-      title={t("hardware.label.title.list-broken")}
+      title={
+        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+          {t("hardware.label.title.list-broken")}
+        </div>
+      }
       pageHeaderProps={{
         extra: permissionsData.admin === EPermissions.ADMIN && (
           <CreateButton onClick={handleCreate}>

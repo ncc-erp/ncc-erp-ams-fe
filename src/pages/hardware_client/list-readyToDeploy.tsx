@@ -1134,7 +1134,11 @@ export const ClientHardwareListReadyToDeploy: React.FC<
 
   return (
     <List
-      title={t("hardware.label.title.list-readyToDeploy")}
+      title={
+        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+          {t("hardware.label.title.list-readyToDeploy")}
+        </div>
+      }
       pageHeaderProps={{
         extra: isAdmin && (
           <CreateButton onClick={handleCreate}>

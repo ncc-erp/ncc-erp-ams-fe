@@ -121,6 +121,10 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       )} đến ${searchParams1.get("purchase_date_to")}`
     );
   };
+  const locationName = data?.data.payload.find(
+    (item: ILocation) => item.id === locationSelected
+  )?.name;
+  console.log("locationName", locationName);
 
   useEffect(() => {
     localStorage.removeItem("purchase_date");
@@ -183,7 +187,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
               <Form.Item
                 label={translate("dashboard.field.search-location")}
                 name="location"
-                initialValue={99999}
+                initialValue={locationName}
               >
                 <Select
                   allowClear
