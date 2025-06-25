@@ -105,18 +105,8 @@ export const Sider: React.FC = () => {
   const userIsBranchAdmin =
     permissionsData?.branchadmin === EPermissions.BRANCHADMIN;
 
-  return (
-    <AntdLayout.Sider
-      collapsible
-      collapsed={collapsed}
-      onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
-      collapsedWidth={isMobile ? 0 : 80}
-      breakpoint="lg"
-      style={isMobile ? antLayoutSiderMobile : antLayoutSider}
-      width="230px"
-      className="custom-overflow-y"
-      data-test-id="sidebar"
-    >
+  const renderMenuContent = () => (
+    <>
       {permissionsData && userIsUser && (
         <>
           <Link to="users" data-test-id="logo">
@@ -249,7 +239,7 @@ export const Sider: React.FC = () => {
             title={translate("resource.users_assets")}
             label={"users"}
             key={"users_assets"}
-            hasItemIcon={true}
+            hasItemIcon={false}
             collapsed={collapsed}
             itemList={userAssetItemList}
           />
@@ -286,6 +276,51 @@ export const Sider: React.FC = () => {
           />
         )}
       </Menu>
-    </AntdLayout.Sider>
+    </>
+  );
+
+  return (
+    <>
+      {isMobile && !collapsed && (
+        <div
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.6)",
+            zIndex: 998,
+          }}
+          onClick={() => setCollapsed(true)}
+        />
+      )}
+      <AntdLayout.Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
+        collapsedWidth={isMobile ? 0 : 80}
+        breakpoint="lg"
+        style={isMobile ? antLayoutSiderMobile : antLayoutSider}
+        width="230px"
+        className="custom-overflow-y"
+        data-test-id="sidebar"
+      >
+        {isMobile ? (
+          <div style={{ height: "100%", display: "flex" }}>
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+              className="sider-overflow-y"
+            >
+              {renderMenuContent()}
+            </div>
+          </div>
+        ) : (
+          renderMenuContent()
+        )}
+      </AntdLayout.Sider>
+    </>
   );
 };
