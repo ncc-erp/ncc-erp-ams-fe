@@ -544,7 +544,13 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <>
-      <List title={translate("dashboard.titleStatistic")}>
+      <List
+        title={
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {translate("dashboard.titleStatistic")}
+          </div>
+        }
+      >
         <section className="reportAssetContainer">
           <span className="title-section-dashboard">
             {translate("report.label.title.nameReportCheckOut")}

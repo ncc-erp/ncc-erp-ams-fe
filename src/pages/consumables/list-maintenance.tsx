@@ -416,7 +416,11 @@ export const ConsumablesMainternanceList: React.FC<
 
   return (
     <List
-      title={translate("consumables.label.title.consumables")}
+      title={
+        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+          {translate("consumables.label.title.maintenance")}
+        </div>
+      }
       pageHeaderProps={{
         extra: permissionsData.admin === EPermissions.ADMIN && (
           <CreateButton onClick={handleCreate}>
