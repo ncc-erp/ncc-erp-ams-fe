@@ -72,6 +72,7 @@ import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { ConsumablesMainternanceList } from "pages/consumables/list-maintenance";
 import { WebhookList } from "pages/webhook/list";
 import { WebhookDetail } from "pages/webhook/detail";
+import { KomuLogs } from "pages/audit/komu/list";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -507,6 +508,13 @@ function App() {
             list: WebhookList,
             options: {
               route: "webhook",
+            },
+          },
+          {
+            name: t("resource.komu_logs"),
+            list: KomuLogs,
+            options: {
+              route: "komu_logs",
             },
           },
         ]}

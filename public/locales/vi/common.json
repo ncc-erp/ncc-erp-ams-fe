@@ -993,7 +993,9 @@
     "client-asset-waitingConfirm": "Đang chờ xác nhận",
     "client-asset-expires": "Sắp hết hạn",
     "webhook": "Webhook",
-    "webhook_details": "Chi tiết webhook"
+    "webhook_details": "Chi tiết webhook",
+    "audit": "Audit",
+    "komu_logs": "Komu logs"
   },
   "model": {
     "label": {
@@ -1426,6 +1428,31 @@
         "maintenance_cycle": "Nhập chu kỳ bảo trì",
         "maintenance_date": "Nhập ngày bảo trì",
         "webhook": "Lựa chọn webhook"
+      }
+    }
+  },
+  "komu_logs": {
+    "label": {
+      "title": {
+        "komu": "Komu Logs",
+        "create": "Tạo mới ",
+        "edit": "Cập nhật",
+        "detail": "Chi tiết Komu Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "send_to": "Gửi đến",
+        "message": "Message",
+        "creator": "Người tạo",
+        "company": "Công ty",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "status": "Trạng thái",
+        "system_response": "Phản hồi hệ thống",
+        "delete": "Xoá"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
       }
     }
   }
