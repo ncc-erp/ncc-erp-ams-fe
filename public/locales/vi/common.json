@@ -658,7 +658,8 @@
         "above": "Bên trên",
         "below": "Bên dưới",
         "codeDevice": "Tên Tài Sản",
-        "user_name": "Tên người dùng"
+        "user_name": "Tên người dùng",
+        "total_user": "Người dùng"
       },
       "field": {
         "notes": "Mô tả",

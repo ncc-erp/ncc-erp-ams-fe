@@ -94,7 +94,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       return filters;
     },
   });
-
+  const totalUser = tableQueryResult?.data?.total ?? 0;
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
@@ -499,6 +499,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="user-list-sum">
+        <span className="user-list-sum_title">
+          {translate("user.label.title.total_user")}:{" "}
+        </span>{" "}
+        {totalUser}
       </div>
       {refLoading ? (
         <>
