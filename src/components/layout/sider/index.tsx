@@ -99,7 +99,10 @@ export const Sider: React.FC = () => {
     translate("resource.client-asset-waitingConfirm"),
     translate("resource.client-asset-expires"),
   ];
-  const auditItemList = [translate("resource.komu_logs")];
+  const auditItemList = [
+    translate("resource.komu_logs"),
+    translate("resource.webhook_logs"),
+  ];
 
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;

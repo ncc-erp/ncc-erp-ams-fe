@@ -100,3 +100,6 @@ export const WEBHOOK_API = "api/v1/webhooks";
 
 export const KOMU_LOGS_API = "api/v1/komu-logs";
 export const KOMU_LOGS_TOTAL_DETAIL_API = "api/v1/komu-logs/total-detail";
+
+export const WEBHOOK_LOGS_API = "api/v1/webhook-logs";
+export const WEBHOOK_LOGS_TOTAL_DETAIL_API = "api/v1/webhook-logs/total-detail";

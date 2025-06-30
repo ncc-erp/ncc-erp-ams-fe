@@ -12,6 +12,7 @@ import {
   CLIENT_HARDWARE_API,
   WEBHOOK_API,
   KOMU_LOGS_API,
+  WEBHOOK_LOGS_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -322,6 +323,12 @@ p, 1, ${i18n.t("resource.komu_logs")}/*, (show)
 p, 1, ${i18n.t("resource.komu_logs")}, (list)|(create)
 p, 1, ${KOMU_LOGS_API}/*, (delete)
 p, 1, ${i18n.t("resource.komu_logs")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${i18n.t("resource.webhook_logs")}, (list)
+p, 1, ${i18n.t("resource.webhook_logs")}/*, (show)
+p, 1, ${i18n.t("resource.webhook_logs")}, (list)|(create)
+p, 1, ${WEBHOOK_LOGS_API}/*, (delete)
+p, 1, ${i18n.t("resource.webhook_logs")}/*, (edit)|(show)|(clone)|(checkout)
 `;
 
 export const adapter = new MemoryAdapter(permissions);
