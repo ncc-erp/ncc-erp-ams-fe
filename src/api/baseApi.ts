@@ -99,3 +99,4 @@ export const CLIENT_HARDWARE_CREATE = "api/v1/customer-project";
 export const WEBHOOK_API = "api/v1/webhooks";
 
 export const KOMU_LOGS_API = "api/v1/komu-logs";
+export const KOMU_LOGS_TOTAL_DETAIL_API = "api/v1/komu-logs/total-detail";

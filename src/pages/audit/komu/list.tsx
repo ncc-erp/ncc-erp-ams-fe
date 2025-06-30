@@ -20,7 +20,7 @@ import "styles/antd.less";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
-import { KOMU_LOGS_API } from "api/baseApi";
+import { KOMU_LOGS_API, KOMU_LOGS_TOTAL_DETAIL_API } from "api/baseApi";
 import { DatePicker, Form, Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { IHardware } from "interfaces";
@@ -30,6 +30,7 @@ import { MModal } from "components/Modal/MModal";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
 import { STATUS_KOMU_LOGS } from "constants/komu_logs";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -43,7 +44,7 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("date_to");
   const { RangePicker } = DatePicker;
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IKomuLogsResponse>({
       initialSorter: [
         {
@@ -262,6 +263,11 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
           <TableAction searchFormProps={searchFormProps} />
         </div>
       </div>
+      <TotalDetail
+        filters={filters}
+        links={KOMU_LOGS_TOTAL_DETAIL_API}
+        isReload={false}
+      ></TotalDetail>
       <MModal
         title={t("komu_logs.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
