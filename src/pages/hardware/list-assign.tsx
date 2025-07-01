@@ -65,7 +65,6 @@ import { HardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
@@ -81,6 +80,7 @@ import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -96,16 +96,20 @@ const defaultCheckedList = [
 
 export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
   const { RangePicker } = DatePicker;
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const category_id = searchParams.get("category_id");
-  const type = searchParams.get("type");
-  const status_id = searchParams.get("status_id");
-  const dateCheckoutFromParam = searchParams.get("dateCheckoutFrom");
-  const dateCheckoutToParam = searchParams.get("dateCheckoutTo");
-  const searchParam = searchParams.get("search");
-
+  const {
+    params: {
+      rtd_location_id,
+      category_id,
+      type,
+      status_id,
+      dateFrom: dateCheckoutFromParam,
+      dateTo: dateCheckoutToParam,
+      search: searchParam,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -231,7 +235,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           }
         );
 
@@ -935,21 +939,17 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("last_checkout", formatString ?? "");
-      searchParams.set(
-        "dateCheckoutFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateCheckoutTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateCheckoutFrom");
-      searchParams.delete("dateCheckoutTo");
+      clearParam("dateFrom");
+      clearParam("dateTo");
       localStorage.setItem("last_checkout", formatString ?? "");
     }
-
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -1126,7 +1126,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1136,13 +1136,11 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: searchFormProps.form?.getFieldsValue()?.location ?? "",
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
