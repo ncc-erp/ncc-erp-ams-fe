@@ -36,6 +36,7 @@ import { HardwareTable } from "./table";
 import { ModalsWrapper } from "./modal";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
 import { HardWareModalType } from "constants/assets";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -55,7 +56,6 @@ export const HardwareListMaintenance: React.FC<
 
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
-  const [searchParams] = useSearchParams();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
     localStorage.getItem("item_selected_maintenance") !== null
       ? JSON.parse(localStorage.getItem("item_selected_maintenance") as any)
@@ -71,8 +71,9 @@ export const HardwareListMaintenance: React.FC<
     () => permissionsData?.admin === EPermissions.ADMIN,
     [permissionsData]
   );
-  const searchParam = searchParams.get("search");
-  const rtd_location_id = searchParams.get("rtd_location_id");
+  const {
+    params: { rtd_location_id, search: searchParam, assigned_status },
+  } = useAppSearchParams("hardwareList");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
@@ -143,7 +144,7 @@ export const HardwareListMaintenance: React.FC<
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           }
         );
         return filters;

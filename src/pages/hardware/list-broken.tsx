@@ -77,6 +77,7 @@ import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -121,11 +122,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      rtd_location_id,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      search: searchParam,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
 
   const { data: permissionsData } = usePermissions();
 
@@ -198,7 +205,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           }
         );
 
@@ -873,21 +880,17 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam(["dateFrom", "dateTo"]);
       localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -912,7 +915,7 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -922,13 +925,13 @@ export const HardwareListBroken: React.FC<IResourceComponentsProps> = () => {
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 

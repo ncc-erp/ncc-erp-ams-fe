@@ -19,7 +19,6 @@ import {
   Tooltip,
   Spin,
 } from "@pankod/refine-antd";
-import { Image } from "antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -35,9 +34,7 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
-  getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
 
