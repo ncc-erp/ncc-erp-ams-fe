@@ -72,6 +72,7 @@ import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { ConsumablesMainternanceList } from "pages/consumables/list-maintenance";
 import { WebhookList } from "pages/webhook/list";
 import { WebhookDetail } from "pages/webhook/detail";
+import ScrollToTopButton from "components/elements/button/ScrollToTopButton";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -518,6 +519,7 @@ function App() {
         OffLayoutArea={OffLayoutArea}
         i18nProvider={i18nProvider}
       />
+      <ScrollToTopButton />
       <div ref={notificationRef} data-test-id="notification-container"></div>
     </>
   );
