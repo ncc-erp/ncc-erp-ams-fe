@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Button } from "antd";
 import { ArrowUpOutlined } from "@ant-design/icons";
 import useDebouncedEventListener from "hooks/useDebouncedEventListener";
+import useWindowWidth from "hooks/useWindowWidth";
+import { WindowSize } from "constants/responsive";
+
+const SCROLL_TO_TOP_OFFSET = 250;
 
 const ScrollToTopButton: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -9,7 +13,7 @@ const ScrollToTopButton: React.FC = () => {
   useDebouncedEventListener(
     "scroll",
     () => {
-      const shouldShow = window.pageYOffset > 250;
+      const shouldShow = window.pageYOffset > SCROLL_TO_TOP_OFFSET;
       setVisible((prev) => (prev !== shouldShow ? shouldShow : prev));
     },
     100
@@ -19,27 +23,21 @@ const ScrollToTopButton: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  useDebouncedEventListener(
-    "resize",
-    () => {
-      setWindowWidth(window.innerWidth);
-    },
-    100
-  );
+  const windowWidth = useWindowWidth();
 
   return (
     <Button
       shape="circle"
       icon={<ArrowUpOutlined />}
-      size="large"
+      size={windowWidth > WindowSize.MOBILE ? "large" : "middle"}
       onClick={scrollToTop}
       style={{
         position: "fixed",
         zIndex: 1000,
-        right: windowWidth > 600 ? 40 : "50%",
+        right: windowWidth > WindowSize.MOBILE ? 40 : "50%",
         bottom: 40,
-        transform: windowWidth > 600 ? undefined : "translateX(50%)",
+        transform:
+          windowWidth > WindowSize.MOBILE ? undefined : "translateX(50%)",
         display: visible ? "block" : "none",
         background: "#888",
         color: "#fff",

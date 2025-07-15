@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-
-enum WindowSize {
-  Desktop = 1200,
-  Laptop = 992,
-  Tablet = 768,
-}
+import { WindowSize } from "constants/responsive";
 
 enum ModalSize {
   Large = 1000,
@@ -15,9 +10,9 @@ enum ModalSize {
 const getModalWidth = () => {
   const windowWidth = window.innerWidth;
 
-  if (windowWidth > WindowSize.Desktop) return ModalSize.Large;
-  if (windowWidth > WindowSize.Laptop) return ModalSize.Medium;
-  if (windowWidth > WindowSize.Tablet) return ModalSize.Small;
+  if (windowWidth > WindowSize.DESKTOP) return ModalSize.Large;
+  if (windowWidth > WindowSize.LAPTOP) return ModalSize.Medium;
+  if (windowWidth > WindowSize.TABLET) return ModalSize.Small;
 
   return windowWidth - 40;
 };
