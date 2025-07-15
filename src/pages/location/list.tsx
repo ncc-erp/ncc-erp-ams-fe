@@ -18,12 +18,18 @@ import {
   Tooltip,
   DateField,
 } from "@pankod/refine-antd";
-import { Image } from "antd";
+import { Badge, Checkbox, Image } from "antd";
 import "styles/antd.less";
-
+import {
+  FileSearchOutlined,
+  SyncOutlined,
+  CloseOutlined,
+  FilterOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { ILocationResponse } from "interfaces/location";
 import { LocationCreate } from "./create";
@@ -31,16 +37,21 @@ import { LocationEdit } from "./edit";
 import { LOCATION_API } from "api/baseApi";
 import { Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { LoacationSearch } from "./search";
+import { trimObjectValues } from "ultils/trimUtils";
 
 export const LocationList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
 
+  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ILocationResponse>();
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location_id = searchParams.get("location_id");
+
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const { tableProps, sorter, searchFormProps, tableQueryResult } =
     useTable<ILocationResponse>({
@@ -53,7 +64,9 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       resource: LOCATION_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
-        const { search } = params;
+        const trimmedParams = trimObjectValues(params);
+        const { search, name, address, address2, city, state, country } = trimmedParams;
+
         filters.push(
           {
             field: "search",
@@ -61,9 +74,16 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
             value: search,
           },
           {
-            field: "location_id",
+            field: "filter",
             operator: "eq",
-            value: location_id,
+            value: JSON.stringify({
+              name,
+              address,
+              address2,
+              city,
+              state,
+              country,
+            }),
           }
         );
         return filters;
@@ -198,6 +218,19 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  const handleOpenSearchModal = () => {
+    setIsSearchModalVisible(!isSearchModalVisible);
+  };
+
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 300);
+  };
+
   const refreshData = () => {
     tableQueryResult.refetch();
   };
@@ -206,107 +239,203 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
+  const handleResetFilter = () => {
+    localStorage.removeItem("search");
+
+    searchParams.delete("search");
+    setSearchParams(searchParams);
+
+    searchFormProps.form?.resetFields();
+    searchFormProps.form?.setFieldsValue({
+      search: undefined,
+    });
+
+    setTimeout(() => {
+      searchFormProps.form?.submit();
+    }, 0);
+  };
+
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
-    <List
-      title={t("location.label.title.nameTitle")}
-      pageHeaderProps={{
-        extra: (
-          <CreateButton onClick={handleCreate}>
-            {t("location.label.field.create")}
-          </CreateButton>
-        ),
-      }}
-    >
-      <div className="all">
-        <TableAction searchFormProps={searchFormProps} />
-      </div>
-      <MModal
-        title={t("location.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
-        isModalVisible={isModalVisible}
+    <>
+      <List
+        title={t("location.label.title.nameTitle")}
+        pageHeaderProps={{
+          extra: (
+            <CreateButton onClick={handleCreate}>
+              {t("location.label.field.create")}
+            </CreateButton>
+          ),
+        }}
       >
-        <LocationCreate
+        <div className="all">
+          <TableAction searchFormProps={searchFormProps} />
+          <div className="other_function">
+            <div className="menu-container" ref={menuRef}>
+              <div>
+                <button
+                  className="menu-trigger"
+                  style={{
+                    borderTopLeftRadius: "3px",
+                    borderBottomLeftRadius: "3px",
+                  }}
+                >
+                  <Tooltip
+                    title={t("buttons.refresh")}
+                    color={"#108ee9"}
+                  >
+                    <SyncOutlined
+                      onClick={handleRefresh}
+                      style={{ color: "black" }}
+                    />
+                  </Tooltip>
+                </button>
+              </div>
+            </div>
+            <div>
+              <button
+                className="menu-trigger"
+                style={{
+                  borderTopRightRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                }}
+              >
+                <Tooltip
+                  title={t("location.label.title.search_advanced")}
+                  color={"#108ee9"}
+                >
+                  <FileSearchOutlined
+                    onClick={handleOpenSearchModal}
+                    style={{ color: "black" }}
+                  />
+                </Tooltip>
+              </button>
+            </div>
+            <div>
+              <button
+                className="menu-trigger"
+                onClick={() => handleResetFilter()}
+              >
+                <Tooltip
+                  title={t("location.label.field.resetFilter")}
+                  color="#108ee9"
+                >
+                  <Badge
+                    count={
+                      <CloseOutlined style={{ fontSize: 8, color: "white" }} />
+                    }
+                    size="small"
+                    offset={[-5, 5]}
+                    style={{
+                      backgroundColor: "#ff4d4f",
+                      boxShadow: "0 0 0 1px white",
+                    }}
+                  >
+                    <FilterOutlined style={{ fontSize: 15, color: "black" }} />
+                  </Badge>
+                </Tooltip>
+              </button>
+            </div>
+          </div>
+        </div>
+        <MModal
+          title={t("location.label.title.create")}
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
-        />
-      </MModal>
-      <MModal
-        title={t("location.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <LocationEdit
-          isModalVisible={isEditModalVisible}
+        >
+          <LocationCreate
+            setIsModalVisible={setIsModalVisible}
+            isModalVisible={isModalVisible}
+          />
+        </MModal>
+        <MModal
+          title={t("location.label.title.edit")}
           setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
+          isModalVisible={isEditModalVisible}
+        >
+          <LocationEdit
+            isModalVisible={isEditModalVisible}
+            setIsModalVisible={setIsEditModalVisible}
+            data={detail}
+          />
+        </MModal>
+        {tableProps.loading ? (
+          <>
+            <div style={{ paddingTop: "15rem", textAlign: "center" }}>
+              <Spin
+                tip={`${t("loading")}...`}
+                style={{ fontSize: "18px", color: "black" }}
+              />
+            </div>
+          </>
+        ) : (
+          <Table
+            className={(pageTotal as number) <= 10 ? "list-table" : ""}
+            {...tableProps}
+            rowKey="id"
+            pagination={
+              (pageTotal as number) > 10
+                ? {
                   position: ["topRight", "bottomRight"],
                   total: pageTotal ? pageTotal : 0,
                   showSizeChanger: true,
                 }
-              : false
-          }
-          scroll={{ x: 1100 }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<ILocationResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("location.label.field.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                {record.assets_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
+                : false
+            }
+            scroll={{ x: 1100 }}
+          >
+            {collumns.map((col) => (
+              <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+            ))}
+            <Table.Column<ILocationResponse>
+              title={t("table.actions")}
+              dataIndex="actions"
+              render={(_, record) => (
+                <Space>
                   <Tooltip
-                    title={t("location.label.field.delete")}
-                    color={"red"}
+                    title={t("location.label.field.edit")}
+                    color={"#108ee9"}
                   >
-                    <DeleteButton
-                      resourceName={LOCATION_API}
+                    <EditButton
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      onClick={() => edit(record)}
                     />
                   </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
-    </List>
+                  {record.assets_count > 0 ? (
+                    <DeleteButton hideText size="small" disabled />
+                  ) : (
+                    <Tooltip
+                      title={t("location.label.field.delete")}
+                      color={"red"}
+                    >
+                      <DeleteButton
+                        resourceName={LOCATION_API}
+                        hideText
+                        size="small"
+                        recordItemId={record.id}
+                      />
+                    </Tooltip>
+                  )}
+                </Space>
+              )}
+            />
+          </Table>
+        )}
+      </List>
+      <MModal
+        title={t("location.label.title.search_advanced")}
+        setIsModalVisible={setIsSearchModalVisible}
+        isModalVisible={isSearchModalVisible}
+      >
+        <LoacationSearch
+          isModalVisible={isSearchModalVisible}
+          setIsModalVisible={setIsSearchModalVisible}
+          searchFormProps={searchFormProps}
+        />
+      </MModal>
+    </>
   );
 };

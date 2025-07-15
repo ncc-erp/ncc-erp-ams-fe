@@ -850,6 +850,7 @@
   "location": {
     "label": {
       "title": {
+        "search_advanced": "Tìm kiếm nâng cao",
         "create": "Tạo văn phòng",
         "edit": "Cập nhật văn phòng",
         "nameTitle": "Văn phòng",
@@ -863,6 +864,7 @@
         "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "delete": "Xóa",
+        "resetFilter": "Xoá bộ lọc",
         "name": " Tên văn phòng",
         "parent": "Parent",
         "manager": "Người quản lý",
@@ -886,6 +888,11 @@
         "branch_code": "Mã văn phòng"
       },
       "placeholder": {
+        "name": " Tên văn phòng",
+        "address_detail": "Địa chỉ chi tiết",
+        "address": "Tên đường",
+        "city": "Tỉnh/Thành phố",
+        "state": "Quận/Huyện",
         "parent": "Lựa chọn một văn phòng",
         "manager": "Lựa chọn một người dùng",
         "country": "Lựa chọn một nước",
