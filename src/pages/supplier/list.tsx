@@ -36,6 +36,9 @@ import {
 import { MenuOutlined } from "@ant-design/icons";
 import { useSearchParams } from "react-router-dom";
 import { trimObjectValues } from "ultils/trimUtils";
+import { getSupplierColumns } from "./column";
+import { SupplierListToolbar } from "./list-toolbar";
+import { SupplierModal } from "./modal";
 
 const defaultCheckedList = [
   "name",
@@ -100,80 +103,12 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
 
   const { list } = useNavigation();
 
-  const collumns = useMemo(
-    () => [
-      {
-        key: "name",
-        title: t("supplier.label.field.name"),
-        render: (value: ISupplier, record: any) => (
-          <div
-            dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }}
-            onClick={() => {
-              if (record.id) {
-                list(`supplier_details?id=${record.id}&name=${record.name}`);
-              }
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("name", sorter),
-      },
-      {
-        key: "image",
-        title: t("supplier.label.field.images"),
-        render: (value: string) => {
-          return value ? <Image width={50} height={"auto"} src={value} /> : "";
-        },
-      },
-      {
-        key: "address",
-        title: t("supplier.label.field.address"),
-        render: (value: ISupplier) => <TextField value={value} />,
-      },
-      {
-        key: "phone",
-        title: t("supplier.label.field.phone"),
-        render: (value: ISupplier) => <TextField value={value} />,
-      },
-      {
-        key: "email",
-        title: t("supplier.label.field.email"),
-        render: (value: ISupplier) => <TextField value={value} />,
-      },
-      {
-        key: "contact",
-        title: t("supplier.label.field.contact"),
-        render: (value: ISupplier) => <TextField value={value} />,
-      },
-
-      {
-        key: "assets_count",
-        title: t("supplier.label.field.assets"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "accessories_count",
-        title: t("supplier.label.field.accessories"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "consumables_count",
-        title: t("supplier.label.field.consumables"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "tools_count",
-        title: t("supplier.label.field.tools"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "digital_signatures_count",
-        title: t("supplier.label.field.tax_tokens"),
-        render: (value: number) => <TagField value={value} />,
-      },
-    ],
-    []
-  );
+  const collumns = getSupplierColumns({
+    t,
+    list,
+    getDefaultSortOrder,
+    sorter,
+  });
 
   const handleCreate = () => {
     handleOpenModel();
@@ -269,130 +204,30 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
-        <div className="other_function">
-          <div className="menu-container" ref={menuRef}>
-            <div>
-              <button
-                className="menu-trigger"
-                style={{
-                  borderTopLeftRadius: "3px",
-                  borderBottomLeftRadius: "3px",
-                }}
-              >
-                <Tooltip
-                  title={t("supplier.label.tooltip.refresh")}
-                  color={"#108ee9"}
-                >
-                  <SyncOutlined
-                    onClick={handleRefresh}
-                    style={{ color: "black" }}
-                  />
-                </Tooltip>
-              </button>
-            </div>
-            <div>
-              <button onClick={onClickDropDown} className="menu-trigger">
-                <Tooltip
-                  title={t("supplier.label.tooltip.columns")}
-                  color={"#108ee9"}
-                >
-                  <MenuOutlined style={{ color: "black" }} />
-                </Tooltip>
-              </button>
-            </div>
-            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
-              <div className="menu-dropdown">
-                {collumns.map((item) => (
-                  <Checkbox
-                    className="checkbox"
-                    key={item.key}
-                    onChange={() => onCheckItem(item)}
-                    checked={collumnSelected.includes(item.key)}
-                  >
-                    {item.title}
-                  </Checkbox>
-                ))}
-              </div>
-            </nav>
-          </div>
-          <div>
-            <button
-              className="menu-trigger"
-              style={{
-                borderTopRightRadius: "3px",
-                borderBottomRightRadius: "3px",
-              }}
-            >
-              <Tooltip
-                title={t("supplier.label.tooltip.search_advanced")}
-                color={"#108ee9"}
-              >
-                <FileSearchOutlined
-                  onClick={handleOpenSearchModal}
-                  style={{ color: "black" }}
-                />
-              </Tooltip>
-            </button>
-          </div>
-          <div>
-            <button
-              className="menu-trigger"
-              onClick={() => handleResetFilter()}
-            >
-              <Tooltip
-                title={t("supplier.label.tooltip.resetFilter")}
-                color="#108ee9"
-              >
-                <Badge
-                  count={
-                    <CloseOutlined style={{ fontSize: 8, color: "white" }} />
-                  }
-                  size="small"
-                  offset={[-5, 5]}
-                  style={{
-                    backgroundColor: "#ff4d4f",
-                    boxShadow: "0 0 0 1px white",
-                  }}
-                >
-                  <FilterOutlined style={{ fontSize: 15, color: "black" }} />
-                </Badge>
-              </Tooltip>
-            </button>
-          </div>
-        </div>
+        <SupplierListToolbar
+          t={t}
+          menuRef={menuRef}
+          handleRefresh={handleRefresh}
+          handleOpenSearchModal={handleOpenSearchModal}
+          handleResetFilter={handleResetFilter}
+          onClickDropDown={onClickDropDown}
+          isActive={isActive}
+          collumns={collumns}
+          onCheckItem={onCheckItem}
+          collumnSelected={collumnSelected}
+        />
       </div>
-      <MModal
-        title={t("supplier.label.title.search_advanced")}
-        setIsModalVisible={setIsSearchModalVisible}
-        isModalVisible={isSearchModalVisible}
-      >
-        <SupplierSearch
-          isModalVisible={isSearchModalVisible}
-          setIsModalVisible={setIsSearchModalVisible}
-          searchFormProps={searchFormProps}
-        />
-      </MModal>
-      <MModal
-        title={t("supplier.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
+      <SupplierModal
+        t={t}
+        isSearchModalVisible={isSearchModalVisible}
+        setIsSearchModalVisible={setIsSearchModalVisible}
         isModalVisible={isModalVisible}
-      >
-        <SupplierCreate
-          setIsModalVisible={setIsModalVisible}
-          isModalVisible={isModalVisible}
-        />
-      </MModal>
-      <MModal
-        title={t("supplier.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <SupplierEdit
-          isModalVisible={isEditModalVisible}
-          setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
+        setIsModalVisible={setIsModalVisible}
+        searchFormProps={searchFormProps}
+        isEditModalVisible={isEditModalVisible}
+        setIsEditModalVisible={setIsEditModalVisible}
+        detail={detail}
+      />
 
       {tableProps.loading || loading ? (
         <>
