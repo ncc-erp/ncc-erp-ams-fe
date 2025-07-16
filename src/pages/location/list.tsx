@@ -37,7 +37,7 @@ import { LocationEdit } from "./edit";
 import { LOCATION_API } from "api/baseApi";
 import { Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { LoacationSearch } from "./search";
+import { LocationSearch } from "./search";
 import { trimObjectValues } from "ultils/trimUtils";
 
 export const LocationList: React.FC<IResourceComponentsProps> = () => {
@@ -65,7 +65,8 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const trimmedParams = trimObjectValues(params);
-        const { search, name, address, address2, city, state, country } = trimmedParams;
+        const { search, name, address, address2, city, state, country } =
+          trimmedParams;
 
         filters.push(
           {
@@ -281,10 +282,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
                     borderBottomLeftRadius: "3px",
                   }}
                 >
-                  <Tooltip
-                    title={t("buttons.refresh")}
-                    color={"#108ee9"}
-                  >
+                  <Tooltip title={t("buttons.refresh")} color={"#108ee9"}>
                     <SyncOutlined
                       onClick={handleRefresh}
                       style={{ color: "black" }}
@@ -377,10 +375,10 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
             pagination={
               (pageTotal as number) > 10
                 ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
+                    position: ["topRight", "bottomRight"],
+                    total: pageTotal ? pageTotal : 0,
+                    showSizeChanger: true,
+                  }
                 : false
             }
             scroll={{ x: 1100 }}
@@ -430,7 +428,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
         setIsModalVisible={setIsSearchModalVisible}
         isModalVisible={isSearchModalVisible}
       >
-        <LoacationSearch
+        <LocationSearch
           isModalVisible={isSearchModalVisible}
           setIsModalVisible={setIsSearchModalVisible}
           searchFormProps={searchFormProps}
