@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Typography,
+  Radio,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
@@ -494,6 +495,30 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.isCustomerRenting ? "true" : "false"}
+          >
+            <Radio.Group>
+              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
+              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            </Radio.Group>
+          </Form.Item>
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item

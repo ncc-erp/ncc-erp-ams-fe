@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Radio,
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -672,14 +673,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-              <Select.Option value="true">
-                {t("hardware.label.field.yes")}
-              </Select.Option>
-              <Select.Option value="false">
-                {t("hardware.label.field.no")}
-              </Select.Option>
-            </Select>
+            <Radio.Group>
+              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
+              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            </Radio.Group>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">

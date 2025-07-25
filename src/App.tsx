@@ -11,6 +11,7 @@ import {
   HardwareListPending,
   HardwareListReadyToDeploy,
   HardwareListMaintenance,
+  HardwareListRentalCustomers,
 } from "pages/hardware";
 
 import {
@@ -508,6 +509,14 @@ function App() {
             list: WebhookList,
             options: {
               route: "webhook",
+            },
+          },
+          {
+            name: t("resource.asset-rental-customers"),
+            list: HardwareListRentalCustomers,
+            options: {
+              route: "asset-rental-customers",
+              label: "assets",
             },
           },
         ]}
