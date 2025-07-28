@@ -174,7 +174,7 @@ export const useRentalCustomerColumns = ({
           />
         ),
         defaultSortOrder: getDefaultSortOrder("isCustomerRenting", sorter),
-        width: 150,
+        width: 250,
       },
       {
         key: "assigned_status",

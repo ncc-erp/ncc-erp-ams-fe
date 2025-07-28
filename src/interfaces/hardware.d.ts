@@ -24,7 +24,7 @@ export interface IHardwareCreateRequest {
   last_audit_date: string;
   location_id: number;
   maintenance: string;
-  isCustomerRenting?: boolean;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareUpdateRequest {
@@ -342,7 +342,7 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
-  isCustomerRenting?: boolean;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareRequestMultipleCancel {

@@ -43,6 +43,7 @@ import { WEBHOOK_API } from "../../api/baseApi";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
+  fromRentalPage?: boolean;
 };
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
@@ -660,6 +661,16 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.project}
             </Typography.Text>
           )}
+          <Form
+            {...formProps}
+            layout="vertical"
+            initialValues={{
+              isCustomerRenting: props.fromRentalPage ? "true" : "false",
+            }}
+            onFinish={(event: any) => {
+              onFinish(event);
+            }}
+          ></Form>
           <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
             name="isCustomerRenting"

@@ -498,7 +498,11 @@ export const HardwareListRentalCustomers: React.FC<
 
   return (
     <List
-      title={t("hardware.label.title.rentalCustomers")}
+      title={
+        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+          {t("hardware.label.title.rentalCustomers")}
+        </div>
+      }
       pageHeaderProps={{
         extra: isAdmin && (
           <CreateButton onClick={handleCreate}>
@@ -651,6 +655,7 @@ export const HardwareListRentalCustomers: React.FC<
         <HardwareCreate
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
+          fromRentalPage={true}
         />
       </MModal>
 
