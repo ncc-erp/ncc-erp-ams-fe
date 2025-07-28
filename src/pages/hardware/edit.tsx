@@ -167,10 +167,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     }
 
     if (event.isCustomerRenting !== undefined) {
-      formData.append(
-        "isCustomerRenting",
-        event.isCustomerRenting === "true" ? "true" : "false"
-      );
+      formData.append("isCustomerRenting", event.isCustomerRenting);
     }
 
     formData.append("_method", "PUT");

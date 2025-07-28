@@ -16,18 +16,19 @@ import {
   getBGAssetStatusDecription,
   filterAssignedStatus,
 } from "untils/assets";
+import { useTranslate } from "@pankod/refine-core";
 
 export const useRentalCustomerColumns = ({
   sorter,
-  t,
   filterCategory,
   filterStatus_Label,
 }: {
   sorter: any;
-  t: any;
   filterCategory?: { text: string; value: string }[];
   filterStatus_Label?: { text: string; value: string }[];
 }) => {
+  const t = useTranslate();
+
   const { list } = useNavigation();
 
   return useMemo(

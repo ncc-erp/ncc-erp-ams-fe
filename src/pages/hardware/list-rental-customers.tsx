@@ -254,7 +254,6 @@ export const HardwareListRentalCustomers: React.FC<
   // Use columns hook
   const collumns = useRentalCustomerColumns({
     sorter,
-    t,
     filterCategory,
     filterStatus_Label,
   });
