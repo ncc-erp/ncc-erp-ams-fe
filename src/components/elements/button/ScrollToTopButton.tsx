@@ -4,6 +4,7 @@ import { ArrowUpOutlined } from "@ant-design/icons";
 import useDebouncedEventListener from "hooks/useDebouncedEventListener";
 import useWindowWidth from "hooks/useWindowWidth";
 import { WindowSize } from "constants/responsive";
+import { DATA_TEST_ID } from "__tests__/constants/data-test-id";
 
 const SCROLL_TO_TOP_OFFSET = 250;
 
@@ -46,6 +47,7 @@ const ScrollToTopButton: React.FC = () => {
       aria-label="Scroll to top"
       type="default"
       ghost
+      data-testid={DATA_TEST_ID.SCROLL_TO_TOP_BUTTON}
     />
   );
 };
