@@ -102,8 +102,7 @@ export const CLIENT_HARDWARE_CREATE = "api/v1/customer-project";
 
 export const WEBHOOK_API = "api/v1/webhooks";
 
-export const HARDWARE_CUSTOMER_RENTING_API =
-  "api/v1/hardware/customer-renting";
+export const HARDWARE_CUSTOMER_RENTING_API = "api/v1/hardware/customer-renting";
 
-export const HARDWARE_RENTAL_DETAILS = 
+export const HARDWARE_RENTAL_DETAILS =
   "api/v1/hardware/customer-renting-total-detail";
