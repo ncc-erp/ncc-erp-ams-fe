@@ -1,4 +1,3 @@
-// filepath: c:\ams\ncc-erp-ams-fe\src\pages\hardware\list-rental-customers.tsx
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -48,10 +47,10 @@ import {
 import { HardwareCheckout } from "./checkout";
 import { HardwareCheckin } from "./checkin";
 import {
-  CLIENT_HARDWARE_CUSTOMER_RENTING_API,
+  HARDWARE_CUSTOMER_RENTING_API,
   CATEGORIES_API,
   STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API,
+  HARDWARE_RENTAL_DETAILS,
   LOCATION_API,
 } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
@@ -151,7 +150,7 @@ export const HardwareListRentalCustomers: React.FC<
           value: true,
         },
       ],
-      resource: CLIENT_HARDWARE_CUSTOMER_RENTING_API,
+      resource: HARDWARE_CUSTOMER_RENTING_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const {
@@ -716,7 +715,7 @@ export const HardwareListRentalCustomers: React.FC<
 
       <TotalDetail
         filters={filters}
-        links={HARDWARE_TOTAL_DETAIL_API}
+        links={HARDWARE_RENTAL_DETAILS}
         isReload={isTotalDetailReload}
       />
 
@@ -799,7 +798,7 @@ export const HardwareListRentalCustomers: React.FC<
                   color={"red"}
                 >
                   <DeleteButton
-                    resourceName={CLIENT_HARDWARE_CUSTOMER_RENTING_API}
+                    resourceName={HARDWARE_CUSTOMER_RENTING_API}
                     hideText
                     size="small"
                     recordItemId={record.id}

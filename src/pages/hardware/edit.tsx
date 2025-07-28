@@ -162,8 +162,16 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       typeof event.image !== "string" &&
       event.image !== undefined &&
       event.image !== null
-    )
+    ) {
       formData.append("image", event.image);
+    }
+
+    if (event.isCustomerRenting !== undefined) {
+      formData.append(
+        "isCustomerRenting",
+        event.isCustomerRenting === "true" ? "true" : "false"
+      );
+    }
 
     formData.append("_method", "PUT");
     setPayload(formData);
