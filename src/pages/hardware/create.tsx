@@ -206,6 +206,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
     if (event.webhook !== undefined)
       formData.append("webhook_id", event.webhook.toString());
+    if (event.startRentalDate !== undefined) {
+      formData.append("startRentalDate", event.startRentalDate);
+    }
 
     setPayload(formData);
   };
@@ -689,6 +692,26 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>
           </Form.Item>
+          {form.getFieldValue("isCustomerRenting") === "true" && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">
               {messageErr.isCustomerRenting}

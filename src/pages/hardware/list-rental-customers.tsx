@@ -189,14 +189,19 @@ export const HardwareListRentalCustomers: React.FC<
             value: location || rtd_location_id,
           },
           {
-            field: "dateFrom",
+            field: "startRentalDate",
             operator: "gte",
             value: purchase_date?.[0]?.format("YYYY-MM-DD") || dateFromParam,
           },
           {
-            field: "dateTo",
+            field: "startRentalDate",
             operator: "lte",
             value: purchase_date?.[1]?.format("YYYY-MM-DD") || dateToParam,
+          },
+          {
+            field: "startRentalDate",
+            operator: "eq",
+            value: searchParams.get("startRentalDate"),
           }
         );
         return filters;
@@ -544,6 +549,18 @@ export const HardwareListRentalCustomers: React.FC<
                 `${t("hardware.label.field.start-date")}`,
                 `${t("hardware.label.field.end-date")}`,
               ]}
+              defaultValue={
+                localStorage.getItem("purchase_date") !== null
+                  ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
+                    ? [
+                        moment(searchValuesByDateFrom),
+                        moment(searchValuesByDateTo),
+                      ]
+                    : dateFromParam && dateToParam
+                      ? [moment(dateFromParam), moment(dateToParam)]
+                      : undefined
+                  : undefined
+              }
             />
           </Form.Item>
           <Form.Item

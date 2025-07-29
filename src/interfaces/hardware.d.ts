@@ -62,6 +62,7 @@ export interface IHardwareUpdateRequest {
     name: string;
   };
   isCustomerRenting: "true" | "false";
+  startRentalDate?: string;
 }
 export interface IHardwareResponse {
   id: number;
@@ -179,6 +180,10 @@ export interface IHardwareResponse {
   };
   maintenance_cycle?: string;
   isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IDefaultValue {
