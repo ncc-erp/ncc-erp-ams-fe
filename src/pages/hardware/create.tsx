@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Radio,
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -42,6 +43,7 @@ import { WEBHOOK_API } from "../../api/baseApi";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
+  fromRentalPage?: boolean;
 };
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
@@ -659,6 +661,16 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.project}
             </Typography.Text>
           )}
+          <Form
+            {...formProps}
+            layout="vertical"
+            initialValues={{
+              isCustomerRenting: props.fromRentalPage ? "true" : "false",
+            }}
+            onFinish={(event: any) => {
+              onFinish(event);
+            }}
+          ></Form>
           <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
             name="isCustomerRenting"
@@ -672,14 +684,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-              <Select.Option value="true">
-                {t("hardware.label.field.yes")}
-              </Select.Option>
-              <Select.Option value="false">
-                {t("hardware.label.field.no")}
-              </Select.Option>
-            </Select>
+            <Radio.Group>
+              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
+              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            </Radio.Group>
           </Form.Item>
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">

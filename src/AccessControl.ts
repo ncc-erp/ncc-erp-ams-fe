@@ -11,6 +11,7 @@ import {
   TAX_TOKEN_API,
   CLIENT_HARDWARE_API,
   WEBHOOK_API,
+  HARDWARE_CUSTOMER_RENTING_API,
 } from "api/baseApi";
 import { DEPARTMENT_API, MODELS_API, SUPPLIERS_API } from "api/baseApi";
 import i18n from "./i18n";
@@ -294,6 +295,13 @@ p, 1, ${i18n.t(
 
 p, 2, ${i18n.t("resource.report")}, (list)
 
+p, 1, ${i18n.t("resource.asset-rental-customers")}, (list)|(create)
+p, 1, ${HARDWARE_CUSTOMER_RENTING_API}/*, (delete)
+p, 1, ${i18n.t("resource.asset-rental-customers")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 2, ${i18n.t("resource.asset-rental-customers")}, (list)
+p, 2, ${i18n.t("resource.asset-rental-customers")}/*, (show)
+
 p, 2, ${i18n.t("resource.client-assets")}, (list)
 p, 2, ${i18n.t("resource.client-assets")}/*, (show)
 
@@ -314,6 +322,7 @@ p, 2, ${i18n.t("resource.client-asset-broken")}/*,(show)
 
 p, 2, ${i18n.t("resource.client-asset-expires")}, (list)
 p, 2, ${i18n.t("resource.client-asset-expires")}/*,(show)
+
 `;
 
 export const adapter = new MemoryAdapter(permissions);
