@@ -1,22 +1,24 @@
 import { Button, Modal } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
-import { IHardwareResponse } from "interfaces/hardware";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
+
+import { IHardwareResponse } from "interfaces/hardware";
 import "../../styles/qr-code.less";
-import SingleQrCard from "./single-qr-card";
 import MultiQrCards from "./muti-qr-cards";
 import QrControlPanel from "./qr-control-panel";
+import SingleQrCard from "./single-qr-card";
+
 interface QrCodeDetailProps {
-  detail: IHardwareResponse | undefined;
+  detail: IHardwareResponse | IHardwareResponse[];
   closeModal: () => void;
 }
 
 export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
   const t = useTranslate();
-  const [qrCodes, setQrCodes] = useState<IHardwareResponse[]>(
-    Array.isArray(detail) ? detail : []
-  );
+  const [qrCodes, setQrCodes] = useState<
+    IHardwareResponse | IHardwareResponse[]
+  >(detail);
   const componentRef = useRef<HTMLDivElement>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -25,6 +27,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
     setDeleteId(id);
     setIsConfirmModalOpen(true);
   };
+
   const handleConfirmDelete = () => {
     if (!qrCodes) return;
     if (Array.isArray(qrCodes)) {
@@ -37,32 +40,11 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
     setIsConfirmModalOpen(false);
     setDeleteId(null);
   };
+
   const handleCancelDelete = () => {
     setIsConfirmModalOpen(false);
     setDeleteId(null);
   };
-
-  const data = useMemo(
-    () => ({
-      id: detail?.id ?? 0,
-      name: detail?.name ?? "",
-      status: detail?.status_label?.name ?? "",
-      serial: detail?.serial ?? "",
-      manufacturer: detail?.manufacturer?.name ?? "",
-      category: detail?.category?.name ?? "",
-      model: detail?.model?.name ?? "",
-      purchase_date: detail?.purchase_date?.formatted ?? "",
-      supplier: detail?.supplier?.name ?? "",
-      location: detail?.location?.name ?? "",
-      created_at: detail?.created_at?.formatted ?? "",
-      updated_at: detail?.updated_at?.formatted ?? "",
-      purchase_cost: detail?.purchase_cost ?? "",
-      assigned_to: detail?.assigned_to?.name ?? "",
-      checkin_counter: detail?.checkin_counter ?? "",
-      checkout_counter: detail?.checkout_counter ?? "",
-    }),
-    [detail]
-  );
 
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [layout, setLayout] = useState<"above" | "below" | null>(null);
@@ -138,7 +120,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       return selectedFields.map((field) => {
         let value = "";
         if (field === "name") {
-          value = data.name !== "" ? data.name : name.toString();
+          value = name;
         }
         return (
           <div
@@ -155,7 +137,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
         );
       });
     },
-    [selectedFields, data]
+    [selectedFields]
   );
 
   useEffect(() => {
@@ -163,6 +145,10 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
       promiseResolveRef.current();
     }
   }, [isPrinting]);
+
+  useEffect(() => {
+    setQrCodes(detail);
+  }, [detail]);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -212,7 +198,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
         <div className="qr__container" ref={componentRef}>
           {Array.isArray(detail) ? (
             <MultiQrCards
-              hardwareList={qrCodes}
+              hardwareList={qrCodes as IHardwareResponse[]}
               layout={layout}
               paddingStyle={paddingStyle}
               renderSelectedFields={renderSelectedFields}
@@ -221,7 +207,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
             />
           ) : (
             <SingleQrCard
-              detail={detail!}
+              detail={detail}
               layout={layout}
               paddingStyle={paddingStyle}
               renderSelectedFields={renderSelectedFields}
