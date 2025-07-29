@@ -15,7 +15,6 @@ import {
   useTranslate,
 } from "@pankod/refine-core";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import {
   AssetsSummaryPieChartCheckIn,
   AssetsSummaryPieChartCheckOut,
@@ -25,6 +24,7 @@ import "styles/antd.less";
 import { CategoryType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 import moment from "moment";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 export interface IReportAsset {
   id: number;
@@ -42,13 +42,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     "",
   ]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const dateFromCheckIn = searchParams.get("from_CheckIn");
-  const dateToCheckIn = searchParams.get("to_CheckIn");
-
-  const [searchParamsCheckOut, setSearchParamsCheckOut] = useSearchParams();
-  const dateFromCheckOut = searchParams.get("from_CheckOut");
-  const dateToCheckOut = searchParams.get("to_CheckOut");
+  const {
+    params: {
+      from_CheckIn: dateFromCheckIn,
+      to_CheckIn: dateToCheckIn,
+      from_CheckOut: dateFromCheckOut,
+      to_CheckOut: dateToCheckOut,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("listCheckinCheckout");
 
   const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
@@ -97,42 +100,38 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       dateToCheckOut !== null ? dateToCheckOut : "",
     ]);
     refetchCheckOut();
-  }, [dateFromCheckOut, dateFromCheckOut]);
+  }, [dateFromCheckOut, dateToCheckOut]);
 
   const handleChangePickerByMonthCheckIn = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      searchParams.set(
-        "from_CheckIn",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "to_CheckIn",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        from_CheckIn: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        to_CheckIn: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("from_CheckIn");
-      searchParams.delete("to_CheckIn");
+      clearParam(["from_CheckIn", "to_CheckIn"]);
     }
-    setSearchParams(searchParams);
   };
 
   const handleChangePickerByMonthCheckOut = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      searchParamsCheckOut.set(
-        "from_CheckOut",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParamsCheckOut.set(
-        "to_CheckOut",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        from_CheckOut: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        to_CheckOut: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParamsCheckOut.delete("from_CheckOut");
-      searchParamsCheckOut.delete("to_CheckOut");
+      clearParam(["from_CheckOut", "to_CheckOut"]);
     }
-    setSearchParamsCheckOut(searchParamsCheckOut);
   };
 
   const calculateSumEachCategory = (

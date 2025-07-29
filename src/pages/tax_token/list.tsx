@@ -70,6 +70,8 @@ import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
 import { TaxTokenCheckin } from "./checkin";
 import { TaxTokenCheckinMultiple } from "./checkin-multiple";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
 
 const defaultCheckedList = [
   "id",
@@ -127,12 +129,17 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
   const [selectdStoreCheckout, setSelectdStoreCheckout] = useState<any[]>([]);
   const [selectdStoreCheckin, setSelectdStoreCheckin] = useState<any[]>([]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchParam = searchParams.get("search");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
+  const {
+    params: {
+      search: searchParam,
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("taxTokenList");
 
   const [listening, setListening] = useState(false);
   const listenForOutsideClicks = (
@@ -697,24 +704,22 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof ITaxTokenListSearchParams,
+    dateTo: keyof ITaxTokenListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      searchParams.set(
-        dateFrom,
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        dateTo,
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete(dateFrom);
-      searchParams.delete(dateTo);
+      clearParam([dateFrom, dateTo]);
     }
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 

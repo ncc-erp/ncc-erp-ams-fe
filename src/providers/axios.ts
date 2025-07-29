@@ -2,7 +2,9 @@ import axios from "axios";
 import { HttpError } from "@pankod/refine-core";
 import { authProvider } from "providers/authProvider";
 
-export const axiosInstance = axios.create();
+export const axiosInstance = axios.create({
+  baseURL: process.env.REACT_APP_API_PROXY,
+});
 
 axiosInstance.interceptors.request.use(function (config) {
   const token = authProvider.getToken();

@@ -35,6 +35,7 @@ import {
 } from "constants/assets";
 import { TableAction } from "components/elements/tables/TableAction";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const { RangePicker } = DatePicker;
 
@@ -42,15 +43,20 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
   const { list } = useNavigation();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const location = searchParams.get("location_id");
-  const dateFromParam = searchParams.get("date_from");
-  const dateToParam = searchParams.get("date_to");
-  const assetHistoryType = searchParams.get("action_type");
-  const searchParam = searchParams.get("search");
-  const category_id = searchParams.get("category_id");
-  const category_type = searchParams.get("category_type");
+  const {
+    params: {
+      location_id: location,
+      date_from: dateFromParam,
+      date_to: dateToParam,
+      action_type: assetHistoryType,
+      search: searchParam,
+      category_id,
+      category_type,
+      action_type,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("reportList");
 
   const [search, setSearch] = useState<string>("");
 
@@ -239,10 +245,9 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify("all")) {
-      searchParams.delete("location_id");
-    } else searchParams.set("location_id", JSON.stringify(value));
+      clearParam("location_id");
+    } else setParams({ location_id: JSON.stringify(value) });
     searchFormProps.form?.submit();
-    setSearchParams(searchParams);
   };
 
   const handleTypeChange = (value: {
@@ -250,35 +255,32 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify("all")) {
-      searchParams.delete("action_type");
-    } else searchParams.set("action_type", JSON.stringify(value));
+      clearParam("action_type");
+    } else setParams({ action_type: JSON.stringify(value) });
     searchFormProps.form?.submit();
-    setSearchParams(searchParams);
   };
 
   const handleDateChange = (value: any) => {
     if (value !== null) {
       const [from, to] = Array.from(value || []) as moment.Moment[];
-      searchParams.set(
-        "date_from",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "date_to",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        date_from: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        date_to: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("date_from");
-      searchParams.delete("date_to");
+      clearParam(["date_from", "date_to"]);
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
   useEffect(() => {
-    if (searchParams.get("search") && search === " ") {
-      searchParams.delete("search");
+    if (searchParam && search === " ") {
+      clearParam("search");
     }
   }, [search]);
 
@@ -297,9 +299,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
                     moment(dateToParam, dateFormat),
                   ]
                 : "",
-            type: searchParams.get("action_type")
-              ? assetHistoryType
-              : translate("all"),
+            type: action_type ? assetHistoryType : translate("all"),
           }}
           onValuesChange={() => searchFormProps.form?.submit()}
         >
