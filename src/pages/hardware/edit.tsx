@@ -521,7 +521,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             ]}
             initialValue={data?.isCustomerRenting ? "true" : "false"}
           >
-            <Radio.Group>
+            <Radio.Group style={{ display: "flex" }}>
               <Radio value="true">{t("hardware.label.field.yes")}</Radio>
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>

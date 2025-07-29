@@ -687,7 +687,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Radio.Group>
+            <Radio.Group style={{ display: "flex" }}>
               <Radio value="true">{t("hardware.label.field.yes")}</Radio>
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>
