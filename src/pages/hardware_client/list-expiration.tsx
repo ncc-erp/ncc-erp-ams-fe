@@ -82,6 +82,7 @@ import { IStatusLabel } from "interfaces/statusLabel";
 import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -135,16 +136,22 @@ export const ClientHardwareListExpiration: React.FC<
   const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
     useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const status_id = searchParams.get("status_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
-  const model_id = searchParams.get("model_id");
-  const manufacturer_id = searchParams.get("manufacturer_id");
-  const supplier_id = searchParams.get("supplier_id");
+  const {
+    params: {
+      rtd_location_id,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      search: searchParam,
+      assigned_status,
+      category_id,
+      status_id,
+      model_id,
+      manufacturer_id,
+      supplier_id,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
 
   const { data: permissionsData } = usePermissions();
 
@@ -244,7 +251,7 @@ export const ClientHardwareListExpiration: React.FC<
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           },
           {
             field: "model_id",
@@ -931,21 +938,17 @@ export const ClientHardwareListExpiration: React.FC<
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam(["dateFrom", "dateTo"]);
       localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -1118,7 +1121,7 @@ export const ClientHardwareListExpiration: React.FC<
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1128,13 +1131,13 @@ export const ClientHardwareListExpiration: React.FC<
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 

@@ -71,6 +71,8 @@ import {
   getTaxTokenStatusDecription,
 } from "untils/tax_token";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
 
 export const TaxTokenListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -107,13 +109,17 @@ export const TaxTokenListWaitingConfirm: React.FC<
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      rtd_location_id,
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("taxTokenList");
 
   const { RangePicker } = DatePicker;
 
@@ -679,27 +685,25 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof ITaxTokenListSearchParams,
+    dateTo: keyof ITaxTokenListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       // localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam([dateFrom, dateTo]);
       // localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 

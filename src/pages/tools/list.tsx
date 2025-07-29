@@ -73,6 +73,8 @@ import { ToolMultiCheckout } from "./multi-checkout";
 import { ToolCheckin } from "./checkin";
 import { ToolMultiCheckin } from "./multi-checkin";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { IToolListSearchParams } from "hooks/useAppSearchParams/types";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -127,12 +129,17 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
   const [detailCheckin, setDetailCheckin] = useState<IToolResponseCheckin>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchParam = searchParams.get("search");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
+  const {
+    params: {
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+      search: searchParam,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("toolList");
 
   const [listening, setListening] = useState(false);
   const listenForOutsideClicks = (
@@ -696,25 +703,22 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof IToolListSearchParams,
+    dateTo: keyof IToolListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      searchParams.set(
-        dateFrom,
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        dateTo,
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete(dateFrom);
-      searchParams.delete(dateTo);
+      clearParam([dateFrom, dateTo]);
     }
-    console.log(searchParam);
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
