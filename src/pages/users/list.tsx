@@ -377,7 +377,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               )
               .map((item) => (
                 <span className="list-checkin" key={item.id}>
-                  <span className="name-checkin">{item.name}</span>
+                  <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-users-accept-refuse"
                     onClick={() => removeItem(item.id)}
@@ -400,7 +400,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               )
               .map((item) => (
                 <span className="list-checkin" key={item.id}>
-                  <span className="name-checkin">{item.name}</span>
+                  <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-users-accept-refuse"
                     onClick={() => removeItem(item.id)}

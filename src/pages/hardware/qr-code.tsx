@@ -207,7 +207,7 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
             />
           ) : (
             <SingleQrCard
-              detail={detail}
+              detail={qrCodes as IHardwareResponse}
               layout={layout}
               paddingStyle={paddingStyle}
               renderSelectedFields={renderSelectedFields}
