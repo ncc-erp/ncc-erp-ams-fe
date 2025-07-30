@@ -169,6 +169,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     if (event.isCustomerRenting !== undefined) {
       formData.append("isCustomerRenting", event.isCustomerRenting);
     }
+    if (event.startRentalDate) {
+      formData.append(
+        "startRentalDate",
+        moment(event.startRentalDate).format("YYYY-MM-DD")
+      );
+    }
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -215,6 +221,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         name: "maintenance_cycle",
         value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
       },
+      { name: "startRentalDate", value: data?.startRentalDate?.date ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -514,11 +521,33 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             ]}
             initialValue={data?.isCustomerRenting ? "true" : "false"}
           >
-            <Radio.Group>
+            <Radio.Group style={{ display: "flex" }}>
               <Radio value="true">{t("hardware.label.field.yes")}</Radio>
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>
           </Form.Item>
+
+          {form.getFieldValue("isCustomerRenting") === "true" && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
+
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">
               {messageErr.isCustomerRenting}
