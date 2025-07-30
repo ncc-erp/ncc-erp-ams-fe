@@ -33,7 +33,7 @@ import { useHardwareColumns } from "./table-column";
 import { SearchFilterForm } from "./search-filter-form";
 import { ToolbarActions } from "./tool-bar";
 import { HardwareTable } from "./table";
-import { ModalsWrapper } from "./modal";
+import { ModalsWrapper } from "components/Modal/MModal";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
 import { HardWareModalType } from "constants/assets";
 import { useAppSearchParams } from "hooks/useAppSearchParams";
