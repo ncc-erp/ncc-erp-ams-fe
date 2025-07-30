@@ -282,7 +282,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [isCustomerRenting, setIsCustomerRenting] = useState(false);
 
   const handleRadioChange = (e: any) => {
-    setIsCustomerRenting(e.target.value === "true");
+    setIsCustomerRenting(e.target.value);
   };
 
   return (
