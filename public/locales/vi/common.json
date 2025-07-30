@@ -198,7 +198,8 @@
         "isCustomerRenting": "Khách Hàng Có Thuê Không",
         "yes": "Có",
         "no": "Không",
-        "webhook": "Webhook"
+        "webhook": "Webhook",
+        "startRentalDate": "Ngày bắt đầu thuê"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",

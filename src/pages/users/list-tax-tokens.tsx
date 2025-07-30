@@ -27,7 +27,6 @@ import {
 import { DatePicker, Spin } from "antd";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import {
   STATUS_LABELS_API,
@@ -37,8 +36,12 @@ import {
   TAX_TOKEN_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
 import { MModal } from "components/Modal/MModal";
-import { dateFormat } from "constants/assets";
+import { ASSIGNED_STATUS, dateFormat } from "constants/assets";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
+import { useRowSelection } from "hooks/useRowSelection";
 import { IModel } from "interfaces/model";
 import { IStatusLabel } from "interfaces/statusLabel";
 import {
@@ -47,6 +50,7 @@ import {
   ITaxTokenFilterVariables,
   ITaxTokenResponse,
 } from "interfaces/tax_token";
+import { TaxTokenShow } from "pages/tax_token/show";
 import { filterAssignedStatus } from "untils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
@@ -54,11 +58,6 @@ import {
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
 } from "untils/tax_token";
-
-import { TotalDetail } from "components/elements/TotalDetail";
-import { ASSIGNED_STATUS } from "constants/assets";
-import { useRowSelection } from "hooks/useRowSelection";
-import { TaxTokenShow } from "pages/tax_token/show";
 import { CancleAsset } from "./cancel";
 
 const defaultCheckedList = [
@@ -92,12 +91,17 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
   const [idConfirm, setidConfirm] = useState<number>(-1);
   const { open } = useNotification();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchParam = searchParams.get("search");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
+  const {
+    params: {
+      search: searchParam,
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("taxTokenList");
 
   const [listening, setListening] = useState(false);
   const listenForOutsideClicks = (
@@ -413,24 +417,22 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof ITaxTokenListSearchParams,
+    dateTo: keyof ITaxTokenListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      searchParams.set(
-        dateFrom,
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        dateTo,
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete(dateFrom);
-      searchParams.delete(dateTo);
+      clearParam([dateFrom, dateTo]);
     }
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 

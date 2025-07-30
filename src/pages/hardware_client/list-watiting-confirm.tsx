@@ -33,7 +33,6 @@ import {
 import { DatePicker, Image } from "antd";
 import moment from "moment";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import {
   CATEGORIES_API,
@@ -46,6 +45,7 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { MModal } from "components/Modal/MModal";
 import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 import { IHardware } from "interfaces";
 import { ICategory } from "interfaces/categories";
 import { ICompany } from "interfaces/company";
@@ -106,11 +106,17 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      rtd_location_id,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      search: searchParam,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
 
   const { RangePicker } = DatePicker;
 
@@ -156,7 +162,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
           {
             field: "search",
             operator: "eq",
-            value: search,
+            value: searchParam,
           },
           {
             field: "filter",
@@ -618,21 +624,17 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam(["dateFrom", "dateTo"]);
       localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -691,7 +693,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -701,13 +703,13 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
