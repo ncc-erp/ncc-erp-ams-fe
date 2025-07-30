@@ -279,6 +279,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     });
   }, [file]);
 
+  const [isCustomerRenting, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
+
   return (
     <Form
       {...formProps}
@@ -668,7 +674,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             {...formProps}
             layout="vertical"
             initialValues={{
-              isCustomerRenting: props.fromRentalPage ? "true" : "false",
+              isCustomerRenting: "false",
             }}
             onFinish={(event: any) => {
               onFinish(event);
@@ -687,7 +693,10 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Radio.Group style={{ display: "flex" }}>
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
               <Radio value="true">{t("hardware.label.field.yes")}</Radio>
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>
