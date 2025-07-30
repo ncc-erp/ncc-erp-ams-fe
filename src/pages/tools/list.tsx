@@ -1,78 +1,75 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  HttpError,
-  useNotification,
-} from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  EditButton,
-  DeleteButton,
-  CreateButton,
-  CloneButton,
-  Button,
-  ShowButton,
-  Tooltip,
-  Checkbox,
-  Form,
-  useSelect,
-  TagField,
-} from "@pankod/refine-antd";
-import {
-  MenuOutlined,
   FileSearchOutlined,
+  MenuOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { MModal } from "components/Modal/MModal";
 import {
+  Button,
+  Checkbox,
+  CloneButton,
+  CreateButton,
+  DateField,
+  DeleteButton,
+  EditButton,
+  Form,
+  getDefaultSortOrder,
+  List,
+  ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
+} from "@pankod/refine-antd";
+import {
+  CrudFilters,
+  HttpError,
+  IResourceComponentsProps,
+  useTranslate,
+} from "@pankod/refine-core";
+import { DatePicker, Spin } from "antd";
+import moment from "moment";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import {
+  STATUS_LABELS_API,
+  SUPPLIERS_API,
+  TOOLS_API,
+  TOOLS_CATEGORIES_API,
+  TOOLS_TOTAL_DETAIL_API,
+} from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
+import { dateFormat } from "constants/assets";
+import { useRowSelection } from "hooks/useRowSelection";
+import { IStatusLabel } from "interfaces/statusLabel";
+import {
+  ITool,
   IToolCheckoutRequest,
   IToolFilterVariable,
   IToolResponse,
   IToolResponseCheckin,
-  ITool,
 } from "interfaces/tool";
+import { filterAssignedStatus } from "untils/assets";
 import {
   getBGToolAssignedStatusDecription,
   getBGToolStatusDecription,
   getToolAssignedStatusDecription,
   getToolStatusDecription,
 } from "untils/tools";
-import { filterAssignedStatus } from "untils/assets";
-import { dateFormat } from "constants/assets";
-
-import { Spin } from "antd";
-import { DatePicker } from "antd";
-import React from "react";
-import { TableAction } from "components/elements/tables/TableAction";
-import { useSearchParams } from "react-router-dom";
-
-import moment from "moment";
-import { IStatusLabel } from "interfaces/statusLabel";
-import {
-  STATUS_LABELS_API,
-  TOOLS_API,
-  TOOLS_CATEGORIES_API,
-  SUPPLIERS_API,
-  TOOLS_TOTAL_DETAIL_API,
-} from "api/baseApi";
-import { ToolSearch } from "./search";
+import { ToolCheckin } from "./checkin";
+import { ToolCheckout } from "./checkout";
+import { ToolClone } from "./clone";
 import { ToolCreate } from "./create";
 import { ToolEdit } from "./edit";
-import { ToolShow } from "./show";
-import { ToolClone } from "./clone";
-import { ToolCheckout } from "./checkout";
-import { ToolMultiCheckout } from "./multi-checkout";
-import { ToolCheckin } from "./checkin";
 import { ToolMultiCheckin } from "./multi-checkin";
-import { TotalDetail } from "components/elements/TotalDetail";
+import { ToolMultiCheckout } from "./multi-checkout";
+import { ToolSearch } from "./search";
+import { ToolShow } from "./show";
 
 const defaultCheckedList = [
   "id",
@@ -575,81 +572,18 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     setIsCheckinModalVisible(true);
   };
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(localStorage.getItem("selectedToolsRowKeys") as string) || []
-    );
-  }, [localStorage.getItem("selectedToolsRowKeys")]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IToolResponse[]
-  >(initselectedRowKeys as React.Key[]);
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IToolResponse[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: any, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: ITool) => item.id !== record.id
-      );
-      localStorage.setItem(
-        "selectedToolsRowKeys",
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(newSelectRow.map((item: ITool) => item.id));
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedToolsRowKeys",
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys;
-          })
-        )
-      );
-      setSelectedRowKeys(newselectedRowKeys.map((item: ITool) => item.id));
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: IToolResponse[],
-    changeRows: IToolResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: IToolResponse) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter(
-        (item: IToolResponse) => item
-      );
-      newSelectedRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
-      );
-
-      localStorage.setItem(
-        "selectedToolsRowKeys",
-        JSON.stringify(newSelectedRows)
-      );
-    } else {
-      selectedRows = selectedRows.filter((item: IToolResponse) => item);
-      localStorage.setItem(
-        "selectedToolsRowKeys",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    clearSelection,
+  } = useRowSelection<IToolResponse>("selectedToolsRowKeys");
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: ITool) => item.id),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
   };
 
   const show = (data: IToolResponse) => {
@@ -738,7 +672,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   }, [collumnSelected]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    clearSelection();
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
@@ -759,7 +693,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   }, [isCloneModalVisible]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    clearSelection();
     refreshData();
   }, [isCheckoutMultiToolsModalVisible]);
 
@@ -768,19 +702,18 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   }, [isCheckinModalVisible]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    clearSelection();
     refreshData();
   }, [isCheckinManyToolVisible]);
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: IToolResponse) => item.user_can_checkout
-      ).length > 0
+      selectedRows.filter((item: IToolResponse) => item.user_can_checkout)
+        .length > 0
     ) {
       setSelectedCheckout(true);
       setSelectdStoreCheckout(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IToolResponse) => item.user_can_checkout)
           .map((item: IToolResponse) => item)
       );
@@ -789,12 +722,12 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter((item: IToolResponse) => item.user_can_checkin)
+      selectedRows.filter((item: IToolResponse) => item.user_can_checkin)
         .length > 0
     ) {
       setSelectedCheckin(true);
       setSelectdStoreCheckin(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IToolResponse) => item.user_can_checkin)
           .map((item: IToolResponse) => item)
       );
@@ -803,17 +736,15 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: IToolResponse) => item.user_can_checkout
-      ).length > 0 &&
-      initselectedRowKeys.filter((item: IToolResponse) => item.user_can_checkin)
+      selectedRows.filter((item: IToolResponse) => item.user_can_checkout)
+        .length > 0 &&
+      selectedRows.filter((item: IToolResponse) => item.user_can_checkin)
         .length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
-    } else {
     }
-  }, [initselectedRowKeys]);
+  }, [selectedRows]);
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -1021,7 +952,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckoutMultiToolsModalVisible}
           setIsModalVisible={setIsCheckoutMultiToolsModalVisible}
           data={selectdStoreCheckout}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
 
@@ -1046,7 +977,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckinManyToolVisible}
           setIsModalVisible={setIsCheckinManyToolVisible}
           data={selectdStoreCheckin}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
 

@@ -1310,7 +1310,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckoutManyAssetModalVisible}
           setIsModalVisible={setIsCheckoutManyAssetModalVisible}
           data={selectdStoreCheckout}
-          setSelectedRowKeys={clearSelection}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -1322,7 +1322,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckinManyAssetModalVisible}
           setIsModalVisible={setIsCheckinManyAssetModalVisible}
           data={selectdStoreCheckin}
-          setSelectedRowKeys={clearSelection}
+          clearSelection={clearSelection}
         />
       </MModal>
       {isShowModalVisibleQR && (

@@ -50,6 +50,7 @@ import { TotalDetail } from "components/elements/TotalDetail";
 import { MModal } from "components/Modal/MModal";
 import { dateFormat, STATUS_LABELS } from "constants/assets";
 import { EPermissions } from "constants/permissions";
+import { useRowSelection } from "hooks/useRowSelection";
 import { IHardware } from "interfaces";
 import { ICategory } from "interfaces/categories";
 import { ICompany } from "interfaces/company";
@@ -77,7 +78,6 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareSearch } from "./search";
 import { HardwareShow } from "./show";
-import { useRowSelection } from "hooks/useRowSelection";
 
 const defaultCheckedList = [
   "id",
