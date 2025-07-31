@@ -25,7 +25,7 @@ import { MModal } from "components/Modal/MModal";
 import { ISupplier, ISupplierRequest } from "interfaces/supplier";
 import { SupplierCreate } from "./create";
 import { SupplierEdit } from "./edit";
-import { SUPPLIERS_API } from "api/baseApi";
+import { SUPPLIERS_API, SUPPLIERS_TOTAL_DETAIL_API } from "api/baseApi";
 import { SupplierSearch } from "./search";
 import {
   FileSearchOutlined,
@@ -39,6 +39,7 @@ import { trimObjectValues } from "ultils/trimUtils";
 import { getSupplierColumns } from "./column";
 import { SupplierListToolbar } from "./list-toolbar";
 import { SupplierModal } from "./modal";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 const defaultCheckedList = [
   "name",
@@ -65,7 +66,7 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<ISupplier>({
       initialSorter: [
         {
@@ -228,7 +229,11 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
         setIsEditModalVisible={setIsEditModalVisible}
         detail={detail}
       />
-
+      <TotalDetail
+        filters={filters}
+        links={SUPPLIERS_TOTAL_DETAIL_API}
+        isReload={false}
+      />
       {tableProps.loading || loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
