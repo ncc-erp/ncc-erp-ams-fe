@@ -1157,12 +1157,20 @@
         "licenses": "Bản quyền",
         "images": "Hình ảnh"
       },
+      "placeholder": {
+        "name": "Tên nhà cung cấp",
+        "address": "Địa chỉ nhà cung cấp",
+        "phone": "Điện thoại",
+        "email": "Email",
+        "contact": "Tên người liên hệ"
+      },
       "message": {
         "required": "bắt buộc"
       },
       "button": {
         "create": "Thêm mới",
-        "update": "Chỉnh sửa"
+        "update": "Chỉnh sửa",
+        "search": "Tìm kiếm"
       },
       "title": {
         "supplier": "Nhà cung cấp",
@@ -1173,12 +1181,17 @@
         "accessories": "Phụ kiện",
         "tools": "Tool & Domain",
         "consumables": "Văn phòng phẩm",
-        "tax_tokens": "Token thuế"
+        "tax_tokens": "Token thuế",
+        "search_advanced": "Tìm kiếm nâng cao"
       },
       "tooltip": {
         "create": "Thêm mới",
         "edit": "Chỉnh sửa",
-        "delete": "Xoá"
+        "delete": "Xoá",
+        "search_advanced": "Tìm kiếm nâng cao",
+        "columns": "Danh sách các cột",
+        "refresh": "Refresh",
+        "resetFilter": "Xoá bộ lọc"
       }
     }
   },

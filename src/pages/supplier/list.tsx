@@ -1,4 +1,4 @@
-import { Image, Tooltip } from "antd";
+import { Badge, Checkbox, Image, Tooltip } from "antd";
 import {
   useTranslate,
   IResourceComponentsProps,
@@ -20,20 +20,53 @@ import {
 import { Spin } from "antd";
 
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { ISupplier, ISupplierRequest } from "interfaces/supplier";
 import { SupplierCreate } from "./create";
 import { SupplierEdit } from "./edit";
-import { SUPPLIERS_API } from "api/baseApi";
+import { SUPPLIERS_API, SUPPLIERS_TOTAL_DETAIL_API } from "api/baseApi";
+import { SupplierSearch } from "./search";
+import {
+  FileSearchOutlined,
+  SyncOutlined,
+  CloseOutlined,
+  FilterOutlined,
+} from "@ant-design/icons";
+import { MenuOutlined } from "@ant-design/icons";
+import { useSearchParams } from "react-router-dom";
+import { trimObjectValues } from "ultils/trimUtils";
+import { getSupplierColumns } from "./column";
+import { SupplierListToolbar } from "./list-toolbar";
+import { SupplierModal } from "./modal";
+import { TotalDetail } from "components/elements/TotalDetail";
 
+const defaultCheckedList = [
+  "name",
+  "image",
+  "address",
+  "assets_count",
+  "accessories_count",
+  "consumables_count",
+  "tools_count",
+  "digital_signatures_count",
+];
 export const SupplierList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
+  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ISupplierRequest>();
-
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const [isActive, setIsActive] = useState(false);
+  const [collumnSelected, setColumnSelected] = useState<string[]>(
+    localStorage.getItem("item_suppliers_selected") !== null
+      ? JSON.parse(localStorage.getItem("item_suppliers_selected") as string)
+      : defaultCheckedList
+  );
+  const onClickDropDown = () => setIsActive(!isActive);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<ISupplier>({
       initialSorter: [
         {
@@ -44,80 +77,84 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
       resource: SUPPLIERS_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
-        const { search } = params;
-        filters.push({
-          field: "search",
-          operator: "eq",
-          value: search,
-        });
+        const trimmedParams = trimObjectValues(params);
+        const { search, name, address, phone, email, contact } = trimmedParams;
+
+        filters.push(
+          {
+            field: "search",
+            operator: "eq",
+            value: search,
+          },
+          {
+            field: "filter",
+            operator: "eq",
+            value: JSON.stringify({
+              name,
+              address,
+              phone,
+              email,
+              contact,
+            }),
+          }
+        );
         return filters;
       },
     });
 
   const { list } = useNavigation();
 
-  const collumns = useMemo(
-    () => [
-      {
-        key: "name",
-        title: t("supplier.label.field.name"),
-        render: (value: ISupplier, record: any) => (
-          <div
-            dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }}
-            onClick={() => {
-              if (record.id) {
-                list(`supplier_details?id=${record.id}&name=${record.name}`);
-              }
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("name", sorter),
-      },
-      {
-        key: "image",
-        title: t("supplier.label.field.images"),
-        render: (value: string) => {
-          return value ? <Image width={50} height={"auto"} src={value} /> : "";
-        },
-      },
-      {
-        key: "address",
-        title: t("supplier.label.field.address"),
-        render: (value: ISupplier) => <TextField value={value} />,
-      },
-
-      {
-        key: "assets_count",
-        title: t("supplier.label.field.assets"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "accessories_count",
-        title: t("supplier.label.field.accessories"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "consumables_count",
-        title: t("supplier.label.field.consumables"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "tools_count",
-        title: t("supplier.label.field.tools"),
-        render: (value: number) => <TagField value={value} />,
-      },
-      {
-        key: "digital_signatures_count",
-        title: t("supplier.label.field.tax_tokens"),
-        render: (value: number) => <TagField value={value} />,
-      },
-    ],
-    []
-  );
+  const collumns = getSupplierColumns({
+    t,
+    list,
+    getDefaultSortOrder,
+    sorter,
+  });
 
   const handleCreate = () => {
     handleOpenModel();
+  };
+
+  const handleOpenSearchModal = () => {
+    setIsSearchModalVisible(!isSearchModalVisible);
+  };
+  const [loading, setLoading] = useState(false);
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      refreshData();
+      setLoading(false);
+    }, 300);
+  };
+
+  const onCheckItem = (item: any) => {
+    const newCheckedList = [...collumnSelected];
+    if (newCheckedList.includes(item.key)) {
+      newCheckedList.splice(newCheckedList.indexOf(item.key), 1);
+    } else {
+      newCheckedList.push(item.key);
+    }
+    setColumnSelected(newCheckedList);
+    localStorage.setItem(
+      "item_suppliers_selected",
+      JSON.stringify(newCheckedList)
+    );
+  };
+
+  const handleResetFilter = () => {
+    localStorage.removeItem("search");
+
+    searchParams.delete("search");
+    setSearchParams(searchParams);
+
+    searchFormProps.form?.resetFields();
+    searchFormProps.form?.setFieldsValue({
+      search: undefined,
+    });
+
+    setTimeout(() => {
+      searchFormProps.form?.submit();
+    }, 0);
   };
 
   const handleOpenModel = () => {
@@ -143,6 +180,13 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem(
+      "item_suppliers_selected",
+      JSON.stringify(collumnSelected)
+    );
+  }, [collumnSelected]);
+
+  useEffect(() => {
     refreshData();
   }, [isEditModalVisible]);
 
@@ -161,30 +205,36 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
     >
       <div className="all">
         <TableAction searchFormProps={searchFormProps} />
+        <SupplierListToolbar
+          t={t}
+          menuRef={menuRef}
+          handleRefresh={handleRefresh}
+          handleOpenSearchModal={handleOpenSearchModal}
+          handleResetFilter={handleResetFilter}
+          onClickDropDown={onClickDropDown}
+          isActive={isActive}
+          collumns={collumns}
+          onCheckItem={onCheckItem}
+          collumnSelected={collumnSelected}
+        />
       </div>
-      <MModal
-        title={t("supplier.label.title.create")}
-        setIsModalVisible={setIsModalVisible}
+      <SupplierModal
+        t={t}
+        isSearchModalVisible={isSearchModalVisible}
+        setIsSearchModalVisible={setIsSearchModalVisible}
         isModalVisible={isModalVisible}
-      >
-        <SupplierCreate
-          setIsModalVisible={setIsModalVisible}
-          isModalVisible={isModalVisible}
-        />
-      </MModal>
-      <MModal
-        title={t("supplier.label.title.edit")}
-        setIsModalVisible={setIsEditModalVisible}
-        isModalVisible={isEditModalVisible}
-      >
-        <SupplierEdit
-          isModalVisible={isEditModalVisible}
-          setIsModalVisible={setIsEditModalVisible}
-          data={detail}
-        />
-      </MModal>
-
-      {tableProps.loading ? (
+        setIsModalVisible={setIsModalVisible}
+        searchFormProps={searchFormProps}
+        isEditModalVisible={isEditModalVisible}
+        setIsEditModalVisible={setIsEditModalVisible}
+        detail={detail}
+      />
+      <TotalDetail
+        filters={filters}
+        links={SUPPLIERS_TOTAL_DETAIL_API}
+        isReload={false}
+      />
+      {tableProps.loading || loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
             <Spin
@@ -208,9 +258,11 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
               : false
           }
         >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
+          {collumns
+            .filter((collumn) => collumnSelected.includes(collumn.key))
+            .map((col) => (
+              <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+            ))}
           <Table.Column<ISupplierRequest>
             title={t("table.actions")}
             dataIndex="actions"

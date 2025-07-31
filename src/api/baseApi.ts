@@ -45,6 +45,7 @@ export const TAX_TOKEN_ASSIGN_API = "api/v1/digital_signatures/assign";
 
 export const USERS_API = "api/v1/users/selectlist";
 export const SUPPLIERS_API = "api/v1/suppliers";
+export const SUPPLIERS_TOTAL_DETAIL_API = "api/v1/suppliers/total-detail";
 export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
 export const STATUS_LABELS_API = "api/v1/statuslabels";
 export const ASSIGN_HARDWARE_API = "api/v1/hardware/assign";
