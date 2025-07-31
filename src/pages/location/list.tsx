@@ -21,13 +21,14 @@ import { MModal } from "components/Modal/MModal";
 import { ILocationResponse } from "interfaces/location";
 import { LocationCreate } from "./create";
 import { LocationEdit } from "./edit";
-import { LOCATION_API } from "api/baseApi";
+import { LOCATION_API, LOCATION_TOTAL_DETAIL_API } from "api/baseApi";
 import { Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { LocationSearch } from "./search";
 import { trimObjectValues } from "ultils/trimUtils";
 import { useLocationColumns } from "./useLocationColumns";
 import { LocationTableActions } from "./locationTableActions";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const LocationList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -42,7 +43,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
 
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<ILocationResponse>({
       initialSorter: [
         {
@@ -204,6 +205,11 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
             data={detail}
           />
         </MModal>
+        <TotalDetail
+          filters={filters}
+          links={LOCATION_TOTAL_DETAIL_API}
+          isReload={false}
+        />
         {tableProps.loading ? (
           <>
             <div style={{ paddingTop: "15rem", textAlign: "center" }}>
