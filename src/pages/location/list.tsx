@@ -108,6 +108,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "id",
         title: "ID",
+        width: 100,
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("id", sorter),
       },
