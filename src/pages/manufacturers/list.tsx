@@ -213,7 +213,7 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={MANUFACTURES_TOTAL_DETAIL_API}
         isReload={false}
-      ></TotalDetail>
+      />
       {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
