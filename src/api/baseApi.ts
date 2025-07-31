@@ -30,6 +30,7 @@ export const MODELS_TOTAL_DETAIL_API = "api/v1/models/total-detail";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
 
 export const LOCATION_API = "api/v1/locations";
+export const LOCATION_TOTAL_DETAIL_API = "api/v1/locations/total-detail";
 export const LOCATION_SELECT_LIST_API = "api/v1/locations/selectlist";
 
 export const COMPANIES_API = "api/v1/companies";
