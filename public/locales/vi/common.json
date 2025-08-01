@@ -1,19 +1,21 @@
 {
   "lang": {
-    "vi": "Vietnamese"
+    "vi": "Tiếng Việt",
+    "en": "Tiếng Anh",
+    "de": "Tiếng Đức"
   },
   "pages": {
     "login": {
-      "signin": "Sign in",
-      "signup": "Sign up",
-      "signinGoogle": "Sign in with google",
-      "signinMezon": "Sign in with Mezon",
-      "username": "Username",
-      "password": "Password",
-      "remember": "Remember me",
-      "forgotPassword": "Forgot password?",
-      "title": "Sign in your account",
-      "noAccount": "Don’t have an account?"
+      "signin": "Đăng nhập",
+      "signup": "Đăng ký",
+      "signinGoogle": "Đăng nhập với Google",
+      "signinMezon": "Đăng nhập với Mezon",
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu",
+      "remember": "Nhớ tôi",
+      "forgotPassword": "Quên mật khẩu?",
+      "title": "Đăng nhập vào tài khoản của bạn",
+      "noAccount": "Bạn chưa có tài khoản?"
     },
     "error": {
       "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
