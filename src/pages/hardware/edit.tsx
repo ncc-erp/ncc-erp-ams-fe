@@ -290,12 +290,6 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     });
   }, [file]);
 
-  const [isCustomerRenting, setIsCustomerRenting] = useState(false);
-
-  const handleRadioChange = (e: any) => {
-    setIsCustomerRenting(e.target.value);
-  };
-
   return (
     <Form
       {...formProps}
@@ -527,10 +521,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
             ]}
             initialValue={data?.isCustomerRenting ? "true" : "false"}
           >
-            <Radio.Group
-              onChange={handleRadioChange}
-              style={{ display: "flex" }}
-            >
+            <Radio.Group style={{ display: "flex" }}>
               <Radio value="true">{t("hardware.label.field.yes")}</Radio>
               <Radio value="false">{t("hardware.label.field.no")}</Radio>
             </Radio.Group>
