@@ -210,9 +210,9 @@ export const useRentalCustomerColumns = ({
       {
         key: "startRentalDate",
         title: t("hardware.label.field.startRentalDate"),
-        render: (value: IHardwareResponse) =>
-          value?.startRentalDate?.date ? (
-            <DateField format="LL" value={value.startRentalDate.date} />
+        render: (value: { formatted?: string }) =>
+          value?.formatted ? (
+            <DateField format="LL" value={value.formatted} />
           ) : (
             <TextField value={t("hardware.label.field.notAvailable")} />
           ),
