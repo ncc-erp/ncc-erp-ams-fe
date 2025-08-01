@@ -80,6 +80,7 @@ const defaultCheckedList = [
   "rtd_location",
   "isCustomerRenting",
   "created_at",
+  "startRentalDate",
 ];
 
 export const HardwareListRentalCustomers: React.FC<
@@ -539,7 +540,7 @@ export const HardwareListRentalCustomers: React.FC<
           className="search-month-location"
         >
           <Form.Item
-            label={t("hardware.label.title.time")}
+            label={t("hardware.label.title.time-rental")}
             name="purchase_date"
           >
             <RangePicker

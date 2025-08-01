@@ -207,6 +207,18 @@ export const useRentalCustomerColumns = ({
         defaultSortOrder: getDefaultSortOrder("created_at.datetime", sorter),
         width: 180,
       },
+      {
+        key: "startRentalDate",
+        title: t("hardware.label.field.startRentalDate"),
+        render: (value: IHardwareResponse) =>
+          value?.startRentalDate?.date ? (
+            <DateField format="LL" value={value.startRentalDate.date} />
+          ) : (
+            <TextField value={t("hardware.label.field.notAvailable")} />
+          ),
+        defaultSortOrder: getDefaultSortOrder("startRentalDate.date", sorter),
+        width: 150,
+      },
     ],
     [filterCategory, filterStatus_Label, t, sorter, list]
   );
