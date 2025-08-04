@@ -995,7 +995,8 @@
     "webhook": "Webhook",
     "webhook_details": "Chi tiết webhook",
     "audit": "Audit",
-    "komu_logs": "Komu logs"
+    "komu_logs": "Komu logs",
+    "webhook_logs": "Webhook logs"
   },
   "model": {
     "label": {
@@ -1450,6 +1451,30 @@
         "status": "Trạng thái",
         "system_response": "Phản hồi hệ thống",
         "delete": "Xoá"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
+      }
+    }
+  },
+  "webhook_logs": {
+    "label": {
+      "title": {
+        "webhook": "Webhook Logs",
+        "detail": "Chi tiết Webhook Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "delete": "Xoá",
+        "webhook": "Webhook",
+        "asset": "Thiết bị",
+        "url": "URL",
+        "message": "Message",
+        "response": "Phản hồi",
+        "status_code": "Trạng thái",
+        "type": "Loại Webhook"
       },
       "tooltip": {
         "viewDetail": "Xem chi tiết"

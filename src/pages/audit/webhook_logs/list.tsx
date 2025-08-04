@@ -20,23 +20,23 @@ import "styles/antd.less";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
-import { KOMU_LOGS_API, KOMU_LOGS_TOTAL_DETAIL_API } from "api/baseApi";
+import { WEBHOOK_LOGS_API, WEBHOOK_LOGS_TOTAL_DETAIL_API } from "api/baseApi";
 import { DatePicker, Form, Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { IHardware } from "interfaces";
-import { IKomuLogs, IKomuLogsResponse } from "interfaces/komu_logs";
-import { KomuLogsShow } from "./show";
-import { MModal } from "components/Modal/MModal";
+import { IWebhookLogsResponse, IWebhookLogs } from "interfaces/webhook_logs";
 import moment from "moment";
 import { dateFormat } from "constants/assets";
-import { STATUS_KOMU_LOGS } from "constants/komu_logs";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
+import { WebhookLogsShow } from "./show";
+import { WebhookEventType } from "constants/webhook";
 
-export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
+export const WebhookLogs: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
 
   const [isEditModalVisible] = useState(false);
-  const [detail, setDetail] = useState<IKomuLogsResponse>();
+  const [detail, setDetail] = useState<IWebhookLogsResponse>();
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -44,15 +44,23 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
   const dateToParam = searchParams.get("date_to");
   const { RangePicker } = DatePicker;
 
+  const typeFilterOptions = useMemo(
+    () =>
+      Object.entries(WebhookEventType).map(([key, label]) => ({
+        text: label,
+        value: key,
+      })),
+    []
+  );
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
-    useTable<IKomuLogsResponse>({
+    useTable<IWebhookLogsResponse>({
       initialSorter: [
         {
           field: "id",
           order: "asc",
         },
       ],
-      resource: KOMU_LOGS_API,
+      resource: WEBHOOK_LOGS_API,
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const { search, date_from, date_to } = params;
@@ -71,33 +79,15 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
             field: "date_to",
             operator: "eq",
             value: date_to ? date_to : dateToParam,
-          },
-          {
-            field: "status",
-            operator: "eq",
-            value: searchParams.get("status"),
           }
         );
         return filters;
       },
     });
 
-  const show = (data: IKomuLogsResponse) => {
+  const show = (data: IWebhookLogsResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
-  };
-
-  const formatMessage = (message: string) => {
-    if (!message) return "";
-
-    let formatted = message;
-    formatted = formatted.replace(/\*\*/g, "");
-    formatted = formatted.replace(/\\n/g, "\n");
-    formatted = formatted.replace(/\\u[\dA-F]{4}/gi, "");
-    formatted = formatted.replace(/\\\//g, "/");
-    formatted = formatted.replace(/\\([\\\/'"])/g, "$1");
-
-    return <span style={{ whiteSpace: "pre-line" }}>{formatted.trim()}</span>;
   };
 
   const collumns = useMemo(
@@ -105,80 +95,116 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
       {
         key: "id",
         title: "ID",
-        render: (value: IKomuLogs) => <TextField value={value ? value : ""} />,
+        render: (value: IWebhookLogs) => (
+          <TextField value={value ? value : ""} />
+        ),
         defaultSortOrder: getDefaultSortOrder("id", sorter),
         width: 50,
       },
       {
-        key: "send_to",
-        title: t("komu_logs.label.field.send_to"),
-        render: (value: IKomuLogs, record: any) => (
-          <TextField value={value ? value : ""} />
+        key: "webhook",
+        title: t("webhook_logs.label.field.webhook"),
+        render: (_: any, record: IWebhookLogsResponse) => (
+          <TextField value={record.webhook ? record.webhook.name : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder("send_to", sorter),
+        defaultSortOrder: getDefaultSortOrder("webhook", sorter),
         width: 200,
       },
       {
-        key: "message",
-        title: t("komu_logs.label.field.message"),
-        render: (_: any, record: IKomuLogsResponse) =>
-          formatMessage(record.message),
-        defaultSortOrder: getDefaultSortOrder("message", sorter),
-        width: 400,
-      },
-      {
-        key: "creator",
-        title: t("komu_logs.label.field.creator"),
-        render: (_: any, record: IKomuLogsResponse) => (
-          <TextField value={record.creator ? record.creator.name : ""} />
+        key: "asset",
+        title: t("webhook_logs.label.field.asset"),
+        render: (value: IWebhookLogs) => (
+          <TextField value={value ? value : ""} />
         ),
-        defaultSortOrder: getDefaultSortOrder("creator.name", sorter),
-        width: 150,
-      },
-      {
-        key: "company",
-        title: t("komu_logs.label.field.company"),
-        render: (_: any, record: IKomuLogsResponse) => (
-          <TextField value={record.company ? record.company.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("company.name", sorter),
-        width: 150,
-      },
-      {
-        key: "system_response",
-        title: t("komu_logs.label.field.system_response"),
-        render: (value: IKomuLogs) => <TextField value={value ? value : ""} />,
-        defaultSortOrder: getDefaultSortOrder("system_response", sorter),
+        defaultSortOrder: getDefaultSortOrder("asset", sorter),
         width: 250,
       },
       {
-        key: "status",
-        title: t("komu_logs.label.field.status"),
-        render: (_: any, record: IKomuLogsResponse) => {
+        key: "url",
+        title: t("webhook_logs.label.field.url"),
+        render: (value: string) => {
+          const shortUrl =
+            value?.length > 70 ? value.slice(0, 70) + "..." : value;
+          return (
+            <Tooltip title={value}>
+              <TagField value={shortUrl || "N/A"} />
+            </Tooltip>
+          );
+        },
+        defaultSortOrder: getDefaultSortOrder("url", sorter),
+        width: 550,
+      },
+      {
+        key: "type",
+        title: t("webhook_logs.label.field.type"),
+        render: (_: any, record: IWebhookLogsResponse) => {
+          const typeText =
+            WebhookEventType[record.type as keyof typeof WebhookEventType] ||
+            record.type ||
+            "";
+          return <TextField value={typeText} />;
+        },
+        defaultSortOrder: getDefaultSortOrder("type", sorter),
+        filters: typeFilterOptions,
+        onFilter: (value: string, record: IWebhookLogsResponse) => {
+          return record.type === value;
+        },
+        width: 250,
+      },
+      {
+        key: "message",
+        title: t("webhook_logs.label.field.message"),
+        render: (value: IWebhookLogs) => (
+          <TextField value={value ? value : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("message", sorter),
+        width: 450,
+      },
+      {
+        key: "status_code",
+        title: t("webhook_logs.label.field.status_code"),
+        render: (_: any, record: IWebhookLogsResponse) => {
           let statusText = "";
           let color = "blue";
-          if (record.status === STATUS_KOMU_LOGS.SUCCESS) {
+          if (record.status_code === 200) {
             statusText = "Success";
             color = "green";
-          } else if (record.status === STATUS_KOMU_LOGS.FAIL) {
+          } else if (record.status_code === 400) {
             statusText = "Fail";
+            color = "red";
+          } else if (record.status_code === 500) {
+            statusText = "Error";
             color = "red";
           }
           return <TagField value={statusText} color={color} />;
         },
-        defaultSortOrder: getDefaultSortOrder("status", sorter),
+        defaultSortOrder: getDefaultSortOrder("status_code", sorter),
         filters: [
-          { text: "Success", value: STATUS_KOMU_LOGS.SUCCESS },
-          { text: "Fail", value: STATUS_KOMU_LOGS.FAIL },
+          { text: "Success", value: 200 },
+          { text: "Fail", value: 400 },
+          { text: "Error", value: 500 },
         ],
-        onFilter: (value: number, record: IKomuLogsResponse) => {
-          return record.status === value;
+        onFilter: (value: number, record: IWebhookLogsResponse) => {
+          if (value === 200) {
+            return record.status_code === 200;
+          } else {
+            return record.status_code === 400 || record.status_code === 500;
+          }
         },
         width: 150,
       },
       {
+        key: "response",
+        title: t("webhook_logs.label.field.response"),
+        render: (value: IWebhookLogs) => (
+          <TextField value={value ? value : ""} />
+        ),
+        defaultSortOrder: getDefaultSortOrder("response", sorter),
+        width: 250,
+      },
+      {
         key: "created_at",
-        title: t("komu_logs.label.field.created_at"),
+        title: t("webhook_logs.label.field.created_at"),
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
@@ -187,7 +213,7 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
       },
       {
         key: "updated_at",
-        title: t("komu_logs.label.field.updated_at"),
+        title: t("webhook_logs.label.field.updated_at"),
         render: (value: IHardware) => (
           <DateField format="LLL" value={value ? value.datetime : ""} />
         ),
@@ -229,7 +255,7 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   return (
-    <List title={t("komu_logs.label.title.komu")}>
+    <List title={t("webhook_logs.label.title.webhook")}>
       <div className="search">
         <Form
           layout="vertical"
@@ -265,15 +291,15 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
       </div>
       <TotalDetail
         filters={filters}
-        links={KOMU_LOGS_TOTAL_DETAIL_API}
+        links={WEBHOOK_LOGS_TOTAL_DETAIL_API}
         isReload={false}
       ></TotalDetail>
       <MModal
-        title={t("komu_logs.label.title.detail")}
+        title={t("webhook_logs.label.title.detail")}
         setIsModalVisible={setIsShowModalVisible}
         isModalVisible={isShowModalVisible}
       >
-        <KomuLogsShow
+        <WebhookLogsShow
           setIsModalVisible={setIsShowModalVisible}
           detail={detail}
         />
@@ -302,7 +328,7 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
                 }
               : false
           }
-          scroll={{ x: 1900 }}
+          scroll={{ x: 2600 }}
         >
           {collumns.map((col) => (
             <Table.Column
@@ -312,13 +338,13 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
               sorter
             />
           ))}
-          <Table.Column<IKomuLogsResponse>
+          <Table.Column<IWebhookLogsResponse>
             title={t("table.actions")}
             dataIndex="actions"
             render={(_, record) => (
               <Space>
                 <Tooltip
-                  title={t("komu_logs.label.tooltip.viewDetail")}
+                  title={t("webhook_logs.label.tooltip.viewDetail")}
                   color={"#108ee9"}
                 >
                   <ShowButton
@@ -329,11 +355,11 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Tooltip>
                 <Tooltip
-                  title={t("komu_logs.label.field.delete")}
+                  title={t("webhook_logs.label.field.delete")}
                   color={"red"}
                 >
                   <DeleteButton
-                    resourceName={KOMU_LOGS_API}
+                    resourceName={WEBHOOK_LOGS_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
