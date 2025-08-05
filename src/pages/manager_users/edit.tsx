@@ -21,7 +21,7 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { LOCATION_API, USERS_API } from "api/baseApi";
+import { LOCATION_API, USERS_API, USER_EDIT_API } from "api/baseApi";
 import { IUser, IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
 import {
@@ -132,7 +132,7 @@ export const UserEdit = (props: UserCreateProps) => {
   const locationOptions = locationSelectProps?.options ?? [];
 
   const { refetch, isFetching } = useCustom({
-    url: "api/v1/users/" + data?.id,
+    url: USER_EDIT_API + data?.id,
     method: "post",
     config: {
       payload: payload,

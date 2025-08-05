@@ -30,6 +30,7 @@ import "styles/antd.less";
 import { AccessoryShow } from "./show";
 import { AccessoryCheckout } from "./checkout";
 import { EPermissions } from "constants/permissions";
+import { ACCESSORY_CHECKEDOUT_API, ACCESSORY_DETAILS_API } from "api/baseApi";
 
 export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -67,14 +68,17 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
         order: "desc",
       },
     ],
-    resource: `api/v1/accessories/${accessory_id}/checkedout`,
+    resource: ACCESSORY_CHECKEDOUT_API.replace(
+      "{accessory}",
+      accessory_id || ""
+    ),
   });
 
   const {
     tableProps: tableDetails,
     tableQueryResult: tableDetailsQueryResult,
   } = useTable<IAccesstoryResponse>({
-    resource: `api/v1/accessories/accessories?category_id=${category_id}&accessory_id=${accessory_id}`,
+    resource: `${ACCESSORY_DETAILS_API}?category_id=${category_id}&accessory_id=${accessory_id}`,
   });
 
   const collumns = useMemo(

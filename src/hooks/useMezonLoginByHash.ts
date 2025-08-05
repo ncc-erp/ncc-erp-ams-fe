@@ -7,6 +7,7 @@ import {
 import { TOKEN_KEY } from "providers/authProvider";
 import dataProvider from "providers/dataProvider";
 import { useEffect, useState } from "react";
+import { MEZON_LOGIN_BY_HASH_API } from "api/baseApi";
 
 export const useMezonLoginByHash = () => {
   const { post } = dataProvider;
@@ -72,7 +73,7 @@ export const useMezonLoginByHash = () => {
         setLoadingMezonByHash(true);
         const [dataCheck, hashKey] = userHashInfo.web_app_data.split("&hash=");
 
-        const path = "api/v1/auth/mezon-login-by-hash";
+        const path = MEZON_LOGIN_BY_HASH_API;
         const payload: LoginMezonByHashParams = {
           dataCheck,
           hashKey,

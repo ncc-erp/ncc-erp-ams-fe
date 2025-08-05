@@ -3,6 +3,7 @@ import { TOKEN_KEY } from "providers/authProvider";
 import dataProvider from "providers/dataProvider";
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { MEZON_LOGIN_API } from "api/baseApi";
 
 const useLoginWithMezon = () => {
   const { post } = dataProvider;
@@ -20,7 +21,7 @@ const useLoginWithMezon = () => {
     const handleLoginWithMezon = async (code: string, state: string) => {
       try {
         const data = await post({
-          url: "api/v1/auth/mezon-login",
+          url: MEZON_LOGIN_API,
           payload: {
             code,
             state,

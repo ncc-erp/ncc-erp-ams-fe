@@ -13,6 +13,7 @@ import {
 
 import { useLogin, useTranslate } from "@pankod/refine-core";
 import { gapi } from "gapi-script";
+import { MEZON_AUTH_URL_API } from "api/baseApi";
 
 import {
   layoutStyles,
@@ -61,7 +62,7 @@ export const LoginPage: React.FC = () => {
     try {
       setIsLoadingMezon(true);
       const { post } = dataProvider;
-      const url = "api/v1/auth/mezon-auth-url";
+      const url = MEZON_AUTH_URL_API;
       const data = await post({
         url: url,
         payload: {},
