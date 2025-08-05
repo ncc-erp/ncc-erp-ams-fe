@@ -1,37 +1,37 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useNavigation,
-} from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  Space,
-  EditButton,
-  TagField,
   CreateButton,
-  Tooltip,
   DateField,
   DeleteButton,
+  EditButton,
+  getDefaultSortOrder,
+  List,
   ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useTable,
 } from "@pankod/refine-antd";
-import "styles/antd.less";
-
-import { TableAction } from "components/elements/tables/TableAction";
+import {
+  CrudFilters,
+  IResourceComponentsProps,
+  useNavigation,
+  useTranslate,
+} from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
-import { MModal } from "components/Modal/MModal";
-import { WEBHOOK_API } from "api/baseApi";
-import { Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { IWebhook, IWebhookResponse } from "interfaces/webhook";
-import { WebhookEdit } from "./edit";
-import { WebhookCreate } from "./create";
+
+import { WEBHOOK_API } from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { MModal } from "components/Modal/MModal";
 import { IHardware } from "interfaces";
+import { IWebhook, IWebhookResponse } from "interfaces/webhook";
+import "styles/antd.less";
+import { WebhookCreate } from "./create";
+import { WebhookEdit } from "./edit";
 import { WebhookShow } from "./show";
+import { TABLE_PAGINATION, TABLE_SCROLL } from "constants/table";
 
 export const WebhookList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -147,7 +147,9 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+  const pageTotal: number = useMemo(() => {
+    return (tableProps.pagination && tableProps.pagination.total) || 0;
+  }, [tableProps.pagination]);
 
   return (
     <List
@@ -195,11 +197,13 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <Table
-        className={(pageTotal as number) <= 10 ? "list-table" : ""}
+        className={
+          pageTotal <= TABLE_PAGINATION.DEFAULT_PAGE_SIZE ? "list-table" : ""
+        }
         {...tableProps}
         rowKey="id"
         pagination={
-          (pageTotal as number) > 10
+          pageTotal > TABLE_PAGINATION.DEFAULT_PAGE_SIZE
             ? {
                 position: ["topRight", "bottomRight"],
                 total: pageTotal ? pageTotal : 0,
@@ -207,7 +211,7 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
               }
             : false
         }
-        scroll={{ x: 1100 }}
+        scroll={TABLE_SCROLL.DEFAULT}
       >
         {collumns.map((col) => (
           <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />

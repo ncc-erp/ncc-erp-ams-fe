@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 
 import { HARDWARE_CHECKOUT_API, USERS_API } from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
+import { IValidationErrors } from "interfaces";
 import { ICompany } from "interfaces/company";
 import {
   IHardwareRequestCheckout,
@@ -32,9 +33,8 @@ type HardwareCheckoutProps = {
 
 export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
-  const [messageErr, setMessageErr] = useState<{
-    [K in keyof IHardwareRequestCheckout]?: string[];
-  }>();
+  const [messageErr, setMessageErr] =
+    useState<IValidationErrors<IHardwareRequestCheckout>>();
   const [isCustomerRenting, setIsCustomerRenting] = useState<
     "true" | "false"
   >();
