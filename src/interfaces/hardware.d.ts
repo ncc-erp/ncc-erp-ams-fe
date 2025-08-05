@@ -211,6 +211,8 @@ export interface IHardwareRequestCheckout {
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
+  isCustomerRenting: "true" | "false";
+  startRentalDate: string;
 }
 export interface IHardwareRequestMultipleCheckout {
   assets: any[];
@@ -223,6 +225,8 @@ export interface IHardwareRequestMultipleCheckout {
   user_can_checkout: boolean;
   note: string;
   status_id: number;
+  isCustomerRenting: "true" | "false";
+  startRentalDate: string;
 }
 
 export interface IHardwareRequestMultipleCheckin {
@@ -273,6 +277,11 @@ export interface IHardwareResponseCheckout {
     };
   };
   user_can_checkout: boolean;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IHardwareList {
