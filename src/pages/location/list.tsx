@@ -108,6 +108,7 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "id",
         title: "ID",
+        width: 100,
         render: (value: IHardware) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("id", sorter),
       },
@@ -243,70 +244,53 @@ export const LocationList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
-              : false
-          }
-          scroll={{ x: 1100 }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<ILocationResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("location.label.field.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
+      <Table
+        className={(pageTotal as number) <= 10 ? "list-table" : ""}
+        {...tableProps}
+        rowKey="id"
+        pagination={
+          (pageTotal as number) > 10
+            ? {
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
+            : false
+        }
+        scroll={{ x: 1100 }}
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+        ))}
+        <Table.Column<ILocationResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip title={t("location.label.field.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.assets_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
+                <Tooltip title={t("location.label.field.delete")} color={"red"}>
+                  <DeleteButton
+                    resourceName={LOCATION_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-                {record.assets_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("location.label.field.delete")}
-                    color={"red"}
-                  >
-                    <DeleteButton
-                      resourceName={LOCATION_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };
