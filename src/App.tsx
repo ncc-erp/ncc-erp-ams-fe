@@ -11,6 +11,7 @@ import {
   HardwareListPending,
   HardwareListReadyToDeploy,
   HardwareListMaintenance,
+  HardwareListRentalCustomers,
 } from "pages/hardware";
 
 import {
@@ -74,6 +75,7 @@ import { WebhookList } from "pages/webhook/list";
 import { WebhookDetail } from "pages/webhook/detail";
 import { KomuLogs } from "pages/audit/komu/list";
 import { WebhookLogs } from "pages/audit/webhook_logs/list";
+import ScrollToTopButton from "components/elements/button/ScrollToTopButton";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -525,6 +527,14 @@ function App() {
               route: "webhook_logs",
             },
           },
+          {
+            name: t("resource.asset-rental-customers"),
+            list: HardwareListRentalCustomers,
+            options: {
+              route: "asset-rental-customers",
+              label: "assets",
+            },
+          },
         ]}
         Title={Title}
         Header={route === DETAIL_DEVICE_ROUTE ? undefined : Header}
@@ -534,6 +544,7 @@ function App() {
         OffLayoutArea={OffLayoutArea}
         i18nProvider={i18nProvider}
       />
+      <ScrollToTopButton />
       <div ref={notificationRef} data-test-id="notification-container"></div>
     </>
   );

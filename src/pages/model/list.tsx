@@ -28,8 +28,9 @@ import { ModelCreate } from "./create";
 import { IModelResponse } from "interfaces/model";
 import { ModelEdit } from "./edit";
 import { ModelClone } from "./clone";
-import { MODELS_API } from "api/baseApi";
+import { MODELS_API, MODELS_TOTAL_DETAIL_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -42,7 +43,7 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
   const [searchParms] = useSearchParams();
   const model_id = searchParms.get("model_id");
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IModel>({
       initialSorter: [
         {
@@ -227,7 +228,11 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
           data={detailClone}
         />
       </MModal>
-
+      <TotalDetail
+        filters={filters}
+        links={MODELS_TOTAL_DETAIL_API}
+        isReload={false}
+      ></TotalDetail>
       {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

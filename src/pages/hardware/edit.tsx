@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Typography,
+  Radio,
 } from "@pankod/refine-antd";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import {
@@ -161,8 +162,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       typeof event.image !== "string" &&
       event.image !== undefined &&
       event.image !== null
-    )
+    ) {
       formData.append("image", event.image);
+    }
+
+    if (event.isCustomerRenting !== undefined) {
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
+    if (event.startRentalDate) {
+      formData.append(
+        "startRentalDate",
+        moment(event.startRentalDate).format("YYYY-MM-DD")
+      );
+    }
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -209,6 +221,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         name: "maintenance_cycle",
         value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
       },
+      { name: "startRentalDate", value: data?.startRentalDate?.date ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -494,6 +507,52 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={data?.isCustomerRenting ? "true" : "false"}
+          >
+            <Radio.Group style={{ display: "flex" }}>
+              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
+              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          {form.getFieldValue("isCustomerRenting") === "true" && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
+
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item

@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Radio,
 } from "@pankod/refine-antd";
 
 import ReactMarkdown from "react-markdown";
@@ -42,6 +43,7 @@ import { WEBHOOK_API } from "../../api/baseApi";
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
+  fromRentalPage?: boolean;
 };
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
@@ -204,6 +206,9 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     }
     if (event.webhook !== undefined)
       formData.append("webhook_id", event.webhook.toString());
+    if (event.startRentalDate !== undefined) {
+      formData.append("startRentalDate", event.startRentalDate);
+    }
 
     setPayload(formData);
   };
@@ -273,6 +278,12 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       image: file,
     });
   }, [file]);
+
+  const [isCustomerRenting, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
 
   return (
     <Form
@@ -659,6 +670,16 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.project}
             </Typography.Text>
           )}
+          <Form
+            {...formProps}
+            layout="vertical"
+            initialValues={{
+              isCustomerRenting: "false",
+            }}
+            onFinish={(event: any) => {
+              onFinish(event);
+            }}
+          ></Form>
           <Form.Item
             label={t("hardware.label.field.isCustomerRenting")}
             name="isCustomerRenting"
@@ -672,15 +693,34 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               },
             ]}
           >
-            <Select placeholder={t("hardware.label.field.isCustomerRenting")}>
-              <Select.Option value="true">
-                {t("hardware.label.field.yes")}
-              </Select.Option>
-              <Select.Option value="false">
-                {t("hardware.label.field.no")}
-              </Select.Option>
-            </Select>
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
+              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
+              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            </Radio.Group>
           </Form.Item>
+          {form.getFieldValue("isCustomerRenting") === "true" && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
           {messageErr?.isCustomerRenting && (
             <Typography.Text type="danger">
               {messageErr.isCustomerRenting}

@@ -198,7 +198,8 @@
         "isCustomerRenting": "Khách Hàng Có Thuê Không",
         "yes": "Có",
         "no": "Không",
-        "webhook": "Webhook"
+        "webhook": "Webhook",
+        "startRentalDate": "Ngày bắt đầu thuê"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -261,7 +262,8 @@
         "sum-assets": "Số lượng",
         "confirmStatus": "Trạng thái xác nhận",
         "timeCheckout": "Ngày cấp phát",
-        "list-maintenance": "Danh sách bảo trì"
+        "list-maintenance": "Danh sách bảo trì",
+        "rentalCustomers": "Thiết bị khách hàng thuê"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -658,7 +660,8 @@
         "above": "Bên trên",
         "below": "Bên dưới",
         "codeDevice": "Tên Tài Sản",
-        "user_name": "Tên người dùng"
+        "user_name": "Tên người dùng",
+        "total_user": "Người dùng"
       },
       "field": {
         "notes": "Mô tả",
@@ -996,7 +999,8 @@
     "webhook_details": "Chi tiết webhook",
     "audit": "Audit",
     "komu_logs": "Komu logs",
-    "webhook_logs": "Webhook logs"
+    "webhook_logs": "Webhook logs",
+    "asset-rental-customers": "Khách hàng thuê"
   },
   "model": {
     "label": {

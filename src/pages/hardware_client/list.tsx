@@ -65,7 +65,6 @@ import { Spin } from "antd";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { dateFormat } from "constants/assets";
@@ -84,6 +83,7 @@ import { TotalDetail } from "components/elements/TotalDetail";
 
 import { Scanner } from "pages/hardware/scanner";
 import { QrCodeDetail } from "pages/hardware/qr-code";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 const defaultCheckedList = [
   "id",
   "name",
@@ -134,16 +134,22 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
     useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const status_id = searchParams.get("status_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
-  const model_id = searchParams.get("model_id");
-  const manufacturer_id = searchParams.get("manufacturer_id");
-  const supplier_id = searchParams.get("supplier_id");
+  const {
+    params: {
+      category_id,
+      rtd_location_id,
+      status_id,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      search: searchParam,
+      model_id,
+      manufacturer_id,
+      supplier_id,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
   const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
   const [isShowModalScan, setIsShowModalScan] = useState(false);
   const { data: permissionsData } = usePermissions();
@@ -235,7 +241,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           },
           {
             field: "model_id",
@@ -930,21 +936,17 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam(["dateFrom", "dateTo"]);
       localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -1123,7 +1125,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1133,13 +1135,13 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
   const showQR = (data: IHardwareResponse) => {

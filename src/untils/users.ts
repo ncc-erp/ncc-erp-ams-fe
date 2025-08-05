@@ -9,3 +9,7 @@ export const getPermissionsUser = (value: any) =>
       : value?.superuser === AccessType.allow
         ? i18n.t("user.label.title.superuser")
         : "";
+
+export const sum = (a: number, b: number) => {
+  return a + b;
+};

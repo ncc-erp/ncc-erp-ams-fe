@@ -29,7 +29,7 @@ export const HardwareTable: React.FC<ITableProps> = ({
       }
       {...tableProps}
       rowKey="id"
-      scroll={{ x: 1850 }}
+      scroll={{ x: 1000 }}
       pagination={
         typeof pageTotal === "number" && pageTotal > 10
           ? {

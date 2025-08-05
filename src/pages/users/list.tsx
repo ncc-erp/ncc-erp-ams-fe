@@ -19,7 +19,6 @@ import {
   Tooltip,
   Spin,
 } from "@pankod/refine-antd";
-import { Image } from "antd";
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -27,7 +26,11 @@ import { MModal } from "components/Modal/MModal";
 import { UserShow } from "./show";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
 import { CancleAsset } from "./cancel";
-import { ASSIGN_HARDWARE_API, HARDWARE_API } from "api/baseApi";
+import {
+  ASSETS_ASSIGNED_TOTAL_DETAIL_API,
+  ASSIGN_HARDWARE_API,
+  HARDWARE_API,
+} from "api/baseApi";
 import type { ColumnsType } from "antd/es/table";
 import { CloseOutlined } from "@ant-design/icons";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
@@ -35,11 +38,10 @@ import { IUserAssets } from "interfaces/user";
 import { ASSIGNED_STATUS } from "constants/assets";
 import {
   getAssetAssignedStatusDecription,
-  getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -48,7 +50,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
   const [idConfirm, setidConfirm] = useState<number>(-1);
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IUserAssets>({
       initialSorter: [
         {
@@ -517,7 +519,11 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           setSelectedRowKey={setSelectedRowKeys}
         />
       </MModal>
-
+      <TotalDetail
+        filters={filters}
+        links={ASSETS_ASSIGNED_TOTAL_DETAIL_API}
+        isReload={false}
+      ></TotalDetail>
       {loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>

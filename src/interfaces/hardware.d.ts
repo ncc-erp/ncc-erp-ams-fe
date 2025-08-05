@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
+import { TablePaginationConfig } from "antd";
 
 export interface IHardwareCreateRequest {
   rows: any;
@@ -23,6 +24,7 @@ export interface IHardwareCreateRequest {
   last_audit_date: string;
   location_id: number;
   maintenance: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareUpdateRequest {
@@ -60,6 +62,7 @@ export interface IHardwareUpdateRequest {
     name: string;
   };
   isCustomerRenting: "true" | "false";
+  startRentalDate?: string;
 }
 export interface IHardwareResponse {
   id: number;
@@ -176,6 +179,11 @@ export interface IHardwareResponse {
     formatted: string;
   };
   maintenance_cycle?: string;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IDefaultValue {
@@ -339,6 +347,7 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareRequestMultipleCancel {

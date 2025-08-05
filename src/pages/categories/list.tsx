@@ -28,8 +28,9 @@ import { MModal } from "components/Modal/MModal";
 import { CategoryCreate } from "./create";
 import { CategoryEdit } from "./edit";
 import { ICategoryRequest, ICategoryResponse } from "interfaces/categories";
-import { CATEGORIES_API } from "api/baseApi";
+import { CATEGORIES_API, CATEGORIES_TOTAL_DETAIL_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export enum ECategory {
   ACCESSORY = "Accessory",
@@ -49,7 +50,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<ICategoryResponse>({
       initialSorter: [
         {
@@ -234,6 +235,11 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
+      <TotalDetail
+        filters={filters}
+        links={CATEGORIES_TOTAL_DETAIL_API}
+        isReload={false}
+      ></TotalDetail>
       {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
