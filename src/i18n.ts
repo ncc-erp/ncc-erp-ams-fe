@@ -2,8 +2,10 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import Backend from "i18next-xhr-backend";
 import detector from "i18next-browser-languagedetector";
-import common_vi from "../public/locales/vi/common.json";
-import common_en from "../public/locales/en/common.json";
+
+import commonVi from "../public/locales/vi/common.json";
+import commonEn from "../public/locales/en/common.json";
+import commonDe from "../public/locales/de/common.json";
 
 i18n
   .use(Backend)
@@ -11,23 +13,17 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: ["vi", "en", "de"],
-    // lng: "vn",
-    // backend: {
-    //   loadPath: "/locales/{{lng}}/{{ns}}.json",
-    // },
-    // defaultNS: "common",
     fallbackLng: ["vi", "en", "de"],
-    interpolation: {
-      escapeValue: false,
-    },
+    interpolation: { escapeValue: false },
     resources: {
-      vi: {
-        translation: common_vi,
-      },
-      en: {
-        translation: common_en,
-      },
+      vi: { translation: commonVi },
+      en: { translation: commonEn },
+      de: { translation: commonDe },
     },
   });
+
+export const t = (key: string, options?: any): string => {
+  return (i18n.t as any)(key, options);
+};
 
 export default i18n;
