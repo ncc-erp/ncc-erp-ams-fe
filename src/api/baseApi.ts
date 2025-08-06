@@ -66,6 +66,8 @@ export const CATEGORIES_SELECT_LIST_ASSET_API =
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
 
 export const MANUFACTURES_API = "api/v1/manufacturers";
+export const MANUFACTURES_TOTAL_DETAIL_API =
+  "api/v1/manufacturers/total-detail";
 export const MANUFACTURERS_SELECT_LIST_API = "api/v1/manufacturers/selectlist";
 
 export const DEPRECIATIONS_API = "api/v1/depreciations";

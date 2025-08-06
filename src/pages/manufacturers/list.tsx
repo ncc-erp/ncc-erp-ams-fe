@@ -29,8 +29,9 @@ import { MModal } from "components/Modal/MModal";
 import { ManufacturesCreate } from "./create";
 import { ManufacturesEdit } from "./edit";
 import { IManufacturesResponse } from "interfaces/manufacturers";
-import { MANUFACTURES_API } from "api/baseApi";
+import { MANUFACTURES_API, MANUFACTURES_TOTAL_DETAIL_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
+import { TotalDetail } from "components/elements/TotalDetail";
 
 export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -41,7 +42,7 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const [searchParams] = useSearchParams();
   const manufacturer_id = searchParams.get("manufacturer_id");
 
-  const { tableProps, sorter, searchFormProps, tableQueryResult } =
+  const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IManufacturesResponse>({
       initialSorter: [
         {
@@ -208,6 +209,11 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
+      <TotalDetail
+        filters={filters}
+        links={MANUFACTURES_TOTAL_DETAIL_API}
+        isReload={false}
+      />
       {tableProps.loading ? (
         <>
           <div style={{ paddingTop: "15rem", textAlign: "center" }}>
