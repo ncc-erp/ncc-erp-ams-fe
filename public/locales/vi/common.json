@@ -201,7 +201,8 @@
         "yes": "Có",
         "no": "Không",
         "webhook": "Webhook",
-        "startRentalDate": "Ngày bắt đầu thuê"
+        "startRentalDate": "Ngày bắt đầu thuê",
+        "notAvailable": "Không khả dụng"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -265,7 +266,8 @@
         "confirmStatus": "Trạng thái xác nhận",
         "timeCheckout": "Ngày cấp phát",
         "list-maintenance": "Danh sách bảo trì",
-        "rentalCustomers": "Thiết bị khách hàng thuê"
+        "rentalCustomers": "Thiết bị khách hàng thuê",
+        "time-rental": "Thời gian khách hàng thuê"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -1002,7 +1004,10 @@
     "asset-rental-customers": "Khách hàng thuê",
     "detail-device": "Chi tiết thiết bị",
     "location_details": "Chi tiết văn phòng",
-    "manufactures_details": "Chi tiết kho"
+    "manufactures_details": "Chi tiết kho",
+    "audit": "Audit",
+    "komu_logs": "Komu logs",
+    "webhook_logs": "Webhook logs"
   },
   "model": {
     "label": {
@@ -1435,6 +1440,55 @@
         "maintenance_cycle": "Nhập chu kỳ bảo trì",
         "maintenance_date": "Nhập ngày bảo trì",
         "webhook": "Lựa chọn webhook"
+      }
+    }
+  },
+  "komu_logs": {
+    "label": {
+      "title": {
+        "komu": "Komu Logs",
+        "create": "Tạo mới ",
+        "edit": "Cập nhật",
+        "detail": "Chi tiết Komu Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "send_to": "Gửi đến",
+        "message": "Message",
+        "creator": "Người tạo",
+        "company": "Công ty",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "status": "Trạng thái",
+        "system_response": "Phản hồi hệ thống",
+        "delete": "Xoá"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
+      }
+    }
+  },
+  "webhook_logs": {
+    "label": {
+      "title": {
+        "webhook": "Webhook Logs",
+        "detail": "Chi tiết Webhook Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "delete": "Xoá",
+        "webhook": "Webhook",
+        "asset": "Thiết bị",
+        "url": "URL",
+        "message": "Message",
+        "response": "Phản hồi",
+        "status_code": "Trạng thái",
+        "type": "Loại Webhook"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
       }
     }
   }

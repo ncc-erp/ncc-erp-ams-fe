@@ -100,6 +100,10 @@ export const Sider: React.FC = () => {
     translate("resource.client-asset-waitingConfirm"),
     translate("resource.client-asset-expires"),
   ];
+  const auditItemList = [
+    translate("resource.komu_logs"),
+    translate("resource.webhook_logs"),
+  ];
 
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;
@@ -274,6 +278,16 @@ export const Sider: React.FC = () => {
             hasItemIcon={true}
             itemList={userManagerList}
             key={"user-manager-menu"}
+          />
+        )}
+        {permissionsData && userIsAdmin && (
+          <SideBarSubMenuItem
+            title={translate("resource.audit")}
+            label={""}
+            key={"audit"}
+            hasItemIcon={false}
+            collapsed={collapsed}
+            itemList={auditItemList}
           />
         )}
       </Menu>

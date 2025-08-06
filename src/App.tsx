@@ -73,6 +73,8 @@ import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { ConsumablesMainternanceList } from "pages/consumables/list-maintenance";
 import { WebhookList } from "pages/webhook/list";
 import { WebhookDetail } from "pages/webhook/detail";
+import { KomuLogs } from "pages/audit/komu/list";
+import { WebhookLogs } from "pages/audit/webhook_logs/list";
 import ScrollToTopButton from "components/elements/button/ScrollToTopButton";
 
 function App() {
@@ -510,6 +512,20 @@ function App() {
             list: WebhookList,
             options: {
               route: "webhook",
+            },
+          },
+          {
+            name: t("resource.komu_logs"),
+            list: KomuLogs,
+            options: {
+              route: "komu_logs",
+            },
+          },
+          {
+            name: t("resource.webhook_logs"),
+            list: WebhookLogs,
+            options: {
+              route: "webhook_logs",
             },
           },
           {

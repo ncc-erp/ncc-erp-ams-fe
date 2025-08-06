@@ -9,6 +9,7 @@ import {
   DEPRECIATIONS_API,
   HARDWARE_API,
   HARDWARE_CUSTOMER_RENTING_API,
+  KOMU_LOGS_API,
   LOCATION_API,
   MANUFACTURES_API,
   MODELS_API,
@@ -17,6 +18,7 @@ import {
   TAX_TOKEN_API,
   TOOLS_API,
   WEBHOOK_API,
+  WEBHOOK_LOGS_API,
 } from "api/baseApi";
 import { t } from "./i18n";
 
@@ -304,6 +306,18 @@ p, 2, ${t("resource.client-asset-broken")}/*,(show)
 p, 2, ${t("resource.client-asset-expires")}, (list)
 p, 2, ${t("resource.client-asset-expires")}/*,(show)
 
+p, 1, ${t("resource.komu_logs")}, (list)
+p, 1, ${t("resource.komu_logs")}/*, (show)
+
+p, 1, ${t("resource.komu_logs")}, (list)|(create)
+p, 1, ${KOMU_LOGS_API}/*, (delete)
+p, 1, ${t("resource.komu_logs")}/*, (edit)|(show)|(clone)|(checkout)
+
+p, 1, ${t("resource.webhook_logs")}, (list)
+p, 1, ${t("resource.webhook_logs")}/*, (show)
+p, 1, ${t("resource.webhook_logs")}, (list)|(create)
+p, 1, ${WEBHOOK_LOGS_API}/*, (delete)
+p, 1, ${t("resource.webhook_logs")}/*, (edit)|(show)|(clone)|(checkout)
 `;
 
 export const adapter = new MemoryAdapter(permissions);

@@ -13,6 +13,7 @@ const {
   InsertRowBelowOutlined,
   ToolOutlined,
   UsbOutlined,
+  AuditOutlined,
 } = Icons;
 
 type SideBarIconProps = {
@@ -110,6 +111,11 @@ export const SideBarIcon = (props: SideBarIconProps) => {
       title: translate("resource.client-asset"),
       type: "title",
       icon: <SettingOutlined />,
+    },
+    {
+      title: translate("resource.audit"),
+      type: "title",
+      icon: <AuditOutlined />,
     },
   ];
   return (

@@ -201,7 +201,8 @@
         "yes": "Ja",
         "no": "Nein",
         "webhook": "Webhook",
-        "startRentalDate": "Vermietungsstartdatum"
+        "startRentalDate": "Vermietungsstartdatum",
+        "notAvailable": "Nicht verfügbar"
       },
       "placeholder": {
         "nameCompany": "Select Company",
@@ -265,7 +266,8 @@
         "confirmStatus": "Confirm Status",
         "timeCheckout": "Checkout Time",
         "list-maintenance": "Maintenance List",
-        "rentalCustomers": "Rental Customers"
+        "rentalCustomers": "Rental Customers",
+        "timeRental": "Rental Time"
       },
       "tooltip": {
         "create": "Create",
@@ -1002,7 +1004,10 @@
     "asset-rental-customers": "Rental Customer",
     "detail-device": "Device Detail",
     "location_details": "Office Detail",
-    "manufactures_details": "Manufacturer Detail"
+    "manufactures_details": "Manufacturer Detail",
+    "audit": "Audit",
+    "komu_logs": "Komu Logs",
+    "webhook_logs": "Webhook Logs"
   },
   "model": {
     "label": {
@@ -1435,6 +1440,55 @@
         "maintenance_cycle": "Enter Maintenance Cycle",
         "maintenance_date": "Enter Maintenance Date",
         "webhook": "Select Webhook"
+      }
+    }
+  },
+  "komu_logs": {
+    "label": {
+      "title": {
+        "komu": "Komu Logs",
+        "create": "Create",
+        "edit": "Edit",
+        "detail": "Detail Komu Logs"
+      },
+      "field": {
+        "create": "Create",
+        "send_to": "Send To",
+        "message": "Message",
+        "creator": "Creator",
+        "company": "Company",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "status": "Status",
+        "system_response": "System Response",
+        "delete": "Delete"
+      },
+      "tooltip": {
+        "viewDetail": "View Detail"
+      }
+    }
+  },
+  "webhook_logs": {
+    "label": {
+      "title": {
+        "webhook": "Webhook Logs",
+        "detail": "Detail Webhook Logs"
+      },
+      "field": {
+        "create": "Create",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "delete": "Delete",
+        "webhook": "Webhook",
+        "asset": "Asset",
+        "url": "URL",
+        "message": "Message",
+        "response": "Response",
+        "status_code": "Status",
+        "type": "Webhook Type"
+      },
+      "tooltip": {
+        "viewDetail": "View Detail"
       }
     }
   }

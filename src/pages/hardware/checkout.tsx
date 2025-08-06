@@ -1,27 +1,30 @@
-import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
+  Radio,
   Row,
-  Col,
+  Select,
   Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
+import { useCustom, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
-import "react-mde/lib/styles/css/react-mde-all.css";
+import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assets";
+import { EBooleanString } from "constants/common";
+import { IValidationErrors } from "interfaces";
+import { ICompany } from "interfaces/company";
 import {
   IHardwareRequestCheckout,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
 import { IModel } from "interfaces/model";
-import { ICompany } from "interfaces/company";
-import { HARDWARE_API, MODELS_SELECT_LIST_API, USERS_API } from "api/baseApi";
-import { STATUS_LABELS } from "constants/assets";
-import moment from "moment";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -30,9 +33,13 @@ type HardwareCheckoutProps = {
 };
 
 export const HardwareCheckout = (props: HardwareCheckoutProps) => {
-  const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
-  const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
+  const [messageErr, setMessageErr] =
+    useState<IValidationErrors<IHardwareRequestCheckout>>();
+  const { setIsModalVisible, data, isModalVisible } = props;
+  const [isCustomerRenting, setIsCustomerRenting] = useState<EBooleanString>(
+    data?.isCustomerRenting ? EBooleanString.TRUE : EBooleanString.FALSE
+  );
 
   const t = useTranslate();
 
@@ -88,8 +95,19 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     },
   });
 
+  const handleValuesChange = (
+    changedValues: Partial<IHardwareRequestCheckout>
+  ) => {
+    if (
+      "isCustomerRenting" in changedValues &&
+      changedValues.isCustomerRenting
+    ) {
+      setIsCustomerRenting(changedValues.isCustomerRenting);
+    }
+  };
+
   const onFinish = (event: IHardwareRequestCheckout) => {
-    setMessageErr(messageErr);
+    setMessageErr(undefined);
 
     const formData = new FormData();
     formData.append("name", event.name);
@@ -103,6 +121,16 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
     if (event.assigned_user !== undefined) {
       formData.append("assigned_user", event.assigned_user);
       formData.append("checkout_to_type", "user");
+    }
+    formData.append(
+      "isCustomerRenting",
+      event.isCustomerRenting ? EBooleanString.TRUE : EBooleanString.FALSE
+    );
+    if (event.startRentalDate) {
+      formData.append(
+        "startRentalDate",
+        moment(event.startRentalDate).format("YYYY-MM-DD")
+      );
     }
 
     setPayload(formData);
@@ -150,6 +178,9 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues) => {
+        handleValuesChange(changedValues);
       }}
     >
       <Row gutter={16}>
@@ -203,6 +234,70 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
             <Typography.Text type="danger">
               {messageErr.assigned_user[0]}
             </Typography.Text>
+          )}
+
+          <>
+            <Form.Item
+              label={t("hardware.label.field.isCustomerRenting")}
+              name="isCustomerRenting"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.isCustomerRenting") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+              initialValue={
+                data?.isCustomerRenting
+                  ? EBooleanString.TRUE
+                  : EBooleanString.FALSE
+              }
+            >
+              <Radio.Group style={{ display: "flex" }}>
+                <Radio value={EBooleanString.TRUE} style={{ padding: 0 }}>
+                  {t("hardware.label.field.yes")}
+                </Radio>
+                <Radio value={EBooleanString.FALSE} style={{ padding: 0 }}>
+                  {t("hardware.label.field.no")}
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            {messageErr?.isCustomerRenting && (
+              <Typography.Text type="danger">
+                {messageErr.isCustomerRenting[0]}
+              </Typography.Text>
+            )}
+          </>
+
+          {isCustomerRenting === EBooleanString.TRUE && (
+            <>
+              <Form.Item
+                label={t("hardware.label.field.startRentalDate")}
+                name="startRentalDate"
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      t("hardware.label.field.startRentalDate") +
+                      " " +
+                      t("hardware.label.message.required"),
+                  },
+                ]}
+                initialValue={data?.startRentalDate?.date}
+              >
+                <Input
+                  type="date"
+                  placeholder={t("hardware.label.placeholder.startRentalDate")}
+                />
+              </Form.Item>
+              {messageErr?.startRentalDate && (
+                <Typography.Text type="danger">
+                  {messageErr.startRentalDate[0]}
+                </Typography.Text>
+              )}
+            </>
           )}
         </Col>
         <Col className="gutter-row" span={12}>

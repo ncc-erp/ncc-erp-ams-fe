@@ -1,37 +1,37 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useNavigation,
-} from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  Space,
-  EditButton,
-  TagField,
   CreateButton,
-  Tooltip,
   DateField,
   DeleteButton,
+  EditButton,
+  getDefaultSortOrder,
+  List,
   ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useTable,
 } from "@pankod/refine-antd";
-import "styles/antd.less";
-
-import { TableAction } from "components/elements/tables/TableAction";
+import {
+  CrudFilters,
+  IResourceComponentsProps,
+  useNavigation,
+  useTranslate,
+} from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
-import { MModal } from "components/Modal/MModal";
-import { WEBHOOK_API } from "api/baseApi";
-import { Spin } from "antd";
 import { useSearchParams } from "react-router-dom";
-import { IWebhook, IWebhookResponse } from "interfaces/webhook";
-import { WebhookEdit } from "./edit";
-import { WebhookCreate } from "./create";
+
+import { WEBHOOK_API } from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { MModal } from "components/Modal/MModal";
 import { IHardware } from "interfaces";
+import { IWebhook, IWebhookResponse } from "interfaces/webhook";
+import "styles/antd.less";
+import { WebhookCreate } from "./create";
+import { WebhookEdit } from "./edit";
 import { WebhookShow } from "./show";
+import { TABLE_PAGINATION, TABLE_SCROLL } from "constants/table";
 
 export const WebhookList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -147,7 +147,9 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+  const pageTotal: number = useMemo(() => {
+    return (tableProps.pagination && tableProps.pagination.total) || 0;
+  }, [tableProps.pagination]);
 
   return (
     <List
@@ -194,74 +196,62 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
           detail={detail}
         />
       </MModal>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
-              : false
-          }
-          scroll={{ x: 1100 }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<IWebhookResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("webhook.label.tooltip.viewDetail")}
-                  color={"#108ee9"}
-                >
-                  <ShowButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => show(record)}
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={t("webhook.label.field.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                <Tooltip title={t("location.label.field.delete")} color={"red"}>
-                  <DeleteButton
-                    resourceName={WEBHOOK_API}
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                  />
-                </Tooltip>
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+      <Table
+        className={
+          pageTotal <= TABLE_PAGINATION.DEFAULT_PAGE_SIZE ? "list-table" : ""
+        }
+        {...tableProps}
+        rowKey="id"
+        pagination={
+          pageTotal > TABLE_PAGINATION.DEFAULT_PAGE_SIZE
+            ? {
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
+            : false
+        }
+        scroll={TABLE_SCROLL.DEFAULT}
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+        ))}
+        <Table.Column<IWebhookResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip
+                title={t("webhook.label.tooltip.viewDetail")}
+                color={"#108ee9"}
+              >
+                <ShowButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => show(record)}
+                />
+              </Tooltip>
+              <Tooltip title={t("webhook.label.field.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              <Tooltip title={t("webhook.label.field.delete")} color={"red"}>
+                <DeleteButton
+                  resourceName={WEBHOOK_API}
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                />
+              </Tooltip>
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };
