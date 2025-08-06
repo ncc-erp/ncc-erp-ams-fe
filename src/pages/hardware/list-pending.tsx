@@ -1111,6 +1111,7 @@ export const HardwareListPending: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}

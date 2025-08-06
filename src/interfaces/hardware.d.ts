@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
 import { TablePaginationConfig } from "antd";
+import { EBooleanString } from "../constants/common";
 
 export interface IHardwareCreateRequest {
   rows: any;
@@ -61,7 +62,7 @@ export interface IHardwareUpdateRequest {
     id: number;
     name: string;
   };
-  isCustomerRenting: "true" | "false";
+  isCustomerRenting: EBooleanString;
   startRentalDate?: string;
 }
 export interface IHardwareResponse {
@@ -211,7 +212,7 @@ export interface IHardwareRequestCheckout {
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
-  isCustomerRenting: "true" | "false";
+  isCustomerRenting: EBooleanString;
   startRentalDate: string;
 }
 export interface IHardwareRequestMultipleCheckout {
@@ -225,7 +226,7 @@ export interface IHardwareRequestMultipleCheckout {
   user_can_checkout: boolean;
   note: string;
   status_id: number;
-  isCustomerRenting: "true" | "false";
+  isCustomerRenting: EBooleanString;
   startRentalDate: string;
 }
 

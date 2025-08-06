@@ -1348,6 +1348,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
@@ -1380,6 +1381,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}

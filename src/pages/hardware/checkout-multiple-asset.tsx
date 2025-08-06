@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 
 import { HARDWARE_CHECKOUT_API, USERS_API } from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
+import { EBooleanString } from "constants/common";
 import { IValidationErrors } from "interfaces";
 import { ICompany } from "interfaces/company";
 import {
@@ -35,9 +36,9 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
   const [messageErr, setMessageErr] =
     useState<IValidationErrors<IHardwareRequestCheckout>>();
-  const [isCustomerRenting, setIsCustomerRenting] = useState<
-    "true" | "false"
-  >();
+  const [isCustomerRenting, setIsCustomerRenting] = useState<EBooleanString>(
+    EBooleanString.FALSE
+  );
 
   const t = useTranslate();
 
@@ -62,7 +63,10 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
   const handleValuesChange = (
     changedValues: Partial<IHardwareRequestMultipleCheckout>
   ) => {
-    if ("isCustomerRenting" in changedValues) {
+    if (
+      "isCustomerRenting" in changedValues &&
+      changedValues.isCustomerRenting
+    ) {
       setIsCustomerRenting(changedValues.isCustomerRenting);
     }
   };
@@ -81,7 +85,9 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         note: event.note !== null ? event.note : "",
         isCustomerRenting: event.isCustomerRenting,
         startRentalDate:
-          event.isCustomerRenting === "true" ? event.startRentalDate : null,
+          event.isCustomerRenting === EBooleanString.TRUE
+            ? event.startRentalDate
+            : null,
       },
     });
   };
@@ -114,10 +120,6 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       localStorage.removeItem("selectedRowKeys");
     }
   }, [dataCheckout, form, setIsModalVisible]);
-
-  useEffect(() => {
-    setIsCustomerRenting("false");
-  }, [data]);
 
   return (
     <Form
@@ -204,13 +206,13 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
                     t("hardware.label.message.required"),
                 },
               ]}
-              initialValue={"false"}
+              initialValue={EBooleanString.FALSE}
             >
               <Radio.Group style={{ display: "flex" }}>
-                <Radio value="true" style={{ padding: 0 }}>
+                <Radio value={EBooleanString.TRUE} style={{ padding: 0 }}>
                   {t("hardware.label.field.yes")}
                 </Radio>
-                <Radio value="false" style={{ padding: 0 }}>
+                <Radio value={EBooleanString.FALSE} style={{ padding: 0 }}>
                   {t("hardware.label.field.no")}
                 </Radio>
               </Radio.Group>
@@ -222,7 +224,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
             )}
           </>
 
-          {isCustomerRenting === "true" && (
+          {isCustomerRenting === EBooleanString.TRUE && (
             <>
               <Form.Item
                 label={t("hardware.label.field.startRentalDate")}

@@ -703,6 +703,7 @@ export const HardwareListRentalCustomers: React.FC<
       </MModal>
 
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}

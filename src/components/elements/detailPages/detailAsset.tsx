@@ -1035,6 +1035,7 @@ export const DetailsAsset = (props: detailAssetProps) => {
           />
         </MModal>
         <MModal
+          key={`checkout-${isCheckoutModalVisible}`}
           title={translate("hardware.label.title.checkout")}
           setIsModalVisible={setIsCheckoutModalVisible}
           isModalVisible={isCheckoutModalVisible}

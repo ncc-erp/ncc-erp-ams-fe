@@ -1328,6 +1328,7 @@ export const HardwareListExpiration: React.FC<
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
@@ -1360,6 +1361,7 @@ export const HardwareListExpiration: React.FC<
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}
