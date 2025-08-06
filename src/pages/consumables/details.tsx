@@ -64,10 +64,7 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         order: "desc",
       },
     ],
-    resource: CONSUMABLE_VIEW_USERS_API.replace(
-      "{id}",
-      searchParams.get("id") || ""
-    ),
+    resource: CONSUMABLE_VIEW_USERS_API(String(searchParams.get("id") || "")),
   });
 
   const {

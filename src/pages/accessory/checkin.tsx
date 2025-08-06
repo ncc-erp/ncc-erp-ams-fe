@@ -43,10 +43,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: ACCESSORY_CHECKIN_API.replace(
-      "{accessory}",
-      data?.assigned_pivot_id || ""
-    ),
+    url: ACCESSORY_CHECKIN_API(String(data?.assigned_pivot_id || "")),
     method: "get",
     config: {
       payload: payload,

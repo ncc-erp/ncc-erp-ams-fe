@@ -55,10 +55,7 @@ export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: CONSUMABLE_CHECKOUT_API.replace(
-      "{consumable}",
-      String(data?.id || "")
-    ),
+    url: CONSUMABLE_CHECKOUT_API(String(data?.id || "")),
     method: "get",
     config: {
       query: payload,

@@ -68,10 +68,7 @@ export const AccessoryDetails: React.FC<IResourceComponentsProps> = () => {
         order: "desc",
       },
     ],
-    resource: ACCESSORY_CHECKEDOUT_API.replace(
-      "{accessory}",
-      accessory_id || ""
-    ),
+    resource: ACCESSORY_CHECKEDOUT_API(String(accessory_id || "")),
   });
 
   const {

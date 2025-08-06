@@ -55,7 +55,7 @@ export const AccessoryCheckout = (props: AccessoryCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: ACCESSORY_CHECKOUT_API.replace("{accessory}", String(data?.id || "")),
+    url: ACCESSORY_CHECKOUT_API(String(data?.id || "")),
     method: "get",
     config: {
       query: payload,
