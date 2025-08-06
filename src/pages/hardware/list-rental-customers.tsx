@@ -80,6 +80,7 @@ const defaultCheckedList = [
   "rtd_location",
   "isCustomerRenting",
   "created_at",
+  "startRentalDate",
 ];
 
 export const HardwareListRentalCustomers: React.FC<
@@ -313,6 +314,8 @@ export const HardwareListRentalCustomers: React.FC<
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+      isCustomerRenting: data?.isCustomerRenting,
+      startRentalDate: data?.startRentalDate,
     };
 
     setDetailCheckout(dataConvert);
@@ -539,7 +542,7 @@ export const HardwareListRentalCustomers: React.FC<
           className="search-month-location"
         >
           <Form.Item
-            label={t("hardware.label.title.time")}
+            label={t("hardware.label.title.time-rental")}
             name="purchase_date"
           >
             <RangePicker
@@ -700,6 +703,7 @@ export const HardwareListRentalCustomers: React.FC<
       </MModal>
 
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}

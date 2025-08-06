@@ -199,7 +199,8 @@
         "yes": "Có",
         "no": "Không",
         "webhook": "Webhook",
-        "startRentalDate": "Ngày bắt đầu thuê"
+        "startRentalDate": "Ngày bắt đầu thuê",
+        "notAvailable": "Không khả dụng"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -263,7 +264,8 @@
         "confirmStatus": "Trạng thái xác nhận",
         "timeCheckout": "Ngày cấp phát",
         "list-maintenance": "Danh sách bảo trì",
-        "rentalCustomers": "Thiết bị khách hàng thuê"
+        "rentalCustomers": "Thiết bị khách hàng thuê",
+        "time-rental": "Thời gian khách hàng thuê"
       },
       "tooltip": {
         "create": "Thêm mới",
