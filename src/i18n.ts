@@ -12,6 +12,7 @@ i18n
   .use(detector)
   .use(initReactI18next)
   .init({
+    lng: "vi",
     supportedLngs: ["vi", "en", "de"],
     fallbackLng: ["vi", "en", "de"],
     interpolation: { escapeValue: false },

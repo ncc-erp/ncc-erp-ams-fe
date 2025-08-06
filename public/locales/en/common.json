@@ -936,7 +936,7 @@
   },
   "resource": {
     "dashboard": "Dashboard",
-    "asset": "Device",
+    "asset": "Asset",
     "assets": "All",
     "software": "Software",
     "softwares": "Software",
