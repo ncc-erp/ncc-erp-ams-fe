@@ -4,7 +4,8 @@ import { IReleaseNote } from "interfaces/releaseNote";
 import ReactMarkdown from "react-markdown";
 import { RELEASE_NOTE_API } from "api/baseApi";
 import dataProvider from "providers/dataProvider";
-// Hàm chuyển đổi link PR/issue thành dạng #number và có thể click
+import { useReleaseNotes } from "hooks/useReleaseNotes";
+
 const renderMarkdown = (text: string) => {
   const regex = /(https:\/\/github\.com\/[^\s]+\/(pull|issues)\/(\d+))/g;
   const userRegex = /@([a-zA-Z0-9-_]+)/g;
@@ -77,7 +78,6 @@ const shortenChangelogLink = (url: string) => {
 
 const parseReleaseBody = (body: string) => {
   if (!body) return { changes: [], contributors: [], changelog: [] };
-  // What's Changed
   const changesMatch = body.match(/## What's Changed([\s\S]*?)(##|$)/);
   let changes =
     changesMatch?.[1]
@@ -89,7 +89,6 @@ const parseReleaseBody = (body: string) => {
           !line.toLowerCase().includes("full changelog")
       ) || [];
 
-  // New Contributors
   const contributorsMatch = body.match(/## New Contributors([\s\S]*?)(##|$)/);
   const contributors =
     contributorsMatch?.[1]
@@ -101,7 +100,6 @@ const parseReleaseBody = (body: string) => {
           !line.toLowerCase().includes("full changelog")
       ) || [];
 
-  // Full Changelog
   const changelogMatch = body.match(/\*\*Full Changelog\*\*:(.*)/);
   const changelog =
     changelogMatch?.[1]
@@ -112,16 +110,8 @@ const parseReleaseBody = (body: string) => {
 };
 
 export const ReleaseNoteList: React.FC = () => {
-  const [data, setData] = useState<IReleaseNote[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useReleaseNotes();
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
-
-  useEffect(() => {
-    fetch(RELEASE_NOTE_API)
-      .then((r) => r.json())
-      .then((res) => setData(Array.isArray(res) ? res : [res]))
-      .finally(() => setLoading(false));
-  }, []);
 
   if (loading) return <Spin size="large" />;
 
@@ -141,10 +131,8 @@ export const ReleaseNoteList: React.FC = () => {
         );
         const isExpanded = expanded[item.id] || false;
 
-        // Gom toàn bộ nội dung thành 1 mảng dòng
         let allLines: React.ReactNode[] = [];
 
-        // What's Changed
         if (changes.length > 0) {
           allLines.push(
             <div
@@ -190,7 +178,6 @@ export const ReleaseNoteList: React.FC = () => {
           );
         }
 
-        // New Contributors
         if (contributors.length > 0) {
           allLines.push(
             <div
@@ -236,7 +223,6 @@ export const ReleaseNoteList: React.FC = () => {
           );
         }
 
-        // Full Changelog
         if (changelog.length > 0) {
           allLines.push(
             <div
@@ -268,7 +254,6 @@ export const ReleaseNoteList: React.FC = () => {
           );
         }
 
-        // Hiển thị rút gọn hoặc đầy đủ
         const showReadMore = allLines.length > MAX_LINES;
         const visibleLines = isExpanded
           ? allLines
