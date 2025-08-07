@@ -1002,7 +1002,8 @@
     "audit": "Audit",
     "komu_logs": "Komu logs",
     "webhook_logs": "Webhook logs",
-    "asset-rental-customers": "Khách hàng thuê"
+    "asset-rental-customers": "Khách hàng thuê",
+    "release_note": "Release Note"
   },
   "model": {
     "label": {
