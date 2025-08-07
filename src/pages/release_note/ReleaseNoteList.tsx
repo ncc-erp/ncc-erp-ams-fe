@@ -113,8 +113,20 @@ export const ReleaseNoteList: React.FC = () => {
   const { data, loading } = useReleaseNotes();
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
 
-  if (loading) return <Spin size="large" />;
-
+  if (loading)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: 300,
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  
   const sorted = [...data].sort(
     (a, b) =>
       new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
