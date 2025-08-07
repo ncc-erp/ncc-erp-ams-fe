@@ -38,7 +38,6 @@ import {
   IConsumablesResponseCheckout,
 } from "interfaces/consumables";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesCreate } from "./create";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
@@ -337,7 +336,7 @@ export const ConsumablesMainternanceList: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

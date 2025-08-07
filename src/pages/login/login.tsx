@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Col,
@@ -12,7 +12,6 @@ import {
 } from "antd";
 
 import { useLogin, useTranslate } from "@pankod/refine-core";
-import { gapi } from "gapi-script";
 
 import {
   layoutStyles,

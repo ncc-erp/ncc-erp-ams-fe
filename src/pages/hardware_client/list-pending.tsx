@@ -65,7 +65,6 @@ import { ClientHardwareSearch } from "./search";
 import moment from "moment";
 import { DatePicker } from "antd";
 import { ICompany } from "interfaces/company";
-import { useSearchParams } from "react-router-dom";
 import { dateFormat, STATUS_LABELS } from "constants/assets";
 import {
   filterAssignedStatus,
@@ -823,7 +822,7 @@ export const ClientHardwareListPending: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

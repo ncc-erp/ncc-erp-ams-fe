@@ -66,7 +66,6 @@ import { Spin } from "antd";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import { HardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { dateFormat } from "constants/assets";
@@ -176,7 +175,6 @@ export const HardwareListExpiration: React.FC<
       onSearch: (params) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -898,7 +896,7 @@ export const HardwareListExpiration: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -982,9 +980,9 @@ export const HardwareListExpiration: React.FC<
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [_, setSelectedRowKeys] = useState<React.Key[] | IHardwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -1047,7 +1045,7 @@ export const HardwareListExpiration: React.FC<
 
   const onSelectChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
+    _: IHardwareResponse[]
   ) => {
     setSelectedRowKeys(selectedRowKeys);
   };

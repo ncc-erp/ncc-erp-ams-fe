@@ -366,7 +366,7 @@ export const AccessoryEdit = (props: AccessoryEditProps) => {
                   " " +
                   t("accessory.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });

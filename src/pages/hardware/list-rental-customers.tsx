@@ -55,7 +55,7 @@ import {
 } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
-import { HardWareModalType, dateFormat } from "constants/assets";
+import { dateFormat } from "constants/assets";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { ICompany } from "interfaces/company";
@@ -457,7 +457,7 @@ export const HardwareListRentalCustomers: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

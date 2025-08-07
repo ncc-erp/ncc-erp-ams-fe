@@ -480,7 +480,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
                   " " +
                   t("consumables.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });

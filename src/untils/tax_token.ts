@@ -1,7 +1,6 @@
-import { STATUS_TAX_TOKEN } from "constants/tax_token";
-import i18n from "../i18n";
 import { ASSIGNED_STATUS } from "constants/assets";
 import { ITaxTokenResponse } from "interfaces/tax_token";
+import i18n from "../i18n";
 
 export const getTaxTokenStatusDecription = (value: ITaxTokenResponse) =>
   // value === STATUS_TAX_TOKEN.NOT_ACTIVATE

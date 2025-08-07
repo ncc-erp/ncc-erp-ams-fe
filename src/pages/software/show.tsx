@@ -63,7 +63,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
       {
         key: "checkout_at",
         title: t("software.label.field.checkout_at"),
-        render: (value: IModelSoftware, record: any) => (
+        render: (value: IModelSoftware) => (
           <TextField value={value ? value.datetime : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),
@@ -71,7 +71,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
       {
         key: "location",
         title: t("software.label.field.location"),
-        render: (value: any, record: ILicenseUsers) => (
+        render: (_: any, record: ILicenseUsers) => (
           <TextField
             value={
               record.assigned_user.location ? record.assigned_user.location : ""
@@ -83,7 +83,7 @@ export const SoftwareShow = (props: SoftwareShowProps) => {
       {
         key: "department",
         title: t("software.label.field.department"),
-        render: (value: any, record: ILicenseUsers) => (
+        render: (_: any, record: ILicenseUsers) => (
           <TextField
             value={
               record.assigned_user.department

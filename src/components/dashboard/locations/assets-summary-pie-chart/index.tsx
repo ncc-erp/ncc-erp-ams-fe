@@ -191,9 +191,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
             : dataPieChart
               ? `${name} ${dataPieChart.reduce((r, d) => r + d.value, 0)}`
               : `${name} 0`;
-          return renderStatistic(width, text, {
-            fontSize: 32,
-          });
+          return renderStatistic(width, text);
         },
       },
     },
@@ -202,10 +200,6 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   return <Pie {...config} />;
 };
 
-function renderStatistic(
-  width: number,
-  text: string,
-  arg2: { fontSize: number }
-): string {
+function renderStatistic(width: number, text: string): string {
   return text;
 }

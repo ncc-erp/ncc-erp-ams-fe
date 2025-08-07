@@ -138,7 +138,7 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               description: "Success",

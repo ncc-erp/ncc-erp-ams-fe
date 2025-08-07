@@ -19,7 +19,7 @@ import {
   ILocationRequest,
   ILocationResponse,
 } from "interfaces/location";
-import { LOCATION_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { LOCATION_API, USERS_API } from "api/baseApi";
 
 type LocationEditProps = {
   isModalVisible: boolean;
@@ -37,18 +37,6 @@ export const LocationEdit = (props: LocationEditProps) => {
 
   const { form, formProps } = useForm<ILocationRequest>({
     action: "edit",
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ILocations>({
-    resource: LOCATION_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({

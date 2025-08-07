@@ -23,11 +23,7 @@ import {
   Popconfirm,
   Button,
 } from "@pankod/refine-antd";
-import {
-  MenuOutlined,
-  FileSearchOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
+import { MenuOutlined, SyncOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
 import { dateFormat } from "constants/assets";
@@ -94,7 +90,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
   const { open } = useNotification();
 
   const {
@@ -119,7 +115,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -236,13 +232,13 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("tax_token.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "seri",
         title: t("tax_token.label.field.seri"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seri", sorter),
       },
       {
@@ -294,7 +290,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("tax_token.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -357,19 +353,19 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_counter",
         title: t("tax_token.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tax_token.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "note",
         title: t("tax_token.label.field.note"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("note", sorter),
       },
     ],
@@ -407,14 +403,11 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | ITaxTokenResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | ITaxTokenResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: ITaxTokenResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -433,7 +426,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
       localStorage.setItem(
         "selectedTaxTokenRowKeys",
         JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
+          newselectedRowKeys.filter(function () {
             return newselectedRowKeys;
           })
         )
@@ -511,13 +504,13 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   };
 
-  const purchaseDateChange = (val: any, formatString: any) => {
+  const purchaseDateChange = (val: any) => {
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
   };
 
-  const expirationDateChange = (val: any, formatString: any) => {
+  const expirationDateChange = (val: any) => {
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);
@@ -563,7 +556,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",

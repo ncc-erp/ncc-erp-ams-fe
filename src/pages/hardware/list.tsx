@@ -178,7 +178,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -901,7 +900,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -985,9 +984,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IHardwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -1053,10 +1052,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setIsSelectedQRCode(false);
     }
   }, [initselectedRowKeys]);
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 

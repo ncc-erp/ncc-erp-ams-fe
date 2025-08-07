@@ -206,7 +206,7 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,
@@ -343,7 +343,7 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });

@@ -1,6 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Interface } from "readline";
-import { TablePaginationConfig } from "antd";
 import { EBooleanString } from "../constants/common";
 
 export interface IHardwareCreateRequest {

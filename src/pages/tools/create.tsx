@@ -141,7 +141,7 @@ export const ToolCreate = (props: ToolCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               description: "Success",
