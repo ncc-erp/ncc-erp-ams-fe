@@ -1487,5 +1487,13 @@
         "viewDetail": "Xem chi tiết"
       }
     }
+  },
+  "release_note": {
+    "whats_changed": "Những thay đổi",
+    "new_contributors": "Người đóng góp mới",
+    "full_changelog": "Lịch sử thay đổi đầy đủ:",
+    "read_more": "Xem thêm",
+    "read_less": "Thu gọn",
+    "no_details": "Không có chi tiết."
   }
 }

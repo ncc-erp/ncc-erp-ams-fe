@@ -89,5 +89,13 @@
         "checkoutTo": "Cấp phát đến"
       }
     }
+  },
+  "release_note": {
+    "whats_changed": "What's Changed",
+    "new_contributors": "New Contributors",
+    "full_changelog": "Full Changelog:",
+    "read_more": "Read More",
+    "read_less": "Read Less",
+    "no_details": "No details"
   }
 }

@@ -3,6 +3,7 @@ import { List, Typography, Spin, Card, Avatar, Button } from "antd";
 import ReactMarkdown from "react-markdown";
 import { useReleaseNotes } from "hooks/useReleaseNotes";
 import { IReleaseNote } from "interfaces/releaseNote";
+import { useTranslate } from "@pankod/refine-core";
 
 const MAX_LINES = 7;
 
@@ -105,6 +106,7 @@ const parseReleaseBody = (body: string) => {
 export const ReleaseNoteList: React.FC = () => {
   const { data, loading } = useReleaseNotes();
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
+  const t = useTranslate();
 
   if (loading)
     return (
@@ -147,7 +149,7 @@ export const ReleaseNoteList: React.FC = () => {
                 color: "#222",
               }}
             >
-              What&apos;s Changed
+              {t("release_note.whats_changed")}
             </div>
           );
           allLines.push(
@@ -158,8 +160,8 @@ export const ReleaseNoteList: React.FC = () => {
                   display: "flex",
                   alignItems: "flex-start",
                   marginLeft: 24,
-                  marginBottom: 2,
-                  lineHeight: "15px",
+                  marginBottom: 0,
+                  lineHeight: "17px",
                 }}
               >
                 <span
@@ -167,7 +169,7 @@ export const ReleaseNoteList: React.FC = () => {
                     fontWeight: 700,
                     marginRight: 8,
                     fontSize: 18,
-                    lineHeight: "15px",
+                    lineHeight: "14px",
                     color: "#222",
                   }}
                 >
@@ -192,7 +194,7 @@ export const ReleaseNoteList: React.FC = () => {
                 color: "#222",
               }}
             >
-              New Contributors
+              {t("release_note.new_contributors")}
             </div>
           );
           allLines.push(
@@ -237,7 +239,9 @@ export const ReleaseNoteList: React.FC = () => {
               }}
               key="changelog-title"
             >
-              <span style={{ fontWeight: 700 }}>Full Changelog:</span>
+              <span style={{ fontWeight: 700 }}>
+                {t("release_note.full_changelog")}
+              </span>
               <div style={{ marginLeft: 31, marginTop: 4 }}>
                 {changelog.map((link, idx) => (
                   <div key={idx}>
@@ -313,7 +317,7 @@ export const ReleaseNoteList: React.FC = () => {
                     {visibleLines.length === 0 ? (
                       <div style={{ marginLeft: 24 }}>
                         <Typography.Text type="secondary">
-                          No details.
+                          {t("release_note.no_details")}
                         </Typography.Text>
                       </div>
                     ) : (
@@ -331,7 +335,9 @@ export const ReleaseNoteList: React.FC = () => {
                         }))
                       }
                     >
-                      {isExpanded ? "Read Less" : "Read More"}
+                      {isExpanded
+                        ? t("release_note.read_less")
+                        : t("release_note.read_more")}
                     </Button>
                   )}
                 </div>
