@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { List, Typography, Spin, Card, Avatar, Button } from "antd";
-import { IReleaseNote } from "interfaces/releaseNote";
 import ReactMarkdown from "react-markdown";
-import { RELEASE_NOTE_API } from "api/baseApi";
-import dataProvider from "providers/dataProvider";
 import { useReleaseNotes } from "hooks/useReleaseNotes";
+import { IReleaseNote } from "interfaces/releaseNote";
+
+const MAX_LINES = 7;
 
 const renderMarkdown = (text: string) => {
   const regex = /(https:\/\/github\.com\/[^\s]+\/(pull|issues)\/(\d+))/g;
@@ -69,18 +69,14 @@ const renderMarkdown = (text: string) => {
   );
 };
 
-// Rút gọn link Full Changelog
-const shortenChangelogLink = (url: string) => {
-  const match = url.match(/compare\/([^/]+)$/);
-  if (match) return match[1];
-  return url.split("/").pop() || url;
-};
+const shortenChangelogLink = (url: string) =>
+  url.match(/compare\/([^/]+)$/)?.[1] || url.split("/").pop() || url;
 
 const parseReleaseBody = (body: string) => {
   if (!body) return { changes: [], contributors: [], changelog: [] };
-  const changesMatch = body.match(/## What's Changed([\s\S]*?)(##|$)/);
-  let changes =
-    changesMatch?.[1]
+  const changes =
+    body
+      .match(/## What's Changed([\s\S]*?)(##|$)/)?.[1]
       .split("\n")
       .map((line) => line.trim())
       .filter(
@@ -88,10 +84,9 @@ const parseReleaseBody = (body: string) => {
           (line.startsWith("*") || line.startsWith("-")) &&
           !line.toLowerCase().includes("full changelog")
       ) || [];
-
-  const contributorsMatch = body.match(/## New Contributors([\s\S]*?)(##|$)/);
   const contributors =
-    contributorsMatch?.[1]
+    body
+      .match(/## New Contributors([\s\S]*?)(##|$)/)?.[1]
       .split("\n")
       .map((line) => line.trim())
       .filter(
@@ -99,13 +94,11 @@ const parseReleaseBody = (body: string) => {
           (line.startsWith("*") || line.startsWith("-")) &&
           !line.toLowerCase().includes("full changelog")
       ) || [];
-
-  const changelogMatch = body.match(/\*\*Full Changelog\*\*:(.*)/);
   const changelog =
-    changelogMatch?.[1]
+    body
+      .match(/\*\*Full Changelog\*\*:(.*)/)?.[1]
       .split(/\s+/)
       .filter((link) => link.startsWith("http")) || [];
-
   return { changes, contributors, changelog };
 };
 
@@ -126,13 +119,11 @@ export const ReleaseNoteList: React.FC = () => {
         <Spin size="large" />
       </div>
     );
-  
+
   const sorted = [...data].sort(
     (a, b) =>
       new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
   );
-
-  const MAX_LINES = 7;
 
   return (
     <List
@@ -143,7 +134,7 @@ export const ReleaseNoteList: React.FC = () => {
         );
         const isExpanded = expanded[item.id] || false;
 
-        let allLines: React.ReactNode[] = [];
+        const allLines: React.ReactNode[] = [];
 
         if (changes.length > 0) {
           allLines.push(
@@ -157,11 +148,11 @@ export const ReleaseNoteList: React.FC = () => {
                 color: "#222",
               }}
             >
-              What's Changed
+              What&apos;s Changed
             </div>
           );
-          allLines = allLines.concat(
-            changes.map((line, idx) => (
+          allLines.push(
+            ...changes.map((line, idx) => (
               <div
                 key={`change-${idx}`}
                 style={{
@@ -205,8 +196,8 @@ export const ReleaseNoteList: React.FC = () => {
               New Contributors
             </div>
           );
-          allLines = allLines.concat(
-            contributors.map((line, idx) => (
+          allLines.push(
+            ...contributors.map((line, idx) => (
               <div
                 key={`contributor-${idx}`}
                 style={{
