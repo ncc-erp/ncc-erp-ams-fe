@@ -277,32 +277,24 @@ export const ReleaseNoteList: React.FC = () => {
                       alignItems: "center",
                     }}
                   >
-                    <span>{item.tag_name}</span>
-                    <span
+                    <a
+                      href={item.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       style={{
-                        marginLeft: 8,
-                        wordBreak: "break-all",
-                        display: "inline-block",
-                        whiteSpace: "normal",
+                        color: "#222",
                         fontWeight: 700,
-                        color: "#e74c3c",
+                        wordBreak: "break-all",
+                        whiteSpace: "normal",
+                        transition: "color 0.2s",
                       }}
+                      onMouseOver={(e) =>
+                        (e.currentTarget.style.color = "#e74c3c")
+                      }
+                      onMouseOut={(e) => (e.currentTarget.style.color = "#222")}
                     >
-                      <a
-                        href={item.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          color: "#e74c3c",
-                          fontWeight: 700,
-                          display: "inline-block",
-                          wordBreak: "break-all",
-                          whiteSpace: "normal",
-                        }}
-                      >
-                        (View on Github)
-                      </a>
-                    </span>
+                      {item.tag_name}
+                    </a>
                   </Typography.Title>
                   <div style={{ fontSize: 12, color: "#888" }}>
                     {new Date(item.published_at).toLocaleString()} by{" "}
