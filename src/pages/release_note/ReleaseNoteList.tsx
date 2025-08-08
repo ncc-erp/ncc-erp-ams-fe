@@ -141,7 +141,6 @@ export const ReleaseNoteList: React.FC = () => {
             <div
               key="changes-title"
               style={{
-                marginLeft: 8,
                 marginBottom: 0,
                 fontWeight: 700,
                 fontSize: 16,
@@ -159,7 +158,8 @@ export const ReleaseNoteList: React.FC = () => {
                   display: "flex",
                   alignItems: "flex-start",
                   marginLeft: 24,
-                  marginBottom: 0,
+                  marginBottom: 2,
+                  lineHeight: "15px",
                 }}
               >
                 <span
@@ -167,7 +167,7 @@ export const ReleaseNoteList: React.FC = () => {
                     fontWeight: 700,
                     marginRight: 8,
                     fontSize: 18,
-                    lineHeight: "22px",
+                    lineHeight: "15px",
                     color: "#222",
                   }}
                 >
@@ -186,7 +186,6 @@ export const ReleaseNoteList: React.FC = () => {
             <div
               key="contributors-title"
               style={{
-                marginLeft: 8,
                 marginTop: 8,
                 fontWeight: 700,
                 fontSize: 16,
@@ -204,7 +203,8 @@ export const ReleaseNoteList: React.FC = () => {
                   display: "flex",
                   alignItems: "flex-start",
                   marginLeft: 24,
-                  marginBottom: 0,
+                  marginBottom: 2,
+                  lineHeight: "15px",
                 }}
               >
                 <span
@@ -212,7 +212,7 @@ export const ReleaseNoteList: React.FC = () => {
                     fontWeight: 700,
                     marginRight: 8,
                     fontSize: 18,
-                    lineHeight: "22px",
+                    lineHeight: "15px",
                     color: "#222",
                   }}
                 >
@@ -230,7 +230,6 @@ export const ReleaseNoteList: React.FC = () => {
           allLines.push(
             <div
               style={{
-                marginLeft: 8,
                 marginTop: 8,
                 fontWeight: 700,
                 fontSize: 16,
@@ -239,7 +238,7 @@ export const ReleaseNoteList: React.FC = () => {
               key="changelog-title"
             >
               <span style={{ fontWeight: 700 }}>Full Changelog:</span>
-              <div style={{ marginLeft: 16, marginTop: 4 }}>
+              <div style={{ marginLeft: 31, marginTop: 4 }}>
                 {changelog.map((link, idx) => (
                   <div key={idx}>
                     <a
@@ -324,7 +323,7 @@ export const ReleaseNoteList: React.FC = () => {
                   {showReadMore && (
                     <Button
                       type="link"
-                      style={{ paddingLeft: 0, marginLeft: 8 }}
+                      style={{ paddingLeft: 0, marginLeft: 0 }}
                       onClick={() =>
                         setExpanded((prev) => ({
                           ...prev,
