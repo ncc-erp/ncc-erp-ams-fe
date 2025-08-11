@@ -17,6 +17,8 @@ import { gapi } from "gapi-script";
 import { MEZON_AUTH_URL_API } from "api/baseApi";
 import useLoginWithMezon from "hooks/useLoginWithMezon";
 import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
+import dataProvider from "providers/dataProvider";
+import "styles/antd.less";
 
 import {
   buttonLoginGoogle,
