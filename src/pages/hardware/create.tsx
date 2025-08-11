@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Button,
   Col,
@@ -86,7 +85,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+    (option) => option.value === STATUS_LABELS.READY_TO_DEPLOY
   );
   statusLabelSelectProps.options = filteredProps;
 

@@ -1355,7 +1355,7 @@ export const HardwareListReadyToDeploy: React.FC<
         />
       </MModal>
       <MModal
-        key={`checkout-${isCheckoutManyAssetModalVisible}`}
+        key={`multiple-checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}

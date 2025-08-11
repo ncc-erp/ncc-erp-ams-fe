@@ -1,4 +1,3 @@
-/* eslint-disable no-loop-func */
 import { Pie, PieConfig } from "@ant-design/plots";
 import { renderToString } from "react-dom/server";
 import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
