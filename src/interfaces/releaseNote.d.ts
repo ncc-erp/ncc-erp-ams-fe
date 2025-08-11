@@ -12,3 +12,7 @@ export interface IReleaseNote {
   published_at: string;
   author: IReleaseNoteAuthor;
 }
+export interface IReleaseNoteListResponse {
+  data: IReleaseNote[];
+  total: number;
+}
