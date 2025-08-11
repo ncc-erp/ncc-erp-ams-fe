@@ -13,7 +13,7 @@ import {
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
-import { USERS_API } from "api/baseApi";
+import { USERS_API, ACCESSORY_CHECKOUT_API } from "api/baseApi";
 import {
   IAccessoryRequestCheckout,
   IAccessoryResponseCheckout,
@@ -55,7 +55,7 @@ export const AccessoryCheckout = (props: AccessoryCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/accessories" + "/" + data?.id + "/" + "checkout",
+    url: ACCESSORY_CHECKOUT_API(String(data?.id || "")),
     method: "get",
     config: {
       query: payload,

@@ -1,4 +1,3 @@
-import { useLogin } from "@pankod/refine-core";
 import {
   Button,
   Card,
@@ -13,10 +12,13 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useLogin } from "@pankod/refine-core";
+import { MEZON_AUTH_URL_API } from "api/baseApi";
 import useLoginWithMezon from "hooks/useLoginWithMezon";
 import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
 import dataProvider from "providers/dataProvider";
 import "styles/antd.less";
+
 import {
   buttonLoginGoogle,
   containerStyles,
@@ -59,7 +61,7 @@ export const LoginPage: React.FC = () => {
     try {
       setIsLoadingMezon(true);
       const { post } = dataProvider;
-      const url = "api/v1/auth/mezon-auth-url";
+      const url = MEZON_AUTH_URL_API;
       const data = await post({
         url: url,
         payload: {},
