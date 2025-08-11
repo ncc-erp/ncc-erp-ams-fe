@@ -1,112 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { List, Typography, Spin, Card, Avatar, Button } from "antd";
-import ReactMarkdown from "react-markdown";
 import { useReleaseNotes } from "hooks/useReleaseNotes";
 import { IReleaseNote } from "interfaces/releaseNote";
 import { useTranslate } from "@pankod/refine-core";
+import {
+  parseReleaseBody,
+  renderMarkdown,
+  shortenChangelogLink,
+} from "./releaseNoteHelpers";
+import { ChangelogLinks } from "./ChangelogLinks";
 
 const MAX_LINES = 7;
-
-const renderMarkdown = (text: string) => {
-  const regex = /(https:\/\/github\.com\/[^\s]+\/(pull|issues)\/(\d+))/g;
-  const userRegex = /@([a-zA-Z0-9-_]+)/g;
-
-  let replacedText = text.replace(
-    userRegex,
-    (full, username) => `[${full}](https://github.com/${username})`
-  );
-  replacedText = replacedText.replace(
-    regex,
-    (full, url, type, num) => `[${"#" + num}](${url})`
-  );
-
-  return (
-    <ReactMarkdown
-      components={{
-        a: ({ href, children }) => {
-          const match = href?.match(/\/(pull|issues)\/(\d+)$/);
-          if (match) {
-            return (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#1677ff", fontWeight: 500 }}
-              >
-                #{match[2]}
-              </a>
-            );
-          }
-          const userMatch = href?.match(
-            /^https:\/\/github\.com\/([a-zA-Z0-9-_]+)$/
-          );
-          if (userMatch) {
-            return (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#1677ff", fontWeight: 500 }}
-              >
-                @{userMatch[1]}
-              </a>
-            );
-          }
-          return (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "#1677ff", fontWeight: 500 }}
-            >
-              {children}
-            </a>
-          );
-        },
-      }}
-    >
-      {replacedText}
-    </ReactMarkdown>
-  );
-};
-
-const shortenChangelogLink = (url: string) =>
-  url.match(/compare\/([^/]+)$/)?.[1] || url.split("/").pop() || url;
-
-const parseReleaseBody = (body: string) => {
-  if (!body) return { changes: [], contributors: [], changelog: [] };
-  const changes =
-    body
-      .match(/## What's Changed([\s\S]*?)(##|$)/)?.[1]
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(
-        (line) =>
-          (line.startsWith("*") || line.startsWith("-")) &&
-          !line.toLowerCase().includes("full changelog")
-      ) || [];
-  const contributors =
-    body
-      .match(/## New Contributors([\s\S]*?)(##|$)/)?.[1]
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(
-        (line) =>
-          (line.startsWith("*") || line.startsWith("-")) &&
-          !line.toLowerCase().includes("full changelog")
-      ) || [];
-  const changelog =
-    body
-      .match(/\*\*Full Changelog\*\*:(.*)/)?.[1]
-      .split(/\s+/)
-      .filter((link) => link.startsWith("http")) || [];
-  return { changes, contributors, changelog };
-};
 
 export const ReleaseNoteList: React.FC = () => {
   const { data, loading } = useReleaseNotes();
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
   const t = useTranslate();
+
+  const sortedReleaseNotes = useMemo(
+    () =>
+      [...data].sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() -
+          new Date(a.published_at).getTime()
+      ),
+    [data]
+  );
 
   if (loading)
     return (
@@ -122,14 +41,9 @@ export const ReleaseNoteList: React.FC = () => {
       </div>
     );
 
-  const sorted = [...data].sort(
-    (a, b) =>
-      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
-  );
-
   return (
     <List
-      dataSource={sorted}
+      dataSource={sortedReleaseNotes}
       renderItem={(item) => {
         const { changes, contributors, changelog } = parseReleaseBody(
           item.body
@@ -242,20 +156,7 @@ export const ReleaseNoteList: React.FC = () => {
               <span style={{ fontWeight: 700 }}>
                 {t("release_note.full_changelog")}
               </span>
-              <div style={{ marginLeft: 31, marginTop: 4 }}>
-                {changelog.map((link, idx) => (
-                  <div key={idx}>
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "#1677ff", fontWeight: 500 }}
-                    >
-                      {shortenChangelogLink(link)}
-                    </a>
-                  </div>
-                ))}
-              </div>
+              <ChangelogLinks links={changelog} />
             </div>
           );
         }
