@@ -1,9 +1,4 @@
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  HttpError,
-} from "@pankod/refine-core";
+import { useTranslate, CrudFilters, HttpError } from "@pankod/refine-core";
 import {
   List,
   Table,
@@ -45,7 +40,6 @@ import {
 import { filterAssignedStatus } from "untils/assets";
 
 import { Spin } from "antd";
-import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 
@@ -111,7 +105,7 @@ export const DetailsTool = (props: detailToolProps) => {
   const [isCheckinModalVisible, setIsCheckinModalVisible] = useState(false);
   const [detailCheckin, setDetailCheckin] = useState<IToolResponseCheckin>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
   const searchParam = searchParams.get("search");
   const type_id = searchParams.get("id");
@@ -126,7 +120,7 @@ export const DetailsTool = (props: detailToolProps) => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -272,7 +266,7 @@ export const DetailsTool = (props: detailToolProps) => {
       {
         key: "name",
         title: t("tools.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -322,7 +316,7 @@ export const DetailsTool = (props: detailToolProps) => {
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -379,19 +373,19 @@ export const DetailsTool = (props: detailToolProps) => {
       {
         key: "checkout_counter",
         title: t("tools.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tools.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],

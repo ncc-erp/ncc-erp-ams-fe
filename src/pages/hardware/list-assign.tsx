@@ -181,7 +181,6 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
           model,
           location,
           status_label,
-          purchase_date,
           last_checkout,
           assigned_to,
         } = params;
@@ -498,6 +497,8 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+      isCustomerRenting: data?.isCustomerRenting,
+      startRentalDate: data?.startRentalDate,
     };
 
     setDetailCheckout(dataConvert);
@@ -894,7 +895,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -974,9 +975,9 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IHardwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -1087,10 +1088,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -1324,6 +1322,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
@@ -1356,6 +1355,7 @@ export const HardwareListAssign: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`multiple-checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}

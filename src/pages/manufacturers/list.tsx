@@ -1,36 +1,36 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useNavigation,
-} from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  Space,
-  EditButton,
-  DeleteButton,
-  TagField,
   CreateButton,
-  Tooltip,
   DateField,
+  DeleteButton,
+  EditButton,
+  getDefaultSortOrder,
+  List,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useTable,
 } from "@pankod/refine-antd";
+import {
+  CrudFilters,
+  IResourceComponentsProps,
+  useNavigation,
+  useTranslate,
+} from "@pankod/refine-core";
 import { Image } from "antd";
-import "styles/antd.less";
-import { Spin } from "antd";
-
-import { IHardware } from "interfaces";
-import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import { MANUFACTURES_API } from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
+import { TABLE_PAGINATION, TABLE_SCROLL } from "constants/table";
+import { IHardware } from "interfaces";
+import { IManufacturesResponse } from "interfaces/manufacturers";
+import "styles/antd.less";
 import { ManufacturesCreate } from "./create";
 import { ManufacturesEdit } from "./edit";
-import { IManufacturesResponse } from "interfaces/manufacturers";
-import { MANUFACTURES_API } from "api/baseApi";
-import { useSearchParams } from "react-router-dom";
 
 export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -171,7 +171,9 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
     refreshData();
   }, [isEditModalVisible]);
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
+  const pageTotal: number = useMemo(() => {
+    return (tableProps.pagination && tableProps.pagination.total) || 0;
+  }, [tableProps.pagination]);
 
   return (
     <List
@@ -208,70 +210,61 @@ export const ManufacturesList: React.FC<IResourceComponentsProps> = () => {
           data={detail}
         />
       </MModal>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
-              : false
-          }
-          scroll={{ x: 1100 }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<IManufacturesResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
+      <Table
+        className={
+          pageTotal <= TABLE_PAGINATION.DEFAULT_PAGE_SIZE ? "list-table" : ""
+        }
+        {...tableProps}
+        rowKey="id"
+        pagination={
+          pageTotal > TABLE_PAGINATION.DEFAULT_PAGE_SIZE
+            ? {
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
+            : false
+        }
+        scroll={TABLE_SCROLL.DEFAULT}
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+        ))}
+        <Table.Column<IManufacturesResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip
+                title={t("manufactures.label.field.edit")}
+                color={"#108ee9"}
+              >
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.assets_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
                 <Tooltip
-                  title={t("manufactures.label.field.edit")}
-                  color={"#108ee9"}
+                  title={t("manufactures.label.field.delete")}
+                  color={"red"}
                 >
-                  <EditButton
+                  <DeleteButton
+                    resourceName={MANUFACTURES_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-                {record.assets_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("manufactures.label.field.delete")}
-                    color={"red"}
-                  >
-                    <DeleteButton
-                      resourceName={MANUFACTURES_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };

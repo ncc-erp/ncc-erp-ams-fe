@@ -1,27 +1,18 @@
-import { useEffect, useState } from "react";
-import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
-  Row,
-  Col,
-  Typography,
   Radio,
+  Row,
+  Select,
+  Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
-import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  FormValues,
-  IHardwareCreateRequest,
-  IHardwareResponse,
-  IHardwareUpdateRequest,
-} from "interfaces/hardware";
-import { IModel } from "interfaces/model";
-import { UploadImage } from "components/elements/uploadImage";
-import { ICompany } from "interfaces/company";
+import { useCustom, useNotification, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 import {
   HARDWARE_API,
@@ -31,8 +22,18 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   WEBHOOK_API,
 } from "api/baseApi";
+import { UploadImage } from "components/elements/uploadImage";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-import moment from "moment";
+import { EBooleanString } from "constants/common";
+import { ICompany } from "interfaces/company";
+import {
+  FormValues,
+  IHardwareCreateRequest,
+  IHardwareResponse,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
+import { IModel } from "interfaces/model";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -42,7 +43,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -290,6 +291,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     });
   }, [file]);
 
+  const [, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
+
   return (
     <Form
       {...formProps}
@@ -463,7 +470,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -519,15 +526,26 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   t("hardware.label.message.required"),
               },
             ]}
-            initialValue={data?.isCustomerRenting ? "true" : "false"}
+            initialValue={
+              data?.isCustomerRenting
+                ? EBooleanString.TRUE
+                : EBooleanString.FALSE
+            }
           >
-            <Radio.Group style={{ display: "flex" }}>
-              <Radio value="true">{t("hardware.label.field.yes")}</Radio>
-              <Radio value="false">{t("hardware.label.field.no")}</Radio>
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
+              <Radio value={EBooleanString.TRUE}>
+                {t("hardware.label.field.yes")}
+              </Radio>
+              <Radio value={EBooleanString.FALSE}>
+                {t("hardware.label.field.no")}
+              </Radio>
             </Radio.Group>
           </Form.Item>
 
-          {form.getFieldValue("isCustomerRenting") === "true" && (
+          {form.getFieldValue("isCustomerRenting") === EBooleanString.TRUE && (
             <Form.Item
               label={t("hardware.label.field.startRentalDate")}
               name="startRentalDate"
@@ -654,7 +672,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ maintenance_cycle: 0 });

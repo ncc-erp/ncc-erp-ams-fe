@@ -112,9 +112,7 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
       {
         key: "send_to",
         title: t("komu_logs.label.field.send_to"),
-        render: (value: IKomuLogs, record: any) => (
-          <TextField value={value ? value : ""} />
-        ),
+        render: (value: IKomuLogs) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("send_to", sorter),
         width: 200,
       },

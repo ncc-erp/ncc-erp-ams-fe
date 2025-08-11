@@ -178,7 +178,6 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -510,6 +509,8 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+      isCustomerRenting: data?.isCustomerRenting,
+      startRentalDate: data?.startRentalDate,
     };
 
     setDetailCheckout(dataConvert);
@@ -899,7 +900,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -983,9 +984,9 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IHardwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -1051,10 +1052,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
       setIsSelectedQRCode(false);
     }
   }, [initselectedRowKeys]);
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -1346,6 +1344,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
@@ -1378,6 +1377,7 @@ export const HardwareList: React.FC<IResourceComponentsProps> = () => {
         />
       </MModal>
       <MModal
+        key={`multiple-checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}

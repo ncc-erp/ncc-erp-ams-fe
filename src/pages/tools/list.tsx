@@ -3,7 +3,6 @@ import {
   IResourceComponentsProps,
   CrudFilters,
   HttpError,
-  useNotification,
 } from "@pankod/refine-core";
 import {
   List,
@@ -52,7 +51,6 @@ import { Spin } from "antd";
 import { DatePicker } from "antd";
 import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useSearchParams } from "react-router-dom";
 
 import moment from "moment";
 import { IStatusLabel } from "interfaces/statusLabel";
@@ -151,7 +149,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -285,7 +283,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("tools.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -335,7 +333,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -392,19 +390,19 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_counter",
         title: t("tools.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tools.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
@@ -588,14 +586,11 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem("selectedToolsRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IToolResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IToolResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IToolResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -614,7 +609,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       localStorage.setItem(
         "selectedToolsRowKeys",
         JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
+          newselectedRowKeys.filter(function () {
             return newselectedRowKeys;
           })
         )
@@ -722,13 +717,13 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   };
 
-  const purchaseDateChange = (val: any, formatString: any) => {
+  const purchaseDateChange = (val: any) => {
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
   };
 
-  const expirationDateChange = (val: any, formatString: any) => {
+  const expirationDateChange = (val: any) => {
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);

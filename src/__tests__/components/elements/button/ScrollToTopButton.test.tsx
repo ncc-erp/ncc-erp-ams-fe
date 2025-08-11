@@ -48,11 +48,9 @@ describe("ScrollToTopButton", () => {
     mockScrollTo.mockClear();
 
     // Setup mock for useDebouncedEventListener to capture the callback
-    mockUseDebouncedEventListener.mockImplementation(
-      (event, callback, delay) => {
-        scrollCallback = callback;
-      }
-    );
+    mockUseDebouncedEventListener.mockImplementation((event, callback) => {
+      scrollCallback = callback;
+    });
 
     // Default window width (desktop)
     mockUseWindowWidth.mockReturnValue(1200);

@@ -19,7 +19,6 @@ import {
   CreateButton,
   TagField,
 } from "@pankod/refine-antd";
-import { Spin } from "antd";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";
@@ -232,75 +231,59 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={MODELS_TOTAL_DETAIL_API}
         isReload={false}
-      ></TotalDetail>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          {...tableProps}
-          rowKey="id"
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<IModelResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
+      />
+      <Table
+        {...tableProps}
+        rowKey="id"
+        pagination={{
+          position: ["topRight", "bottomRight"],
+          total: pageTotal ? pageTotal : 0,
+          showSizeChanger: true,
+        }}
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+        ))}
+        <Table.Column<IModelResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip title={t("model.label.tooltip.clone")} color={"#108ee9"}>
+                <CloneButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => clone(record)}
+                />
+              </Tooltip>
+              <Tooltip title={t("model.label.tooltip.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.assets_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
                 <Tooltip
-                  title={t("model.label.tooltip.clone")}
-                  color={"#108ee9"}
+                  title={t("model.label.tooltip.delete")}
+                  color={"#d73925"}
                 >
-                  <CloneButton
+                  <DeleteButton
+                    resourceName={MODELS_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => clone(record)}
                   />
                 </Tooltip>
-                <Tooltip
-                  title={t("model.label.tooltip.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
-                    hideText
-                    size="small"
-                    recordItemId={record.id}
-                    onClick={() => edit(record)}
-                  />
-                </Tooltip>
-                {record.assets_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("model.label.tooltip.delete")}
-                    color={"#d73925"}
-                  >
-                    <DeleteButton
-                      resourceName={MODELS_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };

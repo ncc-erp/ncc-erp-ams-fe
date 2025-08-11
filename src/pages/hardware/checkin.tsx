@@ -22,10 +22,8 @@ import { IModel } from "interfaces/model";
 import { ICompany } from "interfaces/company";
 import {
   HARDWARE_API,
-  LOCATION_API,
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
-  USERS_API,
 } from "api/baseApi";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
@@ -64,18 +62,6 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
 
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: STATUS_LABELS_API,
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ICompany>({
-    resource: LOCATION_API,
     optionLabel: "name",
     onSearch: (value) => [
       {

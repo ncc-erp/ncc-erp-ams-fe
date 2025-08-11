@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useLogin } from "@pankod/refine-core";
 import {
-  Row,
-  Col,
-  Layout,
+  Button,
   Card,
-  Typography,
+  Checkbox,
+  Col,
   Form,
   Input,
-  Button,
-  Checkbox,
+  Layout,
+  Row,
+  Typography,
 } from "antd";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useLogin, useTranslate } from "@pankod/refine-core";
 import { gapi } from "gapi-script";
 import { MEZON_AUTH_URL_API } from "api/baseApi";
 
 import {
-  layoutStyles,
-  containerStyles,
-  titleStyles,
-  imageContainer,
-  logo,
   buttonLoginGoogle,
+  containerStyles,
+  imageContainer,
+  layoutStyles,
+  logo,
+  titleStyles,
 } from "./styles";
-import "styles/antd.less";
-
-import dataProvider from "providers/dataProvider";
-import useLoginWithMezon from "hooks/useLoginWithMezon";
-import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
 
 const { Title } = Typography;
 
@@ -44,7 +41,7 @@ export interface ILoginForm {
  */
 export const LoginPage: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
-  const translate = useTranslate();
+  const { t } = useTranslation();
   const [isLoadingMezon, setIsLoadingMezon] = useState<boolean>(false);
 
   useLoginWithMezon();
@@ -54,7 +51,7 @@ export const LoginPage: React.FC = () => {
 
   const CardTitle = (
     <Title level={3} style={titleStyles} data-test-id="title">
-      {translate("pages.login.title", "Sign in your account")}
+      {t("pages.login.title")}
     </Title>
   );
 
@@ -109,21 +106,18 @@ export const LoginPage: React.FC = () => {
                   <Form.Item
                     name="username"
                     data-test-id="username"
-                    label={translate("pages.login.username", "Username")}
+                    label={t("pages.login.username")}
                     rules={[{ required: true }]}
                   >
                     <Input
                       size="large"
-                      placeholder={translate(
-                        "pages.login.username",
-                        "Username"
-                      )}
+                      placeholder={t("pages.login.username")}
                     />
                   </Form.Item>
                   <Form.Item
                     data-test-id="password"
                     name="password"
-                    label={translate("pages.login.password", "Password")}
+                    label={t("pages.login.password")}
                     rules={[{ required: true }]}
                     style={{ marginBottom: "12px" }}
                   >
@@ -145,7 +139,7 @@ export const LoginPage: React.FC = () => {
                           fontSize: "12px",
                         }}
                       >
-                        {translate("pages.login.remember", "Remember me")}
+                        {t("pages.login.remember")}
                       </Checkbox>
                     </Form.Item>
                   </div>
@@ -157,7 +151,7 @@ export const LoginPage: React.FC = () => {
                     loading={isLoading}
                     block
                   >
-                    {translate("pages.login.signin", "Sign in")}
+                    {t("pages.login.signin")}
                   </Button>
                 </Form>
               )}
@@ -178,7 +172,7 @@ export const LoginPage: React.FC = () => {
                 style={buttonLoginGoogle}
                 className="btn-login-mezon"
               >
-                {translate("pages.login.signinMezon", "Sign in with Mezon")}
+                {t("pages.login.signinMezon")}
               </Button>
             </Card>
           </div>

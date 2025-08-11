@@ -22,7 +22,7 @@ type WebhookCreateProps = {
 };
 
 export const WebhookCreate = (props: WebhookCreateProps) => {
-  const { isModalVisible, setIsModalVisible } = props;
+  const { setIsModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IWebhookRequest | null>();
@@ -67,7 +67,7 @@ export const WebhookCreate = (props: WebhookCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,

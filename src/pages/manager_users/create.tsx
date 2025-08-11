@@ -24,8 +24,8 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { LOCATION_API, USERS_API, USER_API } from "api/baseApi";
-import { IUser, IUserCreateRequest } from "interfaces/user";
+import { LOCATION_API, USER_API } from "api/baseApi";
+import { IUserCreateRequest } from "interfaces/user";
 import {
   Permission,
   optionsPermissions,
@@ -50,7 +50,7 @@ export const UserCreate = (props: UserCreateProps) => {
   const [messageErr, setMessageErr] = useState<IUserCreateRequest>();
   const { open } = useNotification();
 
-  const [permissionActions, setPermissionActions] = useState<any>(Permission);
+  const [permissionActions] = useState<any>(Permission);
 
   const permissionData: any = {};
   Object.keys(permissionActions).forEach((categoryName: string) => {
@@ -70,18 +70,6 @@ export const UserCreate = (props: UserCreateProps) => {
 
   const { formProps, form } = useForm<IUserCreateRequest>({
     action: "create",
-  });
-
-  const { selectProps: userSelectProps } = useSelect<IUser>({
-    resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
@@ -185,14 +173,14 @@ export const UserCreate = (props: UserCreateProps) => {
         errorNotification: false,
       },
       {
-        onError(error, variables, context) {
+        onError(error) {
           open?.({
             type: "error",
             message: "There was an error creating user",
           });
           setMessageErr(error?.response.data.messages);
         },
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             message: data?.data.messages,

@@ -102,7 +102,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       custom({
         url: SYNC_USER_API,
         method: "get",
-      }).then((x) => {
+      }).then(() => {
         setHrmLoading(false);
         tableQueryResult.refetch();
       });
@@ -383,7 +383,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     }, 300);
   };
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
   const isLoading = tableProps.loading || hrmLoading;
 
   const onCheckItem = (value: any) => {
@@ -412,7 +411,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
