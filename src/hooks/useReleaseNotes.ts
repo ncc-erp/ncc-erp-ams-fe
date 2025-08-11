@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IReleaseNote, IReleaseNoteListResponse } from "interfaces/releaseNote";
+import { IReleaseNote } from "interfaces/releaseNote";
 import { RELEASE_NOTE_API } from "api/baseApi";
 import dataProvider from "providers/dataProvider";
 
@@ -27,9 +27,7 @@ export const useReleaseNotes = (
       .then((response) => {
         const res =
           response && response.data ? response.data : { rows: [], total: 0 };
-        console.log("API response:", response);
         setData(Array.isArray(res?.rows) ? res.rows : []);
-        console.log(Array.isArray(res?.rows));
         setTotal(res.total || 0);
       })
       .catch((error) => console.error("Error fetching release notes:", error))

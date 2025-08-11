@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   List,
   Typography,
@@ -11,7 +11,6 @@ import {
   Pagination,
 } from "antd";
 import { useReleaseNotes } from "hooks/useReleaseNotes";
-import { IReleaseNote } from "interfaces/releaseNote";
 import { useTranslate } from "@pankod/refine-core";
 import { parseReleaseBody, renderMarkdown } from "./releaseNoteHelpers";
 import { ChangelogLinks } from "./ChangelogLinks";
