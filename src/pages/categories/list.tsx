@@ -19,7 +19,6 @@ import {
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
-import { Spin } from "antd";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -47,7 +46,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ICategoryResponse>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =

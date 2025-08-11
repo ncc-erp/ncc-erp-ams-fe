@@ -23,10 +23,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const [locationSelected, setLocationSelected] = useState<number | null>(
     99999
   );
-  const [dataDashboard, setDataDashboard] = useState<[string, string]>([
-    "",
-    "",
-  ]);
+  const [dataDashboard] = useState<[string, string]>(["", ""]);
 
   const {
     params: {
@@ -126,7 +123,6 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const locationName = data?.data.payload.find(
     (item: ILocation) => item.id === locationSelected
   )?.name;
-  console.log("locationName", locationName);
 
   useEffect(() => {
     localStorage.removeItem("purchase_date");

@@ -1,9 +1,4 @@
-import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  HttpError,
-} from "@pankod/refine-core";
+import { useTranslate, CrudFilters, HttpError } from "@pankod/refine-core";
 import {
   List,
   Table,
@@ -38,7 +33,6 @@ import {
   TAX_TOKEN_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { Spin } from "antd";
-import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
@@ -112,8 +106,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
   const [detailCheckin, setDetailCheckin] =
     useState<ITaxTokenResponseCheckin>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
+  const [searchParams] = useSearchParams();
   const searchParam = searchParams.get("search");
   const type_id = searchParams.get("id");
 
@@ -127,7 +120,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -155,8 +148,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
       resource: TAX_TOKEN_API,
       onSearch: (params) => {
         const filters: CrudFilters = [];
-        const { search, name, seri, supplier, purchase_date, expiration_date } =
-          params;
+        const { name, seri, supplier, purchase_date, expiration_date } = params;
         filters.push(
           {
             field: "search",
@@ -252,13 +244,13 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
       {
         key: "name",
         title: t("tax_token.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "seri",
         title: t("tax_token.label.field.seri"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seri", sorter),
       },
       {
@@ -310,7 +302,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
       {
         key: "purchase_cost",
         title: t("tax_token.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -363,7 +355,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
       {
         key: "assigned_to",
         title: t("tax_token.label.field.checkoutTo"),
-        render: (value: string, record: ITaxTokenResponse) => (
+        render: (_: string, record: ITaxTokenResponse) => (
           <TextField
             value={record.assigned_to ? record.assigned_to.username : ""}
           />
@@ -373,19 +365,19 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
       {
         key: "checkout_counter",
         title: t("tax_token.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tax_token.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "note",
         title: t("tax_token.label.field.note"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("note", sorter),
       },
     ],

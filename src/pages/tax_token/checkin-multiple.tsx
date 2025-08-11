@@ -66,7 +66,7 @@ export const TaxTokenCheckinMultiple = (
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
