@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Interface } from "readline";
 import { EBooleanString } from "../constants/common";
 
 export interface IHardwareCreateRequest {

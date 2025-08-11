@@ -1043,10 +1043,7 @@ export const HardwareListExpiration: React.FC<
     }
   }, [initselectedRowKeys]);
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    _: IHardwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
