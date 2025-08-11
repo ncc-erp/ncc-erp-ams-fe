@@ -42,7 +42,6 @@ import {
   IAccesstoryResponse,
 } from "interfaces/accessory";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { AccessoryCheckout } from "./checkout";
 import { AccessoryCreate } from "./create";
 import { AccessoryEdit } from "./edit";
@@ -439,7 +438,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -494,7 +493,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   };
 
-  const handleDateChange = (val: any, formatString: any) => {
+  const handleDateChange = (val: any) => {
     const [from, to] = Array.from(val || []) as moment.Moment[];
 
     if (val !== null) {

@@ -30,7 +30,7 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
     <>
       {menuItems
         .filter((item) => filterSideBarItems(item, label, itemList))
-        .map(({ icon, name, route }) => {
+        .map(({ name, route }) => {
           const isSelected = route === selectedKey;
           return (
             <Menu.Item

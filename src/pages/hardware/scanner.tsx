@@ -42,7 +42,6 @@ export const Scanner = () => {
           if (result.getBarcodeFormat() === BarcodeFormat.QR_CODE) {
             setResult(result.getText());
           } else {
-            console.warn("Non-QR code scanned");
             setIsModalVisible(true);
           }
         }

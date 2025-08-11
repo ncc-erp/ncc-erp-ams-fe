@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Button,
   Col,
@@ -96,7 +95,7 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+    (option) => option.value === STATUS_LABELS.READY_TO_DEPLOY
   );
   statusLabelSelectProps.options = filteredProps;
 
@@ -168,7 +167,7 @@ export const TaxTokenClone = (props: TaxTokenCloneProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               description: "Success",

@@ -91,7 +91,7 @@ export const useMezonLoginByHash = () => {
           Promise.resolve("/users");
           window.location.reload();
         }
-      } catch (error) {
+      } catch {
         setLoginMezonFailed(true);
       } finally {
         setLoadingMezonByHash(false);

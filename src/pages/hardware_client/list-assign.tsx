@@ -65,7 +65,6 @@ import { ClientHardwareSearch } from "./search";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
 import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
@@ -894,7 +893,7 @@ export const ClientHardwareListAssign: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -975,9 +974,9 @@ export const ClientHardwareListAssign: React.FC<
     return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
   }, [localStorage.getItem("selectedRowKeys")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IHardwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -1088,10 +1087,7 @@ export const ClientHardwareListAssign: React.FC<
     }
   };
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 

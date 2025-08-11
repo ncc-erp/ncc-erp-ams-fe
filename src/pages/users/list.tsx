@@ -49,7 +49,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IUserAssets>({
       initialSorter: [
@@ -204,20 +204,18 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem("selectedRowKeys_AcceptRefuse")]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IUserAssets[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | IUserAssets[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
   useEffect(() => {
     localStorage.removeItem("selectedRowKeys_AcceptRefuse");
   }, [window.location.reload]);
 
-  const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -285,10 +283,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     }
   }, [initselectedRowKeys]);
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IUserAssets[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 

@@ -14,9 +14,7 @@ interface MultiQrCardProps {
 const MultiQrCards: React.FC<MultiQrCardProps> = ({
   hardwareList,
   layout,
-  paddingStyle,
   renderSelectedFields,
-  generateRedirectUrl,
   handleDeleteQrCode,
 }) => {
   return (

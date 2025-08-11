@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Typography } from "antd";
-import { DataTable, ICategoryAsset, ILocation } from "interfaces/dashboard";
+import { DataTable, ICategoryAsset } from "interfaces/dashboard";
 import { useNavigation, useTranslate } from "@pankod/refine-core";
 import { useSearchParams } from "react-router-dom";
 import { CategoryType, EStatus } from "constants/assets";

@@ -149,27 +149,25 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "licenses",
         title: t("licenses.label.field.licenses"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("licenses", sorter),
       },
       {
         key: "software",
         title: t("licenses.label.field.software"),
-        render: (value: ILicenses, record: any) => (
-          <TextField value={value?.name} />
-        ),
+        render: (value: ILicenses) => <TextField value={value?.name} />,
         defaultSortOrder: getDefaultSortOrder("software", sorter),
       },
       {
         key: "seats",
         title: t("licenses.label.field.seats"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seats", sorter),
       },
       {
         key: "checkout_count",
         title: t("licenses.label.field.checkout-count"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_count", sorter),
       },
       {
@@ -197,7 +195,7 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("licenses.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
     ],
@@ -258,7 +256,7 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
-  const handleDateChange = (val: any, formatString: any) => {
+  const handleDateChange = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       searchParams.set(

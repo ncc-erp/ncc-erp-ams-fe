@@ -68,7 +68,6 @@ export const DetailsAccessory = (props: detailAccessoryProps) => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
 
-  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IAccesstoryResponse>();
@@ -315,14 +314,6 @@ export const DetailsAccessory = (props: detailAccessoryProps) => {
     setIsCheckoutModalVisible(true);
   };
 
-  const handleSearch = () => {
-    handleOpenSearchModel();
-  };
-
-  const handleOpenSearchModel = () => {
-    setIsSearchModalVisible(!isSearchModalVisible);
-  };
-
   const show = (data: IAccesstoryResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
@@ -366,7 +357,7 @@ export const DetailsAccessory = (props: detailAccessoryProps) => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

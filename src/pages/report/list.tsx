@@ -1,4 +1,3 @@
-/* eslint-disable no-lone-blocks */
 import {
   DateField,
   Form,
@@ -24,7 +23,6 @@ import {
   ASSET_HISTORY_TOTAL_DETAIL_API,
 } from "api/baseApi";
 import { ICompany } from "interfaces/company";
-import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker } from "antd";
 import {
@@ -58,7 +56,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     clearParam,
   } = useAppSearchParams("reportList");
 
-  const [search, setSearch] = useState<string>("");
+  const [search] = useState<string>("");
 
   const { Option } = Select;
 
@@ -72,7 +70,7 @@ export const ReportList: React.FC<IResourceComponentsProps> = () => {
     resource: ASSET_HISTORY_API,
     onSearch: (params: any) => {
       const filters: CrudFilters = [];
-      const { search, location_id, date_from, date_to, action_type } = params;
+      const { location_id, date_from, date_to } = params;
       filters.push(
         {
           field: "search",
