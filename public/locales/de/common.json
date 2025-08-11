@@ -1,12 +1,19 @@
 {
+  "lang": {
+    "vi": "Vietnamesisch",
+    "en": "Englisch",
+    "de": "Deutsch"
+  },
   "pages": {
     "login": {
       "signin": "Einloggen",
       "signup": "Anmelden",
+      "signinGoogle": "Einloggen mit Google",
+      "signinMezon": "Einloggen mit Mezon",
       "username": "Benutzername",
       "password": "Passwort",
       "remember": "Login speichern",
-      "forgotPassword": "Passwort Vergessen?",
+      "forgotPassword": "Passwort vergessen?",
       "title": "Benutzerkonto einloggen",
       "noAccount": "Noch kein Benutzerkonto?"
     },
@@ -51,8 +58,52 @@
   "tags": {
     "clone": "Klon"
   },
+  "all": "Alle",
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Übersicht",
+    "field": {
+      "name": "Gerätename",
+      "pending": "Recheck - Garantie",
+      "broken": "Defekt",
+      "assign": "Zugewiesen",
+      "ready-to-deploy": "Bereit zum Bereitstellen",
+      "sum": "Gesamt",
+      "tilte-section-1": "Gerätetypdetails",
+      "tilte-section-2": "Geräteanzahl nach Büro",
+      "search-date": "Gerätekaufdatum",
+      "search-location": "Standort",
+      "start-date": "Startdatum",
+      "end-date": "Enddatum",
+      "sum-assets": "Gesamtgeräteanzahl nach Büro",
+      "sum-assets-by-category": "Geräteanzahl nach Kategorie pro Büro",
+      "sum-report": "Anzahl",
+      "typeConsumable": "Bürobedarf",
+      "typeAccessory": "Zubehör",
+      "typeTool": "Werkzeuge & Domains",
+      "typeTaxToken": "Steuer-Tokens",
+      "typeClientAsset": "Kunden-Assets"
+    },
+    "titleStatistic": "Gesamtgerätezuweisung - Rückgabestatistik",
+    "time": "Gerätekaufzeit",
+    "time_checkout": "Zuweisungszeit",
+    "time_checkin": "Rückgabezeit",
+    "assetFilter": {
+      "filters": {
+        "label": {
+          "from": "Von Datum",
+          "to": "Bis Datum",
+          "filters": "Filter"
+        }
+      }
+    },
+    "placeholder": {
+      "select-category": "Alle",
+      "searchToDate": "Zeitperiode"
+    },
+    "detail": {
+      "title-show": "Gesamtgeräteanzahl nach Büro",
+      "title-count-asset": "Geräteanzahl nach Büro innerhalb der Zeitperiode"
+    }
   },
   "posts": {
     "posts": "Einträge",
@@ -82,6 +133,1363 @@
     }
   },
   "table": {
-    "actions": "Aktionen"
+    "actions": "Aktionen",
+    "search": "Suchen",
+    "checkAll": "Alle auswählen",
+    "qrCode": "QR-Code"
+  },
+  "hardware": {
+    "label": {
+      "field": {
+        "nameCompany": "Firma",
+        "propertyCard": "Asset Tag",
+        "serial": "Seriennummer",
+        "propertyType": "Asset Typ",
+        "status": "Status",
+        "checkoutTo": "Auschecken an",
+        "checkinTo": "Einchecken von",
+        "user": "Benutzer",
+        "asset": "Asset",
+        "location": "Standort",
+        "assetName": "Gerätename",
+        "dateAdd": "Erstellt am",
+        "supplier": "Lieferant",
+        "orderNumber": "Bestellnummer",
+        "cost": "Kaufpreis",
+        "insurance": "Garantie",
+        "usd": "VND",
+        "month": "Monat",
+        "notes": "Beschreibung",
+        "locationFix": "Büro",
+        "checkbox": "Erlaube Anfrage",
+        "device": "Gerät",
+        "dateCheckout": "Auschecken am",
+        "dateCheckin": "Einchecken am",
+        "note": "Notiz",
+        "category": "Kategorie",
+        "rtd_location": "Standort",
+        "image": "Bild",
+        "loading_image": "Bild laden",
+        "condition": "Bedingung",
+        "dateCreate": "Erstellt am",
+        "manufacturer": "Lager",
+        "purchase_date": "Kaufdatum",
+        "eol": "Ende der Nutzungsdauer",
+        "warranty_expires": "Garantieablauf",
+        "checkout_counter": "Auschecken",
+        "checkin_counter": "Einchecken",
+        "requestable": "Anfrage erlauben",
+        "assign": "Zuweisen",
+        "readyToDeploy": "Bereit zum Bereitstellen",
+        "broken": "Defekt",
+        "pending": "Ausstehend",
+        "checkin": "Einchecken",
+        "start-date": "Startdatum",
+        "end-date": "Enddatum",
+        "confirmStatus": "Bestätigungsstatus",
+        "purchase_cost": "Preis",
+        "qr_code": "QR-Code drucken",
+        "scan_qr": "QR-Code scannen",
+        "confirmDeleteQr": "QR-Code löschen",
+        "maintenance_cycle": "Wartungsschleife",
+        "months_per_time": "Monate pro Zeit",
+        "maintenance_date": "Wartungstermin",
+        "expired": "Abgelaufen",
+        "project": "Projekt",
+        "customer": "Kunde",
+        "isCustomerRenting": "Ist Kunde vermietet",
+        "yes": "Ja",
+        "no": "Nein",
+        "webhook": "Webhook",
+        "startRentalDate": "Vermietungsstartdatum",
+        "notAvailable": "Nicht verfügbar"
+      },
+      "placeholder": {
+        "nameCompany": "Select Company",
+        "propertyCard": "Asset Tag",
+        "serial": "Serial",
+        "propertyType": "Select an Asset Type",
+        "status": "Select Status",
+        "checkoutTo": "Checkout To",
+        "checkinTo": "Checkin From",
+        "user": "Select a User",
+        "asset": "Select Asset",
+        "location": "Select an Office",
+        "supplier": "Select Supplier",
+        "assetName": "Asset Name",
+        "orderNumber": "Order Number",
+        "cost": "Purchase Cost",
+        "insurance": "Warranty",
+        "choiceAsset": "Select Asset",
+        "maintenance": "Maintenance",
+        "maintenance_cycle": "Maintenance Cycle",
+        "webhook": "Select Mezon Webhook"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Update",
+        "clone": "Clone",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "accept": "Accept",
+        "refuse": "Refuse",
+        "search": "Search",
+        "accept_checkout": "Accept Checkout",
+        "accept_checkin": "Accept Checkin",
+        "rejectCheckout": "Reject Checkout",
+        "rejectCheckin": "Reject Checkin"
+      },
+      "title": {
+        "asset": "All Assets",
+        "create": "Create Asset",
+        "edit": "Edit Asset",
+        "delete": "Delete",
+        "clone": "Clone Asset",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "detail": "Asset Detail",
+        "search_advanced": "Search Advanced",
+        "list-assign": "Assigned Asset",
+        "list-readyToDeploy": "Ready to Deploy Asset",
+        "list-pending": "Pending Asset",
+        "list-broken": "Broken Asset",
+        "list-waiting-confirm": "Waiting Confirm",
+        "list-expiration": "Expired Asset",
+        "dateCreate": "Date Created",
+        "updateAt": "Updated At",
+        "time": "Time",
+        "location": "Office",
+        "sum-assets": "Quantity",
+        "confirmStatus": "Confirm Status",
+        "timeCheckout": "Checkout Time",
+        "list-maintenance": "Maintenance List",
+        "rentalCustomers": "Rental Customers",
+        "timeRental": "Rental Time"
+      },
+      "tooltip": {
+        "create": "Create",
+        "viewDetail": "View Detail",
+        "clone": "Clone",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh"
+      },
+      "detail": {
+        "assign": "Assign",
+        "readyToDeploy": "Ready to Deploy",
+        "broken": "Broken",
+        "pending": "Pending",
+        "default": "Not Checkout",
+        "pendingAccept": "Pending Accept",
+        "waitingAcceptCheckout": "Waiting Accept Checkout",
+        "waitingAcceptCheckin": "Waiting Accept Checkin",
+        "accept": "Accepted",
+        "refuse": "Refused",
+        "note-checkin": "These assets are not allowed to be checked in. Please remove them from the list",
+        "note-checkout": "These assets are not allowed to be checked out. Please remove them from the list",
+        "not-confirm-refuse": "These assets are not allowed to be confirmed and refused. Please remove them from the list",
+        "confirm-refuse": "These assets are allowed to be confirmed or refused",
+        "list-asset": "List of Assets",
+        "invalid-qr-code": "The scanned data is not a valid QR code. Please try again."
+      },
+      "option_assigned": {
+        "no-checkout": "Not Checkout",
+        "waiting-confirm": "Waiting Confirm",
+        "confirmed": "Confirmed",
+        "refuse": "Refused",
+        "waiting-confirm-checkout": "Waiting Accept Checkout",
+        "waiting-confirm-checkin": "Waiting Accept Checkin"
+      }
+    }
+  },
+  "tools": {
+    "label": {
+      "field": {
+        "status": "Status",
+        "checkoutTo": "Checkout To",
+        "checkinTo": "Checkin From",
+        "user": "User",
+        "dateAdd": "Date Added",
+        "notes": "Description",
+        "dateCheckout": "Checkout Date",
+        "dateCheckin": "Checkin Date",
+        "category": "Category",
+        "condition": "Confirm",
+        "dateCreate": "Date Created",
+        "manufacturer": "Warehouse",
+        "checkout_count": "Checkout Count",
+        "assigned_to": "Assigned To",
+        "requestable": "Requestable",
+        "assign": "Assign",
+        "checkin": "Checkin",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "checkout_at": "Checkout Date",
+        "checkin_at": "Checkin Date",
+        "confirmStatus": "Confirm Status",
+        "purchase_cost": "Purchase Cost",
+        "purchase_date": "Purchase Date",
+        "version": "Version",
+        "name": "Name",
+        "key": "Key",
+        "supplier": "Supplier",
+        "location": "Location",
+        "expiration_date": "Expiration Date",
+        "qty": "Quantity",
+        "checkin_counter": "Checkin Count",
+        "checkout_counter": "Checkout Count",
+        "usd": "VND",
+        "assigned_status": "Confirm",
+        "readyToDeploy": "Ready to Deploy",
+        "pending": "Pending",
+        "broken": "Broken",
+        "list_tools": "List of Tools"
+      },
+      "placeholder": {
+        "checkoutTo": "Checkout To",
+        "checkinTo": "Checkin From",
+        "name": "Enter name",
+        "key": "Enter key",
+        "version": "Enter version",
+        "notes": "Description",
+        "purchase_cost": "Enter purchase cost",
+        "manufacturer": "Select manufacturer",
+        "category": "Select category",
+        "supplier": "Select supplier",
+        "location": "Select location"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "edit": "Edit",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "accept": "Confirm",
+        "refuse": "Refuse",
+        "search": "Search",
+        "clone": "Clone tool"
+      },
+      "tooltip": {
+        "create": "Create",
+        "viewDetail": "View Detail",
+        "clone": "Clone",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh"
+      },
+      "title": {
+        "tool": "Tool & Domain",
+        "tools": "All Tool & Domain",
+        "create": "Create Tool & Domain",
+        "edit": "Update",
+        "delete": "Delete",
+        "clone": "Clone",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "detail": "Details",
+        "search_advanced": "Search Advanced",
+        "list-assign": "Assigned",
+        "dateCreate": "Date Created",
+        "updateAt": "Updated At",
+        "time": "Time",
+        "time-purchase-date": "Purchase Date",
+        "time-expiration-date": "Expiration Date",
+        "sum-tools": "Quantity",
+        "name": "Name",
+        "my-tool": "My Tool & Domain"
+      },
+      "detail": {
+        "default": "Not Checkout",
+        "readyToDeploy": "Ready to Deploy",
+        "assign": "Assign",
+        "broken": "Broken",
+        "waitingAcceptCheckout": "Waiting Accept Checkout",
+        "waitingAcceptCheckin": "Waiting Accept Checkin",
+        "accept": "Accepted"
+      }
+    }
+  },
+  "licenses": {
+    "label": {
+      "title": {
+        "licenses": "List of Key",
+        "time": "Time",
+        "location": "Office",
+        "sum-licenses": "Total Key",
+        "checkout": "Checkout",
+        "create": "Create Key",
+        "edit": "Update Key",
+        "detail": "Key Detail",
+        "search": "Search Advanced",
+        "dateCreate": "Date Created",
+        "updateAt": "Updated At",
+        "info": "Info",
+        "key": "List of Key",
+        "users": "Assigned Users",
+        "my-licenses": "My Key"
+      },
+      "field": {
+        "licenses": "Key",
+        "seats": "Total Seats",
+        "software": "Software",
+        "purchase_cost": "Purchase Cost",
+        "checkoutTo": "Checkout To",
+        "user": "User",
+        "category": "Category",
+        "manufacturer": "Warehouse",
+        "notes": "Note",
+        "keyName": "Key Name",
+        "checkout-count": "Checkout Count",
+        "location": "Location",
+        "department": "Department",
+        "created_at": "Date Created",
+        "updated_at": "Updated At",
+        "checkout_at": "Checkout Date",
+        "purchase_date": "Purchase Date",
+        "expiration_date": "Expiration Date",
+        "start-date": "Start Date",
+        "end-date": "End Date"
+      },
+      "tooltip": {
+        "create": "Create",
+        "viewDetail": "View Detail",
+        "clone": "Clone",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh"
+      },
+      "message": {
+        "required": "required"
+      },
+      "placeholder": {
+        "manufacturer": "Select Warehouse",
+        "softwareName": "Software Name",
+        "software_tag": "Software Tag",
+        "category": "Select Category",
+        "version": "Version",
+        "user": "Select User",
+        "licenses": "Key",
+        "seats": "Total Seats",
+        "purchase_cost": "Purchase Cost",
+        "purchase_date": "Purchase Date",
+        "expiration_date": "Expiration Date"
+      },
+      "button": {
+        "search": "Search",
+        "create": "Create",
+        "edit": "Edit",
+        "checkout": "Checkout"
+      }
+    }
+  },
+  "software": {
+    "label": {
+      "title": {
+        "all_software": "All Software",
+        "time": "Time",
+        "location": "Office",
+        "sum-assets": "Quantity",
+        "checkout": "Checkout",
+        "create": "Create Software",
+        "clone": "Clone Software",
+        "search": "Search Advanced",
+        "edit": "Update Software",
+        "detail": "Software Detail",
+        "info": "Info",
+        "users": "Assigned Users",
+        "list_software": "List of Software",
+        "dateCreate": "Date Created",
+        "updateAt": "Updated At"
+      },
+      "field": {
+        "status": "Status",
+        "checkoutTo": "Checkout To",
+        "user": "User",
+        "location": "Office",
+        "department": "Department",
+        "softwareName": "Software Name",
+        "category": "Category",
+        "manufacturer": "Warehouse",
+        "software_tag": "Software Tag",
+        "total_licenses": "Total Key",
+        "version": "Version",
+        "notes": "Note",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "purchase_date": "Purchase Date",
+        "expiration_date": "Expiration Date",
+        "checkout_at": "Checkout Date",
+        "checkout-count": "Checkout Count",
+        "created_at": "Date Created"
+      },
+      "tooltip": {
+        "create": "Create",
+        "viewDetail": "View Detail",
+        "clone": "Clone",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh"
+      },
+      "message": {
+        "required": "required"
+      },
+      "placeholder": {
+        "manufacturer": "Select Warehouse",
+        "softwareName": "Software Name",
+        "software_tag": "Software Tag",
+        "category": "Select Category",
+        "version": "Version",
+        "user": "Select User"
+      },
+      "button": {
+        "search": "Search",
+        "create": "Create",
+        "edit": "Edit",
+        "checkout": "Checkout"
+      }
+    }
+  },
+  "request": {
+    "label": {
+      "field": {
+        "create": "Create Request",
+        "name": "Request Name",
+        "branch": "Select Branch",
+        "supplier": "Supplier",
+        "entry": "Asset Type",
+        "note": "Description",
+        "nameAsset": "Device Name",
+        "category": "Category",
+        "location": "Location",
+        "nameRequest": "Request Name",
+        "branchRequest": "Branch",
+        "entryRequest": "Asset Type",
+        "countAsset": "Quantity",
+        "totalAsset": "Quantity",
+        "status": "Status",
+        "asset_ids": "Device",
+        "price": "Price",
+        "image": "Device Image",
+        "warranty_months": "Warranty",
+        "model": "Asset Type",
+        "dateCreate": "Date Created"
+      },
+      "placeholder": {
+        "name": "Enter name",
+        "branch": "Select Branch",
+        "supplier": "Select Supplier",
+        "asset_ids": "Select Device"
+      },
+      "button": {
+        "create": "Create",
+        "send": "Send",
+        "delete": "Delete",
+        "cancle": "Refuse",
+        "viewDetail": "View Detail"
+      },
+      "message": {
+        "required": "required",
+        "assetsRequired": "* You have not selected any device"
+      },
+      "title": {
+        "create": "Create",
+        "detail": "Request Detail"
+      }
+    }
+  },
+  "user": {
+    "label": {
+      "title": {
+        "name": "My Assets",
+        "detail": "My Asset Detail",
+        "detail_licenses": "My Key Detail",
+        "cancle": "Refuse",
+        "search_advanced": "Search Advanced",
+        "edit": "Update User",
+        "clone": "Clone",
+        "create": "Create User",
+        "name_user": "User",
+        "changePassword": "Change Password",
+        "permission": "Permission",
+        "grant": "Grant",
+        "refuse": "Refuse",
+        "inheritance": "Inheritance",
+        "admin": "Admin",
+        "branchadmin": "Admin Office",
+        "choose_branchadmin": "Select Branch Admin",
+        "import_csv": "Import CSV",
+        "asset": "Device",
+        "view": "View",
+        "delete": "Delete",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "audit": "Audit",
+        "view_requestable": "View Requestable Device",
+        "accessory": "Accessories",
+        "consumables": "Consumables",
+        "licenses": "Licenses",
+        "keys": "View License Key",
+        "files": "View and Edit License File",
+        "models": "Asset Type",
+        "categories": "Category",
+        "departments": "Department",
+        "statuslabels": "Status",
+        "customfields": "Custom Fields",
+        "suppliers": "Supplier",
+        "manufacturers": "Warehouse",
+        "locations": "Office",
+        "superuser": "User",
+        "assets": "Device",
+        "import": "Nhập CSV",
+        "reports.view": "Báo cáo",
+        "accessories": "Accessories",
+        "users": "User",
+        "sum-assets": "Total Assets",
+        "detail_tool": "My Tool Detail",
+        "detail_tax_token": "My Tax Token Detail",
+        "qrCode": "QR Code",
+        "above": "Above",
+        "below": "Below",
+        "codeDevice": "Asset Name",
+        "user_name": "User Name",
+        "total_user": "Total User"
+      },
+      "field": {
+        "notes": "Description",
+        "category": "Category",
+        "status": "Status",
+        "location": "Location",
+        "supplier": "Supplier",
+        "name": "Asset Name",
+        "model": "Asset Type",
+        "insurance": "Warranty",
+        "reason": "Reason",
+        "inputReason": "Enter reason",
+        "image": "Image",
+        "condition": "Confirm",
+        "dateCheckout": "Checkout Date",
+        "title": "Title",
+        "email": "Email",
+        "phone": "Phone",
+        "username": "Username",
+        "locations": "Office",
+        "remote": "Remote",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "full_name": "Full Name",
+        "address": "Address",
+        "city": "City",
+        "job_title": "Job Title",
+        "user_manager": "User Manager",
+        "mezon_id": "Mezon Id",
+        "department": "Department",
+        "website": "Website",
+        "state": "State",
+        "country": "Country",
+        "note": "Note",
+        "activated": "Allow login",
+        "checkbox": "User can login",
+        "locale": "Language",
+        "remote_checkbox": "This is a remote user",
+        "assets_count": "Asset",
+        "accessories_count": "Accessories",
+        "licenses_count": "Licenses",
+        "consumables_count": "Consumables",
+        "password": "Password",
+        "password_confirmation": "Confirm Password",
+        "old_password": "Old Password",
+        "new_password": "New Password",
+        "list_assets": "List of Devices",
+        "dateBuy": "Purchase Date",
+        "warranty_months": "Warranty",
+        "name_user": "User Name",
+        "accept": "Accept",
+        "refuse": "Refuse",
+        "user": "User",
+        "admin": "Admin",
+        "information": "Information",
+        "download_picter": "Download Image",
+        "permission": "Permission",
+        "role": "Role",
+        "job_position": "Job Position",
+        "user_type": "User Type"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "cancle": "Refuse",
+        "create": "Create",
+        "synchronized": "Synchronized",
+        "update": "Edit",
+        "changePass": "Change Password",
+        "accept": "Confirm"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "search": "Search Advanced",
+        "refresh": "Refresh",
+        "columns": "Columns",
+        "changePass": "Change Password"
+      },
+      "placeholder": {
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "username": "Username",
+        "email": "Email",
+        "user_manager": "Select User",
+        "mezon_id": "Mezon Id",
+        "department": "Select Department",
+        "locations": "Select Office",
+        "phone": "Phone",
+        "address": "Address",
+        "city": "City",
+        "state": "State"
+      }
+    }
+  },
+  "category": {
+    "label": {
+      "title": {
+        "create": "Create Category",
+        "edit": "Update Category",
+        "nameTitle": "Category"
+      },
+      "field": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "name": "Category Name",
+        "category": "Category",
+        "categoryEULA": "Category Description",
+        "accept": "Request user to confirm asset in this category",
+        "sendMail": "Send email to user when checkin/checkout",
+        "image": "Upload Image",
+        "dateCreate": "Date Created",
+        "checkin_email": "Send email when checkin/checkout"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      },
+      "table": {
+        "nameAsset": "Asset Name",
+        "image": "Image",
+        "category": "Category",
+        "assetCount": "Quantity",
+        "sendEmail": "Send Email",
+        "accept": "Accept",
+        "qrCode": "QR Code"
+      },
+      "options": {
+        "accessory": "Accessories",
+        "asset": "Device",
+        "consumable": "Consumables",
+        "software": "Software",
+        "taxtoken": "Tax Token",
+        "tool": "Tool & Domain"
+      }
+    }
+  },
+  "manufactures": {
+    "label": {
+      "title": {
+        "create": "Create Warehouse",
+        "edit": "Update Warehouse",
+        "nameTitle": "Warehouse",
+        "asset": "Asset",
+        "accessories": "Accessories",
+        "consumables": "Consumables",
+        "tools": "Tool & Domain",
+        "tax_token": "Tax Token",
+        "softwares": "Software"
+      },
+      "field": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "name": "Name",
+        "url": "URL",
+        "urlSupport": "URL Support",
+        "phone": "Support Phone",
+        "email": "Support Email",
+        "image": "Upload Image",
+        "imageTable": "Image",
+        "assetCount": "Device",
+        "accessoriesCount": "Accessories",
+        "consumableCount": "Consumables",
+        "toolCount": "Tool & Domain",
+        "taxTokenCount": "Tax Token",
+        "dateCreate": "Date Created"
+      },
+      "placeholder": {
+        "url": "https://",
+        "urlSupport": "https://"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      }
+    }
+  },
+  "location": {
+    "label": {
+      "title": {
+        "create": "Create Office",
+        "edit": "Update Office",
+        "nameTitle": "Office",
+        "assets": "Asset",
+        "tools": "Tool & Domain",
+        "accessories": "Accessories",
+        "consumables": "Consumables",
+        "tax_tokens": "Tax Token"
+      },
+      "field": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "name": " Office Name",
+        "parent": "Parent",
+        "manager": "Manager",
+        "currency": "Office Currency",
+        "address_detail": "Address Detail",
+        "address": "Address",
+        "city": "City",
+        "state": "State",
+        "country": "Country",
+        "image": "Upload Image",
+        "imageTable": "Image",
+        "assetCount": "Quantity",
+        "assets_count": "Asset",
+        "tools_count": "Tool & Domain",
+        "accessories_count": "Accessories",
+        "consumables_count": "Consumables",
+        "tax_tokens_count": "Tax Token",
+        "assetAssign": "Asset Assigned",
+        "dateCreate": "Date Created",
+        "users_count": "Users",
+        "branch_code": "Office Code"
+      },
+      "placeholder": {
+        "parent": "Select Office",
+        "manager": "Select User",
+        "country": "Select Country",
+        "currency": "USD"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      }
+    }
+  },
+  "webhook": {
+    "label": {
+      "field": {
+        "name": "Webhook Name",
+        "url": "URL",
+        "created_at": "Date Created",
+        "create": "Create",
+        "edit": "Edit",
+        "type": "Webhook Type"
+      },
+      "title": {
+        "nameTitle": "Webhook",
+        "create": "Create Webhook",
+        "edit": "Update Webhook",
+        "detail": "Webhook Detail"
+      },
+      "message": {
+        "required": "required"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh",
+        "viewDetail": "View Detail"
+      }
+    }
+  },
+  "resource": {
+    "dashboard": "Dashboard",
+    "asset": "Device",
+    "assets": "All",
+    "software": "Software",
+    "softwares": "Software",
+    "licenses": "Key",
+    "request": "Create Request",
+    "users": "Asset",
+    "users_licenses": "Software",
+    "category": "Category",
+    "manufactures": "Manufacturer",
+    "tools": "Tool & Domain",
+    "tools-all": "All",
+    "tools-assign": "Tools Assigned",
+    "tools-waiting": "Waiting",
+    "users-tools": "Tool & Domain",
+    "users_assets": "My Assets",
+    "location": "Office",
+    "supplier": "Supplier",
+    "model": "Asset Type",
+    "suppliers": "Supplier",
+    "department": "Department",
+    "setting": "Setting",
+    "depreciation": "Depreciation",
+    "assets_refuse": "Asset Refuse",
+    "assets-assign": "Assigned",
+    "assets-readyToDeploy": "Ready to Deploy",
+    "assets-pending": "Maintenance-Check again",
+    "assets-broken": "Broken",
+    "assets-waiting-confirm": "Waiting Confirm",
+    "assets-expires": "Expiring",
+    "assets-maintenance": "Maintenance",
+    "report": "Report",
+    "asset-category-PC": "All PC",
+    "asset-category-Monitor": "All Monitor",
+    "asset-category-Mouse": "All Mouse",
+    "asset-category-Keyboard": "All Keyboard",
+    "asset-category-Headphone": "All Headphone",
+    "asset-category-Device": "All Device",
+    "checkin-checkout": "Checkin/Checkout",
+    "checkout": "Checkout",
+    "checkin": "Checkin",
+    "manager_user": "User",
+    "accessory": "Accessories",
+    "consumable": "Consumables",
+    "consumables": "All",
+    "consumables-maintenance": "Maintenance",
+    "accessory_details": "Accessories Detail",
+    "consumable_details": "Consumables Detail",
+    "supplier_details": "Supplier Detail",
+    "tax_token": "Tax Token",
+    "tax_token_assign": "Tax Token Assigned",
+    "tax_token_waiting": "Waiting Confirm",
+    "users-tax-tokens": "Tax Token",
+    "client-asset": "Customer Asset",
+    "client-assets": "All",
+    "client-asset-assigned": "Assigned",
+    "client-asset-readyToDeploy": "Ready to Deploy",
+    "client-asset-pending": "Maintenance-Check again",
+    "client-asset-broken": "Broken",
+    "client-asset-waitingConfirm": "Waiting Confirm",
+    "client-asset-expires": "Expiring",
+    "webhook": "Webhook",
+    "webhook_details": "Webhook Detail",
+    "asset-rental-customers": "Rental Customer",
+    "detail-device": "Device Detail",
+    "location_details": "Office Detail",
+    "manufactures_details": "Manufacturer Detail",
+    "audit": "Audit",
+    "komu_logs": "Komu Logs",
+    "webhook_logs": "Webhook Logs"
+  },
+  "model": {
+    "label": {
+      "field": {
+        "id": "ID",
+        "name": "Asset Type Name",
+        "manufacturer": "Warehouse",
+        "category": "Category",
+        "notes": "Note",
+        "image": "Upload Image",
+        "checkbox": "User can request this model",
+        "assets": "Asset",
+        "images": "Image",
+        "requestable": "Allow request",
+        "created_at": "Date Created"
+      },
+      "placeholder": {
+        "manufacturer": "Select Warehouse",
+        "category": "Select Category",
+        "name": "Asset Type Name"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit",
+        "clone": "Clone"
+      },
+      "title": {
+        "model": "Asset Type",
+        "create": "Create Asset Type",
+        "edit": "Update Asset Type",
+        "clone": "Clone Asset Type"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "clone": "Clone",
+        "delete": "Delete"
+      }
+    }
+  },
+  "tax_token": {
+    "label": {
+      "title": {
+        "tax_token": "All Tax Token",
+        "location_detail_tax_token": "Tax Token",
+        "tax_token_waiting": "Waiting Confirm",
+        "time": "Time",
+        "location": "Office",
+        "sum-tax-token": "Quantity",
+        "checkout": "Checkout",
+        "create": "Create Tax Token",
+        "clone": "Clone Tax Token",
+        "search": "Search Advanced",
+        "edit": "Update Tax Token",
+        "detail": "Tax Token Detail",
+        "info": "Info",
+        "users": "Users Assigned",
+        "dateCreate": "Date Created",
+        "updateAt": "Updated At",
+        "checkin": "Checkin",
+        "time-purchase-date": "Purchase Date",
+        "time-expiration-date": "Expiration Date",
+        "my-tax-token": "My Tax Token"
+      },
+      "field": {
+        "name": "Tax Token Name",
+        "seri": "Seri",
+        "status": "Status",
+        "checkoutTo": "Checkout To",
+        "user": "User",
+        "supplier": "Supplier",
+        "note": "Note",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "purchase_date": "Purchase Date",
+        "purchase_cost": "Purchase Cost",
+        "expiration_date": "Expiration Date",
+        "checkout_at": "Checkout At",
+        "checkout_counter": "Checkout Counter",
+        "checkin_counter": "Checkin Counter",
+        "assigned_status": "Confirm",
+        "created_at": "Date Created",
+        "not_active": "Not Active",
+        "assign": "Assigned",
+        "usd": "USD",
+        "location": "Office",
+        "qty": "Quantity",
+        "warranty_months": "Warranty",
+        "month": "Month",
+        "category": "Category",
+        "checkinTo": "Checkin To",
+        "dateCheckin": "Checkin Date",
+        "list_tax_token": "List Tax Token",
+        "notes": "Note",
+        "dateCreate": "Date Created"
+      },
+      "tooltip": {
+        "create": "Create",
+        "viewDetail": "View Detail",
+        "clone": "Clone",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh"
+      },
+      "message": {
+        "required": "required"
+      },
+      "placeholder": {
+        "supplier": "Select Supplier",
+        "user": "Select User",
+        "name": "Enter Tax Token Name",
+        "seri": "Enter Tax Token Seri",
+        "category": "Select Category",
+        "location": "Select Office",
+        "purchase_cost": "Enter Purchase Cost",
+        "note": "Enter Note"
+      },
+      "button": {
+        "search": "Search",
+        "create": "Create",
+        "edit": "Edit",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "clone": "Clone"
+      },
+      "detail": {
+        "assign": "Checkout",
+        "not_active": "Not Active",
+        "tax_token": "Tax Token"
+      }
+    }
+  },
+  "supplier": {
+    "label": {
+      "field": {
+        "id": "ID",
+        "name": "Supplier Name",
+        "address": "Supplier Address",
+        "city": "City",
+        "state": "State",
+        "zip": "Zip",
+        "contact": "Contact Name",
+        "phone": "Phone",
+        "email": "Email",
+        "notes": "Note",
+        "image": "Upload Image",
+        "assets": "Asset",
+        "accessories": "Accessories",
+        "tools": "Tool & Domain",
+        "consumables": "Consumables",
+        "tax_tokens": "Tax Token",
+        "licenses": "Licenses",
+        "images": "Image"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      },
+      "title": {
+        "supplier": "Supplier",
+        "create": "Create Supplier",
+        "edit": "Update Supplier",
+        "note": "View Supplier",
+        "assets": "Asset",
+        "accessories": "Accessories",
+        "tools": "Tool & Domain",
+        "consumables": "Consumables",
+        "tax_tokens": "Tax Token"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    }
+  },
+  "department": {
+    "label": {
+      "field": {
+        "name": "Department Name",
+        "manager": "Manager",
+        "user": "User",
+        "location": "Location",
+        "company": "Company",
+        "image": "Upload Image"
+      },
+      "placeholder": {
+        "name": "Department Name",
+        "company": "Select Company",
+        "manager": "Select User",
+        "location": "Select Location"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      },
+      "title": {
+        "department": "Department",
+        "create": "Create",
+        "edit": "Edit"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    }
+  },
+  "depreciation": {
+    "label": {
+      "field": {
+        "name": "Depreciation Name",
+        "rules": "Rules",
+        "months": "Months",
+        "month": "Month",
+        "depreciation_min": "Minimum Value",
+        "minimum_value": "Minimum Value"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit"
+      },
+      "title": {
+        "depreciation": "Depreciation",
+        "create": "Create",
+        "edit": "Edit"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    }
+  },
+  "report": {
+    "label": {
+      "title": {
+        "name": "Report",
+        "nameReportCheckIn": "Checkin",
+        "nameReportCheckOut": "Checkout"
+      },
+      "field": {
+        "id": "ID",
+        "name": "Asset Name",
+        "asset": "Asset",
+        "image": "Image",
+        "propertyCard": "Property Card",
+        "serial": "Serial",
+        "dateBuy": "Purchase Date",
+        "orderNumber": "Order Number",
+        "note": "Note",
+        "logMeta": "Change Detail",
+        "dateCreate": "Date Created",
+        "dateCheckout": "Checkout Date",
+        "dateCheckin": "Checkin Date",
+        "dateStart": "Start Date",
+        "dateEnd": "End Date",
+        "assetType": "Asset Type",
+        "type": "Type",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "manager": "Manager",
+        "user": "User",
+        "dateCheckout_And_dateCheckin": "Checkin/Checkout"
+      }
+    }
+  },
+  "accessory": {
+    "label": {
+      "field": {
+        "name": "Accessory Name",
+        "category": "Category",
+        "purchase_date": "Purchase Date",
+        "supplier": "Supplier",
+        "location": "Office",
+        "total_accessory": "Quantity",
+        "notes": "Note",
+        "order_number": "Order Number",
+        "purchase_cost": "Purchase Cost",
+        "manufacturer": "Warehouse",
+        "vnd": "VND",
+        "checkoutTo": "Checkout To",
+        "user": "Select User",
+        "image": "Image",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "users": "User",
+        "checkout_date": "Checkout Date",
+        "checkin_date": "Checkin Date",
+        "cost": "Purchase Cost",
+        "insurance": "Warranty",
+        "month": "Month",
+        "remaining_qty": "Remaining Quantity",
+        "first_name": "First Name",
+        "username": "Username",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "warranty_expires": "Warranty Expires",
+        "qty": "Quantity"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "detail": "Details"
+      },
+      "placeholder": {
+        "name": "Accessory Name",
+        "category": "Select Category",
+        "purchase_date": "Purchase Date",
+        "supplier": "Select Supplier",
+        "manufacturer": "Select Warehouse",
+        "location": "Select Office",
+        "total_accessory": "Quantity",
+        "notes": "Note",
+        "user": "Select User",
+        "cost": "Purchase Cost",
+        "insurance": "Warranty"
+      },
+      "title": {
+        "accessory": "Accessories",
+        "create": "Create",
+        "edit": "Update",
+        "checkout": "Checkout",
+        "checkin": "Checkin",
+        "time": "Time",
+        "detail": "Details"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "search": "Search Advanced",
+        "refresh": "Refresh",
+        "detail": "Details"
+      }
+    }
+  },
+  "consumables": {
+    "label": {
+      "field": {
+        "name": "Consumables Name",
+        "category": "Category",
+        "purchase_date": "Purchase Date",
+        "insurance": "Warranty",
+        "manufacturer": "Kho",
+        "location": "Office",
+        "total_consumables": "Quantity",
+        "notes": "Note",
+        "order_number": "Order Number",
+        "start-date": "Start Date",
+        "end-date": "End Date",
+        "checkoutTo": "Checkout To",
+        "users": "User",
+        "admin": "Admin",
+        "checkout_date": "Checkout Date",
+        "purchase_cost": "Purchase Cost",
+        "vnd": "VND",
+        "month": "Month",
+        "supplier": "Supplier",
+        "remaining": "Remaining Quantity",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "warranty_expires": "Warranty Expires",
+        "qty": "Quantity",
+        "user": "Select User",
+        "maintenance_cycle": "Maintenance Cycle",
+        "maintenance_date": "Maintenance Date",
+        "months_per_time": "Month / Time",
+        "maintenance_status": "Maintenance Status",
+        "webhook": "Webhook"
+      },
+      "message": {
+        "required": "required"
+      },
+      "button": {
+        "create": "Create",
+        "update": "Edit",
+        "checkout": "Checkout",
+        "detail": "Details"
+      },
+      "title": {
+        "consumables": "Consumables",
+        "create": "Create",
+        "edit": "Update",
+        "date": "Time",
+        "checkout": "Checkout",
+        "detail": "Details",
+        "maintenance": "Maintenance"
+      },
+      "tooltip": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "columns": "Columns",
+        "refresh": "Refresh",
+        "detail": "Details"
+      },
+      "placeholder": {
+        "name": "Consumables Name",
+        "category": "Select Category",
+        "purchase_date": "Purchase Date",
+        "insurance": "Warranty",
+        "manufacturer": "Select Warehouse",
+        "location": "Select Office",
+        "total_consumables": "Quantity",
+        "notes": "Note",
+        "user": "Select User",
+        "supplier": "Select Supplier",
+        "purchase_cost": "Purchase Cost",
+        "maintenance_cycle": "Enter Maintenance Cycle",
+        "maintenance_date": "Enter Maintenance Date",
+        "webhook": "Select Webhook"
+      }
+    }
+  },
+  "komu_logs": {
+    "label": {
+      "title": {
+        "komu": "Komu Logs",
+        "create": "Create",
+        "edit": "Edit",
+        "detail": "Detail Komu Logs"
+      },
+      "field": {
+        "create": "Create",
+        "send_to": "Send To",
+        "message": "Message",
+        "creator": "Creator",
+        "company": "Company",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "status": "Status",
+        "system_response": "System Response",
+        "delete": "Delete"
+      },
+      "tooltip": {
+        "viewDetail": "View Detail"
+      }
+    }
+  },
+  "webhook_logs": {
+    "label": {
+      "title": {
+        "webhook": "Webhook Logs",
+        "detail": "Detail Webhook Logs"
+      },
+      "field": {
+        "create": "Create",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "delete": "Delete",
+        "webhook": "Webhook",
+        "asset": "Asset",
+        "url": "URL",
+        "message": "Message",
+        "response": "Response",
+        "status_code": "Status",
+        "type": "Webhook Type"
+      },
+      "tooltip": {
+        "viewDetail": "View Detail"
+      }
+    }
   }
 }
