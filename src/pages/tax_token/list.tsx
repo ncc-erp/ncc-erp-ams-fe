@@ -1,49 +1,51 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  HttpError,
-} from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  CloneButton,
-  EditButton,
-  DeleteButton,
-  CreateButton,
-  Button,
-  ShowButton,
-  Tooltip,
-  Checkbox,
-  Form,
-  useSelect,
-  TagField,
-} from "@pankod/refine-antd";
-import {
-  MenuOutlined,
   FileSearchOutlined,
+  MenuOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { MModal } from "components/Modal/MModal";
-import { dateFormat } from "constants/assets";
-import { filterAssignedStatus } from "untils/assets";
 import {
+  Button,
+  Checkbox,
+  CloneButton,
+  CreateButton,
+  DateField,
+  DeleteButton,
+  EditButton,
+  Form,
+  getDefaultSortOrder,
+  List,
+  ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
+} from "@pankod/refine-antd";
+import {
+  CrudFilters,
+  HttpError,
+  IResourceComponentsProps,
+  useTranslate,
+} from "@pankod/refine-core";
+import { DatePicker, Spin } from "antd";
+import moment from "moment";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import {
+  STATUS_LABELS_API,
   SUPPLIERS_API,
   TAX_TOKEN_API,
-  STATUS_LABELS_API,
   TAX_TOKEN_TOTAL_DETAIL_API,
 } from "api/baseApi";
-import { Spin } from "antd";
-import { DatePicker } from "antd";
-import React from "react";
 import { TableAction } from "components/elements/tables/TableAction";
-import moment from "moment";
+import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
+import { dateFormat } from "constants/assets";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
+import { useRowSelection } from "hooks/useRowSelection";
 import { IModel } from "interfaces/model";
 import { IStatusLabel } from "interfaces/statusLabel";
 import {
@@ -53,24 +55,22 @@ import {
   ITaxTokenResponse,
   ITaxTokenResponseCheckin,
 } from "interfaces/tax_token";
+import { filterAssignedStatus } from "untils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
 } from "untils/tax_token";
+import { TaxTokenCheckin } from "./checkin";
+import { TaxTokenCheckinMultiple } from "./checkin-multiple";
+import { TaxTokenCheckout } from "./checkout";
+import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
+import { TaxTokenClone } from "./clone";
 import { TaxTokenCreate } from "./create";
 import { TaxTokenEdit } from "./edit";
 import { TaxTokenSearch } from "./search";
 import { TaxTokenShow } from "./show";
-import { TaxTokenClone } from "./clone";
-import { TaxTokenCheckout } from "./checkout";
-import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
-import { TaxTokenCheckin } from "./checkin";
-import { TaxTokenCheckinMultiple } from "./checkin-multiple";
-import { TotalDetail } from "components/elements/TotalDetail";
-import { useAppSearchParams } from "hooks/useAppSearchParams";
-import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
 
 const defaultCheckedList = [
   "id",
@@ -585,79 +585,18 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     setIsCheckinModalVisible(true);
   };
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) ||
-      []
-    );
-  }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
-
-  const [, setSelectedRowKeys] = useState<React.Key[] | ITaxTokenResponse[]>(
-    initselectedRowKeys as React.Key[]
-  );
-
-  const onSelectChange = (selectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: any, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: ITaxToken) => item.id !== record.id
-      );
-      localStorage.setItem(
-        "selectedTaxTokenRowKeys",
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(newSelectRow.map((item: ITaxToken) => item.id));
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedTaxTokenRowKeys",
-        JSON.stringify(
-          newselectedRowKeys.filter(function () {
-            return newselectedRowKeys;
-          })
-        )
-      );
-      setSelectedRowKeys(newselectedRowKeys.map((item: ITaxToken) => item.id));
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: ITaxTokenResponse[],
-    changeRows: ITaxTokenResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: ITaxTokenResponse) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item
-      );
-      newSelectedRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
-      );
-
-      localStorage.setItem(
-        "selectedTaxTokenRowKeys",
-        JSON.stringify(newSelectedRows)
-      );
-    } else {
-      selectedRows = selectedRows.filter((item: ITaxTokenResponse) => item);
-      localStorage.setItem(
-        "selectedTaxTokenRowKeys",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    clearSelection,
+  } = useRowSelection<ITaxTokenResponse>("selectedTaxTokenRowKeys");
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: ITaxToken) => item.id),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
   };
 
   const handleCheckout = () => {
@@ -738,6 +677,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
   }, [collumnSelected]);
 
   useEffect(() => {
+    clearSelection();
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
@@ -767,13 +707,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item.user_can_checkout
-      ).length > 0
+      selectedRows.filter((item: ITaxTokenResponse) => item.user_can_checkout)
+        .length > 0
     ) {
       setSelectedCheckout(true);
       setSelectdStoreCheckout(
-        initselectedRowKeys
+        selectedRows
           .filter((item: ITaxTokenResponse) => item.user_can_checkout)
           .map((item: ITaxTokenResponse) => item)
       );
@@ -782,13 +721,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: ITaxTokenResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckin(true);
       setSelectdStoreCheckin(
-        initselectedRowKeys
+        selectedRows
           .filter((item: ITaxTokenResponse) => item.user_can_checkin)
           .map((item: ITaxTokenResponse) => item)
       );
@@ -797,18 +735,15 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item.user_can_checkout
-      ).length > 0 &&
-      initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: ITaxTokenResponse) => item.user_can_checkout)
+        .length > 0 &&
+      selectedRows.filter((item: ITaxTokenResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
-    } else {
     }
-  }, [initselectedRowKeys]);
+  }, [selectedRows]);
 
   useEffect(() => {
     const aboutController = new AbortController();
@@ -1024,7 +959,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckoutManyTaxTokenModalVisible}
           setIsModalVisible={setIsCheckoutManyTaxTokenModalVisible}
           data={selectdStoreCheckout}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -1047,7 +982,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckinManyTaxTokenModalVisible}
           setIsModalVisible={setIsCheckinManyTaxTokenModalVisible}
           data={selectdStoreCheckin}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
 

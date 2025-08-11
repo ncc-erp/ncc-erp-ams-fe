@@ -15,11 +15,11 @@ type TaxTokenCancelProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKey: any;
+  clearSelection: () => void;
 };
 
 export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKey } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
   const { open } = useNotification();
   const t = useTranslate();
@@ -67,8 +67,7 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem("selectedRowKeys_AcceptRefuse");
-      setSelectedRowKey([]);
+      clearSelection();
     }
   }, [dataCancel, form, setIsModalVisible]);
 
