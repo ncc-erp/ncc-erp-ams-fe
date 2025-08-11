@@ -185,7 +185,6 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -900,7 +899,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

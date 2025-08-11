@@ -19,7 +19,6 @@ import {
 } from "@pankod/refine-antd";
 import { Image } from "antd";
 import "styles/antd.less";
-import { Spin } from "antd";
 
 import { IHardware } from "interfaces";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -47,7 +46,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<ICategoryResponse>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const category_id = searchParams.get("category_id");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
@@ -205,8 +204,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
       pageHeaderProps={{
         extra: (
           <CreateButton onClick={handleCreate}>
-            {" "}
-            {t("category.label.field.create")}{" "}
+            {t("category.label.field.create")}
           </CreateButton>
         ),
       }}
@@ -239,70 +237,53 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
         filters={filters}
         links={CATEGORIES_TOTAL_DETAIL_API}
         isReload={false}
-      ></TotalDetail>
-      {tableProps.loading ? (
-        <>
-          <div style={{ paddingTop: "15rem", textAlign: "center" }}>
-            <Spin
-              tip={`${t("loading")}...`}
-              style={{ fontSize: "18px", color: "black" }}
-            />
-          </div>
-        </>
-      ) : (
-        <Table
-          className={(pageTotal as number) <= 10 ? "list-table" : ""}
-          {...tableProps}
-          rowKey="id"
-          pagination={
-            (pageTotal as number) > 10
-              ? {
-                  position: ["topRight", "bottomRight"],
-                  total: pageTotal ? pageTotal : 0,
-                  showSizeChanger: true,
-                }
-              : false
-          }
-        >
-          {collumns.map((col) => (
-            <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
-          ))}
-          <Table.Column<ICategoryResponse>
-            title={t("table.actions")}
-            dataIndex="actions"
-            render={(_, record) => (
-              <Space>
-                <Tooltip
-                  title={t("category.label.field.edit")}
-                  color={"#108ee9"}
-                >
-                  <EditButton
+      />
+      <Table
+        className={(pageTotal as number) <= 10 ? "list-table" : ""}
+        {...tableProps}
+        rowKey="id"
+        pagination={
+          (pageTotal as number) > 10
+            ? {
+                position: ["topRight", "bottomRight"],
+                total: pageTotal ? pageTotal : 0,
+                showSizeChanger: true,
+              }
+            : false
+        }
+      >
+        {collumns.map((col) => (
+          <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+        ))}
+        <Table.Column<ICategoryResponse>
+          title={t("table.actions")}
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <Tooltip title={t("category.label.field.edit")} color={"#108ee9"}>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => edit(record)}
+                />
+              </Tooltip>
+              {record.item_count > 0 ? (
+                <DeleteButton hideText size="small" disabled />
+              ) : (
+                <Tooltip title={t("category.label.field.delete")} color={"red"}>
+                  <DeleteButton
+                    resourceName={CATEGORIES_API}
                     hideText
                     size="small"
                     recordItemId={record.id}
-                    onClick={() => edit(record)}
                   />
                 </Tooltip>
-                {record.item_count > 0 ? (
-                  <DeleteButton hideText size="small" disabled />
-                ) : (
-                  <Tooltip
-                    title={t("category.label.field.delete")}
-                    color={"red"}
-                  >
-                    <DeleteButton
-                      resourceName={CATEGORIES_API}
-                      hideText
-                      size="small"
-                      recordItemId={record.id}
-                    />
-                  </Tooltip>
-                )}
-              </Space>
-            )}
-          />
-        </Table>
-      )}
+              )}
+            </Space>
+          )}
+        />
+      </Table>
     </List>
   );
 };

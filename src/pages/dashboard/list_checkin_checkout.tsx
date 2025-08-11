@@ -102,7 +102,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     refetchCheckOut();
   }, [dateFromCheckOut, dateToCheckOut]);
 
-  const handleChangePickerByMonthCheckIn = (val: any, formatString: any) => {
+  const handleChangePickerByMonthCheckIn = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       setParams({
@@ -118,7 +118,7 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     }
   };
 
-  const handleChangePickerByMonthCheckOut = (val: any, formatString: any) => {
+  const handleChangePickerByMonthCheckOut = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       setParams({

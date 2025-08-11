@@ -21,6 +21,7 @@ import {
   useTranslate,
 } from "@pankod/refine-core";
 import type { ColumnsType } from "antd/es/table";
+import { useEffect, useState } from "react";
 
 import {
   ASSETS_ASSIGNED_TOTAL_DETAIL_API,
@@ -35,7 +36,6 @@ import { useRowSelection } from "hooks/useRowSelection";
 import { IHardware } from "interfaces";
 import { IHardwareCreateRequest, IHardwareResponse } from "interfaces/hardware";
 import { IUserAssets } from "interfaces/user";
-import { useEffect, useState } from "react";
 import "styles/request.less";
 import {
   getAssetAssignedStatusDecription,
@@ -51,7 +51,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<IUserAssets>({
       initialSorter: [
@@ -214,8 +214,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 

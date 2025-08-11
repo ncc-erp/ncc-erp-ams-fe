@@ -10,30 +10,12 @@ const createStringParam = (
   defaultValue,
 });
 
-const createNumberParam = (
-  key: string,
-  defaultValue: number | null = null
-): ParamConfig => ({
-  key,
-  type: "number",
-  defaultValue,
-});
-
 const createJsonParam = (
   key: string,
   defaultValue: any = null
 ): ParamConfig => ({
   key,
   type: "json",
-  defaultValue,
-});
-
-const createBooleanParam = (
-  key: string,
-  defaultValue: boolean = false
-): ParamConfig => ({
-  key,
-  type: "boolean",
   defaultValue,
 });
 

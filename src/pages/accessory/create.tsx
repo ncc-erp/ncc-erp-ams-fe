@@ -130,7 +130,7 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,
@@ -314,7 +314,7 @@ export const AccessoryCreate = (props: AccessoryCreateProps) => {
                   " " +
                   t("accessory.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });

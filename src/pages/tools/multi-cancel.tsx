@@ -42,7 +42,7 @@ export const ToolCancelMultiple = (props: ToolCancelProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",

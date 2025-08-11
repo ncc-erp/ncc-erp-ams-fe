@@ -81,7 +81,7 @@ export const HardwareListWaitingConfirm: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
 
   const { data: permissionsData } = usePermissions();
 
@@ -104,7 +104,6 @@ export const HardwareListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
   const {
@@ -200,9 +199,6 @@ export const HardwareListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -454,11 +450,8 @@ export const HardwareListWaitingConfirm: React.FC<
     [filterCategory]
   );
 
-  const {
-    mutate,
-    isLoading: isLoadingSendRequest,
-    isSuccess: isMutateSuccess,
-  } = useCreate<IHardwareCreateRequest>();
+  const { mutate, isLoading: isLoadingSendRequest } =
+    useCreate<IHardwareCreateRequest>();
 
   const cancle = (data: IHardwareResponse) => {
     setIsCancleModalVisible(true);
@@ -498,8 +491,7 @@ export const HardwareListWaitingConfirm: React.FC<
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -677,7 +669,7 @@ export const HardwareListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

@@ -6,12 +6,12 @@ import { IWebhookResponse } from "interfaces/webhook";
 import { WebhookEventType } from "constants/webhook";
 const { Title, Text } = Typography;
 
-type HardwareShowProps = {
+type WebhookShowProps = {
   setIsModalVisible: (data: boolean) => void;
   detail: IWebhookResponse | undefined;
 };
 
-export const WebhookShow = (props: HardwareShowProps) => {
+export const WebhookShow = (props: WebhookShowProps) => {
   const { detail } = props;
   const t = useTranslate();
   const breakpoint = Grid.useBreakpoint();

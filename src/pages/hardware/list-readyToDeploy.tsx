@@ -500,6 +500,8 @@ export const HardwareListReadyToDeploy: React.FC<
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+      isCustomerRenting: data?.isCustomerRenting,
+      startRentalDate: data?.startRentalDate,
     };
 
     setDetailCheckout(dataConvert);
@@ -885,7 +887,7 @@ export const HardwareListReadyToDeploy: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -1247,6 +1249,7 @@ export const HardwareListReadyToDeploy: React.FC<
         />
       </MModal>
       <MModal
+        key={`checkout-${isCheckoutModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutModalVisible}
         isModalVisible={isCheckoutModalVisible}
@@ -1279,6 +1282,7 @@ export const HardwareListReadyToDeploy: React.FC<
         />
       </MModal>
       <MModal
+        key={`multiple-checkout-${isCheckoutManyAssetModalVisible}`}
         title={t("hardware.label.title.checkout")}
         setIsModalVisible={setIsCheckoutManyAssetModalVisible}
         isModalVisible={isCheckoutManyAssetModalVisible}

@@ -147,7 +147,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -281,7 +281,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("tools.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -331,7 +331,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -388,19 +388,19 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "checkout_counter",
         title: t("tools.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tools.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
@@ -655,13 +655,13 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
     searchFormProps.form?.submit();
   };
 
-  const purchaseDateChange = (val: any, formatString: any) => {
+  const purchaseDateChange = (val: any) => {
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
   };
 
-  const expirationDateChange = (val: any, formatString: any) => {
+  const expirationDateChange = (val: any) => {
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);

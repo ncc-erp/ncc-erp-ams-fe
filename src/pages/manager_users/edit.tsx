@@ -21,8 +21,8 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { LOCATION_API, USERS_API } from "api/baseApi";
-import { IUser, IUserCreateRequest } from "interfaces/user";
+import { LOCATION_API } from "api/baseApi";
+import { IUserCreateRequest } from "interfaces/user";
 import "styles/antd.less";
 import {
   Permission,
@@ -104,18 +104,6 @@ export const UserEdit = (props: UserCreateProps) => {
   });
 
   const { setFields } = form;
-
-  const { selectProps: userSelectProps } = useSelect<IUser>({
-    resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,

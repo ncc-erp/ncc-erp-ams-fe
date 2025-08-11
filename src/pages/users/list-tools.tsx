@@ -43,7 +43,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
   const [detail, setDetail] = useState<IToolResponse>();
   const [loading, setLoading] = useState(false);
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const { open } = useNotification();
 
@@ -88,7 +88,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -149,7 +149,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
       {
@@ -190,7 +190,7 @@ export const UserListTool: React.FC<IResourceComponentsProps> = () => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",

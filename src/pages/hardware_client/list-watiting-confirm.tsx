@@ -80,7 +80,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
 
   const { data: permissionsData } = usePermissions();
 
@@ -103,7 +103,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
   const {
@@ -112,7 +111,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       dateFrom: dateFromParam,
       dateTo: dateToParam,
       search: searchParam,
-      assigned_status,
     },
     setParams,
     clearParam,
@@ -148,7 +146,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -200,9 +197,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -499,8 +493,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -673,7 +666,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

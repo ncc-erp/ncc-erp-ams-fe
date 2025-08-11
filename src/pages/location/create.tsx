@@ -18,7 +18,7 @@ import { UploadImage } from "components/elements/uploadImage";
 
 import "../../styles/hardware.less";
 import { ILocations, ILocationRequest } from "interfaces/location";
-import { LOCATION_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { LOCATION_API, USERS_API } from "api/baseApi";
 
 type LocationCreateProps = {
   isModalVisible: boolean;
@@ -26,7 +26,7 @@ type LocationCreateProps = {
 };
 
 export const LocationCreate = (props: LocationCreateProps) => {
-  const { isModalVisible, setIsModalVisible } = props;
+  const { setIsModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<ILocationRequest | null>();
@@ -35,18 +35,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
 
   const { formProps, form } = useForm<ILocationRequest>({
     action: "create",
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ILocations>({
-    resource: LOCATION_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({
@@ -115,7 +103,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,

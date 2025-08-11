@@ -10,7 +10,6 @@ import { List, useTable, CreateButton, useSelect } from "@pankod/refine-antd";
 import { Spin } from "antd";
 import "styles/antd.less";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import { TableAction } from "components/elements/tables/TableAction";
 
@@ -33,7 +32,7 @@ import { useHardwareColumns } from "./table-column";
 import { SearchFilterForm } from "./search-filter-form";
 import { ToolbarActions } from "./tool-bar";
 import { HardwareTable } from "./table";
-import { ModalsWrapper } from "./modal";
+import { ModalsWrapper } from "components/Modal/MModal";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
 import { HardWareModalType } from "constants/assets";
 import { useAppSearchParams } from "hooks/useAppSearchParams";

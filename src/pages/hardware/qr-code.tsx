@@ -62,56 +62,6 @@ export const QrCodeDetail = ({ detail, closeModal }: QrCodeDetailProps) => {
 
   const generateRedirectUrl = (hardware: IHardwareResponse) => {
     if (!hardware) return "";
-    const {
-      id,
-      name,
-      serial,
-      manufacturer,
-      category,
-      model,
-      purchase_date,
-      supplier,
-      created_at,
-      updated_at,
-      purchase_cost,
-      assigned_to,
-      status_label,
-      checkin_counter,
-      checkout_counter,
-      notes,
-      warranty_expires,
-      requests_counter,
-      rtd_location,
-      warranty_months,
-    } = hardware;
-    const selectedFields = {
-      id: id?.toString() ?? "",
-      name: name?.toString() ?? "",
-      status: status_label?.name?.toString() ?? "",
-      serial: serial?.toString() ?? "",
-      manufacturer: manufacturer?.name?.toString() ?? "",
-      category: category?.name?.toString() ?? "",
-      model: model?.name?.toString() ?? "",
-      purchase_date: purchase_date?.formatted?.toString() ?? "",
-      supplier: supplier?.name?.toString() ?? "",
-      location: rtd_location?.name?.toString() ?? "",
-      created_at: created_at?.datetime?.toString() ?? "",
-      updated_at: updated_at?.datetime?.toString() ?? "",
-      purchase_cost: purchase_cost?.toString() ?? "",
-      assigned_to: assigned_to?.name?.toString() ?? "",
-      checkin_counter: checkin_counter?.toString() ?? "",
-      checkout_counter: checkout_counter?.toString() ?? "",
-      notes: notes?.toString() ?? "",
-      warranty_expires: warranty_expires?.date?.toString() ?? "",
-      warranty_months: warranty_months?.toString() ?? "",
-      requests_counter: requests_counter?.toString() ?? "",
-    };
-    const queryParams = Object.entries(selectedFields)
-      .map(
-        ([key, value]) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-      )
-      .join("&");
     return `${window.location.origin}/detail-device?id=${hardware.id}`;
   };
 

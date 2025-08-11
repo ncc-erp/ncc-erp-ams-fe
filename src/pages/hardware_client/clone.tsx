@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
@@ -78,7 +77,7 @@ export const ClientHardwareClone = (props: HardwareCloneProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+    (option) => option.value === STATUS_LABELS.READY_TO_DEPLOY
   );
   statusLabelSelectProps.options = filteredProps;
 

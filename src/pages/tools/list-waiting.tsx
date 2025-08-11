@@ -12,7 +12,6 @@ import {
   getDefaultSortOrder,
   List,
   Popconfirm,
-  Select,
   Space,
   Spin,
   Table,
@@ -81,7 +80,7 @@ export const ToolListWaitingConfirm: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IToolResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
 
   const { data: permissionsData } = usePermissions();
 
@@ -104,7 +103,6 @@ export const ToolListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
   const {
@@ -196,9 +194,6 @@ export const ToolListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -250,7 +245,7 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "name",
         title: t("tools.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -300,7 +295,7 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -357,19 +352,19 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "checkout_counter",
         title: t("tools.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tools.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
@@ -401,7 +396,7 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -443,8 +438,7 @@ export const ToolListWaitingConfirm: React.FC<
 
   const [isCancelManyToolVisible, setisCancelManyToolVisible] = useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -544,7 +538,7 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -563,7 +557,6 @@ export const ToolListWaitingConfirm: React.FC<
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const { Option } = Select;
   const searchValuesByDateFrom = useMemo(() => {
     return localStorage.getItem("purchase_date")?.substring(0, 10);
   }, [localStorage.getItem("purchase_date")]);
@@ -636,7 +629,7 @@ export const ToolListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
