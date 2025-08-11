@@ -18,12 +18,6 @@ import { ChangelogLinks } from "./ChangelogLinks";
 
 const MAX_LINES = 7;
 
-const getReleaseTypeFromUrl = (url: string): "FE" | "BE" | "UNKNOWN" => {
-  if (url.includes("ncc-erp-ams-fe")) return "FE";
-  if (url.includes("ncc-erp-ams")) return "BE";
-  return "UNKNOWN";
-};
-
 export const ReleaseNoteList: React.FC = () => {
   const [filter, setFilter] = useState<"ALL" | "FE" | "BE">("ALL");
   const [pagination, setPagination] = useState({
@@ -38,16 +32,7 @@ export const ReleaseNoteList: React.FC = () => {
   );
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
   const t = useTranslate();
-
-  const sortedReleaseNotes = useMemo(
-    () =>
-      [...data].sort(
-        (a, b) =>
-          new Date(b.published_at).getTime() -
-          new Date(a.published_at).getTime()
-      ),
-    [data]
-  );
+  const releaseNotes = data;
 
   if (loading)
     return (
@@ -117,7 +102,7 @@ export const ReleaseNoteList: React.FC = () => {
           </div>
         )}
         <List
-          dataSource={sortedReleaseNotes}
+          dataSource={releaseNotes}
           renderItem={(item) => {
             const { changes, contributors, changelog } = parseReleaseBody(
               item.body
@@ -241,7 +226,7 @@ export const ReleaseNoteList: React.FC = () => {
               : allLines.slice(0, MAX_LINES);
 
             // Thêm chip/tag FE/BE vào title
-            const releaseType = getReleaseTypeFromUrl(item.html_url);
+            const releaseType = item.type;
 
             return (
               <Card style={{ marginBottom: 24 }}>
@@ -279,7 +264,7 @@ export const ReleaseNoteList: React.FC = () => {
                         >
                           {item.tag_name}
                         </a>
-                        {["FE", "BE"].includes(releaseType) && (
+                        {["FE", "BE"].includes(releaseType as string) && (
                           <Tag
                             color={releaseType === "FE" ? "blue" : "green"}
                             style={{ marginLeft: 8 }}

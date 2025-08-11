@@ -9,6 +9,7 @@ export interface IReleaseNote {
   name: string;
   body: string;
   html_url: string;
+  url: string;
   published_at: string;
   author: IReleaseNoteAuthor;
   type?: "FE" | "BE";
