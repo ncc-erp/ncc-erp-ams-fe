@@ -37,7 +37,7 @@ type ToolEditProps = {
 
 export const ToolEdit = (props: ToolEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const t = useTranslate();
   const [messageErr, setMessageErr] = useState<IToolMessageResponse | null>();
   const [payload, setPayload] = useState<FormData>();

@@ -174,7 +174,7 @@ export const TableAction = (props: ITableAction) => {
             <Form.Item name={"search"}>
               <Search
                 placeholder={t("table.search")}
-                onSearch={(key) => {
+                onSearch={() => {
                   localStorage.setItem(
                     "search",
                     searchFormProps.form.getFieldsValue().search

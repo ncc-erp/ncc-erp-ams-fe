@@ -256,7 +256,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -299,7 +299,7 @@ export const RequestList: React.FC<IResourceComponentsProps> = () => {
                 <Checkbox
                   className="checkbox"
                   key={item.key}
-                  onChange={(e) => onCheckItem(item)}
+                  onChange={() => onCheckItem(item)}
                   checked={collumnSelected.includes(item.key)}
                 >
                   {item.title}

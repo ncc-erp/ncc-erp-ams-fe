@@ -113,3 +113,21 @@ export const HARDWARE_RENTAL_DETAILS =
   "api/v1/hardware/customer-renting-total-detail";
 
 export const RELEASE_NOTE_API = "api/v1/release-notes/releases";
+export const MEZON_LOGIN_API = "api/v1/auth/mezon-login";
+export const MEZON_LOGIN_BY_HASH_API = "api/v1/auth/mezon-login-by-hash";
+export const ACCESSORY_CHECKIN_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkin`;
+export const ACCESSORY_CHECKOUT_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkout`;
+export const ACCESSORY_CHECKEDOUT_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkedout`;
+export const ACCESSORY_DETAILS_API = "api/v1/accessories/accessories";
+export const CONSUMABLE_CHECKOUT_API = (consumableId: string) =>
+  `api/v1/consumables/${consumableId}/checkout`;
+export const CONSUMABLE_VIEW_USERS_API = (id: string) =>
+  `api/v1/consumables/view/${id}/users`;
+export const CONSUMABLE_DETAILS_API = "api/v1/consumables";
+export const MEZON_AUTH_URL_API = "api/v1/auth/mezon-auth-url";
+export const USER_EDIT_API = "api/v1/users";
+export const GOOGLE_AUTH_API = "api/v1/auth/google";
+export const LOGIN_API = "api/v1/auth/login";

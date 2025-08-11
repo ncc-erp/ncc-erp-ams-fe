@@ -1,5 +1,3 @@
-import { Interface } from "readline";
-
 export interface ISoftware {
   id: string;
   name: string;

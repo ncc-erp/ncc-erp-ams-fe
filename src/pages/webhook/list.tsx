@@ -16,7 +16,6 @@ import {
 import {
   CrudFilters,
   IResourceComponentsProps,
-  useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
 import { useEffect, useMemo, useState } from "react";
@@ -87,7 +86,6 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
     setIsShowModalVisible(true);
     setDetail(data);
   };
-  const { list } = useNavigation();
 
   const collumns = useMemo(
     () => [
@@ -100,9 +98,7 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "name",
         title: t("webhook.label.field.name"),
-        render: (value: IWebhook, record: any) => (
-          <TextField value={value ? value : ""} />
-        ),
+        render: (value: IWebhook) => <TextField value={value ? value : ""} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {

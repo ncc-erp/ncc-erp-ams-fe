@@ -17,7 +17,6 @@ import {
   CreateButton,
   TagField,
 } from "@pankod/refine-antd";
-import { Spin } from "antd";
 
 import { TableAction } from "components/elements/tables/TableAction";
 import { useEffect, useMemo, useState } from "react";

@@ -1,77 +1,77 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useCreate,
-  HttpError,
-  usePermissions,
-} from "@pankod/refine-core";
+  CloseOutlined,
+  FileSearchOutlined,
+  MenuOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  TagField,
-  Popconfirm,
   Button,
-  Spin,
-  Form,
-  Select,
-  useSelect,
-  Tooltip,
   Checkbox,
+  DateField,
+  Form,
+  getDefaultSortOrder,
+  List,
+  Popconfirm,
+  Select,
+  Space,
+  Spin,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
 } from "@pankod/refine-antd";
-import { Image } from "antd";
-import { IHardware } from "interfaces";
-import { TableAction } from "components/elements/tables/TableAction";
+import {
+  CrudFilters,
+  HttpError,
+  IResourceComponentsProps,
+  useCreate,
+  usePermissions,
+  useTranslate,
+} from "@pankod/refine-core";
+import { DatePicker, Image } from "antd";
+import moment from "moment";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import {
+  CATEGORIES_API,
+  CLIENT_HARDWARE_API,
+  CLIENT_HARDWARE_TOTAL_DETAIL_API,
+  LOCATION_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
 import { MModal } from "components/Modal/MModal";
+import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { IHardware } from "interfaces";
+import { ICategory } from "interfaces/categories";
+import { ICompany } from "interfaces/company";
 import {
   IAssetsWaiting,
   IHardwareCreateRequest,
   IHardwareFilterVariables,
   IHardwareResponse,
 } from "interfaces/hardware";
-import { CancleAsset } from "../users/cancel";
-import {
-  CATEGORIES_API,
-  CLIENT_HARDWARE_API,
-  LOCATION_API,
-  STATUS_LABELS_API,
-  CLIENT_HARDWARE_TOTAL_DETAIL_API,
-} from "api/baseApi";
-import {
-  CloseOutlined,
-  SyncOutlined,
-  MenuOutlined,
-  FileSearchOutlined,
-} from "@ant-design/icons";
-import { HardwareCancelMultipleAsset } from "../users/cancel-multiple-assets";
-import {
-  ASSIGNED_STATUS,
-  dateFormat,
-  defaultCheckedListWaitingConfirm,
-} from "../../constants/assets";
-import moment from "moment";
-import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
-import { ICompany } from "interfaces/company";
-import { ClientHardwareSearch } from "./search";
+import { IStatusLabel } from "interfaces/statusLabel";
+import "styles/request.less";
 import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
-import "styles/request.less";
-import { ICategory } from "interfaces/categories";
-import { IStatusLabel } from "interfaces/statusLabel";
-import { EPermissions } from "constants/permissions";
-import { TotalDetail } from "components/elements/TotalDetail";
-import { useAppSearchParams } from "hooks/useAppSearchParams";
+import {
+  ASSIGNED_STATUS,
+  dateFormat,
+  defaultCheckedListWaitingConfirm,
+} from "../../constants/assets";
+import { useRowSelection } from "../../hooks/useRowSelection";
+import { CancleAsset } from "../users/cancel";
+import { HardwareCancelMultipleAsset } from "../users/cancel-multiple-assets";
+import { ClientHardwareSearch } from "./search";
 
 export const ClientHardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -80,7 +80,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const [isCancleModalVisible, setIsCancleModalVisible] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
 
   const { data: permissionsData } = usePermissions();
 
@@ -103,7 +103,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
   const {
@@ -112,13 +111,21 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       dateFrom: dateFromParam,
       dateTo: dateToParam,
       search: searchParam,
-      assigned_status,
     },
     setParams,
     clearParam,
   } = useAppSearchParams("hardwareList");
 
   const { RangePicker } = DatePicker;
+
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    removeItem,
+    clearSelection,
+  } = useRowSelection<IAssetsWaiting>("selectedRow_AcceptRefuse");
 
   const { tableProps, sorter, searchFormProps, tableQueryResult, filters } =
     useTable<any, HttpError, IHardwareFilterVariables>({
@@ -139,7 +146,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       onSearch: (params: any) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -191,9 +197,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -482,27 +485,15 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     refreshData();
   }, [isCancleModalVisible]);
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(localStorage.getItem("selectedRow_AcceptRefuse") as string) ||
-      []
-    );
-  }, [localStorage.getItem("selectedRow_AcceptRefuse")]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IAssetsWaiting[]
-  >(initselectedRowKeys as React.Key[]);
-
   useEffect(() => {
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    clearSelection();
+    searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const [selectedRows, setSelectedRows] = useState<IAssetsWaiting[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -514,7 +505,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
@@ -529,7 +520,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -539,7 +530,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
       setSelectedStoreAcceptAndRefuse(
-        initselectedRowKeys
+        selectedRows
           .filter(
             (item: IAssetsWaiting) =>
               item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -553,13 +544,13 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0 &&
       isAdmin &&
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IAssetsWaiting) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -569,88 +560,13 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(false);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
-    } else {
     }
-  }, [initselectedRowKeys]);
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IAssetsWaiting[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: IAssetsWaiting, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: IAssetsWaiting) => item.id !== record.id
-      );
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(newSelectRow.map((item: IAssetsWaiting) => item.id));
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys.findIndex((item) => item.id === index);
-          })
-        )
-      );
-      setSelectedRowKeys(
-        newselectedRowKeys.map((item: IAssetsWaiting) => item.id)
-      );
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: IAssetsWaiting[],
-    changeRows: IAssetsWaiting[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: IAssetsWaiting) => item.id);
-      let newSelectRows = initselectedRowKeys.filter(
-        (item: IAssetsWaiting) => item
-      );
-      newSelectRows = initselectedRowKeys.filter(
-        (item: IAssetsWaiting) => !unSelectIds.includes(item.id)
-      );
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(newSelectRows)
-      );
-      setSelectedRowKeys(newSelectRows);
-    } else {
-      selectedRows = selectedRows.filter((item: IAssetsWaiting) => item);
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  }, [selectedRows]);
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
-  };
-
-  const handleRemoveItem = (id: number) => {
-    const newSelectRow = initselectedRowKeys.filter(
-      (item: IAssetsWaiting) => item.id !== id
-    );
-    localStorage.setItem(
-      "selectedRow_AcceptRefuse",
-      JSON.stringify(newSelectRow)
-    );
-    setSelectedRowKeys(newSelectRow.map((item: IAssetsWaiting) => item.id));
   };
 
   const handleCancel = () => {
@@ -675,8 +591,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
       },
     });
     handleRefresh();
-    setSelectedRowKeys([]);
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    clearSelection();
   };
 
   useEffect(() => {
@@ -697,10 +612,6 @@ export const ClientHardwareListWaitingConfirm: React.FC<
   const searchValuesLocation = useMemo(() => {
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
-
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
@@ -755,7 +666,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -943,7 +854,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
           isModalVisible={isCancelManyAssetModalVisible}
           setIsModalVisible={setIsCancelManyAssetModalVisible}
           data={selectdStoreAcceptAndRefuse}
-          setSelectedRowKey={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -969,7 +880,7 @@ export const ClientHardwareListWaitingConfirm: React.FC<
               title={t("user.label.button.accept")}
               onConfirm={() =>
                 confirmMultipleHardware(
-                  initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
+                  selectedRows.map((item: IAssetsWaiting) => item.id),
                   ASSIGNED_STATUS.ACCEPT
                 )
               }
@@ -1001,18 +912,18 @@ export const ClientHardwareListWaitingConfirm: React.FC<
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {isAdmin &&
-              initselectedRowKeys
+              selectedRows
                 .filter(
-                  (item: IAssetsWaiting) =>
+                  (item) =>
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
                 )
-                .map((item: IHardwareResponse) => (
+                .map((item) => (
                   <span className="list-checkin" key={item.id}>
                     <span className="name-checkin">{item.asset_tag}</span>
                     <span
                       className="delete-users-accept-refuse"
-                      onClick={() => handleRemoveItem(item.id)}
+                      onClick={() => removeItem(item.id)}
                     >
                       <CloseOutlined />
                     </span>
@@ -1026,18 +937,18 @@ export const ClientHardwareListWaitingConfirm: React.FC<
             }
           >
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
-            {initselectedRowKeys
+            {selectedRows
               .filter(
-                (item: IAssetsWaiting) =>
+                (item) =>
                   item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
                   item.assigned_status === ASSIGNED_STATUS.REFUSE
               )
-              .map((item: IHardwareResponse) => (
+              .map((item) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-users-accept-refuse"
-                    onClick={() => handleRemoveItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>

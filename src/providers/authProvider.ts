@@ -4,6 +4,7 @@ import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "untils/assets";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
+import { GOOGLE_AUTH_API, LOGIN_API } from "api/baseApi";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -13,7 +14,7 @@ export const authProvider: AuthProvider = {
   },
   login: async ({ username, password, tokenId, profileObj, tokenObj }) => {
     const { post } = dataProvider;
-    const url = tokenId ? "api/v1/auth/google" : "api/v1/auth/login";
+    const url = tokenId ? GOOGLE_AUTH_API : LOGIN_API;
     const payload = tokenId
       ? {
           token_id: tokenId,

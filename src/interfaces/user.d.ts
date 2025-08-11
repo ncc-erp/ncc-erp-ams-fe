@@ -257,4 +257,5 @@ interface IUserAssets {
     datetime: string;
     formatted: string;
   };
+  asset_tag: string;
 }

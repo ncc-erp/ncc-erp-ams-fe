@@ -16,6 +16,7 @@ import {
   IAccessoryResponseCheckin,
 } from "interfaces/accessory";
 import moment from "moment";
+import { ACCESSORY_CHECKIN_API } from "api/baseApi";
 
 type AccessoryCheckinProps = {
   isModalVisible: boolean;
@@ -42,7 +43,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/accessories" + "/" + data?.assigned_pivot_id + "/" + "checkin",
+    url: ACCESSORY_CHECKIN_API(String(data?.assigned_pivot_id || "")),
     method: "get",
     config: {
       payload: payload,

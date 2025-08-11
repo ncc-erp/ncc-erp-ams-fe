@@ -44,7 +44,7 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
       {menuItems &&
         menuItems
           .filter((item) => filterSideBarItems(item, label, itemList))
-          .map(({ icon, name, route }) => {
+          .map(({ name, route }) => {
             const isSelected = route === selectedKey;
             return (
               <Menu.Item

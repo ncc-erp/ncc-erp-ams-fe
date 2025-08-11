@@ -16,7 +16,7 @@ type ManufacturesCreateProps = {
 };
 
 export const ManufacturesCreate = (props: ManufacturesCreateProps) => {
-  const { isModalVisible, setIsModalVisible } = props;
+  const { setIsModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IManufacturesRequest | null>();
@@ -74,7 +74,7 @@ export const ManufacturesCreate = (props: ManufacturesCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,

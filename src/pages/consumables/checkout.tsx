@@ -13,7 +13,7 @@ import {
 } from "@pankod/refine-antd";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
-import { USERS_API } from "api/baseApi";
+import { USERS_API, CONSUMABLE_CHECKOUT_API } from "api/baseApi";
 import {
   IConsumablesRequestCheckout,
   IConsumablesResponseCheckout,
@@ -55,7 +55,7 @@ export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
     data: updateData,
     isLoading,
   } = useCustom({
-    url: "api/v1/consumables" + "/" + data?.id + "/" + "checkout",
+    url: CONSUMABLE_CHECKOUT_API(String(data?.id || "")),
     method: "get",
     config: {
       query: payload,

@@ -27,7 +27,6 @@ const generateSort = (sort?: CrudSorting) => {
     const _sort: string[] = [];
     const _order: string[] = [];
 
-    // eslint-disable-next-line array-callback-return
     sort.map((item) => {
       _sort.push(item.field);
       _order.push(item.order);
@@ -45,14 +44,12 @@ const generateSort = (sort?: CrudSorting) => {
 const generateFilter = (filters?: CrudFilters) => {
   const queryFilters: { [key: string]: string | string[] } = {};
   if (filters) {
-    // eslint-disable-next-line array-callback-return
     filters.map((filter) => {
       if (filter.operator !== "or") {
         const { field, operator, value } = filter;
 
         if (field === "q") {
           queryFilters[field] = value;
-          // eslint-disable-next-line array-callback-return
           return;
         }
 
@@ -151,10 +148,9 @@ const JsonServer = (
 
   updateMany: async ({ resource, ids, variables }) => {
     const response = await Promise.all(
-      ids.map(async (id, index) => {
+      ids.map(async (id) => {
         const { data } = await httpClient.patch(
           `${apiUrl}/${resource}/${id}`,
-          index,
           variables
         );
         return data;

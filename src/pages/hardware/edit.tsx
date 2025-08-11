@@ -43,7 +43,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -291,7 +291,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     });
   }, [file]);
 
-  const [isCustomerRenting, setIsCustomerRenting] = useState(false);
+  const [, setIsCustomerRenting] = useState(false);
 
   const handleRadioChange = (e: any) => {
     setIsCustomerRenting(e.target.value);
@@ -470,7 +470,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -672,7 +672,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ maintenance_cycle: 0 });

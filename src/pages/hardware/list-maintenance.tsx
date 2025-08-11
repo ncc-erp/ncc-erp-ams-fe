@@ -10,7 +10,6 @@ import { List, useTable, CreateButton, useSelect } from "@pankod/refine-antd";
 import { Spin } from "antd";
 import "styles/antd.less";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import { TableAction } from "components/elements/tables/TableAction";
 

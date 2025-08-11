@@ -1,5 +1,5 @@
 import { useTranslate } from "@pankod/refine-core";
-import { Typography, Row, Col, MarkdownField, Grid } from "@pankod/refine-antd";
+import { Typography, Row, Col, Grid } from "@pankod/refine-antd";
 
 import "styles/hardware.less";
 import { IAccesstoryResponse } from "interfaces/accessory";
