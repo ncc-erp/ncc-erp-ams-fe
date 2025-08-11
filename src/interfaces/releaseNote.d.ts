@@ -11,8 +11,9 @@ export interface IReleaseNote {
   html_url: string;
   published_at: string;
   author: IReleaseNoteAuthor;
+  type?: "FE" | "BE";
 }
 export interface IReleaseNoteListResponse {
-  data: IReleaseNote[];
+  rows: IReleaseNote[];
   total: number;
 }

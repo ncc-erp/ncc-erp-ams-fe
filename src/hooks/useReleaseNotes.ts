@@ -19,14 +19,15 @@ export const useReleaseNotes = (
         url: RELEASE_NOTE_API,
         method: "get",
         query: {
-          ...(filter === "ALL" ? {} : { type: filter }),
+          type: filter,
           page,
           pageSize,
         },
       })
       .then((response) => {
-        setData(Array.isArray(response?.data) ? response.data : []);
-        setTotal((response as { total?: number }).total || 0);
+        const res = response as unknown as IReleaseNoteListResponse;
+        setData(Array.isArray(res?.rows) ? res.rows : []);
+        setTotal(res.total || 0);
       })
       .catch((error) => console.error("Error fetching release notes:", error))
       .finally(() => setLoading(false));
