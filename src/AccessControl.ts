@@ -285,6 +285,11 @@ p, 1, ${t("resource.asset-rental-customers")}/*, (edit)|(show)|(clone)|(checkout
 p, 2, ${t("resource.asset-rental-customers")}, (list)
 p, 2, ${t("resource.asset-rental-customers")}/*, (show)
 
+p, 1, ${t("resource.release_note")}, (list)
+p, 1, ${t("resource.release_note")}, (edit)|(show)|(clone)|(checkout)
+p, 2, ${t("resource.client-assets")}, (list)
+p, 2, ${t("resource.client-assets")}/*, (show)
+
 p, 2, ${t("resource.client-assets")}, (list)
 p, 2, ${t("resource.client-assets")}/*, (show)
 

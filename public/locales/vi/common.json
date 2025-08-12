@@ -1007,7 +1007,8 @@
     "manufactures_details": "Chi tiết kho",
     "audit": "Audit",
     "komu_logs": "Komu logs",
-    "webhook_logs": "Webhook logs"
+    "webhook_logs": "Webhook logs",
+    "release_note": "Release Note"
   },
   "model": {
     "label": {
@@ -1490,6 +1491,19 @@
       "tooltip": {
         "viewDetail": "Xem chi tiết"
       }
+    }
+  },
+  "release_note": {
+    "whats_changed": "Những thay đổi",
+    "new_contributors": "Người đóng góp mới",
+    "full_changelog": "Lịch sử thay đổi đầy đủ:",
+    "read_more": "Xem thêm",
+    "read_less": "Thu gọn",
+    "no_details": "Không có chi tiết.",
+    "filter": {
+      "all": "Tất cả",
+      "fe": "Frontend",
+      "be": "Backend"
     }
   }
 }

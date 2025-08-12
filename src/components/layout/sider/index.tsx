@@ -77,6 +77,7 @@ export const Sider: React.FC = () => {
     translate("resource.suppliers"),
     translate("resource.location"),
     translate("resource.webhook"),
+    translate("resource.release_note"),
   ];
 
   const userAssetItemList = [

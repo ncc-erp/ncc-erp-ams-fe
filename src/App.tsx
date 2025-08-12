@@ -58,6 +58,7 @@ import { ToolListWaitingConfirm } from "pages/tools/list-waiting";
 import { UserListTool } from "pages/users/list-tools";
 import { UserListTaxToken } from "pages/users/list-tax-tokens";
 // import { ThemeSwitcherProvider } from "react-css-theme-switcher";
+import ReleaseNotePage from "pages/release_note";
 import {
   ClientHardwareList,
   ClientHardwareListAssign,
@@ -534,6 +535,14 @@ function App() {
             options: {
               route: "asset-rental-customers",
               label: "assets",
+            },
+          },
+          {
+            name: t("resource.release_note"),
+            list: ReleaseNotePage,
+            options: {
+              route: "release-note",
+              label: "release_note",
             },
           },
         ]}

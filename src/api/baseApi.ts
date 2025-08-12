@@ -112,6 +112,7 @@ export const HARDWARE_CUSTOMER_RENTING_API = "api/v1/hardware/customer-renting";
 export const HARDWARE_RENTAL_DETAILS =
   "api/v1/hardware/customer-renting-total-detail";
 
+export const RELEASE_NOTE_API = "api/v1/release-notes/releases";
 export const MEZON_LOGIN_API = "api/v1/auth/mezon-login";
 export const MEZON_LOGIN_BY_HASH_API = "api/v1/auth/mezon-login-by-hash";
 export const ACCESSORY_CHECKIN_API = (accessoryId: string) =>
