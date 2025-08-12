@@ -64,6 +64,7 @@ import { TaxTokenShow } from "pages/tax_token/show";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { ASSIGNED_STATUS } from "constants/assets";
 import { CancleAsset } from "./cancel";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -374,8 +375,12 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     useCreate<ITaxTokenCreateRequest>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tax_token_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tax_token_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TAX_TOKEN_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_TAX_TOKEN_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
 
@@ -396,10 +401,13 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) ||
-      []
+      JSON.parse(
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_TAX_TOKEN_ROW_KEYS
+        ) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_TAX_TOKEN_ROW_KEYS)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | ITaxTokenResponse[]
@@ -521,7 +529,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tax_token_selected",
+      LocalStorageKey.ITEM_TAX_TOKEN_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

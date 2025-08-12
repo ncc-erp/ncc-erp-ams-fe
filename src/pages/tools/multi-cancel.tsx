@@ -10,6 +10,7 @@ import {
 } from "interfaces/tool";
 import { TOOLS_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolCancelProps = {
   isModalVisible: boolean;
@@ -67,7 +68,7 @@ export const ToolCancelMultiple = (props: ToolCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem("selectedRow_AcceptRefuse");
+      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
       setSelectedRowKey([]);
     }
   }, [dataCancel, form, setIsModalVisible]);

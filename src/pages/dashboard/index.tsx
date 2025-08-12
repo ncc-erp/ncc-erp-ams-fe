@@ -15,6 +15,7 @@ import { ILocation } from "interfaces/dashboard";
 import { useSearchParams } from "react-router-dom";
 import { AllLocations } from "components/dashboard/locations/index-all-location";
 import { dateFormat } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -72,7 +73,10 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   );
 
   const handleChangeLocation = (value: any) => {
-    localStorage.setItem("rtd_location_id", value !== undefined ? value : "");
+    localStorage.setItem(
+      LocalStorageKey.RTD_LOCATION_ID,
+      value !== undefined ? value : ""
+    );
     setLocationSelected(value);
     searchParams.set("rtd_location_id", JSON.stringify(value));
     setSearchParams(searchParams);
@@ -127,9 +131,9 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   console.log("locationName", locationName);
 
   useEffect(() => {
-    localStorage.removeItem("purchase_date");
-    localStorage.removeItem("rtd_location_id");
-    localStorage.removeItem("search");
+    localStorage.removeItem(LocalStorageKey.PURCHASE_DATE);
+    localStorage.removeItem(LocalStorageKey.RTD_LOCATION_ID);
+    localStorage.removeItem(LocalStorageKey.SEARCH);
   }, [window.location.reload]);
 
   return (

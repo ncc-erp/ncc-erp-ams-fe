@@ -25,6 +25,7 @@ import "styles/antd.less";
 import { CategoryType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 import moment from "moment";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export interface IReportAsset {
   id: number;
@@ -537,9 +538,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
   columnsCheckIn = [...columnsCheckIn, ...columntypesCheckIn];
 
   useEffect(() => {
-    localStorage.removeItem("purchase_date");
-    localStorage.removeItem("rtd_location_id");
-    localStorage.removeItem("search");
+    localStorage.removeItem(LocalStorageKey.PURCHASE_DATE);
+    localStorage.removeItem(LocalStorageKey.RTD_LOCATION_ID);
+    localStorage.removeItem(LocalStorageKey.SEARCH);
   }, [window.location.reload]);
 
   return (

@@ -56,6 +56,7 @@ import { AccessoryShow } from "./show";
 import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -85,8 +86,12 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_accessory_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_accessory_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_ACCESSORY_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_ACCESSORY_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -419,7 +424,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_accessory_selected",
+      LocalStorageKey.ITEM_ACCESSORY_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

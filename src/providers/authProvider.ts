@@ -4,6 +4,7 @@ import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "untils/assets";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -58,7 +59,7 @@ export const authProvider: AuthProvider = {
       "username",
       JSON.stringify(permissionRes.data.username)
     );
-    const token = localStorage.getItem("username");
+    const token = localStorage.getItem(LocalStorageKey.USERNAME);
     if (token) {
       return Promise.resolve(token);
     }

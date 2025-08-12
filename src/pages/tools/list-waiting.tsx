@@ -71,6 +71,7 @@ import { EPermissions } from "constants/permissions";
 import { IModel } from "interfaces/model";
 import { IAssetsWaiting } from "interfaces/hardware";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const ToolListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -95,8 +96,10 @@ export const ToolListWaitingConfirm: React.FC<
   }, [permissionsData]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SELECTED) as string
+        )
       : defaultCheckedListWaitingConfirm
   );
   const [isActive, setIsActive] = useState(false);
@@ -423,17 +426,20 @@ export const ToolListWaitingConfirm: React.FC<
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedRow_AcceptRefuse") as string) ||
-      []
+      JSON.parse(
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE
+        ) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedRow_AcceptRefuse")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | IToolResponse[]
   >(initselectedRowKeys as React.Key[]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
   }, [window.location.reload]);
 
   const [selectedRows, setSelectedRows] = useState<IToolResponse[]>([]);
@@ -524,14 +530,14 @@ export const ToolListWaitingConfirm: React.FC<
         (item: IToolResponse) => item.id !== record.id
       );
       localStorage.setItem(
-        "selectedRow_AcceptRefuse",
+        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
         JSON.stringify(newSelectRow)
       );
       setSelectedRowKeys(newSelectRow.map((item: IToolResponse) => item.id));
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
-        "selectedRow_AcceptRefuse",
+        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
         JSON.stringify(
           newselectedRowKeys.filter(function (item, index) {
             return newselectedRowKeys.findIndex((item) => item.id === index);
@@ -558,14 +564,14 @@ export const ToolListWaitingConfirm: React.FC<
         (item: IToolResponse) => !unSelectIds.includes(item.id)
       );
       localStorage.setItem(
-        "selectedRow_AcceptRefuse",
+        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
         JSON.stringify(newSelectRows)
       );
       setSelectedRowKeys(newSelectRows);
     } else {
       selectedRows = selectedRows.filter((item: IToolResponse) => item);
       localStorage.setItem(
-        "selectedRow_AcceptRefuse",
+        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
         JSON.stringify([...initselectedRowKeys, ...selectedRows])
       );
       setSelectedRowKeys(selectedRows);
@@ -585,7 +591,7 @@ export const ToolListWaitingConfirm: React.FC<
       (item: IToolResponse) => item.id !== id
     );
     localStorage.setItem(
-      "selectedRow_AcceptRefuse",
+      LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
       JSON.stringify(newSelectRow)
     );
     setSelectedRowKeys(newSelectRow.map((item: IToolResponse) => item.id));
@@ -626,7 +632,7 @@ export const ToolListWaitingConfirm: React.FC<
     );
     handleRefresh();
     setSelectedRowKeys([]);
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
   };
 
   useEffect(() => {
@@ -637,16 +643,20 @@ export const ToolListWaitingConfirm: React.FC<
 
   const { Option } = Select;
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   useEffect(() => {
     searchFormProps.form?.submit();
@@ -659,7 +669,7 @@ export const ToolListWaitingConfirm: React.FC<
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      // localStorage.setItem("purchase_date", formatString ?? "");
+      // localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
       searchParams.set(
         "dateFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -671,7 +681,7 @@ export const ToolListWaitingConfirm: React.FC<
     } else {
       searchParams.delete("dateFrom");
       searchParams.delete("dateTo");
-      // localStorage.setItem("purchase_date", formatString ?? "");
+      // localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     }
 
     setSearchParams(searchParams);
@@ -679,14 +689,14 @@ export const ToolListWaitingConfirm: React.FC<
   };
 
   const purchaseDateChange = (val: any, formatString: any) => {
-    localStorage.setItem("purchase_date", formatString ?? "");
+    localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     const dateFrom = "purchaseDateFrom";
     const dateTo = "purchaseDateTo";
     handleDateChange(val, dateFrom, dateTo);
   };
 
   const expirationDateChange = (val: any, formatString: any) => {
-    localStorage.setItem("purchase_date", formatString ?? "");
+    localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     const dateFrom = "expirationDateFrom";
     const dateTo = "expirationDateTo";
     handleDateChange(val, dateFrom, dateTo);
@@ -702,7 +712,10 @@ export const ToolListWaitingConfirm: React.FC<
     }
   };
   useEffect(() => {
-    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      LocalStorageKey.ITEM_SELECTED,
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (
@@ -742,11 +755,11 @@ export const ToolListWaitingConfirm: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location: localStorage.getItem("rtd_location_id")
+            location: localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)
               ? searchValuesLocation
               : Number(rtd_location_id),
             purchase_date:
-              localStorage.getItem("purchase_date") !== null
+              localStorage.getItem(LocalStorageKey.PURCHASE_DATE) !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
                       moment(searchValuesByDateFrom),

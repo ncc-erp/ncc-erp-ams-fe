@@ -19,6 +19,7 @@ import {
   IToolCheckoutMessageResponse,
   IToolMultiCheckoutRequest,
 } from "interfaces/tool";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolMultiCheckoutProps = {
   isModalVisible: boolean;
@@ -95,7 +96,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
       setIsModalVisible(false);
       setMessageErr(undefined);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedToolsCheckoutRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_CHECKOUT_ROW_KEYS);
     } else {
       setMessageErr(dataCheckout?.data.messages);
     }

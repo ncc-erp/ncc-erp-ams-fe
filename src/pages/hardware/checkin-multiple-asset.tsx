@@ -18,6 +18,7 @@ import { HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
@@ -84,7 +85,7 @@ export const HardwareCheckinMultipleAsset = (props: HardwareCheckinProps) => {
       setIsModalVisible(false);
       setMessageErr(messageErr);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS);
     }
   }, [dataCheckin, form, setIsModalVisible]);
 

@@ -35,6 +35,7 @@ import { useSearchParams } from "react-router-dom";
 import { getPermissionsUser } from "untils/users";
 import { ILocations } from "interfaces/location";
 import { IUserType, IJobPosition } from "interfaces/index";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -54,8 +55,10 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
   const [detail, setDetail] = useState<IUserResponse>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_users_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_users_selected") as any)
+    localStorage.getItem(LocalStorageKey.ITEM_USERS_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_USERS_SELECTED) as any
+        )
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);

@@ -10,6 +10,7 @@ import {
 } from "interfaces/hardware";
 import { HARDWARE_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type HardwareCancelProps = {
   isModalVisible: boolean;
@@ -55,7 +56,7 @@ export const HardwareCancelMultipleAsset = (props: HardwareCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem("selectedRowKeys_AcceptRefuse");
+      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE);
       setSelectedRowKey([]);
     }
   }, [dataCancel, form, setIsModalVisible]);

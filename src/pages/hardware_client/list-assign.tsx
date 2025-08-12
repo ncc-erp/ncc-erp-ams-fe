@@ -81,6 +81,7 @@ import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -126,8 +127,8 @@ export const ClientHardwareListAssign: React.FC<
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as any)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED) !== null
+      ? JSON.parse(localStorage.getItem(LocalStorageKey.ITEM_SELECTED) as any)
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -875,7 +876,10 @@ export const ClientHardwareListAssign: React.FC<
   };
 
   useEffect(() => {
-    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      LocalStorageKey.ITEM_SELECTED,
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (
@@ -917,21 +921,25 @@ export const ClientHardwareListAssign: React.FC<
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   const searchValuesByDateCheckoutFrom = useMemo(() => {
-    return localStorage.getItem("last_checkout")?.substring(0, 10);
-  }, [localStorage.getItem("last_checkout")]);
+    return localStorage
+      .getItem(LocalStorageKey.LAST_CHECKOUT)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.LAST_CHECKOUT)]);
 
   const searchValuesByDateCheckoutTo = useMemo(() => {
-    return localStorage.getItem("last_checkout")?.substring(11, 21);
-  }, [localStorage.getItem("last_checkout")]);
+    return localStorage
+      .getItem(LocalStorageKey.LAST_CHECKOUT)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.LAST_CHECKOUT)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("last_checkout", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.LAST_CHECKOUT, formatString ?? "");
       searchParams.set(
         "dateCheckoutFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -943,7 +951,7 @@ export const ClientHardwareListAssign: React.FC<
     } else {
       searchParams.delete("dateCheckoutFrom");
       searchParams.delete("dateCheckoutTo");
-      localStorage.setItem("last_checkout", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.LAST_CHECKOUT, formatString ?? "");
     }
 
     setSearchParams(searchParams);
@@ -969,8 +977,12 @@ export const ClientHardwareListAssign: React.FC<
   const { Option } = Select;
 
   const initselectedRowKeys = useMemo(() => {
-    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
-  }, [localStorage.getItem("selectedRowKeys")]);
+    return (
+      JSON.parse(
+        localStorage.getItem(LocalStorageKey.SELECTED_ROW_KEYS) as string
+      ) || []
+    );
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_ROW_KEYS)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | IHardwareResponse[]
@@ -1040,7 +1052,10 @@ export const ClientHardwareListAssign: React.FC<
       const newSelectRow = initselectedRowKeys.filter(
         (item: IHardwareResponse) => item.id !== record.id
       );
-      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+      localStorage.setItem(
+        LocalStorageKey.SELECTED_ROW_KEYS,
+        JSON.stringify(newSelectRow)
+      );
       setSelectedRowKeys(
         newSelectRow.map((item: IHardwareResponse) => item.id)
       );
@@ -1074,7 +1089,10 @@ export const ClientHardwareListAssign: React.FC<
         (item: IHardwareResponse) => !unSelectIds.includes(item.id)
       );
 
-      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
+      localStorage.setItem(
+        LocalStorageKey.SELECTED_ROW_KEYS,
+        JSON.stringify(newSelectedRows)
+      );
     } else {
       selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
       localStorage.setItem(
@@ -1102,7 +1120,7 @@ export const ClientHardwareListAssign: React.FC<
   };
 
   useEffect(() => {
-    localStorage.removeItem("selectedRowKeys");
+    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS);
   }, [window.location.reload]);
 
   const handleCheckout = () => {
@@ -1117,7 +1135,10 @@ export const ClientHardwareListAssign: React.FC<
     const newSelectRow = initselectedRowKeys.filter(
       (item: IHardwareResponse) => item.id !== id
     );
-    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
+    localStorage.setItem(
+      LocalStorageKey.SELECTED_ROW_KEYS,
+      JSON.stringify(newSelectRow)
+    );
     setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
   };
 
@@ -1158,10 +1179,10 @@ export const ClientHardwareListAssign: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location: localStorage.getItem("rtd_location_id")
+            location: localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)
               ? searchValuesLocation
               : Number(rtd_location_id),
-            last_checkout: localStorage.getItem("last_checkout")
+            last_checkout: localStorage.getItem(LocalStorageKey.LAST_CHECKOUT)
               ? searchValuesByDateCheckoutFrom && searchValuesByDateCheckoutTo
                 ? [
                     moment(searchValuesByDateCheckoutFrom),

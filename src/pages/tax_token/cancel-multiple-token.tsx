@@ -10,6 +10,7 @@ import {
 } from "interfaces/tax_token";
 import { TAX_TOKEN_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type TaxTokenCancelProps = {
   isModalVisible: boolean;
@@ -67,7 +68,7 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem("selectedRowKeys_AcceptRefuse");
+      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE);
       setSelectedRowKey([]);
     }
   }, [dataCancel, form, setIsModalVisible]);

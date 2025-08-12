@@ -16,6 +16,7 @@ import { ISoftwareRequestMultipleCheckout } from "interfaces/software";
 import { USERS_API, SOFTWARE_CHECKOUT_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import moment from "moment";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type SoftwareCheckoutProps = {
   isModalVisible: boolean;
@@ -80,7 +81,7 @@ export const SoftwareCheckout = (props: SoftwareCheckoutProps) => {
       setIsModalVisible(false);
       setMessageErr(undefined);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedSoftwareRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS);
     } else {
       setMessageErr(dataCheckout?.data.messages);
     }

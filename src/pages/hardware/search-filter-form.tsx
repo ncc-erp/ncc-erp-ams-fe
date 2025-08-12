@@ -9,6 +9,7 @@ import { ICompany } from "interfaces/company";
 import { LOCATION_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 /* eslint-disable react/prop-types */
 
 export const SearchFilterForm: React.FC<ISearchFormProps> = ({
@@ -38,7 +39,10 @@ export const SearchFilterForm: React.FC<ISearchFormProps> = ({
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date_maintenance", formatString ?? "");
+      localStorage.setItem(
+        LocalStorageKey.PURCHASE_DATE_MAINTENANCE,
+        formatString ?? ""
+      );
       searchParams.set(
         "dateFrom",
         from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
@@ -50,7 +54,10 @@ export const SearchFilterForm: React.FC<ISearchFormProps> = ({
     } else {
       searchParams.delete("dateFrom");
       searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date_maintenance", formatString ?? "");
+      localStorage.setItem(
+        LocalStorageKey.PURCHASE_DATE_MAINTENANCE,
+        formatString ?? ""
+      );
     }
     setSearchParams(searchParams);
     searchFormProps.form?.submit();
@@ -78,26 +85,35 @@ export const SearchFilterForm: React.FC<ISearchFormProps> = ({
   };
 
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date_maintenance")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date_maintenance")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE_MAINTENANCE)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE_MAINTENANCE)]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date_maintenance")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date_maintenance")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE_MAINTENANCE)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE_MAINTENANCE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id_maintenance"));
-  }, [localStorage.getItem("rtd_location_id_maintenance")]);
+    return Number(
+      localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID_MAINTENANCE)
+    );
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID_MAINTENANCE)]);
 
   return (
     <Form
       {...searchFormProps}
       initialValues={{
-        location: localStorage.getItem("rtd_location_id_maintenance")
+        location: localStorage.getItem(
+          LocalStorageKey.RTD_LOCATION_ID_MAINTENANCE
+        )
           ? searchValuesLocation
           : Number(rtd_location_id),
         purchase_date:
-          localStorage.getItem("purchase_date_maintenance") !== null
+          localStorage.getItem(LocalStorageKey.PURCHASE_DATE_MAINTENANCE) !==
+          null
             ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
               ? [moment(searchValuesByDateFrom), moment(searchValuesByDateTo)]
               : dateFromParam && dateToParam

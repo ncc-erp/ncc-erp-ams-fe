@@ -56,6 +56,7 @@ import { SoftwareShow } from "./show";
 import { SoftwareCheckout } from "./checkout";
 import moment from "moment";
 import { IModel } from "interfaces/model";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -294,8 +295,10 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_software_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_software_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_SOFTWARE_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SOFTWARE_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -395,10 +398,13 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedSoftwareRowKeys") as string) ||
-      []
+      JSON.parse(
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS
+        ) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedSoftwareRowKeys")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | ISoftwareResponse[]

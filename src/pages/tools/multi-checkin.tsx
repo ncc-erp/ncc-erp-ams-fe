@@ -17,6 +17,7 @@ import {
   IToolMultiCheckinRequest,
   IToolResponse,
 } from "interfaces/tool";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolMultiCheckinProps = {
   isModalVisible: boolean;
@@ -86,7 +87,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
       setIsModalVisible(false);
       setMessageErr(undefined);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedToolsCheckinRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_CHECKIN_ROW_KEYS);
     } else {
       setMessageErr(dataCheckin?.data.messages);
     }

@@ -36,6 +36,7 @@ import { HardwareTable } from "./table";
 import { ModalsWrapper } from "./modal";
 import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
 import { HardWareModalType } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -57,8 +58,14 @@ export const HardwareListMaintenance: React.FC<
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [searchParams] = useSearchParams();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected_maintenance") !== null
-      ? JSON.parse(localStorage.getItem("item_selected_maintenance") as any)
+    localStorage.getItem(
+      LocalStorageKey.ITEM_CONSUMABLES_MAINTENANCE_SELECTED
+    ) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_CONSUMABLES_MAINTENANCE_SELECTED
+          ) as any
+        )
       : defaultCheckedList
   );
   const [modalState, setModalState] = useState<{

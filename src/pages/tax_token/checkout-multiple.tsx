@@ -19,6 +19,7 @@ import {
   ITaxTokenMultipleRequestCheckout,
   ITaxTokenRequestCheckout,
 } from "interfaces/tax_token";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;
@@ -97,7 +98,7 @@ export const TaxTokenCheckoutMultiple = (
       setIsModalVisible(false);
       setMessageErr(messageErr);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedTaxTokenRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_TAX_TOKEN_ROW_KEYS);
     }
   }, [dataCheckout, form, setIsModalVisible]);
 

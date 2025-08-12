@@ -70,6 +70,7 @@ import { TaxTokenCheckoutMultiple } from "./checkout-multiple";
 import { TaxTokenCheckin } from "./checkin";
 import { TaxTokenCheckinMultiple } from "./checkin-multiple";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -403,8 +404,12 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tax_token_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tax_token_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TAX_TOKEN_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_TAX_TOKEN_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
 
@@ -582,10 +587,13 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedTaxTokenRowKeys") as string) ||
-      []
+      JSON.parse(
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_TAX_TOKEN_ROW_KEYS
+        ) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedTaxTokenRowKeys")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_TAX_TOKEN_ROW_KEYS)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | ITaxTokenResponse[]
@@ -732,7 +740,7 @@ export const TaxTokenList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tax_token_selected",
+      LocalStorageKey.ITEM_TAX_TOKEN_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

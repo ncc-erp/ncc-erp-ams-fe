@@ -21,6 +21,7 @@ import { ICompany } from "interfaces/company";
 import { USERS_API, CLIENT_HARDWARE_CHECKOUT_API } from "api/baseApi";
 import { STATUS_LABELS } from "constants/assets";
 import moment from "moment";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
@@ -95,7 +96,7 @@ export const ClientHardwareCheckoutMultipleAsset = (
       setIsModalVisible(false);
       setMessageErr(messageErr);
       setSelectedRowKeys([]);
-      localStorage.removeItem("selectedRowKeys");
+      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS);
     }
   }, [dataCheckout, form, setIsModalVisible]);
 

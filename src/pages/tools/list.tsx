@@ -73,6 +73,7 @@ import { ToolMultiCheckout } from "./multi-checkout";
 import { ToolCheckin } from "./checkin";
 import { ToolMultiCheckin } from "./multi-checkin";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -405,8 +406,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tools_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tools_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -577,9 +580,11 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedToolsRowKeys") as string) || []
+      JSON.parse(
+        localStorage.getItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedToolsRowKeys")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | IToolResponse[]
@@ -732,13 +737,13 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tools_selected",
+      LocalStorageKey.ITEM_TOOLS_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS);
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
@@ -759,7 +764,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   }, [isCloneModalVisible]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS);
     refreshData();
   }, [isCheckoutMultiToolsModalVisible]);
 
@@ -768,7 +773,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   }, [isCheckinModalVisible]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS);
     refreshData();
   }, [isCheckinManyToolVisible]);
 

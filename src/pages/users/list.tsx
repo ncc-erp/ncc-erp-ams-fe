@@ -40,6 +40,7 @@ import {
   getBGAssetStatusDecription,
 } from "untils/assets";
 import "styles/request.less";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();
@@ -197,17 +198,19 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const initselectedRowKeys = useMemo(() => {
     return (
       JSON.parse(
-        localStorage.getItem("selectedRowKeys_AcceptRefuse") as string
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE
+        ) as string
       ) || []
     );
-  }, [localStorage.getItem("selectedRowKeys_AcceptRefuse")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE)]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     React.Key[] | IUserAssets[]
   >(initselectedRowKeys as React.Key[]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedRowKeys_AcceptRefuse");
+    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE);
   }, [window.location.reload]);
 
   const [selectedRows, setSelectedRows] = useState<IUserAssets[]>([]);
@@ -386,7 +389,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     });
     handleRefresh();
     setSelectedRowKeys([]);
-    localStorage.removeItem("selectedRowKeys_AcceptRefuse");
+    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE);
   };
 
   useEffect(() => {

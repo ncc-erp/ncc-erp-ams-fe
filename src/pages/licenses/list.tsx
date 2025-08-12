@@ -49,6 +49,7 @@ import { LicensesEdit } from "./edit";
 import { LicensesShow } from "./show";
 import { LicensesSearch } from "./search";
 import { ILicenses } from "interfaces/license";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -243,8 +244,10 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
   };
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_licenses_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_licenses_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_LICENSES_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_LICENSES_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
