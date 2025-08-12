@@ -236,7 +236,7 @@ export const HardwareListMaintenance: React.FC<
 
   useEffect(() => {
     localStorage.setItem(
-      "item_selected_maintenance",
+      LocalStorageKey.ITEM_SELECTED_MAINTENANCE,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

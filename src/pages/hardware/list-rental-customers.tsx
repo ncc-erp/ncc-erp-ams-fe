@@ -65,6 +65,7 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { useRentalCustomerColumns } from "./table-column-rental-customers";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -93,9 +94,12 @@ export const HardwareListRentalCustomers: React.FC<
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected_rental_customers") !== null
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED_RENTAL_CUSTOMERS) !==
+      null
       ? JSON.parse(
-          localStorage.getItem("item_selected_rental_customers") as any
+          localStorage.getItem(
+            LocalStorageKey.ITEM_SELECTED_RENTAL_CUSTOMERS
+          ) as any
         )
       : defaultCheckedList
   );
@@ -392,21 +396,25 @@ export const HardwareListRentalCustomers: React.FC<
 
   // Date and location handlers
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
       searchParams.set(
         "dateFrom",
         from?.format("YYYY-MM-DD") ? from?.format("YYYY-MM-DD").toString() : ""
@@ -418,7 +426,7 @@ export const HardwareListRentalCustomers: React.FC<
     } else {
       searchParams.delete("dateFrom");
       searchParams.delete("dateTo");
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     }
 
     setSearchParams(searchParams);
@@ -427,18 +435,18 @@ export const HardwareListRentalCustomers: React.FC<
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      searchParams.delete(LocalStorageKey.RTD_LOCATION_ID);
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       searchParams.set(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
       );
     }
@@ -470,7 +478,7 @@ export const HardwareListRentalCustomers: React.FC<
   // Effects
   useEffect(() => {
     localStorage.setItem(
-      "item_selected_rental_customers",
+      LocalStorageKey.ITEM_SELECTED_RENTAL_CUSTOMERS,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
@@ -522,11 +530,11 @@ export const HardwareListRentalCustomers: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location: localStorage.getItem("rtd_location_id")
+            location: localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)
               ? searchValuesLocation
               : Number(rtd_location_id),
             purchase_date:
-              localStorage.getItem("purchase_date") !== null
+              localStorage.getItem(LocalStorageKey.PURCHASE_DATE) !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
                       moment(searchValuesByDateFrom),
@@ -553,7 +561,7 @@ export const HardwareListRentalCustomers: React.FC<
                 `${t("hardware.label.field.end-date")}`,
               ]}
               defaultValue={
-                localStorage.getItem("purchase_date") !== null
+                localStorage.getItem(LocalStorageKey.PURCHASE_DATE) !== null
                   ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                     ? [
                         moment(searchValuesByDateFrom),

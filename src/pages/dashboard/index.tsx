@@ -91,7 +91,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       : "";
 
     localStorage.setItem(
-      "purchase_date",
+      LocalStorageKey.PURCHASE_DATE,
       formatString !== undefined ? formatString : ""
     );
     setParams({
@@ -113,7 +113,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       : "";
 
     localStorage.setItem(
-      "purchase_date",
+      LocalStorageKey.PURCHASE_DATE,
       formatString !== undefined ? formatString : ""
     );
     setParams({

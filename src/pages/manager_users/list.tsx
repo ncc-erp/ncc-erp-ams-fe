@@ -400,7 +400,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_users_selected",
+      LocalStorageKey.ITEM_USERS_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

@@ -64,16 +64,16 @@ export const SearchFilterForm: FC<ISearchFormProps> = ({ searchFormProps }) => {
     if (value === 0) {
       searchParams.delete("rtd_location_id");
       localStorage.setItem(
-        "rtd_location_id_maintenance",
+        LocalStorageKey.RTD_LOCATION_ID_MAINTENANCE,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
-        "rtd_location_id_maintenance",
+        LocalStorageKey.RTD_LOCATION_ID_MAINTENANCE,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       searchParams.set(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
       );
     }

@@ -955,7 +955,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
       setParams({
         dateFrom: from?.format("YY-MM-DD")
           ? from?.format("YY-MM-DD").toString()
@@ -964,7 +964,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
       });
     } else {
       clearParam(["dateFrom", "dateTo"]);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     }
 
     searchFormProps.form?.submit();
@@ -1068,14 +1068,14 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      clearParam("rtd_location_id");
+      clearParam(LocalStorageKey.RTD_LOCATION_ID);
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       setParams({

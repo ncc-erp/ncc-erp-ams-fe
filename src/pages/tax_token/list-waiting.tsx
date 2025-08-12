@@ -594,8 +594,8 @@ export const TaxTokenListWaitingConfirm: React.FC<
   }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   const handleDateChange = (
     val: moment.Moment[] | null,

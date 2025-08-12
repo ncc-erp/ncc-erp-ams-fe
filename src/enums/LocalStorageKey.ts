@@ -26,4 +26,5 @@ export enum LocalStorageKey {
   SELECTED_TOOLS_CHECKOUT_ROW_KEYS = "selectedToolsCheckoutRowKeys",
   SELECTED_TOOLS_CHECKIN_ROW_KEYS = "selectedToolsCheckinRowKeys",
   USERNAME = "username",
+  ITEM_SELECTED_RENTAL_CUSTOMERS = "item_selected_rental_customers",
 }

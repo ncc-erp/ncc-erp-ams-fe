@@ -308,7 +308,7 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_licenses_selected",
+      LocalStorageKey.ITEM_LICENSES_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
