@@ -19,7 +19,6 @@ import {
   IToolCheckoutMessageResponse,
   IToolMultiCheckoutRequest,
 } from "interfaces/tool";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolMultiCheckoutProps = {
   isModalVisible: boolean;

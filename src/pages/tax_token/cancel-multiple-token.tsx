@@ -10,7 +10,6 @@ import {
 } from "interfaces/tax_token";
 import { TAX_TOKEN_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type TaxTokenCancelProps = {
   isModalVisible: boolean;

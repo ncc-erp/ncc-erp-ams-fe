@@ -19,7 +19,6 @@ import {
   ITaxTokenMultipleRequestCheckout,
   ITaxTokenRequestCheckout,
 } from "interfaces/tax_token";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;

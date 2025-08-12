@@ -10,7 +10,6 @@ import {
 } from "interfaces/tool";
 import { TOOLS_API } from "api/baseApi";
 import { ASSIGNED_STATUS } from "constants/assets";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolCancelProps = {
   isModalVisible: boolean;

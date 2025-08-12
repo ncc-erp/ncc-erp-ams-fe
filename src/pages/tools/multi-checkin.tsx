@@ -17,7 +17,6 @@ import {
   IToolMultiCheckinRequest,
   IToolResponse,
 } from "interfaces/tool";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type ToolMultiCheckinProps = {
   isModalVisible: boolean;

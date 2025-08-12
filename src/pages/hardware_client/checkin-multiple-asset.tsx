@@ -18,7 +18,6 @@ import { CLIENT_HARDWARE_CHECKIN_API, STATUS_LABELS_API } from "api/baseApi";
 import { ICompany } from "interfaces/company";
 import { EStatus, STATUS_LABELS } from "constants/assets";
 import moment from "moment";
-import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type HardwareCheckinProps = {
   isModalVisible: boolean;
