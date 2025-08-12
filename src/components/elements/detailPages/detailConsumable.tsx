@@ -18,7 +18,6 @@ import {
 import {
   CrudFilters,
   HttpError,
-  IResourceComponentsProps,
   useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
@@ -71,7 +70,6 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
 
-  const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isShowModalVisible, setIsShowModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [detail, setDetail] = useState<IConsumablesResponse>();
@@ -307,14 +305,6 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
     setIsCheckoutModalVisible(true);
   };
 
-  const handleSearch = () => {
-    handleOpenSearchModel();
-  };
-
-  const handleOpenSearchModel = () => {
-    setIsSearchModalVisible(!isSearchModalVisible);
-  };
-
   const show = (data: IConsumablesResponse) => {
     setIsShowModalVisible(true);
     setDetail(data);
@@ -358,7 +348,7 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;

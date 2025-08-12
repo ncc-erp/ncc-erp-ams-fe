@@ -1,26 +1,18 @@
-import { useEffect, useState } from "react";
-import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
+  Radio,
   Row,
-  Col,
+  Select,
   Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
-import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  FormValues,
-  IHardwareCreateRequest,
-  IHardwareResponse,
-  IHardwareUpdateRequest,
-} from "interfaces/hardware";
-import { IModel } from "interfaces/model";
-import { UploadImage } from "components/elements/uploadImage";
-import { ICompany } from "interfaces/company";
+import { useCustom, useNotification, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 import {
   HARDWARE_API,
@@ -30,8 +22,18 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   WEBHOOK_API,
 } from "api/baseApi";
+import { UploadImage } from "components/elements/uploadImage";
 import { EStatus, STATUS_LABELS } from "constants/assets";
-import moment from "moment";
+import { EBooleanString } from "constants/common";
+import { ICompany } from "interfaces/company";
+import {
+  FormValues,
+  IHardwareCreateRequest,
+  IHardwareResponse,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
+import { IModel } from "interfaces/model";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -41,7 +43,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -161,8 +163,19 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       typeof event.image !== "string" &&
       event.image !== undefined &&
       event.image !== null
-    )
+    ) {
       formData.append("image", event.image);
+    }
+
+    if (event.isCustomerRenting !== undefined) {
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
+    if (event.startRentalDate) {
+      formData.append(
+        "startRentalDate",
+        moment(event.startRentalDate).format("YYYY-MM-DD")
+      );
+    }
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -209,6 +222,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         name: "maintenance_cycle",
         value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
       },
+      { name: "startRentalDate", value: data?.startRentalDate?.date ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -276,6 +290,12 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       image: file,
     });
   }, [file]);
+
+  const [, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
 
   return (
     <Form
@@ -450,7 +470,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -494,6 +514,63 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               placeholder={t("hardware.label.placeholder.maintenance")}
             />
           </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={
+              data?.isCustomerRenting
+                ? EBooleanString.TRUE
+                : EBooleanString.FALSE
+            }
+          >
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
+              <Radio value={EBooleanString.TRUE}>
+                {t("hardware.label.field.yes")}
+              </Radio>
+              <Radio value={EBooleanString.FALSE}>
+                {t("hardware.label.field.no")}
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          {form.getFieldValue("isCustomerRenting") === EBooleanString.TRUE && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
+
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
+            </Typography.Text>
+          )}
         </Col>
         <Col className="gutter-row" span={12}>
           <Form.Item
@@ -595,7 +672,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ maintenance_cycle: 0 });

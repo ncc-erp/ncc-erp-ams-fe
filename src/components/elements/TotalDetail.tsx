@@ -1,8 +1,4 @@
-import {
-  CrudFilters,
-  useNotification,
-  useTranslate,
-} from "@pankod/refine-core";
+import { CrudFilters, useTranslate } from "@pankod/refine-core";
 import { ITotalDetail } from "interfaces";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "providers/axios";
@@ -18,7 +14,6 @@ type TotalDetailProps = {
 export const TotalDetail = (props: TotalDetailProps) => {
   const { filters, links, isReload, additional_filter } = props;
   const t = useTranslate();
-  const { open } = useNotification();
   const [totalDetail, setTotalDetail] = useState<ITotalDetail[]>();
 
   const getTotalDetail = () => {
@@ -26,7 +21,7 @@ export const TotalDetail = (props: TotalDetailProps) => {
     if (filters) {
       filters.map((filter) => {
         if (filter.operator !== "or") {
-          const { field, operator, value } = filter;
+          const { field, value } = filter;
           queryFilters[field] = value;
         }
       });

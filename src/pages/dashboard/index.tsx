@@ -12,9 +12,9 @@ import "styles/antd.less";
 import { DASHBOARD_API } from "api/baseApi";
 import { useEffect, useState } from "react";
 import { ILocation } from "interfaces/dashboard";
-import { useSearchParams } from "react-router-dom";
 import { AllLocations } from "components/dashboard/locations/index-all-location";
 import { dateFormat } from "constants/assets";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
@@ -24,19 +24,18 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const [locationSelected, setLocationSelected] = useState<number | null>(
     99999
   );
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchParams1, setSearchParams1] = useSearchParams();
+  const [dataDashboard] = useState<[string, string]>(["", ""]);
 
-  const [dataDashboard, setDataDashboard] = useState<[string, string]>([
-    "",
-    "",
-  ]);
-  const purchase_date_from = searchParams.get("purchase_date_from");
-  const purchase_date_to = searchParams.get("purchase_date_to");
-
-  const purchase_date_from1 = searchParams.get("purchase_date_from1");
-  const purchase_date_to1 = searchParams.get("purchase_date_to1");
-
+  const {
+    params: {
+      purchase_date_from,
+      purchase_date_to,
+      purchase_date_from1,
+      purchase_date_to1,
+      rtd_location_id,
+    },
+    setParams,
+  } = useAppSearchParams("dashboard");
   const { data, isLoading: isLoadingData } = useCustom({
     url: DASHBOARD_API,
     method: "get",
@@ -48,7 +47,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
         purchase_date_to: purchase_date_to
           ? purchase_date_to
           : dataDashboard[1],
-        location: searchParams.get("rtd_location_id"),
+        location: rtd_location_id,
       },
     },
   });
@@ -64,10 +63,11 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
         purchase_date_to: purchase_date_to1
           ? purchase_date_to1
           : dataDashboard[1],
-        location: searchParams.get("rtd_location_id"),
+        location: rtd_location_id,
       },
     },
   });
+
   const [nameSearch, setNameSearch] = useState(
     translate("dashboard.detail.title-show")
   );
@@ -78,57 +78,55 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       value !== undefined ? value : ""
     );
     setLocationSelected(value);
-    searchParams.set("rtd_location_id", JSON.stringify(value));
-    setSearchParams(searchParams);
+    setParams({ rtd_location_id: JSON.stringify(value) });
   };
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     const [from, to] = Array.from(val || []) as moment.Moment[];
+    const newFromDate = from?.format("YY-MM-DD")
+      ? from?.format("YY-MM-DD").toString()
+      : "";
+    const newToDate = to?.format("YY-MM-DD")
+      ? to?.format("YY-MM-DD").toString()
+      : "";
+
     localStorage.setItem(
       "purchase_date",
       formatString !== undefined ? formatString : ""
     );
-    searchParams.set(
-      "purchase_date_from",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams.set(
-      "purchase_date_to",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    setSearchParams(searchParams);
+    setParams({
+      purchase_date_from: newFromDate,
+      purchase_date_to: newToDate,
+    });
     setNameSearch(
-      `${translate("dashboard.detail.title-count-asset")} : ${searchParams.get(
-        "purchase_date_from"
-      )} đến ${searchParams.get("purchase_date_to")}`
+      `${translate("dashboard.detail.title-count-asset")} : ${newFromDate} đến ${newToDate}`
     );
   };
 
   const handleChangePickerByMonthByCategory = (val: any, formatString: any) => {
     const [from, to] = Array.from(val || []) as moment.Moment[];
+    const newFromDate = from?.format("YY-MM-DD")
+      ? from?.format("YY-MM-DD").toString()
+      : "";
+    const newToDate = to?.format("YY-MM-DD")
+      ? to?.format("YY-MM-DD").toString()
+      : "";
+
     localStorage.setItem(
       "purchase_date",
       formatString !== undefined ? formatString : ""
     );
-    searchParams1.set(
-      "purchase_date_from1",
-      from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-    );
-    searchParams1.set(
-      "purchase_date_to1",
-      to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-    );
-    setSearchParams1(searchParams1);
+    setParams({
+      purchase_date_from1: newFromDate,
+      purchase_date_to1: newToDate,
+    });
     setNameSearch(
-      `${translate("dashboard.detail.title-count-asset")} : ${searchParams1.get(
-        "purchase_date_from"
-      )} đến ${searchParams1.get("purchase_date_to")}`
+      `${translate("dashboard.detail.title-count-asset")} : ${newFromDate} đến ${newToDate}`
     );
   };
   const locationName = data?.data.payload.find(
     (item: ILocation) => item.id === locationSelected
   )?.name;
-  console.log("locationName", locationName);
 
   useEffect(() => {
     localStorage.removeItem(LocalStorageKey.PURCHASE_DATE);

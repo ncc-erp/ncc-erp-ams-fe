@@ -6,7 +6,6 @@ import {
   Tabs,
   Table,
   useTable,
-  Spin,
   TextField,
   getDefaultSortOrder,
 } from "@pankod/refine-antd";
@@ -18,7 +17,7 @@ import {
   ILicenseUsers,
 } from "interfaces/license";
 import { defaultValue } from "constants/permissions";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { LICENSES_CHECKOUT_USER_API } from "api/baseApi";
 const { Title, Text } = Typography;
 
@@ -68,7 +67,7 @@ export const LicensesShow = (props: SoftwareShowProps) => {
       {
         key: "checkout_at",
         title: t("licenses.label.field.checkout_at"),
-        render: (value: ILicenses, record: any) => (
+        render: (value: ILicenses) => (
           <TextField value={value ? value.datetime : ""} />
         ),
         defaultSortOrder: getDefaultSortOrder("checkout_at", sorter),

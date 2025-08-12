@@ -48,3 +48,7 @@ export interface ITotalDetail {
   name: string;
   total: number;
 }
+
+export type IValidationErrors<T> = {
+  [K in keyof T]?: string[];
+};

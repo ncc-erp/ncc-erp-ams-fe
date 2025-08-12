@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+import { Button, Form, Input, useForm } from "@pankod/refine-antd";
 import { useCreate, useTranslate } from "@pankod/refine-core";
-import { Form, Input, useForm, Button } from "@pankod/refine-antd";
+import { useEffect, useState } from "react";
 
-import "react-mde/lib/styles/css/react-mde-all.css";
+import { HARDWARE_API } from "api/baseApi";
+import { ASSIGNED_STATUS } from "constants/assets";
 import {
   IHardwareRequestCheckout,
   IHardwareRequestMultipleCancel,
   IHardwareRequestMultipleCheckout,
 } from "interfaces/hardware";
-import { HARDWARE_API } from "api/baseApi";
-import { ASSIGNED_STATUS } from "constants/assets";
-import { LocalStorageKey } from "enums/LocalStorageKey";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareCancelProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKey: any;
+  clearSelection: () => void;
 };
 
 export const HardwareCancelMultipleAsset = (props: HardwareCancelProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKey } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
@@ -56,8 +55,7 @@ export const HardwareCancelMultipleAsset = (props: HardwareCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS_ACCEPT_REFUSE);
-      setSelectedRowKey([]);
+      clearSelection();
     }
   }, [dataCancel, form, setIsModalVisible]);
 

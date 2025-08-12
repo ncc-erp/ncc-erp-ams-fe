@@ -27,13 +27,13 @@ type HardwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const ClientHardwareCheckoutMultipleAsset = (
   props: HardwareCheckoutProps
 ) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
 
   const t = useTranslate();
@@ -95,8 +95,7 @@ export const ClientHardwareCheckoutMultipleAsset = (
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      setSelectedRowKeys([]);
-      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS);
+      clearSelection();
     }
   }, [dataCheckout, form, setIsModalVisible]);
 

@@ -16,11 +16,11 @@ type ToolCancelProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKey: any;
+  clearSelection: () => void;
 };
 
 export const ToolCancelMultiple = (props: ToolCancelProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKey } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<IToolCheckoutRequest>();
   const { open } = useNotification();
   const t = useTranslate();
@@ -43,7 +43,7 @@ export const ToolCancelMultiple = (props: ToolCancelProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -68,8 +68,7 @@ export const ToolCancelMultiple = (props: ToolCancelProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
-      setSelectedRowKey([]);
+      clearSelection();
     }
   }, [dataCancel, form, setIsModalVisible]);
 

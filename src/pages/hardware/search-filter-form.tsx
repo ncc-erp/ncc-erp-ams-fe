@@ -1,20 +1,17 @@
 import { Form, Select, useSelect } from "@pankod/refine-antd";
 import { useTranslate } from "@pankod/refine-core";
-import moment from "moment";
-import { dateFormat } from "constants/assets";
 import { DatePicker } from "antd";
-
-import { ISearchFormProps } from "interfaces/hardware";
-import { ICompany } from "interfaces/company";
-import { LOCATION_API } from "api/baseApi";
+import { dateFormat } from "constants/assets";
+import moment from "moment";
+import { FC, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useMemo } from "react";
-import { LocalStorageKey } from "enums/LocalStorageKey";
-/* eslint-disable react/prop-types */
 
-export const SearchFilterForm: React.FC<ISearchFormProps> = ({
-  searchFormProps,
-}) => {
+import { LOCATION_API } from "api/baseApi";
+import { ICompany } from "interfaces/company";
+import { ISearchFormProps } from "interfaces/hardware";
+import { LocalStorageKey } from "enums/LocalStorageKey";
+
+export const SearchFilterForm: FC<ISearchFormProps> = ({ searchFormProps }) => {
   const t = useTranslate();
   const { Option } = Select;
   const { RangePicker } = DatePicker;

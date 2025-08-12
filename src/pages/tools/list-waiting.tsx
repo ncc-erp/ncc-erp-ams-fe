@@ -1,76 +1,76 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useCreate,
-  HttpError,
-  usePermissions,
-  useNotification,
-} from "@pankod/refine-core";
+  CloseOutlined,
+  FileSearchOutlined,
+  MenuOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  TagField,
-  Popconfirm,
   Button,
-  Spin,
-  Form,
-  Select,
-  useSelect,
-  Tooltip,
   Checkbox,
+  DateField,
+  Form,
+  getDefaultSortOrder,
+  List,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
 } from "@pankod/refine-antd";
-import { TableAction } from "components/elements/tables/TableAction";
+import {
+  CrudFilters,
+  HttpError,
+  IResourceComponentsProps,
+  useCreate,
+  useNotification,
+  usePermissions,
+  useTranslate,
+} from "@pankod/refine-core";
+import { DatePicker } from "antd";
+import moment from "moment";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MModal } from "components/Modal/MModal";
-import {
-  ITool,
-  IToolCreateRequest,
-  IToolFilterVariable,
-  IToolResponse,
-} from "interfaces/tool";
-import {
-  getBGToolAssignedStatusDecription,
-  getBGToolStatusDecription,
-  getToolAssignedStatusDecription,
-  getToolStatusDecription,
-} from "untils/tools";
-import { filterAssignedStatus } from "untils/assets";
-import { CancleTool } from "./cancel";
-import { ToolSearch } from "./search";
+
 import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
   TOOLS_API,
   TOOLS_TOTAL_DETAIL_API,
 } from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
+import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { IToolListSearchParams } from "hooks/useAppSearchParams/types";
+import { useRowSelection } from "hooks/useRowSelection";
+import { ICategory } from "interfaces/categories";
+import { IStatusLabel } from "interfaces/statusLabel";
 import {
-  CloseOutlined,
-  SyncOutlined,
-  MenuOutlined,
-  FileSearchOutlined,
-} from "@ant-design/icons";
-import { ToolCancelMultiple } from "./multi-cancel";
+  ITool,
+  IToolCreateRequest,
+  IToolFilterVariable,
+  IToolResponse,
+} from "interfaces/tool";
+import "styles/request.less";
+import { filterAssignedStatus } from "untils/assets";
+import {
+  getBGToolAssignedStatusDecription,
+  getBGToolStatusDecription,
+  getToolAssignedStatusDecription,
+  getToolStatusDecription,
+} from "untils/tools";
 import {
   ASSIGNED_STATUS,
   dateFormat,
   defaultCheckedListWaitingConfirm,
 } from "../../constants/assets";
-import moment from "moment";
-import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
-import "styles/request.less";
-import { ICategory } from "interfaces/categories";
-import { IStatusLabel } from "interfaces/statusLabel";
-import { EPermissions } from "constants/permissions";
-import { IModel } from "interfaces/model";
-import { IAssetsWaiting } from "interfaces/hardware";
-import { TotalDetail } from "components/elements/TotalDetail";
+import { CancleTool } from "./cancel";
+import { ToolCancelMultiple } from "./multi-cancel";
+import { ToolSearch } from "./search";
 import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const ToolListWaitingConfirm: React.FC<
@@ -81,7 +81,7 @@ export const ToolListWaitingConfirm: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IToolResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
 
   const { data: permissionsData } = usePermissions();
 
@@ -106,16 +106,20 @@ export const ToolListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+      search: searchParam,
+      rtd_location_id,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("toolList");
 
   const { open } = useNotification();
 
@@ -193,9 +197,6 @@ export const ToolListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -247,7 +248,7 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "name",
         title: t("tools.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
@@ -297,7 +298,7 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "purchase_cost",
         title: t("tools.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -354,19 +355,19 @@ export const ToolListWaitingConfirm: React.FC<
       {
         key: "checkout_counter",
         title: t("tools.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tools.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "notes",
         title: t("tools.label.field.notes"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
     ],
@@ -398,7 +399,7 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -424,29 +425,23 @@ export const ToolListWaitingConfirm: React.FC<
     refreshData();
   }, [isCancleModalVisible]);
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(
-        localStorage.getItem(
-          LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE
-        ) as string
-      ) || []
-    );
-  }, [localStorage.getItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE)]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IToolResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    removeItem,
+    clearSelection,
+  } = useRowSelection<IToolResponse>("selectedRow_AcceptRefuse");
 
   useEffect(() => {
-    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
+    clearSelection();
+    searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const [selectedRows, setSelectedRows] = useState<IToolResponse[]>([]);
   const [isCancelManyToolVisible, setisCancelManyToolVisible] = useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -458,7 +453,7 @@ export const ToolListWaitingConfirm: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IToolResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
@@ -473,7 +468,7 @@ export const ToolListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IToolResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -483,7 +478,7 @@ export const ToolListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
       setSelectedStoreAcceptAndRefuse(
-        initselectedRowKeys
+        selectedRows
           .filter(
             (item: IToolResponse) =>
               item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -497,13 +492,13 @@ export const ToolListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IToolResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0 &&
       isAdmin &&
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: IToolResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -513,88 +508,13 @@ export const ToolListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(false);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
-    } else {
     }
-  }, [initselectedRowKeys]);
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IToolResponse[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: IToolResponse, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: IToolResponse) => item.id !== record.id
-      );
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(newSelectRow.map((item: IToolResponse) => item.id));
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys.findIndex((item) => item.id === index);
-          })
-        )
-      );
-      setSelectedRowKeys(
-        newselectedRowKeys.map((item: IToolResponse) => item.id)
-      );
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: IToolResponse[],
-    changeRows: IToolResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: IToolResponse) => item.id);
-      let newSelectRows = initselectedRowKeys.filter(
-        (item: IToolResponse) => item
-      );
-      newSelectRows = initselectedRowKeys.filter(
-        (item: IToolResponse) => !unSelectIds.includes(item.id)
-      );
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
-        JSON.stringify(newSelectRows)
-      );
-      setSelectedRowKeys(newSelectRows);
-    } else {
-      selectedRows = selectedRows.filter((item: IToolResponse) => item);
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  }, [selectedRows]);
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: IToolResponse) => item.id),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
-  };
-
-  const handleRemoveItem = (id: number) => {
-    const newSelectRow = initselectedRowKeys.filter(
-      (item: IToolResponse) => item.id !== id
-    );
-    localStorage.setItem(
-      LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE,
-      JSON.stringify(newSelectRow)
-    );
-    setSelectedRowKeys(newSelectRow.map((item: IToolResponse) => item.id));
   };
 
   const handleCancel = () => {
@@ -621,7 +541,7 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -631,8 +551,7 @@ export const ToolListWaitingConfirm: React.FC<
       }
     );
     handleRefresh();
-    setSelectedRowKeys([]);
-    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_ACCEPT_REFUSE);
+    clearSelection();
   };
 
   useEffect(() => {
@@ -641,7 +560,6 @@ export const ToolListWaitingConfirm: React.FC<
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const { Option } = Select;
   const searchValuesByDateFrom = useMemo(() => {
     return localStorage
       .getItem(LocalStorageKey.PURCHASE_DATE)
@@ -655,36 +573,30 @@ export const ToolListWaitingConfirm: React.FC<
   }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
-  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
-
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
+    return Number(localStorage.getItem("rtd_location_id"));
+  }, [localStorage.getItem("rtd_location_id")]);
 
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof IToolListSearchParams,
+    dateTo: keyof IToolListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
-      // localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      // localStorage.setItem("purchase_date", formatString ?? "");
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
-      // localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
+      clearParam([dateFrom, dateTo]);
+      // localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -727,7 +639,7 @@ export const ToolListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -902,7 +814,7 @@ export const ToolListWaitingConfirm: React.FC<
           isModalVisible={isCancelManyToolVisible}
           setIsModalVisible={setisCancelManyToolVisible}
           data={selectdStoreAcceptAndRefuse}
-          setSelectedRowKey={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -929,7 +841,7 @@ export const ToolListWaitingConfirm: React.FC<
               title={t("user.label.button.accept")}
               onConfirm={() =>
                 confirmMultipleTools(
-                  initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
+                  selectedRows.map((item) => item.id),
                   ASSIGNED_STATUS.ACCEPT
                 )
               }
@@ -961,18 +873,18 @@ export const ToolListWaitingConfirm: React.FC<
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {isAdmin &&
-              initselectedRowKeys
+              selectedRows
                 .filter(
-                  (item: IAssetsWaiting) =>
+                  (item) =>
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
                 )
-                .map((item: IToolResponse) => (
+                .map((item) => (
                   <span className="list-checkin" key={item.id}>
                     <span className="name-checkin">{item.name}</span>
                     <span
                       className="delete-users-accept-refuse"
-                      onClick={() => handleRemoveItem(item.id)}
+                      onClick={() => removeItem(item.id)}
                     >
                       <CloseOutlined />
                     </span>
@@ -986,18 +898,18 @@ export const ToolListWaitingConfirm: React.FC<
             }
           >
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
-            {initselectedRowKeys
+            {selectedRows
               .filter(
-                (item: IAssetsWaiting) =>
+                (item) =>
                   item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
                   item.assigned_status === ASSIGNED_STATUS.REFUSE
               )
-              .map((item: IToolResponse) => (
+              .map((item) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.name}</span>
                   <span
                     className="delete-users-accept-refuse"
-                    onClick={() => handleRemoveItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>

@@ -23,11 +23,11 @@ type ToolMultiCheckinProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<IToolCheckinMessageResponse>();
   const [assigned_users, setAssignedUsers] = useState([]);
   const t = useTranslate();
@@ -53,7 +53,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -86,8 +86,7 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(undefined);
-      setSelectedRowKeys([]);
-      localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_CHECKIN_ROW_KEYS);
+      clearSelection();
     } else {
       setMessageErr(dataCheckin?.data.messages);
     }

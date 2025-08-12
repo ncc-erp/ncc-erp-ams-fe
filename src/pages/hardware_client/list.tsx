@@ -1,74 +1,69 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
+  CloseOutlined,
+  FileSearchOutlined,
+  MenuOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Checkbox,
+  CloneButton,
+  CreateButton,
+  DateField,
+  DeleteButton,
+  EditButton,
+  Form,
+  getDefaultSortOrder,
+  List,
+  Select,
+  ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
+} from "@pankod/refine-antd";
+import {
   CrudFilters,
   HttpError,
+  IResourceComponentsProps,
   useNavigation,
   usePermissions,
+  useTranslate,
 } from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  CloneButton,
-  EditButton,
-  DeleteButton,
-  TagField,
-  CreateButton,
-  Button,
-  ShowButton,
-  Tooltip,
-  Checkbox,
-  Form,
-  Select,
-  useSelect,
-} from "@pankod/refine-antd";
-import { Image } from "antd";
-import "styles/antd.less";
+import { DatePicker, Image, Spin } from "antd";
+import moment from "moment";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import { IHardware } from "interfaces";
+import {
+  CATEGORIES_API,
+  CLIENT_HARDWARE_API,
+  CLIENT_HARDWARE_TOTAL_DETAIL_API,
+  LOCATION_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
 import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { TotalDetail } from "components/elements/TotalDetail";
 import { MModal } from "components/Modal/MModal";
-import { ClientHardwareCreate } from "./create";
-import { ClientHardwareEdit } from "./edit";
-import { ClientHardwareClone } from "./clone";
-import { ClientHardwareShow } from "./show";
-import {
-  MenuOutlined,
-  FileSearchOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-
+import { dateFormat } from "constants/assets";
+import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { useRowSelection } from "hooks/useRowSelection";
+import { IHardware } from "interfaces";
+import { ICategory } from "interfaces/categories";
+import { ICompany } from "interfaces/company";
 import {
   IHardwareFilterVariables,
   IHardwareResponse,
   IHardwareResponseCheckin,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
-import { ClientHardwareCheckout } from "./checkout";
-import { ClientHardwareCheckin } from "./checkin";
-import {
-  CATEGORIES_API,
-  CLIENT_HARDWARE_API,
-  LOCATION_API,
-  STATUS_LABELS_API,
-  CLIENT_HARDWARE_TOTAL_DETAIL_API,
-} from "api/baseApi";
-import { ClientHardwareSearch } from "./search";
-import { Spin } from "antd";
-import { ICompany } from "interfaces/company";
-import moment from "moment";
-import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
-import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
-import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { dateFormat } from "constants/assets";
+import { IStatusLabel } from "interfaces/statusLabel";
+import { QrCodeDetail } from "pages/hardware/qr-code";
+import { Scanner } from "pages/hardware/scanner";
+import "styles/antd.less";
 import {
   filterAssignedStatus,
   getAssetAssignedStatusDecription,
@@ -76,15 +71,17 @@ import {
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
 } from "untils/assets";
-import { ICategory } from "interfaces/categories";
-import { IStatusLabel } from "interfaces/statusLabel";
-import React from "react";
-import { EPermissions } from "constants/permissions";
-import { TotalDetail } from "components/elements/TotalDetail";
-
-import { Scanner } from "pages/hardware/scanner";
-import { QrCodeDetail } from "pages/hardware/qr-code";
+import { ClientHardwareCheckin } from "./checkin";
+import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ClientHardwareCheckout } from "./checkout";
+import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { ClientHardwareClone } from "./clone";
+import { ClientHardwareCreate } from "./create";
+import { ClientHardwareEdit } from "./edit";
+import { ClientHardwareSearch } from "./search";
+import { ClientHardwareShow } from "./show";
 import { LocalStorageKey } from "enums/LocalStorageKey";
+
 const defaultCheckedList = [
   "id",
   "name",
@@ -96,6 +93,7 @@ const defaultCheckedList = [
   "assigned_status",
   "created_at",
 ];
+
 interface ICheckboxChange {
   key: string;
 }
@@ -137,18 +135,37 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const [isCheckinManyAssetModalVisible, setIsCheckinManyAssetModalVisible] =
     useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const status_id = searchParams.get("status_id");
-  const dateFromParam = searchParams.get("dateFrom");
-  const dateToParam = searchParams.get("dateTo");
-  const searchParam = searchParams.get("search");
-  const model_id = searchParams.get("model_id");
-  const manufacturer_id = searchParams.get("manufacturer_id");
-  const supplier_id = searchParams.get("supplier_id");
+  const {
+    params: {
+      category_id,
+      rtd_location_id,
+      status_id,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      search: searchParam,
+      model_id,
+      manufacturer_id,
+      supplier_id,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
   const [isShowModalVisibleQR, setIsShowModalVisibleQR] = useState(false);
   const [isShowModalScan, setIsShowModalScan] = useState(false);
+  const [qrCodeDetail, setQrCodeDetail] = useState<
+    IHardwareResponse | IHardwareResponse[]
+  >([]);
+
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    removeItem,
+    clearSelection,
+  } = useRowSelection<IHardwareResponse>("selectedRowKeys");
+
   const { data: permissionsData } = usePermissions();
 
   useEffect(() => {
@@ -171,7 +188,6 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
       onSearch: (params) => {
         const filters: CrudFilters = [];
         const {
-          search,
           name,
           asset_tag,
           serial,
@@ -238,7 +254,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           },
           {
             field: "model_id",
@@ -889,7 +905,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -939,28 +955,20 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      localStorage.setItem("purchase_date", formatString ?? "");
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
-      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
+      clearParam(["dateFrom", "dateTo"]);
+      localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -977,18 +985,6 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
 
   const { Option } = Select;
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(
-        localStorage.getItem(LocalStorageKey.SELECTED_ROW_KEYS) as string
-      ) || []
-    );
-  }, [localStorage.getItem(LocalStorageKey.SELECTED_ROW_KEYS)]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
-
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
   const [isSelectedQRCode, setIsSelectedQRCode] = useState<boolean>(false);
@@ -1001,14 +997,13 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkout
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkout)
+        .length > 0
     ) {
       setSelectedCheckout(true);
       setNameCheckin(t("hardware.label.detail.note-checkin"));
       setSelectdStoreCheckout(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IHardwareResponse) => item.user_can_checkout)
           .map((item: IHardwareResponse) => item)
       );
@@ -1018,14 +1013,13 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckin(true);
       setNameCheckout(t("hardware.label.detail.note-checkout"));
       setSelectdStoreCheckin(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IHardwareResponse) => item.user_can_checkin)
           .map((item: IHardwareResponse) => item)
       );
@@ -1033,96 +1027,35 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
       setSelectedCheckin(false);
       setNameCheckout("");
     }
+
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkout
-      ).length > 0 &&
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkout)
+        .length > 0 &&
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(t("hardware.label.detail.note-checkin"));
       setNameCheckout(t("hardware.label.detail.note-checkout"));
-    } else {
     }
-    if (initselectedRowKeys.length > 0) {
+
+    if (selectedRows.length > 0) {
       setIsSelectedQRCode(true);
     } else {
       setIsSelectedQRCode(false);
     }
-  }, [initselectedRowKeys]);
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: any, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: IHardware) => item.id !== record.id
-      );
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_KEYS,
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(newSelectRow.map((item: IHardware) => item.id));
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedRowKeys",
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys.findIndex((item) => item.id === index);
-          })
-        )
-      );
-      setSelectedRowKeys(newselectedRowKeys.map((item: IHardware) => item.id));
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: IHardwareResponse[],
-    changeRows: IHardwareResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item
-      );
-      newSelectedRows = initselectedRowKeys.filter(
-        (item: any) => !unSelectIds.includes(item.id)
-      );
-
-      localStorage.setItem(
-        LocalStorageKey.SELECTED_ROW_KEYS,
-        JSON.stringify(newSelectedRows)
-      );
-    } else {
-      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
-      localStorage.setItem(
-        "selectedRowKeys",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  }, [selectedRows]);
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map((item: IHardware) => item.id),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
   };
 
   useEffect(() => {
-    localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS);
+    clearSelection();
+    searchFormProps.form?.submit();
   }, [window.location.reload]);
 
   const handleCheckout = () => {
@@ -1133,20 +1066,9 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
     setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
   };
 
-  const handleRemoveCheckInCheckOutItem = (id: number) => {
-    const newSelectRow = initselectedRowKeys.filter(
-      (item: IHardwareResponse) => item.id !== id
-    );
-    localStorage.setItem(
-      LocalStorageKey.SELECTED_ROW_KEYS,
-      JSON.stringify(newSelectRow)
-    );
-    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
-  };
-
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1156,22 +1078,24 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
+
   const showQR = (data: IHardwareResponse) => {
     setIsShowModalVisibleQR(true);
-    setDetail(data);
+    setQrCodeDetail(data);
   };
+
   const handleQRGenerator = () => {
     setIsShowModalVisibleQR(true);
-    setDetail(initselectedRowKeys);
+    setQrCodeDetail(selectedRows);
   };
 
   const handleScanQR = () => {
@@ -1397,7 +1321,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckoutManyAssetModalVisible}
           setIsModalVisible={setIsCheckoutManyAssetModalVisible}
           data={selectdStoreCheckout}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -1409,7 +1333,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           isModalVisible={isCheckinManyAssetModalVisible}
           setIsModalVisible={setIsCheckinManyAssetModalVisible}
           data={selectdStoreCheckin}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       {isShowModalVisibleQR && (
@@ -1420,7 +1344,7 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
         >
           <QrCodeDetail
             closeModal={() => setIsShowModalVisibleQR(false)}
-            detail={detail}
+            detail={qrCodeDetail}
           />
         </MModal>
       )}
@@ -1451,14 +1375,14 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           )}
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
-            {initselectedRowKeys
+            {selectedRows
               .filter((item: IHardwareResponse) => item.user_can_checkin)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-checkin-checkout"
-                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>
@@ -1480,14 +1404,14 @@ export const ClientHardwareList: React.FC<IResourceComponentsProps> = () => {
           )}
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
-            {initselectedRowKeys
+            {selectedRows
               .filter((item: IHardwareResponse) => item.user_can_checkout)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-checkin-checkout"
-                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>

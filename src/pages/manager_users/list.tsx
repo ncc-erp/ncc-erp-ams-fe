@@ -97,7 +97,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       return filters;
     },
   });
-
+  const totalUser = tableQueryResult?.data?.total ?? 0;
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
@@ -105,7 +105,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       custom({
         url: SYNC_USER_API,
         method: "get",
-      }).then((x) => {
+      }).then(() => {
         setHrmLoading(false);
         tableQueryResult.refetch();
       });
@@ -386,7 +386,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     }, 300);
   };
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
   const isLoading = tableProps.loading || hrmLoading;
 
   const onCheckItem = (value: any) => {
@@ -415,7 +414,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -502,6 +501,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="user-list-sum">
+        <span className="user-list-sum_title">
+          {translate("user.label.title.total_user")}:{" "}
+        </span>{" "}
+        {totalUser}
       </div>
       {refLoading ? (
         <>

@@ -24,13 +24,13 @@ type HardwareCheckinProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const ClientHardwareCheckinMultipleAsset = (
   props: HardwareCheckinProps
 ) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] =
     useState<IHardwareRequestMultipleCheckin>();
   const [, setIsReadyToDeploy] = useState<boolean>(false);
@@ -86,8 +86,7 @@ export const ClientHardwareCheckinMultipleAsset = (
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      setSelectedRowKeys([]);
-      localStorage.removeItem(LocalStorageKey.SELECTED_ROW_KEYS);
+      clearSelection();
     }
   }, [dataCheckin, form, setIsModalVisible]);
 

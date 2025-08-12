@@ -109,7 +109,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -230,25 +230,25 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
       {
         key: "software_tag",
         title: t("software.label.field.software_tag"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("software_tag", sorter),
       },
       {
         key: "version",
         title: t("software.label.field.version"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("version", sorter),
       },
       {
         key: "total_licenses",
         title: t("software.label.field.total_licenses"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("total_licenses", sorter),
       },
       {
         key: "checkout_count",
         title: t("software.label.field.checkout-count"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_count", sorter),
       },
       {
@@ -406,14 +406,11 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     );
   }, [localStorage.getItem(LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS)]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | ISoftwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const [, setSelectedRowKeys] = useState<React.Key[] | ISoftwareResponse[]>(
+    initselectedRowKeys as React.Key[]
+  );
 
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: ISoftwareResponse[]
-  ) => {
+  const onSelectChange = (selectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -432,7 +429,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
       localStorage.setItem(
         "selectedSoftwareRowKeys",
         JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
+          newselectedRowKeys.filter(function () {
             return newselectedRowKeys;
           })
         )
@@ -509,7 +506,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
     handleOpenModel();
   };
 
-  const handleDateChange = (val: any, formatString: any) => {
+  const handleDateChange = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       searchParams.set(

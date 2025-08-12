@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Interface } from "readline";
+import { EBooleanString } from "../constants/common";
 
 export interface IHardwareCreateRequest {
   rows: any;
@@ -23,6 +22,7 @@ export interface IHardwareCreateRequest {
   last_audit_date: string;
   location_id: number;
   maintenance: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareUpdateRequest {
@@ -59,7 +59,8 @@ export interface IHardwareUpdateRequest {
     id: number;
     name: string;
   };
-  isCustomerRenting: "true" | "false";
+  isCustomerRenting: EBooleanString;
+  startRentalDate?: string;
 }
 export interface IHardwareResponse {
   id: number;
@@ -176,6 +177,11 @@ export interface IHardwareResponse {
     formatted: string;
   };
   maintenance_cycle?: string;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IDefaultValue {
@@ -203,6 +209,8 @@ export interface IHardwareRequestCheckout {
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
+  isCustomerRenting: EBooleanString;
+  startRentalDate: string;
 }
 export interface IHardwareRequestMultipleCheckout {
   assets: any[];
@@ -215,6 +223,8 @@ export interface IHardwareRequestMultipleCheckout {
   user_can_checkout: boolean;
   note: string;
   status_id: number;
+  isCustomerRenting: EBooleanString;
+  startRentalDate: string;
 }
 
 export interface IHardwareRequestMultipleCheckin {
@@ -265,6 +275,11 @@ export interface IHardwareResponseCheckout {
     };
   };
   user_can_checkout: boolean;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IHardwareList {
@@ -339,6 +354,7 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareRequestMultipleCancel {
