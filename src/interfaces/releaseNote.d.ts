@@ -18,3 +18,10 @@ export interface IReleaseNoteListResponse {
   rows: IReleaseNote[];
   total: number;
 }
+
+export interface ReleaseNoteCardProps {
+  item: IReleaseNote;
+  expanded: boolean;
+  onToggleExpand: () => void;
+  maxLines?: number;
+}

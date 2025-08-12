@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { IReleaseNote } from "interfaces/releaseNote";
 import { RELEASE_NOTE_API } from "api/baseApi";
 import dataProvider from "providers/dataProvider";
+import { ReleaseNoteFilter } from "constants/releaseNote";
 
 export const useReleaseNotes = (
-  filter: "ALL" | "FE" | "BE",
+  filter: ReleaseNoteFilter,
   page: number,
   pageSize: number
 ) => {

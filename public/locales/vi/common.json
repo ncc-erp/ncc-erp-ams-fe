@@ -1499,6 +1499,11 @@
     "full_changelog": "Lịch sử thay đổi đầy đủ:",
     "read_more": "Xem thêm",
     "read_less": "Thu gọn",
-    "no_details": "Không có chi tiết."
+    "no_details": "Không có chi tiết.",
+    "filter": {
+      "all": "Tất cả",
+      "fe": "Frontend",
+      "be": "Backend"
+    }
   }
 }

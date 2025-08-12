@@ -1498,6 +1498,11 @@
     "full_changelog": "Full Changelog:",
     "read_more": "Read More",
     "read_less": "Read Less",
-    "no_details": "No details"
+    "no_details": "No details",
+    "filter": {
+      "all": "ALL",
+      "fe": "Frontend",
+      "be": "Backend"
+    }
   }
 }
