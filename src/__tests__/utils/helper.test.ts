@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { sum } from "untils/users";
+import { sum } from "utils/users";
 
 describe("helper module", () => {
   test("sum", () => {

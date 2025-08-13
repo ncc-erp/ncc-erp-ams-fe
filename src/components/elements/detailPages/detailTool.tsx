@@ -36,8 +36,8 @@ import {
   getBGToolStatusDecription,
   getToolAssignedStatusDecription,
   getToolStatusDecription,
-} from "untils/tools";
-import { filterAssignedStatus } from "untils/assets";
+} from "utils/tools";
+import { filterAssignedStatus } from "utils/assets";
 
 import { Spin } from "antd";
 import { TableAction } from "components/elements/tables/TableAction";

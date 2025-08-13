@@ -55,13 +55,13 @@ import {
   ITaxTokenResponse,
   ITaxTokenResponseCheckin,
 } from "interfaces/tax_token";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
-} from "untils/tax_token";
+} from "utils/tax_token";
 import { TaxTokenCheckin } from "./checkin";
 import { TaxTokenCheckinMultiple } from "./checkin-multiple";
 import { TaxTokenCheckout } from "./checkout";

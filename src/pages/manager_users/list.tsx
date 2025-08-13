@@ -32,7 +32,7 @@ import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
 import { LOCATION_API, SYNC_USER_API, USER_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
-import { getPermissionsUser } from "untils/users";
+import { getPermissionsUser } from "utils/users";
 import { ILocations } from "interfaces/location";
 import { IUserType, IJobPosition } from "interfaces/index";
 

@@ -57,13 +57,13 @@ import {
   ITaxTokenResponse,
 } from "interfaces/tax_token";
 import "styles/request.less";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
-} from "untils/tax_token";
+} from "utils/tax_token";
 import {
   ASSIGNED_STATUS,
   dateFormat,

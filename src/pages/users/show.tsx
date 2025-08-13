@@ -1,7 +1,7 @@
 import { useTranslate } from "@pankod/refine-core";
 import { Typography, Tag, Row, Col, Grid } from "@pankod/refine-antd";
 import { IHardwareResponse } from "interfaces/hardware";
-import { getDetailAssetStatus } from "untils/assets";
+import { getDetailAssetStatus } from "utils/assets";
 import { UserOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
