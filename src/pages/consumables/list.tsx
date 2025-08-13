@@ -85,10 +85,10 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem(LocalStorageKey.ITEM_COMSUMABLE_SELECTED) !== null
+    localStorage.getItem(LocalStorageKey.ITEM_CONSUMABLE_SELECTED) !== null
       ? JSON.parse(
           localStorage.getItem(
-            LocalStorageKey.ITEM_COMSUMABLE_SELECTED
+            LocalStorageKey.ITEM_CONSUMABLE_SELECTED
           ) as string
         )
       : defaultCheckedList
@@ -316,7 +316,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      LocalStorageKey.ITEM_COMSUMABLE_SELECTED,
+      LocalStorageKey.ITEM_CONSUMABLE_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

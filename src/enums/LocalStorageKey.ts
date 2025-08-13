@@ -1,7 +1,7 @@
 export enum LocalStorageKey {
   ITEM_ACCESSORY_SELECTED = "item_accessory_selected",
   ITEM_SELECTED = "item_selected",
-  ITEM_COMSUMABLE_SELECTED = "item_consumable_selected",
+  ITEM_CONSUMABLE_SELECTED = "item_consumable_selected",
   ITEM_TAX_TOKEN_SELECTED = "item_tax_token_selected",
   ITEM_TOOLS_SELECTED = "item_tools_selected",
   SEARCH = "search",

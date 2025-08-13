@@ -57,13 +57,9 @@ export const HardwareListMaintenance: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem(
-      LocalStorageKey.ITEM_CONSUMABLES_MAINTENANCE_SELECTED
-    ) !== null
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED_MAINTENANCE) !== null
       ? JSON.parse(
-          localStorage.getItem(
-            LocalStorageKey.ITEM_CONSUMABLES_MAINTENANCE_SELECTED
-          ) as any
+          localStorage.getItem(LocalStorageKey.ITEM_SELECTED_MAINTENANCE) as any
         )
       : defaultCheckedList
   );

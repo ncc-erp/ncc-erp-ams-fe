@@ -79,10 +79,10 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
     useState<IConsumablesResponseCheckout>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem(LocalStorageKey.ITEM_COMSUMABLE_SELECTED) !== null
+    localStorage.getItem(LocalStorageKey.ITEM_CONSUMABLE_SELECTED) !== null
       ? JSON.parse(
           localStorage.getItem(
-            LocalStorageKey.ITEM_COMSUMABLE_SELECTED
+            LocalStorageKey.ITEM_CONSUMABLE_SELECTED
           ) as string
         )
       : defaultCheckedList
