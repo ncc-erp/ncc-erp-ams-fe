@@ -148,7 +148,6 @@ describe("branch coverage for convertHardwareToEditData", () => {
     const result = convertHardwareToEditData(hardware);
     // manufacturer is always default
     expect(result.manufacturer).toEqual({ id: 0, name: "" });
-    // others should keep the provided object
     expect(result.supplier).toEqual(obj);
     expect(result.category).toEqual(obj);
     expect(result.location).toEqual(obj);
@@ -551,5 +550,157 @@ describe("convertHardwareToEditData", () => {
     const hardware = { ...baseHardware, webhook: {} as any };
     const result = convertHardwareToEditData(hardware);
     expect(result.webhook).toEqual({ id: undefined, name: undefined });
+  });
+});
+
+describe("convertHardwareToEditData additional tests", () => {
+  it("should handle serial as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).serial;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.serial).toBe("");
+  });
+
+  it("should handle model as null", () => {
+    const hardware = { ...baseHardware, model: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.model).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle status_label as null", () => {
+    const hardware = { ...baseHardware, status_label: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.status_label).toEqual({
+      id: 0,
+      name: "",
+      status_type: "",
+      status_meta: "",
+    });
+  });
+
+  it("should handle category as null", () => {
+    const hardware = { ...baseHardware, category: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.category).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle purchase_date as null", () => {
+    const hardware = { ...baseHardware, purchase_date: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.purchase_date).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle webhook as null", () => {
+    const hardware = { ...baseHardware, webhook: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.webhook).toBeUndefined();
+  });
+
+  it("should handle startRentalDate as null", () => {
+    const hardware = { ...baseHardware, startRentalDate: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.startRentalDate).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle assigned_to as null", () => {
+    const hardware = { ...baseHardware, assigned_to: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.assigned_to).toEqual({
+      id: 0,
+      name: "",
+      username: "",
+      last_name: "",
+      first_name: "",
+    });
+  });
+
+  it("should handle checkout_to_type as null", () => {
+    const hardware = { ...baseHardware, checkout_to_type: null as any };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.checkout_to_type).toEqual({
+      assigned_user: 0,
+      assigned_asset: "",
+      assigned_location: { id: 0, name: "" },
+    });
+  });
+});
+
+describe("additional branch coverage for convertHardwareToEditData", () => {
+  it("should handle model as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).model;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.model).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle model_number as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).order_number;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.model_number).toBeUndefined();
+  });
+
+  it("should handle status_label as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).status_label;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.status_label).toEqual({
+      id: 0,
+      name: "",
+      status_type: "",
+      status_meta: "",
+    });
+  });
+
+  it("should handle category as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).category;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.category).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle purchase_date as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).purchase_date;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.purchase_date).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle webhook as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).webhook;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.webhook).toBeUndefined();
+  });
+
+  it("should handle startRentalDate as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).startRentalDate;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.startRentalDate).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle assigned_to as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).assigned_to;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.assigned_to).toEqual({
+      id: 0,
+      name: "",
+      username: "",
+      last_name: "",
+      first_name: "",
+    });
+  });
+
+  it("should handle checkout_to_type as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).checkout_to_type;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.checkout_to_type).toEqual({
+      assigned_user: 0,
+      assigned_asset: "",
+      assigned_location: { id: 0, name: "" },
+    });
   });
 });
