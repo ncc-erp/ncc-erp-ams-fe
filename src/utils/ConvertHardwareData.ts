@@ -3,6 +3,62 @@ import { IHardwareResponse } from "interfaces/hardware";
 export const convertHardwareToEditData = (
   data: IHardwareResponse
 ): IHardwareResponse => {
+  if (data == null) {
+    return {
+      id: 0,
+      name: "",
+      asset_tag: "",
+      serial: "",
+      model: { id: 0, name: "" },
+      model_number: "",
+      status_label: { id: 0, name: "", status_type: "", status_meta: "" },
+      category: { id: 0, name: "" },
+      supplier: { id: 0, name: "" },
+      notes: "",
+      order_number: "",
+      location: { id: 0, name: "" },
+      rtd_location: { id: 0, name: "" },
+      image: "",
+      warranty_months: "",
+      purchase_cost: 0,
+      last_audit_date: "",
+      requestable: "",
+      physical: 0,
+      note: "",
+      expected_checkin: { date: "", formatted: "" },
+      last_checkout: { date: "", formatted: "" },
+      assigned_location: { id: 0, name: "" },
+      assigned_user: 0,
+      assigned_asset: "",
+      checkout_to_type: {
+        assigned_user: 0,
+        assigned_asset: "",
+        assigned_location: { id: 0, name: "" },
+      },
+      user_can_checkout: false,
+      assigned_status: 0,
+      checkin_at: { date: "", formatted: "" },
+      created_at: { datetime: "", formatted: "" },
+      updated_at: { datetime: "", formatted: "" },
+      manufacturer: { id: 0, name: "" },
+      checkin_counter: 0,
+      checkout_counter: 0,
+      requests_counter: 0,
+      user_can_checkin: false,
+      purchase_date: { date: "", formatted: "" },
+      warranty_expires: { date: "", formatted: "" },
+      assigned_to: {
+        id: 0,
+        name: "",
+        username: "",
+        last_name: "",
+        first_name: "",
+      },
+      isCustomerRenting: false,
+      startRentalDate: { date: "", formatted: "" },
+    } as IHardwareResponse;
+  }
+
   return {
     ...data,
     id: data.id,
@@ -137,7 +193,10 @@ export const convertHardwareToEditData = (
     isCustomerRenting: data?.isCustomerRenting ?? false,
     startRentalDate:
       data?.startRentalDate && typeof data.startRentalDate === "object"
-        ? data.startRentalDate
+        ? {
+            date: data.startRentalDate.date ?? "",
+            formatted: data.startRentalDate.formatted ?? "",
+          }
         : { date: "", formatted: "" },
     webhook:
       data?.webhook == null

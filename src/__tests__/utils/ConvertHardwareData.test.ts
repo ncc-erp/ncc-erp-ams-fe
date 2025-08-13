@@ -704,3 +704,167 @@ describe("additional branch coverage for convertHardwareToEditData", () => {
     });
   });
 });
+
+describe("edge cases for branch coverage", () => {
+  it("should handle model with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      model: { id: undefined, name: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.model).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle category with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      category: { id: undefined, name: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.category).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle supplier with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      supplier: { id: undefined, name: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.supplier).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle location with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      location: { id: undefined, name: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.location).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle rtd_location with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      rtd_location: { id: undefined, name: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.rtd_location).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle purchase_date with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      purchase_date: { date: undefined, formatted: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.purchase_date).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle maintenance_date with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      maintenance_date: { date: undefined, formatted: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.maintenance_date).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle warranty_expires with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      warranty_expires: { date: undefined, formatted: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.warranty_expires).toEqual({ date: "", formatted: "" });
+  });
+
+  it("should handle assigned_to with partial data", () => {
+    const hardware = {
+      ...baseHardware,
+      assigned_to: {
+        id: 5,
+        name: "User",
+        username: undefined,
+        last_name: undefined,
+        first_name: undefined,
+      } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.assigned_to.id).toBe(5);
+    expect(result.assigned_to.name).toBe("User");
+    expect(result.assigned_to.username).toBeUndefined();
+    expect(result.assigned_to.last_name).toBeUndefined();
+    expect(result.assigned_to.first_name).toBeUndefined();
+  });
+
+  it("should handle startRentalDate with undefined properties", () => {
+    const hardware = {
+      ...baseHardware,
+      startRentalDate: { date: undefined, formatted: undefined } as any,
+    };
+    const result = convertHardwareToEditData(hardware);
+    expect(result.startRentalDate).toEqual({ date: "", formatted: "" });
+  });
+
+  // Additional edge cases for complex ternaries
+  it("should handle image as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).image;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.image).toBeUndefined();
+  });
+
+  it("should handle warranty_months as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).warranty_months;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.warranty_months).toBeUndefined();
+  });
+
+  it("should handle purchase_cost as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).purchase_cost;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.purchase_cost).toBeUndefined();
+  });
+
+  it("should handle requestable as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).requestable;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.requestable).toBeUndefined();
+  });
+
+  it("should handle physical as undefined", () => {
+    const hardware = { ...baseHardware };
+    delete (hardware as any).physical;
+    const result = convertHardwareToEditData(hardware);
+    expect(result.physical).toBeUndefined();
+  });
+  it("should handle null data input", () => {
+    expect(convertHardwareToEditData(null as any)).toBeTruthy();
+  });
+
+  it("should handle wrong property access chains", () => {
+    const hardware = {
+      id: 1,
+      name: "Test",
+      asset_tag: "Tag",
+      model: 123, // number thay vì object
+      status_label: "abc", // string thay vì object
+    } as any;
+
+    const result = convertHardwareToEditData(hardware);
+    expect(result.model).toEqual({ id: 0, name: "" });
+  });
+
+  it("should handle property chains with null in the middle", () => {
+    const hardwareMock = {};
+    Object.defineProperty(hardwareMock, "model", {
+      get: () => null,
+    });
+
+    const result = convertHardwareToEditData(hardwareMock as any);
+    expect(result.model).toEqual({ id: 0, name: "" });
+  });
+});
