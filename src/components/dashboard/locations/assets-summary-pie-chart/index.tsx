@@ -1,6 +1,5 @@
 import { Pie, PieConfig } from "@ant-design/plots";
-import { renderToString } from "react-dom/server";
-import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
+import { ICategoryAsset } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
 import { CategoryType } from "constants/assets";
 import { useTranslate } from "@pankod/refine-core";
