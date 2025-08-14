@@ -48,8 +48,6 @@ export const AssetsSummaryPieChartCheckOut = (
       type: "inner",
       offset: "-50%",
       content: (datum: any) => {
-        console.log("Label datum:", datum);
-
         const percentage = (datum.percent * 100).toFixed(2);
 
         if (parseFloat(percentage) >= 5) {
