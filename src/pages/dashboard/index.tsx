@@ -227,27 +227,29 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
             </div>
           </div>
 
-          <Row gutter={[12, 12]}>
-            {isLoadingData1 ? (
-              <Col sm={24} md={24} className="dashboard-loading">
-                <Spin
-                  tip={`${translate("loading")}...`}
-                  className="spin-center"
-                />
-              </Col>
-            ) : (
-              (data1?.data.payload || [])
-                .filter(
-                  (item: ILocation) =>
-                    locationSelected === null || item.id === locationSelected
-                )
-                .map((item: ILocation, index: number) => (
-                  <Col key={index} sm={24} md={24}>
-                    <AllLocations location={item}></AllLocations>
-                  </Col>
-                ))
-            )}
-          </Row>
+          <div className="locations-container">
+            <Row gutter={[12, 12]}>
+              {isLoadingData1 ? (
+                <Col sm={24} md={24} className="dashboard-loading">
+                  <Spin
+                    tip={`${translate("loading")}...`}
+                    className="spin-center"
+                  />
+                </Col>
+              ) : (
+                (data1?.data.payload || [])
+                  .filter(
+                    (item: ILocation) =>
+                      locationSelected === null || item.id === locationSelected
+                  )
+                  .map((item: ILocation, index: number) => (
+                    <Col key={index} sm={24} md={24}>
+                      <AllLocations location={item}></AllLocations>
+                    </Col>
+                  ))
+              )}
+            </Row>
+          </div>
         </section>
       </List>
     </div>
