@@ -45,22 +45,16 @@ jest.mock("providers/dataProvider", () => ({
 
 // Mock react-icons
 jest.mock("react-icons/io5", () => ({
-  IoQrCodeSharp: ({ onClick, className, style }: any) => (
-    <button
-      data-testid="qr-icon"
-      className={className}
-      style={style}
-      onClick={onClick}
-      aria-label="QR Code Scanner"
-    >
+  IoQrCodeSharp: ({ onClick }: any) => (
+    <button data-testid="qr-icon" onClick={onClick}>
       QR Icon
     </button>
   ),
 }));
 
-// Mock Scanner component to avoid useTranslate issues
+// Mock Scanner component
 jest.mock("pages/hardware/scanner", () => ({
-  Scanner: () => <div>Scanner Component</div>,
+  Scanner: () => <div data-testid="scanner-component">Scanner Component</div>,
 }));
 
 const mockLogout = jest.fn();
@@ -88,10 +82,10 @@ describe("Header component", () => {
     render(<Header />);
 
     expect(screen.getByText("Test User")).toBeInTheDocument();
-
-    // Check if avatar is rendered by looking for img with src attribute
-    const avatar = screen.getByRole("img", { name: "Test User" });
-    expect(avatar).toHaveAttribute("src", "avatar.png");
+    expect(screen.getByRole("img", { name: "Test User" })).toHaveAttribute(
+      "src",
+      "avatar.png"
+    );
   });
 
   it("should call logout and redirect on logout button click", () => {
@@ -102,9 +96,7 @@ describe("Header component", () => {
 
     render(<Header />);
 
-    // Find logout button by aria-label
-    const logoutBtn = screen.getByLabelText("logout");
-    fireEvent.click(logoutBtn.closest("button")!);
+    fireEvent.click(screen.getByLabelText("logout"));
 
     expect(mockLogout).toHaveBeenCalled();
     expect(mockPush).toHaveBeenCalledWith("/login");
@@ -112,7 +104,6 @@ describe("Header component", () => {
 
   it("should render sync button only for admin and trigger syncHrm when clicked", async () => {
     mockCustom.mockResolvedValueOnce({});
-
     (useGetIdentity as jest.Mock).mockReturnValue({
       data: { name: "Admin User" },
     });
@@ -126,7 +117,7 @@ describe("Header component", () => {
     const syncBtn = screen.getByLabelText("sync");
     expect(syncBtn).toBeInTheDocument();
 
-    fireEvent.click(syncBtn.closest("button")!);
+    fireEvent.click(syncBtn);
 
     await waitFor(() => {
       expect(mockCustom).toHaveBeenCalledWith({
@@ -160,11 +151,10 @@ describe("Header component", () => {
 
     render(<Header />);
 
-    // Use testid selector for QR icon
-    const qrBtn = screen.getByTestId("qr-icon");
-    fireEvent.click(qrBtn);
+    fireEvent.click(screen.getByTestId("qr-icon"));
 
     expect(screen.getByText("Scan QR")).toBeInTheDocument();
+    expect(screen.getByTestId("scanner-component")).toBeInTheDocument();
   });
 
   it("should not render QR icon for non-admin users", () => {
@@ -172,7 +162,7 @@ describe("Header component", () => {
       data: { name: "Regular User" },
     });
     (usePermissions as jest.Mock).mockReturnValue({
-      data: { admin: "USER" }, // Not admin
+      data: { admin: "USER" },
     });
 
     render(<Header />);
@@ -182,9 +172,8 @@ describe("Header component", () => {
   });
 
   it("should handle userIdentity as string correctly", () => {
-    // Test the string slicing logic
     (useGetIdentity as jest.Mock).mockReturnValue({
-      data: '"Test User with quotes"', // Simulating string with quotes
+      data: '"Test User with quotes"',
     });
     (usePermissions as jest.Mock).mockReturnValue({ data: {} });
 
@@ -201,8 +190,23 @@ describe("Header component", () => {
 
     render(<Header />);
 
-    // Check that logout button exists (this is always rendered)
-    const logoutBtn = screen.getByLabelText("logout");
-    expect(logoutBtn.closest("button")).toBeInTheDocument();
+    expect(screen.getByLabelText("logout")).toBeInTheDocument();
+  });
+
+  it("should display modal when QR icon is clicked", () => {
+    (useGetIdentity as jest.Mock).mockReturnValue({
+      data: { name: "Admin User" },
+    });
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: { admin: EPermissions.ADMIN },
+    });
+
+    render(<Header />);
+
+    const qrBtn = screen.getByTestId("qr-icon");
+    fireEvent.click(qrBtn);
+
+    expect(screen.getByText("Scan QR")).toBeInTheDocument();
+    expect(screen.getByTestId("scanner-component")).toBeInTheDocument();
   });
 });
