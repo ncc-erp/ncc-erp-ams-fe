@@ -1,0 +1,201 @@
+:root {
+  /* Light theme variables */
+  --color-primary: #ed1b23;
+  --color-error: #fa541c;
+  --color-success: #00a65a;
+  
+  --color-bg-base: #ffffff;
+  --color-bg-container: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-layout: #ffffff;
+  
+  --color-text: #626262;
+  --color-text-secondary: rgba(0, 0, 0, 0.65);
+  --color-text-tertiary: rgba(0, 0, 0, 0.45);
+  
+  --color-border: #cdcdcd;
+  --color-border-secondary: #e8e8e8;
+  
+  --box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 8px;
+  --box-shadow-secondary: rgba(0, 0, 0, 0.15) 0px 6px 16px;
+  
+  --border-radius: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-sm: 3px;
+  
+  /* Layout */
+  --color-bg-header: #ffffff;
+  --color-bg-body: #ffffff;
+  --color-bg-trigger: #ffffff;
+  --color-bg-sider: #ffffff;
+  
+  /* Menu */
+  --color-item-bg: transparent;
+  --color-item-text: #000000;
+  --color-item-text-selected: #000000;
+  --color-item-bg-selected: transparent;
+  --color-item-text-hover: #ed1b23;
+  
+  /* Card */
+  --color-card-bg: #ffffff;
+  --color-card-border: #cdcdcd;
+  
+  /* Input */
+  --color-input-bg: #ffffff;
+  --color-input-border: #cdcdcd;
+  --color-input-text: #626262;
+  --color-input-placeholder: rgba(0, 0, 0, 0.45);
+  
+  /* Button */
+  --color-button-primary: #ed1b23;
+  --color-button-hover: #ff3340;
+  --color-button-active: #d41520;
+  
+  /* Typography */
+  --color-typography: #626262;
+  --color-typography-secondary: rgba(0, 0, 0, 0.65);
+  
+  /* Form */
+  --color-label: #626262;
+  
+  /* Checkbox */
+  --color-checkbox-text: #626262;
+}
+
+[data-theme="dark"] {
+  /* Dark theme variables */
+  --color-primary: #ed1b23;
+  --color-error: #fa541c;
+  --color-success: #52c41a;
+  
+  --color-bg-base: #1f1f1f;
+  --color-bg-container: #282828;
+  --color-bg-elevated: #282828;
+  --color-bg-layout: #1f1f1f;
+  
+  --color-text: rgba(255, 255, 255, 0.75);
+  --color-text-secondary: rgba(255, 255, 255, 0.45);
+  --color-text-tertiary: rgba(255, 255, 255, 0.25);
+  
+  --color-border: #565656;
+  --color-border-secondary: #424242;
+  
+  --box-shadow: rgba(255, 255, 255, 0.24) 0px 3px 8px;
+  --box-shadow-secondary: rgba(255, 255, 255, 0.3) 0px 6px 16px;
+  
+  /* Layout */
+  --color-bg-header: #292929;
+  --color-bg-body: #1f1f1f;
+  --color-bg-trigger: #292929;
+  --color-bg-sider: black;
+  
+  /* Menu */
+  --color-item-bg: transparent;
+  --color-item-text: #ffffff;
+  --color-item-text-selected: #ffffff;
+  --color-item-bg-selected: transparent;
+  --color-item-text-hover: #ed1b23;
+  
+  /* Card */
+  --color-card-bg: #282828;
+  --color-card-border: #565656;
+  
+  /* Input */
+  --color-input-bg: #282828;
+  --color-input-border: #565656;
+  --color-input-text: rgba(255, 255, 255, 0.75);
+  --color-input-placeholder: rgba(255, 255, 255, 0.45);
+  
+  /* Button */
+  --color-button-primary: #ed1b23;
+  --color-button-hover: #ff3340;
+  --color-button-active: #d41520;
+  
+  /* Typography */
+  --color-typography: rgba(255, 255, 255, 0.75);
+  --color-typography-secondary: rgba(255, 255, 255, 0.45);
+  
+  /* Form */
+  --color-label: rgba(255, 255, 255, 0.75);
+  
+  /* Checkbox */
+  --color-checkbox-text: rgba(255, 255, 255, 0.75);
+}
+
+/* Override Ant Design styles with CSS variables */
+.ant-layout {
+  background-color: var(--color-bg-layout);
+}
+
+.ant-layout-header {
+  background-color: var(--color-bg-header);
+}
+
+.ant-layout-sider {
+  background-color: var(--color-bg-sider);
+}
+
+.ant-menu {
+  background-color: var(--color-item-bg);
+  color: var(--color-item-text);
+}
+
+.ant-menu-item-selected {
+  color: var(--color-item-text-selected);
+}
+
+.ant-menu-item:hover {
+  color: var(--color-item-text-hover);
+}
+
+.ant-card {
+  background-color: var(--color-card-bg);
+  border-color: var(--color-card-border);
+}
+
+.ant-input {
+  background-color: var(--color-input-bg);
+  border-color: var(--color-input-border);
+  color: var(--color-input-text);
+}
+
+.ant-input::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.ant-btn-primary {
+  background-color: var(--color-button-primary);
+  border-color: var(--color-button-primary);
+}
+
+.ant-btn-primary:hover {
+  background-color: var(--color-button-hover);
+  border-color: var(--color-button-hover);
+}
+
+.ant-btn-primary:active {
+  background-color: var(--color-button-active);
+  border-color: var(--color-button-active);
+}
+
+.ant-typography {
+  color: var(--color-typography);
+}
+
+.ant-form-item-label > label {
+  color: var(--color-label);
+}
+
+.ant-checkbox-wrapper {
+  color: var(--color-checkbox-text);
+}
+
+/* Dark mode specific styles */
+[data-theme="dark"] .ant-layout {
+  background-color: var(--color-bg-layout);
+}
+
+[data-theme="dark"] body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text);
+}

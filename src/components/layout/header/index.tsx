@@ -20,6 +20,8 @@ import { EPermissions } from "constants/permissions";
 import { MModal } from "components/Modal/MModal";
 import { Scanner } from "pages/hardware/scanner";
 import "../../../styles/qr-code.less";
+import ThemeToggle from "components/ThemeToggle";
+
 const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
@@ -105,7 +107,7 @@ export const Header: React.FC = () => {
           alignItems: "center",
           padding: "0px 24px",
           height: "64px",
-          backgroundColor: "#FFF",
+          backgroundColor: "var(--color-bg-header)",
         }}
       >
         {isAdmin && (
@@ -122,6 +124,10 @@ export const Header: React.FC = () => {
             />
           </>
         )}
+
+        {/* Add theme toggle */}
+        <ThemeToggle style={{ marginRight: "16px" }} />
+
         <Text
           data-test-id="username"
           style={{ fontWeight: "500", fontSize: "16px" }}
