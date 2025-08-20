@@ -30,7 +30,60 @@ function App() {
   const notificationRef = useRef(null);
   const route = window.location.pathname;
 
-  const resources = useMemo(() => generateResources(t), [t]);
+  const resourceNames = [
+    "USERS",
+    "DASHBOARD",
+    "DETAIL_DEVICE",
+    "CHECKIN_CHECKOUT",
+    "ASSETS",
+    "ASSETS_ASSIGN",
+    "ASSETS_READY_TO_DEPLOY",
+    "ASSETS_PENDING",
+    "ASSETS_BROKEN",
+    "ASSETS_MAINTENANCE",
+    "TOOLS_ALL",
+    "TOOLS_WAITING",
+    "LICENSES",
+    "USERS_TOOLS",
+    "USERS_TAX_TOKENS",
+    "USERS_LICENSES",
+    "MODELS",
+    "CATEGORY",
+    "MANUFACTURES",
+    "SUPPLIERS",
+    "DEPARTMENT",
+    "LOCATION",
+    "TAX_TOKEN_ASSIGN",
+    "REQUEST",
+    "REPORT",
+    "MANAGER_USER",
+    "ASSETS_WAITING_CONFIRM",
+    "CONSUMABLES",
+    "CONSUMABLES_MAINTENANCE",
+    "ACCESSORY",
+    "ACCESSORY_DETAILS",
+    "CONSUMABLE_DETAILS",
+    "SUPPLIER_DETAILS",
+    "LOCATION_DETAILS",
+    "MANUFACTURES_DETAILS",
+    "WEBHOOK_DETAILS",
+    "ASSETS_EXPIRES",
+    "TAX_TOKEN",
+    "TAX_TOKEN_WAITING",
+    "CLIENT_ASSETS",
+    "CLIENT_ASSET_ASSIGNED",
+    "CLIENT_ASSET_READY_TO_DEPLOY",
+    "CLIENT_ASSET_PENDING",
+    "CLIENT_ASSET_BROKEN",
+    "CLIENT_ASSET_WAITING_CONFIRM",
+    "CLIENT_ASSETS_EXPIRES",
+    "WEBHOOK",
+    "KOMU_LOGS",
+    "WEBHOOK_LOGS",
+    "ASSET_RENTAL_CUSTOMERS",
+  ];
+
+  const resources = useMemo(() => generateResources(t, resourceNames), [t]);
 
   notification.config({
     getContainer() {

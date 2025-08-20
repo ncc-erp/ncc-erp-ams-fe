@@ -1,22 +1,36 @@
-import { RESOURCE_CONFIGS, ResourceConfig } from "./resourceConfigs";
+import React from "react";
+import { IResourceComponentsProps } from "@pankod/refine-core";
+import { RESOURCE_CONFIGS } from "./resourceConfigs";
 
-// Function to generate resources from configuration
-export const generateResources = (
-  t: (key: string, params?: Record<string, any>) => string
-): {
+export interface ResourceProps {
   name: string;
-  list: any;
-  options: {
-    route: string;
+  list?: React.FC<IResourceComponentsProps<unknown, unknown>>;
+  options?: {
+    route?: string;
     label?: string;
   };
-}[] => {
-  return RESOURCE_CONFIGS.map((config: ResourceConfig) => ({
-    name: t(config.translationKey),
-    list: config.component,
-    options: {
-      route: config.route,
-      ...(config.label && { label: config.label }),
-    },
-  }));
+}
+
+//Generates resource data from configuration
+export const generateResources = (
+  t: (key: string, params?: Record<string, unknown>) => string,
+  resourceNames: string[]
+): ResourceProps[] => {
+  return resourceNames.map((resourceName) => {
+    const config = RESOURCE_CONFIGS[resourceName];
+    if (!config) {
+      throw new Error(`Resource config not found for: ${resourceName}`);
+    }
+
+    return {
+      name: t(config.translationKey),
+      list: config.component as React.FunctionComponent<
+        IResourceComponentsProps<unknown, unknown>
+      >,
+      options: {
+        route: config.route,
+        ...(config.label && { label: config.label }),
+      },
+    };
+  });
 };
