@@ -57,7 +57,7 @@ import { WebhookDetail } from "pages/webhook/detail";
 import { KomuLogs } from "pages/audit/komu/list";
 import { WebhookLogs } from "pages/audit/webhook_logs/list";
 
-interface ResourceConfig {
+export interface ResourceConfig {
   translationKey: string;
   component: any;
   route: RESOURCE_ROUTES;
