@@ -89,12 +89,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
     const darkModeVars = {
       "--color-bg-base": isDarkMode ? "#1f1f1f" : "#ffffff",
       "--color-bg-container": isDarkMode ? "#282828" : "#ffffff",
-      "--color-bg-layout": isDarkMode ? "#1f1f1f" : "#ffffff",
+      "--color-bg-layout": isDarkMode ? "#1f1f1f" : "#f5f5f5",
       "--color-bg-elevated": isDarkMode ? "#282828" : "#ffffff",
       "--color-text": isDarkMode ? "rgba(255, 255, 255, 0.75)" : "#626262",
       "--color-bg-header": isDarkMode ? "#292929" : "#ffffff",
       "--color-bg-body": isDarkMode ? "#1f1f1f" : "#ffffff",
-      "--color-bg-sider": isDarkMode ? "black" : "#ffffff",
+      "--color-bg-sider": "black",
       "--color-card-bg": isDarkMode ? "#282828" : "#ffffff",
     };
 
