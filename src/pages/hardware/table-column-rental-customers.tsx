@@ -15,7 +15,7 @@ import {
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
   filterAssignedStatus,
-} from "untils/assets";
+} from "utils/assets";
 import { useTranslate } from "@pankod/refine-core";
 
 export const useRentalCustomerColumns = ({

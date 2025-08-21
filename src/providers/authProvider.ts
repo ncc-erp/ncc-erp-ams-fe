@@ -2,7 +2,7 @@ import { AuthProvider } from "@pankod/refine-core";
 import dataProvider from "providers/dataProvider";
 import { UserAPI } from "api/userApi";
 import { GET_ME_API } from "api/baseApi";
-import { parseJwt } from "untils/assets";
+import { parseJwt } from "utils/assets";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { GOOGLE_AUTH_API, LOGIN_API } from "api/baseApi";
 
