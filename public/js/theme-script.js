@@ -43,11 +43,11 @@
       "--color-bg-base": isDark ? "#1f1f1f" : "#ffffff",
       "--color-bg-container": isDark ? "#282828" : "#ffffff",
       "--color-bg-elevated": isDark ? "#282828" : "#ffffff",
-      "--color-bg-layout": isDark ? "#1f1f1f" : "#ffffff",
+      "--color-bg-layout": isDark ? "#1f1f1f" : "#f5f5f5",
       "--color-text": isDark ? "rgba(255, 255, 255, 0.75)" : "#626262",
       "--color-bg-header": isDark ? "#292929" : "#ffffff",
       "--color-bg-body": isDark ? "#1f1f1f" : "#ffffff",
-      "--color-bg-sider": isDark ? "black" : "#ffffff",
+      "--color-bg-sider": "black",
       "--color-card-bg": isDark ? "#282828" : "#ffffff",
     };
 

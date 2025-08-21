@@ -21,6 +21,12 @@ import { MModal } from "components/Modal/MModal";
 import { Scanner } from "pages/hardware/scanner";
 import "../../../styles/qr-code.less";
 import ThemeToggle from "components/ThemeToggle";
+import {
+  headerStyles,
+  IoQrCodeSharpStyles,
+  userInfoSpaceStyles,
+  usernameStyles,
+} from "components/layout/header/styles";
 
 const { LogoutOutlined, SyncOutlined } = Icons;
 
@@ -34,6 +40,7 @@ export const Header: React.FC = () => {
   const [isShowModalScan, setIsShowModalScan] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { data: permissionsData } = usePermissions();
+
   useEffect(() => {
     if (permissionsData?.admin === EPermissions.ADMIN) {
       setIsAdmin(true);
@@ -89,6 +96,7 @@ export const Header: React.FC = () => {
   const handleScanQR = () => {
     setIsShowModalScan(true);
   };
+
   return (
     <>
       {isShowModalScan && (
@@ -100,25 +108,12 @@ export const Header: React.FC = () => {
           <Scanner />
         </MModal>
       )}
-      <AntdLayout.Header
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          padding: "0px 24px",
-          height: "64px",
-          backgroundColor: "var(--color-bg-header)",
-        }}
-      >
+      <AntdLayout.Header style={headerStyles}>
         {isAdmin && (
           <>
             <IoQrCodeSharp
               className="qr-icon"
-              style={{
-                marginRight: "25px",
-                backgroundColor: "none",
-                border: "none",
-              }}
+              style={IoQrCodeSharpStyles}
               size={45}
               onClick={handleScanQR}
             />
@@ -128,10 +123,8 @@ export const Header: React.FC = () => {
         {/* Add theme toggle */}
         <ThemeToggle style={{ marginRight: "16px" }} />
 
-        <Text
-          data-test-id="username"
-          style={{ fontWeight: "500", fontSize: "16px" }}
-        >
+        {/* Username, render .ant-typography */}
+        <Text data-test-id="username" style={usernameStyles}>
           {userIdentity?.slice(1, userIdentity.length - 1)}
         </Text>
         {/* <Switch
@@ -178,7 +171,7 @@ export const Header: React.FC = () => {
           </Space>
         </Button>
       </Dropdown> */}
-        <Space style={{ marginLeft: "8px" }}>
+        <Space style={userInfoSpaceStyles}>
           {user?.name && (
             <Text ellipsis strong>
               {user.name}
