@@ -130,8 +130,8 @@ describe("LoginPage", () => {
         screen.getByText(
           (_, element) => element?.getAttribute(attribute) === value
         );
+
       const titleElement = getByAttribute("data-test-id", "title");
-      expect(titleElement).toBeInTheDocument();
       expect(titleElement).toBeInTheDocument();
       expect(titleElement).toHaveTextContent("Sign In");
 
@@ -146,22 +146,34 @@ describe("LoginPage", () => {
       expect(mezonButton).toBeInTheDocument();
       expect(mezonButton).toHaveTextContent("Sign in with Mezon");
 
+      const rememberCheckbox = screen.getByText("Remember me");
+      expect(rememberCheckbox).toBeInTheDocument();
+
+      const logo = screen.getByAltText("Refine Logo");
+      expect(logo).toBeInTheDocument();
+
       restore();
     });
   });
 
   describe("Login Flow Tests", () => {
-    // it("should validate required fields", async () => {
-    //   const restore = mockEnv("true");
-    //   renderLoginPage();
-    //   const signInButton = screen.getByTestId("signin-btn");
-    //   fireEvent.click(signInButton);
-    //   await waitFor(() => {
-    //     expect(screen.getByText("Username is required")).toBeInTheDocument();
-    //     expect(screen.getByText("Password is required")).toBeInTheDocument();
-    //   });
-    //   restore();
-    // });
+    it("should validate required fields", async () => {
+      const restore = mockEnv("true");
+      renderLoginPage();
+      const getByAttribute = (attribute: string, value: string) =>
+        screen.getByText(
+          (_, element) => element?.getAttribute(attribute) === value
+        );
+      const signInButton = getByAttribute("data-test-id", "signin-btn");
+      fireEvent.click(signInButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("Username")).toBeInTheDocument();
+        expect(screen.getByText("Password")).toBeInTheDocument();
+      });
+
+      restore();
+    });
 
     it("should handle manual login form submission", async () => {
       const mockLogin = jest.fn();
@@ -241,6 +253,45 @@ describe("LoginPage", () => {
       await waitFor(() => {
         expect(mezonButton).not.toHaveClass("ant-btn-loading");
       });
+    });
+
+    it("should handle Remember me checkbox", async () => {
+      const mockLogin = jest.fn();
+      (useLogin as jest.Mock).mockReturnValue({
+        mutate: mockLogin,
+        isLoading: false,
+      });
+
+      const getByAttribute = (attribute: string, value: string) =>
+        screen.getByText(
+          (_, element) => element?.getAttribute(attribute) === value
+        );
+
+      const restore = mockEnv("true");
+      renderLoginPage();
+
+      fireEvent.change(screen.getByPlaceholderText("Username"), {
+        target: { value: "testuser" },
+      });
+      fireEvent.change(screen.getByPlaceholderText("●●●●●●●●"), {
+        target: { value: "password123" },
+      });
+
+      // Chọn checkbox Remember me
+      fireEvent.click(screen.getByText("Remember me"));
+
+      const signInButton = getByAttribute("data-test-id", "signin-btn");
+      fireEvent.click(signInButton);
+
+      await waitFor(() => {
+        expect(mockLogin).toHaveBeenCalledWith({
+          username: "testuser",
+          password: "password123",
+          remember: true, // Giá trị checkbox
+        });
+      });
+
+      restore();
     });
   });
 
