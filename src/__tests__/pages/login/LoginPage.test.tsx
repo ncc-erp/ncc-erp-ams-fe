@@ -310,6 +310,33 @@ describe("LoginPage", () => {
 
       restore();
     });
+
+    it("should handle API error during Mezon login", async () => {
+      const mockPost = jest.fn().mockRejectedValue(new Error("API Error"));
+      (dataProvider.post as jest.Mock) = mockPost;
+
+      // Mock console.error
+      const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
+      renderLoginPage();
+
+      const getByAttribute = (attribute: string, value: string) =>
+        screen.getByText(
+          (_, element) => element?.getAttribute(attribute) === value
+        );
+      const mezonButton = getByAttribute("data-test-id", "signin-mezon-btn");
+      fireEvent.click(mezonButton);
+
+      await waitFor(() => {
+        expect(mockPost).toHaveBeenCalledWith({
+          url: MEZON_AUTH_URL_API,
+          payload: {},
+        });
+        expect(consoleErrorSpy).toHaveBeenCalledWith(new Error("API Error"));
+      });
+
+      consoleErrorSpy.mockRestore();
+    });
   });
 
   describe("Accessibility Tests", () => {
