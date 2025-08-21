@@ -6,6 +6,7 @@ import i18n from "i18next";
 import { LoginPage } from "../../../pages/login/login";
 import { useLogin } from "@pankod/refine-core";
 import dataProvider from "../../../providers/dataProvider";
+import { MEZON_AUTH_URL_API } from "api/baseApi";
 
 // Initialize i18n for testing
 i18n.init({
@@ -160,6 +161,7 @@ describe("LoginPage", () => {
     it("should validate required fields", async () => {
       const restore = mockEnv("true");
       renderLoginPage();
+
       const getByAttribute = (attribute: string, value: string) =>
         screen.getByText(
           (_, element) => element?.getAttribute(attribute) === value
@@ -211,21 +213,37 @@ describe("LoginPage", () => {
       restore();
     });
 
-    // it("should handle Mezon login flow", async () => {
-    //   const mockPost = jest.fn().mockResolvedValue({
-    //     data: { url: "https://mezon.auth/url" },
-    //   });
-    //   (dataProvider.post as jest.Mock) = mockPost;
+    it("should handle Mezon login flow", async () => {
+      // Mock API response
+      const mockPost = jest.fn().mockResolvedValue({
+        data: { url: "http://localhost/" },
+      });
+      (dataProvider.post as jest.Mock) = mockPost;
 
-    //   renderLoginPage();
-    //   const mezonButton = screen.getByTestId("signin-mezon-btn");
-    //   fireEvent.click(mezonButton);
+      renderLoginPage();
 
-    //   await waitFor(() => {
-    //     expect(mockPost).toHaveBeenCalled();
-    //     expect(window.location.href).toBe("https://mezon.auth/url");
-    //   });
-    // });
+      // Tìm nút Mezon
+      const getByAttribute = (attribute: string, value: string) =>
+        screen.getByText(
+          (_, element) => element?.getAttribute(attribute) === value
+        );
+
+      const mezonButton = getByAttribute("data-test-id", "signin-mezon-btn");
+
+      // Nhấn nút Mezon
+      fireEvent.click(mezonButton);
+
+      // Kiểm tra API được gọi đúng
+      await waitFor(() => {
+        expect(mockPost).toHaveBeenCalledWith({
+          url: MEZON_AUTH_URL_API,
+          payload: {},
+        });
+      });
+
+      // Kiểm tra rằng trình duyệt được chuyển hướng
+      expect(window.location.href).toBe("http://localhost/");
+    });
 
     it("should show loading state during Mezon login", async () => {
       const mockPost = jest
@@ -277,7 +295,6 @@ describe("LoginPage", () => {
         target: { value: "password123" },
       });
 
-      // Chọn checkbox Remember me
       fireEvent.click(screen.getByText("Remember me"));
 
       const signInButton = getByAttribute("data-test-id", "signin-btn");
@@ -287,7 +304,7 @@ describe("LoginPage", () => {
         expect(mockLogin).toHaveBeenCalledWith({
           username: "testuser",
           password: "password123",
-          remember: true, // Giá trị checkbox
+          remember: true,
         });
       });
 
