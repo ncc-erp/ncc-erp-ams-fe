@@ -62,9 +62,21 @@
   text-align: left;   
 }
 
+/**
+ * Component <List /> of @pankod/refine
+ * Ref: https://refine.dev/docs/ui-integrations/ant-design/components/basic-views/list/#properties
+ */
 .ant-page-header {
   border-radius: @border-radius-base;
+
+  background-color: var(--color-bg-header);
+  color: var(--color-text);
 }
+
+.ant-page-header-heading-title {
+  color: var(--color-text);
+}
+
 .ant-table-cell.ant-table-column-sort.ant-table-column-has-sorters {
   min-width: 10px;
 }
@@ -86,7 +98,7 @@
 }
 
 .ant-menu-sub.ant-menu-inline {
-  background: black;
+  background: var(--color-bg-sider);
 }
 
 .menu-dropdown {
@@ -223,6 +235,7 @@
   cursor: pointer;
   font-weight: bolder;
 }
+
 .table-dashboard {
   width: 200px;
   border: 1px solid gray;
@@ -243,9 +256,10 @@
 .all-location {
   margin-top: 2rem;
   border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: var(--box-shadow);
   padding: 25px 30px;
 }
+
 .search-all-location {
   display: flex;
   flex-direction: column;

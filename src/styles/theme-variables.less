@@ -7,7 +7,7 @@
   --color-bg-base: #ffffff;
   --color-bg-container: #ffffff;
   --color-bg-elevated: #ffffff;
-  --color-bg-layout: #ffffff;
+  --color-bg-layout: #f5f5f5;
   
   --color-text: #626262;
   --color-text-secondary: rgba(0, 0, 0, 0.65);
@@ -27,7 +27,7 @@
   --color-bg-header: #ffffff;
   --color-bg-body: #ffffff;
   --color-bg-trigger: #ffffff;
-  --color-bg-sider: #ffffff;
+  --color-bg-sider: black;
   
   /* Menu */
   --color-item-bg: transparent;
@@ -60,6 +60,11 @@
   
   /* Checkbox */
   --color-checkbox-text: #626262;
+
+  /* Table */
+  --color-table-header-bg: #f8f9fa;
+  --color-table-header-border: #dee2e6;
+  --color-table-body-text: #8C8C8C;
 }
 
 [data-theme="dark"] {
@@ -120,6 +125,11 @@
   
   /* Checkbox */
   --color-checkbox-text: rgba(255, 255, 255, 0.75);
+
+  /* Table */
+  --color-table-header-bg: #343a40;
+  --color-table-header-border: #495057;
+  --color-table-body-text: rgba(255,255,255,0.75);
 }
 
 /* Ant Design Component Overrides */
@@ -133,19 +143,6 @@
 
 .ant-layout-sider {
   background-color: var(--color-bg-sider);
-}
-
-.ant-menu {
-  background-color: var(--color-item-bg);
-  color: var(--color-item-text);
-}
-
-.ant-menu-item-selected {
-  color: var(--color-item-text-selected);
-}
-
-.ant-menu-item:hover {
-  color: var(--color-item-text-hover);
 }
 
 .ant-card {
@@ -198,4 +195,137 @@
 [data-theme="dark"] body {
   background-color: var(--color-bg-base);
   color: var(--color-text);
+}
+
+// Main ant table container
+.ant-table-wrapper {
+  .ant-table {
+    background-color: var(--color-card-bg);
+    color: var(--color-table-body-text);
+    
+    // Header styling
+    .ant-table-thead > tr > th {
+      background-color: var(--color-table-header-bg);
+      border-bottom: 2px solid var(--color-table-header-border);
+      color: var(--color-text);
+      font-weight: 600;
+      
+      // Style for sortable column
+      &.ant-table-column-sort {
+        background-color: var(--color-table-header-bg);
+      }
+    }
+    
+    // Body styling
+    .ant-table-tbody {
+      > tr {
+        /* Style for data cells */
+        > td {
+          background-color: var(--color-card-bg);
+          border-bottom: 1px solid var(--color-border-secondary);
+          color: var(--color-table-body-text);
+        }
+        
+        &:hover > td {
+          background-color: var(--color-bg-elevated) !important;
+        }
+        
+        &.ant-table-row-selected > td {
+          background-color: rgba(237, 27, 35, 0.1);
+        }
+      }
+    }
+    
+    // Empty state
+    .ant-table-placeholder {
+      .ant-empty {
+        .ant-empty-description {
+          color: var(--color-text-secondary);
+        }
+      }
+    }
+    
+    // Scroll area
+    .ant-table-body {
+      background-color: var(--color-card-bg);
+      
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--color-border);
+        border-radius: 3px;
+        
+        &:hover {
+          background-color: var(--color-text-tertiary);
+        }
+      }
+      
+      &::-webkit-scrollbar-track {
+        background-color: var(--color-bg-container);
+      }
+    }
+  }
+  
+  // Pagination
+  .ant-table-pagination {
+    .ant-pagination {
+      .ant-pagination-item {
+        background-color: var(--color-card-bg);
+        border-color: var(--color-border);
+        
+        a {
+          color: var(--color-text);
+        }
+        
+        &.ant-pagination-item-active {
+          background-color: var(--color-primary);
+          border-color: var(--color-primary);
+          
+          a {
+            color: #fff;
+          }
+        }
+      }
+      
+      .ant-pagination-prev,
+      .ant-pagination-next {
+        .ant-pagination-item-link {
+          background-color: var(--color-card-bg);
+          border-color: var(--color-border);
+          color: var(--color-text);
+        }
+      }
+    }
+  }
+}
+
+// Field category styling (Clickable text in table)
+.field-category {
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: var(--color-primary) !important;
+  }
+
+  &.ant-typography-success {
+    color: var(--color-success);
+  }
+}
+
+// Typography in table
+.ant-table {
+  .ant-typography {
+    color: var(--color-text);
+    
+    &.ant-typography-success {
+      color: var(--color-success);
+    }
+    
+    &.ant-typography-secondary {
+      color: var(--color-text-secondary);
+    }
+  }
 }
