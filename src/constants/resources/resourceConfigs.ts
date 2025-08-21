@@ -66,7 +66,10 @@ export interface ResourceConfig {
 }
 
 // Resource configurations as an object
-export const RESOURCE_CONFIGS: Record<string, ResourceConfig> = {
+export const RESOURCE_CONFIGS: Record<
+  keyof typeof RESOURCE_ROUTES,
+  ResourceConfig
+> = {
   USERS: {
     translationKey: RESOURCE_TRANSLATION_KEYS.USERS,
     component: UserList,

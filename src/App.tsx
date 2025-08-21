@@ -24,13 +24,14 @@ import { useMemo, useRef } from "react";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import ScrollToTopButton from "components/elements/button/ScrollToTopButton";
 import { generateResources } from "./constants/resources";
+import { RESOURCE_CONFIGS } from "./constants/resources/resourceConfigs";
 
 function App() {
   const { t, i18n } = useTranslation();
   const notificationRef = useRef(null);
   const route = window.location.pathname;
 
-  const resourceNames = [
+  const resourceNames: (keyof typeof RESOURCE_CONFIGS)[] = [
     "USERS",
     "DASHBOARD",
     "DETAIL_DEVICE",

@@ -14,7 +14,7 @@ export interface ResourceProps {
 //Generates resource data from configuration
 export const generateResources = (
   t: (key: string, params?: Record<string, unknown>) => string,
-  resourceNames: string[]
+  resourceNames: (keyof typeof RESOURCE_CONFIGS)[]
 ): ResourceProps[] => {
   return resourceNames.map((resourceName) => {
     const config = RESOURCE_CONFIGS[resourceName];
