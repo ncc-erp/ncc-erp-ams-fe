@@ -41,7 +41,7 @@ import {
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
+} from "utils/assets";
 import { IHardware } from "interfaces";
 import { HardwareEdit, HardwareShow } from "pages/hardware";
 import { HardwareClone } from "pages/hardware/clone";

@@ -62,7 +62,7 @@ import {
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
+} from "utils/assets";
 import {
   ASSIGNED_STATUS,
   dateFormat,

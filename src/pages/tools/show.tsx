@@ -3,7 +3,7 @@ import { Typography, Tag, Row, Col, Grid } from "@pankod/refine-antd";
 import "styles/hardware.less";
 import { UserOutlined } from "@ant-design/icons";
 import { IToolResponse } from "interfaces/tool";
-import { getDetailToolStatus } from "untils/tools";
+import { getDetailToolStatus } from "utils/tools";
 import moment from "moment";
 const { Title, Text } = Typography;
 

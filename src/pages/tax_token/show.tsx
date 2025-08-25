@@ -3,7 +3,7 @@ import { Typography, Row, Col, Tag, Grid } from "@pankod/refine-antd";
 import "styles/hardware.less";
 import { UserOutlined } from "@ant-design/icons";
 import { ITaxTokenResponse } from "interfaces/tax_token";
-import { getDetailTaxTokenStatus } from "untils/tax_token";
+import { getDetailTaxTokenStatus } from "utils/tax_token";
 import moment from "moment";
 const { Title, Text } = Typography;
 
