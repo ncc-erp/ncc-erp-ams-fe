@@ -1,5 +1,3 @@
-import { Interface } from "readline";
-
 export interface ILicenses {
   id: string;
   name: string;

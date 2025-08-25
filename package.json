@@ -9,13 +9,6 @@
     "@pankod/refine-core": "^3.1.0",
     "@pankod/refine-react-router-v6": "^3.3.0",
     "@pankod/refine-simple-rest": "^3.1.0",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^12.20.10",
-    "@types/react": "^17.0.4",
-    "@types/react-dom": "^17.0.3",
     "@zxing/library": "^0.21.2",
     "autoprefixer": "^10.4.15",
     "casbin.js": "^1.0.1",
@@ -27,8 +20,8 @@
     "gulp-less": "^5.0.0",
     "gulp-postcss": "^9.0.1",
     "http-proxy-middleware": "^2.0.4",
-    "i18next": "^20.1.0",
-    "i18next-browser-languagedetector": "^6.1.1",
+    "i18next": "^25.3.2",
+    "i18next-browser-languagedetector": "^8.2.0",
     "i18next-xhr-backend": "^3.2.2",
     "less-plugin-npm-import": "^2.1.0",
     "moment": "^2.29.4",
@@ -38,7 +31,7 @@
     "react-css-theme-switcher": "^0.3.0",
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",
-    "react-i18next": "^11.8.11",
+    "react-i18next": "^15.6.1",
     "react-icons": "^4.10.1",
     "react-markdown": "^6.0.1",
     "react-mde": "^11.1.0",
@@ -46,19 +39,24 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.0",
     "react-to-print": "^2.15.1",
-    "typescript": "^4.2.4",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
-    "test": "craco test",
     "eject": "craco eject",
     "prepare": "husky",
     "lint": "eslint --ext js,jsx,ts,tsx src/",
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src/",
     "prettier": "prettier --check \"src/**/(*.jsx|*.js|*.tsx|*.ts|*.json|*.scss|*.css)\"",
-    "format": "prettier --write \"src/**/(*.jsx|*.js|*.tsx|*.ts|*.json|*.scss|*.css)\""
+    "format": "prettier --write \"src/**/(*.jsx|*.js|*.tsx|*.ts|*.json|*.scss|*.css)\"",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json}": [
+      "prettier --write"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -81,15 +79,30 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@jest/globals": "^30.0.5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^12.20.10",
+    "@types/react": "^17.0.4",
+    "@types/react-dom": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^8.9.0",
     "@typescript-eslint/parser": "^8.9.0",
     "babel-jest": "^27.5.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "jest": "^27.5.1",
+    "husky": "^9.1.6",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
+    "lint-staged": "^16.1.2",
     "prettier": "^3.3.3",
     "react-test-renderer": "^17.0.1",
-    "husky": "^9.1.6"
+    "ts-jest": "^29.4.0",
+    "typescript": "^4.9.5"
   }
 }

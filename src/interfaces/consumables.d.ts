@@ -25,6 +25,9 @@ export interface IConsumablesRequest {
   purchase_cost: string;
   supplier: string;
   warranty_months: string;
+  maintenance_date: string;
+  maintenance_cycle: string;
+  webhook: number;
 }
 export interface IConsumablesResponse {
   id: number;
@@ -49,6 +52,10 @@ export interface IConsumablesResponse {
     id: number;
     name: string;
   };
+  webhook?: {
+    id: number;
+    name: string;
+  };
   total_consumables: number;
   notes: string;
   purchase_cost: number;
@@ -67,6 +74,11 @@ export interface IConsumablesResponse {
     formatted: string;
   };
   remaining: number;
+  maintenance_date?: {
+    date: string;
+    formatted: string;
+  };
+  maintenance_cycle?: string;
 }
 
 export interface IConsumablesRequestCheckout {
@@ -115,4 +127,9 @@ export interface IConsumablesFilterVariables {
   location: string;
   purchase_date: [Dayjs, Dayjs];
   category: string;
+}
+export interface FormValues {
+  purchase_date?: string;
+  maintenance_cycle?: number;
+  maintenance_date?: string;
 }

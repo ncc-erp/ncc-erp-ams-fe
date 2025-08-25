@@ -48,6 +48,8 @@ export const Sider: React.FC = () => {
     translate("resource.assets-broken"),
     translate("resource.assets-waiting-confirm"),
     translate("resource.assets-expires"),
+    translate("resource.assets-maintenance"),
+    translate("resource.asset-rental-customers"),
   ];
 
   const toolItemList = [
@@ -55,7 +57,10 @@ export const Sider: React.FC = () => {
     translate("resource.tools-waiting"),
   ];
 
-  const consumableItemList = [translate("resource.consumables")];
+  const consumableItemList = [
+    translate("resource.consumables"),
+    translate("resource.consumables-maintenance"),
+  ];
 
   const accessoryItemList = [translate("resource.accessory")];
 
@@ -71,6 +76,7 @@ export const Sider: React.FC = () => {
     translate("resource.manufactures"),
     translate("resource.suppliers"),
     translate("resource.location"),
+    translate("resource.webhook"),
   ];
 
   const userAssetItemList = [
@@ -94,24 +100,18 @@ export const Sider: React.FC = () => {
     translate("resource.client-asset-waitingConfirm"),
     translate("resource.client-asset-expires"),
   ];
+  const auditItemList = [
+    translate("resource.komu_logs"),
+    translate("resource.webhook_logs"),
+  ];
 
   const userIsUser = permissionsData?.admin === EPermissions.USER;
   const userIsAdmin = permissionsData?.admin === EPermissions.ADMIN;
   const userIsBranchAdmin =
     permissionsData?.branchadmin === EPermissions.BRANCHADMIN;
 
-  return (
-    <AntdLayout.Sider
-      collapsible
-      collapsed={collapsed}
-      onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
-      collapsedWidth={isMobile ? 0 : 80}
-      breakpoint="lg"
-      style={isMobile ? antLayoutSiderMobile : antLayoutSider}
-      width="230px"
-      className="custom-overflow-y"
-      data-test-id="sidebar"
-    >
+  const renderMenuContent = () => (
+    <>
       {permissionsData && userIsUser && (
         <>
           <Link to="users" data-test-id="logo">
@@ -218,12 +218,13 @@ export const Sider: React.FC = () => {
         )}
 
         {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
-          <SideBarMenuItem
+          <SideBarSubMenuItem
+            title={translate("resource.consumable")}
+            label={"consumables"}
+            key={"consumable"}
+            hasItemIcon={false}
             collapsed={collapsed}
-            label={""}
-            hasItemIcon={true}
             itemList={consumableItemList}
-            key={"consumable-menu"}
           />
         )}
 
@@ -243,7 +244,7 @@ export const Sider: React.FC = () => {
             title={translate("resource.users_assets")}
             label={"users"}
             key={"users_assets"}
-            hasItemIcon={true}
+            hasItemIcon={false}
             collapsed={collapsed}
             itemList={userAssetItemList}
           />
@@ -279,7 +280,62 @@ export const Sider: React.FC = () => {
             key={"user-manager-menu"}
           />
         )}
+        {permissionsData && userIsAdmin && (
+          <SideBarSubMenuItem
+            title={translate("resource.audit")}
+            label={""}
+            key={"audit"}
+            hasItemIcon={false}
+            collapsed={collapsed}
+            itemList={auditItemList}
+          />
+        )}
       </Menu>
-    </AntdLayout.Sider>
+    </>
+  );
+
+  return (
+    <>
+      {isMobile && !collapsed && (
+        <div
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.6)",
+            zIndex: 998,
+          }}
+          onClick={() => setCollapsed(true)}
+        />
+      )}
+      <AntdLayout.Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
+        collapsedWidth={isMobile ? 0 : 80}
+        breakpoint="lg"
+        style={isMobile ? antLayoutSiderMobile : antLayoutSider}
+        width="230px"
+        className="custom-overflow-y"
+        data-test-id="sidebar"
+      >
+        {isMobile ? (
+          <div style={{ height: "100%", display: "flex" }}>
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+              className="sider-overflow-y"
+            >
+              {renderMenuContent()}
+            </div>
+          </div>
+        ) : (
+          renderMenuContent()
+        )}
+      </AntdLayout.Sider>
+    </>
   );
 };

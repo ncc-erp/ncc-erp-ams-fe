@@ -24,11 +24,11 @@ type ToolMultiCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<IToolCheckoutMessageResponse>();
   const t = useTranslate();
   const { open } = useNotification();
@@ -65,7 +65,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -94,8 +94,7 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(undefined);
-      setSelectedRowKeys([]);
-      localStorage.removeItem("selectedToolsCheckoutRowKeys");
+      clearSelection();
     } else {
       setMessageErr(dataCheckout?.data.messages);
     }

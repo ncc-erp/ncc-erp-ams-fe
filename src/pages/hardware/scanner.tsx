@@ -42,7 +42,6 @@ export const Scanner = () => {
           if (result.getBarcodeFormat() === BarcodeFormat.QR_CODE) {
             setResult(result.getText());
           } else {
-            console.warn("Non-QR code scanned");
             setIsModalVisible(true);
           }
         }
@@ -107,7 +106,7 @@ export const Scanner = () => {
       )}
       {showModalDevice && (
         <PopupDetailDevice
-          url={result}
+          id={new URL(result).searchParams.get("id") || ""}
           onClose={() => setShowModalDevice(false)}
         />
       )}

@@ -1,20 +1,20 @@
 import { ASSIGNED_STATUS } from "constants/assets";
 import { IHardwareResponse } from "interfaces/hardware";
-import i18n from "../i18n";
+import { t } from "../i18n";
 
 export const getAssetAssignedStatusDecription = (value: number) =>
   value === ASSIGNED_STATUS.DEFAULT
-    ? i18n.t("hardware.label.detail.default")
+    ? t("hardware.label.detail.default")
     : value === ASSIGNED_STATUS.PENDING_ACCEPT
-      ? i18n.t("hardware.label.detail.pendingAccept")
+      ? t("hardware.label.detail.pendingAccept")
       : value === ASSIGNED_STATUS.ACCEPT
-        ? i18n.t("hardware.label.detail.accept")
+        ? t("hardware.label.detail.accept")
         : value === ASSIGNED_STATUS.REFUSE
-          ? i18n.t("hardware.label.detail.refuse")
+          ? t("hardware.label.detail.refuse")
           : value === ASSIGNED_STATUS.WAITING_CHECKOUT
-            ? i18n.t("hardware.label.detail.waitingAcceptCheckout")
+            ? t("hardware.label.detail.waitingAcceptCheckout")
             : value === ASSIGNED_STATUS.WAITING_CHECKIN
-              ? i18n.t("hardware.label.detail.waitingAcceptCheckin")
+              ? t("hardware.label.detail.waitingAcceptCheckin")
               : "";
 
 export const getBGAssetAssignedStatusDecription = (value: number) =>
@@ -33,52 +33,46 @@ export const getBGAssetAssignedStatusDecription = (value: number) =>
               : "gray";
 
 export const getAssetStatusDecription = (value: IHardwareResponse) =>
-  value.name === i18n.t("hardware.label.field.assign")
-    ? i18n.t("hardware.label.detail.assign")
-    : value.name === i18n.t("hardware.label.field.readyToDeploy")
-      ? i18n.t("hardware.label.detail.readyToDeploy")
-      : value.name === i18n.t("hardware.label.field.broken")
-        ? i18n.t("hardware.label.detail.broken")
-        : value.name === i18n.t("hardware.label.field.pending")
-          ? i18n.t("hardware.label.detail.pending")
+  value.name === t("hardware.label.field.assign")
+    ? t("hardware.label.detail.assign")
+    : value.name === t("hardware.label.field.readyToDeploy")
+      ? t("hardware.label.detail.readyToDeploy")
+      : value.name === t("hardware.label.field.broken")
+        ? t("hardware.label.detail.broken")
+        : value.name === t("hardware.label.field.pending")
+          ? t("hardware.label.detail.pending")
           : "";
 
 export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
-  value.name === i18n.t("hardware.label.field.assign")
+  value.name === t("hardware.label.field.assign")
     ? "#0073b7"
-    : value.name === i18n.t("hardware.label.field.readyToDeploy")
+    : value.name === t("hardware.label.field.readyToDeploy")
       ? "#00a65a"
-      : value.name === i18n.t("hardware.label.field.broken")
+      : value.name === t("hardware.label.field.broken")
         ? "red"
-        : value.name === i18n.t("hardware.label.field.pending")
+        : value.name === t("hardware.label.field.pending")
           ? "#f39c12"
           : "";
 
 export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
-  value?.status_label?.name === i18n.t("hardware.label.field.assign")
-    ? i18n.t("hardware.label.detail.assign")
-    : value?.status_label?.name === i18n.t("hardware.label.field.readyToDeploy")
-      ? i18n.t("hardware.label.detail.readyToDeploy")
-      : value?.status_label?.name === i18n.t("hardware.label.field.broken")
-        ? i18n.t("hardware.label.detail.broken")
-        : value?.status_label?.name === i18n.t("hardware.label.field.pending")
-          ? i18n.t("hardware.label.detail.pending")
+  value?.status_label?.name === t("hardware.label.field.assign")
+    ? t("hardware.label.detail.assign")
+    : value?.status_label?.name === t("hardware.label.field.readyToDeploy")
+      ? t("hardware.label.detail.readyToDeploy")
+      : value?.status_label?.name === t("hardware.label.field.broken")
+        ? t("hardware.label.detail.broken")
+        : value?.status_label?.name === t("hardware.label.field.pending")
+          ? t("hardware.label.detail.pending")
           : "";
 
 export const getDetailAssetStatusByName = (value: string) => {
   const statusMap: { [key: string]: string } = {
-    [i18n.t("hardware.label.field.assign")]: i18n.t(
-      "hardware.label.detail.assign"
-    ),
-    [i18n.t("hardware.label.field.readyToDeploy")]: i18n.t(
+    [t("hardware.label.field.assign")]: t("hardware.label.detail.assign"),
+    [t("hardware.label.field.readyToDeploy")]: t(
       "hardware.label.detail.readyToDeploy"
     ),
-    [i18n.t("hardware.label.field.broken")]: i18n.t(
-      "hardware.label.detail.broken"
-    ),
-    [i18n.t("hardware.label.field.pending")]: i18n.t(
-      "hardware.label.detail.pending"
-    ),
+    [t("hardware.label.field.broken")]: t("hardware.label.detail.broken"),
+    [t("hardware.label.field.pending")]: t("hardware.label.detail.pending"),
   };
 
   return statusMap[value] || "";
@@ -86,23 +80,23 @@ export const getDetailAssetStatusByName = (value: string) => {
 
 export const filterAssignedStatus = [
   {
-    text: i18n.t("hardware.label.detail.default"),
+    text: t("hardware.label.detail.default"),
     value: ASSIGNED_STATUS.DEFAULT,
   },
   {
-    text: i18n.t("hardware.label.detail.waitingAcceptCheckout"),
+    text: t("hardware.label.detail.waitingAcceptCheckout"),
     value: ASSIGNED_STATUS.WAITING_CHECKOUT,
   },
   {
-    text: i18n.t("hardware.label.detail.waitingAcceptCheckin"),
+    text: t("hardware.label.detail.waitingAcceptCheckin"),
     value: ASSIGNED_STATUS.WAITING_CHECKIN,
   },
   {
-    text: i18n.t("hardware.label.detail.accept"),
+    text: t("hardware.label.detail.accept"),
     value: ASSIGNED_STATUS.ACCEPT,
   },
   {
-    text: i18n.t("hardware.label.detail.refuse"),
+    text: t("hardware.label.detail.refuse"),
     value: ASSIGNED_STATUS.REFUSE,
   },
 ];

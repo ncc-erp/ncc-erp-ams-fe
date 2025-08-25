@@ -19,7 +19,7 @@ import {
   ILocationRequest,
   ILocationResponse,
 } from "interfaces/location";
-import { LOCATION_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { LOCATION_API, USERS_API } from "api/baseApi";
 
 type LocationEditProps = {
   isModalVisible: boolean;
@@ -37,18 +37,6 @@ export const LocationEdit = (props: LocationEditProps) => {
 
   const { form, formProps } = useForm<ILocationRequest>({
     action: "edit",
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ILocations>({
-    resource: LOCATION_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({
@@ -81,6 +69,7 @@ export const LocationEdit = (props: LocationEditProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
+    formData.append("branch_code", event.branch_code);
     if (event.parent !== undefined) {
       formData.append("parent_id", event.parent.toString());
     }
@@ -168,6 +157,27 @@ export const LocationEdit = (props: LocationEditProps) => {
     >
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
+          <Form.Item
+            label={t("location.label.field.branch_code")}
+            name="branch_code"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("location.label.field.branch_code") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+            initialValue={data?.branch_code}
+          >
+            <Input placeholder={t("location.label.field.branch_code")} />
+          </Form.Item>
+          {messageErr?.branch_code && (
+            <Typography.Text type="danger">
+              {messageErr.branch_code[0]}
+            </Typography.Text>
+          )}
           <Form.Item
             label={t("location.label.field.name")}
             name="name"

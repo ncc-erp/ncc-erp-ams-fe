@@ -18,7 +18,7 @@ import { UploadImage } from "components/elements/uploadImage";
 
 import "../../styles/hardware.less";
 import { ILocations, ILocationRequest } from "interfaces/location";
-import { LOCATION_API, LOCATION_SELECT_LIST_API, USERS_API } from "api/baseApi";
+import { LOCATION_API, USERS_API } from "api/baseApi";
 
 type LocationCreateProps = {
   isModalVisible: boolean;
@@ -26,7 +26,7 @@ type LocationCreateProps = {
 };
 
 export const LocationCreate = (props: LocationCreateProps) => {
-  const { isModalVisible, setIsModalVisible } = props;
+  const { setIsModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<ILocationRequest | null>();
@@ -35,18 +35,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
 
   const { formProps, form } = useForm<ILocationRequest>({
     action: "create",
-  });
-
-  const { selectProps: locationSelectProps } = useSelect<ILocations>({
-    resource: LOCATION_SELECT_LIST_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
   });
 
   const { selectProps: userSelectProps } = useSelect<ILocations>({
@@ -68,6 +56,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
     const formData = new FormData();
 
     formData.append("name", event.name);
+    formData.append("branch_code", event.branch_code);
     if (event.parent !== undefined) {
       formData.append("parent_id", event.parent.toString());
     }
@@ -114,7 +103,7 @@ export const LocationCreate = (props: LocationCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,
@@ -154,6 +143,26 @@ export const LocationCreate = (props: LocationCreateProps) => {
       <Row gutter={16}>
         <Col className="gutter-row" span={12}>
           <Form.Item
+            label={t("location.label.field.branch_code")}
+            name="branch_code"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("location.label.field.branch_code") +
+                  " " +
+                  t("location.label.message.required"),
+              },
+            ]}
+          >
+            <Input placeholder={t("location.label.field.branch_code")} />
+          </Form.Item>
+          {messageErr?.branch_code && (
+            <Typography.Text type="danger">
+              {messageErr.branch_code[0]}
+            </Typography.Text>
+          )}
+          <Form.Item
             label={t("location.label.field.name")}
             name="name"
             rules={[
@@ -173,7 +182,6 @@ export const LocationCreate = (props: LocationCreateProps) => {
               {messageErr.name[0]}
             </Typography.Text>
           )}
-
           <Form.Item
             label={t("location.label.field.manager")}
             name="manager"

@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ams-dev
-
+    environment: development
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -24,12 +24,19 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-          REACT_APP_API_PROXY: ${{secrets.REACT_APP_API_PROXY}}
-          REACT_APP_AUTH_CLIENT_ID: ${{secrets.REACT_APP_AUTH_CLIENT_ID}}
-          REACT_APP_AUTH_SECRET_KEY: ${{secrets.REACT_APP_AUTH_SECRET_KEY}}
-          REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
-          REACT_APP_SHOW_MANUAL_LOGIN: ${{secrets.REACT_APP_SHOW_MANUAL_LOGIN}}
-          CI: ""
+          REACT_APP_API_PROXY: ${{secrets.REACT_APP_API_PROXY_DEV}}
+          REACT_APP_AUTH_CLIENT_ID: ${{secrets.REACT_APP_AUTH_CLIENT_ID_DEV}}
+          REACT_APP_AUTH_SECRET_KEY: ${{secrets.REACT_APP_AUTH_SECRET_KEY_DEV}}
+          REACT_APP_SHOW_MANUAL_LOGIN: ${{secrets.REACT_APP_SHOW_MANUAL_LOGIN_DEV}}
+
+      - name: Create .env.fe from GitHub Secrets
+        run: |
+          cat <<EOF > /home/nccsoft/ams-dev-docker/envs/.env.fe
+          REACT_APP_API_PROXY=${{secrets.REACT_APP_API_PROXY_DEV}}
+          REACT_APP_AUTH_CLIENT_ID=${{secrets.REACT_APP_AUTH_CLIENT_ID_DEV}}
+          REACT_APP_AUTH_SECRET_KEY=${{secrets.REACT_APP_AUTH_SECRET_KEY_DEV}}
+          REACT_APP_SHOW_MANUAL_LOGIN=${{secrets.REACT_APP_SHOW_MANUAL_LOGIN_DEV}}
+          EOF
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

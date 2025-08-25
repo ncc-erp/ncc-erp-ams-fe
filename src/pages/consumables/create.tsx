@@ -23,10 +23,14 @@ import {
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import { IConsumablesRequest } from "interfaces/consumables";
 import { ILocation } from "interfaces/dashboard";
 import { ISupplier } from "interfaces/supplier";
+import moment from "moment";
+import { FormValues } from "interfaces/consumables";
+import { ICompany } from "interfaces/company";
 
 type ConsumablesCreateProps = {
   isModalVisible: boolean;
@@ -81,6 +85,17 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { mutate, data: createData, isLoading } = useCreate();
 
@@ -108,6 +123,14 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       formData.append("purchase_cost", event.purchase_cost.toString());
     }
     formData.append("warranty_months", event.warranty_months);
+    if (event.purchase_date !== undefined)
+      formData.append("maintenance_date", event.maintenance_date);
+    formData.append(
+      "maintenance_cycle",
+      event.maintenance_cycle === "0" ? "" : (event.maintenance_cycle ?? "")
+    );
+    if (event.webhook !== undefined)
+      formData.append("webhook_id", event.webhook.toString());
 
     setPayload(formData);
   };
@@ -132,7 +155,7 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,
@@ -158,6 +181,44 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle, maintenance_date } =
+            allValues;
+
+          const isValidCycle =
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            Number(maintenance_cycle) > 0;
+
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance_date) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+
+            form.setFieldsValue({ maintenance_date: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance_date: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -245,6 +306,42 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("consumables.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("consumables.label.field.months_per_time")}
+              placeholder={t("consumables.label.placeholder.maintenance_cycle")}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("consumables.label.field.webhook")}
+            name="webhook"
+          >
+            <Select
+              showSearch
+              placeholder={t("consumables.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
         </Col>
 
         <Col className="gutter-row" span={12}>
@@ -315,7 +412,7 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
                   " " +
                   t("consumables.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -336,6 +433,15 @@ export const ConsumablesCreate = (props: ConsumablesCreateProps) => {
               {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("consumables.label.field.maintenance_date")}
+            name="maintenance_date"
+          >
+            <Input
+              type="date"
+              placeholder={t("consumables.label.placeholder.maintenance_date")}
+            />
+          </Form.Item>
         </Col>
       </Row>
 

@@ -1,76 +1,77 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
-  CrudFilters,
-  useCreate,
-  HttpError,
-  usePermissions,
-  useNotification,
-} from "@pankod/refine-core";
+  CloseOutlined,
+  FileSearchOutlined,
+  MenuOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  TagField,
-  Popconfirm,
   Button,
-  Spin,
-  Form,
-  Select,
-  useSelect,
-  Tooltip,
   Checkbox,
+  DateField,
+  Form,
+  getDefaultSortOrder,
+  List,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
 } from "@pankod/refine-antd";
-import { TableAction } from "components/elements/tables/TableAction";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { MModal } from "components/Modal/MModal";
 import {
-  ITaxToken,
-  ITaxTokenCreateRequest,
-  ITaxTokenFilterVariables,
-  ITaxTokenResponse,
-} from "interfaces/tax_token";
-import { CancleAsset } from "./cancel";
-import { TaxTokenSearch } from "./search";
-import { filterAssignedStatus } from "untils/assets";
+  CrudFilters,
+  HttpError,
+  IResourceComponentsProps,
+  useCreate,
+  useNotification,
+  usePermissions,
+  useTranslate,
+} from "@pankod/refine-core";
+import { DatePicker } from "antd";
+import moment from "moment";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import {
   STATUS_LABELS_API,
   SUPPLIERS_API,
   TAX_TOKEN_API,
   TAX_TOKEN_TOTAL_DETAIL_API,
 } from "api/baseApi";
-import {
-  CloseOutlined,
-  SyncOutlined,
-  MenuOutlined,
-  FileSearchOutlined,
-} from "@ant-design/icons";
-import { TaxTokenCancelMultipleToken } from "./cancel-multiple-token";
-import {
-  ASSIGNED_STATUS,
-  dateFormat,
-  defaultCheckedListWaitingConfirm,
-} from "../../constants/assets";
-import moment from "moment";
-import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
-import "styles/request.less";
-import { ICategory } from "interfaces/categories";
-import { IStatusLabel } from "interfaces/statusLabel";
+import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
 import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { ITaxTokenListSearchParams } from "hooks/useAppSearchParams/types";
+import { useRowSelection } from "hooks/useRowSelection";
+import { ICategory } from "interfaces/categories";
 import { IModel } from "interfaces/model";
-import { IAssetsWaiting } from "interfaces/hardware";
+import { IStatusLabel } from "interfaces/statusLabel";
+import {
+  ITaxToken,
+  ITaxTokenCreateRequest,
+  ITaxTokenFilterVariables,
+  ITaxTokenResponse,
+} from "interfaces/tax_token";
+import "styles/request.less";
+import { filterAssignedStatus } from "utils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
-} from "untils/tax_token";
-import { TotalDetail } from "components/elements/TotalDetail";
+} from "utils/tax_token";
+import {
+  ASSIGNED_STATUS,
+  dateFormat,
+  defaultCheckedListWaitingConfirm,
+} from "../../constants/assets";
+import { CancleAsset } from "./cancel";
+import { TaxTokenCancelMultipleToken } from "./cancel-multiple-token";
+import { TaxTokenSearch } from "./search";
 
 export const TaxTokenListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -80,7 +81,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<ITaxTokenResponse>();
   const [isLoadingArr, setIsLoadingArr] = useState<boolean[]>([]);
-  const [idConfirm, setidConfirm] = useState<number>(-1);
+  const idConfirm = -1;
   const { open } = useNotification();
 
   const { data: permissionsData } = usePermissions();
@@ -104,16 +105,19 @@ export const TaxTokenListWaitingConfirm: React.FC<
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const purchaseDateFromParam = searchParams.get("purchaseDateFrom");
-  const purchaseDateToParam = searchParams.get("purchaseDateTo");
-  const expirationDateFromParam = searchParams.get("expirationDateFrom");
-  const expirationDateToParam = searchParams.get("expirationDateTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      rtd_location_id,
+      purchaseDateFrom: purchaseDateFromParam,
+      purchaseDateTo: purchaseDateToParam,
+      expirationDateFrom: expirationDateFromParam,
+      expirationDateTo: expirationDateToParam,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("taxTokenList");
 
   const { RangePicker } = DatePicker;
 
@@ -208,9 +212,6 @@ export const TaxTokenListWaitingConfirm: React.FC<
       },
     });
 
-  const handleOpenModel = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const handleOpenSearchModel = () => {
     setIsSearchModalVisible(!isSearchModalVisible);
   };
@@ -262,13 +263,13 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "name",
         title: t("tax_token.label.field.name"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("name", sorter),
       },
       {
         key: "seri",
         title: t("tax_token.label.field.seri"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("seri", sorter),
       },
       {
@@ -306,7 +307,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "purchase_cost",
         title: t("tax_token.label.field.purchase_cost"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
       },
       {
@@ -368,19 +369,19 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "checkout_counter",
         title: t("tax_token.label.field.checkout_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkout_counter", sorter),
       },
       {
         key: "checkin_counter",
         title: t("tax_token.label.field.checkin_counter"),
-        render: (value: number, record: any) => <TextField value={value} />,
+        render: (value: number) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("checkin_counter", sorter),
       },
       {
         key: "note",
         title: t("tax_token.label.field.note"),
-        render: (value: string, record: any) => <TextField value={value} />,
+        render: (value: string) => <TextField value={value} />,
         defaultSortOrder: getDefaultSortOrder("note", sorter),
       },
     ],
@@ -412,7 +413,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -438,27 +439,24 @@ export const TaxTokenListWaitingConfirm: React.FC<
     refreshData();
   }, [isCancleModalVisible]);
 
-  const initselectedRowKeys = useMemo(() => {
-    return (
-      JSON.parse(localStorage.getItem("selectedRow_AcceptRefuse") as string) ||
-      []
-    );
-  }, [localStorage.getItem("selectedRow_AcceptRefuse")]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | ITaxTokenResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    removeItem,
+    clearSelection,
+  } = useRowSelection<ITaxTokenResponse>("selectedRow_AcceptRefuse");
 
   useEffect(() => {
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    clearSelection();
+    searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const [selectedRows, setSelectedRows] = useState<ITaxTokenResponse[]>([]);
   const [isCancelManyAssetModalVisible, setIsCancelManyAssetModalVisible] =
     useState(false);
 
-  const [selectedNotAcceptAndRefuse, setSelectedNotAcceptAndRefuse] =
-    useState<boolean>(true);
+  const [, setSelectedNotAcceptAndRefuse] = useState<boolean>(true);
   const [selectedAcceptAndRefuse, setSelectedAcceptAndRefuse] =
     useState<boolean>(true);
 
@@ -470,7 +468,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
@@ -485,7 +483,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -495,7 +493,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(true);
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
       setSelectedStoreAcceptAndRefuse(
-        initselectedRowKeys
+        selectedRows
           .filter(
             (item: ITaxTokenResponse) =>
               item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
@@ -509,13 +507,13 @@ export const TaxTokenListWaitingConfirm: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
           item.assigned_status === ASSIGNED_STATUS.REFUSE
       ).length > 0 &&
       isAdmin &&
-      initselectedRowKeys.filter(
+      selectedRows.filter(
         (item: ITaxTokenResponse) =>
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
           item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
@@ -525,92 +523,13 @@ export const TaxTokenListWaitingConfirm: React.FC<
       setSelectedAcceptAndRefuse(false);
       setNameNotAcceptAndRefuse(t("hardware.label.detail.not-confirm-refuse"));
       setNameAcceptAndRefuse(t("hardware.label.detail.confirm-refuse"));
-    } else {
     }
-  }, [initselectedRowKeys]);
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: ITaxTokenResponse[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
-
-  const onSelect = (record: ITaxTokenResponse, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item.id !== record.id
-      );
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(newSelectRow)
-      );
-      setSelectedRowKeys(
-        newSelectRow.map((item: ITaxTokenResponse) => item.id)
-      );
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys.findIndex((item) => item.id === index);
-          })
-        )
-      );
-      setSelectedRowKeys(
-        newselectedRowKeys.map((item: ITaxTokenResponse) => item.id)
-      );
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: ITaxTokenResponse[],
-    changeRows: ITaxTokenResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: ITaxTokenResponse) => item.id);
-      let newSelectRows = initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => item
-      );
-      newSelectRows = initselectedRowKeys.filter(
-        (item: ITaxTokenResponse) => !unSelectIds.includes(item.id)
-      );
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify(newSelectRows)
-      );
-      setSelectedRowKeys(newSelectRows);
-    } else {
-      selectedRows = selectedRows.filter((item: ITaxTokenResponse) => item);
-      localStorage.setItem(
-        "selectedRow_AcceptRefuse",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
+  }, [selectedRows]);
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map(
-      (item: ITaxTokenResponse) => item.id
-    ),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
-    onSelectChange,
-  };
-
-  const handleRemoveItem = (id: number) => {
-    const newSelectRow = initselectedRowKeys.filter(
-      (item: ITaxTokenResponse) => item.id !== id
-    );
-    localStorage.setItem(
-      "selectedRow_AcceptRefuse",
-      JSON.stringify(newSelectRow)
-    );
-    setSelectedRowKeys(newSelectRow.map((item: ITaxTokenResponse) => item.id));
   };
 
   const handleCancel = () => {
@@ -640,7 +559,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -650,8 +569,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
       }
     );
     handleRefresh();
-    setSelectedRowKeys([]);
-    localStorage.removeItem("selectedRow_AcceptRefuse");
+    clearSelection();
   };
 
   useEffect(() => {
@@ -660,7 +578,6 @@ export const TaxTokenListWaitingConfirm: React.FC<
 
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
-  const { Option } = Select;
   const searchValuesByDateFrom = useMemo(() => {
     return localStorage.getItem("purchase_date")?.substring(0, 10);
   }, [localStorage.getItem("purchase_date")]);
@@ -673,33 +590,27 @@ export const TaxTokenListWaitingConfirm: React.FC<
     return Number(localStorage.getItem("rtd_location_id"));
   }, [localStorage.getItem("rtd_location_id")]);
 
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
-
   const handleDateChange = (
     val: moment.Moment[] | null,
-    dateFrom: string,
-    dateTo: string
+    dateFrom: keyof ITaxTokenListSearchParams,
+    dateTo: keyof ITaxTokenListSearchParams
   ) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []);
       // localStorage.setItem("purchase_date", formatString ?? "");
-      searchParams.set(
-        "dateFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        [dateFrom]: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        [dateTo]: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("dateFrom");
-      searchParams.delete("dateTo");
+      clearParam([dateFrom, dateTo]);
       // localStorage.setItem("purchase_date", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -739,7 +650,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -914,7 +825,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
           isModalVisible={isCancelManyAssetModalVisible}
           setIsModalVisible={setIsCancelManyAssetModalVisible}
           data={selectdStoreAcceptAndRefuse}
-          setSelectedRowKey={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -941,7 +852,7 @@ export const TaxTokenListWaitingConfirm: React.FC<
               title={t("user.label.button.accept")}
               onConfirm={() =>
                 confirmMultipleTaxToken(
-                  initselectedRowKeys.map((item: IAssetsWaiting) => item.id),
+                  selectedRows.map((item) => item.id),
                   ASSIGNED_STATUS.ACCEPT
                 )
               }
@@ -973,18 +884,18 @@ export const TaxTokenListWaitingConfirm: React.FC<
           >
             <span className="title-remove-name">{nameAcceptAndRefuse}</span>
             {isAdmin &&
-              initselectedRowKeys
+              selectedRows
                 .filter(
-                  (item: IAssetsWaiting) =>
+                  (item) =>
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKOUT ||
                     item.assigned_status === ASSIGNED_STATUS.WAITING_CHECKIN
                 )
-                .map((item: ITaxTokenResponse) => (
+                .map((item) => (
                   <span className="list-checkin" key={item.id}>
                     <span className="name-checkin">{item.name}</span>
                     <span
                       className="delete-users-accept-refuse"
-                      onClick={() => handleRemoveItem(item.id)}
+                      onClick={() => removeItem(item.id)}
                     >
                       <CloseOutlined />
                     </span>
@@ -998,18 +909,18 @@ export const TaxTokenListWaitingConfirm: React.FC<
             }
           >
             <span className="title-remove-name">{nameNotAcceptAndRefuse}</span>
-            {initselectedRowKeys
+            {selectedRows
               .filter(
-                (item: IAssetsWaiting) =>
+                (item) =>
                   item.assigned_status === ASSIGNED_STATUS.ACCEPT ||
                   item.assigned_status === ASSIGNED_STATUS.REFUSE
               )
-              .map((item: ITaxTokenResponse) => (
+              .map((item) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.name}</span>
                   <span
                     className="delete-users-accept-refuse"
-                    onClick={() => handleRemoveItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>

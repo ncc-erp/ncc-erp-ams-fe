@@ -1,25 +1,18 @@
-import { useEffect, useState } from "react";
-import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
+  Radio,
   Row,
-  Col,
+  Select,
   Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
-import "react-mde/lib/styles/css/react-mde-all.css";
-import {
-  IHardwareCreateRequest,
-  IHardwareResponse,
-  IHardwareUpdateRequest,
-} from "interfaces/hardware";
-import { IModel } from "interfaces/model";
-import { UploadImage } from "components/elements/uploadImage";
-import { ICompany } from "interfaces/company";
+import { useCustom, useNotification, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 import {
   HARDWARE_API,
@@ -27,8 +20,20 @@ import {
   MODELS_SELECT_LIST_API,
   STATUS_LABELS_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
+import { UploadImage } from "components/elements/uploadImage";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import { EBooleanString } from "constants/common";
+import { ICompany } from "interfaces/company";
+import {
+  FormValues,
+  IHardwareCreateRequest,
+  IHardwareResponse,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
+import { IModel } from "interfaces/model";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareEditProps = {
   isModalVisible: boolean;
@@ -38,7 +43,7 @@ type HardwareEditProps = {
 
 export const HardwareEdit = (props: HardwareEditProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
-  const [isReadyToDeploy, setIsReadyToDeploy] = useState<boolean>(false);
+  const [, setIsReadyToDeploy] = useState<boolean>(false);
   const [payload, setPayload] = useState<FormData>();
   const [file, setFile] = useState<File>();
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
@@ -98,6 +103,17 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { refetch, isFetching } = useCustom({
     url: HARDWARE_API + "/" + data?.id,
@@ -133,17 +149,33 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     formData.append("purchase_date", event.purchase_date ?? "");
     formData.append("rtd_location_id", event.rtd_location.toString());
     formData.append("location_id", event.rtd_location.toString());
+    formData.append("maintenance", event.maintenance ?? "");
+    formData.append("maintenance_cycle", event.maintenance_cycle ?? "");
 
     if (event.supplier !== undefined) {
       formData.append("supplier_id", event.supplier.toString());
+    }
+    if (event.webhook !== undefined) {
+      formData.append("webhook_id", event.webhook.toString());
     }
 
     if (
       typeof event.image !== "string" &&
       event.image !== undefined &&
       event.image !== null
-    )
+    ) {
       formData.append("image", event.image);
+    }
+
+    if (event.isCustomerRenting !== undefined) {
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
+    if (event.startRentalDate) {
+      formData.append(
+        "startRentalDate",
+        moment(event.startRentalDate).format("YYYY-MM-DD")
+      );
+    }
 
     formData.append("_method", "PUT");
     setPayload(formData);
@@ -153,6 +185,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     form.resetFields();
     setFile(undefined);
     setMessageErr(null);
+
     setFields([
       { name: "name", value: data?.name },
       { name: "serial", value: data?.serial },
@@ -179,9 +212,17 @@ export const HardwareEdit = (props: HardwareEditProps) => {
         value: data?.purchase_date.date ?? "",
       },
       { name: "supplier_id", value: data?.supplier.id },
+      { name: "webhook", value: data?.webhook?.id ?? "" },
+
       { name: "rtd_location_id", value: data?.rtd_location.id },
       { name: "assigned_to", value: data?.assigned_to },
       { name: "image", value: data?.image },
+      { name: "maintenance", value: data?.maintenance_date?.date },
+      {
+        name: "maintenance_cycle",
+        value: data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0],
+      },
+      { name: "startRentalDate", value: data?.startRentalDate?.date ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -250,12 +291,55 @@ export const HardwareEdit = (props: HardwareEditProps) => {
     });
   }, [file]);
 
+  const [, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
+
   return (
     <Form
       {...formProps}
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle, maintenance } = allValues;
+
+          const isValidCycle =
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            Number(maintenance_cycle) > 0;
+
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+
+            form.setFieldsValue({ maintenance: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -386,7 +470,7 @@ export const HardwareEdit = (props: HardwareEditProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -410,6 +494,81 @@ export const HardwareEdit = (props: HardwareEditProps) => {
           {messageErr?.warranty_months && (
             <Typography.Text type="danger">
               {messageErr.warranty_months[0]}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_date")}
+            name="maintenance"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_date") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Input
+              type="date"
+              placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+            initialValue={
+              data?.isCustomerRenting
+                ? EBooleanString.TRUE
+                : EBooleanString.FALSE
+            }
+          >
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
+              <Radio value={EBooleanString.TRUE}>
+                {t("hardware.label.field.yes")}
+              </Radio>
+              <Radio value={EBooleanString.FALSE}>
+                {t("hardware.label.field.no")}
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          {form.getFieldValue("isCustomerRenting") === EBooleanString.TRUE && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
+
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
             </Typography.Text>
           )}
         </Col>
@@ -502,6 +661,52 @@ export const HardwareEdit = (props: HardwareEditProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_cycle") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+            initialValue={
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+              value={
+                data?.maintenance_cycle && data?.maintenance_cycle.split(" ")[0]
+              }
+            />
+          </Form.Item>
+          <Form.Item label={t("hardware.label.field.webhook")} name="webhook">
+            <Select
+              showSearch
+              placeholder={t("hardware.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Form.Item

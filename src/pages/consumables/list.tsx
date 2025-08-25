@@ -2,19 +2,15 @@ import {
   Button,
   Checkbox,
   CreateButton,
-  DateField,
   DeleteButton,
   EditButton,
   Form,
-  getDefaultSortOrder,
   List,
   Select,
   ShowButton,
   Space,
   Spin,
   Table,
-  TagField,
-  TextField,
   Tooltip,
   useSelect,
   useTable,
@@ -38,12 +34,10 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { MModal } from "components/Modal/MModal";
 import {
   IConsumablesFilterVariables,
-  IConsumablesRequest,
   IConsumablesResponse,
   IConsumablesResponseCheckout,
 } from "interfaces/consumables";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesCreate } from "./create";
 import { SyncOutlined, MenuOutlined } from "@ant-design/icons";
@@ -56,6 +50,8 @@ import "styles/antd.less";
 import { ConsumablesShow } from "./show";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useComsumableColumns } from "./table-column";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -66,6 +62,9 @@ const defaultCheckedList = [
   "location",
   "qty",
   "notes",
+  "maintenance_date",
+  "maintenance_cycle",
+  "maintenance_status",
 ];
 
 export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
@@ -93,15 +92,19 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const onClickDropDown = () => setIsActive(!isActive);
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location_id = searchParams.get("location_id");
-  const dateFromParam = searchParams.get("date_from");
-  const dateToParam = searchParams.get("date_to");
-  const searchParam = searchParams.get("search");
-  const category_id = searchParams.get("category_id");
-  const manufacturer_id = searchParams.get("manufacturer_id");
-  const supplier_id = searchParams.get("supplier_id");
+  const {
+    params: {
+      location_id,
+      date_from: dateFromParam,
+      date_to: dateToParam,
+      search: searchParam,
+      category_id,
+      manufacturer_id,
+      supplier_id,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("consumablesList");
 
   const { data: permissionsData } = usePermissions();
 
@@ -186,132 +189,15 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     };
   });
 
-  const collumns = useMemo(
-    () => [
-      {
-        key: "id",
-        title: "ID",
-        render: (value: number) => <TextField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("id", sorter),
-      },
-      {
-        key: "name",
-        title: translate("consumables.label.field.name"),
-        render: (value: string, record: any) => (
-          <TextField
-            value={value ? value : ""}
-            onClick={() => {
-              if (record.id) {
-                list(`consumable_details?id=${record.id}&name=${record.name}
-                &category_id=${record.category.id}`);
-              }
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("name", sorter),
-      },
-      {
-        key: "category",
-        title: translate("consumables.label.field.category"),
-        render: (value: IConsumablesResponse) => (
-          <TagField value={value ? value.name : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("category.name", sorter),
-        filters: filterCategory,
-        onFilter: (value: number, record: IConsumablesResponse) => {
-          return record.category.id === value;
-        },
-      },
-      {
-        key: "manufacturer",
-        title: translate("consumables.label.field.manufacturer"),
-        render: (value: IConsumablesRequest) => (
-          <TagField
-            value={value ? value.name : ""}
-            onClick={() => {
-              if (value) {
-                list(`manufactures_details?id=${value.id}&name=${value.name}`);
-              }
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("manufacturer.name", sorter),
-      },
-      {
-        key: "warranty_months",
-        title: translate("consumables.label.field.insurance"),
-        render: (value: IConsumablesRequest) => (
-          <TagField value={value ? value : ""} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("warranty_months", sorter),
-      },
-      {
-        key: "supplier",
-        title: translate("consumables.label.field.supplier"),
-        render: (value: IConsumablesRequest) => (
-          <div
-            dangerouslySetInnerHTML={{ __html: `${value ? value?.name : ""}` }}
-            onClick={() => {
-              list(`supplier_details?id=${value.id}&name=${value.name}`);
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("supplier.name", sorter),
-      },
-      {
-        key: "location",
-        title: translate("consumables.label.field.location"),
-        render: (value: IConsumablesRequest) => (
-          <TagField
-            value={value ? value.name : ""}
-            onClick={() => {
-              list(`location_details?id=${value.id}&name=${value.name}`);
-            }}
-            style={{ cursor: "pointer", color: "rgb(36 118 165)" }}
-          />
-        ),
-        defaultSortOrder: getDefaultSortOrder("location.name", sorter),
-      },
-      {
-        key: "purchase_date",
-        title: translate("consumables.label.field.purchase_date"),
-        render: (value: IConsumablesRequest) =>
-          value ? (
-            <DateField format="LL" value={value ? value.date : ""} />
-          ) : (
-            ""
-          ),
-        defaultSortOrder: getDefaultSortOrder("purchase_date.date", sorter),
-      },
-      {
-        key: "qty",
-        title: translate("consumables.label.field.total_consumables"),
-        render: (value: string) => <TextField value={value ? value : ""} />,
-        defaultSortOrder: getDefaultSortOrder("qty", sorter),
-      },
-      {
-        key: "purchase_cost",
-        title: translate("consumables.label.field.purchase_cost"),
-        render: (value: number) => <TextField value={value ? value : 0} />,
-        defaultSortOrder: getDefaultSortOrder("purchase_cost", sorter),
-      },
-      {
-        key: "notes",
-        title: translate("consumables.label.field.notes"),
-        render: (value: string) => (
-          <div dangerouslySetInnerHTML={{ __html: `${value ? value : ""}` }} />
-        ),
-        defaultSortOrder: getDefaultSortOrder("notes", sorter),
-      },
-    ],
-    [filterCategory]
-  );
+  const collumns = useComsumableColumns({
+    sorter,
+    list,
+    filterCategory,
+  });
 
   const edit = (data: IConsumablesResponse) => {
     const dataConvert: IConsumablesResponse = {
+      ...data,
       id: data.id,
       name: data.name,
       category: {
@@ -353,6 +239,11 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
         formatted: "",
       },
       remaining: 0,
+      maintenance_date: {
+        date: data?.maintenance_date?.date ?? "",
+        formatted: data?.maintenance_date?.formatted ?? "",
+      },
+      maintenance_cycle: data?.maintenance_cycle,
     };
     setDetail(dataConvert);
     setIsEditModalVisible(true);
@@ -434,7 +325,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -483,19 +374,17 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     const [from, to] = Array.from(val || []) as moment.Moment[];
 
     if (val !== null) {
-      searchParams.set(
-        "date_from",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "date_to",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        date_from: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        date_to: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("date_from");
-      searchParams.delete("date_to");
+      clearParam(["date_from", "date_to"]);
     }
-    setSearchParams(searchParams);
 
     searchFormProps.form?.submit();
   };
@@ -505,9 +394,8 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify(0)) {
-      searchParams.delete("location_id");
-    } else searchParams.set("location_id", JSON.stringify(value));
-    setSearchParams(searchParams);
+      clearParam("location_id");
+    } else setParams({ location_id: JSON.stringify(value) });
 
     searchFormProps.form?.submit();
   };

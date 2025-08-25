@@ -1,30 +1,22 @@
 import {
-  useGetLocale,
-  useSetLocale,
   useGetIdentity,
   useLogout,
   useNavigation,
-  useTranslate,
   usePermissions,
 } from "@pankod/refine-core";
 import {
   AntdLayout,
   Space,
-  Menu,
   Button,
   Icons,
   Avatar,
   Typography,
-  // Switch,
 } from "@pankod/refine-antd";
 import { IoQrCodeSharp } from "react-icons/io5";
-import { useGoogleLogout } from "react-google-login";
 import { useEffect, useState } from "react";
 import dataProvider from "providers/dataProvider";
 import { SYNC_USER_API } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
-import { useThemeSwitcher } from "react-css-theme-switcher";
-import { FaMoon, FaSun } from "react-icons/fa";
 import { MModal } from "components/Modal/MModal";
 import { Scanner } from "pages/hardware/scanner";
 import "../../../styles/qr-code.less";
@@ -33,12 +25,8 @@ const { LogoutOutlined, SyncOutlined } = Icons;
 const { Text } = Typography;
 
 export const Header: React.FC = () => {
-  const translate = useTranslate();
-  const locale = useGetLocale();
-  const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity();
   const { mutate: logout } = useLogout();
-  const currentLocale = locale();
   const { push } = useNavigation();
   const [hrmLoading, setHrmLoading] = useState(false);
   const [isShowModalScan, setIsShowModalScan] = useState(false);
@@ -52,15 +40,6 @@ export const Header: React.FC = () => {
     }
   }, [permissionsData]);
 
-  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
-    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
-    : "149954872426-ga5qkfj6v6fjr98p4lbakvf8u6mgtnp6.apps.googleusercontent.com";
-
-  const { signOut: signOutGoogle } = useGoogleLogout({
-    clientId,
-    cookiePolicy: "single_host_origin",
-  });
-
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
@@ -68,33 +47,33 @@ export const Header: React.FC = () => {
       custom({
         url: SYNC_USER_API,
         method: "get",
-      }).then((x) => {
+      }).then(() => {
         setHrmLoading(false);
       });
     }
   };
 
   const logoutAccount = () => {
-    signOutGoogle();
+    // signOutGoogle();
     logout();
     push("/login");
   };
 
-  const menu = (
-    <Menu selectedKeys={[currentLocale]}>
-      <Menu.Item
-        key="vi"
-        onClick={() => changeLanguage("vi")}
-        icon={
-          <span style={{ marginRight: 8 }}>
-            <Avatar size={16} src={`/images/flags/${"vi"}.svg`} />
-          </span>
-        }
-      >
-        {translate("lang.vi")}
-      </Menu.Item>
-    </Menu>
-  );
+  // const menu = (
+  //   <Menu selectedKeys={[currentLocale]}>
+  //     <Menu.Item
+  //       key="vi"
+  //       onClick={() => changeLanguage("vi")}
+  //       icon={
+  //         <span style={{ marginRight: 8 }}>
+  //           <Avatar size={16} src={`/images/flags/${"vi"}.svg`} />
+  //         </span>
+  //       }
+  //     >
+  //       {translate("lang.vi")}
+  //     </Menu.Item>
+  //   </Menu>
+  // );
 
   const { data: userIdentity } = useGetIdentity<string>();
   // const [isDarkMode, setIsDarkMode] = useState<boolean>();

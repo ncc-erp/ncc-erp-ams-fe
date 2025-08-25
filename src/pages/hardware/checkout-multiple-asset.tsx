@@ -1,37 +1,44 @@
-import { useEffect, useState } from "react";
-import { useCreate, useTranslate } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
+  Radio,
   Row,
-  Col,
+  Select,
   Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
+import { useCreate, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
-import "react-mde/lib/styles/css/react-mde-all.css";
+import { HARDWARE_CHECKOUT_API, USERS_API } from "api/baseApi";
+import { STATUS_LABELS } from "constants/assets";
+import { EBooleanString } from "constants/common";
+import { IValidationErrors } from "interfaces";
+import { ICompany } from "interfaces/company";
 import {
   IHardwareRequestCheckout,
   IHardwareRequestMultipleCheckout,
 } from "interfaces/hardware";
-import { ICompany } from "interfaces/company";
-import { USERS_API, HARDWARE_CHECKOUT_API } from "api/baseApi";
-import { STATUS_LABELS } from "constants/assets";
-import moment from "moment";
+import "react-mde/lib/styles/css/react-mde-all.css";
 
 type HardwareCheckoutProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
-  const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
+  const [messageErr, setMessageErr] =
+    useState<IValidationErrors<IHardwareRequestCheckout>>();
+  const [isCustomerRenting, setIsCustomerRenting] = useState<EBooleanString>(
+    EBooleanString.FALSE
+  );
 
   const t = useTranslate();
 
@@ -53,6 +60,17 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
 
   const { mutate, data: dataCheckout, isLoading } = useCreate();
 
+  const handleValuesChange = (
+    changedValues: Partial<IHardwareRequestMultipleCheckout>
+  ) => {
+    if (
+      "isCustomerRenting" in changedValues &&
+      changedValues.isCustomerRenting
+    ) {
+      setIsCustomerRenting(changedValues.isCustomerRenting);
+    }
+  };
+
   const onFinish = (event: IHardwareRequestMultipleCheckout) => {
     mutate({
       resource: HARDWARE_CHECKOUT_API,
@@ -65,11 +83,17 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
         checkout_to_type: "user",
         status_id: STATUS_LABELS.ASSIGN,
         note: event.note !== null ? event.note : "",
+        isCustomerRenting: event.isCustomerRenting,
+        startRentalDate:
+          event.isCustomerRenting === EBooleanString.TRUE
+            ? event.startRentalDate
+            : null,
       },
     });
   };
 
   const { setFields } = form;
+
   useEffect(() => {
     form.resetFields();
     setFields([
@@ -92,8 +116,7 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      setSelectedRowKeys([]);
-      localStorage.removeItem("selectedRowKeys");
+      clearSelection();
     }
   }, [dataCheckout, form, setIsModalVisible]);
 
@@ -103,6 +126,9 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues) => {
+        handleValuesChange(changedValues);
       }}
     >
       <Row gutter={16}>
@@ -164,6 +190,66 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
             <Typography.Text type="danger">
               {messageErr.checkout_at[0]}
             </Typography.Text>
+          )}
+
+          <>
+            <Form.Item
+              label={t("hardware.label.field.isCustomerRenting")}
+              name="isCustomerRenting"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.isCustomerRenting") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+              initialValue={EBooleanString.FALSE}
+            >
+              <Radio.Group style={{ display: "flex" }}>
+                <Radio value={EBooleanString.TRUE} style={{ padding: 0 }}>
+                  {t("hardware.label.field.yes")}
+                </Radio>
+                <Radio value={EBooleanString.FALSE} style={{ padding: 0 }}>
+                  {t("hardware.label.field.no")}
+                </Radio>
+              </Radio.Group>
+            </Form.Item>
+            {messageErr?.isCustomerRenting && (
+              <Typography.Text type="danger">
+                {messageErr.isCustomerRenting[0]}
+              </Typography.Text>
+            )}
+          </>
+
+          {isCustomerRenting === EBooleanString.TRUE && (
+            <>
+              <Form.Item
+                label={t("hardware.label.field.startRentalDate")}
+                name="startRentalDate"
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      t("hardware.label.field.startRentalDate") +
+                      " " +
+                      t("hardware.label.message.required"),
+                  },
+                ]}
+                initialValue={data?.startRentalDate?.date}
+              >
+                <Input
+                  type="date"
+                  placeholder={t("hardware.label.placeholder.startRentalDate")}
+                />
+              </Form.Item>
+              {messageErr?.startRentalDate && (
+                <Typography.Text type="danger">
+                  {messageErr.startRentalDate[0]}
+                </Typography.Text>
+              )}
+            </>
           )}
         </Col>
       </Row>

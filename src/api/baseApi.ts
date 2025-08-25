@@ -26,6 +26,7 @@ export const LICENSES_API = "api/v1/software/licenses";
 export const LICENSES_CHECKOUT_USER_API = "api/v1/software/license";
 
 export const MODELS_API = "api/v1/models";
+export const MODELS_TOTAL_DETAIL_API = "api/v1/models/total-detail";
 export const MODELS_SELECT_LIST_API = "api/v1/models/selectlist";
 
 export const LOCATION_API = "api/v1/locations";
@@ -47,6 +48,8 @@ export const SUPPLIERS_API = "api/v1/suppliers";
 export const SUPPLIERS_SELECT_LIST_API = "api/v1/suppliers/selectlist";
 export const STATUS_LABELS_API = "api/v1/statuslabels";
 export const ASSIGN_HARDWARE_API = "api/v1/hardware/assign";
+export const ASSETS_ASSIGNED_TOTAL_DETAIL_API =
+  "api/v1/hardware/assigned-total-detail";
 export const ASSIGN_TOOLS_API = "api/v1/tools/assign";
 export const ASSIGN_LICENSES_API = "api/v1/software/license/assign";
 
@@ -57,6 +60,7 @@ export const SUPPLIER_REQUEST_API = "api/v1/finfast/supplier";
 export const FINFAST_ENTRY_TYPE_API = "api/v1/finfast/entry-type";
 
 export const CATEGORIES_API = "api/v1/categories";
+export const CATEGORIES_TOTAL_DETAIL_API = "api/v1/categories/total-detail";
 export const CATEGORIES_SELECT_LIST_ASSET_API =
   "api/v1/categories/asset/selectlist";
 export const CATEGORIES_SELECT_LIST_API = "api/v1/categories/selectlist";
@@ -94,3 +98,35 @@ export const CLIENT_HARDWARE_CHECKOUT_API = "api/v1/client-hardware/checkout";
 export const CLIENT_HARDWARE_CHECKIN_API = "api/v1/client-hardware/checkin";
 export const CLIENT_HARDWARE_TOTAL_DETAIL_API =
   "api/v1/client-hardware/total-detail";
+export const CLIENT_HARDWARE_CREATE = "api/v1/customer-project";
+
+export const WEBHOOK_API = "api/v1/webhooks";
+
+export const KOMU_LOGS_API = "api/v1/komu-logs";
+export const KOMU_LOGS_TOTAL_DETAIL_API = "api/v1/komu-logs/total-detail";
+
+export const WEBHOOK_LOGS_API = "api/v1/webhook-logs";
+export const WEBHOOK_LOGS_TOTAL_DETAIL_API = "api/v1/webhook-logs/total-detail";
+export const HARDWARE_CUSTOMER_RENTING_API = "api/v1/hardware/customer-renting";
+
+export const HARDWARE_RENTAL_DETAILS =
+  "api/v1/hardware/customer-renting-total-detail";
+
+export const MEZON_LOGIN_API = "api/v1/auth/mezon-login";
+export const MEZON_LOGIN_BY_HASH_API = "api/v1/auth/mezon-login-by-hash";
+export const ACCESSORY_CHECKIN_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkin`;
+export const ACCESSORY_CHECKOUT_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkout`;
+export const ACCESSORY_CHECKEDOUT_API = (accessoryId: string) =>
+  `api/v1/accessories/${accessoryId}/checkedout`;
+export const ACCESSORY_DETAILS_API = "api/v1/accessories/accessories";
+export const CONSUMABLE_CHECKOUT_API = (consumableId: string) =>
+  `api/v1/consumables/${consumableId}/checkout`;
+export const CONSUMABLE_VIEW_USERS_API = (id: string) =>
+  `api/v1/consumables/view/${id}/users`;
+export const CONSUMABLE_DETAILS_API = "api/v1/consumables";
+export const MEZON_AUTH_URL_API = "api/v1/auth/mezon-auth-url";
+export const USER_EDIT_API = "api/v1/users";
+export const GOOGLE_AUTH_API = "api/v1/auth/google";
+export const LOGIN_API = "api/v1/auth/login";

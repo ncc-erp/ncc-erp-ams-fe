@@ -23,13 +23,17 @@ import {
   CONSUMABLE_CATEGORIES_API,
   LOCATION_SELECT_LIST_API,
   SUPPLIERS_SELECT_LIST_API,
+  WEBHOOK_API,
 } from "api/baseApi";
 import {
+  FormValues,
   IConsumablesRequest,
   IConsumablesResponse,
 } from "interfaces/consumables";
 import { ILocation } from "interfaces/dashboard";
 import { ISupplier } from "interfaces/supplier";
+import moment from "moment";
+import { ICompany } from "interfaces/company";
 
 type ConsumablesEditProps = {
   isModalVisible: boolean;
@@ -84,6 +88,17 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       },
     ],
   });
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
 
   const { refetch, isFetching } = useCustom({
     url: CONSUMABLE_API + "/" + data?.id,
@@ -119,7 +134,11 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
     }
     formData.append("purchase_cost", event.purchase_cost ?? "");
     formData.append("warranty_months", event.warranty_months);
-
+    formData.append("maintenance_date", event.maintenance_date ?? "");
+    formData.append("maintenance_cycle", event.maintenance_cycle ?? "");
+    if (event.webhook !== undefined) {
+      formData.append("webhook_id", event.webhook.toString());
+    }
     formData.append("_method", "PATCH");
     setPayload(formData);
   };
@@ -155,6 +174,13 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
         name: "warranty_months",
         value: data?.warranty_months,
       },
+      { name: "maintenance_date", value: data?.maintenance_date?.date },
+      {
+        name: "maintenance_cycle",
+        value:
+          data?.maintenance_cycle && data?.maintenance_cycle.split(" ")?.[0],
+      },
+      { name: "webhook", value: data?.webhook?.id ?? "" },
     ]);
   }, [data, form, isModalVisible]);
 
@@ -190,6 +216,44 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle, maintenance_date } =
+            allValues;
+
+          const isValidCycle =
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            Number(maintenance_cycle) > 0;
+
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance_date) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+
+            form.setFieldsValue({ maintenance_date: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance_date: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -297,6 +361,49 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
               {messageErr.purchase_cost[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("consumables.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+            initialValue={
+              data?.maintenance_cycle && data?.maintenance_cycle.split(" ")?.[0]
+            }
+          >
+            <Input
+              type="number"
+              addonAfter={t("consumables.label.field.months_per_time")}
+              placeholder={t("consumables.label.placeholder.maintenance_cycle")}
+              value={
+                data?.maintenance_cycle &&
+                data?.maintenance_cycle.split(" ")?.[0]
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("consumables.label.field.webhook")}
+            name="webhook"
+          >
+            <Select
+              showSearch
+              placeholder={t("consumables.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
         </Col>
 
         <Col className="gutter-row" span={12}>
@@ -373,7 +480,7 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
                   " " +
                   t("consumables.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -395,6 +502,15 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
               {messageErr.warranty_months[0]}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("consumables.label.field.maintenance_date")}
+            name="maintenance_date"
+          >
+            <Input
+              type="date"
+              placeholder={t("consumables.label.placeholder.maintenance_date")}
+            />
+          </Form.Item>
         </Col>
       </Row>
 

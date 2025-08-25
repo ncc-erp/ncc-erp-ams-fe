@@ -6,3 +6,5 @@ export * from "./list-broken";
 export * from "./create";
 export * from "./edit";
 export * from "./show";
+export * from "./list-maintenance";
+export * from "./list-rental-customers";

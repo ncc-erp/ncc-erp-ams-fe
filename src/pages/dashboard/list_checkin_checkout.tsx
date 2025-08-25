@@ -15,7 +15,6 @@ import {
   useTranslate,
 } from "@pankod/refine-core";
 import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
 import {
   AssetsSummaryPieChartCheckIn,
   AssetsSummaryPieChartCheckOut,
@@ -25,6 +24,7 @@ import "styles/antd.less";
 import { CategoryType, dateFormat, TypeAssetHistory } from "constants/assets";
 import { DASHBOARD_REPORT_ASSET_API } from "api/baseApi";
 import moment from "moment";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 export interface IReportAsset {
   id: number;
@@ -42,13 +42,16 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
     "",
   ]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const dateFromCheckIn = searchParams.get("from_CheckIn");
-  const dateToCheckIn = searchParams.get("to_CheckIn");
-
-  const [searchParamsCheckOut, setSearchParamsCheckOut] = useSearchParams();
-  const dateFromCheckOut = searchParams.get("from_CheckOut");
-  const dateToCheckOut = searchParams.get("to_CheckOut");
+  const {
+    params: {
+      from_CheckIn: dateFromCheckIn,
+      to_CheckIn: dateToCheckIn,
+      from_CheckOut: dateFromCheckOut,
+      to_CheckOut: dateToCheckOut,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("listCheckinCheckout");
 
   const [dataReportCheckIn, setDataReportCheckIn] = useState<any>([]);
   const [dataReportCheckOut, setDataReportCheckOut] = useState<any>([]);
@@ -97,42 +100,38 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       dateToCheckOut !== null ? dateToCheckOut : "",
     ]);
     refetchCheckOut();
-  }, [dateFromCheckOut, dateFromCheckOut]);
+  }, [dateFromCheckOut, dateToCheckOut]);
 
-  const handleChangePickerByMonthCheckIn = (val: any, formatString: any) => {
+  const handleChangePickerByMonthCheckIn = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      searchParams.set(
-        "from_CheckIn",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "to_CheckIn",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        from_CheckIn: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        to_CheckIn: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("from_CheckIn");
-      searchParams.delete("to_CheckIn");
+      clearParam(["from_CheckIn", "to_CheckIn"]);
     }
-    setSearchParams(searchParams);
   };
 
-  const handleChangePickerByMonthCheckOut = (val: any, formatString: any) => {
+  const handleChangePickerByMonthCheckOut = (val: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      searchParamsCheckOut.set(
-        "from_CheckOut",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParamsCheckOut.set(
-        "to_CheckOut",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        from_CheckOut: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        to_CheckOut: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParamsCheckOut.delete("from_CheckOut");
-      searchParamsCheckOut.delete("to_CheckOut");
+      clearParam(["from_CheckOut", "to_CheckOut"]);
     }
-    setSearchParamsCheckOut(searchParamsCheckOut);
   };
 
   const calculateSumEachCategory = (
@@ -544,7 +543,13 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <>
-      <List title={translate("dashboard.titleStatistic")}>
+      <List
+        title={
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {translate("dashboard.titleStatistic")}
+          </div>
+        }
+      >
         <section className="reportAssetContainer">
           <span className="title-section-dashboard">
             {translate("report.label.title.nameReportCheckOut")}
@@ -566,9 +571,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div style={{ marginTop: "6rem" }}>
+          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
-              <Col sm={24} md={24}>
+              <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckout ? (
                   <Row gutter={16} className="dashboard-loading">
                     <Spin
@@ -578,12 +583,12 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={10} md={7}>
+                    <Col xs={24} sm={24} md={7}>
                       <AssetsSummaryPieChartCheckOut
                         assets_statistic={dataReportCheckOut ?? ""}
                       />
                     </Col>
-                    <Col sm={24} md={17}>
+                    <Col xs={24} sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckOut}
@@ -620,9 +625,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div style={{ marginTop: "6rem" }}>
+          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
             <Row gutter={[12, 12]}>
-              <Col sm={24} md={24}>
+              <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckin ? (
                   <Row gutter={16} className="dashboard-loading">
                     <Spin
@@ -632,12 +637,12 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
                   </Row>
                 ) : (
                   <Row gutter={16}>
-                    <Col sm={24} md={7}>
+                    <Col xs={24} sm={24} md={7}>
                       <AssetsSummaryPieChartCheckIn
                         assets_statistic={dataReportCheckIn ?? ""}
                       />
                     </Col>
-                    <Col sm={24} md={17}>
+                    <Col xs={24} sm={24} md={17}>
                       <Table
                         key="id"
                         dataSource={dataReportCheckIn}

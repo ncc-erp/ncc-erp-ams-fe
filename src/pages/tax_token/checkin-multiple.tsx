@@ -24,13 +24,13 @@ type TaxTokenCheckoutMultipleProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
   data: any;
-  setSelectedRowKeys: any;
+  clearSelection: () => void;
 };
 
 export const TaxTokenCheckinMultiple = (
   props: TaxTokenCheckoutMultipleProps
 ) => {
-  const { setIsModalVisible, data, isModalVisible, setSelectedRowKeys } = props;
+  const { setIsModalVisible, data, isModalVisible, clearSelection } = props;
   const [messageErr, setMessageErr] = useState<ITaxTokenRequestCheckout>();
   const [, setIsReadyToDeploy] = useState<boolean>(false);
   const { open } = useNotification();
@@ -66,7 +66,7 @@ export const TaxTokenCheckinMultiple = (
         successNotification: false,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           open?.({
             type: "success",
             description: "Success",
@@ -123,8 +123,7 @@ export const TaxTokenCheckinMultiple = (
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-      setSelectedRowKeys([]);
-      localStorage.removeItem("selectedTaxTokenRowKeys");
+      clearSelection();
     }
   }, [dataCheckout, form, setIsModalVisible]);
 

@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Interface } from "readline";
+import { EBooleanString } from "../constants/common";
 
 export interface IHardwareCreateRequest {
   rows: any;
@@ -22,6 +21,8 @@ export interface IHardwareCreateRequest {
   rtd_location_id: number;
   last_audit_date: string;
   location_id: number;
+  maintenance: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareUpdateRequest {
@@ -39,15 +40,27 @@ export interface IHardwareUpdateRequest {
   purchase_date: string;
   rtd_location: number;
   supplier: number;
+  webhook: number;
   image: string;
   user_id: number;
   assigned_to: number;
   location: number;
   physical: number;
   requestable: number;
-
   reason: string;
   assigned_status: number;
+  maintenance: string;
+  maintenance_cycle: string;
+  customer: {
+    id: number;
+    name: string;
+  };
+  project: {
+    id: number;
+    name: string;
+  };
+  isCustomerRenting: EBooleanString;
+  startRentalDate?: string;
 }
 export interface IHardwareResponse {
   id: number;
@@ -80,6 +93,10 @@ export interface IHardwareResponse {
   notes: string;
   order_number: string;
   location: {
+    id: number;
+    name: string;
+  };
+  webhook?: {
     id: number;
     name: string;
   };
@@ -155,6 +172,16 @@ export interface IHardwareResponse {
   checkout_counter: number;
   requests_counter: number;
   withdraw_from: number;
+  maintenance_date?: {
+    date: string;
+    formatted: string;
+  };
+  maintenance_cycle?: string;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IDefaultValue {
@@ -182,6 +209,8 @@ export interface IHardwareRequestCheckout {
   checkout_to_type: string;
   assigned_status: number;
   user_can_checkout: boolean;
+  isCustomerRenting: EBooleanString;
+  startRentalDate: string;
 }
 export interface IHardwareRequestMultipleCheckout {
   assets: any[];
@@ -194,6 +223,8 @@ export interface IHardwareRequestMultipleCheckout {
   user_can_checkout: boolean;
   note: string;
   status_id: number;
+  isCustomerRenting: EBooleanString;
+  startRentalDate: string;
 }
 
 export interface IHardwareRequestMultipleCheckin {
@@ -244,6 +275,11 @@ export interface IHardwareResponseCheckout {
     };
   };
   user_can_checkout: boolean;
+  isCustomerRenting?: boolean;
+  startRentalDate?: {
+    date: string;
+    formatted: string;
+  };
 }
 
 export interface IHardwareList {
@@ -318,6 +354,7 @@ export interface IHardwareFilterVariables {
   assigned_to: string;
   assigned_status: string;
   category: string;
+  isCustomerRenting: boolean;
 }
 
 export interface IHardwareRequestMultipleCancel {
@@ -346,4 +383,47 @@ export interface IAssetsWaiting {
   last_audit_date: string;
   location_id: number;
   assigned_status: number;
+}
+
+export interface ISearchFormProps {
+  searchFormProps: any;
+}
+
+export interface ITableProps {
+  columns: any[];
+  selectedColumns: string[];
+  tableProps: any;
+  onShow: (record: IHardwareResponse) => void;
+  onEdit: (record: IHardwareResponse) => void;
+  onDeleteSuccess: () => void;
+  resourceName?: string;
+}
+
+export interface IToolBarProps {
+  columns: ColumnItem[];
+  selectedColumns: string[];
+  onToggleColumn: (col: ColumnItem) => void;
+  onRefresh: () => void;
+  onOpenSearch: () => void;
+}
+
+export interface IModalPropsProps {
+  t: any;
+  modalState: {
+    type: HardwareModalType | null;
+    isVisible: boolean;
+  };
+  setModalState: React.Dispatch<
+    React.SetStateAction<{
+      type: HardwareModalType | null;
+      isVisible: boolean;
+    }>
+  >;
+  detail: any;
+  searchFormProps: any;
+}
+export interface FormValues {
+  purchase_date?: string;
+  maintenance_cycle?: number;
+  maintenance?: string;
 }

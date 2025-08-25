@@ -14,8 +14,6 @@ import {
   TagField,
   TextField,
   Tooltip,
-  Typography,
-  useSelect,
   useTable,
 } from "@pankod/refine-antd";
 import {
@@ -24,12 +22,7 @@ import {
   useNavigation,
   useTranslate,
 } from "@pankod/refine-core";
-import {
-  CATEGORIES_API,
-  HARDWARE_API,
-  STATUS_LABELS_API,
-  HARDWARE_TOTAL_DETAIL_API,
-} from "api/baseApi";
+import { HARDWARE_API, HARDWARE_TOTAL_DETAIL_API } from "api/baseApi";
 import { MModal } from "components/Modal/MModal";
 import {
   IHardwareFilterVariables,
@@ -48,9 +41,8 @@ import {
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
-import { ICategory, IHardware } from "interfaces";
-import { IStatusLabel } from "interfaces/statusLabel";
+} from "utils/assets";
+import { IHardware } from "interfaces";
 import { HardwareEdit, HardwareShow } from "pages/hardware";
 import { HardwareClone } from "pages/hardware/clone";
 import { HardwareCheckout } from "pages/hardware/checkout";
@@ -86,7 +78,6 @@ type detailAssetProps = {
 
 export const DetailsAsset = (props: detailAssetProps) => {
   const translate = useTranslate();
-  const { Title } = Typography;
   const { list } = useNavigation();
   const { id_name } = props;
   const [isLoadingArr] = useState<boolean[]>([]);
@@ -120,11 +111,9 @@ export const DetailsAsset = (props: detailAssetProps) => {
   );
 
   const [searchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
   const status_id = searchParams.get("status_id");
   const searchParam = searchParams.get("search");
   const type_id = searchParams.get("id");
-  const location_name = searchParams.get("name");
 
   const { tableProps, tableQueryResult, sorter, searchFormProps, filters } =
     useTable<IHardwareResponse, HttpError, IHardwareFilterVariables>({
@@ -145,18 +134,8 @@ export const DetailsAsset = (props: detailAssetProps) => {
       // resource: `${HARDWARE_API}?rtd_location_id=${rtd_location_id}`,
       onSearch: (params) => {
         const filters: CrudFilters = [];
-        const {
-          search,
-          name,
-          asset_tag,
-          serial,
-          model,
-          location,
-          status_label,
-          purchase_date,
-          assigned_to,
-          category,
-        } = params;
+        const { name, asset_tag, serial, model, status_label, assigned_to } =
+          params;
         filters.push(
           {
             field: "search",
@@ -614,6 +593,8 @@ export const DetailsAsset = (props: detailAssetProps) => {
       assigned_asset: data?.assigned_asset,
       checkout_to_type: data?.checkout_to_type,
       user_can_checkout: data?.user_can_checkout,
+      isCustomerRenting: data?.isCustomerRenting,
+      startRentalDate: data?.startRentalDate,
     };
 
     setDetailCheckout(dataConvert);
@@ -689,40 +670,6 @@ export const DetailsAsset = (props: detailAssetProps) => {
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 
-  const { selectProps: categorySelectProps } = useSelect<ICategory>({
-    resource: CATEGORIES_API,
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const filterCategory = categorySelectProps?.options?.map((item) => ({
-    text: item.label,
-    value: item.value,
-  }));
-
-  const { selectProps: statusLabelSelectProps } = useSelect<IStatusLabel>({
-    resource: STATUS_LABELS_API,
-    optionLabel: "name",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
-  const filterStatus_Label = statusLabelSelectProps?.options?.map((item) => ({
-    text: item.label,
-    value: item.value,
-  }));
-
   const onCheckItem = (value: ICheckboxChange) => {
     if (collumnSelected.includes(value.key)) {
       setColumnSelected(
@@ -746,7 +693,7 @@ export const DetailsAsset = (props: detailAssetProps) => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -1033,6 +980,7 @@ export const DetailsAsset = (props: detailAssetProps) => {
           />
         </MModal>
         <MModal
+          key={`checkout-${isCheckoutModalVisible}`}
           title={translate("hardware.label.title.checkout")}
           setIsModalVisible={setIsCheckoutModalVisible}
           isModalVisible={isCheckoutModalVisible}

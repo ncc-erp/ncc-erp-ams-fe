@@ -1,36 +1,32 @@
-import React, { useEffect } from "react";
 import {
-  Row,
-  Col,
-  Layout,
+  Button,
   Card,
-  Typography,
+  Checkbox,
+  Col,
   Form,
   Input,
-  Button,
-  Checkbox,
+  Layout,
+  Row,
+  Typography,
 } from "antd";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { Icons } from "@pankod/refine-antd";
-
-import { useLogin, useTranslate } from "@pankod/refine-core";
-import { gapi } from "gapi-script";
-
-import {
-  layoutStyles,
-  containerStyles,
-  titleStyles,
-  imageContainer,
-  logo,
-  buttonLoginGoogle,
-} from "./styles";
+import { useLogin } from "@pankod/refine-core";
+import { MEZON_AUTH_URL_API } from "api/baseApi";
+import useLoginWithMezon from "hooks/useLoginWithMezon";
+import { useMezonLoginByHash } from "hooks/useMezonLoginByHash";
+import dataProvider from "providers/dataProvider";
 import "styles/antd.less";
 
-import { useGoogleLogin, GoogleLoginResponse } from "react-google-login";
-import dataProvider from "providers/dataProvider";
-import useLoginWithMezon from "hooks/useLoginWithMezon";
-
-const { GoogleOutlined } = Icons;
+import {
+  buttonLoginGoogle,
+  containerStyles,
+  imageContainer,
+  layoutStyles,
+  logo,
+  titleStyles,
+} from "./styles";
 
 const { Title } = Typography;
 
@@ -47,48 +43,25 @@ export interface ILoginForm {
  */
 export const LoginPage: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
-  const translate = useTranslate();
+  const { t } = useTranslation();
+  const [isLoadingMezon, setIsLoadingMezon] = useState<boolean>(false);
 
   useLoginWithMezon();
+  useMezonLoginByHash();
 
   const { mutate: login, isLoading } = useLogin<ILoginForm>();
 
   const CardTitle = (
     <Title level={3} style={titleStyles} data-test-id="title">
-      {translate("pages.login.title", "Sign in your account")}
+      {t("pages.login.title")}
     </Title>
   );
 
-  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
-    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
-    : "773310957148-o1bk15p279jst37itlfqmfulglnh4t1k.apps.googleusercontent.com";
-
-  const { mutate: loginGoogle, isLoading: isLoadingGoogle } =
-    useLogin<GoogleLoginResponse>();
-
-  const { signIn } = useGoogleLogin({
-    onSuccess: (response) => {
-      loginGoogle(response as GoogleLoginResponse);
-    },
-    clientId,
-    isSignedIn: false,
-    cookiePolicy: "single_host_origin",
-  });
-
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "email",
-      });
-    }
-    gapi.load("client:auth2", start);
-  }, []);
-
   const getMezonAuthUrl = async () => {
     try {
+      setIsLoadingMezon(true);
       const { post } = dataProvider;
-      const url = "api/v1/auth/mezon-auth-url";
+      const url = MEZON_AUTH_URL_API;
       const data = await post({
         url: url,
         payload: {},
@@ -96,6 +69,8 @@ export const LoginPage: React.FC = () => {
       window.location.href = data.data.url;
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoadingMezon(false);
     }
   };
 
@@ -133,21 +108,18 @@ export const LoginPage: React.FC = () => {
                   <Form.Item
                     name="username"
                     data-test-id="username"
-                    label={translate("pages.login.username", "Username")}
+                    label={t("pages.login.username")}
                     rules={[{ required: true }]}
                   >
                     <Input
                       size="large"
-                      placeholder={translate(
-                        "pages.login.username",
-                        "Username"
-                      )}
+                      placeholder={t("pages.login.username")}
                     />
                   </Form.Item>
                   <Form.Item
                     data-test-id="password"
                     name="password"
-                    label={translate("pages.login.password", "Password")}
+                    label={t("pages.login.password")}
                     rules={[{ required: true }]}
                     style={{ marginBottom: "12px" }}
                   >
@@ -169,7 +141,7 @@ export const LoginPage: React.FC = () => {
                           fontSize: "12px",
                         }}
                       >
-                        {translate("pages.login.remember", "Remember me")}
+                        {t("pages.login.remember")}
                       </Checkbox>
                     </Form.Item>
                   </div>
@@ -181,25 +153,10 @@ export const LoginPage: React.FC = () => {
                     loading={isLoading}
                     block
                   >
-                    {translate("pages.login.signin", "Sign in")}
+                    {t("pages.login.signin")}
                   </Button>
                 </Form>
               )}
-
-              <Button
-                data-test-id="signin-google-btn"
-                type="primary"
-                size="large"
-                block
-                icon={<GoogleOutlined />}
-                loading={isLoadingGoogle}
-                onClick={() => signIn()}
-                style={buttonLoginGoogle}
-                className="btn-login-google"
-              >
-                {translate("pages.login.signinGoogle", "Sign in with google")}
-              </Button>
-
               <Button
                 data-test-id="signin-mezon-btn"
                 type="primary"
@@ -212,12 +169,12 @@ export const LoginPage: React.FC = () => {
                     src="/images/svg/mezon-logo-black.svg"
                   />
                 }
-                loading={isLoadingGoogle}
+                loading={isLoadingMezon}
                 onClick={() => getMezonAuthUrl()}
                 style={buttonLoginGoogle}
                 className="btn-login-mezon"
               >
-                {translate("pages.login.signinMezon", "Sign in with Mezon")}
+                {t("pages.login.signinMezon")}
               </Button>
             </Card>
           </div>

@@ -1,13 +1,12 @@
-import { useNavigation } from "@pankod/refine-core";
 import { TOKEN_KEY } from "providers/authProvider";
 import dataProvider from "providers/dataProvider";
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { MEZON_LOGIN_API } from "api/baseApi";
 
 const useLoginWithMezon = () => {
   const { post } = dataProvider;
   const location = useLocation();
-  const { list } = useNavigation();
 
   const paramValues = useMemo(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -16,11 +15,11 @@ const useLoginWithMezon = () => {
   }, [location.search]);
 
   useEffect(() => {
-    const [code, scope, state] = paramValues;
+    const [code, _, state] = paramValues;
     const handleLoginWithMezon = async (code: string, state: string) => {
       try {
         const data = await post({
-          url: "api/v1/auth/mezon-login",
+          url: MEZON_LOGIN_API,
           payload: {
             code,
             state,

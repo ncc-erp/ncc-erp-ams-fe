@@ -27,7 +27,7 @@ export const LicensesCreate = (props: LicensesCreateProps) => {
   const { mutate, data: createData, isLoading } = useCreate();
   const [payload, setPayload] = useState<FormData>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const software_id = searchParams.get("id");
   const software_name = searchParams.get("name");
 

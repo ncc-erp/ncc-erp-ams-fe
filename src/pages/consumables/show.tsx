@@ -1,5 +1,5 @@
 import { useTranslate } from "@pankod/refine-core";
-import { Typography, Row, Col, MarkdownField } from "@pankod/refine-antd";
+import { Typography, Row, Col, Grid } from "@pankod/refine-antd";
 
 import "styles/hardware.less";
 import { IConsumablesResponse } from "interfaces/consumables";
@@ -14,24 +14,26 @@ type ConsumablesShowProps = {
 export const ConsumablesShow = (props: ConsumablesShowProps) => {
   const { detail } = props;
   const translate = useTranslate();
+  const breakpoint = Grid.useBreakpoint();
+  const isMobile = !breakpoint.lg;
 
   return (
     <>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>{translate("consumables.label.field.name")}</Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <Text>{detail && detail?.name}</Text>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.category")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           {detail?.category ? (
             <Text className="show-asset">
               {detail?.category && detail?.category.name}
@@ -42,12 +44,12 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.location")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           {detail?.location ? (
             <Text className="show-asset">
               {detail?.location && detail?.location.name}
@@ -58,12 +60,12 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.manufacturer")}
           </Title>
         </Col>
-        <Col>
+        <Col span={14}>
           {detail?.manufacturer ? (
             <>
               <Text className="show-asset">
@@ -76,12 +78,12 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.supplier")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           {detail?.supplier ? (
             <>
               <div
@@ -96,34 +98,34 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.purchase_cost")}
           </Title>
         </Col>
-        <Col>
+        <Col span={14}>
           <Text>{detail?.purchase_cost && detail?.purchase_cost}</Text>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.purchase_date")}
           </Title>
         </Col>
-        <Col>
+        <Col span={14}>
           <Text>
             {detail?.purchase_date && detail?.purchase_date.formatted}
           </Text>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.insurance")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <Text>
             {detail?.warranty_months}
             {" months"}
@@ -131,10 +133,10 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>{translate("consumables.label.field.notes")}</Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <div
             dangerouslySetInnerHTML={{
               __html: `${detail?.notes ? detail?.notes : ""}`,
@@ -143,12 +145,12 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.created_at")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           {detail?.created_at ? (
             <Text>
               {" "}
@@ -163,12 +165,12 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.updated_at")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <Text>
             {" "}
             {detail?.updated_at &&
@@ -179,21 +181,56 @@ export const ConsumablesShow = (props: ConsumablesShowProps) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>{translate("consumables.label.field.qty")}</Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <Text>{detail?.qty && detail?.qty}</Text>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
           <Title level={5}>
             {translate("consumables.label.field.remaining")}
           </Title>
         </Col>
-        <Col span={18}>
+        <Col span={14}>
           <Text>{detail?.remaining && detail?.remaining}</Text>
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
+          <Title level={5}>
+            {translate("consumables.label.field.maintenance_date")}
+          </Title>
+        </Col>
+        <Col span={14}>
+          <Text>
+            {" "}
+            {detail?.maintenance_date &&
+              moment(detail?.maintenance_date.date)
+                .add(moment.duration(moment().format("Z")))
+                .format("ddd MMM D, YYYY")}
+          </Text>
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col className="gutter-row" span={isMobile ? 10 : 6}>
+          <Title level={5}>
+            {translate("consumables.label.field.maintenance_cycle")}
+          </Title>
+        </Col>
+        <Col span={14}>
+          {detail?.maintenance_cycle ? (
+            <>
+              <Text>
+                {"Every "}
+                {detail?.maintenance_cycle && detail?.maintenance_cycle}
+              </Text>
+            </>
+          ) : (
+            ""
+          )}
         </Col>
       </Row>
     </>

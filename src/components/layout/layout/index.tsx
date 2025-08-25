@@ -1,8 +1,8 @@
-/* eslint-disable react/prop-types */
-import { LayoutProps } from "@pankod/refine-core";
 import { AntdLayout, Grid } from "@pankod/refine-antd";
+import { LayoutProps } from "@pankod/refine-core";
+import { FC, PropsWithChildren } from "react";
 
-export const Layout: React.FC<LayoutProps> = ({
+export const Layout: FC<PropsWithChildren<LayoutProps>> = ({
   children,
   Sider,
   Header,

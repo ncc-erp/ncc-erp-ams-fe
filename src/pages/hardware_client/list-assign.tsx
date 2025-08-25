@@ -1,86 +1,83 @@
 import {
-  useTranslate,
-  IResourceComponentsProps,
+  CloseOutlined,
+  FileSearchOutlined,
+  MenuOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Checkbox,
+  CloneButton,
+  CreateButton,
+  DateField,
+  DeleteButton,
+  EditButton,
+  Form,
+  getDefaultSortOrder,
+  List,
+  Select,
+  ShowButton,
+  Space,
+  Table,
+  TagField,
+  TextField,
+  Tooltip,
+  useSelect,
+  useTable,
+} from "@pankod/refine-antd";
+import {
   CrudFilters,
   HttpError,
+  IResourceComponentsProps,
   useNavigation,
   usePermissions,
+  useTranslate,
 } from "@pankod/refine-core";
-import {
-  List,
-  Table,
-  TextField,
-  useTable,
-  getDefaultSortOrder,
-  DateField,
-  Space,
-  CloneButton,
-  EditButton,
-  DeleteButton,
-  TagField,
-  CreateButton,
-  Button,
-  ShowButton,
-  Tooltip,
-  Checkbox,
-  Form,
-  Select,
-  useSelect,
-} from "@pankod/refine-antd";
-
-import { Image } from "antd";
-import "styles/antd.less";
-
-import { IHardware } from "interfaces";
-import { TableAction } from "components/elements/tables/TableAction";
+import { DatePicker, Image, Spin } from "antd";
+import moment from "moment";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MModal } from "components/Modal/MModal";
-import { ClientHardwareCreate } from "./create";
-import { ClientHardwareEdit } from "./edit";
-import { ClientHardwareClone } from "./clone";
-import { ClientHardwareShow } from "./show";
 
+import {
+  CATEGORIES_API,
+  CLIENT_HARDWARE_API,
+  CLIENT_HARDWARE_TOTAL_DETAIL_API,
+  LOCATION_API,
+  STATUS_LABELS_API,
+} from "api/baseApi";
+import { TableAction } from "components/elements/tables/TableAction";
+import { TotalDetail } from "components/elements/TotalDetail";
+import { MModal } from "components/Modal/MModal";
+import { dateFormat, STATUS_LABELS } from "constants/assets";
+import { EPermissions } from "constants/permissions";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { useRowSelection } from "hooks/useRowSelection";
+import { IHardware } from "interfaces";
+import { ICategory } from "interfaces/categories";
+import { ICompany } from "interfaces/company";
 import {
   IHardwareFilterVariables,
   IHardwareResponse,
   IHardwareResponseCheckin,
   IHardwareResponseCheckout,
 } from "interfaces/hardware";
-import { ClientHardwareCheckout } from "./checkout";
-import { ClientHardwareCheckin } from "./checkin";
-import {
-  CATEGORIES_API,
-  CLIENT_HARDWARE_API,
-  LOCATION_API,
-  STATUS_LABELS_API,
-  CLIENT_HARDWARE_TOTAL_DETAIL_API,
-} from "api/baseApi";
-import {
-  MenuOutlined,
-  FileSearchOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import { ClientHardwareSearch } from "./search";
-import { ICompany } from "interfaces/company";
-import moment from "moment";
-import { DatePicker } from "antd";
-import { useSearchParams } from "react-router-dom";
-import { Spin } from "antd";
-import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
-import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
-import { dateFormat, STATUS_LABELS } from "constants/assets";
+import { IStatusLabel } from "interfaces/statusLabel";
+import "styles/antd.less";
 import {
   filterAssignedStatus,
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
-import { ICategory } from "interfaces/categories";
-import { IStatusLabel } from "interfaces/statusLabel";
-import { EPermissions } from "constants/permissions";
-import { TotalDetail } from "components/elements/TotalDetail";
+} from "utils/assets";
+import { ClientHardwareCheckin } from "./checkin";
+import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
+import { ClientHardwareCheckout } from "./checkout";
+import { ClientHardwareCheckoutMultipleAsset } from "./checkout-multiple-asset";
+import { ClientHardwareClone } from "./clone";
+import { ClientHardwareCreate } from "./create";
+import { ClientHardwareEdit } from "./edit";
+import { ClientHardwareSearch } from "./search";
+import { ClientHardwareShow } from "./show";
 
 const defaultCheckedList = [
   "id",
@@ -99,14 +96,20 @@ export const ClientHardwareListAssign: React.FC<
 > = () => {
   const { RangePicker } = DatePicker;
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const rtd_location_id = searchParams.get("rtd_location_id");
-  const category_id = searchParams.get("category_id");
-  const type = searchParams.get("type");
-  const status_id = searchParams.get("status_id");
-  const dateCheckoutFromParam = searchParams.get("dateCheckoutFrom");
-  const dateCheckoutToParam = searchParams.get("dateCheckoutTo");
-  const searchParam = searchParams.get("search");
+  const {
+    params: {
+      rtd_location_id,
+      category_id,
+      type,
+      status_id,
+      dateFrom: dateCheckoutFromParam,
+      dateTo: dateCheckoutToParam,
+      search: searchParam,
+      assigned_status,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("hardwareList");
 
   const t = useTranslate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -233,7 +236,7 @@ export const ClientHardwareListAssign: React.FC<
           {
             field: "assigned_status",
             operator: "eq",
-            value: searchParams.get("assigned_status"),
+            value: assigned_status,
           }
         );
 
@@ -887,7 +890,7 @@ export const ClientHardwareListAssign: React.FC<
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -932,27 +935,19 @@ export const ClientHardwareListAssign: React.FC<
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
       localStorage.setItem("last_checkout", formatString ?? "");
-      searchParams.set(
-        "dateCheckoutFrom",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "dateCheckoutTo",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        dateFrom: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        dateTo: to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : "",
+      });
     } else {
-      searchParams.delete("dateCheckoutFrom");
-      searchParams.delete("dateCheckoutTo");
+      clearParam(["dateFrom", "dateTo"]);
       localStorage.setItem("last_checkout", formatString ?? "");
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
-
-  useEffect(() => {
-    searchFormProps.form?.submit();
-  }, [window.location.reload]);
 
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
@@ -968,13 +963,14 @@ export const ClientHardwareListAssign: React.FC<
   });
   const { Option } = Select;
 
-  const initselectedRowKeys = useMemo(() => {
-    return JSON.parse(localStorage.getItem("selectedRowKeys") as string) || [];
-  }, [localStorage.getItem("selectedRowKeys")]);
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    React.Key[] | IHardwareResponse[]
-  >(initselectedRowKeys as React.Key[]);
+  const {
+    selectedRowKeys,
+    selectedRows,
+    onSelect,
+    onSelectAll,
+    removeItem,
+    clearSelection,
+  } = useRowSelection<IHardwareResponse>("selectedRowKeys");
 
   const [selectedCheckout, setSelectedCheckout] = useState<boolean>(true);
   const [selectedCheckin, setSelectedCheckin] = useState<boolean>(true);
@@ -986,14 +982,13 @@ export const ClientHardwareListAssign: React.FC<
   const [nameCheckin, setNameCheckin] = useState("");
   useEffect(() => {
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkout
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkout)
+        .length > 0
     ) {
       setSelectedCheckout(true);
       setNameCheckin(t("hardware.label.detail.note-checkin"));
       setSelectdStoreCheckout(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IHardwareResponse) => item.user_can_checkout)
           .map((item: IHardwareResponse) => item)
       );
@@ -1003,14 +998,13 @@ export const ClientHardwareListAssign: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckin(true);
       setNameCheckout(t("hardware.label.detail.note-checkout"));
       setSelectdStoreCheckin(
-        initselectedRowKeys
+        selectedRows
           .filter((item: IHardwareResponse) => item.user_can_checkin)
           .map((item: IHardwareResponse) => item)
       );
@@ -1020,89 +1014,27 @@ export const ClientHardwareListAssign: React.FC<
     }
 
     if (
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkout
-      ).length > 0 &&
-      initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.user_can_checkin
-      ).length > 0
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkout)
+        .length > 0 &&
+      selectedRows.filter((item: IHardwareResponse) => item.user_can_checkin)
+        .length > 0
     ) {
       setSelectedCheckout(false);
       setSelectedCheckin(false);
       setNameCheckin(t("hardware.label.detail.note-checkin"));
       setNameCheckout(t("hardware.label.detail.note-checkout"));
-    } else {
     }
-  }, [initselectedRowKeys]);
-
-  const onSelect = (record: IHardwareResponse, selected: boolean) => {
-    if (!selected) {
-      const newSelectRow = initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item.id !== record.id
-      );
-      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-      setSelectedRowKeys(
-        newSelectRow.map((item: IHardwareResponse) => item.id)
-      );
-    } else {
-      const newselectedRowKeys = [record, ...initselectedRowKeys];
-      localStorage.setItem(
-        "selectedRowKeys",
-        JSON.stringify(
-          newselectedRowKeys.filter(function (item, index) {
-            return newselectedRowKeys.findIndex((item) => item.id === index);
-          })
-        )
-      );
-      setSelectedRowKeys(
-        newselectedRowKeys.map((item: IHardwareResponse) => item.id)
-      );
-    }
-  };
-
-  const onSelectAll = (
-    selected: boolean,
-    selectedRows: IHardwareResponse[],
-    changeRows: IHardwareResponse[]
-  ) => {
-    if (!selected) {
-      const unSelectIds = changeRows.map((item: IHardwareResponse) => item.id);
-      let newSelectedRows = initselectedRowKeys.filter(
-        (item: IHardwareResponse) => item
-      );
-      newSelectedRows = initselectedRowKeys.filter(
-        (item: IHardwareResponse) => !unSelectIds.includes(item.id)
-      );
-
-      localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectedRows));
-    } else {
-      selectedRows = selectedRows.filter((item: IHardwareResponse) => item);
-      localStorage.setItem(
-        "selectedRowKeys",
-        JSON.stringify([...initselectedRowKeys, ...selectedRows])
-      );
-      setSelectedRowKeys(selectedRows);
-    }
-  };
-
-  const onSelectChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: IHardwareResponse[]
-  ) => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
+  }, [selectedRows]);
 
   const rowSelection = {
-    selectedRowKeys: initselectedRowKeys.map(
-      (item: IHardwareResponse) => item.id
-    ),
-    onChange: onSelectChange,
+    selectedRowKeys: selectedRowKeys,
     onSelect: onSelect,
     onSelectAll: onSelectAll,
   };
 
   useEffect(() => {
-    localStorage.removeItem("selectedRowKeys");
+    clearSelection();
+    searchFormProps.form?.submit();
   }, [window.location.reload]);
 
   const handleCheckout = () => {
@@ -1113,17 +1045,9 @@ export const ClientHardwareListAssign: React.FC<
     setIsCheckinManyAssetModalVisible(!isCheckinManyAssetModalVisible);
   };
 
-  const handleRemoveCheckInCheckOutItem = (id: number) => {
-    const newSelectRow = initselectedRowKeys.filter(
-      (item: IHardwareResponse) => item.id !== id
-    );
-    localStorage.setItem("selectedRowKeys", JSON.stringify(newSelectRow));
-    setSelectedRowKeys(newSelectRow.map((item: IHardwareResponse) => item.id));
-  };
-
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      searchParams.delete("rtd_location_id");
+      clearParam("rtd_location_id");
       localStorage.setItem(
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
@@ -1133,13 +1057,13 @@ export const ClientHardwareListAssign: React.FC<
         "rtd_location_id",
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
-      searchParams.set(
-        "rtd_location_id",
-        JSON.stringify(searchFormProps.form?.getFieldsValue()?.location)
-      );
+      setParams({
+        rtd_location_id: JSON.stringify(
+          searchFormProps.form?.getFieldsValue()?.location
+        ),
+      });
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
@@ -1359,7 +1283,7 @@ export const ClientHardwareListAssign: React.FC<
           isModalVisible={isCheckoutManyAssetModalVisible}
           setIsModalVisible={setIsCheckoutManyAssetModalVisible}
           data={selectdStoreCheckout}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <MModal
@@ -1371,7 +1295,7 @@ export const ClientHardwareListAssign: React.FC<
           isModalVisible={isCheckinManyAssetModalVisible}
           setIsModalVisible={setIsCheckinManyAssetModalVisible}
           data={selectdStoreCheckin}
-          setSelectedRowKeys={setSelectedRowKeys}
+          clearSelection={clearSelection}
         />
       </MModal>
       <TotalDetail
@@ -1393,14 +1317,14 @@ export const ClientHardwareListAssign: React.FC<
           <div className={nameCheckout ? "list-checkouts" : ""}>
             <span className="title-remove-name">{nameCheckout}</span>
 
-            {initselectedRowKeys
+            {selectedRows
               .filter((item: IHardwareResponse) => item.user_can_checkin)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-checkin-checkout"
-                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>
@@ -1424,14 +1348,14 @@ export const ClientHardwareListAssign: React.FC<
           <div className={nameCheckin ? "list-checkins" : ""}>
             <span className="title-remove-name">{nameCheckin}</span>
 
-            {initselectedRowKeys
+            {selectedRows
               .filter((item: IHardwareResponse) => item.user_can_checkout)
               .map((item: IHardwareResponse) => (
                 <span className="list-checkin" key={item.id}>
                   <span className="name-checkin">{item.asset_tag}</span>
                   <span
                     className="delete-checkin-checkout"
-                    onClick={() => handleRemoveCheckInCheckOutItem(item.id)}
+                    onClick={() => removeItem(item.id)}
                   >
                     <CloseOutlined />
                   </span>

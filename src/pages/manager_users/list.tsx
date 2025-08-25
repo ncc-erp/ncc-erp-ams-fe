@@ -13,6 +13,7 @@ import {
   TextField,
   Tooltip,
   useTable,
+  useSelect,
 } from "@pankod/refine-antd";
 import {
   CrudFilters,
@@ -29,9 +30,11 @@ import { TableAction } from "components/elements/tables/TableAction";
 import { MenuOutlined } from "@ant-design/icons";
 import dataProvider from "providers/dataProvider";
 import { UserEdit } from "./edit";
-import { SYNC_USER_API, USER_API } from "api/baseApi";
+import { LOCATION_API, SYNC_USER_API, USER_API } from "api/baseApi";
 import { useSearchParams } from "react-router-dom";
-import { getPermissionsUser } from "untils/users";
+import { getPermissionsUser } from "utils/users";
+import { ILocations } from "interfaces/location";
+import { IUserType, IJobPosition } from "interfaces/index";
 
 const defaultCheckedList = [
   "id",
@@ -40,6 +43,7 @@ const defaultCheckedList = [
   "category",
   "email",
   "phone",
+  "mezon_id",
 ];
 
 export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
@@ -90,7 +94,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       return filters;
     },
   });
-
+  const totalUser = tableQueryResult?.data?.total ?? 0;
   const syncHrm = () => {
     const { custom } = dataProvider;
     setHrmLoading(true);
@@ -98,12 +102,45 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       custom({
         url: SYNC_USER_API,
         method: "get",
-      }).then((x) => {
+      }).then(() => {
         setHrmLoading(false);
         tableQueryResult.refetch();
       });
     }
   };
+
+  //prepare filter
+  const { selectProps: locationSelectProps } = useSelect<ILocations>({
+    resource: LOCATION_API,
+    optionLabel: "name",
+  });
+
+  const filterLocation = locationSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
+  const { selectProps: userTypeSelectProps } = useSelect<IUserType>({
+    resource: USER_API + "/list-user-type",
+    optionLabel: "name",
+    optionValue: "name",
+  });
+
+  const filterUserType = userTypeSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
+
+  const { selectProps: jobPositionSelectProps } = useSelect<IJobPosition>({
+    resource: USER_API + "/list-user-position",
+    optionLabel: "name",
+    optionValue: "name",
+  });
+
+  const filterJobPosition = jobPositionSelectProps?.options?.map((item) => ({
+    text: item.label,
+    value: item.value,
+  }));
 
   const collumns = useMemo(
     () => [
@@ -199,6 +236,21 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         title: translate("user.label.field.locations"),
         render: (value: IUser) => <TextField value={value ? value.name : ""} />,
         defaultSortOrder: getDefaultSortOrder("location.name", sorter),
+        filters: filterLocation,
+      },
+      {
+        key: "job_position_code",
+        title: translate("user.label.field.job_position"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("job_position_code", sorter),
+        filters: filterJobPosition,
+      },
+      {
+        key: "user_type",
+        title: translate("user.label.field.user_type"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("user_type", sorter),
+        filters: filterUserType,
       },
       {
         key: "manager",
@@ -251,11 +303,15 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
         ),
         defaultSortOrder: getDefaultSortOrder("notes", sorter),
       },
+      {
+        key: "mezon_id",
+        title: translate("user.label.field.mezon_id"),
+        render: (value: string) => <TextField value={value ? value : ""} />,
+        defaultSortOrder: getDefaultSortOrder("mezon_id", sorter),
+      },
     ],
-    []
+    [filterLocation, filterJobPosition, filterUserType]
   );
-
-  // console.log(tableProps, "?tableProps");
 
   const handleCreate = () => {
     handleOpenModel();
@@ -274,6 +330,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
       id: data.id,
       first_name: data.first_name,
       last_name: data.last_name,
+      mezon_id: data.mezon_id,
       username: data.username,
       manager: {
         id: data?.manager?.id,
@@ -326,7 +383,6 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     }, 300);
   };
 
-  const pageTotal = tableProps.pagination && tableProps.pagination.total;
   const isLoading = tableProps.loading || hrmLoading;
 
   const onCheckItem = (value: any) => {
@@ -355,7 +411,7 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -443,6 +499,12 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           </div>
         </div>
       </div>
+      <div className="user-list-sum">
+        <span className="user-list-sum_title">
+          {translate("user.label.title.total_user")}:{" "}
+        </span>{" "}
+        {totalUser}
+      </div>
       {refLoading ? (
         <>
           <Col sm={24} md={24} className="dashboard-loading">
@@ -450,19 +512,16 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
           </Col>
         </>
       ) : (
-        <Table
-          {...tableProps}
-          loading={isLoading}
-          rowKey="id"
-          pagination={{
-            position: ["topRight", "bottomRight"],
-            total: pageTotal ? pageTotal : 0,
-          }}
-        >
+        <Table {...tableProps} loading={isLoading} rowKey="id">
           {collumns
             .filter((collumn) => collumnSelected.includes(collumn.key))
             .map((col) => (
-              <Table.Column dataIndex={col.key} {...col} key={col.key} sorter />
+              <Table.Column
+                key={col.key}
+                dataIndex={col.key}
+                {...(col as any)}
+                sorter
+              />
             ))}
           <Table.Column<IUserResponse>
             title={translate("table.actions")}

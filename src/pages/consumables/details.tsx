@@ -30,6 +30,7 @@ import "styles/antd.less";
 import { ConsumablesCheckout } from "./checkout";
 import { ConsumablesShow } from "./show";
 import { EPermissions } from "constants/permissions";
+import { CONSUMABLE_VIEW_USERS_API, CONSUMABLE_DETAILS_API } from "api/baseApi";
 
 export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -63,14 +64,14 @@ export const ConsumableDetails: React.FC<IResourceComponentsProps> = () => {
         order: "desc",
       },
     ],
-    resource: `api/v1/consumables/view/${searchParams.get("id")}/users`,
+    resource: CONSUMABLE_VIEW_USERS_API(String(searchParams.get("id") || "")),
   });
 
   const {
     tableProps: tableDetails,
     tableQueryResult: tableDetailsQueryResult,
   } = useTable<IConsumablesFilterVariables>({
-    resource: `api/v1/consumables?category_id=${category_id}&consumable_id=${consumable_id}`,
+    resource: `${CONSUMABLE_DETAILS_API}?category_id=${category_id}&consumable_id=${consumable_id}`,
   });
 
   const collumns = useMemo(

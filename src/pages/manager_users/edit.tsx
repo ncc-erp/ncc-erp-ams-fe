@@ -21,8 +21,9 @@ import { UploadImage } from "components/elements/uploadImage";
 import { ICompany } from "interfaces/company";
 
 import "../../styles/hardware.less";
-import { LOCATION_API, USERS_API } from "api/baseApi";
-import { IUser, IUserCreateRequest } from "interfaces/user";
+import { LOCATION_API, USER_EDIT_API } from "api/baseApi";
+import { IUserCreateRequest } from "interfaces/user";
+
 import "styles/antd.less";
 import {
   Permission,
@@ -105,18 +106,6 @@ export const UserEdit = (props: UserCreateProps) => {
 
   const { setFields } = form;
 
-  const { selectProps: userSelectProps } = useSelect<IUser>({
-    resource: USERS_API,
-    optionLabel: "text",
-    onSearch: (value) => [
-      {
-        field: "search",
-        operator: "containss",
-        value,
-      },
-    ],
-  });
-
   const { selectProps: locationSelectProps } = useSelect<ICompany>({
     resource: LOCATION_API,
     optionLabel: "name",
@@ -132,7 +121,7 @@ export const UserEdit = (props: UserCreateProps) => {
   const locationOptions = locationSelectProps?.options ?? [];
 
   const { refetch, isFetching } = useCustom({
-    url: "api/v1/users/" + data?.id,
+    url: USER_EDIT_API + data?.id,
     method: "post",
     config: {
       payload: payload,
@@ -146,6 +135,9 @@ export const UserEdit = (props: UserCreateProps) => {
     setMessageErr(messageErr);
     const formData = new FormData();
 
+    if (event.mezon_id !== undefined) {
+      formData.append("mezon_id", event.mezon_id);
+    }
     if (event.first_name !== undefined) {
       formData.append("first_name", event.first_name);
     }
@@ -207,6 +199,7 @@ export const UserEdit = (props: UserCreateProps) => {
     setFile(undefined);
     setMessageErr(null);
     setFields([
+      { name: "mezon_id", value: data?.mezon_id },
       { name: "first_name", value: data?.first_name },
       { name: "last_name", value: data?.last_name },
       { name: "username", value: data?.username },
@@ -357,6 +350,13 @@ export const UserEdit = (props: UserCreateProps) => {
             </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item
+                label={t("user.label.field.mezon_id")}
+                name="mezon_id"
+                initialValue={data?.mezon_id}
+              >
+                <Input placeholder={t("user.label.placeholder.mezon_id")} />
+              </Form.Item>
+              {/* <Form.Item
                 label={t("user.label.field.user_manager")}
                 name="manager"
                 initialValue={data?.manager.id}
@@ -370,7 +370,7 @@ export const UserEdit = (props: UserCreateProps) => {
                 <Typography.Text type="danger">
                   {messageErr.manager}
                 </Typography.Text>
-              )}
+              )} */}
 
               <Form.Item
                 label={t("user.label.field.locations")}

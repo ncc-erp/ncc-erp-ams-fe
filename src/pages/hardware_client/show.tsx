@@ -1,9 +1,9 @@
 import { useTranslate } from "@pankod/refine-core";
-import { Typography, Tag, Row, Col } from "@pankod/refine-antd";
+import { Typography, Tag, Row, Col, Grid } from "@pankod/refine-antd";
 import { UserOutlined } from "@ant-design/icons";
 import { IHardwareResponse } from "interfaces/hardware";
 import "styles/hardware.less";
-import { getDetailAssetStatus } from "untils/assets";
+import { getDetailAssetStatus } from "utils/assets";
 import moment from "moment";
 const { Title, Text } = Typography;
 
@@ -15,16 +15,18 @@ type HardwareShowProps = {
 export const ClientHardwareShow = (props: HardwareShowProps) => {
   const { detail } = props;
   const t = useTranslate();
+  const breakpoint = Grid.useBreakpoint();
+  const isMobile = !breakpoint.lg;
 
   return (
     <div className="hardware-detail">
       <div className="hardware-information">
         <>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.status")}</Title>
             </Col>
-            <Col>
+            <Col span={14}>
               <Text>
                 <Tag>{getDetailAssetStatus(detail)}</Tag>
                 {detail?.assigned_to ? (
@@ -41,26 +43,26 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.assetName")}</Title>
             </Col>
-            <Col>
+            <Col span={14}>
               <Text>{detail && detail?.name}</Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.serial")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>{detail && detail?.serial}</Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.manufacturer")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text className="show-asset">
                 {detail?.manufacturer ? (
                   <>
@@ -75,40 +77,40 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.category")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text className="show-asset">
                 {detail && detail?.category.name}
               </Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.propertyType")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text className="show-asset">
                 {detail?.model && detail?.model.name}
               </Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.purchase_date")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>
                 {detail?.purchase_date && detail?.purchase_date.formatted}
               </Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.supplier")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               {detail?.supplier ? (
                 <>
                   <div
@@ -124,10 +126,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.insurance")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>
                 {detail?.warranty_months} (
                 {t("hardware.label.field.warranty_expires")}{" "}
@@ -136,10 +138,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.notes")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <div
                 dangerouslySetInnerHTML={{
                   __html: `<span>${detail?.notes ? detail?.notes : ""}</span>`,
@@ -148,10 +150,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.rtd_location")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               {detail?.rtd_location ? (
                 <Text className="show-asset">
                   {detail?.rtd_location && detail?.rtd_location.name}
@@ -162,10 +164,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.title.dateCreate")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               {detail?.created_at ? (
                 <Text>
                   {" "}
@@ -180,10 +182,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.title.updateAt")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>
                 {" "}
                 {detail?.updated_at &&
@@ -194,10 +196,10 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.dateCheckout")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               {detail?.last_checkout ? (
                 <>
                   <Text>
@@ -210,38 +212,38 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>
                 {t("hardware.label.field.checkin_counter")}
               </Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>{detail && detail?.checkin_counter}</Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>
                 {t("hardware.label.field.checkout_counter")}
               </Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>{detail && detail?.checkout_counter}</Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.requestable")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>{detail && detail?.requests_counter}</Text>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={isMobile ? 10 : 4}>
               <Title level={5}>{t("hardware.label.field.purchase_cost")}</Title>
             </Col>
-            <Col span={18}>
+            <Col span={14}>
               <Text>{detail?.purchase_cost && detail?.purchase_cost}</Text>
             </Col>
           </Row>

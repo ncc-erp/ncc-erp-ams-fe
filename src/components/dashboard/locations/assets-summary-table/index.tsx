@@ -106,7 +106,6 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
     item = {} as ILocation
   ) => {
     let url = "";
-    console.log(record);
 
     switch (record.category_type) {
       case CategoryType.ASSET:

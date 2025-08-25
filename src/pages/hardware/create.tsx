@@ -1,32 +1,21 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { useTranslate, useCreate, useNotification } from "@pankod/refine-core";
 import {
+  Button,
+  Col,
   Form,
   Input,
-  Select,
-  useSelect,
-  useForm,
-  Button,
+  Radio,
   Row,
-  Col,
+  Select,
   Typography,
+  useForm,
+  useSelect,
 } from "@pankod/refine-antd";
-
+import { useCreate, useNotification, useTranslate } from "@pankod/refine-core";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 
-import "react-mde/lib/styles/css/react-mde-all.css";
-
-import {
-  IHardwareCreateRequest,
-  IHardwareUpdateRequest,
-} from "interfaces/hardware";
-import { IModel } from "interfaces/model";
-import { UploadImage } from "components/elements/uploadImage";
-import { ICompany } from "interfaces/company";
-
-import "../../styles/hardware.less";
 import {
   HARDWARE_API,
   LOCATION_API,
@@ -35,11 +24,25 @@ import {
   SUPPLIERS_SELECT_LIST_API,
   USERS_API,
 } from "api/baseApi";
+import { UploadImage } from "components/elements/uploadImage";
 import { EStatus, STATUS_LABELS } from "constants/assets";
+import { EBooleanString } from "constants/common";
+import { useGetProjectData } from "hooks/useGetProjectData";
+import { ICompany } from "interfaces/company";
+import {
+  FormValues,
+  IHardwareCreateRequest,
+  IHardwareUpdateRequest,
+} from "interfaces/hardware";
+import { IModel } from "interfaces/model";
+import "react-mde/lib/styles/css/react-mde-all.css";
+import { WEBHOOK_API } from "../../api/baseApi";
+import "../../styles/hardware.less";
 
 type HardWareCreateProps = {
   isModalVisible: boolean;
   setIsModalVisible: (data: boolean) => void;
+  fromRentalPage?: boolean;
 };
 
 export const HardwareCreate = (props: HardWareCreateProps) => {
@@ -51,6 +54,8 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareUpdateRequest | null>();
   const { open } = useNotification();
   const t = useTranslate();
+
+  const { customer, project } = useGetProjectData();
 
   const { formProps, form } = useForm<IHardwareCreateRequest>({
     action: "create",
@@ -67,7 +72,6 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
       },
     ],
   });
-
   const { selectProps: statusLabelSelectProps } = useSelect<ICompany>({
     resource: STATUS_LABELS_API,
     optionLabel: "name",
@@ -81,7 +85,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
   });
 
   const filteredProps = statusLabelSelectProps.options?.filter(
-    (props) => props.value === STATUS_LABELS.READY_TO_DEPLOY
+    (option) => option.value === STATUS_LABELS.READY_TO_DEPLOY
   );
   statusLabelSelectProps.options = filteredProps;
 
@@ -121,12 +125,43 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     ],
   });
 
+  const { selectProps: webhookSelectProps } = useSelect<ICompany>({
+    resource: WEBHOOK_API,
+    optionLabel: "name",
+    onSearch: (value) => [
+      {
+        field: "search",
+        operator: "containss",
+        value,
+      },
+    ],
+  });
+
   const { mutate, data: createData, isLoading } = useCreate();
 
   const onFinish = (event: IHardwareUpdateRequest) => {
-    setMessageErr(messageErr);
+    const selectedCustomer = customer.find(
+      (c) => Number(c.id) === Number(event.customer)
+    );
+    const selectedProject = project.find(
+      (p) => Number(p.id) === Number(event.project)
+    );
     const formData = new FormData();
-
+    if (selectedCustomer !== undefined) {
+      formData.append("customer", selectedCustomer.name);
+    }
+    if (selectedCustomer !== undefined) {
+      formData.append("customer_code", selectedCustomer.code);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project", selectedProject.name);
+    }
+    if (selectedProject !== undefined) {
+      formData.append("project_code", selectedProject.code);
+    }
+    if (event.isCustomerRenting !== undefined) {
+      formData.append("isCustomerRenting", event.isCustomerRenting);
+    }
     if (event.name !== undefined) {
       formData.append("name", event.name);
     }
@@ -159,8 +194,19 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     formData.append("supplier_id", event.supplier.toString());
     formData.append("warranty_months", event.warranty_months);
     formData.append("notes", event.notes ?? "");
+    if (event.purchase_date !== undefined)
+      formData.append("maintenance", event.maintenance);
+    formData.append(
+      "maintenance_cycle",
+      event.maintenance_cycle === "0" ? "" : (event.maintenance_cycle ?? "")
+    );
     if (event.image !== null && event.image !== undefined) {
       formData.append("image", event.image);
+    }
+    if (event.webhook !== undefined)
+      formData.append("webhook_id", event.webhook.toString());
+    if (event.startRentalDate !== undefined) {
+      formData.append("startRentalDate", event.startRentalDate);
     }
 
     setPayload(formData);
@@ -186,7 +232,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data, variables, context) {
+          onSuccess(data) {
             open?.({
               type: "success",
               message: data?.data.messages,
@@ -232,12 +278,55 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
     });
   }, [file]);
 
+  const [_, setIsCustomerRenting] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    setIsCustomerRenting(e.target.value);
+  };
+
   return (
     <Form
       {...formProps}
       layout="vertical"
       onFinish={(event: any) => {
         onFinish(event);
+      }}
+      onValuesChange={(changedValues, allValues: FormValues) => {
+        if (
+          "purchase_date" in changedValues ||
+          "maintenance_cycle" in changedValues
+        ) {
+          const { purchase_date, maintenance_cycle, maintenance } = allValues;
+
+          const isValidCycle =
+            maintenance_cycle &&
+            !isNaN(Number(maintenance_cycle)) &&
+            Number(maintenance_cycle) > 0;
+
+          const isValidPurchaseDate = moment(
+            purchase_date,
+            "YYYY-MM-DD",
+            true
+          ).isValid();
+
+          const isCycleCleared =
+            "maintenance_cycle" in changedValues &&
+            (!maintenance_cycle || Number(maintenance_cycle) === 0);
+
+          if (isCycleCleared && maintenance) {
+            return;
+          }
+
+          if (isValidCycle && isValidPurchaseDate) {
+            const nextMaintenance = moment(purchase_date)
+              .add(Number(maintenance_cycle), "months")
+              .format("YYYY-MM-DD");
+
+            form.setFieldsValue({ maintenance: nextMaintenance });
+          } else {
+            form.setFieldsValue({ maintenance: "" });
+          }
+        }
       }}
     >
       <Row gutter={16}>
@@ -326,7 +415,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
                   " " +
                   t("hardware.label.message.required"),
               },
-              ({ getFieldValue, setFieldsValue }) => ({
+              ({ setFieldsValue }) => ({
                 validator(_, value) {
                   if (value < 0) {
                     setFieldsValue({ warranty_months: 0 });
@@ -373,6 +462,77 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               {messageErr.status_label}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.customer")}
+            name="customer"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.customer") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t("hardware.label.field.customer")}
+              options={customer?.map((customer) => ({
+                label: customer.name,
+                value: customer.id,
+              }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          {messageErr?.customer && (
+            <Typography.Text type="danger">
+              {messageErr.customer}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_date")}
+            name="maintenance"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_date") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="date"
+              placeholder={t("hardware.label.placeholder.maintenance")}
+            />
+          </Form.Item>
+          <Form.Item label={t("hardware.label.field.webhook")} name="webhook">
+            <Select
+              showSearch
+              placeholder={t("hardware.label.placeholder.webhook")}
+              {...webhookSelectProps}
+              filterOption={(input, option) =>
+                (option?.label ?? option?.children ?? "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
           {isReadyToDeploy && (
             <Form.Item
               className="tabUser"
@@ -402,7 +562,7 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
             name="name"
             rules={[
               {
-                required: false,
+                required: true,
                 message:
                   t("hardware.label.field.assetName") +
                   " " +
@@ -472,14 +632,132 @@ export const HardwareCreate = (props: HardWareCreateProps) => {
               placeholder={t("hardware.label.placeholder.cost")}
             />
           </Form.Item>
-          {messageErr?.purchase_cost && (
+          {messageErr?.project && (
             <Typography.Text type="danger">
-              {messageErr.purchase_cost[0]}
+              {messageErr.project}
             </Typography.Text>
           )}
+          <Form.Item
+            label={t("hardware.label.field.project")}
+            name="project"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.project") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t("hardware.label.field.project")}
+              options={project?.map((project) => ({
+                label: project.name,
+                value: project.id,
+              }))}
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          {messageErr?.project && (
+            <Typography.Text type="danger">
+              {messageErr.project}
+            </Typography.Text>
+          )}
+          <Form
+            {...formProps}
+            layout="vertical"
+            initialValues={{
+              isCustomerRenting: EBooleanString.FALSE,
+            }}
+            onFinish={(event: any) => {
+              onFinish(event);
+            }}
+          ></Form>
+          <Form.Item
+            label={t("hardware.label.field.isCustomerRenting")}
+            name="isCustomerRenting"
+            rules={[
+              {
+                required: true,
+                message:
+                  t("hardware.label.field.isCustomerRenting") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+            ]}
+          >
+            <Radio.Group
+              onChange={handleRadioChange}
+              style={{ display: "flex" }}
+            >
+              <Radio value={EBooleanString.TRUE}>
+                {t("hardware.label.field.yes")}
+              </Radio>
+              <Radio value={EBooleanString.FALSE}>
+                {t("hardware.label.field.no")}
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+          {form.getFieldValue("isCustomerRenting") === EBooleanString.TRUE && (
+            <Form.Item
+              label={t("hardware.label.field.startRentalDate")}
+              name="startRentalDate"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    t("hardware.label.field.startRentalDate") +
+                    " " +
+                    t("hardware.label.message.required"),
+                },
+              ]}
+            >
+              <Input
+                type="date"
+                placeholder={t("hardware.label.placeholder.startRentalDate")}
+              />
+            </Form.Item>
+          )}
+          {messageErr?.isCustomerRenting && (
+            <Typography.Text type="danger">
+              {messageErr.isCustomerRenting}
+            </Typography.Text>
+          )}
+          <Form.Item
+            label={t("hardware.label.field.maintenance_cycle")}
+            name="maintenance_cycle"
+            rules={[
+              {
+                required: false,
+                message:
+                  t("hardware.label.field.maintenance_cycle") +
+                  " " +
+                  t("hardware.label.message.required"),
+              },
+              ({ setFieldsValue }) => ({
+                validator(_, value) {
+                  if (value < 0) {
+                    setFieldsValue({ maintenance_cycle: 0 });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              type="number"
+              addonAfter={t("hardware.label.field.months_per_time")}
+              placeholder={t("hardware.label.placeholder.maintenance_cycle")}
+            />
+          </Form.Item>
         </Col>
       </Row>
-
       <Form.Item
         label={t("hardware.label.field.notes")}
         name="notes"

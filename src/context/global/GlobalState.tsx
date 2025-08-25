@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  ReactChild,
-} from "react";
+import { createContext, useReducer, ReactChild } from "react";
 import AppReducer from "./AppReducer";
 
 export interface IGlobalState {

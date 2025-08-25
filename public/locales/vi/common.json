@@ -1,25 +1,27 @@
 {
   "lang": {
-    "vi": "Vietnamese"
+    "vi": "Tiếng Việt",
+    "en": "Tiếng Anh",
+    "de": "Tiếng Đức"
   },
   "pages": {
     "login": {
-      "signin": "Sign in",
-      "signup": "Sign up",
-      "signinGoogle": "Sign in with google",
-      "signinMezon": "Sign in with Mezon",
-      "username": "Username",
-      "password": "Password",
-      "remember": "Remember me",
-      "forgotPassword": "Forgot password?",
-      "title": "Sign in your account",
-      "noAccount": "Don’t have an account?"
+      "signin": "Đăng nhập",
+      "signup": "Đăng ký",
+      "signinGoogle": "Đăng nhập với Google",
+      "signinMezon": "Đăng nhập với Mezon",
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu",
+      "remember": "Nhớ tôi",
+      "forgotPassword": "Quên mật khẩu?",
+      "title": "Đăng nhập vào tài khoản của bạn",
+      "noAccount": "Bạn chưa có tài khoản?"
     },
     "error": {
-      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
-      "404": "Sorry, the page you visited does not exist.",
-      "resource404": "Are you sure you have created the {{resource}} resource.",
-      "backHome": "Back Home"
+      "info": "Bạn có thể đã quên thêm component {{action}} vào tài nguyên {{resource}}.",
+      "404": "Xin lỗi, trang bạn truy cập không tồn tại.",
+      "resource404": "Bạn có chắc chắn đã tạo tài nguyên {{resource}} không?",
+      "backHome": "Quay về trang chủ"
     }
   },
   "buttons": {
@@ -29,32 +31,32 @@
     "delete": "Xóa",
     "edit": "Chỉnh sửa",
     "cancel": "Hủy",
-    "confirm": "Are you sure?",
+    "confirm": "Bạn có chắc chắn không?",
     "filter": "Lọc",
-    "clear": "Clear",
+    "clear": "Xóa",
     "refresh": "Làm mới",
     "show": "Hiển thị",
-    "undo": "Undo",
+    "undo": "Hoàn tác",
     "import": "Nhập",
     "clone": "Clone",
-    "notAccessTitle": "You don't have permission to access"
+    "notAccessTitle": "Bạn không có quyền truy cập"
   },
-  "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+  "warnWhenUnsavedChanges": "Bạn có chắc chắn muốn rời khỏi? Bạn có những thay đổi chưa được lưu.",
   "notifications": {
-    "success": "Successful",
-    "error": "Error (status code: {{statusCode}})",
-    "undoable": "You have {{seconds}} seconds to undo",
-    "createSuccess": "Successfully created {{resource}}",
-    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
-    "deleteSuccess": "Successfully deleted {{resource}}",
-    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
-    "editSuccess": "Successfully edited {{resource}}",
-    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
-    "importProgress": "Importing: {{processed}}/{{total}}"
+    "success": "Thành công",
+    "error": "Lỗi (mã trạng thái: {{statusCode}})",
+    "undoable": "Bạn có {{seconds}} giây để hoàn tác",
+    "createSuccess": "Tạo {{resource}} thành công",
+    "createError": "Có lỗi khi tạo {{resource}} (mã trạng thái: {{statusCode}})",
+    "deleteSuccess": "Xóa {{resource}} thành công",
+    "deleteError": "Lỗi khi xóa {{resource}} (mã trạng thái: {{statusCode}})",
+    "editSuccess": "Chỉnh sửa {{resource}} thành công",
+    "editError": "Lỗi khi chỉnh sửa {{resource}} (mã trạng thái: {{statusCode}})",
+    "importProgress": "Đang nhập: {{processed}}/{{total}}"
   },
-  "loading": "Loading",
+  "loading": "Đang tải",
   "tags": {
-    "clone": "Clone"
+    "clone": "Sao chép"
   },
   "all": "Tất cả",
   "dashboard": {
@@ -104,36 +106,36 @@
     }
   },
   "posts": {
-    "posts": "Posts",
+    "posts": "Bài viết",
     "fields": {
-      "id": "Id",
-      "title": "Title",
+      "id": "ID",
+      "title": "Tiêu đề",
       "category": {
-        "title": "Category",
+        "title": "Danh mục",
         "filter": {
-          "placeholder": "Select Category"
+          "placeholder": "Chọn danh mục"
         }
       },
       "status": {
         "title": "Trạng thái",
-        "published": "Published",
-        "draft": "Draft",
-        "rejected": "Rejected"
+        "published": "Đã xuất bản",
+        "draft": "Bản nháp",
+        "rejected": "Bị từ chối"
       },
-      "content": "Content",
-      "createdAt": "Created At"
+      "content": "Nội dung",
+      "createdAt": "Ngày tạo"
     },
     "titles": {
-      "create": "Create Post",
-      "edit": "Edit Post",
-      "list": "Posts",
-      "show": "Show Post"
+      "create": "Tạo bài viết",
+      "edit": "Chỉnh sửa bài viết",
+      "list": "Bài viết",
+      "show": "Hiển thị bài viết"
     }
   },
   "table": {
-    "actions": "Actions",
+    "actions": "Hành động",
     "search": "Tìm kiếm",
-    "checkAll": "Check all",
+    "checkAll": "Chọn tất cả",
     "qrCode": "Mã QR"
   },
   "hardware": {
@@ -172,23 +174,35 @@
         "dateCreate": "Ngày tạo",
         "manufacturer": "Kho",
         "purchase_date": "Ngày mua",
-        "eol": "EOL",
+        "eol": "Hết vòng đời",
         "warranty_expires": "Ngày hết hạn",
         "checkout_counter": "Số lần cấp phát",
         "checkin_counter": "Số lần thu hồi",
         "requestable": "Yêu cầu",
-        "assign": "Assign",
-        "readyToDeploy": "Ready to Deploy",
-        "broken": "Broken",
-        "pending": "Pending",
-        "checkin": "Checkin",
+        "assign": "Đã cấp phát",
+        "readyToDeploy": "Sẵn sàng cấp phát",
+        "broken": "Hỏng",
+        "pending": "Chờ xử lý",
+        "checkin": "Thu hồi",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "confirmStatus": "Trạng thái xác nhận",
         "purchase_cost": "Giá",
         "qr_code": "In mã QR",
         "scan_qr": "Scan QR",
-        "confirmDeleteQr": "Xác nhận xóa mã QR"
+        "confirmDeleteQr": "Xác nhận xóa mã QR",
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "months_per_time": "Tháng / Lần",
+        "maintenance_date": "Ngày bảo trì",
+        "expired": "Expired",
+        "project": "Dự Án",
+        "customer": "Khách Hàng",
+        "isCustomerRenting": "Khách Hàng Có Thuê Không",
+        "yes": "Có",
+        "no": "Không",
+        "webhook": "Webhook",
+        "startRentalDate": "Ngày bắt đầu thuê",
+        "notAvailable": "Không khả dụng"
       },
       "placeholder": {
         "nameCompany": "Chọn công ty",
@@ -206,7 +220,10 @@
         "orderNumber": "Mã đơn hàng",
         "cost": "Chi phí mua hàng",
         "insurance": "Bảo hành",
-        "choiceAsset": "Lựa chọn tài sản"
+        "choiceAsset": "Lựa chọn tài sản",
+        "maintenance": "Bảo trì",
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "webhook": "Chọn Mezon webhook"
       },
       "message": {
         "required": "bắt buộc"
@@ -247,7 +264,10 @@
         "location": "Văn phòng",
         "sum-assets": "Số lượng",
         "confirmStatus": "Trạng thái xác nhận",
-        "timeCheckout": "Ngày cấp phát"
+        "timeCheckout": "Ngày cấp phát",
+        "list-maintenance": "Danh sách bảo trì",
+        "rentalCustomers": "Thiết bị khách hàng thuê",
+        "time-rental": "Thời gian khách hàng thuê"
       },
       "tooltip": {
         "create": "Thêm mới",
@@ -257,7 +277,7 @@
         "delete": "Xóa",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Làm mới"
       },
       "detail": {
         "assign": "Bàn giao",
@@ -305,8 +325,8 @@
         "checkout_count": "Đã cấp phát",
         "assigned_to": "Cấp phát đến",
         "requestable": "Yêu cầu",
-        "assign": "Assign",
-        "checkin": "Checkin",
+        "assign": "Đã cấp phát",
+        "checkin": "Thu hồi",
         "start-date": "Ngày bắt đầu",
         "end-date": "Ngày kết thúc",
         "checkout_at": "Ngày cấp phát",
@@ -325,9 +345,9 @@
         "checkout_counter": "Số lần cấp phát",
         "usd": "VND",
         "assigned_status": "Xác nhận",
-        "readyToDeploy": "Ready to Deploy",
-        "pending": "Pending",
-        "broken": "Broken",
+        "readyToDeploy": "Sẵn sàng cấp phát",
+        "pending": "Chờ xử lý",
+        "broken": "Hỏng",
         "list_tools": "Danh sách tool"
       },
       "placeholder": {
@@ -364,7 +384,7 @@
         "delete": "Xóa",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Làm mới"
       },
       "title": {
         "tool": "Tool & Domain",
@@ -447,7 +467,7 @@
         "delete": "Xóa",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Làm mới"
       },
       "message": {
         "required": "bắt buộc"
@@ -521,7 +541,7 @@
         "delete": "Xóa",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Làm mới"
       },
       "message": {
         "required": "bắt buộc"
@@ -644,7 +664,8 @@
         "above": "Bên trên",
         "below": "Bên dưới",
         "codeDevice": "Tên Tài Sản",
-        "user_name": "Tên người dùng"
+        "user_name": "Tên người dùng",
+        "total_user": "Người dùng"
       },
       "field": {
         "notes": "Mô tả",
@@ -673,6 +694,7 @@
         "city": "Thành phố",
         "job_title": "Tiêu đề",
         "user_manager": "Người quản lý",
+        "mezon_id": "Mezon Id",
         "department": "Bộ phận",
         "website": "Website",
         "state": "Tỉnh/Quận huyện",
@@ -701,7 +723,9 @@
         "information": "Thông tin",
         "download_picter": "Tải hình",
         "permission": "Phân quyền",
-        "role": "Vai trò"
+        "role": "Vai trò",
+        "job_position": "Vị trí làm việc",
+        "user_type": "Bậc người dùng"
       },
       "message": {
         "required": "bắt buộc"
@@ -719,7 +743,7 @@
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh",
+        "refresh": "Làm mới",
         "columns": "Danh sách các cột",
         "changePass": "Đổi mật khẩu"
       },
@@ -729,6 +753,7 @@
         "username": "Tên đăng nhập",
         "email": "Email",
         "user_manager": "Lựa chọn một Người dùng",
+        "mezon_id": "Mezon Id",
         "department": "Chọn một phòng",
         "locations": "Lựa chọn một văn phòng",
         "phone": "Số điện thoại",
@@ -802,8 +827,8 @@
         "edit": "Chỉnh sửa",
         "delete": "Xóa",
         "name": "Tên",
-        "url": "URL",
-        "urlSupport": "URL Hỗ trợ",
+        "url": "Đường dẫn",
+        "urlSupport": "Đường dẫn hỗ trợ",
         "phone": "Điện thoại hỗ trợ",
         "email": "Hỗ trợ Email",
         "image": "Tải hình",
@@ -845,7 +870,7 @@
         "edit": "Chỉnh sửa",
         "delete": "Xóa",
         "name": " Tên văn phòng",
-        "parent": "Parent",
+        "parent": "Văn phòng cha",
         "manager": "Người quản lý",
         "currency": "Tiền tệ văn phòng",
         "address_detail": "Địa chỉ chi tiết",
@@ -863,7 +888,8 @@
         "tax_tokens_count": "Token thuế",
         "assetAssign": "Thiết bị đã cấp phát",
         "dateCreate": "Ngày tạo",
-        "users_count": "Thành viên"
+        "users_count": "Thành viên",
+        "branch_code": "Mã văn phòng"
       },
       "placeholder": {
         "parent": "Lựa chọn một văn phòng",
@@ -877,6 +903,36 @@
       "button": {
         "create": "Thêm mới",
         "update": "Chỉnh sửa"
+      }
+    }
+  },
+  "webhook": {
+    "label": {
+      "field": {
+        "name": "Tên webhook",
+        "url": "Đường dẫn",
+        "created_at": "Ngày tạo",
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "type": "Loại Webhook"
+      },
+      "title": {
+        "nameTitle": "Webhook",
+        "create": "Tạo webhook",
+        "edit": "Cập nhật webhook",
+        "detail": "Chi tiết webhook"
+      },
+      "message": {
+        "required": "bắt buộc"
+      },
+      "tooltip": {
+        "create": "Tạo mới",
+        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "columns": "Danh sách các cột",
+        "search": "Tìm kiếm nâng cao",
+        "refresh": "Làm mới",
+        "viewDetail": "Xem chi tiết"
       }
     }
   },
@@ -912,6 +968,7 @@
     "assets-broken": "Hỏng",
     "assets-waiting-confirm": "Đang chờ xác nhận",
     "assets-expires": "Sắp hết hạn",
+    "assets-maintenance": "Bảo trì",
     "report": "Báo cáo",
     "asset-category-PC": "Tất cả máy tính",
     "asset-category-Monitor": "Tất cả màn hình",
@@ -924,7 +981,9 @@
     "checkin": "Thu hồi",
     "manager_user": "Người dùng",
     "accessory": "Phụ kiện",
-    "consumables": "Văn phòng phẩm",
+    "consumable": "Văn phòng phẩm",
+    "consumables": "Tất cả",
+    "consumables-maintenance": "Bảo trì",
     "accessory_details": "Chi tiết phụ kiện",
     "consumable_details": "Chi tiết văn phòng phẩm",
     "supplier_details": "Chi tiết nhà cung cấp",
@@ -939,7 +998,16 @@
     "client-asset-pending": "Bảo hành-Check lại",
     "client-asset-broken": "Hỏng",
     "client-asset-waitingConfirm": "Đang chờ xác nhận",
-    "client-asset-expires": "Sắp hết hạn"
+    "client-asset-expires": "Sắp hết hạn",
+    "webhook": "Webhook",
+    "webhook_details": "Chi tiết webhook",
+    "asset-rental-customers": "Khách hàng thuê",
+    "detail-device": "Chi tiết thiết bị",
+    "location_details": "Chi tiết văn phòng",
+    "manufactures_details": "Chi tiết kho",
+    "audit": "Audit",
+    "komu_logs": "Komu logs",
+    "webhook_logs": "Webhook logs"
   },
   "model": {
     "label": {
@@ -1047,7 +1115,7 @@
         "delete": "Xóa",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh"
+        "refresh": "Làm mới"
       },
       "message": {
         "required": "bắt buộc"
@@ -1085,7 +1153,7 @@
         "address": "Địa chỉ nhà cung cấp",
         "city": "Thành phố",
         "state": "Tỉnh/Thành phố",
-        "zip": "Zip",
+        "zip": "Mã bưu điện",
         "contact": "Tên người liên hệ",
         "phone": "Điện thoại",
         "email": "Email",
@@ -1166,7 +1234,7 @@
         "rules": "Điều khoản",
         "months": "Số lượng tháng",
         "month": "tháng",
-        "depreciation_min": "Floor Value",
+        "depreciation_min": "Giá trị tối thiểu",
         "minimum_value": "Giá trị tối thiểu sau khi khấu hao"
       },
       "message": {
@@ -1292,7 +1360,7 @@
         "delete": "Xoá",
         "columns": "Danh sách các cột",
         "search": "Tìm kiếm nâng cao",
-        "refresh": "Refresh",
+        "refresh": "Làm mới",
         "detail": "Xem chi tiết"
       }
     }
@@ -1324,7 +1392,12 @@
         "updated_at": "Cập nhật tại",
         "warranty_expires": "Hết hạn",
         "qty": "Số lượng văn phòng phẩm được cấp phát",
-        "user": "Lựa chọn một người dùng"
+        "user": "Lựa chọn một người dùng",
+        "maintenance_cycle": "Chu kỳ bảo trì",
+        "maintenance_date": "Ngày bảo trì",
+        "months_per_time": "Tháng / Lần",
+        "maintenance_status": "Trạng thái bảo trì",
+        "webhook": "Webhook"
       },
       "message": {
         "required": "bắt buộc"
@@ -1341,14 +1414,15 @@
         "edit": "Cập nhật văn phòng phẩm",
         "date": "Thời gian",
         "checkout": "Cấp phát",
-        "detail": "Chi tiết văn phòng phẩm"
+        "detail": "Chi tiết văn phòng phẩm",
+        "maintenance": "Bảo trì văn phòng phẩm"
       },
       "tooltip": {
         "create": "Thêm mới",
         "edit": "Chỉnh sửa",
         "delete": "Xoá",
         "columns": "Danh sách các cột",
-        "refresh": "Refresh",
+        "refresh": "Làm mới",
         "detail": "Xem chi tiết"
       },
       "placeholder": {
@@ -1362,7 +1436,59 @@
         "notes": "Ghi chú",
         "user": "Lựa chọn một người dùng",
         "supplier": "Lựa chọn nhà cung cấp",
-        "purchase_cost": "Chi phí mua hàng"
+        "purchase_cost": "Chi phí mua hàng",
+        "maintenance_cycle": "Nhập chu kỳ bảo trì",
+        "maintenance_date": "Nhập ngày bảo trì",
+        "webhook": "Lựa chọn webhook"
+      }
+    }
+  },
+  "komu_logs": {
+    "label": {
+      "title": {
+        "komu": "Komu Logs",
+        "create": "Tạo mới ",
+        "edit": "Cập nhật",
+        "detail": "Chi tiết Komu Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "send_to": "Gửi đến",
+        "message": "Message",
+        "creator": "Người tạo",
+        "company": "Công ty",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "status": "Trạng thái",
+        "system_response": "Phản hồi hệ thống",
+        "delete": "Xoá"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
+      }
+    }
+  },
+  "webhook_logs": {
+    "label": {
+      "title": {
+        "webhook": "Webhook Logs",
+        "detail": "Chi tiết Webhook Logs"
+      },
+      "field": {
+        "create": "Tạo mới",
+        "created_at": "Đã tạo lúc",
+        "updated_at": "Cập nhật lúc",
+        "delete": "Xoá",
+        "webhook": "Webhook",
+        "asset": "Thiết bị",
+        "url": "URL",
+        "message": "Message",
+        "response": "Phản hồi",
+        "status_code": "Trạng thái",
+        "type": "Loại Webhook"
+      },
+      "tooltip": {
+        "viewDetail": "Xem chi tiết"
       }
     }
   }

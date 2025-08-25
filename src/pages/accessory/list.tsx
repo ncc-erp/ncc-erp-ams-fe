@@ -42,7 +42,6 @@ import {
   IAccesstoryResponse,
 } from "interfaces/accessory";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { AccessoryCheckout } from "./checkout";
 import { AccessoryCreate } from "./create";
 import { AccessoryEdit } from "./edit";
@@ -56,6 +55,7 @@ import { AccessoryShow } from "./show";
 import React from "react";
 import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { useAppSearchParams } from "hooks/useAppSearchParams";
 
 const defaultCheckedList = [
   "id",
@@ -94,14 +94,19 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
   const menuRef = useRef(null);
   const [listening, setListening] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category_id = searchParams.get("category_id");
-  const location_id = searchParams.get("location_id");
-  const dateFromParam = searchParams.get("date_from");
-  const dateToParam = searchParams.get("date_to");
-  const searchParam = searchParams.get("search");
-  const supplier_id = searchParams.get("supplier_id");
-  const manufacturer_id = searchParams.get("manufacturer_id");
+  const {
+    params: {
+      category_id,
+      location_id,
+      date_from: dateFromParam,
+      date_to: dateToParam,
+      search: searchParam,
+      supplier_id,
+      manufacturer_id,
+    },
+    setParams,
+    clearParam,
+  } = useAppSearchParams("accessoryList");
 
   const { data: permissionsData } = usePermissions();
 
@@ -433,7 +438,7 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (event) => {
         const current = menuRef.current;
         const node = event.target;
@@ -482,31 +487,28 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
     label: React.ReactNode;
   }) => {
     if (JSON.stringify(value) === JSON.stringify(0)) {
-      searchParams.delete("location_id");
-    } else searchParams.set("location_id", JSON.stringify(value));
-    setSearchParams(searchParams);
+      clearParam("location_id");
+    } else setParams({ location_id: JSON.stringify(value) });
 
     searchFormProps.form?.submit();
   };
 
-  const handleDateChange = (val: any, formatString: any) => {
+  const handleDateChange = (val: any) => {
     const [from, to] = Array.from(val || []) as moment.Moment[];
 
     if (val !== null) {
-      searchParams.set(
-        "date_from",
-        from?.format("YY-MM-DD") ? from?.format("YY-MM-DD").toString() : ""
-      );
-      searchParams.set(
-        "date_to",
-        to?.format("YY-MM-DD") ? to?.format("YY-MM-DD").toString() : ""
-      );
+      setParams({
+        date_from: from?.format("YY-MM-DD")
+          ? from?.format("YY-MM-DD").toString()
+          : "",
+        date_to: to?.format("YY-MM-DD")
+          ? to?.format("YY-MM-DD").toString()
+          : "",
+      });
     } else {
-      searchParams.delete("date_from");
-      searchParams.delete("date_to");
+      clearParam(["date_from", "date_to"]);
     }
 
-    setSearchParams(searchParams);
     searchFormProps.form?.submit();
   };
 
