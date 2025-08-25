@@ -44,13 +44,7 @@ const localStorageMock = {
 };
 Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
-// Mock window.location.reload
-delete (window as any).location;
-(window as any).location = {
-  reload: jest.fn(),
-  href: "http://localhost:3000",
-  origin: "http://localhost:3000",
-};
+jest.mock("styles/antd.less", () => ({}));
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {
