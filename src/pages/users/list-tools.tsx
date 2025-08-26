@@ -23,7 +23,7 @@ import {
 import {
   getBGToolAssignedStatusDecription,
   getToolAssignedStatusDecription,
-} from "untils/tools";
+} from "utils/tools";
 import { CancleAsset } from "./cancel";
 import { SyncOutlined } from "@ant-design/icons";
 import { TableAction } from "components/elements/tables/TableAction";
@@ -34,7 +34,7 @@ import { IModel } from "interfaces/model";
 import { IToolCreateRequest, IToolResponse } from "interfaces/tool";
 import { ToolShow } from "pages/tools/show";
 import { ASSIGNED_STATUS } from "constants/assets";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 
 export const UserListTool: React.FC<IResourceComponentsProps> = () => {
   const t = useTranslate();

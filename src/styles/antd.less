@@ -170,12 +170,23 @@
 
 .ant-menu-submenu-popup .ant-menu-item {
   color: #000000 !important;
+
+  // Override antdesign default styles
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin: 0 !important;
+}
+
+.ant-menu-submenu-popup .ant-menu-item:hover {
+  background: #f5f5f5;
+  transition: background-color 0.3s ease;
 }
 
 .other_function {
   display: flex;
   margin-bottom: 8px;
 }
+
 .ant-row {
   margin-top: 8px !important;
 }

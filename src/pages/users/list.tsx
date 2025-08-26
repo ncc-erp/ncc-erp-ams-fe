@@ -40,7 +40,7 @@ import "styles/request.less";
 import {
   getAssetAssignedStatusDecription,
   getBGAssetAssignedStatusDecription,
-} from "untils/assets";
+} from "utils/assets";
 import { CancleAsset } from "./cancel";
 import { HardwareCancelMultipleAsset } from "./cancel-multiple-assets";
 import { UserShow } from "./show";

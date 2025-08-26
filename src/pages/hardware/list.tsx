@@ -68,7 +68,7 @@ import {
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
+} from "utils/assets";
 import "../../styles/list-hardware.less";
 import { HardwareCheckin } from "./checkin";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";

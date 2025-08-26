@@ -55,13 +55,13 @@ import {
   IToolResponse,
   IToolResponseCheckin,
 } from "interfaces/tool";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 import {
   getBGToolAssignedStatusDecription,
   getBGToolStatusDecription,
   getToolAssignedStatusDecription,
   getToolStatusDecription,
-} from "untils/tools";
+} from "utils/tools";
 import { ToolCheckin } from "./checkin";
 import { ToolCheckout } from "./checkout";
 import { ToolClone } from "./clone";

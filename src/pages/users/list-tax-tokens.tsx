@@ -37,7 +37,7 @@ import { MModal } from "components/Modal/MModal";
 import { dateFormat } from "constants/assets";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 
 import { TotalDetail } from "components/elements/TotalDetail";
 import { ASSIGNED_STATUS } from "constants/assets";
@@ -58,7 +58,7 @@ import {
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
-} from "untils/tax_token";
+} from "utils/tax_token";
 import { CancleAsset } from "./cancel";
 
 const defaultCheckedList = [

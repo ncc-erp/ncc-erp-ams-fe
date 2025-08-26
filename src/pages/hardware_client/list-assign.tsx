@@ -68,7 +68,7 @@ import {
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
   getBGAssetStatusDecription,
-} from "untils/assets";
+} from "utils/assets";
 import { ClientHardwareCheckin } from "./checkin";
 import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
 import { ClientHardwareCheckout } from "./checkout";

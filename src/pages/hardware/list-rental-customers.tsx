@@ -54,7 +54,7 @@ import {
   LOCATION_API,
 } from "api/baseApi";
 import { EPermissions } from "constants/permissions";
-import { convertHardwareToEditData } from "ultils/ConvertHardwareData";
+import { convertHardwareToEditData } from "utils/ConvertHardwareData";
 import { dateFormat } from "constants/assets";
 import { ICategory } from "interfaces/categories";
 import { IStatusLabel } from "interfaces/statusLabel";

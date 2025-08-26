@@ -25,7 +25,7 @@ import {
 } from "@ant-design/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MModal } from "components/Modal/MModal";
-import { filterAssignedStatus } from "untils/assets";
+import { filterAssignedStatus } from "utils/assets";
 import {
   SUPPLIERS_API,
   TAX_TOKEN_API,
@@ -50,7 +50,7 @@ import {
   getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
-} from "untils/tax_token";
+} from "utils/tax_token";
 import { TaxTokenEdit } from "pages/tax_token/edit";
 import { TaxTokenSearch } from "pages/tax_token/search";
 import { TaxTokenShow } from "pages/tax_token/show";
