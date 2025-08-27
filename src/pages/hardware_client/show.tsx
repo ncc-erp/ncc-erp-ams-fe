@@ -28,7 +28,14 @@ export const ClientHardwareShow = (props: HardwareShowProps) => {
             </Col>
             <Col span={14}>
               <Text>
-                <Tag>{getDetailAssetStatus(detail, t)}</Tag>
+                {(() => {
+                  const { label, color } = getDetailAssetStatus(detail, t);
+                  return (
+                    <Tag style={{ background: color, color: "white" }}>
+                      {label}
+                    </Tag>
+                  );
+                })()}
                 {detail?.assigned_to ? (
                   <>
                     <UserOutlined />{" "}

@@ -70,21 +70,33 @@ export const getDetailToolStatus = (
   t: (key: string) => string
 ) => {
   if (!value?.status_label?.name) {
-    return t("tools.label.detail.unknown");
+    return { label: t("tools.label.detail.unknown"), color: "gray" };
   }
 
-  const statusMapping: Record<string, string> = {
-    Assign: t("tools.label.detail.assign"),
-    "Ready to Deploy": t("tools.label.detail.readyToDeploy"),
-    Broken: t("tools.label.detail.broken"),
-    Pending: t("tools.label.detail.pending"),
-    Default: t("tools.label.detail.default"),
-    "Waiting Checkout": t("tools.label.detail.waitingAcceptCheckout"),
-    "Waiting Checkin": t("tools.label.detail.waitingAcceptCheckin"),
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("tools.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("tools.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("tools.label.detail.broken"), color: "red" },
+    Pending: { label: t("tools.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("tools.label.detail.default"), color: "gray" },
+    "Waiting Checkout": {
+      label: t("tools.label.detail.waitingAcceptCheckout"),
+      color: "#f39c12",
+    },
+    "Waiting Checkin": {
+      label: t("tools.label.detail.waitingAcceptCheckin"),
+      color: "#f39c12",
+    },
   };
 
   return (
-    statusMapping[value.status_label.name] || t("tools.label.detail.unknown")
+    statusMapping[value.status_label.name] || {
+      label: t("tools.label.detail.unknown"),
+      color: "gray",
+    }
   );
 };
 

@@ -81,21 +81,33 @@ export const getDetailAssetStatus = (
   t: (key: string) => string
 ) => {
   if (!value?.status_label?.name) {
-    return t("hardware.label.detail.unknown");
+    return { label: t("hardware.label.detail.unknown"), color: "gray" };
   }
 
-  const statusMapping: Record<string, string> = {
-    Assign: t("hardware.label.detail.assign"),
-    "Ready to Deploy": t("hardware.label.detail.readyToDeploy"),
-    Broken: t("hardware.label.detail.broken"),
-    Pending: t("hardware.label.detail.pending"),
-    Default: t("hardware.label.detail.default"),
-    "Waiting Checkout": t("hardware.label.detail.waitingAcceptCheckout"),
-    "Waiting Checkin": t("hardware.label.detail.waitingAcceptCheckin"),
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("hardware.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("hardware.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("hardware.label.detail.broken"), color: "red" },
+    Pending: { label: t("hardware.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("hardware.label.detail.default"), color: "gray" },
+    "Waiting Checkout": {
+      label: t("hardware.label.detail.waitingAcceptCheckout"),
+      color: "#f39c12",
+    },
+    "Waiting Checkin": {
+      label: t("hardware.label.detail.waitingAcceptCheckin"),
+      color: "#f39c12",
+    },
   };
 
   return (
-    statusMapping[value.status_label.name] || t("hardware.label.detail.unknown")
+    statusMapping[value.status_label.name] || {
+      label: t("hardware.label.detail.unknown"),
+      color: "gray",
+    }
   );
 };
 

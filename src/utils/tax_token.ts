@@ -75,21 +75,32 @@ export const getDetailTaxTokenStatus = (
   t: (key: string) => string
 ) => {
   if (!value?.status_label?.name) {
-    return t("tax_token.label.detail.unknown");
+    return { label: t("tax_token.label.detail.unknown"), color: "gray" };
   }
 
-  const statusMapping: Record<string, string> = {
-    Assign: t("tax_token.label.detail.assign"),
-    "Ready to Deploy": t("tax_token.label.detail.readyToDeploy"),
-    Broken: t("tax_token.label.detail.broken"),
-    Pending: t("tax_token.label.detail.pending"),
-    Default: t("tax_token.label.detail.default"),
-    "Waiting Checkout": t("tax_token.label.detail.waitingAcceptCheckout"),
-    "Waiting Checkin": t("tax_token.label.detail.waitingAcceptCheckin"),
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("tax_token.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("tax_token.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("tax_token.label.detail.broken"), color: "red" },
+    Pending: { label: t("tax_token.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("tax_token.label.detail.default"), color: "gray" },
+    "Waiting Checkout": {
+      label: t("tax_token.label.detail.waitingAcceptCheckout"),
+      color: "#f39c12",
+    },
+    "Waiting Checkin": {
+      label: t("tax_token.label.detail.waitingAcceptCheckin"),
+      color: "#f39c12",
+    },
   };
 
   return (
-    statusMapping[value.status_label.name] ||
-    t("tax_token.label.detail.unknown")
+    statusMapping[value.status_label.name] || {
+      label: t("tax_token.label.detail.unknown"),
+      color: "gray",
+    }
   );
 };
