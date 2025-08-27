@@ -65,6 +65,14 @@
   --color-table-header-bg: #f8f9fa;
   --color-table-header-border: #dee2e6;
   --color-table-body-text: #8C8C8C;
+
+  /* PieChart variables */
+  --chart-label-text-color: #FFFFFF;
+  --chart-legend-color: #626262;
+  --chart-legend-inactive-color: #bfbfbf;
+  --chart-statistic-color: #626262;
+  --chart-bg-color: #ffffff;
+  --chart-border-color: #cdcdcd;
 }
 
 [data-theme="dark"] {
@@ -130,6 +138,14 @@
   --color-table-header-bg: #343a40;
   --color-table-header-border: #495057;
   --color-table-body-text: rgba(255,255,255,0.75);
+
+  /* PieChart variables in dark theme */
+  --chart-label-text-color: #FFFFFF;
+  --chart-legend-color: rgba(255, 255, 255, 0.75);
+  --chart-legend-inactive-color: #444444;
+  --chart-statistic-color: rgba(255, 255, 255, 0.75);
+  --chart-bg-color: #282828;
+  --chart-border-color: #565656;
 }
 
 /* Ant Design Component Overrides */
@@ -185,6 +201,21 @@
 
 .ant-checkbox-wrapper {
   color: var(--color-checkbox-text);
+}
+
+/* Pagination ellipsis fix for dark theme */
+.ant-pagination-item-ellipsis,
+.ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis, 
+.ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] {
+  .ant-pagination-item-ellipsis,
+  .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
+  .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+    color: rgba(255, 255, 255, 0.75);
+  }
 }
 
 /* Ensure consistent theme application */
@@ -326,6 +357,598 @@
     
     &.ant-typography-secondary {
       color: var(--color-text-secondary);
+    }
+  }
+}
+
+/* MModal Component */
+.ant-modal {
+  .ant-modal-content {
+    background-color: var(--color-card-bg);
+    border-color: var(--color-border);
+    box-shadow: var(--box-shadow);
+  }
+  
+  /* Modal header */
+  .ant-modal-header {
+    background-color: var(--color-card-bg);
+    border-bottom: 1px solid var(--color-border-secondary);
+    
+    .ant-modal-title {
+      color: var(--color-text);
+    }
+  }
+  
+  /* Modal Body */
+  .ant-modal-body {
+    background-color: var(--color-card-bg);
+    color: var(--color-text);
+
+    .ant-form-item-label label {
+      color: var(--color-label);
+    }
+  }
+  
+  /* Modal Footer */
+  .ant-modal-footer {
+    background-color: var(--color-card-bg);
+    border-top: 1px solid var(--color-border-secondary);
+    
+    .ant-btn {
+      &:not(.ant-btn-primary) {
+        background-color: var(--color-bg-container);
+        border-color: var(--color-border);
+        color: var(--color-text);
+        
+        &:hover {
+          border-color: var(--color-primary);
+          color: var(--color-primary);
+        }
+      }
+    }
+  }
+  
+  /* Close button */
+  .ant-modal-close {
+    color: var(--color-text-secondary);
+    background-color: transparent;
+    border: none;
+    
+    &:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-elevated);
+    }
+
+    &:focus {
+      background-color: var(--color-bg-elevated);
+    }
+  }
+}
+
+/* Main DatePicker Input Field */
+.ant-picker {
+  background-color: var(--color-input-bg);
+  border-color: var(--color-input-border);
+  color: var(--color-input-text);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  /* Hover state */
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  /* Focus state */
+  &:focus, 
+  &.ant-picker-focused {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+    outline: none;
+  }
+
+  /* Input text styling */
+  .ant-picker-input > input {
+    color: var(--color-input-text);
+    background-color: transparent;
+
+    &::placeholder {
+      color: var(--color-input-placeholder);
+    }
+  }
+
+  /* Range picker separator (arrow between start & end date) */
+  .ant-picker-range-separator {
+    svg {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  /* Calendar icon */
+  .ant-picker-suffix {
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  /* Clear button (X) */
+  .ant-picker-clear {
+    color: var(--color-text-secondary);
+    background-color: var(--color-input-bg);
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-elevated);
+    }
+  }
+
+  /* Disabled state */
+  &.ant-picker-disabled {
+    background-color: var(--color-bg-container);
+    border-color: var(--color-border-secondary);
+    cursor: not-allowed;
+
+    .ant-picker-input > input {
+      color: var(--color-text-tertiary);
+      cursor: not-allowed;
+    }
+
+    .ant-picker-suffix {
+      color: var(--color-text-tertiary);
+    }
+  }
+}
+
+/* DatePicker Dropdown Panel */
+.ant-picker-dropdown {
+  background-color: var(--color-card-bg);
+
+  .ant-picker-panel-container {
+    background-color: var(--color-card-bg);
+    border-radius: var(--border-radius-lg);
+  }
+
+  .ant-picker-panel {
+    /* Header Section (Month/Year & Navigation) */
+    .ant-picker-header {
+      background-color: var(--color-card-bg);
+      border-bottom: 1px solid var(--color-border-secondary);
+    
+      /* Navigation buttons (prev/next month/year) */
+      .ant-picker-header-super-prev-btn,
+      .ant-picker-header-prev-btn,
+      .ant-picker-header-next-btn,
+      .ant-picker-header-super-next-btn {
+        color: var(--color-text-secondary);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          color: var(--color-primary);
+          background-color: var(--color-bg-elevated);
+        }
+
+        &:active {
+          color: var(--color-button-active);
+        }
+      }
+
+      /* Month/Year selector buttons */
+      .ant-picker-header-view {
+        button {
+          color: var(--color-text);
+          background: transparent;
+          font-weight: 600;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: var(--color-primary);
+            background-color: var(--color-bg-elevated);
+          }
+        }
+      }
+    }
+
+    /* Calendar Body Section */
+    .ant-picker-body {
+      .ant-picker-content {
+        /* Week day headers (Su, Mo, Tu, We, Th, Fr, Sa) */
+        thead th {
+          color: var(--color-text-secondary);
+          background-color: var(--color-card-bg);
+        }
+
+        /* Date cells container */
+        .ant-picker-cell {
+          color: var(--color-text);
+          position: relative;
+
+          /* Clear any default background */
+          &::before {
+            display: none;
+          }
+
+          /* Inner cell content - base styling */
+          .ant-picker-cell-inner {
+            position: relative;
+            z-index: 2;
+            color: var(--color-text);
+            background-color: transparent;
+            transition: all 0.3s ease;
+            display: inline-block;
+          }
+
+          /* Normal hover - only for non-selected, non-range cells */
+          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+            .ant-picker-cell-inner {
+              background-color: var(--color-bg-elevated);
+              color: var(--color-primary);
+            }
+          }
+
+          /* Today's date */
+          &.ant-picker-cell-today .ant-picker-cell-inner {
+            color: var(--color-primary);
+            font-weight: 600;
+          }
+
+          /* Selected single date or range start/end */
+          &.ant-picker-cell-selected .ant-picker-cell-inner,
+          &.ant-picker-cell-range-start .ant-picker-cell-inner,
+          &.ant-picker-cell-range-end .ant-picker-cell-inner {
+            background-color: var(--color-primary) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+          }
+
+          /* Base range background styling - No background color */
+          &.ant-picker-cell-in-range,
+          &.ant-picker-cell-range-start,
+          &.ant-picker-cell-range-end {
+            position: relative;
+            
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block;
+            }
+          }
+
+          /* Dates in range (between start and end) - full width background */
+          &.ant-picker-cell-in-range {
+            &::before {
+              left: 0;
+              right: 0;
+            }
+            
+            .ant-picker-cell-inner {
+              background-color: transparent !important;
+              color: var(--color-text) !important;
+              position: relative;
+              z-index: 2;
+            }
+
+            &:hover .ant-picker-cell-inner {
+              background-color: var(--color-bg-elevated) !important;
+              color: var(--color-primary) !important;
+            }
+          }
+
+          /* Range start - background extension to the right */
+          &.ant-picker-cell-range-start {
+            &::before {
+              left: 50%;
+              right: 0;
+            }
+          }
+
+          /* Range end - background extension to the left */
+          &.ant-picker-cell-range-end {
+            &::before {
+              left: 0;
+              right: 50%;
+            }
+          }
+
+          /* Single selected cell (both start and end) - no background extension */
+          &.ant-picker-cell-range-start.ant-picker-cell-range-end {
+            &::before {
+              display: none;
+            }
+          }
+
+          /* Dates outside current month (grayed out) */
+          &:not(.ant-picker-cell-in-view) .ant-picker-cell-inner {
+            color: var(--color-text-tertiary);
+          }
+
+          /* Disabled dates */
+          &.ant-picker-cell-disabled {
+            .ant-picker-cell-inner {
+              color: var(--color-text-tertiary);
+              cursor: not-allowed;
+              background-color: transparent !important;
+            }
+
+            &:hover .ant-picker-cell-inner {
+              color: var(--color-text-tertiary) !important;
+              background-color: transparent !important;
+            }
+
+            &::before {
+              display: none !important;
+            }
+          }
+
+          /* Range hover effects - preview before selection */
+          &.ant-picker-cell-range-hover-start,
+          &.ant-picker-cell-range-hover-end {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block;
+            }
+          }
+
+          &.ant-picker-cell-range-hover-start::before {
+            left: 50%;
+            right: 0;
+          }
+
+          &.ant-picker-cell-range-hover-end::before {
+            left: 0;
+            right: 50%;
+          }
+
+          &.ant-picker-cell-range-hover {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    /* Footer Section */
+    .ant-picker-footer {
+      background-color: var(--color-card-bg);
+      border-top: 1px solid var(--color-border-secondary);
+      padding: 8px 12px;
+      
+      /* Today/Now buttons */
+      .ant-picker-today-btn,
+      .ant-picker-now-btn {
+        color: var(--color-primary);
+        background-color: transparent;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          color: var(--color-button-hover);
+          background-color: rgba(237, 27, 35, 0.1);
+        }
+
+        &:active {
+          color: var(--color-button-active);
+        }
+      }
+      
+      /* Extra footer content */
+      .ant-picker-footer-extra {
+        color: var(--color-text-secondary);
+        font-size: 12px;
+      }
+    }
+
+    /* Time picker panel (for datetime picker) */
+    .ant-picker-time-panel {
+      background-color: var(--color-card-bg);
+      border-left: 1px solid var(--color-border-secondary);
+
+      .ant-picker-time-panel-column {
+        > li {
+          color: var(--color-text);
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: var(--color-bg-elevated);
+          }
+
+          &.ant-picker-time-panel-cell-selected {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            font-weight: 600;
+          }
+
+          &.ant-picker-time-panel-cell-disabled {
+            color: var(--color-text-tertiary);
+            cursor: not-allowed;
+
+            &:hover {
+              background-color: transparent;
+            }
+          }
+        }
+      }
+    }
+
+    /* Month/Year picker panel */
+    .ant-picker-month-panel,
+    .ant-picker-year-panel,
+    .ant-picker-decade-panel {
+      .ant-picker-content {
+        .ant-picker-cell {
+          .ant-picker-cell-inner {
+            background-color: transparent;
+          }
+
+          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+            color: var(--color-primary);
+            background-color: rgba(237, 27, 35, 0.3);
+          }
+
+          &.ant-picker-cell-selected .ant-picker-cell-inner {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Multiple picker dropdowns positioning */
+.ant-picker-dropdown-range {
+  .ant-picker-panels {
+    display: flex;
+    
+    .ant-picker-panel {
+      border-right: 1px solid var(--color-border-secondary);
+      
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+/* Dark theme specific adjustments */
+[data-theme="dark"] {
+  .ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
+    /* Style for cell not start/end/selected/disabled */
+    .ant-picker-cell {
+      &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+        .ant-picker-cell-inner {
+          background-color: rgba(237, 27, 35, 0.2);
+          color: #ffffff;
+        }
+      }
+
+      &.ant-picker-cell-in-range:hover .ant-picker-cell-inner {
+        background-color: rgba(237, 27, 35, 0.3) !important;
+        color: #ffffff !important;
+      }
+      
+      &.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single),
+      &.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single) {
+        &::before {
+          background-color: rgba(237, 27, 35, 0.1) !important;
+        }
+      }
+
+      &.ant-picker-cell-range-hover-start,
+      &.ant-picker-cell-range-hover-end,
+      &.ant-picker-cell-range-hover {
+        &::before {
+          display: none !important;
+        }
+      }
+    }
+
+    .ant-picker-cell-in-view.ant-picker-cell-in-range {
+      &::before {
+        background-color: rgba(237, 27, 35, 0.1);
+        display: block !important;
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ant-picker-dropdown {
+    .ant-picker-panel-container {
+      border-radius: var(--border-radius);
+      margin: 8px;
+    }
+    
+    .ant-picker-panel {
+      .ant-picker-body {
+        padding: 4px 8px;
+      }
+      
+      .ant-picker-header {
+        padding: 4px 8px;
+      }
+      
+      .ant-picker-footer {
+        padding: 4px 8px;
+      }
+    }
+  }
+}
+
+/* Calendar Body Section */
+.ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
+  .ant-picker-cell-range-hover,
+  .ant-picker-cell-range-hover-start,
+  .ant-picker-cell-range-hover-end,
+  .ant-picker-cell-range-hover-edge-start,
+  .ant-picker-cell-range-hover-edge-end {
+    &::before {
+      display: none !important;
+    }
+  }
+
+  /* Keep only the border for the selected dates */
+  .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border-radius: 2px;
+  }
+  
+  /* Remove all hover outlines/backgrounds in range */
+  .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single).ant-picker-cell-range-hover-start::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single).ant-picker-cell-range-hover-end::before {
+    display: none !important;
+  }
+  
+  /* Fix for the month/year selection panels */
+  .ant-picker-month-panel .ant-picker-cell,
+  .ant-picker-year-panel .ant-picker-cell,
+  .ant-picker-decade-panel .ant-picker-cell {
+    .ant-picker-cell-inner {
+      border-radius: var(--border-radius-sm);
+    }
+    
+    &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+      background-color: rgba(237, 27, 35, 0.1);
+    }
+    
+    &.ant-picker-cell-selected .ant-picker-cell-inner {
+      background-color: var(--color-primary);
+    }
+  }
+}
+
+/* Keep background for actual selected range */
+.ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
+  .ant-picker-cell-in-view.ant-picker-cell-in-range:not(.ant-picker-cell-range-hover) {
+    &::before {
+      background-color: rgba(237, 27, 35, 0.1);
+      display: block !important;
     }
   }
 }
