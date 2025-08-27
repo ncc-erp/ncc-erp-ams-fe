@@ -67,7 +67,6 @@ import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "utils/assets";
 import { HardwareCheckin } from "./checkin";
 import { HardwareCheckinMultipleAsset } from "./checkin-multiple-asset";

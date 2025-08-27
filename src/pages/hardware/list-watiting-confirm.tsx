@@ -61,7 +61,6 @@ import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "utils/assets";
 import {
   ASSIGNED_STATUS,

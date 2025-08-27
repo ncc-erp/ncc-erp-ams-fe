@@ -13,7 +13,6 @@ import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
   filterAssignedStatus,
 } from "utils/assets";
 import { useTranslate } from "@pankod/refine-core";
