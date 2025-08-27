@@ -13,7 +13,6 @@ import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
   filterAssignedStatus,
 } from "utils/assets";
 import { useTranslate } from "@pankod/refine-core";
@@ -98,21 +97,24 @@ export const useRentalCustomerColumns = ({
       {
         key: "status_label",
         title: t("hardware.label.field.status"),
-        render: (value: IHardwareResponse) => (
-          <TagField
-            value={getAssetStatusDecription(value)}
-            style={{
-              background: getBGAssetStatusDecription(value),
-              color: "white",
-            }}
-          />
-        ),
+        render: (value: IHardwareResponse) => {
+          // Lấy mô tả trạng thái và màu sắc từ hàm getAssetStatusDecription
+          const { label, color } = getAssetStatusDecription(value);
+          return (
+            <TagField
+              value={label}
+              style={{
+                background: color,
+                color: "white",
+              }}
+            />
+          );
+        },
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
         filters: filterStatus_Label,
         onFilter: (value: number, record: IHardwareResponse) => {
           return record.status_label.id === value;
         },
-        width: 150,
       },
       {
         key: "assigned_to",
