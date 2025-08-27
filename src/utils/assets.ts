@@ -32,16 +32,38 @@ export const getBGAssetAssignedStatusDecription = (value: number) =>
               ? "#f39c12"
               : "gray";
 
-export const getAssetStatusDecription = (value: IHardwareResponse) =>
-  value.name === t("hardware.label.field.assign")
-    ? t("hardware.label.detail.assign")
-    : value.name === t("hardware.label.field.readyToDeploy")
-      ? t("hardware.label.detail.readyToDeploy")
-      : value.name === t("hardware.label.field.broken")
-        ? t("hardware.label.detail.broken")
-        : value.name === t("hardware.label.field.pending")
-          ? t("hardware.label.detail.pending")
-          : "";
+export const getAssetStatusDecription = (value: IHardwareResponse) => {
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("hardware.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("hardware.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("hardware.label.detail.broken"), color: "red" },
+    Pending: { label: t("hardware.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("hardware.label.detail.default"), color: "gray" },
+    "Waiting Checkout": {
+      label: t("hardware.label.detail.waitingAcceptCheckout"),
+      color: "#f39c12",
+    },
+    "Waiting Checkin": {
+      label: t("hardware.label.detail.waitingAcceptCheckin"),
+      color: "#f39c12",
+    },
+  };
+  // const result =
+  //   value.name === t("hardware.label.field.assign")
+  //     ? t("hardware.label.detail.assign")
+  //     : value.name === t("hardware.label.field.readyToDeploy")
+  //       ? t("hardware.label.detail.readyToDeploy")
+  //       : value.name === t("hardware.label.field.broken")
+  //         ? t("hardware.label.detail.broken")
+  //         : value.name === t("hardware.label.field.pending")
+  //           ? t("hardware.label.detail.pending")
+  //           : "";
+  const result = statusMapping[value.name] || "";
+  return result;
+};
 
 export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
   value.name === t("hardware.label.field.assign")
