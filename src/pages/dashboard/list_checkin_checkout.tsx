@@ -432,7 +432,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       key: "type",
       width: 150,
       render: (text: string, record: IReport) => (
-        <strong
+        <Typography.Text
+          strong
+          type="success" // add .ant-typography-success
+          className="field-category"
           onClick={() =>
             getUrlForOnClick(
               TypeAssetHistory.CHECKOUT,
@@ -441,10 +444,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               dateToCheckOut
             )
           }
-          style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
-        </strong>
+        </Typography.Text>
       ),
     },
   ];
@@ -487,7 +489,10 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
       key: "type",
       width: 150,
       render: (text: string, record: IReport) => (
-        <strong
+        <Typography.Text
+          strong
+          type="success" // Add .ant-typography-success
+          className="field-category"
           onClick={() =>
             getUrlForOnClick(
               TypeAssetHistory.CHECKIN,
@@ -496,10 +501,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               dateToCheckIn
             )
           }
-          style={{ color: "#52c41a", cursor: "pointer" }}
         >
           {text}
-        </strong>
+        </Typography.Text>
       ),
     },
   ];
