@@ -76,16 +76,28 @@ export const getBGAssetStatusDecription = (value: IHardwareResponse) =>
           ? "#f39c12"
           : "";
 
-export const getDetailAssetStatus = (value: IHardwareResponse | undefined) =>
-  value?.status_label?.name === t("hardware.label.field.assign")
-    ? t("hardware.label.detail.assign")
-    : value?.status_label?.name === t("hardware.label.field.readyToDeploy")
-      ? t("hardware.label.detail.readyToDeploy")
-      : value?.status_label?.name === t("hardware.label.field.broken")
-        ? t("hardware.label.detail.broken")
-        : value?.status_label?.name === t("hardware.label.field.pending")
-          ? t("hardware.label.detail.pending")
-          : "";
+export const getDetailAssetStatus = (
+  value: IHardwareResponse | undefined,
+  t: (key: string) => string
+) => {
+  if (!value?.status_label?.name) {
+    return t("hardware.label.detail.unknown");
+  }
+
+  const statusMapping: Record<string, string> = {
+    Assign: t("hardware.label.detail.assign"),
+    "Ready to Deploy": t("hardware.label.detail.readyToDeploy"),
+    Broken: t("hardware.label.detail.broken"),
+    Pending: t("hardware.label.detail.pending"),
+    Default: t("hardware.label.detail.default"),
+    "Waiting Checkout": t("hardware.label.detail.waitingAcceptCheckout"),
+    "Waiting Checkin": t("hardware.label.detail.waitingAcceptCheckin"),
+  };
+
+  return (
+    statusMapping[value.status_label.name] || t("hardware.label.detail.unknown")
+  );
+};
 
 export const getDetailAssetStatusByName = (value: string) => {
   const statusMap: { [key: string]: string } = {

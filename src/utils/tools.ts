@@ -32,16 +32,27 @@ export const getBGToolAssignedStatusDecription = (value: number) =>
               ? "#f39c12"
               : "gray";
 
-export const getToolStatusDecription = (value: IToolResponse) =>
-  value.name === t("tools.label.field.assign")
-    ? t("tools.label.detail.assign")
-    : value.name === t("tools.label.field.readyToDeploy")
-      ? t("tools.label.detail.readyToDeploy")
-      : value.name === t("tools.label.field.broken")
-        ? t("tools.label.detail.broken")
-        : value.name === t("tools.label.field.pending")
-          ? t("tools.label.detail.pending")
-          : "";
+export const getToolStatusDecription = (
+  value: IToolResponse,
+  t: (key: string) => string
+) => {
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("tools.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("tools.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("tools.label.detail.broken"), color: "red" },
+    Pending: { label: t("tools.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("tools.label.detail.default"), color: "gray" },
+  };
+
+  const result = statusMapping[value.name] || {
+    label: t("tools.label.detail.unknown"),
+    color: "gray",
+  }; // Giá trị mặc định
+  return result;
+};
 
 export const getBGToolStatusDecription = (value: IToolResponse) =>
   value.name === t("tools.label.field.assign")
@@ -54,16 +65,28 @@ export const getBGToolStatusDecription = (value: IToolResponse) =>
           ? "#f39c12"
           : "";
 
-export const getDetailToolStatus = (value: IToolResponse | undefined) =>
-  value?.status_label?.name === t("tools.label.field.assign")
-    ? t("tools.label.detail.assign")
-    : value?.status_label?.name === t("tools.label.field.readyToDeploy")
-      ? t("tools.label.detail.readyToDeploy")
-      : value?.status_label?.name === t("tools.label.field.broken")
-        ? t("tools.label.detail.broken")
-        : value?.status_label?.name === t("tools.label.field.pending")
-          ? t("tools.label.detail.pending")
-          : "";
+export const getDetailToolStatus = (
+  value: IToolResponse | undefined,
+  t: (key: string) => string
+) => {
+  if (!value?.status_label?.name) {
+    return t("tools.label.detail.unknown");
+  }
+
+  const statusMapping: Record<string, string> = {
+    Assign: t("tools.label.detail.assign"),
+    "Ready to Deploy": t("tools.label.detail.readyToDeploy"),
+    Broken: t("tools.label.detail.broken"),
+    Pending: t("tools.label.detail.pending"),
+    Default: t("tools.label.detail.default"),
+    "Waiting Checkout": t("tools.label.detail.waitingAcceptCheckout"),
+    "Waiting Checkin": t("tools.label.detail.waitingAcceptCheckin"),
+  };
+
+  return (
+    statusMapping[value.status_label.name] || t("tools.label.detail.unknown")
+  );
+};
 
 export const filterAssignedStatus = [
   {

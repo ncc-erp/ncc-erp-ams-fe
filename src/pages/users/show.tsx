@@ -48,7 +48,7 @@ export const UserShow = (props: UserShowProps) => {
         </Col>
         <Col span={14}>
           <Text>
-            <Tag>{getDetailAssetStatus(detail)}</Tag>
+            <Tag>{getDetailAssetStatus(detail, t)}</Tag>
             {detail?.assigned_to ? (
               <>
                 <UserOutlined />{" "}

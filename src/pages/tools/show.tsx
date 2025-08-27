@@ -25,7 +25,7 @@ export const ToolShow = (props: ToolShowProps) => {
         </Col>
         <Col span={14}>
           <Text>
-            <Tag>{getDetailToolStatus(detail)}</Tag>
+            <Tag>{getDetailToolStatus(detail, t)}</Tag>
             {detail?.assigned_to ? (
               <>
                 <UserOutlined />{" "}

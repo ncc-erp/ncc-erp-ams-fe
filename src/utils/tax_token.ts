@@ -2,19 +2,32 @@ import { ASSIGNED_STATUS } from "constants/assets";
 import { ITaxTokenResponse } from "interfaces/tax_token";
 import { t } from "../i18n";
 
-export const getTaxTokenStatusDecription = (value: ITaxTokenResponse) =>
-  // value === STATUS_TAX_TOKEN.NOT_ACTIVATE
-  //     ? t("tax_token.label.field.not_active")
-  //     : t("tax_token.label.field.assign")
-  value.name === t("hardware.label.field.assign")
-    ? t("hardware.label.detail.assign")
-    : value.name === t("hardware.label.field.readyToDeploy")
-      ? t("hardware.label.detail.readyToDeploy")
-      : value.name === t("hardware.label.field.broken")
-        ? t("hardware.label.detail.broken")
-        : value.name === t("hardware.label.field.pending")
-          ? t("hardware.label.detail.pending")
-          : "";
+export const getTaxTokenStatusDecription = (value: ITaxTokenResponse) => {
+  const statusMapping: Record<string, { label: string; color: string }> = {
+    Assign: { label: t("hardware.label.detail.assign"), color: "#0073b7" },
+    "Ready to Deploy": {
+      label: t("hardware.label.detail.readyToDeploy"),
+      color: "#00a65a",
+    },
+    Broken: { label: t("hardware.label.detail.broken"), color: "red" },
+    Pending: { label: t("hardware.label.detail.pending"), color: "#f39c12" },
+    Default: { label: t("hardware.label.detail.default"), color: "gray" },
+    "Waiting Checkout": {
+      label: t("hardware.label.detail.waitingAcceptCheckout"),
+      color: "#f39c12",
+    },
+    "Waiting Checkin": {
+      label: t("hardware.label.detail.waitingAcceptCheckin"),
+      color: "#f39c12",
+    },
+  };
+
+  const result = statusMapping[value.name] || {
+    label: t("hardware.label.detail.unknown"),
+    color: "gray",
+  }; // Giá trị mặc định
+  return result;
+};
 
 export const getBGTaxTokenStatusDecription = (value: ITaxTokenResponse) =>
   value.name === t("hardware.label.field.assign")
@@ -58,14 +71,25 @@ export const getBGTaxTokenAssignedStatusDecription = (value: number) =>
               : "gray";
 
 export const getDetailTaxTokenStatus = (
-  value: ITaxTokenResponse | undefined
-) =>
-  value?.status_label?.name === t("hardware.label.field.assign")
-    ? t("hardware.label.detail.assign")
-    : value?.status_label?.name === t("hardware.label.field.readyToDeploy")
-      ? t("hardware.label.detail.readyToDeploy")
-      : value?.status_label?.name === t("hardware.label.field.broken")
-        ? t("hardware.label.detail.broken")
-        : value?.status_label?.name === t("hardware.label.field.pending")
-          ? t("hardware.label.detail.pending")
-          : "";
+  value: ITaxTokenResponse | undefined,
+  t: (key: string) => string
+) => {
+  if (!value?.status_label?.name) {
+    return t("tax_token.label.detail.unknown");
+  }
+
+  const statusMapping: Record<string, string> = {
+    Assign: t("tax_token.label.detail.assign"),
+    "Ready to Deploy": t("tax_token.label.detail.readyToDeploy"),
+    Broken: t("tax_token.label.detail.broken"),
+    Pending: t("tax_token.label.detail.pending"),
+    Default: t("tax_token.label.detail.default"),
+    "Waiting Checkout": t("tax_token.label.detail.waitingAcceptCheckout"),
+    "Waiting Checkin": t("tax_token.label.detail.waitingAcceptCheckin"),
+  };
+
+  return (
+    statusMapping[value.status_label.name] ||
+    t("tax_token.label.detail.unknown")
+  );
+};
