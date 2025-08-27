@@ -1,0 +1,89 @@
+name: Deploy NCC-ERP-AMS-FE-PROD
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "master"
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20.11.1"
+  ARTIFACT_NAME: "release.tar.gz"
+
+jobs:
+  build:
+    name: Build FE
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event.inputs.branch == 'master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install deps (CI)
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test --if-present -- --ci
+
+      # Tạo file env từ GitHub Secrets
+      - name: Generate .env from GitHub Secrets
+        run: |
+          cat <<EOF > .env
+          REACT_APP_API_PROXY=${{ secrets.REACT_APP_API_PROXY_PROD }}
+          REACT_APP_AUTH_CLIENT_ID=${{ secrets.REACT_APP_AUTH_CLIENT_ID_PROD }}
+          REACT_APP_AUTH_SECRET_KEY=${{ secrets.REACT_APP_AUTH_SECRET_KEY_PROD }}
+          REACT_APP_GOOGLE_CLIENT_ID=${{ secrets.REACT_APP_GOOGLE_CLIENT_ID_PROD }}
+          EOF
+
+      - name: Build
+        env:
+          CI: "false"
+        run: npm run build
+
+      - name: Package artifact (tar.gz)
+        run: |
+          rm -f ${{ env.ARTIFACT_NAME }}
+          tar -C build -czf ${{ env.ARTIFACT_NAME }} .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fe-build-prod
+          path: ${{ env.ARTIFACT_NAME }}
+          retention-days: 7
+
+  deploy:
+    name: Deploy FE
+    runs-on: ams-prod-fe
+    needs: build
+    if: github.event.inputs.branch == 'master'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fe-build-prod
+          path: .
+
+      - name: Unzip artifact to tmp/fe-release
+        run: |
+          mkdir -p /tmp/fe-release
+          tar -xzf ${{ env.ARTIFACT_NAME }} -C /tmp/fe-release
+
+      - name: Run script deploy-release.sh
+        run: bash /home/nccsoft/NCC-ITTools-Client/deploy-release.sh
