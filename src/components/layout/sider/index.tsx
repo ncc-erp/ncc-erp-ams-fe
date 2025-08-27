@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from "react";
+import React, { useState } from "react";
 
 import {
   useTranslate,
@@ -7,20 +7,17 @@ import {
   useRouterContext,
 } from "@pankod/refine-core";
 import { AntdLayout, Menu, Grid, useMenu } from "@pankod/refine-antd";
-import { antLayoutSider, antLayoutSiderMobile } from "./styles";
+import {
+  antLayoutSider,
+  antLayoutSiderMobile,
+  logoStyles,
+  mobileSiderContent,
+  mobileSiderWrapper,
+} from "./styles";
 import "../../../styles/antd.less";
 import { EPermissions } from "constants/permissions";
 import { SideBarSubMenuItem } from "./SideBarSubMenuItem";
 import { SideBarMenuItem } from "./SideBarMenuItem";
-
-const logo: CSSProperties = {
-  height: "50px",
-  left: "50%",
-  position: "relative",
-  transform: "translateX(-50%)",
-  marginTop: "10px",
-  marginBottom: "10px",
-};
 
 export const Sider: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -112,6 +109,7 @@ export const Sider: React.FC = () => {
 
   const renderMenuContent = () => (
     <>
+      {/* NCC Logo */}
       {permissionsData && userIsUser && (
         <>
           <Link to="users" data-test-id="logo">
@@ -119,13 +117,13 @@ export const Sider: React.FC = () => {
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
                 alt="NCC IT TOOL"
-                style={logo}
+                style={logoStyles}
               />
             ) : (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
                 alt="NCC IT TOOL"
-                style={logo}
+                style={logoStyles}
               />
             )}
           </Link>
@@ -139,18 +137,20 @@ export const Sider: React.FC = () => {
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
                 alt="NCC IT TOOL"
-                style={logo}
+                style={logoStyles}
               />
             ) : (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
                 alt="NCC IT TOOL"
-                style={logo}
+                style={logoStyles}
               />
             )}
           </Link>
         </>
       )}
+
+      {/* Menu */}
       <Menu
         selectedKeys={[selectedKey]}
         mode="inline"
@@ -309,7 +309,7 @@ export const Sider: React.FC = () => {
         />
       )}
       <AntdLayout.Sider
-        collapsible
+        collapsible // Turn collapsible => .ant-layout-sider-trigger
         collapsed={collapsed}
         onCollapse={(collapsed: boolean): void => setCollapsed(collapsed)}
         collapsedWidth={isMobile ? 0 : 80}
@@ -320,15 +320,8 @@ export const Sider: React.FC = () => {
         data-test-id="sidebar"
       >
         {isMobile ? (
-          <div style={{ height: "100%", display: "flex" }}>
-            <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}
-              className="sider-overflow-y"
-            >
+          <div style={mobileSiderWrapper}>
+            <div style={mobileSiderContent} className="sider-overflow-y">
               {renderMenuContent()}
             </div>
           </div>
