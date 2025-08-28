@@ -126,7 +126,9 @@ export const Header: React.FC = () => {
           data-test-id="username"
           style={{ fontWeight: "500", fontSize: "16px" }}
         >
-          {userIdentity?.slice(1, userIdentity.length - 1)}
+          {typeof userIdentity === "string"
+            ? userIdentity.slice(1, userIdentity.length - 1)
+            : ""}
         </Text>
         {/* <Switch
         checkedChildren={<FaMoon style={{fontSize: "17px", paddingTop: "3px"}}/>}
