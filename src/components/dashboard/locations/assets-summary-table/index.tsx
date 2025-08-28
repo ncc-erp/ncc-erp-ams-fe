@@ -196,6 +196,7 @@ export const AssetsSummaryTable = (props: AssetsSummaryTableProps) => {
       dataIndex: "type",
       key: "type",
       width: 150,
+      fixed: "left" as const, // Freeze first column
       render: (text: string, record: DataTable) => (
         <Typography.Text
           strong
