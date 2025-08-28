@@ -176,6 +176,35 @@
   color: var(--color-input-placeholder);
 }
 
+/* Button Component */
+.ant-btn {
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  height: 32px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Default button */
+  &.ant-btn-default {
+    background-color: var(--color-bg-container);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    
+    &:hover, &:focus {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    &:active {
+      border-color: var(--color-button-active);
+      color: var(--color-button-active);
+    }
+  }
+}
+
 .ant-btn-primary {
   background-color: var(--color-button-primary);
   border-color: var(--color-button-primary);
@@ -430,7 +459,7 @@
   background-color: var(--color-input-bg);
   border-color: var(--color-input-border);
   color: var(--color-input-text);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
   /* Hover state */
   &:hover {
@@ -949,6 +978,356 @@
     &::before {
       background-color: rgba(237, 27, 35, 0.1);
       display: block !important;
+    }
+  }
+}
+
+/* Select Component */
+/* Main Select Input Field */
+.ant-select {
+  .ant-select-selector {
+    background-color: var(--color-input-bg) !important;
+    border-color: var(--color-input-border) !important;
+    border-radius: var(--border-radius) !important;
+    color: var(--color-input-text) !important;
+    box-shadow: none !important;
+    transition: all 0.3s ease;
+  }
+
+  /* Hover state */
+  .ant-select-selector:hover {
+    border-color: var(--color-primary) !important;
+  }
+
+  /* Focus state */
+  &.ant-select-focused .ant-select-selector {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2) !important;
+    outline: none;
+  }
+
+  /* Placeholder text */
+  .ant-select-selection-placeholder {
+    color: var(--color-input-placeholder) !important;
+  }
+
+  /* Selected item text */
+  .ant-select-selection-item {
+    color: var(--color-input-text) !important;
+  }
+
+  /* Multiple selection items */
+  .ant-select-selection-item {
+    background-color: var(--color-bg-elevated);
+    color: var(--color-text);
+    border-radius: var(--border-radius-sm);
+
+    /* Remove button in multiple select */
+    .ant-select-selection-item-remove {
+      color: var(--color-text-secondary);
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  /* Dropdown arrow icon */
+  .ant-select-arrow {
+    color: var(--color-text-secondary) !important;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--color-primary) !important;
+    }
+  }
+
+  /* Clear button (X) */
+  .ant-select-clear {
+    color: var(--color-text-secondary);
+    background-color: var(--color-input-bg);
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-elevated);
+    }
+  }
+
+  /* Disabled state */
+  &.ant-select-disabled {
+    .ant-select-selector {
+      background-color: var(--color-bg-container) !important;
+      border-color: var(--color-border-secondary) !important;
+      color: var(--color-text-tertiary) !important;
+      cursor: not-allowed;
+    }
+
+    .ant-select-arrow {
+      color: var(--color-text-tertiary) !important;
+    }
+  }
+
+  /* Loading state */
+  &.ant-select-loading {
+    .ant-select-arrow .anticon {
+      color: var(--color-primary) !important;
+    }
+  }
+}
+
+/* Select Dropdown Panel */
+.ant-select-dropdown {
+  background-color: var(--color-bg-container) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--box-shadow-secondary) !important;
+  padding: 4px;
+
+  /* Options container */
+  .ant-select-item {
+    color: var(--color-item-text) !important;
+    background-color: var(--color-item-bg) !important;
+    border-radius: var(--border-radius-sm) !important;
+    margin: 2px 4px !important;
+    padding: 8px 12px !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    /* Hover state */
+    &:hover:not(.ant-select-item-option-disabled) {
+      background-color: rgba(237, 27, 35, 0.1) !important;
+      color: var(--color-item-text-hover) !important;
+    }
+
+    /* Active state (keyboard navigation) */
+    &.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: rgba(237, 27, 35, 0.1) !important;
+      color: var(--color-item-text-hover) !important;
+    }
+
+    /* Selected option */
+    &.ant-select-item-option-selected {
+      background-color: var(--color-item-bg-selected) !important;
+      color: var(--color-primary) !important;
+      font-weight: 600 !important;
+      position: relative;
+    }
+
+    /* Disabled option */
+    &.ant-select-item-option-disabled {
+      color: var(--color-text-tertiary) !important;
+      background-color: transparent !important;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: transparent !important;
+        color: var(--color-text-tertiary) !important;
+      }
+    }
+
+    /* Group title styling */
+    &.ant-select-item-group {
+      color: var(--color-text-secondary) !important;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 8px 12px 4px 12px !important;
+      cursor: default;
+
+      &:hover {
+        background-color: transparent !important;
+      }
+    }
+  }
+
+  /* Empty state */
+  .ant-select-item-empty {
+    color: var(--color-text-secondary) !important;
+    text-align: center;
+    padding: 16px 12px !important;
+    cursor: default;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  /* Search input in dropdown (for searchable select) */
+  .ant-select-selection-search-input {
+    background-color: transparent !important;
+    color: var(--color-input-text) !important;
+    border: none !important;
+    outline: none !important;
+
+    &::placeholder {
+      color: var(--color-input-placeholder) !important;
+    }
+  }
+
+  /* Scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 3px;
+
+    &:hover {
+      background-color: var(--color-text-tertiary);
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--color-bg-container);
+  }
+}
+
+/* Select Size Variants */
+.ant-select-sm {
+  .ant-select-selector {
+    padding: 0 7px;
+    height: 24px;
+  }
+}
+
+.ant-select-lg {
+  .ant-select-selector {
+    padding: 0 11px;
+    height: 40px;
+  }
+}
+
+/* Multiple Select Styling */
+.ant-select-multiple {
+  .ant-select-selector {
+    padding: 2px 4px;
+
+    .ant-select-selection-overflow {
+      .ant-select-selection-overflow-item {
+        .ant-select-selection-item {
+          background-color: var(--color-bg-elevated);
+          border: 1px solid var(--color-border-secondary);
+          color: var(--color-text);
+          border-radius: var(--border-radius-sm);
+          margin: 2px 4px 2px 0;
+          padding: 0 7px;
+          height: 22px;
+          line-height: 20px;
+
+          .ant-select-selection-item-content {
+            font-size: 12px;
+          }
+
+          .ant-select-selection-item-remove {
+            margin-left: 4px;
+            color: var(--color-text-secondary);
+            font-size: 10px;
+
+            &:hover {
+              color: var(--color-primary);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Select with border variants */
+.ant-select-borderless {
+  .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+  }
+}
+
+/* Custom class for themed select */
+.themed-select {
+  .ant-select-selector {
+    background-color: var(--color-input-bg) !important;
+    border-color: var(--color-input-border) !important;
+    border-radius: var(--border-radius) !important;
+    transition: all 0.3s ease;
+  }
+
+  &:hover .ant-select-selector {
+    border-color: var(--color-primary) !important;
+  }
+
+  &.ant-select-focused .ant-select-selector {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2) !important;
+  }
+}
+
+/* Custom dropdown class */
+.themed-select-dropdown {
+  &.ant-select-dropdown {
+    background-color: var(--color-bg-container) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--box-shadow-secondary) !important;
+
+    .ant-select-item {
+      color: var(--color-item-text) !important;
+      border-radius: var(--border-radius-sm) !important;
+      margin: 2px 4px !important;
+      transition: all 0.2s ease;
+
+      &:hover:not(.ant-select-item-option-disabled) {
+        background-color: rgba(237, 27, 35, 0.1) !important;
+        color: var(--color-item-text-hover) !important;
+      }
+
+      &.ant-select-item-option-selected {
+        color: var(--color-primary) !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+}
+
+/* Dark theme specific adjustments */
+[data-theme="dark"] {
+  .ant-select-dropdown {
+    .ant-select-item {
+      &:hover:not(.ant-select-item-option-disabled) {
+        background-color: rgba(237, 27, 35, 0.2) !important;
+        color: #ffffff !important;
+      }
+
+      &.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+        background-color: rgba(237, 27, 35, 0.2) !important;
+        color: #ffffff !important;
+      }
+    }
+  }
+
+  .ant-select-multiple {
+    .ant-select-selector {
+      .ant-select-selection-item {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--color-border);
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ant-select-dropdown {
+    margin: 8px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .ant-select {
+    .ant-select-selector {
+      padding: 0 8px;
     }
   }
 }
