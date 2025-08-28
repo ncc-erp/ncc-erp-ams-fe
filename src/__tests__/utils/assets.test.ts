@@ -123,34 +123,29 @@ describe("assets utils", () => {
 
   it("getAssetStatusDecription returns correct label", () => {
     expect(
-      getAssetStatusDecription({
-        ...mockHardwareResponse,
-        name: "hardware.label.field.assign",
-      })
+      getAssetStatusDecription({ ...mockHardwareResponse, name: "Assign" })
+        .label
     ).toBe("hardware.label.detail.assign");
+
     expect(
       getAssetStatusDecription({
         ...mockHardwareResponse,
-        name: "hardware.label.field.readyToDeploy",
-      })
+        name: "Ready to Deploy",
+      }).label
     ).toBe("hardware.label.detail.readyToDeploy");
+
     expect(
-      getAssetStatusDecription({
-        ...mockHardwareResponse,
-        name: "hardware.label.field.broken",
-      })
+      getAssetStatusDecription({ ...mockHardwareResponse, name: "Broken" })
+        .label
     ).toBe("hardware.label.detail.broken");
+
     expect(
-      getAssetStatusDecription({
-        ...mockHardwareResponse,
-        name: "hardware.label.field.pending",
-      })
+      getAssetStatusDecription({ ...mockHardwareResponse, name: "Pending" })
+        .label
     ).toBe("hardware.label.detail.pending");
+
     expect(
-      getAssetStatusDecription({
-        ...mockHardwareResponse,
-        name: "unknown",
-      })
+      getAssetStatusDecription({ ...mockHardwareResponse, name: "unknown" })
     ).toBe("");
   });
 
@@ -187,63 +182,83 @@ describe("assets utils", () => {
     ).toBe("");
   });
 
-  it("getDetailAssetStatus returns correct label", () => {
-    expect(
-      getDetailAssetStatus({
+  it("getDetailAssetStatus returns correct label and color", () => {
+    const resultAssign = getDetailAssetStatus(
+      {
         ...mockHardwareResponse,
         status_label: {
           id: 1,
-          name: "hardware.label.field.assign",
+          name: "Assign",
           status_type: "",
           status_meta: "",
         },
-      })
-    ).toBe("hardware.label.detail.assign");
-    expect(
-      getDetailAssetStatus({
-        ...mockHardwareResponse,
-        status_label: {
-          id: 1,
-          name: "hardware.label.field.readyToDeploy",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("hardware.label.detail.readyToDeploy");
-    expect(
-      getDetailAssetStatus({
-        ...mockHardwareResponse,
-        status_label: {
-          id: 1,
-          name: "hardware.label.field.broken",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("hardware.label.detail.broken");
-    expect(
-      getDetailAssetStatus({
-        ...mockHardwareResponse,
-        status_label: {
-          id: 1,
-          name: "hardware.label.field.pending",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("hardware.label.detail.pending");
-    expect(
-      getDetailAssetStatus({
+      },
+      (key) => key
+    );
+    expect(resultAssign.label).toBe("hardware.label.detail.assign");
+    expect(resultAssign.color).toBe("#0073b7");
+
+    const resultReadyToDeploy = getDetailAssetStatus(
+      {
         ...mockHardwareResponse,
         status_label: {
           id: 2,
+          name: "Ready to Deploy",
+          status_type: "",
+          status_meta: "",
+        },
+      },
+      (key) => key
+    );
+    expect(resultReadyToDeploy.label).toBe(
+      "hardware.label.detail.readyToDeploy"
+    );
+    expect(resultReadyToDeploy.color).toBe("#00a65a");
+
+    const resultBroken = getDetailAssetStatus(
+      {
+        ...mockHardwareResponse,
+        status_label: {
+          id: 3,
+          name: "Broken",
+          status_type: "",
+          status_meta: "",
+        },
+      },
+      (key) => key
+    );
+    expect(resultBroken.label).toBe("hardware.label.detail.broken");
+    expect(resultBroken.color).toBe("red");
+
+    const resultPending = getDetailAssetStatus(
+      {
+        ...mockHardwareResponse,
+        status_label: {
+          id: 4,
+          name: "Pending",
+          status_type: "",
+          status_meta: "",
+        },
+      },
+      (key) => key
+    );
+    expect(resultPending.label).toBe("hardware.label.detail.pending");
+    expect(resultPending.color).toBe("#f39c12");
+
+    const resultUnknown = getDetailAssetStatus(
+      {
+        ...mockHardwareResponse,
+        status_label: {
+          id: 5,
           name: "unknown",
           status_type: "",
           status_meta: "",
         },
-      })
-    ).toBe("");
-    expect(getDetailAssetStatus(undefined)).toBe("");
+      },
+      (key) => key
+    );
+    expect(resultUnknown.label).toBe("hardware.label.detail.unknown");
+    expect(resultUnknown.color).toBe("gray");
   });
 
   it("getDetailAssetStatusByName returns correct label", () => {

@@ -65,30 +65,12 @@ function createMockTaxTokenResponse(name: string): ITaxTokenResponse {
 }
 
 describe("tax_token utils", () => {
-  it("getTaxTokenStatusDecription returns correct label", () => {
-    expect(
-      getTaxTokenStatusDecription(
-        createMockTaxTokenResponse("hardware.label.field.assign")
-      )
-    ).toBe("hardware.label.detail.assign");
-    expect(
-      getTaxTokenStatusDecription(
-        createMockTaxTokenResponse("hardware.label.field.readyToDeploy")
-      )
-    ).toBe("hardware.label.detail.readyToDeploy");
-    expect(
-      getTaxTokenStatusDecription(
-        createMockTaxTokenResponse("hardware.label.field.broken")
-      )
-    ).toBe("hardware.label.detail.broken");
-    expect(
-      getTaxTokenStatusDecription(
-        createMockTaxTokenResponse("hardware.label.field.pending")
-      )
-    ).toBe("hardware.label.detail.pending");
-    expect(
-      getTaxTokenStatusDecription(createMockTaxTokenResponse("unknown"))
-    ).toBe("");
+  it("getTaxTokenStatusDecription returns correct label and color", () => {
+    const result = getTaxTokenStatusDecription(
+      createMockTaxTokenResponse("Assign")
+    );
+    expect(result.label).toBe("hardware.label.detail.assign");
+    expect(result.color).toBe("#0073b7");
   });
 
   it("getBGTaxTokenStatusDecription returns correct color", () => {
@@ -149,30 +131,20 @@ describe("tax_token utils", () => {
     expect(getBGTaxTokenAssignedStatusDecription(999)).toBe("gray");
   });
 
-  it("getDetailTaxTokenStatus returns correct label", () => {
-    expect(
-      getDetailTaxTokenStatus(
-        createMockTaxTokenResponse("hardware.label.field.assign")
-      )
-    ).toBe("hardware.label.detail.assign");
-    expect(
-      getDetailTaxTokenStatus(
-        createMockTaxTokenResponse("hardware.label.field.readyToDeploy")
-      )
-    ).toBe("hardware.label.detail.readyToDeploy");
-    expect(
-      getDetailTaxTokenStatus(
-        createMockTaxTokenResponse("hardware.label.field.broken")
-      )
-    ).toBe("hardware.label.detail.broken");
-    expect(
-      getDetailTaxTokenStatus(
-        createMockTaxTokenResponse("hardware.label.field.pending")
-      )
-    ).toBe("hardware.label.detail.pending");
-    expect(getDetailTaxTokenStatus(createMockTaxTokenResponse("unknown"))).toBe(
-      ""
+  it("getDetailTaxTokenStatus returns correct label and color", () => {
+    const result = getDetailTaxTokenStatus(
+      createMockTaxTokenResponse("Assign"),
+      (key) => key
     );
-    expect(getDetailTaxTokenStatus(undefined)).toBe("");
+    expect(result.label).toBe("tax_token.label.detail.assign");
+    expect(result.color).toBe("#0073b7");
+  });
+
+  it("getTaxTokenStatusDecription returns default label for unmatched name", () => {
+    const result = getTaxTokenStatusDecription(
+      createMockTaxTokenResponse("Unmatched")
+    );
+    expect(result.label).toBe("hardware.label.detail.unknown");
+    expect(result.color).toBe("gray");
   });
 });

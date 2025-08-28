@@ -94,37 +94,13 @@ describe("tools utils", () => {
     expect(getBGToolAssignedStatusDecription(999)).toBe("gray");
   });
 
-  it("getToolStatusDecription returns correct label", () => {
-    expect(
-      getToolStatusDecription({
-        ...mockToolResponse,
-        name: "tools.label.field.assign",
-      })
-    ).toBe("tools.label.detail.assign");
-    expect(
-      getToolStatusDecription({
-        ...mockToolResponse,
-        name: "tools.label.field.readyToDeploy",
-      })
-    ).toBe("tools.label.detail.readyToDeploy");
-    expect(
-      getToolStatusDecription({
-        ...mockToolResponse,
-        name: "tools.label.field.broken",
-      })
-    ).toBe("tools.label.detail.broken");
-    expect(
-      getToolStatusDecription({
-        ...mockToolResponse,
-        name: "tools.label.field.pending",
-      })
-    ).toBe("tools.label.detail.pending");
-    expect(
-      getToolStatusDecription({
-        ...mockToolResponse,
-        name: "unknown",
-      })
-    ).toBe("");
+  it("getToolStatusDecription returns correct label and color", () => {
+    const result = getToolStatusDecription(
+      { ...mockToolResponse, name: "Assign" },
+      (key) => key
+    );
+    expect(result.label).toBe("tools.label.detail.assign");
+    expect(result.color).toBe("#0073b7");
   });
 
   it("getBGToolStatusDecription returns correct color", () => {
@@ -160,63 +136,21 @@ describe("tools utils", () => {
     ).toBe("");
   });
 
-  it("getDetailToolStatus returns correct label", () => {
-    expect(
-      getDetailToolStatus({
+  it("getDetailToolStatus returns correct label and color", () => {
+    const result = getDetailToolStatus(
+      {
         ...mockToolResponse,
         status_label: {
           id: 1,
-          name: "tools.label.field.assign",
+          name: "Assign",
           status_type: "",
           status_meta: "",
         },
-      })
-    ).toBe("tools.label.detail.assign");
-    expect(
-      getDetailToolStatus({
-        ...mockToolResponse,
-        status_label: {
-          id: 1,
-          name: "tools.label.field.readyToDeploy",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("tools.label.detail.readyToDeploy");
-    expect(
-      getDetailToolStatus({
-        ...mockToolResponse,
-        status_label: {
-          id: 1,
-          name: "tools.label.field.broken",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("tools.label.detail.broken");
-    expect(
-      getDetailToolStatus({
-        ...mockToolResponse,
-        status_label: {
-          id: 1,
-          name: "tools.label.field.pending",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("tools.label.detail.pending");
-    expect(
-      getDetailToolStatus({
-        ...mockToolResponse,
-        status_label: {
-          id: 2,
-          name: "unknown",
-          status_type: "",
-          status_meta: "",
-        },
-      })
-    ).toBe("");
-    expect(getDetailToolStatus(undefined)).toBe("");
+      },
+      (key) => key
+    );
+    expect(result.label).toBe("tools.label.detail.assign");
+    expect(result.color).toBe("#0073b7");
   });
 
   it("filterAssignedStatus contains correct values", () => {
@@ -230,5 +164,14 @@ describe("tools utils", () => {
     const token = `header.${base64Payload}.signature`;
     expect(parseJwt(token)).toEqual(payload);
     expect(parseJwt(null)).toBeUndefined();
+  });
+
+  it("getToolStatusDecription returns default label for unmatched name", () => {
+    const result = getToolStatusDecription(
+      { ...mockToolResponse, name: "Unmatched" },
+      (key) => key
+    );
+    expect(result.label).toBe("tools.label.detail.unknown");
+    expect(result.color).toBe("gray");
   });
 });

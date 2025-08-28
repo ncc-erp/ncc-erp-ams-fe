@@ -67,7 +67,6 @@ import {
   getAssetAssignedStatusDecription,
   getAssetStatusDecription,
   getBGAssetAssignedStatusDecription,
-  getBGAssetStatusDecription,
 } from "utils/assets";
 import { ClientHardwareCheckin } from "./checkin";
 import { ClientHardwareCheckinMultipleAsset } from "./checkin-multiple-asset";
@@ -637,15 +636,19 @@ export const ClientHardwareListReadyToDeploy: React.FC<
       {
         key: "status_label",
         title: t("hardware.label.field.status"),
-        render: (value: IHardwareResponse) => (
-          <TagField
-            value={getAssetStatusDecription(value)}
-            style={{
-              background: getBGAssetStatusDecription(value),
-              color: "white",
-            }}
-          />
-        ),
+        render: (value: IHardwareResponse) => {
+          // Lấy mô tả trạng thái và màu sắc từ hàm getAssetStatusDecription
+          const { label, color } = getAssetStatusDecription(value);
+          return (
+            <TagField
+              value={label}
+              style={{
+                background: color,
+                color: "white",
+              }}
+            />
+          );
+        },
         defaultSortOrder: getDefaultSortOrder("status_label.name", sorter),
         filters: filterStatus_Label,
         onFilter: (value: number, record: IHardwareResponse) => {

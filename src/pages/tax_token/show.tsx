@@ -27,7 +27,12 @@ export const TaxTokenShow = (props: TaxTokenShowProps) => {
         </Col>
         <Col span={14}>
           <Text>
-            <Tag>{getDetailTaxTokenStatus(detail)}</Tag>
+            {(() => {
+              const { label, color } = getDetailTaxTokenStatus(detail, t);
+              return (
+                <Tag style={{ background: color, color: "white" }}>{label}</Tag>
+              );
+            })()}
             {detail?.assigned_to ? (
               <>
                 <UserOutlined />{" "}
