@@ -1,17 +1,18 @@
-import React, { useState, CSSProperties } from "react";
-
+import { AntdLayout, Grid, Menu, useMenu } from "@pankod/refine-antd";
 import {
-  useTranslate,
   useNavigation,
   usePermissions,
   useRouterContext,
+  useTranslate,
 } from "@pankod/refine-core";
-import { AntdLayout, Menu, Grid, useMenu } from "@pankod/refine-antd";
-import { antLayoutSider, antLayoutSiderMobile } from "./styles";
-import "../../../styles/antd.less";
+import React, { CSSProperties, useState } from "react";
+
+import { DATA_TEST_ID } from "__tests__/constants/data-test-id";
 import { EPermissions } from "constants/permissions";
-import { SideBarSubMenuItem } from "./SideBarSubMenuItem";
+import "../../../styles/antd.less";
 import { SideBarMenuItem } from "./SideBarMenuItem";
+import { SideBarSubMenuItem } from "./SideBarSubMenuItem";
+import { antLayoutSider, antLayoutSiderMobile } from "./styles";
 
 const logo: CSSProperties = {
   height: "50px",
@@ -114,7 +115,7 @@ export const Sider: React.FC = () => {
     <>
       {permissionsData && userIsUser && (
         <>
-          <Link to="users" data-test-id="logo">
+          <Link to="users" data-testid={DATA_TEST_ID.SIDEBAR.LOGO}>
             {collapsed ? (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
@@ -134,7 +135,7 @@ export const Sider: React.FC = () => {
 
       {permissionsData && userIsAdmin && (
         <>
-          <Link to="dashboard" data-test-id="logo">
+          <Link to="dashboard" data-testid={DATA_TEST_ID.SIDEBAR.LOGO}>
             {collapsed ? (
               <img
                 src={"/images/global/nccsoft-logo-small.png"}
@@ -161,13 +162,13 @@ export const Sider: React.FC = () => {
 
           push(key as string);
         }}
-        data-test-id="menu"
+        data-testid={DATA_TEST_ID.SIDEBAR.MENU}
       >
         {permissionsData && (userIsAdmin || userIsBranchAdmin) && (
           <SideBarSubMenuItem
             title={translate("resource.dashboard")}
             label=""
-            key={"dashboard"}
+            menuKey={"dashboard"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={dashboardItemList}
@@ -178,7 +179,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.asset")}
             label={"assets"}
-            key={"asset"}
+            menuKey={"asset"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={assetItemList}
@@ -189,7 +190,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.client-asset")}
             label={"client-assets"}
-            key={"client-asset"}
+            menuKey={"client-asset"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={clientAssetList}
@@ -200,7 +201,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.tools")}
             label={"tools"}
-            key={"tool"}
+            menuKey={"tool"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={toolItemList}
@@ -221,7 +222,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.consumable")}
             label={"consumables"}
-            key={"consumable"}
+            menuKey={"consumable"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={consumableItemList}
@@ -232,7 +233,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.tax_token")}
             label={"tax_token"}
-            key={"tax_token"}
+            menuKey={"tax_token"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={taxTokenItemList}
@@ -243,7 +244,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.users_assets")}
             label={"users"}
-            key={"users_assets"}
+            menuKey={"users_assets"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={userAssetItemList}
@@ -254,7 +255,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.setting")}
             label={""}
-            key={"setting"}
+            menuKey={"setting"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={settingItemList}
@@ -284,7 +285,7 @@ export const Sider: React.FC = () => {
           <SideBarSubMenuItem
             title={translate("resource.audit")}
             label={""}
-            key={"audit"}
+            menuKey={"audit"}
             hasItemIcon={false}
             collapsed={collapsed}
             itemList={auditItemList}
@@ -317,7 +318,7 @@ export const Sider: React.FC = () => {
         style={isMobile ? antLayoutSiderMobile : antLayoutSider}
         width="230px"
         className="custom-overflow-y"
-        data-test-id="sidebar"
+        data-testid={DATA_TEST_ID.SIDEBAR}
       >
         {isMobile ? (
           <div style={{ height: "100%", display: "flex" }}>

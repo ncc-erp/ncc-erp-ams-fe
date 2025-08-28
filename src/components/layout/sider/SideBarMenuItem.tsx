@@ -1,4 +1,6 @@
-import { Menu, Icons, useMenu, IMenuItem } from "@pankod/refine-antd";
+import { Icons, IMenuItem, Menu, useMenu } from "@pankod/refine-antd";
+
+import { DATA_TEST_ID } from "__tests__/constants/data-test-id";
 import "../../../styles/antd.less";
 import { SideBarIcon } from "./SideBarIcon";
 
@@ -39,6 +41,7 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
               key={route}
               eventKey={route}
               icon={<SideBarIcon title={name} type={"item"} />}
+              data-testid={DATA_TEST_ID.SIDEBAR.MENU_ITEM}
             >
               <div
                 style={{
@@ -46,10 +49,13 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
-                data-test-id="menu-item"
               >
                 {name}
-                {!collapsed && isSelected && <RightOutlined />}
+                {!collapsed && isSelected && (
+                  <RightOutlined
+                    data-testid={DATA_TEST_ID.ICONS.RIGHT_OUTLINED}
+                  />
+                )}
               </div>
             </Menu.Item>
           );

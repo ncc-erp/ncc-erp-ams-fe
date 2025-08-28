@@ -15,7 +15,8 @@ const jestConfig: JestConfigWithTsJest = {
     "^interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
     "^context/(.*)$": "<rootDir>/src/context/$1",
     "^api/(.*)$": "<rootDir>/src/api/$1",
-    "^styles/(.*)$": "<rootDir>/src/styles/$1",
+    "\\.(css|less|scss|sass)$":
+      "<rootDir>/src/__tests__/__mocks__/styleMock.js",
   },
   testMatch: [
     "**/__tests__/**/*.(test|spec).(ts|tsx|js|jsx)",
