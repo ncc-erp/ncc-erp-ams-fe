@@ -33,7 +33,6 @@ import {
 } from "interfaces/tool";
 import {
   getBGToolAssignedStatusDecription,
-  getBGToolStatusDecription,
   getToolAssignedStatusDecription,
   getToolStatusDecription,
 } from "utils/tools";
@@ -328,15 +327,18 @@ export const DetailsTool = (props: detailToolProps) => {
       {
         key: "status_label",
         title: t("tools.label.field.status"),
-        render: (value: IToolResponse) => (
-          <TagField
-            value={getToolStatusDecription(value)}
-            style={{
-              background: getBGToolStatusDecription(value),
-              color: "white",
-            }}
-          />
-        ),
+        render: (value: IToolResponse) => {
+          const { label, color } = getToolStatusDecription(value, t);
+          return (
+            <TagField
+              value={label}
+              style={{
+                background: color,
+                color: "white",
+              }}
+            />
+          );
+        },
         defaultSortOrder: getDefaultSortOrder("status_label", sorter),
         filters: filterStatus_Label,
         onFilter: (value: number, record: IToolResponse) => {
