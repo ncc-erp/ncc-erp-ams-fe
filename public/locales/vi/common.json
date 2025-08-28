@@ -1140,8 +1140,13 @@
       },
       "detail": {
         "assign": "Bàn Giao",
-        "not_active": "Chưa kích hoạt",
-        "tax_token": "Token thuế"
+        "readyToDeploy": "Trong kho",
+        "broken": "Hỏng",
+        "pending": "Chờ xử lý",
+        "default": "Chưa cấp phát",
+        "waitingAcceptCheckout": "Chờ xác nhận cấp phát",
+        "waitingAcceptCheckin": "Chờ xác nhận thu hồi",
+        "unknown": "Không xác định"
       }
     }
   },
