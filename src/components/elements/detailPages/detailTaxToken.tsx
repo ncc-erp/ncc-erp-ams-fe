@@ -58,6 +58,7 @@ import { TaxTokenClone } from "pages/tax_token/clone";
 import { TaxTokenCheckout } from "pages/tax_token/checkout";
 import { TaxTokenCheckin } from "pages/tax_token/checkin";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -385,8 +386,12 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tax_token_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tax_token_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TAX_TOKEN_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_TAX_TOKEN_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
 
@@ -593,7 +598,7 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tax_token_selected",
+      LocalStorageKey.ITEM_TAX_TOKEN_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

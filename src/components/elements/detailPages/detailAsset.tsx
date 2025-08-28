@@ -55,6 +55,7 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -105,8 +106,10 @@ export const DetailsAsset = (props: detailAssetProps) => {
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -681,7 +684,10 @@ export const DetailsAsset = (props: detailAssetProps) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      LocalStorageKey.ITEM_SELECTED,
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (

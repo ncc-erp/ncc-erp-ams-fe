@@ -77,6 +77,7 @@ import { HardwareCreate } from "./create";
 import { HardwareEdit } from "./edit";
 import { HardwareSearch } from "./search";
 import { HardwareShow } from "./show";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -128,8 +129,8 @@ export const HardwareListReadyToDeploy: React.FC<
   const [detailClone, setDetailClone] = useState<IHardwareResponse>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as any)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED) !== null
+      ? JSON.parse(localStorage.getItem(LocalStorageKey.ITEM_SELECTED) as any)
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -878,7 +879,10 @@ export const HardwareListReadyToDeploy: React.FC<
   };
 
   useEffect(() => {
-    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      LocalStorageKey.ITEM_SELECTED,
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (
@@ -920,21 +924,25 @@ export const HardwareListReadyToDeploy: React.FC<
   const pageTotal = tableProps.pagination && tableProps.pagination.total;
 
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
       setParams({
         dateFrom: from?.format("YY-MM-DD")
           ? from?.format("YY-MM-DD").toString()
@@ -943,7 +951,7 @@ export const HardwareListReadyToDeploy: React.FC<
       });
     } else {
       clearParam(["dateFrom", "dateTo"]);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     }
 
     searchFormProps.form?.submit();
@@ -1051,12 +1059,12 @@ export const HardwareListReadyToDeploy: React.FC<
     if (value === 0) {
       clearParam("rtd_location_id");
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       setParams({
@@ -1086,11 +1094,11 @@ export const HardwareListReadyToDeploy: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location: localStorage.getItem("rtd_location_id")
+            location: localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)
               ? searchValuesLocation
               : Number(rtd_location_id),
             purchase_date:
-              localStorage.getItem("purchase_date") !== null
+              localStorage.getItem(LocalStorageKey.PURCHASE_DATE) !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
                       moment(searchValuesByDateFrom),

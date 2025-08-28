@@ -5,6 +5,7 @@ import { ICheckboxChange } from "interfaces";
 import { useTranslate } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 const { Search } = Input;
 export declare type CheckboxValueType = string | number | boolean;
 export interface ISelectTableCol {
@@ -118,21 +119,21 @@ export const TableAction = (props: ITableAction) => {
   const onSelectCollumn = useCallback(() => {}, []);
 
   const searchValues = useMemo(() => {
-    return localStorage.getItem("search");
-  }, [localStorage.getItem("search")]);
+    return localStorage.getItem(LocalStorageKey.SEARCH);
+  }, [localStorage.getItem(LocalStorageKey.SEARCH)]);
 
   const debouncedSearch = () => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       localStorage.setItem(
-        "search",
+        LocalStorageKey.SEARCH,
         searchFormProps.form?.getFieldsValue()?.search !== undefined
           ? searchFormProps.form?.getFieldsValue()?.search
           : ""
       );
       searchFormProps.form.submit();
       searchParams.set(
-        "search",
+        LocalStorageKey.SEARCH,
         searchFormProps.form?.getFieldsValue()?.search
       );
       setSearchParams(searchParams);
@@ -144,7 +145,7 @@ export const TableAction = (props: ITableAction) => {
   }, [window.location.reload]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchParam = searchParams.get("search");
+  const searchParam = searchParams.get(LocalStorageKey.SEARCH);
   return (
     <div className="table-action-container">
       <div>
@@ -163,7 +164,8 @@ export const TableAction = (props: ITableAction) => {
             {...searchFormProps}
             initialValues={{
               search:
-                localStorage.getItem("search") !== null || searchValues !== ""
+                localStorage.getItem(LocalStorageKey.SEARCH) !== null ||
+                searchValues !== ""
                   ? searchValues
                   : searchParam,
             }}
@@ -171,12 +173,12 @@ export const TableAction = (props: ITableAction) => {
               debouncedSearch();
             }}
           >
-            <Form.Item name={"search"}>
+            <Form.Item name={LocalStorageKey.SEARCH}>
               <Search
                 placeholder={t("table.search")}
                 onSearch={() => {
                   localStorage.setItem(
-                    "search",
+                    LocalStorageKey.SEARCH,
                     searchFormProps.form.getFieldsValue().search
                   );
                   searchFormProps.form.submit();

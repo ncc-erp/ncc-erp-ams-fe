@@ -4,6 +4,7 @@ import { DataTable, ICategoryAsset } from "interfaces/dashboard";
 import { useNavigation, useTranslate } from "@pankod/refine-core";
 import { useSearchParams } from "react-router-dom";
 import { CategoryType, EStatus } from "constants/assets";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type AssetsSummaryTableAllLocation = {
   id: number;
@@ -23,7 +24,7 @@ export const AssetsSummaryTableAllLocation = (
   const [searchParams, setSearchParams] = useSearchParams();
   const dateFrom = searchParams.get("purchase_date_from1");
   const dateTo = searchParams.get("purchase_date_to1");
-  const rtd_location_id = searchParams.get("rtd_location_id");
+  const rtd_location_id = searchParams.get(LocalStorageKey.RTD_LOCATION_ID);
 
   const sumEachCategoryByLocation = (type: string, is_client = false) => {
     const dataAllCategory = [] as any;

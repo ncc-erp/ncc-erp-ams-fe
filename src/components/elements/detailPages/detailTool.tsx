@@ -58,6 +58,7 @@ import { ToolClone } from "pages/tools/clone";
 import { ToolCheckout } from "pages/tools/checkout";
 import { ToolCheckin } from "pages/tools/checkin";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -395,8 +396,10 @@ export const DetailsTool = (props: detailToolProps) => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tools_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tools_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -593,13 +596,13 @@ export const DetailsTool = (props: detailToolProps) => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tools_selected",
+      LocalStorageKey.ITEM_TOOLS_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
 
   useEffect(() => {
-    localStorage.removeItem("selectedToolsRowKeys");
+    localStorage.removeItem(LocalStorageKey.SELECTED_TOOLS_ROW_KEYS);
     searchFormProps.form?.submit();
   }, [window.location.reload]);
 

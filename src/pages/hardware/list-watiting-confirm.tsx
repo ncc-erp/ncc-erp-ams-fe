@@ -71,6 +71,7 @@ import { useRowSelection } from "../../hooks/useRowSelection";
 import { CancleAsset } from "../users/cancel";
 import { HardwareCancelMultipleAsset } from "../users/cancel-multiple-assets";
 import { HardwareSearch } from "./search";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const HardwareListWaitingConfirm: React.FC<
   IResourceComponentsProps
@@ -95,8 +96,10 @@ export const HardwareListWaitingConfirm: React.FC<
   }, [permissionsData]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SELECTED) as string
+        )
       : defaultCheckedListWaitingConfirm
   );
   const [isActive, setIsActive] = useState(false);
@@ -603,16 +606,20 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const { Option } = Select;
   const searchValuesByDateFrom = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(0, 10);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(0, 10);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesByDateTo = useMemo(() => {
-    return localStorage.getItem("purchase_date")?.substring(11, 21);
-  }, [localStorage.getItem("purchase_date")]);
+    return localStorage
+      .getItem(LocalStorageKey.PURCHASE_DATE)
+      ?.substring(11, 21);
+  }, [localStorage.getItem(LocalStorageKey.PURCHASE_DATE)]);
 
   const searchValuesLocation = useMemo(() => {
-    return Number(localStorage.getItem("rtd_location_id"));
-  }, [localStorage.getItem("rtd_location_id")]);
+    return Number(localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID));
+  }, [localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)]);
 
   useEffect(() => {
     clearSelection();
@@ -622,7 +629,7 @@ export const HardwareListWaitingConfirm: React.FC<
   const handleChangePickerByMonth = (val: any, formatString: any) => {
     if (val !== null) {
       const [from, to] = Array.from(val || []) as moment.Moment[];
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
       setParams({
         dateFrom: from?.format("YY-MM-DD")
           ? from?.format("YY-MM-DD").toString()
@@ -631,7 +638,7 @@ export const HardwareListWaitingConfirm: React.FC<
       });
     } else {
       clearParam(["dateFrom", "dateTo"]);
-      localStorage.setItem("purchase_date", formatString ?? "");
+      localStorage.setItem(LocalStorageKey.PURCHASE_DATE, formatString ?? "");
     }
 
     searchFormProps.form?.submit();
@@ -660,7 +667,10 @@ export const HardwareListWaitingConfirm: React.FC<
     }
   };
   useEffect(() => {
-    localStorage.setItem("item_selected", JSON.stringify(collumnSelected));
+    localStorage.setItem(
+      LocalStorageKey.ITEM_SELECTED,
+      JSON.stringify(collumnSelected)
+    );
   }, [collumnSelected]);
 
   const listenForOutsideClicks = (
@@ -692,14 +702,14 @@ export const HardwareListWaitingConfirm: React.FC<
 
   const handleChangeLocation = (value: number) => {
     if (value === 0) {
-      clearParam("rtd_location_id");
+      clearParam(LocalStorageKey.RTD_LOCATION_ID);
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
     } else {
       localStorage.setItem(
-        "rtd_location_id",
+        LocalStorageKey.RTD_LOCATION_ID,
         JSON.stringify(searchFormProps.form?.getFieldsValue()?.location) ?? ""
       );
       setParams({
@@ -722,11 +732,11 @@ export const HardwareListWaitingConfirm: React.FC<
         <Form
           {...searchFormProps}
           initialValues={{
-            location: localStorage.getItem("rtd_location_id")
+            location: localStorage.getItem(LocalStorageKey.RTD_LOCATION_ID)
               ? searchValuesLocation
               : Number(rtd_location_id),
             purchase_date:
-              localStorage.getItem("purchase_date") !== null
+              localStorage.getItem(LocalStorageKey.PURCHASE_DATE) !== null
                 ? searchValuesByDateFrom !== "" && searchValuesByDateTo !== ""
                   ? [
                       moment(searchValuesByDateFrom),
