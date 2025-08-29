@@ -1,5 +1,13 @@
 import { formatDateWithTimeZone } from "utils/dateUtils";
 
+beforeAll(() => {
+  jest.spyOn(console, "warn").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});
+
 describe("formatDateWithTimeZone", () => {
   it("should format valid date string", () => {
     const date = "2024-08-13T10:30:00Z";

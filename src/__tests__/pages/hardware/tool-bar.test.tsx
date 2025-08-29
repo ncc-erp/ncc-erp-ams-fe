@@ -2,6 +2,14 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ToolbarActions } from "../../../pages/hardware/tool-bar";
 
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});
+
 // Mock useTranslate trả về chính key
 jest.mock("@pankod/refine-core", () => ({
   useTranslate: () => (key: string) => key,
