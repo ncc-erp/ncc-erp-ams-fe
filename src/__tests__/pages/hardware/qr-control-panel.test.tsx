@@ -2,17 +2,61 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import QrControlPanel from "../../../pages/hardware/qr-control-panel";
 
+jest.mock("antd", () => {
+  const actualAntd = jest.requireActual("antd");
+
+  const Select: React.FC<{
+    value?: string;
+    onChange?: (value: string) => void;
+    children?: React.ReactNode;
+    disabled?: boolean;
+    style?: React.CSSProperties;
+  }> = ({ value, onChange, children, disabled, style, ...props }) => {
+    return (
+      <select
+        role="combobox"
+        value={value || ""}
+        onChange={(e) => onChange && onChange(e.target.value)}
+        disabled={disabled}
+        style={style}
+        {...props}
+      >
+        {children}
+      </select>
+    );
+  };
+
+  // Define Select.Option as a property of Select
+  const Option = ({
+    value,
+    children,
+  }: {
+    value: string;
+    children: React.ReactNode;
+  }) => <option value={value}>{children}</option>;
+
+  Option.displayName = "Select.Option";
+  (Select as any).Option = Option;
+
+  (Select as any).Option.displayName = "Select.Option";
+
+  return {
+    ...actualAntd,
+    Select,
+  };
+});
+
 // Mock react-i18next
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
-    t: (key: string) => key, // Trả về chính key để tránh lỗi
+    t: (key: string) => key,
   }),
 }));
 
 // Mock rc-virtual-list để tránh lỗi removeEventListener
 jest.mock("rc-virtual-list", () => ({
   __esModule: true,
-  default: jest.fn(() => <div />), // Mock thành một div đơn giản
+  default: jest.fn(() => <div />),
 }));
 
 describe("QrControlPanel Component", () => {

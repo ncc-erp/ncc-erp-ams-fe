@@ -35,9 +35,9 @@ describe("ToolbarActions Component", () => {
   describe("Check render", () => {
     it("should render all buttons and dropdown", () => {
       renderComponent();
-      expect(screen.getByLabelText("sync")).toBeInTheDocument(); // Refresh
-      expect(screen.getByLabelText("menu")).toBeInTheDocument(); // Columns
-      expect(screen.getByLabelText("file-search")).toBeInTheDocument(); // Search
+      expect(screen.getByLabelText("sync")).toBeInTheDocument();
+      expect(screen.getByLabelText("menu")).toBeInTheDocument();
+      expect(screen.getByLabelText("file-search")).toBeInTheDocument();
     });
 
     it("should display all column checkboxes when dropdown is open", () => {
