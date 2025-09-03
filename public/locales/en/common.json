@@ -1143,9 +1143,14 @@
         "clone": "Clone"
       },
       "detail": {
-        "assign": "Checkout",
-        "not_active": "Not Active",
-        "tax_token": "Tax Token"
+        "assign": "Assigned",
+        "readyToDeploy": "Ready to Deploy",
+        "broken": "Broken",
+        "pending": "Pending",
+        "default": "Not Assigned",
+        "waitingAcceptCheckout": "Waiting Accept Checkout",
+        "waitingAcceptCheckin": "Waiting Accept Checkin",
+        "unknown": "Unknown"
       }
     }
   },

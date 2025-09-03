@@ -60,7 +60,6 @@ import "styles/request.less";
 import { filterAssignedStatus } from "utils/assets";
 import {
   getBGTaxTokenAssignedStatusDecription,
-  getBGTaxTokenStatusDecription,
   getTaxTokenAssignedStatusDecription,
   getTaxTokenStatusDecription,
 } from "utils/tax_token";
@@ -313,15 +312,18 @@ export const TaxTokenListWaitingConfirm: React.FC<
       {
         key: "status_label",
         title: t("tax_token.label.field.status"),
-        render: (value: ITaxTokenResponse) => (
-          <TagField
-            value={getTaxTokenStatusDecription(value)}
-            style={{
-              background: getBGTaxTokenStatusDecription(value),
-              color: "white",
-            }}
-          />
-        ),
+        render: (value: ITaxTokenResponse) => {
+          const { label, color } = getTaxTokenStatusDecription(value);
+          return (
+            <TagField
+              value={label}
+              style={{
+                background: color,
+                color: "white",
+              }}
+            />
+          );
+        },
         defaultSortOrder: getDefaultSortOrder("status_label", sorter),
         filters: filterStatus_Label,
         onFilter: (value: number, record: ITaxTokenResponse) => {
