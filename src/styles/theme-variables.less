@@ -176,7 +176,9 @@
   color: var(--color-input-placeholder);
 }
 
-/* Button Component */
+/* ==============================================
+   BUTTON COMPONENT
+   ============================================== */
 .ant-btn {
   border-radius: var(--border-radius);
   transition: all 0.3s ease;
@@ -186,11 +188,114 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  /* Focus state */
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+  }
+
+  /* Disabled state: attr disabled or .ant-btn-disabled */
+  &[disabled], &-disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+    
+    &, &:hover, &:focus, &:active {
+      color: var(--color-text-secondary) !important;
+      background-color: var(--color-bg-container) !important;
+      border-color: var(--color-border) !important;
+      box-shadow: none !important;
+    }
+  }
   
-  /* Default button */
-  &.ant-btn-default {
+  /* Default button: ant-btn-default */
+  &-default {
     background-color: var(--color-bg-container);
     border-color: var(--color-border);
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    
+    /* Icon color */
+    .anticon, svg {
+      color: var(--color-text);
+    }
+
+    &:hover, &:focus {
+      background-color: var(--color-bg-elevated);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    
+      .anticon, svg {
+        color: var(--color-primary);
+      }
+    }
+    
+    &:active {
+      background-color: var(--color-bg-elevated);
+      border-color: var(--color-button-active);
+      color: var(--color-button-active);
+    
+      .anticon, svg {
+        color: var(--color-button-active);
+      }
+    }
+  }
+
+  /* Text button: ant-btn-text */
+  &-text {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-text);
+    box-shadow: none;
+  
+    &:hover, &:focus {
+      background-color: rgba(237, 27, 35, 0.1);
+      color: var(--color-primary);
+    }
+    
+    &:active {
+      background-color: rgba(237, 27, 35, 0.15);
+    }
+
+    /* Dark theme adjustment */
+    [data-theme="dark"] & {
+      &:hover, &:focus {
+        background-color: rgba(237, 27, 35, 0.2);
+      }
+      
+      &:active {
+        background-color: rgba(237, 27, 35, 0.3);
+      }
+    }
+  }
+
+  /* Link button: ant-btn-link */
+  &-link {
+    background: transparent;
+    border-color: transparent;
+    color: var(--color-primary);
+    box-shadow: none;
+
+    &:hover, &:focus {
+      color: var(--color-button-hover);
+    }
+    
+    &:active {
+      color: var(--color-button-active);
+    }
+    
+    &[disabled], &-disabled {
+      background-color: transparent !important;
+      border-color: transparent !important;
+    }
+  }
+
+  /* Dashed button: btn-ant-dashed */
+  &-dashed {
+    background-color: var(--color-bg-container);
+    border-color: var(--color-border);
+    border-style: dashed;
     color: var(--color-text);
     
     &:hover, &:focus {
@@ -203,21 +308,213 @@
       color: var(--color-button-active);
     }
   }
+
+  /* Dangerous button */
+  &-dangerous {
+    &.ant-btn-primary {
+      background-color: var(--color-error);
+      border-color: var(--color-error);
+      
+      &:hover, &:focus {
+        background-color: #ff7a45;
+        border-color: #ff7a45;
+      }
+      
+      &:active {
+        background-color: #d4380d;
+        border-color: #d4380d;
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(250, 84, 28, 0.2);
+      }
+    }
+    
+    &.ant-btn-default, &.ant-btn-dashed {
+      color: var(--color-error);
+      border-color: var(--color-error);
+      
+      &:hover, &:focus {
+        color: #ff7a45;
+        border-color: #ff7a45;
+      }
+      
+      &:active {
+        color: #d4380d;
+        border-color: #d4380d;
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(250, 84, 28, 0.2);
+      }
+    }
+    
+    &.ant-btn-text, &.ant-btn-link {
+      color: var(--color-error);
+      
+      &:hover, &:focus {
+        color: #ff7a45;
+      }
+      
+      &:active {
+        color: #d4380d;
+      }
+    }
+  }
+
+  /* Ghost button: btn-ant-background-ghost */
+  &-background-ghost {
+    background-color: transparent !important;
+    
+    &.ant-btn-primary {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+      
+      &:hover, &:focus {
+        background-color: var(--color-primary) !important;
+        color: #ffffff;
+      }
+      
+      &:active {
+        background-color: var(--color-button-active) !important;
+        border-color: var(--color-button-active);
+      }
+    }
+  }
+
+  /* Icon only button: btn-ant-icon-only */
+  &-icon-only {
+    padding: 0;
+    width: 32px;
+
+    &.ant-btn-sm { width: 24px; }
+    &.ant-btn-lg { width: 40px; }
+
+    > .anticon { margin: 0; }
+  }
+
+  /* Button sizes */
+  &-sm {
+    height: 24px;
+    padding: 0 8px;
+    font-size: 12px;
+    border-radius: var(--border-radius-sm);
+  }
+  
+  &-lg {
+    height: 40px;
+    padding: 0 20px;
+    font-size: 16px;
+    border-radius: var(--border-radius-lg);
+  }
+
+  /* Button shapes */
+  &-circle {
+    width: 32px;
+    border-radius: 50%;
+    padding: 0;
+    
+    &.ant-btn-sm {
+      width: 24px;
+    }
+    
+    &.ant-btn-lg {
+      width: 40px;
+    }
+    
+    > .anticon {
+      margin: 0;
+    }
+  }
+  
+  &-round {
+    border-radius: 32px;
+    
+    &.ant-btn-sm {
+      border-radius: 24px;
+    }
+    
+    &.ant-btn-lg {
+      border-radius: 40px;
+    }
+  }
+  
+  /* Block button */
+  &-block {
+    width: 100%;
+  }
+  
+  /* Loading state */
+  &-loading {
+    opacity: 0.65;
+    pointer-events: none;
+  }
 }
 
 .ant-btn-primary {
   background-color: var(--color-button-primary);
   border-color: var(--color-button-primary);
+
+  &:hover {
+    background-color: var(--color-button-hover);
+    border-color: var(--color-button-hover);
+  }
+
+  &:focus {
+    background-color: var(--color-button-hover);
+    border-color: var(--color-button-hover);
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+  }
+
+  &:active {
+    background-color: var(--color-button-active);
+    border-color: var(--color-button-active);
+  }
 }
 
-.ant-btn-primary:hover {
-  background-color: var(--color-button-hover);
-  border-color: var(--color-button-hover);
+/* ==============================================
+   BUTTON GROUPS
+   ============================================== */
+.ant-btn-group {
+  display: inline-flex;
+  
+  > .ant-btn {
+    position: relative;
+    z-index: 1;
+    
+    &:hover, &:focus, &:active {
+      z-index: 2;
+    }
+    
+    &:not(:first-child) {
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
 }
 
-.ant-btn-primary:active {
-  background-color: var(--color-button-active);
-  border-color: var(--color-button-active);
+/* Button Responsive */
+@media (max-width: 768px) {
+  .ant-btn {
+    height: 36px;
+    padding: 0 12px;
+    
+    &-sm {
+      height: 28px;
+      padding: 0 10px;
+    }
+    
+    &-lg {
+      height: 44px;
+      padding: 0 24px;
+    }
+  }
 }
 
 .ant-typography {
@@ -232,18 +529,208 @@
   color: var(--color-checkbox-text);
 }
 
-/* Pagination ellipsis fix for dark theme */
-.ant-pagination-item-ellipsis,
-.ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis, 
-.ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+/* ==============================================
+   PAGINATION COMPONENT
+   ============================================== */
+/* Base Pagination Container */
+.ant-pagination {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+/* Pagination Items (Numbers) */
+.ant-pagination-item {
+  background-color: var(--color-bg-container);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+}
+
+.ant-pagination-item a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.ant-pagination-item:hover {
+  border-color: var(--color-primary);
+}
+
+.ant-pagination-item:hover a {
+  color: var(--color-primary);
+}
+
+/* Active/Selected Page */
+.ant-pagination-item-active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.ant-pagination-item-active a {
+  color: #ffffff !important;
+}
+
+.ant-pagination-item-active:hover {
+  background-color: var(--color-button-hover);
+  border-color: var(--color-button-hover);
+}
+
+/* Previous/Next Buttons */
+.ant-pagination-prev,
+.ant-pagination-next {
   color: var(--color-text);
 }
 
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+  background-color: var(--color-bg-container);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-text);
+}
+
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Disabled Previous/Next Buttons */
+.ant-pagination-disabled .ant-pagination-item-link {
+  background-color: var(--color-bg-container);
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.ant-pagination-disabled:hover .ant-pagination-item-link {
+  background-color: var(--color-bg-container);
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-tertiary);
+}
+
+/* Jump Prev/Next (Quick jumper with ellipsis) */
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next {
+  color: var(--color-text-secondary);
+}
+
+.ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-link-icon,
+.ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
+  color: var(--color-primary);
+}
+
+.ant-pagination-jump-prev:hover .ant-pagination-item-container .ant-pagination-item-link-icon,
+.ant-pagination-jump-next:hover .ant-pagination-item-container .ant-pagination-item-link-icon {
+  color: var(--color-button-hover);
+}
+
+/* Ellipsis */
+.ant-pagination-item-ellipsis,
+.ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
+.ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+  color: var(--color-text-tertiary);
+}
+
+/* Options (Page size selector and quick jumper) */
+.ant-pagination-options {
+  color: var(--color-text);
+}
+
+.ant-pagination-options-size-changer {
+  color: var(--color-text);
+}
+
+.ant-pagination-options-quick-jumper {
+  color: var(--color-text);
+}
+
+.ant-pagination-options-quick-jumper input {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-input-text);
+}
+
+.ant-pagination-options-quick-jumper input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+}
+
+/* Total info */
+.ant-pagination-total-text {
+  color: var(--color-text-secondary);
+}
+
+/* Simple Pagination (when simple prop is true) */
+.ant-pagination-simple .ant-pagination-simple-pager {
+  background-color: var(--color-bg-container);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+}
+
+.ant-pagination-simple .ant-pagination-simple-pager input {
+  background-color: transparent;
+  border: none;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.ant-pagination-simple .ant-pagination-simple-pager input:focus {
+  box-shadow: none;
+}
+
+.ant-pagination-simple .ant-pagination-slash {
+  color: var(--color-text-secondary);
+}
+
+/* Size variants */
+.ant-pagination.ant-pagination-mini .ant-pagination-item,
+.ant-pagination.ant-pagination-mini .ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination.ant-pagination-mini .ant-pagination-next .ant-pagination-item-link {
+  border-radius: var(--border-radius-sm);
+}
+
+/* Dark theme specific overrides */
 [data-theme="dark"] {
+  /* Ensure proper contrast for active states in dark theme */
+  .ant-pagination-item-active a {
+    color: #ffffff !important;
+  }
+  
+  /* Dark theme ellipsis color override */
   .ant-pagination-item-ellipsis,
   .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
   .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.25);
+  }
+  
+  /* Dark theme focus states */
+  .ant-pagination-options-quick-jumper input:focus {
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.3);
+  }
+  
+  /* Dark theme disabled state improvements */
+  .ant-pagination-disabled .ant-pagination-item-link {
+    background-color: var(--color-bg-container);
+    border-color: var(--color-border-secondary);
+    color: var(--color-text-tertiary);
+  }
+}
+
+/* RTL Support (if needed) */
+.ant-pagination[dir="rtl"] .ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination[dir="rtl"] .ant-pagination-next .ant-pagination-item-link {
+  transform: rotate(180deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ant-pagination {
+    text-align: center;
+  }
+  
+  .ant-pagination-options {
+    display: none;
   }
 }
 
