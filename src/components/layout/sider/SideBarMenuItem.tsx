@@ -1,6 +1,10 @@
 import { Menu, Icons, useMenu, IMenuItem } from "@pankod/refine-antd";
 import "../../../styles/antd.less";
 import { SideBarIcon } from "./SideBarIcon";
+import {
+  menuItemInnerStyles,
+  menuItemStyles,
+} from "components/layout/sider/styles";
 
 const { RightOutlined } = Icons;
 
@@ -33,21 +37,12 @@ export const SideBarMenuItem = (props: MenuItemProps) => {
           return (
             <Menu.Item
               {...others}
-              style={{
-                fontWeight: isSelected ? "bold" : "normal",
-              }}
+              style={menuItemStyles(isSelected)}
               key={route}
               eventKey={route}
               icon={<SideBarIcon title={name} type={"item"} />}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-                data-test-id="menu-item"
-              >
+              <div style={menuItemInnerStyles} data-test-id="menu-item">
                 {name}
                 {!collapsed && isSelected && <RightOutlined />}
               </div>

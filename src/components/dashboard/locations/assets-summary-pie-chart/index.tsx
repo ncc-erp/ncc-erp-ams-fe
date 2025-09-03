@@ -133,10 +133,21 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
       style: {
         textAlign: "center",
         fontSize: 14,
+        fill: "#FFFFFF",
       },
     },
     legend: {
       selected: dataActive,
+      itemName: {
+        style: ({ checked }: { checked: boolean }) => ({
+          fontSize: 12,
+          fill: checked ? "#4A5568" : "#A0AEC0",
+          fontWeight: checked ? 600 : 400,
+        }),
+      },
+      onChange: (selected: Record<string, boolean>) => {
+        setDataActive(selected);
+      },
     },
     tooltip: {
       customContent: (title, data) => {
@@ -182,6 +193,8 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
           overflow: "hidden",
           textOverflow: "ellipsis",
           fontSize: "25px",
+          fill: "#4A5568",
+          fontWeight: "bold",
         },
         customHtml: (container, view, datum, dataPieChart) => {
           const { width } = container.getBoundingClientRect();
@@ -190,7 +203,7 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
             : dataPieChart
               ? `${name} ${dataPieChart.reduce((r, d) => r + d.value, 0)}`
               : `${name} 0`;
-          return renderStatistic(width, text);
+          return renderStatistic(width, text, "#4A5568");
         },
       },
     },
@@ -199,6 +212,10 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   return <Pie {...config} />;
 };
 
-function renderStatistic(width: number, text: string): string {
-  return text;
+function renderStatistic(
+  width: number,
+  text: string,
+  textColor: string
+): string {
+  return `<div style="color: ${textColor}; text-align: center; font-size: 25px; font-weight: bold; line-height: 1.2;">${text}</div>`;
 }

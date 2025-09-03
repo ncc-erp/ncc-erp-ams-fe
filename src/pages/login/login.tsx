@@ -20,11 +20,18 @@ import dataProvider from "providers/dataProvider";
 import "styles/antd.less";
 
 import {
-  buttonLoginGoogle,
+  buttonLoginMezon,
+  cardStyles,
+  checkboxStyles,
   containerStyles,
+  formItemStyles,
+  fullHeightRow,
   imageContainer,
   layoutStyles,
   logo,
+  mezonLogoStyle,
+  rememberContainer,
+  titleContentStyles,
   titleStyles,
 } from "./styles";
 
@@ -53,7 +60,7 @@ export const LoginPage: React.FC = () => {
 
   const CardTitle = (
     <Title level={3} style={titleStyles} data-test-id="title">
-      {t("pages.login.title")}
+      <div style={titleContentStyles}>{t("pages.login.title")}</div>
     </Title>
   );
 
@@ -76,13 +83,7 @@ export const LoginPage: React.FC = () => {
 
   return (
     <Layout style={layoutStyles}>
-      <Row
-        justify="center"
-        align="middle"
-        style={{
-          height: "100vh",
-        }}
-      >
+      <Row justify="center" align="middle" style={fullHeightRow}>
         <Col xs={22}>
           <div style={containerStyles}>
             <div style={imageContainer}>
@@ -92,7 +93,11 @@ export const LoginPage: React.FC = () => {
                 alt="Refine Logo"
               />
             </div>
-            <Card title={CardTitle} headStyle={{ borderBottom: 0 }}>
+            <Card
+              title={CardTitle}
+              headStyle={{ borderBottom: 0 }}
+              style={cardStyles}
+            >
               {process.env.REACT_APP_SHOW_MANUAL_LOGIN === "true" && (
                 <Form<ILoginForm>
                   layout="vertical"
@@ -105,6 +110,7 @@ export const LoginPage: React.FC = () => {
                     remember: false,
                   }}
                 >
+                  {/* Username */}
                   <Form.Item
                     name="username"
                     data-test-id="username"
@@ -116,12 +122,14 @@ export const LoginPage: React.FC = () => {
                       placeholder={t("pages.login.username")}
                     />
                   </Form.Item>
+
+                  {/* Password */}
                   <Form.Item
                     data-test-id="password"
                     name="password"
                     label={t("pages.login.password")}
                     rules={[{ required: true }]}
-                    style={{ marginBottom: "12px" }}
+                    style={formItemStyles}
                   >
                     <Input
                       type="password"
@@ -129,22 +137,22 @@ export const LoginPage: React.FC = () => {
                       size="large"
                     />
                   </Form.Item>
-                  <div style={{ marginBottom: "12px" }}>
+
+                  {/* Check box remember me */}
+                  <div style={rememberContainer}>
                     <Form.Item
                       data-test-id="remember"
                       name="remember"
                       valuePropName="checked"
                       noStyle
                     >
-                      <Checkbox
-                        style={{
-                          fontSize: "12px",
-                        }}
-                      >
+                      <Checkbox style={checkboxStyles}>
                         {t("pages.login.remember")}
                       </Checkbox>
                     </Form.Item>
                   </div>
+
+                  {/* Sign in button */}
                   <Button
                     data-test-id="signin-btn"
                     type="primary"
@@ -164,14 +172,13 @@ export const LoginPage: React.FC = () => {
                 block
                 icon={
                   <img
-                    width={20}
-                    style={{ marginRight: 10 }}
-                    src="/images/svg/mezon-logo-black.svg"
+                    style={mezonLogoStyle}
+                    src={"/images/svg/mezon-logo-black.svg"}
                   />
                 }
                 loading={isLoadingMezon}
                 onClick={() => getMezonAuthUrl()}
-                style={buttonLoginGoogle}
+                style={buttonLoginMezon}
                 className="btn-login-mezon"
               >
                 {t("pages.login.signinMezon")}
