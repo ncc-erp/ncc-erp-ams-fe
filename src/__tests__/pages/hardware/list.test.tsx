@@ -447,9 +447,6 @@ describe("HardwareList Component", () => {
     localStorage.clear();
   });
 
-  // ======================
-  // CHECK RENDER
-  // ======================
   describe("Check render", () => {
     it("should render the list component", () => {
       render(<HardwareList />);
@@ -484,14 +481,9 @@ describe("HardwareList Component", () => {
         JSON.stringify(["id", "name", "model"])
       );
       render(<HardwareList />);
-      // This is a basic check. In a real test, you might want to verify
-      // that the columns are actually displayed based on the preferences
     });
   });
 
-  // ======================
-  // BASIC WORKFLOWS
-  // ======================
   describe("Basic workflows", () => {
     it("should open the create modal when create button is clicked", async () => {
       render(<HardwareList />);
@@ -538,8 +530,6 @@ describe("HardwareList Component", () => {
     it("should refresh the data when refresh button is clicked", () => {
       render(<HardwareList />);
       fireEvent.click(screen.getByTestId("refresh-button"));
-      // Since we're mocking useTable, we can't directly test that the data is refreshed
-      // But we can check that the button works and doesn't cause errors
     });
 
     it("should open QR code modal for selected hardware", async () => {
