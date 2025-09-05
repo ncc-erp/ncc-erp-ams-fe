@@ -197,16 +197,16 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // ===== Mock moment =====
-jest.mock("moment", () => {
-  const mockMoment = (date?: any) => ({
-    format: jest.fn(() => "2023-01-01"),
-    add: jest.fn().mockReturnThis(),
-    toDate: jest.fn(() => new Date("2023-01-01")),
-    substring: jest.fn(() => "2023-01-01"),
-  });
-  mockMoment.duration = jest.fn(() => ({ format: jest.fn() }));
-  return mockMoment;
-});
+// jest.mock("moment", () => {
+//   const mockMoment = (date?: any) => ({
+//     format: jest.fn(() => "2023-01-01"),
+//     add: jest.fn().mockReturnThis(),
+//     toDate: jest.fn(() => new Date("2023-01-01")),
+//     substring: jest.fn(() => "2023-01-01"),
+//   });
+//   mockMoment.duration = jest.fn(() => ({ format: jest.fn() }));
+//   return mockMoment;
+// });
 
 // ===== Mock react-router-dom =====
 jest.mock("react-router-dom", () => ({
@@ -560,7 +560,7 @@ jest.mock("@pankod/refine-antd", () => {
   };
 
   // Create Column as separate component
-  const TableColumn = ({ title, dataIndex, render, ...props }: any) => null;
+  const TableColumn = ({ title, dataIndex, render, ..._props }: any) => null;
 
   // Create Select with Option for refine-antd
   const RefineSelect: React.FC<any> = ({
