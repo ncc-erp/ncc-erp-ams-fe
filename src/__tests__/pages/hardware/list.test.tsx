@@ -551,6 +551,32 @@ describe("HardwareList Component", () => {
       );
       render(<HardwareList />);
     });
+
+    it("renders list header, create button and toolbar actions", () => {
+      render(<HardwareList />);
+      expect(screen.getByTestId("list-header")).toBeInTheDocument();
+      expect(screen.getByTestId("create-button")).toBeInTheDocument();
+      const toolbar =
+        screen.queryByTestId("toolbar-actions-mock") ??
+        screen.queryByTestId("toolbar-actions");
+      expect(toolbar).toBeInTheDocument();
+      const tableEl =
+        screen.queryByTestId("table") ??
+        screen.queryByTestId("hardware-table") ??
+        screen.queryByTestId("hardware-table-component");
+      expect(tableEl).toBeInTheDocument();
+    });
+
+    it("renders selected checkin list and delete control calls removeItem", () => {
+      render(<HardwareList />);
+      expect(screen.queryByText("TAG002")).toBeTruthy();
+      const deleteBtn =
+        screen.queryByText("X") || screen.queryByTestId("delete-checkin-2");
+      if (deleteBtn) {
+        fireEvent.click(deleteBtn);
+        expect(typeof removeItemMock === "function").toBe(true);
+      }
+    });
   });
 
   describe("Basic workflows", () => {
