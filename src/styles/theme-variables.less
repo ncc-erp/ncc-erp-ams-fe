@@ -50,6 +50,10 @@
   --color-button-primary: #ed1b23;
   --color-button-hover: #ff3340;
   --color-button-active: #d41520;
+
+  --color-checkout: #0073b7;
+  --color-checkout-hover: #0288d1;
+  --color-checkout-active: #005b94;
   
   /* Typography */
   --color-typography: #626262;
@@ -123,6 +127,10 @@
   --color-button-primary: #ed1b23;
   --color-button-hover: #ff3340;
   --color-button-active: #d41520;
+
+  --color-checkout: #0073b7;
+  --color-checkout-hover: #0288d1;
+  --color-checkout-active: #005b94;
   
   /* Typography */
   --color-typography: rgba(255, 255, 255, 0.75);
@@ -500,7 +508,7 @@
 }
 
 .ant-typography {
-  color: var(--color-typography);
+  color: var(--color-typography) !important;
 }
 
 .ant-form-item-label > label {
@@ -509,6 +517,217 @@
 
 .ant-checkbox-wrapper {
   color: var(--color-checkbox-text);
+}
+
+/* ==============================================
+   CHECKOUT BUTTON COMPONENT
+   ============================================== */
+.ant-btn-checkout {
+  background-color: var(--color-checkout);
+  border-color: var(--color-checkout);
+  color: #ffffff;
+  
+  &:hover, &:focus {
+    background-color: var(--color-checkout-hover);
+    border-color: var(--color-checkout-hover);
+    color: #ffffff;
+  }
+  
+  &:active {
+    background-color: var(--color-checkout-active);
+    border-color: var(--color-checkout-active);
+    color: #ffffff;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(0, 115, 183, 0.2);
+  }
+  
+  &[disabled], &-disabled {
+    &, &:hover, &:focus, &:active {
+      background-color: rgba(0, 115, 183, 0.5);
+      border-color: rgba(0, 115, 183, 0.5);
+      color: rgba(255, 255, 255, 0.65);
+    }
+  }
+}
+
+/* Ghost version of checkout button */
+.ant-btn-checkout.ant-btn-background-ghost {
+  background-color: transparent !important;
+  color: var(--color-checkout);
+  border-color: var(--color-checkout);
+  
+  &:hover, &:focus {
+    color: var(--color-checkout-hover);
+    border-color: var(--color-checkout-hover);
+  }
+  
+  &:active {
+    color: var(--color-checkout-active);
+    border-color: var(--color-checkout-active);
+  }
+}
+
+/* Text version of checkout button */
+.ant-btn-checkout.ant-btn-text {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--color-checkout);
+  
+  &:hover, &:focus {
+    background-color: rgba(0, 115, 183, 0.1);
+    color: var(--color-checkout-hover);
+  }
+  
+  &:active {
+    background-color: rgba(0, 115, 183, 0.2);
+    color: var(--color-checkout-active);
+  }
+}
+
+/* Link version of checkout button */
+.ant-btn-checkout.ant-btn-link {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--color-checkout);
+  
+  &:hover, &:focus {
+    color: var(--color-checkout-hover);
+  }
+  
+  &:active {
+    color: var(--color-checkout-active);
+  }
+}
+
+/* Dark theme adjustments for checkout button */
+[data-theme="dark"] {
+  .ant-btn-checkout.ant-btn-text {
+    &:hover, &:focus {
+      background-color: rgba(0, 115, 183, 0.2);
+    }
+    
+    &:active {
+      background-color: rgba(0, 115, 183, 0.3);
+    }
+  }
+}
+
+/* ==============================================
+   CHECKOUT/CHECKIN COMPONENTS
+   ============================================== */
+/* Container list checkout/checkin */
+.list-checkouts,
+.list-checkins {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-secondary);
+  padding: 16px 8px;
+  border-radius: var(--border-radius);
+  overflow-y: scroll;
+  
+  /* Scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 3px;
+    
+    &:hover {
+      background-color: var(--color-text-tertiary);
+    }
+  }
+  
+  &::-webkit-scrollbar-track {
+    background-color: var(--color-bg-container);
+  }
+}
+
+/* List title */
+.title-remove-name {
+  font-weight: 600;
+  color: var(--color-error);
+}
+
+/* Style for list checkin */
+.list-checkin {
+  display: flex;
+  gap: 15px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-text);
+  padding: 5px 0;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border-secondary);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Item name in checkin */
+.name-checkin {
+  width: 550%;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Delete button in checkout/checkin list */
+.delete-checkin-checkout {
+  cursor: pointer;
+  color: var(--color-error);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: var(--color-button-hover);
+  }
+}
+
+/* Multiple checkout/checkin container */
+.checkout-multiple-asset,
+.checkin-multiple-asset {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.checkin-multiple-asset-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Button Select Checkout */
+.btn-select-checkout {
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-checkout);
+  background-color: var(--color-checkout);
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+.checkin-multiple-asset .btn-select-checkout {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* Container cho các nút checkout/checkin */
+.checkout-checkin-multiple {
+  display: flex;
+  gap: 10px;
+  padding: 15px 0px;
+  flex-wrap: wrap;
 }
 
 /* ==============================================
@@ -912,6 +1131,9 @@
   }
 }
 
+/* ==============================================
+  DatePicker Component
+  ============================================== */
 /* Main DatePicker Input Field */
 .ant-picker {
   background-color: var(--color-input-bg);
@@ -995,6 +1217,9 @@
   .ant-picker-panel-container {
     background-color: var(--color-card-bg);
     border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
   }
 
   .ant-picker-panel {
@@ -1010,6 +1235,8 @@
       .ant-picker-header-super-next-btn {
         color: var(--color-text-secondary);
         transition: all 0.3s ease;
+        border: none;
+        background-color: transparent;
         
         &:hover {
           color: var(--color-primary);
@@ -1039,6 +1266,8 @@
 
     /* Calendar Body Section */
     .ant-picker-body {
+      background-color: var(--color-card-bg);
+
       .ant-picker-content {
         /* Week day headers (Su, Mo, Tu, We, Th, Fr, Sa) */
         thead th {
@@ -1048,13 +1277,8 @@
 
         /* Date cells container */
         .ant-picker-cell {
-          color: var(--color-text);
           position: relative;
-
-          /* Clear any default background */
-          &::before {
-            display: none;
-          }
+          color: var(--color-text);
 
           /* Inner cell content - base styling */
           .ant-picker-cell-inner {
@@ -1063,65 +1287,126 @@
             color: var(--color-text);
             background-color: transparent;
             transition: all 0.3s ease;
-            display: inline-block;
+          }
+
+          /* Today's date */
+          &.ant-picker-cell-today {
+            .ant-picker-cell-inner {
+              color: var(--color-primary);
+              font-weight: 600;
+            }
+          }
+
+          /* Selected single date */
+          &.ant-picker-cell-selected {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary);
+              color: #ffffff;
+              font-weight: 600;
+              position: relative;
+            }
           }
 
           /* Normal hover - only for non-selected, non-range cells */
-          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
             .ant-picker-cell-inner {
-              background-color: var(--color-bg-elevated);
+              background-color: rgba(237, 27, 35, 0.1);
               color: var(--color-primary);
             }
           }
 
-          /* Today's date */
-          &.ant-picker-cell-today .ant-picker-cell-inner {
-            color: var(--color-primary);
-            font-weight: 600;
+          /* Range start date */
+          &.ant-picker-cell-range-start {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary);
+              color: #ffffff !important;
+              font-weight: 600;
+            }
+
+            /* Extend background to the right for range */
+            &:not(.ant-picker-cell-range-start-single)::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.1);
+              transform: translateY(-50%);
+              z-index: 1;
+            }
           }
 
-          /* Selected single date or range start/end */
-          &.ant-picker-cell-selected .ant-picker-cell-inner,
-          &.ant-picker-cell-range-start .ant-picker-cell-inner,
-          &.ant-picker-cell-range-end .ant-picker-cell-inner {
-            background-color: var(--color-primary) !important;
-            color: #ffffff !important;
-            font-weight: 600;
-          }
-
-          /* Base range background styling - No background color */
-          &.ant-picker-cell-in-range,
-          &.ant-picker-cell-range-start,
+          /* Range end date */
           &.ant-picker-cell-range-end {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary) !important;
+              color: #ffffff !important;
+              font-weight: 600;
+            }
+
+            /* Extend background to the left for range */
+            &:not(.ant-picker-cell-range-end-single)::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 50%;
+              background-color: rgba(237, 27, 35, 0.1);
+              transform: translateY(-50%);
+              z-index: 1;
+            }
+            /* Extend background to the left for range */
+            &:not(.ant-picker-cell-range-end-single)::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 50%;
+              background-color: rgba(237, 27, 35, 0.1);
+              transform: translateY(-50%);
+              z-index: 1;
+            }
+
+          }
+
+          /* Dates in range (between start and end) */
+          &.ant-picker-cell-in-range {
             position: relative;
-            
+
             &::before {
               content: '';
               position: absolute;
               top: 50%;
-              transform: translateY(-50%);
-              z-index: 1;
-              display: block;
-            }
-          }
-
-          /* Dates in range (between start and end) - full width background */
-          &.ant-picker-cell-in-range {
-            &::before {
               left: 0;
               right: 0;
+              height: 24px;
+              background-color: rgba(237, 27, 35, 0.1);
+              transform: translateY(-50%);
+              transform: translateY(-50%);
+              z-index: 1;
             }
-            
+
             .ant-picker-cell-inner {
               background-color: transparent !important;
               color: var(--color-text) !important;
-              position: relative;
-              z-index: 2;
             }
 
-            &:hover .ant-picker-cell-inner {
-              background-color: var(--color-bg-elevated) !important;
-              color: var(--color-primary) !important;
+            /* Hover effect for dates in range */
+            &:hover {
+              .ant-picker-cell-inner {
+                background-color: var(--color-bg-elevated) !important;
+                color: var(--color-primary) !important;
+              }
+            }
+          }
+          
+          /* Ensure correct hover state when modifying range */
+          &.ant-picker-cell-range-hover-start,
+          &.ant-picker-cell-range-hover-end,
+          &.ant-picker-cell-range-hover {
+            .ant-picker-cell-inner {
+              z-index: 3;
+              position: relative;
             }
           }
 
@@ -1173,6 +1458,58 @@
 
           /* Range hover effects - preview before selection */
           &.ant-picker-cell-range-hover-start,
+          &.ant-picker-cell-range-hover-end,
+          &.ant-picker-cell-range-hover {
+            &::before {
+              background-color: transparent !important;
+            }
+          }
+
+          /* Chỉ hiển thị background hover khi đang trong quá trình chọn range */
+          &.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block !important;
+            }
+          }
+
+          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 50%;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block !important;
+            }
+          }
+
+          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              display: block !important;
+            }
+          }
+
+          /* Range hover effects - preview before selection */
+          &.ant-picker-cell-range-hover-start,
           &.ant-picker-cell-range-hover-end {
             &::before {
               content: '';
@@ -1181,18 +1518,18 @@
               background-color: rgba(237, 27, 35, 0.05);
               transform: translateY(-50%);
               z-index: 1;
-              display: block;
+              display: block !important;
             }
           }
 
           &.ant-picker-cell-range-hover-start::before {
-            left: 50%;
-            right: 0;
+            right: 50%;
+            left: 0;
           }
 
           &.ant-picker-cell-range-hover-end::before {
-            left: 0;
-            right: 50%;
+            right: 0;
+            left: 50%;
           }
 
           &.ant-picker-cell-range-hover {
@@ -1205,7 +1542,79 @@
               background-color: rgba(237, 27, 35, 0.05);
               transform: translateY(-50%);
               z-index: 1;
+              display: block !important;
+            }
+          }
+
+          &:not(.ant-picker-cell-in-range):hover {
+            &.ant-picker-cell-range-hover-start,
+            &.ant-picker-cell-range-hover-end,
+            &.ant-picker-cell-range-hover {
+              &::before {
+                display: none !important;
+              }
+            }
+          }
+
+          &.ant-picker-cell-range-hover-start,
+          &.ant-picker-cell-range-hover-end,
+          &.ant-picker-cell-range-hover {
+            &::before {
+              background-color: transparent !important;
+            }
+          }
+
+          /* Range hover effects - preview before selection */
+          &.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
               display: block;
+            }
+          }
+
+          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start):not(.ant-picker-cell-in-range) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 50%;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              height: 24px;
+              display: block !important;
+            }
+          }
+
+          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              right: 0;
+              background-color: rgba(237, 27, 35, 0.05);
+              transform: translateY(-50%);
+              z-index: 1;
+              height: 24px;
+              display: block !important;
+            }
+          }
+          &.ant-picker-cell-in-range {
+            &.ant-picker-cell-range-hover-start,
+            &.ant-picker-cell-range-hover-end,
+            &.ant-picker-cell-range-hover {
+              &::before {
+                background-color: rgba(237, 27, 35, 0.1) !important;
+              }
             }
           }
         }
@@ -1216,7 +1625,6 @@
     .ant-picker-footer {
       background-color: var(--color-card-bg);
       border-top: 1px solid var(--color-border-secondary);
-      padding: 8px 12px;
       
       /* Today/Now buttons */
       .ant-picker-today-btn,
@@ -1224,7 +1632,6 @@
         color: var(--color-primary);
         background-color: transparent;
         border: none;
-        border-radius: var(--border-radius-sm);
         transition: all 0.3s ease;
         
         &:hover {
@@ -1282,165 +1689,101 @@
     .ant-picker-decade-panel {
       .ant-picker-content {
         .ant-picker-cell {
-          .ant-picker-cell-inner {
-            background-color: transparent;
+          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) {
+            .ant-picker-cell-inner {
+              background-color: var(--color-bg-elevated);
+              color: var(--color-primary);
+            }
           }
 
-          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
-            color: var(--color-primary);
-            background-color: rgba(237, 27, 35, 0.3);
+          &.ant-picker-cell-selected {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary);
+              color: #ffffff;
+              font-weight: 600;
+            }
           }
 
-          &.ant-picker-cell-selected .ant-picker-cell-inner {
-            background-color: var(--color-primary);
-            color: #ffffff;
-            font-weight: 600;
+          &.ant-picker-cell-disabled {
+            .ant-picker-cell-inner {
+              color: var(--color-text-tertiary);
+              cursor: not-allowed;
+            }
+
+            &:hover {
+              .ant-picker-cell-inner {
+                background-color: transparent;
+                color: var(--color-text-tertiary);
+              }
+            }
           }
         }
       }
     }
   }
-}
 
-/* Multiple picker dropdowns positioning */
-.ant-picker-dropdown-range {
-  .ant-picker-panels {
-    display: flex;
-    
-    .ant-picker-panel {
-      border-right: 1px solid var(--color-border-secondary);
+  /* Multiple picker dropdowns positioning */
+  .ant-picker-dropdown-range {
+    .ant-picker-panels {
+      display: flex;
       
-      &:last-child {
-        border-right: none;
+      .ant-picker-panel {
+        border-right: 1px solid var(--color-border-secondary);
+        
+        &:last-child {
+          border-right: none;
+        }
       }
     }
   }
 }
 
 /* Dark theme specific adjustments */
-[data-theme="dark"] {
-  .ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
-    /* Style for cell not start/end/selected/disabled */
-    .ant-picker-cell {
-      &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
-        .ant-picker-cell-inner {
-          background-color: rgba(237, 27, 35, 0.2);
-          color: #ffffff;
-        }
-      }
+// [data-theme="dark"] {
+//   .ant-picker-dropdown {
+//     .ant-picker-panel {
+//       .ant-picker-body {
+//         .ant-picker-content {
+//           /* Style for cell not start/end/selected/disabled */
+//           .ant-picker-cell {
+//             &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
+//               .ant-picker-cell-inner {
+//                 background-color: rgba(237, 27, 35, 0.05);
+//                 color: #ffffff;
+//               }
+//             }
 
-      &.ant-picker-cell-in-range:hover .ant-picker-cell-inner {
-        background-color: rgba(237, 27, 35, 0.3) !important;
-        color: #ffffff !important;
-      }
-      
-      &.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single),
-      &.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single) {
-        &::before {
-          background-color: rgba(237, 27, 35, 0.1) !important;
-        }
-      }
+//             &.ant-picker-cell-in-range:hover {
+//               .ant-picker-cell-inner {
+//                 color: #ffffff !important;
+//               }
+//             }
+            
+//             /* Range background in dark theme */
+//             &.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+//             &.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before,
+//             &.ant-picker-cell-in-range::before {
+//               background-color: rgba(237, 27, 35, 0.05);
+//             }
 
-      &.ant-picker-cell-range-hover-start,
-      &.ant-picker-cell-range-hover-end,
-      &.ant-picker-cell-range-hover {
-        &::before {
-          display: none !important;
-        }
-      }
-    }
+//             /* Fix hover for range selection in dark mode */
+//             &.ant-picker-cell-range-hover-start,
+//             &.ant-picker-cell-range-hover-end,
+//             &.ant-picker-cell-range-hover {
+//               &::before {
+//                 display: none !important;
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
-    .ant-picker-cell-in-view.ant-picker-cell-in-range {
-      &::before {
-        background-color: rgba(237, 27, 35, 0.1);
-        display: block !important;
-      }
-    }
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .ant-picker-dropdown {
-    .ant-picker-panel-container {
-      border-radius: var(--border-radius);
-      margin: 8px;
-    }
-    
-    .ant-picker-panel {
-      .ant-picker-body {
-        padding: 4px 8px;
-      }
-      
-      .ant-picker-header {
-        padding: 4px 8px;
-      }
-      
-      .ant-picker-footer {
-        padding: 4px 8px;
-      }
-    }
-  }
-}
-
-/* Calendar Body Section */
-.ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
-  .ant-picker-cell-range-hover,
-  .ant-picker-cell-range-hover-start,
-  .ant-picker-cell-range-hover-end,
-  .ant-picker-cell-range-hover-edge-start,
-  .ant-picker-cell-range-hover-edge-end {
-    &::before {
-      display: none !important;
-    }
-  }
-
-  /* Keep only the border for the selected dates */
-  .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
-  .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
-    background-color: var(--color-primary);
-    color: #ffffff;
-    border-radius: 2px;
-  }
-  
-  /* Remove all hover outlines/backgrounds in range */
-  .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
-  .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
-  .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
-  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single).ant-picker-cell-range-hover-start::before,
-  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single).ant-picker-cell-range-hover-end::before {
-    display: none !important;
-  }
-  
-  /* Fix for the month/year selection panels */
-  .ant-picker-month-panel .ant-picker-cell,
-  .ant-picker-year-panel .ant-picker-cell,
-  .ant-picker-decade-panel .ant-picker-cell {
-    .ant-picker-cell-inner {
-      border-radius: var(--border-radius-sm);
-    }
-    
-    &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
-      background-color: rgba(237, 27, 35, 0.1);
-    }
-    
-    &.ant-picker-cell-selected .ant-picker-cell-inner {
-      background-color: var(--color-primary);
-    }
-  }
-}
-
-/* Keep background for actual selected range */
-.ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content {
-  .ant-picker-cell-in-view.ant-picker-cell-in-range:not(.ant-picker-cell-range-hover) {
-    &::before {
-      background-color: rgba(237, 27, 35, 0.1);
-      display: block !important;
-    }
-  }
-}
-
-/* Select Component */
+/* ==============================================
+  Select Component
+  ============================================== */
 /* Main Select Input Field */
 .ant-select {
   .ant-select-selector {
@@ -1754,12 +2097,12 @@
   .ant-select-dropdown {
     .ant-select-item {
       &:hover:not(.ant-select-item-option-disabled) {
-        background-color: rgba(237, 27, 35, 0.2) !important;
+        background-color: rgba(237, 27, 35, 0.1) !important;
         color: #ffffff !important;
       }
 
       &.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-        background-color: rgba(237, 27, 35, 0.2) !important;
+        background-color: rgba(237, 27, 35, 0.1) !important;
         color: #ffffff !important;
       }
     }
@@ -1788,4 +2131,370 @@
       padding: 0 8px;
     }
   }
+}
+
+/* ==============================================
+   ReactMde
+   ============================================== */
+/* Main Container */
+.react-mde {
+  border-color: var(--color-border);
+  background-color: var(--color-bg-container);
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+  }
+
+  /* Tabbed Layout */
+  &.react-mde-tabbed-layout {
+    .mde-header {
+      background-color: var(--color-bg-container);
+      border-bottom-color: var(--color-border);
+
+      /* Tab Navigation */
+      .mde-tabs {
+        color: var(--color-text);
+      }
+
+      /* Toolbar Groups */
+      .mde-header-group {
+        background-color: var(--color-bg-container);
+
+        .mde-header-item {
+          button {
+            color: var(--color-text);
+            background-color: transparent;
+            border: none;
+            transition: all 0.3s ease;
+
+            &:hover {
+              color: var(--color-primary);
+            }
+
+            &:active {
+              color: var(--color-button-active);
+            }
+
+            &:focus {
+              color: var(--color-primary);
+              outline: none;
+            }
+
+            &:disabled {
+              color: var(--color-text-tertiary);
+
+              &:hover {
+                background-color: transparent;
+                color: var(--color-text-tertiary);
+                border-color: transparent;
+              }
+            }
+
+            svg {
+              color: currentColor;
+            }
+          }
+        }
+      }
+
+      /* Toolbar Separator */
+      .mde-header-separator {
+        border-left: 1px solid var(--color-border-secondary);
+      }
+    }
+  }
+
+  /* Text Area */
+  .mde-textarea-wrapper {
+    background-color: var(--color-bg-container);
+
+    .mde-text {
+      background-color: var(--color-bg-container);
+      color: var(--color-text);
+      border: none;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: var(--color-input-placeholder);
+      }
+
+      &:focus {
+        background-color: var(--color-bg-container);
+        border: none;
+        outline: none;
+      }
+
+      &:disabled {
+        color: var(--color-text-tertiary);
+        cursor: not-allowed;
+      }
+    }
+
+    .mde-textarea-counter {
+      background-color: var(--color-bg-elevated);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  /* Preview */
+  .mde-preview {
+    background-color: var(--color-bg-container);
+    color: var(--color-text);
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--color-text);
+      border-bottom-color: var(--color-border-secondary);
+    }
+
+    /* Paragraphs */
+    p {
+      color: var(--color-text);
+    }
+
+    /* Links */
+    a {
+      color: var(--color-primary);
+
+      &:hover {
+        color: var(--color-button-hover);
+      }
+
+      &:active {
+        color: var(--color-button-active);
+      }
+    }
+
+    /* Lists */
+    ul, ol {
+      color: var(--color-text);
+
+      li {
+        color: var(--color-text);
+
+        &::marker {
+          color: var(--color-text-secondary);
+        }
+      }
+    }
+
+    /* Strong and Emphasis */
+    strong, b {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    em, i {
+      color: var(--color-text-secondary);
+    }
+
+    /* Strike through */
+    s, del {
+      color: var(--color-text-tertiary);
+    }
+
+    /* Images */
+    img {
+      border: 1px solid var(--color-border-secondary);
+    }
+
+    /* Code */
+    code {
+      background-color: rgba(237, 27, 35, 0.1);
+      color: var(--color-primary);
+    }
+
+    pre {
+      background-color: var(--color-bg-elevated);
+      border-color: var(--color-border);
+
+      code {
+        background: none;
+        color: var(--color-text);
+      }
+    }
+
+    /* Blockquotes */
+    blockquote {
+      border-left-color: var(--color-primary);
+      background-color: var(--color-bg-elevated);
+      color: var(--color-text-secondary);
+    }
+
+    /* Tables */
+    table {
+      border-color: var(--color-border);
+
+      th {
+        background-color: var(--color-table-header-bg);
+        border-color: var(--color-table-header-border);
+        color: var(--color-text);
+      }
+
+      td {
+        border-color: var(--color-border);
+        color: var(--color-table-body-text);
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: var(--color-bg-elevated);
+      }
+
+      tbody tr:hover {
+        background-color: var(--color-bg-elevated);
+      }
+    }
+
+    /* Horizontal Rule */
+    hr {
+      border-top-color: var(--color-border);
+    }
+
+    /* Task Lists */
+    .task-list-item {
+      input[type="checkbox"] {
+        accent-color: var(--color-primary);
+      }
+    }
+  }
+
+  /* Suggestions Dropdown */
+  .mde-suggestions-dropdown {
+    background-color: var(--color-bg-elevated);
+    border-color: var(--color-border);
+
+    .mde-suggestion-item {
+      color: var(--color-text);
+      transition: all 0.3s ease;
+
+      &:hover,
+      &.mde-suggestion-item-selected {
+        background-color: var(--color-bg-container);
+        color: var(--color-primary);
+      }
+
+      &:active {
+        background-color: var(--color-bg-container);
+        color: var(--color-button-active);
+      }
+    }
+  }
+
+  /* Split View */
+  .react-mde-split-view {
+    .mde-textarea-wrapper {
+      border-right-color: var(--color-border-secondary);
+    }
+
+    .mde-preview {
+      border-left-color: var(--color-border-secondary);
+    }
+  }
+
+  /* Loading State */
+  .mde-loading {
+    color: var(--color-text-secondary);
+  }
+}
+
+/* ==============================================
+   SINGLE DATE INPUT (PENDING...)
+   ============================================== */
+.themed-date-container {
+  position: relative;
+}
+
+.themed-date-input {
+  background-color: var(--color-input-bg) !important;
+  border-color: var(--color-input-border) !important;
+  color: var(--color-input-text) !important;
+  border-radius: var(--border-radius) !important;
+  transition: all 0.2s ease;
+}
+
+.themed-date-input:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.themed-date-input:focus,
+.themed-date-input:focus-within {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2) !important;
+  outline: none !important;
+}
+
+/* Style cho date input placeholder */
+.themed-date-input::-webkit-input-placeholder {
+  color: var(--color-input-placeholder) !important;
+}
+
+.themed-date-input::-moz-placeholder {
+  color: var(--color-input-placeholder) !important;
+}
+
+.themed-date-input::placeholder {
+  color: var(--color-input-placeholder) !important;
+}
+
+/* Style cho date picker calendar icon */
+.themed-date-input::-webkit-calendar-picker-indicator {
+  background-color: var(--color-input-text);
+  border-radius: var(--border-radius-sm);
+  padding: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.themed-date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background-color: var(--color-primary);
+}
+
+/* Style cho date picker trong dark theme */
+[data-theme="dark"] .themed-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+[data-theme="dark"] .themed-date-input::-webkit-calendar-picker-indicator:hover {
+  filter: none;
+  background-color: var(--color-primary);
+}
+
+/* Style cho date input text khi có value */
+.themed-date-input:valid {
+  color: var(--color-input-text) !important;
+}
+
+/* Disabled state */
+.themed-date-input:disabled {
+  background-color: var(--color-bg-layout) !important;
+  color: var(--color-text-tertiary) !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.themed-date-input:disabled::-webkit-calendar-picker-indicator {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .themed-date-input {
+    font-size: 16px; /* Tránh zoom trên iOS */
+  }
+}
+
+/* ==============================================
+   IMAGE COMPONENT (src='upload.png')
+   ============================================== */
+img[src*="upload.png"] {
+  filter: none;
+}
+
+[data-theme="dark"] img[src*="upload.png"] {
+  filter: invert(1);
 }
