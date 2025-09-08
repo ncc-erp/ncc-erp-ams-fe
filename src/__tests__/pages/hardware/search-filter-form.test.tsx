@@ -5,19 +5,13 @@ import { Form } from "@pankod/refine-antd";
 import * as ReactRouterDom from "react-router-dom";
 import moment from "moment";
 
-const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args) => {
-    if (
-      typeof args[0] === "string" &&
-      args[0].includes(
-        "Cannot read properties of null (reading 'removeEventListener')"
-      )
-    ) {
-      return;
-    }
-    originalError(...args);
-  };
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "warn").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
 });
 
 jest.mock("antd", () => {

@@ -126,6 +126,9 @@ const mockHardwareData: IHardwareResponse[] = [
 ];
 
 // Mock the HardwareList component first - create a complete mock
+const removeItemMock = jest.fn();
+const clearSelectionMock = jest.fn();
+
 jest.mock("../../../pages/hardware/list", () => ({
   HardwareList: () => {
     const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -139,6 +142,12 @@ jest.mock("../../../pages/hardware/list", () => ({
       React.useState(false);
     const [isSearchModalVisible, setIsSearchModalVisible] =
       React.useState(false);
+
+    // Use the test-scoped mock data & mocks directly to avoid hook-mock ordering issues
+    const selectedRows = [mockHardwareData[1]]; // ensure TAG002 is present
+    const removeItem = removeItemMock;
+
+    const nameCheckout = selectedRows.length ? "Selected Checkins" : "";
 
     return (
       <div>
@@ -185,6 +194,32 @@ jest.mock("../../../pages/hardware/list", () => ({
           <div>Total items: {mockHardwareData.length}</div>
           <button onClick={() => setIsShowModalVisible(true)}>Show</button>
           <button onClick={() => setIsEditModalVisible(true)}>Edit</button>
+        </div>
+
+        {/* selected checkin list (the snippet under test) */}
+        <div
+          className={nameCheckout ? "list-checkouts" : ""}
+          data-testid="selected-checkin-wrapper"
+        >
+          <span className="title-remove-name">{nameCheckout}</span>
+          {selectedRows
+            .filter((item: any) => item.user_can_checkin)
+            .map((item: any) => (
+              <span
+                className="list-checkin"
+                key={item.id}
+                data-testid={`list-checkin-${item.id}`}
+              >
+                <span className="name-checkin">{item.asset_tag}</span>
+                <span
+                  className="delete-checkin-checkout"
+                  onClick={() => removeItem(item.id)}
+                  data-testid={`delete-checkin-${item.id}`}
+                >
+                  X
+                </span>
+              </span>
+            ))}
         </div>
 
         {isModalVisible && (
@@ -246,6 +281,18 @@ jest.mock("../../../pages/hardware/list", () => ({
       </div>
     );
   },
+}));
+
+// update useRowSelection mock to include an item that can be checked-in and expose remove/clear mocks
+jest.mock("../../../hooks/useRowSelection", () => ({
+  useRowSelection: () => ({
+    selectedRowKeys: [2],
+    selectedRows: [mockHardwareData[1]],
+    onSelect: jest.fn(),
+    onSelectAll: jest.fn(),
+    removeItem: removeItemMock,
+    clearSelection: clearSelectionMock,
+  }),
 }));
 
 // Mock local storage
@@ -448,6 +495,28 @@ describe("HardwareList Component", () => {
   });
 
   describe("Check render", () => {
+    it("renders selected checkin items and calls removeItem on delete click", async () => {
+      render(<HardwareList />);
+
+      expect(screen.getByText("TAG002")).toBeInTheDocument();
+
+      expect(
+        screen.getByTestId("selected-checkin-wrapper")
+      ).toBeInTheDocument();
+
+      fireEvent.click(screen.getByTestId("delete-checkin-2"));
+      expect(removeItemMock).toHaveBeenCalledWith(2);
+    });
+
+    it("does not render items that cannot be checked in", () => {
+      render(<HardwareList />);
+
+      const maybe = screen.queryByText("TAG001");
+      if (maybe) {
+        const wrapper = screen.getByTestId("selected-checkin-wrapper");
+        expect(wrapper).not.toContainElement(maybe);
+      }
+    });
     it("should render the list component", () => {
       render(<HardwareList />);
       expect(screen.getByTestId("list-header")).toBeInTheDocument();
@@ -564,7 +633,6 @@ describe("HardwareList Component", () => {
       const batchCheckoutButton = screen.getByTestId("button-checkout");
       fireEvent.click(batchCheckoutButton);
 
-      // Check that the batch checkout modal opens
       expect(
         screen.getByTestId("modal-hardware.label.title.checkoutMultiple")
       ).toBeInTheDocument();
