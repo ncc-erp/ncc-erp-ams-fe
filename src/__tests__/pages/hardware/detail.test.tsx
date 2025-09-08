@@ -1,7 +1,5 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { DetailProduct } from "pages/hardware/detail";
-import { HARDWARE_API } from "api/baseApi";
 
 jest.mock("api/baseApi", () => ({
   HARDWARE_API: "api/v1/hardware",
@@ -17,12 +15,15 @@ jest.mock("react-router-dom", () => ({
   useLocation: () => ({ search: "?id=123" }),
 }));
 
+/* Silence React warnings in tests */
 beforeAll(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
 afterAll(() => {
   (console.error as jest.Mock).mockRestore();
 });
+
+import { DetailProduct } from "pages/hardware/detail";
 
 describe("DetailProduct - Check render and Basic workflows", () => {
   beforeEach(() => {
@@ -78,7 +79,7 @@ describe("DetailProduct - Check render and Basic workflows", () => {
       await waitFor(() =>
         expect(useCustomMock).toHaveBeenCalledWith(
           expect.objectContaining({
-            url: `${HARDWARE_API}/123`,
+            url: `api/v1/hardware/123`,
             method: "get",
           })
         )
