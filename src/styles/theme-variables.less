@@ -77,6 +77,12 @@
   --chart-statistic-color: #626262;
   --chart-bg-color: #ffffff;
   --chart-border-color: #cdcdcd;
+
+  /* DatePicker variabes */
+  --color-picker-cell-hover-bg: rgba(237, 27, 35, 0.1);
+  --color-picker-range-bg: #ffebe8;
+  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.05);
+  // --color-picker-range-hover-bg: #ffdbdb;
 }
 
 [data-theme="dark"] {
@@ -154,11 +160,36 @@
   --chart-statistic-color: rgba(255, 255, 255, 0.75);
   --chart-bg-color: #282828;
   --chart-border-color: #565656;
+
+  /* DatePicker variables */
+  --color-picker-cell-hover-bg: rgba(237, 27, 35, 0.15);
+  --color-picker-range-bg: #3e1b1c;
+  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.18);
+  // --color-picker-range-hover-bg: #5c3536;
 }
 
 /* Ant Design Component Overrides */
 .ant-layout {
   background-color: var(--color-bg-layout);
+}
+
+/* NOT FOUND PAGE */
+.ant-layout-content {
+  div {
+    h1 {
+      color: var(--color-text);
+    
+      & + button {
+        color: #FFFFFF;
+        background-color: var(--color-primary);
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 .ant-layout-header {
@@ -515,6 +546,9 @@
   color: var(--color-label);
 }
 
+/* ==============================================
+   CHECKBOX
+   ============================================== */
 .ant-checkbox-wrapper {
   color: var(--color-checkbox-text);
 }
@@ -995,12 +1029,13 @@
           color: var(--color-table-body-text);
         }
         
-        &:hover > td {
-          background-color: var(--color-bg-elevated) !important;
-        }
-        
         &.ant-table-row-selected > td {
           background-color: rgba(237, 27, 35, 0.1);
+        }
+
+        /* Selected rows when hovered - keep the selection color */
+        &.ant-table-row-selected:hover > td {
+          background-color: rgba(237, 27, 35, 0.15) !important;
         }
       }
     }
@@ -1289,7 +1324,7 @@
             transition: all 0.3s ease;
           }
 
-          /* Today's date */
+          /* Today's date / Current Period */
           &.ant-picker-cell-today {
             .ant-picker-cell-inner {
               color: var(--color-primary);
@@ -1297,7 +1332,7 @@
             }
           }
 
-          /* Selected single date */
+          /* Selected single cell */
           &.ant-picker-cell-selected {
             .ant-picker-cell-inner {
               background-color: var(--color-primary);
@@ -1311,134 +1346,17 @@
           &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
             .ant-picker-cell-inner {
               background-color: rgba(237, 27, 35, 0.1);
+              // background-color: var(--color-picker-cell-hover-bg);
               color: var(--color-primary);
             }
           }
 
-          /* Range start date */
-          &.ant-picker-cell-range-start {
-            .ant-picker-cell-inner {
-              background-color: var(--color-primary);
-              color: #ffffff !important;
-              font-weight: 600;
-            }
-
-            /* Extend background to the right for range */
-            &:not(.ant-picker-cell-range-start-single)::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              right: 0;
-              background-color: rgba(237, 27, 35, 0.1);
-              transform: translateY(-50%);
-              z-index: 1;
-            }
-          }
-
-          /* Range end date */
-          &.ant-picker-cell-range-end {
-            .ant-picker-cell-inner {
-              background-color: var(--color-primary) !important;
-              color: #ffffff !important;
-              font-weight: 600;
-            }
-
-            /* Extend background to the left for range */
-            &:not(.ant-picker-cell-range-end-single)::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 50%;
-              background-color: rgba(237, 27, 35, 0.1);
-              transform: translateY(-50%);
-              z-index: 1;
-            }
-            /* Extend background to the left for range */
-            &:not(.ant-picker-cell-range-end-single)::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 50%;
-              background-color: rgba(237, 27, 35, 0.1);
-              transform: translateY(-50%);
-              z-index: 1;
-            }
-
-          }
-
-          /* Dates in range (between start and end) */
-          &.ant-picker-cell-in-range {
-            position: relative;
-
-            &::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              height: 24px;
-              background-color: rgba(237, 27, 35, 0.1);
-              transform: translateY(-50%);
-              transform: translateY(-50%);
-              z-index: 1;
-            }
-
-            .ant-picker-cell-inner {
-              background-color: transparent !important;
-              color: var(--color-text) !important;
-            }
-
-            /* Hover effect for dates in range */
-            &:hover {
-              .ant-picker-cell-inner {
-                background-color: var(--color-bg-elevated) !important;
-                color: var(--color-primary) !important;
-              }
-            }
-          }
-          
-          /* Ensure correct hover state when modifying range */
-          &.ant-picker-cell-range-hover-start,
-          &.ant-picker-cell-range-hover-end,
-          &.ant-picker-cell-range-hover {
-            .ant-picker-cell-inner {
-              z-index: 3;
-              position: relative;
-            }
-          }
-
-          /* Range start - background extension to the right */
-          &.ant-picker-cell-range-start {
-            &::before {
-              left: 50%;
-              right: 0;
-            }
-          }
-
-          /* Range end - background extension to the left */
-          &.ant-picker-cell-range-end {
-            &::before {
-              left: 0;
-              right: 50%;
-            }
-          }
-
-          /* Single selected cell (both start and end) - no background extension */
-          &.ant-picker-cell-range-start.ant-picker-cell-range-end {
-            &::before {
-              display: none;
-            }
-          }
-
-          /* Dates outside current month (grayed out) */
+          /* Dates outside current view (grayed out) */
           &:not(.ant-picker-cell-in-view) .ant-picker-cell-inner {
-            color: var(--color-text-tertiary);
+            color: var(--color-text-tertiary) !important;
           }
 
-          /* Disabled dates */
+          /* Disabled cells */
           &.ant-picker-cell-disabled {
             .ant-picker-cell-inner {
               color: var(--color-text-tertiary);
@@ -1456,115 +1374,68 @@
             }
           }
 
-          /* Range hover effects - preview before selection */
-          &.ant-picker-cell-range-hover-start,
-          &.ant-picker-cell-range-hover-end,
-          &.ant-picker-cell-range-hover {
-            &::before {
-              background-color: transparent !important;
+          /* Range start date */
+          &.ant-picker-cell-range-start {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary);
+              color: #ffffff !important;
+              font-weight: 600;
             }
-          }
 
-          /* Chỉ hiển thị background hover khi đang trong quá trình chọn range */
-          &.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range) {
-            &::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              background-color: rgba(237, 27, 35, 0.05);
-              transform: translateY(-50%);
-              z-index: 1;
-              display: block !important;
-            }
-          }
-
-          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start) {
-            &::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 50%;
-              background-color: rgba(237, 27, 35, 0.05);
-              transform: translateY(-50%);
-              z-index: 1;
-              display: block !important;
-            }
-          }
-
-          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end) {
-            &::before {
+            /* Extend background to the right for range */
+            &:not(.ant-picker-cell-range-start.ant-picker-cell-range-end)::before {
               content: '';
               position: absolute;
               top: 50%;
               left: 50%;
               right: 0;
-              background-color: rgba(237, 27, 35, 0.05);
+              background-color: rgba(237, 27, 35, 0.1);
+              // background-color: var(--color-picker-range-bg);
               transform: translateY(-50%);
               z-index: 1;
-              display: block !important;
             }
           }
 
-          /* Range hover effects - preview before selection */
-          &.ant-picker-cell-range-hover-start,
-          &.ant-picker-cell-range-hover-end {
-            &::before {
+          /* Range end date */
+          &.ant-picker-cell-range-end {
+            .ant-picker-cell-inner {
+              background-color: var(--color-primary) !important;
+              color: #ffffff !important;
+              font-weight: 600;
+            }
+
+            /* Extend background to the left for range */
+            &:not(.ant-picker-cell-range-start.ant-picker-cell-range-end)::before {
               content: '';
               position: absolute;
               top: 50%;
-              background-color: rgba(237, 27, 35, 0.05);
+              left: 0;
+              right: 50%;
+              background-color: rgba(237, 27, 35, 0.1);
               transform: translateY(-50%);
               z-index: 1;
-              display: block !important;
             }
           }
 
-          &.ant-picker-cell-range-hover-start::before {
-            right: 50%;
-            left: 0;
-          }
-
-          &.ant-picker-cell-range-hover-end::before {
-            right: 0;
-            left: 50%;
-          }
-
-          &.ant-picker-cell-range-hover {
-            &::before {
+          /* Dates in range (between start and end) */
+          &.ant-picker-cell-in-range {
+            &.ant-picker-cell-in-view::before {
               content: '';
               position: absolute;
               top: 50%;
               left: 0;
               right: 0;
-              background-color: rgba(237, 27, 35, 0.05);
               transform: translateY(-50%);
+              background-color: var(--color-picker-range-bg);
               z-index: 1;
-              display: block !important;
+            }
+
+            .ant-picker-cell-inner {
+              color: var(--color-text);
             }
           }
 
-          &:not(.ant-picker-cell-in-range):hover {
-            &.ant-picker-cell-range-hover-start,
-            &.ant-picker-cell-range-hover-end,
-            &.ant-picker-cell-range-hover {
-              &::before {
-                display: none !important;
-              }
-            }
-          }
-
-          &.ant-picker-cell-range-hover-start,
-          &.ant-picker-cell-range-hover-end,
-          &.ant-picker-cell-range-hover {
-            &::before {
-              background-color: transparent !important;
-            }
-          }
-
-          /* Range hover effects - preview before selection */
+          /* Range hover preview effects (No background, only default dashed border) */
           &.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
             &::before {
               content: '';
@@ -1572,49 +1443,37 @@
               top: 50%;
               left: 0;
               right: 0;
-              background-color: rgba(237, 27, 35, 0.05);
               transform: translateY(-50%);
-              z-index: 1;
-              display: block;
+              z-index: 10;
             }
           }
 
-          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start):not(.ant-picker-cell-in-range) {
-            &::before {
+          /* Range hover preview effects */
+          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start):not(.ant-picker-cell-in-view) {
+            &.ant-picker-cell-in-view::before {
               content: '';
               position: absolute;
               top: 50%;
               left: 0;
               right: 50%;
-              background-color: rgba(237, 27, 35, 0.05);
+              background-color: rgba(237, 27, 35, 0.1);
+              // background-color: var(--color-picker-range-hover-bg);
               transform: translateY(-50%);
-              z-index: 1;
-              height: 24px;
-              display: block !important;
+              z-index: 10;
             }
           }
 
-          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
-            &::before {
+          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-view) {
+            &.ant-picker-cell-in-view::before {
               content: '';
               position: absolute;
               top: 50%;
               left: 50%;
               right: 0;
-              background-color: rgba(237, 27, 35, 0.05);
+              background-color: rgba(237, 27, 35, 0.1);
+              // background-color: var(--color-picker-range-hover-bg);
               transform: translateY(-50%);
-              z-index: 1;
-              height: 24px;
-              display: block !important;
-            }
-          }
-          &.ant-picker-cell-in-range {
-            &.ant-picker-cell-range-hover-start,
-            &.ant-picker-cell-range-hover-end,
-            &.ant-picker-cell-range-hover {
-              &::before {
-                background-color: rgba(237, 27, 35, 0.1) !important;
-              }
+              z-index: 10;
             }
           }
         }
@@ -1682,44 +1541,6 @@
         }
       }
     }
-
-    /* Month/Year picker panel */
-    .ant-picker-month-panel,
-    .ant-picker-year-panel,
-    .ant-picker-decade-panel {
-      .ant-picker-content {
-        .ant-picker-cell {
-          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) {
-            .ant-picker-cell-inner {
-              background-color: var(--color-bg-elevated);
-              color: var(--color-primary);
-            }
-          }
-
-          &.ant-picker-cell-selected {
-            .ant-picker-cell-inner {
-              background-color: var(--color-primary);
-              color: #ffffff;
-              font-weight: 600;
-            }
-          }
-
-          &.ant-picker-cell-disabled {
-            .ant-picker-cell-inner {
-              color: var(--color-text-tertiary);
-              cursor: not-allowed;
-            }
-
-            &:hover {
-              .ant-picker-cell-inner {
-                background-color: transparent;
-                color: var(--color-text-tertiary);
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   /* Multiple picker dropdowns positioning */
@@ -1738,48 +1559,21 @@
   }
 }
 
-/* Dark theme specific adjustments */
-// [data-theme="dark"] {
-//   .ant-picker-dropdown {
-//     .ant-picker-panel {
-//       .ant-picker-body {
-//         .ant-picker-content {
-//           /* Style for cell not start/end/selected/disabled */
-//           .ant-picker-cell {
-//             &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
-//               .ant-picker-cell-inner {
-//                 background-color: rgba(237, 27, 35, 0.05);
-//                 color: #ffffff;
-//               }
-//             }
+.ant-month-panel, .ant-year-panel {
+  .ant-picker-cell-range-start, .ant-picker-cell-range-end {
+    .ant-picker-cell-inner {
+      background-color: var(--color-primary) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+    }
+  }
+}
 
-//             &.ant-picker-cell-in-range:hover {
-//               .ant-picker-cell-inner {
-//                 color: #ffffff !important;
-//               }
-//             }
-            
-//             /* Range background in dark theme */
-//             &.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
-//             &.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before,
-//             &.ant-picker-cell-in-range::before {
-//               background-color: rgba(237, 27, 35, 0.05);
-//             }
-
-//             /* Fix hover for range selection in dark mode */
-//             &.ant-picker-cell-range-hover-start,
-//             &.ant-picker-cell-range-hover-end,
-//             &.ant-picker-cell-range-hover {
-//               &::before {
-//                 display: none !important;
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+/* Overrides */
+.ant-picker-dropdown .ant-picker-panel .ant-picker-body .ant-picker-content .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range):not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+  background-color: var(--color-picker-cell-hover-bg) !important;
+  color: var(--color-primary) !important;
+}
 
 /* ==============================================
   Select Component
@@ -2497,4 +2291,247 @@ img[src*="upload.png"] {
 
 [data-theme="dark"] img[src*="upload.png"] {
   filter: invert(1);
+}
+
+/* ==============================================
+   ANT PROPOVER
+   ============================================== */
+// PopConfirm/Popover Theme SCSS
+.ant-popover {
+  .ant-popover-content {
+    .ant-popover-arrow {
+      &::before {
+        background: var(--color-bg-elevated);
+        border-color: var(--color-border);
+      }
+
+      &::after {
+        background: var(--color-bg-elevated);
+      }
+    }
+
+    .ant-popover-inner {
+      background-color: var(--color-bg-elevated);
+      box-shadow: var(--box-shadow);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+
+      .ant-popover-inner-content {
+        color: var(--color-text);
+      }
+    }
+  }
+
+  /* PopConfirm Component Style */
+  &.ant-popconfirm {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          .ant-popover-message {
+            color: var(--color-text);
+
+            /* Confirm message */
+            .ant-popover-message-title {
+              color: var(--color-text);
+            }
+          }
+
+          .ant-popconfirm-buttons {
+            .ant-btn {
+              background-color: var(--color-bg-container);
+              border-color: var(--color-border);
+              color: var(--color-text);
+
+              &:hover {
+                background-color: var(--color-bg-container);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+              }
+
+              &:focus {
+                background-color: var(--color-bg-container);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+                box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+              }
+
+              &:active {
+                background-color: var(--color-bg-container);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+              }
+
+              // Primary button (Yes/OK button)
+              &.ant-btn-primary {
+                background-color: var(--color-button-primary);
+                border-color: var(--color-button-primary);
+                color: #ffffff;
+
+                &:hover {
+                  background-color: var(--color-button-hover);
+                  border-color: var(--color-button-hover);
+                  color: #ffffff;
+                }
+
+                &:focus {
+                  background-color: var(--color-button-primary);
+                  border-color: var(--color-button-primary);
+                  color: #ffffff;
+                  box-shadow: 0 0 0 2px rgba(237, 27, 35, 0.2);
+                }
+
+                &:active {
+                  background-color: var(--color-button-active);
+                  border-color: var(--color-button-active);
+                  color: #ffffff;
+                }
+              }
+
+              &.ant-btn-dangerous {
+                background-color: var(--color-error);
+                border-color: var(--color-error);
+                color: #ffffff;
+
+                &:hover {
+                  background-color: #ff7875;
+                  border-color: #ff7875;
+                  color: #ffffff;
+                }
+
+                &:focus {
+                  background-color: var(--color-error);
+                  border-color: var(--color-error);
+                  color: #ffffff;
+                  box-shadow: 0 0 0 2px rgba(250, 84, 28, 0.2);
+                }
+
+                &:active {
+                  background-color: #d4380d;
+                  border-color: #d4380d;
+                  color: #ffffff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ant-popover-placement-top,
+.ant-popover-placement-topLeft,
+.ant-popover-placement-topRight {
+  .ant-popover-arrow {
+    &::before {
+      border-top-color: var(--color-border);
+    }
+    &::after {
+      border-top-color: var(--color-bg-elevated);
+    }
+  }
+}
+
+.ant-popover-placement-bottom,
+.ant-popover-placement-bottomLeft,
+.ant-popover-placement-bottomRight {
+  .ant-popover-arrow {
+    &::before {
+      border-bottom-color: var(--color-border);
+    }
+    &::after {
+      border-bottom-color: var(--color-bg-elevated);
+    }
+  }
+}
+
+.ant-popover-placement-left,
+.ant-popover-placement-leftTop,
+.ant-popover-placement-leftBottom {
+  .ant-popover-arrow {
+    &::before {
+      border-left-color: var(--color-border);
+    }
+    &::after {
+      border-left-color: var(--color-bg-elevated);
+    }
+  }
+}
+
+.ant-popover-placement-right,
+.ant-popover-placement-rightTop,
+.ant-popover-placement-rightBottom {
+  .ant-popover-arrow {
+    &::before {
+      border-right-color: var(--color-border);
+    }
+    &::after {
+      border-right-color: var(--color-bg-elevated);
+    }
+  }
+}
+
+// Regular Popover
+.ant-popover:not(.ant-popconfirm) {
+  .ant-popover-content {
+    .ant-popover-inner {
+      .ant-popover-inner-content {
+        .ant-popover-title {
+          color: var(--color-text);
+          border-bottom-color: var(--color-border-secondary);
+        }
+      }
+    }
+  }
+}
+
+/* ==============================================
+   GLOBAL SCROLLBAR STYLING
+   ============================================== */
+* {
+  scrollbar-color: var(--color-border) var(--color-bg-container);
+  scrollbar-width: auto;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-bg-container);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-tertiary);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-primary);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: var(--color-bg-container);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] {
+  * {
+    scrollbar-color: var(--color-border) var(--color-bg-container); /* Firefox */
+  }
+}
+
+/* Custom ultra thin scrollbar */
+.custom-thin-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 }

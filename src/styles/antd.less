@@ -99,16 +99,6 @@
   background: var(--color-bg-sider);
 }
 
-.menu-dropdown {
-  left: 0;
-  width: 172px;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  height: 17.5rem;
-  overflow-y: scroll;
-}
-
 .search {
   display: flex;
   gap: 1rem;
@@ -120,9 +110,13 @@
   position: relative;
   display: flex;
 }
-.menu {
-  background: rgb(249 249 249);
-  border-radius: 8px;
+
+.menu { 
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+
   position: absolute;
   top: 85px;
   right: 0;
@@ -131,8 +125,10 @@
   visibility: hidden;
   z-index: 2;
   padding: 10px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  overflow: hidden;
 }
+
 .menu.active {
   opacity: 1;
   visibility: visible;
@@ -170,16 +166,52 @@
   }
 }
 
+.menu-dropdown {
+  left: 0;
+  width: 172px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 17.5rem;
+  overflow-y: scroll;
+}
+
 .menu-dropdown .checkbox {
   margin-left: 8px;
   padding: 3px;
 }
+
+/* Custom Scrollbar Styles */
+// .menu-dropdown::-webkit-scrollbar {
+//   width: 6px;
+// }
+
+// .menu-dropdown::-webkit-scrollbar-track {
+//   background: var(--color-bg-base);
+//   border-radius: var(--border-radius-sm);
+// }
+
+// .menu-dropdown::-webkit-scrollbar-thumb {
+//   background: var(--color-border);
+//   border-radius: var(--border-radius-sm);
+//   transition: background-color 0.3s ease;
+// }
+
+// .menu-dropdown::-webkit-scrollbar-thumb:hover {
+//   background: var(--color-text-secondary);
+// }
+
+// .menu-dropdown::-webkit-scrollbar-thumb:active {
+//   background: var(--color-primary);
+// }
+
 .ant-menu-submenu-popup {
-  background-color: #ffffff !important;
+  background-color: var(--color-bg-container) !important;
 }
 
 .ant-menu-submenu-popup .ant-menu-item {
-  color: #000000 !important;
+  color: var(--color-item-text) !important;
+  background: var(--color-item-bg) !important;
 
   // Override antdesign default styles
   padding-top: 0px !important;
@@ -188,8 +220,40 @@
 }
 
 .ant-menu-submenu-popup .ant-menu-item:hover {
-  background: #f5f5f5;
+  color: var(--color-item-text-hover) !important;
+  background: var(--color-bg-layout) !important;
   transition: background-color 0.3s ease;
+}
+
+.ant-menu-submenu-popup .ant-menu-item:active,
+.ant-menu-submenu-popup .ant-menu-item-selected {
+  color: var(--color-item-text-selected) !important;
+  background: var(--color-item-bg-selected) !important;
+}
+
+.ant-menu-submenu-popup .ant-menu {
+  background: var(--color-bg-container) !important;
+  border: none !important;
+}
+
+/* Dark Theme Support */
+[data-theme="dark"] .ant-menu-submenu-popup .ant-menu-item {
+  color: var(--color-item-text) !important;
+}
+
+[data-theme="dark"] .ant-menu-submenu-popup .ant-menu-item:hover {
+  color: var(--color-item-text-hover) !important;
+  background: var(--color-bg-layout) !important;
+}
+
+[data-theme="dark"] .ant-menu-submenu-popup {
+  background: var(--color-bg-container) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: var(--box-shadow-secondary) !important;
+}
+
+[data-theme="dark"] .ant-menu-submenu-popup .ant-menu {
+  background: var(--color-bg-container) !important;
 }
 
 .other_function {
