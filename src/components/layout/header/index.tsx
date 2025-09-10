@@ -56,6 +56,7 @@ export const Header: React.FC = () => {
   const logoutAccount = () => {
     // signOutGoogle();
     logout();
+    localStorage.removeItem("unauthorized");
     push("/login");
   };
 

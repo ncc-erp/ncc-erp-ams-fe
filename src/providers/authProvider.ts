@@ -41,6 +41,8 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem("unauthorized");
+    localStorage.removeItem("username");
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
