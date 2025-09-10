@@ -245,6 +245,10 @@
       background-color: var(--color-bg-container) !important;
       border-color: var(--color-border) !important;
       box-shadow: none !important;
+
+      .anticon, svg {
+        color: var(--color-text-secondary) !important;
+      }
     }
   }
   
@@ -330,7 +334,7 @@
     }
   }
 
-  /* Dashed button: btn-ant-dashed */
+  /* Dashed button: ant-btn-dashed */
   &-dashed {
     background-color: var(--color-bg-container);
     border-color: var(--color-border);
@@ -372,6 +376,11 @@
     &.ant-btn-default, &.ant-btn-dashed {
       color: var(--color-error);
       border-color: var(--color-error);
+
+      .anticon,
+      svg {
+        color: var(--color-error);
+      }
       
       &:hover, &:focus {
         color: #ff7a45;
