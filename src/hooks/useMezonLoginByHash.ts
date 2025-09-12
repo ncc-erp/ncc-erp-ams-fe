@@ -1,3 +1,4 @@
+import { LocalStorageKey } from "enums/LocalStorageKey";
 import {
   LoginMezonByHashParams,
   MezonUserHash,
@@ -34,7 +35,7 @@ export const useMezonLoginByHash = () => {
       window.Mezon.WebView.postEvent("PING", { message: "PING" }, () => {});
 
       const handlePong = () => {
-        localStorage.setItem("isInMezon", "true");
+        localStorage.setItem(LocalStorageKey.IS_IN_MEZON, "true");
       };
       const handleUserHash = async (_: any, userHashData: MezonUserHash) => {
         setUserHashInfo(userHashData.message);

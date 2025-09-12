@@ -70,6 +70,7 @@ import { ToolMultiCheckin } from "./multi-checkin";
 import { ToolMultiCheckout } from "./multi-checkout";
 import { ToolSearch } from "./search";
 import { ToolShow } from "./show";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -410,8 +411,10 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tools_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tools_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_TOOLS_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -671,7 +674,7 @@ export const ToolList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tools_selected",
+      LocalStorageKey.ITEM_TOOLS_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

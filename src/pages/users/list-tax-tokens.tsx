@@ -60,6 +60,7 @@ import {
   getTaxTokenStatusDecription,
 } from "utils/tax_token";
 import { CancleAsset } from "./cancel";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -375,8 +376,12 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
     useCreate<ITaxTokenCreateRequest>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_tax_token_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_tax_token_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_TAX_TOKEN_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_TAX_TOKEN_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
 
@@ -451,7 +456,7 @@ export const UserListTaxToken: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_tax_token_selected",
+      LocalStorageKey.ITEM_TAX_TOKEN_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

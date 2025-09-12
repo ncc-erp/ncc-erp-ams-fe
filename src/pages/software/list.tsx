@@ -56,6 +56,7 @@ import { SoftwareShow } from "./show";
 import { SoftwareCheckout } from "./checkout";
 import moment from "moment";
 import { IModel } from "interfaces/model";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -294,8 +295,10 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
   );
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_software_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_software_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_SOFTWARE_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SOFTWARE_SELECTED) as string
+        )
       : defaultCheckedList
   );
 
@@ -395,10 +398,13 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
 
   const initselectedRowKeys = useMemo(() => {
     return (
-      JSON.parse(localStorage.getItem("selectedSoftwareRowKeys") as string) ||
-      []
+      JSON.parse(
+        localStorage.getItem(
+          LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS
+        ) as string
+      ) || []
     );
-  }, [localStorage.getItem("selectedSoftwareRowKeys")]);
+  }, [localStorage.getItem(LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS)]);
 
   const [, setSelectedRowKeys] = useState<React.Key[] | ISoftwareResponse[]>(
     initselectedRowKeys as React.Key[]
@@ -414,14 +420,14 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
         (item: ISoftware) => item.id !== record.id
       );
       localStorage.setItem(
-        "selectedSoftwareRowKeys",
+        LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS,
         JSON.stringify(newSelectRow)
       );
       setSelectedRowKeys(newSelectRow.map((item: ISoftware) => item.id));
     } else {
       const newselectedRowKeys = [record, ...initselectedRowKeys];
       localStorage.setItem(
-        "selectedSoftwareRowKeys",
+        LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS,
         JSON.stringify(
           newselectedRowKeys.filter(function () {
             return newselectedRowKeys;
@@ -447,13 +453,13 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
       );
 
       localStorage.setItem(
-        "selectedSoftwareRowKeys",
+        LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS,
         JSON.stringify(newSelectedRows)
       );
     } else {
       selectedRows = selectedRows.filter((item: ISoftwareResponse) => item);
       localStorage.setItem(
-        "selectedSoftwareRowKeys",
+        LocalStorageKey.SELECTED_SOFTWARE_ROW_KEYS,
         JSON.stringify([...initselectedRowKeys, ...selectedRows])
       );
       setSelectedRowKeys(selectedRows);
@@ -522,7 +528,7 @@ export const SoftwareList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_software_selected",
+      LocalStorageKey.ITEM_SOFTWARE_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
