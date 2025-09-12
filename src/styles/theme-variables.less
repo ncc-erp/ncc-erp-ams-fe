@@ -283,7 +283,7 @@ svg {
 }
 
 .ant-input {
-  background-color: var(--color-input-bg);
+  background-color: var(--color-input-bg) !important;
   border-color: var(--color-input-border);
   color: var(--color-input-text);
 }
@@ -1985,7 +1985,7 @@ svg {
       }
     }
   }
-  
+
   /* Time picker dark theme */
   .ant-picker-time-panel {
     .ant-picker-content {
@@ -2687,6 +2687,19 @@ img[src*="upload.png"] {
 [data-theme="dark"] {
   * {
     scrollbar-color: var(--color-border) var(--color-bg-container); /* Firefox */
+  }
+  // Autofill background fix for dark mode 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #282828 inset !important; 
+    -webkit-text-fill-color: #fff !important;
   }
 }
 
