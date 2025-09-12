@@ -5,6 +5,7 @@ import { GET_ME_API } from "api/baseApi";
 import { parseJwt } from "utils/assets";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { GOOGLE_AUTH_API, LOGIN_API } from "api/baseApi";
+import { ELocalStorageKey } from "constants/common";
 
 export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
 
@@ -41,7 +42,7 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem("unauthorized");
+    localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
     localStorage.removeItem("username");
     return Promise.resolve();
   },

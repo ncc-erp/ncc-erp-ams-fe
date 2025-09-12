@@ -1,6 +1,7 @@
 import axios from "axios";
 import { HttpError } from "@pankod/refine-core";
 import { authProvider } from "providers/authProvider";
+import { EBooleanString, ELocalStorageKey } from "constants/common";
 
 export const axiosInstance = axios.create();
 
@@ -18,9 +19,12 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       const currentToken = authProvider.getToken();
       if (currentToken) {
-        localStorage.removeItem("unauthorized");
-        localStorage.setItem("unauthorized", "true");
-        window.dispatchEvent(new CustomEvent("unauthorized"));
+        localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
+        localStorage.setItem(
+          ELocalStorageKey.UNAUTHORIZED,
+          EBooleanString.TRUE
+        );
+        window.dispatchEvent(new CustomEvent(ELocalStorageKey.UNAUTHORIZED));
       }
     }
     const customError: HttpError = {

@@ -2,6 +2,7 @@ import { AntdLayout, Grid } from "@pankod/refine-antd";
 import { LayoutProps } from "@pankod/refine-core";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { UnauthorizedModal } from "components/Modal/UnauthorizedModal";
+import { EBooleanString, ELocalStorageKey } from "constants/common";
 
 export const Layout: FC<PropsWithChildren<LayoutProps>> = ({
   children,
@@ -12,18 +13,24 @@ export const Layout: FC<PropsWithChildren<LayoutProps>> = ({
 }) => {
   const breakpoint = Grid.useBreakpoint();
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(
-    localStorage.getItem("unauthorized") === "true"
+    localStorage.getItem(ELocalStorageKey.UNAUTHORIZED) === EBooleanString.TRUE
   );
 
   useEffect(() => {
     const handleUnauthorized = () => {
       setIsAuthModalVisible(true);
     };
-    window.addEventListener("unauthorized", handleUnauthorized);
+    window.addEventListener(ELocalStorageKey.UNAUTHORIZED, handleUnauthorized);
     return () => {
-      window.removeEventListener("unauthorized", handleUnauthorized);
-      if (localStorage.getItem("unauthorized") === "true") {
-        localStorage.removeItem("unauthorized");
+      window.removeEventListener(
+        ELocalStorageKey.UNAUTHORIZED,
+        handleUnauthorized
+      );
+      if (
+        localStorage.getItem(ELocalStorageKey.UNAUTHORIZED) ===
+        EBooleanString.TRUE
+      ) {
+        localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
       }
     };
   }, []);

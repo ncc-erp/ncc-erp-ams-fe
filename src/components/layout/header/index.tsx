@@ -20,6 +20,7 @@ import { EPermissions } from "constants/permissions";
 import { MModal } from "components/Modal/MModal";
 import { Scanner } from "pages/hardware/scanner";
 import "../../../styles/qr-code.less";
+import { ELocalStorageKey } from "constants/common";
 const { LogoutOutlined, SyncOutlined } = Icons;
 
 const { Text } = Typography;
@@ -56,7 +57,7 @@ export const Header: React.FC = () => {
   const logoutAccount = () => {
     // signOutGoogle();
     logout();
-    localStorage.removeItem("unauthorized");
+    localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
     push("/login");
   };
 

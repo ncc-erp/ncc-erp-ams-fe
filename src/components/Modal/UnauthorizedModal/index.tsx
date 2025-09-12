@@ -2,6 +2,8 @@ import { Modal, Button } from "@pankod/refine-antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useLogout, useNavigation } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
+import { ELocalStorageKey } from "constants/common";
+import "./style.less";
 
 type UnauthorizedModalProps = {
   visible: boolean;
@@ -15,7 +17,7 @@ export const UnauthorizedModal = (props: UnauthorizedModalProps) => {
   const { push } = useNavigation();
 
   const handleLogout = () => {
-    localStorage.removeItem("unauthorized");
+    localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
     onClose?.();
     logout();
     push("/login");
@@ -24,8 +26,8 @@ export const UnauthorizedModal = (props: UnauthorizedModalProps) => {
   return (
     <Modal
       title={
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <ExclamationCircleOutlined style={{ color: "#faad14" }} />
+        <div className="modal-title">
+          <ExclamationCircleOutlined className="modal-icon" />
           {t("modal.unauthorized.title", "Session Expired")}
         </div>
       }
