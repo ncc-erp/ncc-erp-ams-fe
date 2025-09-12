@@ -1,3 +1,72 @@
+/* Hide content during theme initialization to prevent FOUC */
+.theme-initializing {
+  visibility: hidden !important;
+}
+
+/* Global theme transition properties */
+:root {
+  --theme-transition-duration: 70ms;
+  --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Apply consistent transitions to all theme-aware elements */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, box-shadow, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: var(--theme-transition-timing);
+}
+
+/* During theme transitions, ensure all elements transition together */
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition-property: background-color, border-color, color, box-shadow, fill, stroke !important;
+  transition-duration: var(--theme-transition-duration) !important;
+  transition-timing-function: var(--theme-transition-timing) !important;
+}
+
+/* Disable transitions for elements that shouldn't animate */
+.no-transition,
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
+}
+
+.ant-layout,
+.ant-layout-header,
+.ant-layout-sider,
+.ant-layout-content,
+.ant-card,
+.ant-input,
+.ant-btn,
+.ant-table,
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td,
+.ant-modal-content,
+.ant-picker,
+.ant-select-selector,
+.ant-typography,
+.ant-form-item-label > label,
+.ant-checkbox-wrapper,
+.ant-pagination,
+.ant-popover-inner,
+.react-mde {
+  transition-property: background-color, border-color, color, box-shadow !important;
+  transition-duration: var(--theme-transition-duration) !important;
+  transition-timing-function: var(--theme-transition-timing) !important;
+}
+
+/* Ensure SVG icons also transition smoothly */
+.anticon,
+svg {
+  transition-property: fill, stroke, color !important;
+  transition-duration: var(--theme-transition-duration) !important;
+  transition-timing-function: var(--theme-transition-timing) !important;
+}
+
 :root {
   /* Light theme variables */
   --color-primary: #ed1b23;
@@ -78,11 +147,15 @@
   --chart-bg-color: #ffffff;
   --chart-border-color: #cdcdcd;
 
-  /* DatePicker variabes */
+  /* DatePicker variables */
   --color-picker-cell-hover-bg: rgba(237, 27, 35, 0.1);
-  --color-picker-range-bg: #ffebe8;
-  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.05);
-  // --color-picker-range-hover-bg: #ffdbdb;
+  --color-picker-cell-not-view-bg: #f5f5f5;
+  --color-picker-range-bg: rgba(237, 27, 35, 0.1);
+  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.15);
+  --color-picker-selected-bg: #ed1b23;
+  --color-picker-selected-color: #ffffff;
+  --color-picker-today-border: #ed1b23;
+  --color-picker-today-color: #ed1b23;
 }
 
 [data-theme="dark"] {
@@ -162,10 +235,14 @@
   --chart-border-color: #565656;
 
   /* DatePicker variables */
-  --color-picker-cell-hover-bg: rgba(237, 27, 35, 0.15);
-  --color-picker-range-bg: #3e1b1c;
-  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.18);
-  // --color-picker-range-hover-bg: #5c3536;
+  --color-picker-cell-hover-bg: rgba(237, 27, 35, 0.2);
+  --color-picker-cell-not-view-bg: #f5f5f5;
+  --color-picker-range-bg: rgba(237, 27, 35, 0.15);
+  --color-picker-range-hover-bg: rgba(237, 27, 35, 0.25);
+  --color-picker-selected-bg: #ed1b23;
+  --color-picker-selected-color: #ffffff;
+  --color-picker-today-border: #ed1b23;
+  --color-picker-today-color: #ed1b23;
 }
 
 /* Ant Design Component Overrides */
@@ -206,9 +283,18 @@
 }
 
 .ant-input {
-  background-color: var(--color-input-bg);
+  background-color: var(--color-input-bg) !important;
   border-color: var(--color-input-border);
   color: var(--color-input-text);
+}
+
+.ant-input-status-error,.ant-input-group-addon{
+  background-color: transparent !important;
+}
+
+.ant-input-disabled{
+  background-color: transparent !important;
+  color: #6B7280 !important;
 }
 
 .ant-input::placeholder {
@@ -1255,313 +1341,234 @@
 }
 
 /* DatePicker Dropdown Panel */
-.ant-picker-dropdown {
-  background-color: var(--color-card-bg);
+.ant-picker-range-arrow{
+  background: var(--color-bg-container) !important;
+}
+.ant-picker-range-arrow::before{
+  background: var(--color-bg-container) !important;
+}
 
+.ant-picker-dropdown {
   .ant-picker-panel-container {
-    background-color: var(--color-card-bg);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--box-shadow);
+    background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-secondary);
   }
 
   .ant-picker-panel {
-    /* Header Section (Month/Year & Navigation) */
+    background-color: var(--color-bg-elevated);
+    border: none;
+
+    /* Header (Month/Year navigation) */
     .ant-picker-header {
-      background-color: var(--color-card-bg);
       border-bottom: 1px solid var(--color-border-secondary);
-    
-      /* Navigation buttons (prev/next month/year) */
-      .ant-picker-header-super-prev-btn,
-      .ant-picker-header-prev-btn,
-      .ant-picker-header-next-btn,
-      .ant-picker-header-super-next-btn {
-        color: var(--color-text-secondary);
-        transition: all 0.3s ease;
+      
+      button {
+        color: var(--color-text);
         border: none;
         background-color: transparent;
+        transition: all 0.3s ease;
         
         &:hover {
           color: var(--color-primary);
-          background-color: var(--color-bg-elevated);
-        }
-
-        &:active {
-          color: var(--color-button-active);
         }
       }
-
-      /* Month/Year selector buttons */
+      
       .ant-picker-header-view {
         button {
           color: var(--color-text);
-          background: transparent;
           font-weight: 600;
-          transition: all 0.3s ease;
-
+          
           &:hover {
             color: var(--color-primary);
-            background-color: var(--color-bg-elevated);
           }
         }
       }
     }
 
-    /* Calendar Body Section */
+    /* Calendar body */
     .ant-picker-body {
-      background-color: var(--color-card-bg);
-
       .ant-picker-content {
-        /* Week day headers (Su, Mo, Tu, We, Th, Fr, Sa) */
-        thead th {
-          color: var(--color-text-secondary);
-          background-color: var(--color-card-bg);
-        }
-
-        /* Date cells container */
+        /* Regular calendar cells */
         .ant-picker-cell {
-          position: relative;
-          color: var(--color-text);
-
-          /* Inner cell content - base styling */
           .ant-picker-cell-inner {
-            position: relative;
-            z-index: 2;
             color: var(--color-text);
             background-color: transparent;
-            transition: all 0.3s ease;
+            border-radius: var(--border-radius-sm);
+            transition: all 0.2s ease;
           }
-
-          /* Today's date / Current Period */
-          &.ant-picker-cell-today {
+          
+          /* Hover state */
+          &:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range):not(.ant-picker-cell-disabled) {
             .ant-picker-cell-inner {
+              background-color: var(--color-picker-cell-hover-bg);
               color: var(--color-primary);
-              font-weight: 600;
             }
           }
-
-          /* Selected single cell */
+          
+          /* Selected cell */
           &.ant-picker-cell-selected {
             .ant-picker-cell-inner {
-              background-color: var(--color-primary);
-              color: #ffffff;
+              background-color: var(--color-picker-selected-bg) !important;
+              color: var(--color-picker-selected-color) !important;
               font-weight: 600;
-              position: relative;
             }
-          }
-
-          /* Normal hover - only for non-selected, non-range cells */
-          &:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range) {
-            .ant-picker-cell-inner {
-              background-color: rgba(237, 27, 35, 0.1);
-              // background-color: var(--color-picker-cell-hover-bg);
-              color: var(--color-primary);
-            }
-          }
-
-          /* Dates outside current view (grayed out) */
-          &:not(.ant-picker-cell-in-view) .ant-picker-cell-inner {
-            color: var(--color-text-tertiary) !important;
-          }
-
-          /* Disabled cells */
-          &.ant-picker-cell-disabled {
-            .ant-picker-cell-inner {
-              color: var(--color-text-tertiary);
-              cursor: not-allowed;
-              background-color: transparent !important;
-            }
-
-            &:hover .ant-picker-cell-inner {
-              color: var(--color-text-tertiary) !important;
-              background-color: transparent !important;
-            }
-
+            
+            /* Remove range background for selected cells */
             &::before {
               display: none !important;
             }
           }
-
-          /* Range start date */
-          &.ant-picker-cell-range-start {
+          
+          /* Disabled cells */
+          &.ant-picker-cell-disabled {
             .ant-picker-cell-inner {
-              background-color: var(--color-primary);
-              color: #ffffff !important;
-              font-weight: 600;
+              color: var(--color-text-tertiary);
+              background-color: transparent;
+              cursor: not-allowed;
             }
-
-            /* Extend background to the right for range */
-            &:not(.ant-picker-cell-range-start.ant-picker-cell-range-end)::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              right: 0;
-              background-color: rgba(237, 27, 35, 0.1);
-              // background-color: var(--color-picker-range-bg);
-              transform: translateY(-50%);
-              z-index: 1;
+            
+            &:hover {
+              .ant-picker-cell-inner {
+                background-color: transparent;
+                color: var(--color-text-tertiary);
+              }
+            }
+            
+            /* Remove range background for disabled cells */
+            &::before {
+              display: none !important;
             }
           }
-
-          /* Range end date */
+          
+          /* Range picker - start and end */
+          &.ant-picker-cell-range-start,
           &.ant-picker-cell-range-end {
             .ant-picker-cell-inner {
-              background-color: var(--color-primary) !important;
-              color: #ffffff !important;
+              background-color: var(--color-picker-selected-bg) !important;
+              color: var(--color-picker-selected-color) !important;
               font-weight: 600;
             }
-
-            /* Extend background to the left for range */
-            &:not(.ant-picker-cell-range-start.ant-picker-cell-range-end)::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 50%;
-              background-color: rgba(237, 27, 35, 0.1);
-              transform: translateY(-50%);
-              z-index: 1;
+            
+            /* Remove range background for start/end cells */
+            &::before {
+              display: none !important;
             }
           }
-
-          /* Dates in range (between start and end) */
+          
+          /* Range picker - in range */
           &.ant-picker-cell-in-range {
-            &.ant-picker-cell-in-view::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              transform: translateY(-50%);
-              background-color: var(--color-picker-range-bg);
-              z-index: 1;
+            position: relative;
+            
+            /* Only show range background for non-selected cells */
+            &:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+              &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--color-picker-range-bg);
+                z-index: 0;
+              }
             }
-
+           
             .ant-picker-cell-inner {
+              position: relative;
+              z-index: 1;
+              background-color: transparent;
               color: var(--color-text);
             }
-          }
 
-          /* Range hover preview effects (No background, only default dashed border) */
-          &.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
-            &::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              transform: translateY(-50%);
-              z-index: 10;
+             .ant-picker-cell-range-hover-start {
+              // recheck
+              .ant-picker-cell-inner::after{
+                content: '';
+                position: absolute;
+                top: 50%;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: blue !important;
+                z-index: 100;
+              }
+             }
+          }
+          
+          /* Range hover effects */
+          &.ant-picker-cell-range-hover {
+            &:not(.ant-picker-cell-in-range){
+              &::before {
+                display: none !important;
+              }
+            }
+            &:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+              &::before {
+                background-color: var(--color-picker-range-hover-bg);
+              }
             }
           }
-
-          /* Range hover preview effects */
-          &.ant-picker-cell-range-hover-start:not(.ant-picker-cell-range-start):not(.ant-picker-cell-in-view) {
-            &.ant-picker-cell-in-view::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 50%;
-              background-color: rgba(237, 27, 35, 0.1);
-              // background-color: var(--color-picker-range-hover-bg);
-              transform: translateY(-50%);
-              z-index: 10;
-            }
-          }
-
-          &.ant-picker-cell-range-hover-end:not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-view) {
-            &.ant-picker-cell-in-view::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              right: 0;
-              background-color: rgba(237, 27, 35, 0.1);
-              // background-color: var(--color-picker-range-hover-bg);
-              transform: translateY(-50%);
-              z-index: 10;
-            }
+        }
+        
+        /* Week column header */
+        thead {
+          th {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid var(--color-border-secondary);
           }
         }
       }
     }
-
-    /* Footer Section */
+    
+    /* Footer (Today button, OK button) */
     .ant-picker-footer {
-      background-color: var(--color-card-bg);
       border-top: 1px solid var(--color-border-secondary);
       
-      /* Today/Now buttons */
-      .ant-picker-today-btn,
-      .ant-picker-now-btn {
+      .ant-picker-today-btn {
         color: var(--color-primary);
-        background-color: transparent;
         border: none;
-        transition: all 0.3s ease;
+        background: transparent;
         
         &:hover {
           color: var(--color-button-hover);
-          background-color: rgba(237, 27, 35, 0.1);
-        }
-
-        &:active {
-          color: var(--color-button-active);
         }
       }
       
-      /* Extra footer content */
-      .ant-picker-footer-extra {
-        color: var(--color-text-secondary);
-        font-size: 12px;
+      .ant-picker-ok {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        
+        &:hover {
+          background-color: var(--color-button-hover);
+          border-color: var(--color-button-hover);
+        }
       }
     }
-
-    /* Time picker panel (for datetime picker) */
+    
+    /* Time picker panel */
     .ant-picker-time-panel {
-      background-color: var(--color-card-bg);
-      border-left: 1px solid var(--color-border-secondary);
-
-      .ant-picker-time-panel-column {
-        > li {
-          color: var(--color-text);
-          transition: all 0.3s ease;
-
-          &:hover {
-            background-color: var(--color-bg-elevated);
-          }
-
-          &.ant-picker-time-panel-cell-selected {
-            background-color: var(--color-primary);
-            color: #ffffff;
-            font-weight: 600;
-          }
-
-          &.ant-picker-time-panel-cell-disabled {
-            color: var(--color-text-tertiary);
-            cursor: not-allowed;
-
+      .ant-picker-content {
+        .ant-picker-time-panel-column {
+          > li {
+            color: var(--color-text);
+            
             &:hover {
-              background-color: transparent;
+              background-color: rgba(237, 27, 35, 0.1);
+              color: var(--color-primary);
+            }
+            
+            &.ant-picker-time-panel-cell-selected {
+              background-color: var(--color-primary);
+              color: #ffffff;
+            }
+            
+            &.ant-picker-time-panel-cell-disabled {
+              color: var(--color-text-tertiary);
             }
           }
-        }
-      }
-    }
-  }
-
-  /* Multiple picker dropdowns positioning */
-  .ant-picker-dropdown-range {
-    .ant-picker-panels {
-      display: flex;
-      
-      .ant-picker-panel {
-        border-right: 1px solid var(--color-border-secondary);
-        
-        &:last-child {
-          border-right: none;
         }
       }
     }
@@ -1571,8 +1578,8 @@
 .ant-month-panel, .ant-year-panel {
   .ant-picker-cell-range-start, .ant-picker-cell-range-end {
     .ant-picker-cell-inner {
-      background-color: var(--color-primary) !important;
-      color: #FFFFFF !important;
+      background-color: var(--color-picker-selected-bg) !important;
+      color: var(--color-picker-selected-color) !important;
       font-weight: 600;
     }
   }
@@ -1689,6 +1696,9 @@
   box-shadow: var(--box-shadow-secondary) !important;
   padding: 4px;
 
+  .ant-empty-description {
+    color: #aaa !important; 
+  }
   /* Options container */
   .ant-select-item {
     color: var(--color-item-text) !important;
@@ -1745,7 +1755,6 @@
       }
     }
   }
-
   /* Empty state */
   .ant-select-item-empty {
     color: var(--color-text-secondary) !important;
@@ -1897,6 +1906,116 @@
 
 /* Dark theme specific adjustments */
 [data-theme="dark"] {
+  .ant-picker-dropdown {
+    .ant-picker-panel {
+      .ant-picker-body {
+        .ant-picker-content {
+          .ant-picker-cell {
+            .ant-picker-cell-inner {
+              color: rgba(255, 255, 255, 0.85);
+            }
+            
+            /* Enhanced hover effect for dark theme */
+            &:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-in-range):not(.ant-picker-cell-disabled) {
+              .ant-picker-cell-inner {
+                background-color: var(--color-picker-cell-hover-bg) !important;
+                color: #ffffff !important;
+              }
+            }
+            
+            /* Disabled cells in dark theme */
+            &.ant-picker-cell-disabled {
+              .ant-picker-cell-inner {
+                color: rgba(255, 255, 255, 0.25) !important;
+              }
+            }
+            
+            /* Range cells in dark theme */
+            &.ant-picker-cell-in-range {
+              &:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+                &::before {
+                  background-color: var(--color-picker-range-bg);
+                }
+              }
+              
+              .ant-picker-cell-inner {
+                color: rgba(255, 255, 255, 0.85);
+              }
+
+              .ant-picker-cell-inner{
+                &::after{
+                  background-color: var(--color-picker-cell-hover-bg);
+                }
+              }
+            }
+            
+            /* Range hover in dark theme */
+            &.ant-picker-cell-range-hover {
+              &:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end) {
+                &::before {
+                  background-color: var(--color-picker-range-hover-bg);
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      /* Header styling in dark theme */
+      .ant-picker-header {
+        button {
+          color: rgba(255, 255, 255, 0.85);
+          
+          &:hover {
+            color: var(--color-primary);
+          }
+        }
+        
+        .ant-picker-header-view {
+          button {
+            color: rgba(255, 255, 255, 0.85);
+            
+            &:hover {
+              color: var(--color-primary);
+            }
+          }
+        }
+      }
+      
+      /* Week header in dark theme */
+      .ant-picker-body {
+        .ant-picker-content {
+          thead {
+            th {
+              color: rgba(255, 255, 255, 0.65);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Time picker dark theme */
+  .ant-picker-time-panel {
+    .ant-picker-content {
+      .ant-picker-time-panel-column {
+        > li {
+          color: rgba(255, 255, 255, 0.85);
+          
+          &:hover {
+            background-color: rgba(237, 27, 35, 0.2);
+            color: #ffffff;
+          }
+          
+          &.ant-picker-time-panel-cell-disabled {
+            color: rgba(255, 255, 255, 0.25);
+          }
+        }
+      }
+    }
+  }
+  
+  /* Select dropdown dark theme styles */
   .ant-select-dropdown {
     .ant-select-item {
       &:hover:not(.ant-select-item-option-disabled) {
@@ -1917,6 +2036,49 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-color: var(--color-border);
         color: rgba(255, 255, 255, 0.85);
+      }
+    }
+  }
+}
+
+.ant-picker-dropdown
+  .ant-picker-panel
+  .ant-picker-body
+  .ant-picker-content {
+
+  .ant-picker-cell:not(.ant-picker-cell-in-view) {
+
+    .ant-picker-cell-inner {
+      color: var(--color-text-tertiary) !important;
+      background-color: transparent !important;
+    }
+
+    /* Remove any pseudo-element backgrounds used for range/hover */
+    &::before,
+    &::after {
+      background-color: transparent !important;
+      display: none !important;
+      content: none !important;
+    }
+
+    &.ant-picker-cell-selected,
+    &.ant-picker-cell-in-range,
+    &.ant-picker-cell-range-start,
+    &.ant-picker-cell-range-end,
+    &.ant-picker-cell-range-hover,
+    &.ant-picker-cell-range-hover-start,
+    &.ant-picker-cell-range-hover-end {
+      .ant-picker-cell-inner {
+        background-color: transparent !important;
+        color: var(--color-text-tertiary) !important;
+        font-weight: normal !important;
+      }
+
+      &::before,
+      &::after {
+        background-color: transparent !important;
+        display: none !important;
+        content: none !important;
       }
     }
   }
@@ -2534,6 +2696,19 @@ img[src*="upload.png"] {
 [data-theme="dark"] {
   * {
     scrollbar-color: var(--color-border) var(--color-bg-container); /* Firefox */
+  }
+  // Autofill background fix for dark mode 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #282828 inset !important; 
+    -webkit-text-fill-color: #fff !important;
   }
 }
 
