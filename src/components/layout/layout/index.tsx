@@ -2,7 +2,8 @@ import { AntdLayout, Grid } from "@pankod/refine-antd";
 import { LayoutProps } from "@pankod/refine-core";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { UnauthorizedModal } from "components/Modal/UnauthorizedModal";
-import { EBooleanString, ELocalStorageKey } from "constants/common";
+import { EBooleanString } from "constants/common";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const Layout: FC<PropsWithChildren<LayoutProps>> = ({
   children,
@@ -13,24 +14,24 @@ export const Layout: FC<PropsWithChildren<LayoutProps>> = ({
 }) => {
   const breakpoint = Grid.useBreakpoint();
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(
-    localStorage.getItem(ELocalStorageKey.UNAUTHORIZED) === EBooleanString.TRUE
+    localStorage.getItem(LocalStorageKey.UNAUTHORIZED) === EBooleanString.TRUE
   );
 
   useEffect(() => {
     const handleUnauthorized = () => {
       setIsAuthModalVisible(true);
     };
-    window.addEventListener(ELocalStorageKey.UNAUTHORIZED, handleUnauthorized);
+    window.addEventListener(LocalStorageKey.UNAUTHORIZED, handleUnauthorized);
     return () => {
       window.removeEventListener(
-        ELocalStorageKey.UNAUTHORIZED,
+        LocalStorageKey.UNAUTHORIZED,
         handleUnauthorized
       );
       if (
-        localStorage.getItem(ELocalStorageKey.UNAUTHORIZED) ===
+        localStorage.getItem(LocalStorageKey.UNAUTHORIZED) ===
         EBooleanString.TRUE
       ) {
-        localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
+        localStorage.removeItem(LocalStorageKey.UNAUTHORIZED);
       }
     };
   }, []);

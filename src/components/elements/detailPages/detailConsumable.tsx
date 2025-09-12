@@ -40,6 +40,7 @@ import moment from "moment";
 import { ConsumablesCheckout, ConsumablesEdit } from "pages/consumables";
 import { ConsumablesShow } from "pages/consumables/show";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -78,8 +79,12 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
     useState<IConsumablesResponseCheckout>();
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_consumable_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_consumable_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_CONSUMABLE_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_CONSUMABLE_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
 
@@ -329,7 +334,7 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_consumables_selected",
+      LocalStorageKey.ITEM_CONSUMABLES_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

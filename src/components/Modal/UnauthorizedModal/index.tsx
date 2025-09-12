@@ -2,8 +2,8 @@ import { Modal, Button } from "@pankod/refine-antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useLogout, useNavigation } from "@pankod/refine-core";
 import { useTranslation } from "react-i18next";
-import { ELocalStorageKey } from "constants/common";
 import "./style.less";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 type UnauthorizedModalProps = {
   visible: boolean;
@@ -17,7 +17,7 @@ export const UnauthorizedModal = (props: UnauthorizedModalProps) => {
   const { push } = useNavigation();
 
   const handleLogout = () => {
-    localStorage.removeItem(ELocalStorageKey.UNAUTHORIZED);
+    localStorage.removeItem(LocalStorageKey.UNAUTHORIZED);
     onClose?.();
     logout();
     push("/login");

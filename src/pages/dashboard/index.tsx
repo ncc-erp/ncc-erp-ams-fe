@@ -15,6 +15,7 @@ import { ILocation } from "interfaces/dashboard";
 import { AllLocations } from "components/dashboard/locations/index-all-location";
 import { dateFormat } from "constants/assets";
 import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -72,7 +73,10 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   );
 
   const handleChangeLocation = (value: any) => {
-    localStorage.setItem("rtd_location_id", value !== undefined ? value : "");
+    localStorage.setItem(
+      LocalStorageKey.RTD_LOCATION_ID,
+      value !== undefined ? value : ""
+    );
     setLocationSelected(value);
     setParams({ rtd_location_id: JSON.stringify(value) });
   };
@@ -87,7 +91,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       : "";
 
     localStorage.setItem(
-      "purchase_date",
+      LocalStorageKey.PURCHASE_DATE,
       formatString !== undefined ? formatString : ""
     );
     setParams({
@@ -109,7 +113,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
       : "";
 
     localStorage.setItem(
-      "purchase_date",
+      LocalStorageKey.PURCHASE_DATE,
       formatString !== undefined ? formatString : ""
     );
     setParams({
@@ -125,9 +129,9 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
   )?.name;
 
   useEffect(() => {
-    localStorage.removeItem("purchase_date");
-    localStorage.removeItem("rtd_location_id");
-    localStorage.removeItem("search");
+    localStorage.removeItem(LocalStorageKey.PURCHASE_DATE);
+    localStorage.removeItem(LocalStorageKey.RTD_LOCATION_ID);
+    localStorage.removeItem(LocalStorageKey.SEARCH);
   }, [window.location.reload]);
 
   return (
