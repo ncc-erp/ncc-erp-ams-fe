@@ -24,7 +24,6 @@ import { useMemo, useRef } from "react";
 import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import ScrollToTopButton from "components/elements/button/ScrollToTopButton";
 import { ThemeProvider } from "context/ThemeContext";
-import ThemeToggle from "components/ThemeToggle";
 import { ThemeWrapper } from "components/ThemeWrapper";
 import { generateResources } from "./constants/resources";
 import { RESOURCE_CONFIGS } from "./constants/resources/resourceConfigs";
@@ -182,15 +181,6 @@ function App() {
             ref={notificationRef}
             data-test-id="notification-container"
           ></div>
-          <ThemeToggle
-            style={{
-              position: "fixed",
-              bottom: "60px",
-              right: "15px",
-              zIndex: 9999,
-              backgroundColor: "var(--color-bg-container)",
-            }}
-          />
         </ThemeWrapper>
       </ThemeProvider>
     </>
