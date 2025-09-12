@@ -24,6 +24,13 @@
       "backHome": "Zurück"
     }
   },
+  "modal": {
+    "unauthorized": {
+      "title": "Sitzung abgelaufen",
+      "logout": "Abmelden",
+      "message": "Ihre Sitzung ist aufgrund von Inaktivität abgelaufen. Bitte melden Sie sich erneut an, um fortzufahren."
+    }
+  },
   "buttons": {
     "create": "Erstellen",
     "save": "Speichern",
