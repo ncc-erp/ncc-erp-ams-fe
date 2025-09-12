@@ -4,6 +4,10 @@
     "en": "English",
     "de": "German"
   },
+  "theme": {
+    "dark_mode": "Switch to Dark Mode",
+    "light_mode": "Switch to Light Mode"
+  },
   "pages": {
     "login": {
       "signin": "Sign In",

@@ -4,6 +4,10 @@
     "en": "Tiếng Anh",
     "de": "Tiếng Đức"
   },
+  "theme": {
+    "dark_mode": "Chuyển sang Chế độ Tối",
+    "light_mode": "Chuyển sang Chế độ Sáng"
+  },
   "pages": {
     "login": {
       "signin": "Đăng nhập",

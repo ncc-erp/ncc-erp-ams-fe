@@ -13,6 +13,13 @@
       rel="stylesheet"
     />
     <!--
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using refine" />
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
@@ -25,8 +32,62 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>AMS NCCPLUS</title>
-  </head>
+
+  <!-- Script to avoid FOUC -->
+  <script src="%PUBLIC_URL%/js/theme-script.js"></script>
+
+  <!-- Critical CSS applied before any JS executes to prevent FOUC -->
+  <style>
+    html.theme-initializing,
+    html.theme-initializing body,
+    html.theme-initializing #root {
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+
+    /* Apply transitions only to theme-specific properties when theme changes */
+    html.theme-transition .ant-layout,
+    html.theme-transition .ant-layout-header,
+    html.theme-transition .ant-layout-sider,
+    html.theme-transition .ant-card,
+    html.theme-transition .ant-input,
+    html.theme-transition .ant-btn,
+    html.theme-transition .ant-typography,
+    html.theme-transition .ant-menu,
+    html.theme-transition .ant-form-item-label > label,
+    html.theme-transition .ant-checkbox-wrapper,
+    html.theme-transition body,
+    html.theme-transition #root {
+      transition: background-color 0.2s ease,
+        color 0.2s ease, 
+        border-color 0.2s ease,
+        box-shadow 0.2s ease !important;
+    }
+
+    html {
+      background-color: var(--color-bg-base);
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: var(--color-bg-base);
+      color: var(--color-text);
+    }
+    
+    #root {
+      min-height: 100vh;
+      background-color: var(--color-bg-container);
+    }
+  </style>
+  
+  <title>AMS NCCPLUS</title>
+</head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

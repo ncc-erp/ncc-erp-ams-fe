@@ -51,6 +51,7 @@ export const AssetsSummaryPieChartCheckOut = (
       style: {
         textAlign: "center",
         fontSize: 12,
+        fill: "#FFFFFF",
       },
     },
     legend: {
@@ -64,7 +65,7 @@ export const AssetsSummaryPieChartCheckOut = (
       itemName: {
         style: {
           fontSize: 12,
-          fill: "#666",
+          fill: "#4A5568",
         },
       },
       maxRow: 2,
@@ -85,6 +86,7 @@ export const AssetsSummaryPieChartCheckOut = (
           overflow: "hidden",
           textOverflow: "ellipsis",
           fontSize: "22px",
+          fill: "#4A5568",
         },
         content: translate("report.label.title.nameReportCheckOut"),
       },
@@ -136,6 +138,7 @@ export const AssetsSummaryPieChartCheckIn = (
       style: {
         textAlign: "center",
         fontSize: 12,
+        fill: "#FFFFFF",
       },
     },
     legend: {
@@ -149,7 +152,7 @@ export const AssetsSummaryPieChartCheckIn = (
       itemName: {
         style: {
           fontSize: 12,
-          fill: "#666",
+          fill: "#4A5568",
         },
       },
       maxRow: 2,
@@ -170,6 +173,7 @@ export const AssetsSummaryPieChartCheckIn = (
           overflow: "hidden",
           textOverflow: "ellipsis",
           fontSize: "22px",
+          fill: "#4A5568",
         },
         content: translate("report.label.title.nameReportCheckIn"),
       },
