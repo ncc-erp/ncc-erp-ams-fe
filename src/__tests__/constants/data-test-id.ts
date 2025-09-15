@@ -1,5 +1,26 @@
-const DATA_TEST_ID = {
+export const DATA_TEST_ID = {
   SCROLL_TO_TOP_BUTTON: "scroll-to-top-button",
+  ICONS: {
+    DASHBOARD_OUTLINED: "dashboard-outlined",
+    DESKTOP_OUTLINED: "desktop-outlined",
+    PULL_REQUEST_OUTLINED: "pull-request-outlined",
+    SCHEDULE_OUTLINED: "schedule-outlined",
+    SETTING_OUTLINED: "setting-outlined",
+    BAR_CHART_OUTLINED: "bar-chart-outlined",
+    USERGROUP_ADD_OUTLINED: "usergroup-add-outlined",
+    COPY_OUTLINED: "copy-outlined",
+    INSERT_ROW_BELOW_OUTLINED: "insert-row-below-outlined",
+    TOOL_OUTLINED: "tool-outlined",
+    USB_OUTLINED: "usb-outlined",
+    AUDIT_OUTLINED: "audit-outlined",
+    RIGHT_OUTLINED: "right-outlined",
+  },
+  SIDEBAR: Object.assign("sidebar", {
+    LOGO: "logo",
+    COLLAPSE_BUTTON: "collapse-button",
+    MENU: "menu",
+    MENU_ITEM: "menu-item",
+    SUB_MENU_ITEM: "sub-menu-item",
+    SUB_MENU_TITLE: "sub-menu-title",
+  }),
 };
-
-export { DATA_TEST_ID };

@@ -1,4 +1,6 @@
-import { Menu, Icons, IMenuItem, useMenu } from "@pankod/refine-antd";
+import { Icons, IMenuItem, Menu, useMenu } from "@pankod/refine-antd";
+
+import { DATA_TEST_ID } from "__tests__/constants/data-test-id";
 import "../../../styles/antd.less";
 import { SideBarIcon } from "./SideBarIcon";
 
@@ -7,17 +9,16 @@ const { RightOutlined } = Icons;
 type MenuItemProps = {
   collapsed: boolean;
   itemList: string[];
-  key: string;
+  menuKey: string;
   label: string;
   title: string;
   hasItemIcon: boolean;
 };
 
 export const SideBarSubMenuItem = (props: MenuItemProps) => {
-  const { itemList, key, label, title, hasItemIcon, collapsed, ...others } =
+  const { itemList, menuKey, label, title, hasItemIcon, collapsed, ...others } =
     props;
   const { menuItems, selectedKey } = useMenu();
-  const SubMenu = Menu.SubMenu;
 
   const filterSideBarItems = (
     item: IMenuItem,
@@ -31,15 +32,16 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
   };
 
   return (
-    <SubMenu
+    <Menu.SubMenu
       {...others}
       title={
-        <span>
+        <span data-testid={DATA_TEST_ID.SIDEBAR.SUB_MENU_TITLE}>
           <SideBarIcon title={title} type={"title"} />
-          <span data-test-id="menu-item">{title}</span>
+          <span>{title}</span>
         </span>
       }
-      key={key}
+      key={menuKey}
+      data-testid={DATA_TEST_ID.SIDEBAR.SUB_MENU_ITEM}
     >
       {menuItems &&
         menuItems
@@ -52,7 +54,12 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
                   fontWeight: isSelected ? "bold" : "normal",
                 }}
                 key={route}
-                icon={hasItemIcon && <SideBarIcon title={name} type={"item"} />}
+                icon={
+                  hasItemIcon ? (
+                    <SideBarIcon title={name} type={"item"} />
+                  ) : undefined
+                }
+                data-testid={DATA_TEST_ID.SIDEBAR.MENU_ITEM}
               >
                 <div
                   style={{
@@ -60,14 +67,17 @@ export const SideBarSubMenuItem = (props: MenuItemProps) => {
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
-                  data-test-id="sub-menu-item"
                 >
                   {name}
-                  {!collapsed && isSelected && <RightOutlined />}
+                  {!collapsed && isSelected && (
+                    <RightOutlined
+                      data-testid={DATA_TEST_ID.ICONS.RIGHT_OUTLINED}
+                    />
+                  )}
                 </div>
               </Menu.Item>
             );
           })}
-    </SubMenu>
+    </Menu.SubMenu>
   );
 };
