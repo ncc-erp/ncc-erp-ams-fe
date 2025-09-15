@@ -30,8 +30,12 @@ i18n.init({
 delete (window as any).location;
 window.location = {
   href: "",
-  assign: jest.fn(),
-  replace: jest.fn(),
+  assign: jest.fn((url) => {
+    window.location.href = url;
+  }),
+  replace: jest.fn((url) => {
+    window.location.href = url;
+  }),
   reload: jest.fn(),
 } as any;
 
@@ -83,6 +87,12 @@ describe("LoginPage", () => {
       }
       originalError.call(console, ...args);
     };
+
+    jest.spyOn(console, "warn").mockImplementation((message) => {
+      if (typeof message === "string" && message.includes("async-validator")) {
+        return;
+      }
+    });
   });
 
   afterAll(() => {
@@ -214,7 +224,6 @@ describe("LoginPage", () => {
     });
 
     it("should handle Mezon login flow", async () => {
-      // Mock API response
       const mockPost = jest.fn().mockResolvedValue({
         data: { url: "http://localhost/" },
       });
@@ -222,7 +231,6 @@ describe("LoginPage", () => {
 
       renderLoginPage();
 
-      // Tìm nút Mezon
       const getByAttribute = (attribute: string, value: string) =>
         screen.getByText(
           (_, element) => element?.getAttribute(attribute) === value
@@ -230,10 +238,8 @@ describe("LoginPage", () => {
 
       const mezonButton = getByAttribute("data-test-id", "signin-mezon-btn");
 
-      // Nhấn nút Mezon
       fireEvent.click(mezonButton);
 
-      // Kiểm tra API được gọi đúng
       await waitFor(() => {
         expect(mockPost).toHaveBeenCalledWith({
           url: MEZON_AUTH_URL_API,
@@ -241,7 +247,6 @@ describe("LoginPage", () => {
         });
       });
 
-      // Kiểm tra rằng trình duyệt được chuyển hướng
       expect(window.location.href).toBe("http://localhost/");
     });
 
@@ -315,7 +320,6 @@ describe("LoginPage", () => {
       const mockPost = jest.fn().mockRejectedValue(new Error("API Error"));
       (dataProvider.post as jest.Mock) = mockPost;
 
-      // Mock console.error
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
       renderLoginPage();
