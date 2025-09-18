@@ -21,13 +21,11 @@ Object.defineProperty(window, "localStorage", {
 
 let mutateMock = jest.fn();
 
-/* Mock constants used by component */
 jest.mock("constants/assets", () => ({
   EStatus: { ASSIGN: "Assign", PENDING: "Pending" },
   STATUS_LABELS: { READY_TO_DEPLOY: 2 },
 }));
 
-/* Mock UploadImage to expose a file input */
 jest.mock("components/elements/uploadImage", () => ({
   UploadImage: ({ setFile }: any) => (
     <input
@@ -41,7 +39,6 @@ jest.mock("components/elements/uploadImage", () => ({
   ),
 }));
 
-/* refine-core mocks */
 let __setCreateData: (v: any) => void = () => {};
 
 jest.mock("@pankod/refine-core", () => {
