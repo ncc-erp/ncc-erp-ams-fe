@@ -121,7 +121,8 @@ export const UserEdit = (props: UserCreateProps) => {
   const locationOptions = locationSelectProps?.options ?? [];
 
   const { refetch, isFetching } = useCustom({
-    url: USER_EDIT_API + data?.id,
+    // url: USER_EDIT_API + data?.id,
+    url: data?.id ? `${USER_EDIT_API}/${data.id}` : USER_EDIT_API,
     method: "post",
     config: {
       payload: payload,
