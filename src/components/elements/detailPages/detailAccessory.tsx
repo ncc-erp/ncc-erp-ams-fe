@@ -39,6 +39,7 @@ import {
 import { AccessoryShow } from "pages/accessory/show";
 import { AccessoryCheckout, AccessoryEdit } from "pages/accessory";
 import { TotalDetail } from "components/elements/TotalDetail";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedListAccessory = [
   "id",
@@ -79,8 +80,12 @@ export const DetailsAccessory = (props: detailAccessoryProps) => {
   const [collumnSelectedAccessory, setColumnSelectedAccessory] = useState<
     string[]
   >(
-    localStorage.getItem("item_accessory_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_accessory_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_ACCESSORY_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_ACCESSORY_SELECTED
+          ) as string
+        )
       : defaultCheckedListAccessory
   );
 
@@ -343,7 +348,7 @@ export const DetailsAccessory = (props: detailAccessoryProps) => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_accessory_selected",
+      LocalStorageKey.ITEM_ACCESSORY_SELECTED,
       JSON.stringify(collumnSelectedAccessory)
     );
   }, [collumnSelectedAccessory]);

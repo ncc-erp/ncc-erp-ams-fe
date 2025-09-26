@@ -24,6 +24,13 @@
       "backHome": "Quay về trang chủ"
     }
   },
+  "modal": {
+    "unauthorized": {
+      "title": "Phiên đã hết hạn",
+      "logout": "Đăng xuất",
+      "message": "Phiên của bạn đã hết hạn do không hoạt động trong một thời gian dài. Vui lòng đăng nhập lại để tiếp tục."
+    }
+  },
   "buttons": {
     "create": "Thêm mới",
     "save": "Lưu",

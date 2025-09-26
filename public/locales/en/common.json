@@ -24,6 +24,13 @@
       "backHome": "Back Home"
     }
   },
+  "modal": {
+    "unauthorized": {
+      "title": "Session Expired",
+      "logout": "Logout",
+      "message": "Your session has expired due to inactivity. Please log in again to continue."
+    }
+  },
   "buttons": {
     "create": "Create",
     "save": "Save",

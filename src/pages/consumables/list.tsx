@@ -52,6 +52,7 @@ import { EPermissions } from "constants/permissions";
 import { TotalDetail } from "components/elements/TotalDetail";
 import { useComsumableColumns } from "./table-column";
 import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -84,8 +85,12 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
   const [isLoadingArr] = useState<boolean[]>([]);
 
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_consumables_selected") !== null
-      ? JSON.parse(localStorage.getItem("item_consumables_selected") as string)
+    localStorage.getItem(LocalStorageKey.ITEM_CONSUMABLE_SELECTED) !== null
+      ? JSON.parse(
+          localStorage.getItem(
+            LocalStorageKey.ITEM_CONSUMABLE_SELECTED
+          ) as string
+        )
       : defaultCheckedList
   );
   const [isActive, setIsActive] = useState(false);
@@ -311,7 +316,7 @@ export const ConsumablesList: React.FC<IResourceComponentsProps> = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      "item_consumables_selected",
+      LocalStorageKey.ITEM_CONSUMABLE_SELECTED,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);
