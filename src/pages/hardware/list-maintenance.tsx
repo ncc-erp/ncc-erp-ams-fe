@@ -36,6 +36,7 @@ import { ModalsWrapper } from "components/Modal/MModal";
 import { convertHardwareToEditData } from "utils/ConvertHardwareData";
 import { HardWareModalType } from "constants/assets";
 import { useAppSearchParams } from "hooks/useAppSearchParams";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 const defaultCheckedList = [
   "id",
@@ -56,8 +57,10 @@ export const HardwareListMaintenance: React.FC<
   const [isTotalDetailReload, setIsTotalDetailReload] = useState(false);
   const [detail, setDetail] = useState<IHardwareResponse>();
   const [collumnSelected, setColumnSelected] = useState<string[]>(
-    localStorage.getItem("item_selected_maintenance") !== null
-      ? JSON.parse(localStorage.getItem("item_selected_maintenance") as any)
+    localStorage.getItem(LocalStorageKey.ITEM_SELECTED_MAINTENANCE) !== null
+      ? JSON.parse(
+          localStorage.getItem(LocalStorageKey.ITEM_SELECTED_MAINTENANCE) as any
+        )
       : defaultCheckedList
   );
   const [modalState, setModalState] = useState<{
@@ -229,7 +232,7 @@ export const HardwareListMaintenance: React.FC<
 
   useEffect(() => {
     localStorage.setItem(
-      "item_selected_maintenance",
+      LocalStorageKey.ITEM_SELECTED_MAINTENANCE,
       JSON.stringify(collumnSelected)
     );
   }, [collumnSelected]);

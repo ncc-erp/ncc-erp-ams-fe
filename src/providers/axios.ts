@@ -1,13 +1,14 @@
 import axios from "axios";
 import { HttpError } from "@pankod/refine-core";
 import { authProvider } from "providers/authProvider";
+import { EBooleanString } from "constants/common";
+import { LocalStorageKey } from "enums/LocalStorageKey";
 
 export const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(function (config) {
   const token = authProvider.getToken();
   config.headers.Authorization = `Bearer ${token}`;
-
   return config;
 });
 
@@ -16,6 +17,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error.response?.status === 401) {
+      const currentToken = authProvider.getToken();
+      if (currentToken) {
+        localStorage.removeItem(LocalStorageKey.UNAUTHORIZED);
+        localStorage.setItem(LocalStorageKey.UNAUTHORIZED, EBooleanString.TRUE);
+        window.dispatchEvent(new CustomEvent(LocalStorageKey.UNAUTHORIZED));
+      }
+    }
     const customError: HttpError = {
       ...error,
       message: error.response?.data?.message,
