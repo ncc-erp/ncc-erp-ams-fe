@@ -64,6 +64,18 @@ export const ClientHardwareCheckinMultipleAsset = (
         note: event.note ?? "",
         checkin_at: event.checkin_at,
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "error",
+      },
     });
   };
 

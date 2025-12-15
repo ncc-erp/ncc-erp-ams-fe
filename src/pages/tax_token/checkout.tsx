@@ -102,8 +102,10 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
         const err: string = response.error?.response.data.messages;
         open?.({
           type: "error",
-          description: "Error",
-          message: err,
+          message: t("notifications.editError", {
+            resource: t("resource.tax_token"),
+          }),
+          description: err,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -113,7 +115,9 @@ export const TaxTokenCheckout = (props: TaxTokenCheckoutProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: t("notifications.success"),
+        message: t("notifications.editSuccess", {
+          resource: t("resource.tax_token"),
+        }),
       });
     };
     fetch();

@@ -404,7 +404,9 @@ export const ToolListWaitingConfirm: React.FC<
         onSuccess() {
           open?.({
             type: "success",
-            message: t("notifications.success"),
+            message: t("notifications.editSuccess", {
+              resource: t("resource.tools"),
+            }),
           });
         },
       }

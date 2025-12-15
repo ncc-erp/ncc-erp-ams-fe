@@ -475,6 +475,18 @@ export const HardwareListWaitingConfirm: React.FC<
         send_accept: id,
         assigned_status: assigned_status,
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        type: "error",
+      },
     });
   };
 
@@ -592,6 +604,18 @@ export const HardwareListWaitingConfirm: React.FC<
       values: {
         assets: assets,
         assigned_status: assigned_status,
+      },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        type: "error",
       },
     });
     handleRefresh();

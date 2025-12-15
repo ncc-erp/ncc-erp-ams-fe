@@ -179,6 +179,18 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
         send_accept: id,
         assigned_status: assigned_status,
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        type: "error",
+      },
     });
     handleRefresh();
   };

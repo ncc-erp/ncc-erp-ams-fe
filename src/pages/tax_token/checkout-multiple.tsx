@@ -69,7 +69,9 @@ export const TaxTokenCheckoutMultiple = (
         onSuccess() {
           open?.({
             type: "success",
-            message: t("notifications.success"),
+            message: t("notifications.editSuccess", {
+              resource: t("resource.tax_token"),
+            }),
           });
         },
       }

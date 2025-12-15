@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -37,7 +37,7 @@ export const ClientHardwareCheckout = (props: HardwareCheckoutProps) => {
   const { setIsModalVisible, data, isModalVisible } = props;
   const [payload, setPayload] = useState<FormData>();
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckout>();
-
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
@@ -136,10 +136,23 @@ export const ClientHardwareCheckout = (props: HardwareCheckoutProps) => {
 
   useEffect(() => {
     if (updateData?.data.status === "success") {
+      open?.({
+        type: "success",
+        message: t("notifications.editSuccess", {
+          resource: t("resource.client-asset"),
+        }),
+      });
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
+    } else if (updateData?.data.messages) {
+      open?.({
+        type: "error",
+        message: t("notifications.editError", {
+          resource: t("resource.client-asset"),
+        }),
+        description: updateData?.data.messages?.name?.[0],
+      });
       setMessageErr(updateData?.data.messages);
     }
   }, [updateData]);
