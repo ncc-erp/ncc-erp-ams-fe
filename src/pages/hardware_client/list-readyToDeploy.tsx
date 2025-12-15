@@ -1465,6 +1465,18 @@ export const ClientHardwareListReadyToDeploy: React.FC<
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.client-asset"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.client-asset"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
 

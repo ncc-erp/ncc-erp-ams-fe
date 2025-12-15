@@ -554,6 +554,18 @@ export const Manager_UserList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      successNotification={{
+                        message: translate("notifications.deleteSuccess", {
+                          resource: translate("resource.manager_user"),
+                        }),
+                        type: "success",
+                      }}
+                      errorNotification={{
+                        message: translate("notifications.deleteError", {
+                          resource: translate("resource.manager_user"),
+                        }),
+                        type: "error",
+                      }}
                     />
                   </Tooltip>
                 )}

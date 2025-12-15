@@ -506,6 +506,18 @@ export const DetailsConsumable = (props: detailConsumableProps) => {
                   hideText
                   size="small"
                   recordItemId={record.id}
+                  successNotification={{
+                    message: translate("notifications.deleteSuccess", {
+                      resource: translate("resource.consumable"),
+                    }),
+                    type: "success",
+                  }}
+                  errorNotification={{
+                    message: translate("notifications.deleteError", {
+                      resource: translate("resource.consumable"),
+                    }),
+                    type: "error",
+                  }}
                   onSuccess={() => {
                     setIsTotalDetailReload(!isTotalDetailReload);
                   }}

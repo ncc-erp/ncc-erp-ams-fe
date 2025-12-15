@@ -903,6 +903,18 @@ export const DetailsAsset = (props: detailAssetProps) => {
                         hideText
                         size="small"
                         recordItemId={record.id}
+                        successNotification={{
+                          message: translate("notifications.deleteSuccess", {
+                            resource: translate("resource.asset"),
+                          }),
+                          type: "success",
+                        }}
+                        errorNotification={{
+                          message: translate("notifications.deleteError", {
+                            resource: translate("resource.asset"),
+                          }),
+                          type: "error",
+                        }}
                         onSuccess={() => {
                           setIsTotalDetailReload(!isTotalDetailReload);
                         }}
