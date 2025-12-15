@@ -135,16 +135,19 @@ export const ToolCreate = (props: ToolCreateProps) => {
             const message = Object.values(err)[0][0];
             open?.({
               type: "error",
-              description: "Error",
-              message: message,
+              message: t("notifications.createError", {
+                resource: t("tools.label.title.tool"),
+              }),
+              description: message,
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data) {
+          onSuccess() {
             open?.({
               type: "success",
-              description: "Success",
-              message: data?.data.messages,
+              message: t("notifications.createSuccess", {
+                resource: t("tools.label.title.tool"),
+              }),
             });
           },
         }

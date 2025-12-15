@@ -142,7 +142,9 @@ export const ModelEdit = (props: ModelEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("models.models"),
+        }),
       });
     };
     fetch();

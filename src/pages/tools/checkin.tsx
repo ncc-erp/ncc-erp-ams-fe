@@ -117,8 +117,7 @@ export const ToolCheckin = (props: ToolCheckinProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        description: "Success",
-        message: response.data?.data.messages,
+        message: t("notifications.success"),
       });
     };
     fetch();

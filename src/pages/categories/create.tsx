@@ -78,14 +78,19 @@ export const CategoryCreate = (props: CategoriesCreateProps) => {
             const message = Object.values(err)[0][0];
             open?.({
               type: "error",
-              message: message,
+              message: t("notifications.createError", {
+                resource: t("resource.category"),
+              }),
+              description: message,
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data) {
+          onSuccess() {
             open?.({
               type: "success",
-              message: data?.data.messages,
+              message: t("notifications.createSuccess", {
+                resource: t("resource.category"),
+              }),
             });
           },
         }

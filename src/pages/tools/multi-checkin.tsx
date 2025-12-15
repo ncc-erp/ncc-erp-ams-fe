@@ -52,11 +52,11 @@ export const ToolMultiCheckin = (props: ToolMultiCheckinProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.success"),
+            description: t("tools.label.button.checkin"),
           });
         },
       }

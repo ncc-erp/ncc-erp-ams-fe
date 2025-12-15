@@ -65,11 +65,11 @@ export const ToolMultiCheckout = (props: ToolMultiCheckoutProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.success"),
+            description: t("tools.label.button.checkout"),
           });
         },
       }
