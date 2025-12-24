@@ -36,14 +36,14 @@ export const useGetProjectData = () => {
     },
   });
   const customer: Customer[] =
-    data?.data?.customers.result?.map((customer) => ({
+    data?.data?.customers?.result?.map((customer) => ({
       id: customer.id,
       name: customer.name,
       code: customer.code,
     })) || [];
 
   const project: Project[] =
-    data?.data?.projects.result?.map((project) => ({
+    data?.data?.projects?.result?.map((project) => ({
       id: project.id,
       name: project.name,
       code: project.code,
