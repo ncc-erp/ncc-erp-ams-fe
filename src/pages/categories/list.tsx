@@ -277,6 +277,18 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.category"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.category"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
               )}

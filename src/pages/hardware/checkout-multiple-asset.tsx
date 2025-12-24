@@ -89,6 +89,18 @@ export const HardwareCheckoutMultipleAsset = (props: HardwareCheckoutProps) => {
             ? event.startRentalDate
             : null,
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        type: "error",
+      },
     });
   };
 

@@ -418,11 +418,12 @@ export const TaxTokenListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.editSuccess", {
+              resource: t("resource.tax_token"),
+            }),
           });
         },
       }
@@ -564,11 +565,10 @@ export const TaxTokenListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.success"),
           });
         },
       }

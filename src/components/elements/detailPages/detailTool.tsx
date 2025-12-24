@@ -851,6 +851,18 @@ export const DetailsTool = (props: detailToolProps) => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.tools"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.tools"),
+                      }),
+                      type: "error",
+                    }}
                     onSuccess={() => {
                       setIsTotalDetailReload(!isTotalDetailReload);
                     }}

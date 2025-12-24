@@ -201,14 +201,19 @@ export const ClientHardwareCreate = (props: HardWareCreateProps) => {
             const message = Object.values(err)[0][0];
             open?.({
               type: "error",
-              message: message,
+              message: t("notifications.createError", {
+                resource: t("resource.asset"),
+              }),
+              description: message,
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data) {
+          onSuccess() {
             open?.({
               type: "success",
-              message: data?.data.messages,
+              message: t("notifications.createSuccess", {
+                resource: t("resource.asset"),
+              }),
             });
           },
         }

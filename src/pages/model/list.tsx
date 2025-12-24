@@ -277,6 +277,18 @@ export const ModelList: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.model"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.model"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
               )}

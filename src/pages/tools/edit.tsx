@@ -193,8 +193,10 @@ export const ToolEdit = (props: ToolEditProps) => {
         const message = Object.values(err)[0][0];
         open?.({
           type: "error",
-          description: "Error",
-          message: message,
+          message: t("notifications.editError", {
+            resource: t("tools.label.title.tool"),
+          }),
+          description: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -204,8 +206,9 @@ export const ToolEdit = (props: ToolEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        description: "Success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("tools.label.title.tool"),
+        }),
       });
     };
     fetch();

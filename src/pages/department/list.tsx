@@ -215,6 +215,18 @@ export const DepartmentList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      successNotification={{
+                        message: t("notifications.deleteSuccess", {
+                          resource: t("resource.department"),
+                        }),
+                        type: "success",
+                      }}
+                      errorNotification={{
+                        message: t("notifications.deleteError", {
+                          resource: t("resource.department"),
+                        }),
+                        type: "error",
+                      }}
                     />
                   </Tooltip>
                 )}

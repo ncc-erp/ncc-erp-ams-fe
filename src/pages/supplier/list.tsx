@@ -227,6 +227,18 @@ export const SupplierList: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.supplier"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.supplier"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
               )}

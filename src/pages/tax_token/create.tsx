@@ -132,16 +132,19 @@ export const TaxTokenCreate = (props: TaxTokenCreateProps) => {
             const message = Object.values(err)[0][0];
             open?.({
               type: "error",
-              description: "Error",
-              message: message,
+              message: t("notifications.createError", {
+                resource: t("resource.tax_token"),
+              }),
+              description: message,
             });
             setMessageErr(error?.response.data.messages);
           },
-          onSuccess(data) {
+          onSuccess() {
             open?.({
               type: "success",
-              description: "Success",
-              message: data?.data.messages,
+              message: t("notifications.createSuccess", {
+                resource: t("resource.tax_token"),
+              }),
             });
           },
         }

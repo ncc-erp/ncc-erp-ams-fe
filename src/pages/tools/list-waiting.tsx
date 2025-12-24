@@ -401,11 +401,12 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.editSuccess", {
+              resource: t("resource.tools"),
+            }),
           });
         },
       }
@@ -543,11 +544,10 @@ export const ToolListWaitingConfirm: React.FC<
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.success"),
           });
         },
       }

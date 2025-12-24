@@ -233,7 +233,9 @@ export const UserEdit = (props: UserCreateProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("resource.manager_user"),
+        }),
       });
     };
     fetch();
