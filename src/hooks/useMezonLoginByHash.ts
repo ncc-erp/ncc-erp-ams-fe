@@ -1,8 +1,8 @@
 import { LocalStorageKey } from "enums/LocalStorageKey";
-import { MezonUserHash } from "interfaces/mezon";
+import { MezonUserHash, MezonUserProfile } from "interfaces/mezon";
 import { TOKEN_KEY } from "providers/authProvider";
 import dataProvider from "providers/dataProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { MEZON_LOGIN_BY_HASH_API } from "api/baseApi";
 
 export const useMezonLoginByHash = () => {
@@ -10,6 +10,7 @@ export const useMezonLoginByHash = () => {
   const accessToken = localStorage.getItem(TOKEN_KEY);
 
   const [loadingMezonByHash, setLoadingMezonByHash] = useState(false);
+  const mezonUserProfileRef = useRef<MezonUserProfile | null>(null);
 
   const handleLogin = async (rawWebAppData: string) => {
     if (loadingMezonByHash || accessToken) return;
@@ -23,14 +24,19 @@ export const useMezonLoginByHash = () => {
         hashData: base64Data,
       };
 
-      const data = await post({
+      const response = await post({
         url: MEZON_LOGIN_BY_HASH_API,
         payload,
       });
 
-      const newAccessToken = data?.data?.access_token;
+      const newAccessToken = response?.data?.access_token;
       if (newAccessToken) {
         localStorage.setItem(TOKEN_KEY, newAccessToken);
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete("data");
+        window.history.replaceState({}, document.title, url.toString());
+
         window.location.reload();
       }
     } catch (error) {
@@ -62,15 +68,25 @@ export const useMezonLoginByHash = () => {
         }
       };
 
+      const handleUserInfo = (_: any, userData: MezonUserProfile) => {
+        if (userData?.user) {
+          mezonUserProfileRef.current = userData;
+        }
+      };
+
       window.Mezon.WebView.onEvent("PONG", handlePong);
+
       window.Mezon.WebView.postEvent("SEND_BOT_ID", {
-        appId: process.env.MEZON_APP_ID,
+        appId: process.env.REACT_APP_MEZON_APP_ID,
       });
+
       window.Mezon.WebView.onEvent("USER_HASH_INFO", handleUserHash);
+      window.Mezon.WebView.onEvent("CURRENT_USER_INFO", handleUserInfo);
 
       return () => {
         window.Mezon.WebView?.offEvent("PONG", handlePong);
         window.Mezon.WebView?.offEvent("USER_HASH_INFO", handleUserHash);
+        window.Mezon.WebView?.offEvent("CURRENT_USER_INFO", handleUserInfo);
       };
     }
   }, []);
