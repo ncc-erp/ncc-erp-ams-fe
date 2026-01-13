@@ -11,6 +11,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 
 import { useLogin } from "@pankod/refine-core";
 import { MEZON_AUTH_URL_API } from "api/baseApi";
@@ -22,6 +23,8 @@ import "styles/antd.less";
 import {
   buttonLoginGoogle,
   containerStyles,
+  eyeIconActiveColor,
+  eyeIconDefaultColor,
   imageContainer,
   layoutStyles,
   logo,
@@ -45,6 +48,8 @@ export const LoginPage: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
   const { t } = useTranslation();
   const [isLoadingMezon, setIsLoadingMezon] = useState<boolean>(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState<boolean>(false);
+  const [isPasswordHoved, setIsPasswordHoved] = useState<boolean>(false);
 
   useLoginWithMezon();
   useMezonLoginByHash();
@@ -123,11 +128,40 @@ export const LoginPage: React.FC = () => {
                     rules={[{ required: true }]}
                     style={{ marginBottom: "12px" }}
                   >
-                    <Input
-                      type="password"
-                      placeholder="●●●●●●●●"
-                      size="large"
-                    />
+                    <div
+                      onMouseEnter={() => setIsPasswordHoved(true)}
+                      onMouseLeave={() => setIsPasswordHoved(false)}
+                      style={{ width: "100%" }}
+                    >
+                      <Input.Password
+                        placeholder="●●●●●●●●"
+                        size="large"
+                        onFocus={() => setIsPasswordFocused(true)}
+                        onBlur={() => setIsPasswordFocused(false)}
+                        iconRender={(visible) =>
+                          visible ? (
+                            <EyeTwoTone
+                              twoToneColor={
+                                isPasswordFocused || isPasswordHoved
+                                  ? eyeIconActiveColor
+                                  : eyeIconDefaultColor
+                              }
+                              style={{ transition: "color 0.3s" }}
+                            />
+                          ) : (
+                            <EyeInvisibleOutlined
+                              style={{
+                                color:
+                                  isPasswordFocused || isPasswordHoved
+                                    ? eyeIconActiveColor
+                                    : eyeIconDefaultColor,
+                                transition: "color 0.3s",
+                              }}
+                            />
+                          )
+                        }
+                      />
+                    </div>
                   </Form.Item>
                   <div style={{ marginBottom: "12px" }}>
                     <Form.Item

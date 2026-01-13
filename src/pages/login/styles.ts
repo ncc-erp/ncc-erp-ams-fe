@@ -40,3 +40,6 @@ export const forgotPass: CSSProperties = {
   float: "right",
   fontSize: "12px",
 };
+
+export const eyeIconDefaultColor = "#D9D9D9";
+export const eyeIconActiveColor = "#FF4D4F";
