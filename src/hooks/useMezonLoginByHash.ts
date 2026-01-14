@@ -9,44 +9,47 @@ export const useMezonLoginByHash = () => {
   const { post } = dataProvider;
   const [loadingMezonByHash, setLoadingMezonByHash] = useState(false);
   const mezonUserProfileRef = useRef<MezonUserProfile | null>(null);
-
-  const handleLogin = async (rawWebAppData: string) => {
-    const accessToken = localStorage.getItem(TOKEN_KEY);
-    if (loadingMezonByHash || accessToken) return;
-
-    try {
-      setLoadingMezonByHash(true);
-
-      const base64Data = btoa(rawWebAppData);
-
-      const payload = {
-        hashData: base64Data,
-      };
-
-      const response = await post({
-        url: MEZON_LOGIN_BY_HASH_API,
-        payload,
-      });
-
-      const newAccessToken = response?.data?.access_token;
-      if (newAccessToken) {
-        localStorage.setItem(TOKEN_KEY, newAccessToken);
-
-        const url = new URL(window.location.href);
-        url.searchParams.delete("data");
-        window.history.replaceState({}, document.title, url.toString());
-
-        window.location.reload();
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingMezonByHash(false);
-    }
-  };
+  const isLoggingInRef = useRef(false);
 
   useEffect(() => {
+    const handleLogin = async (rawWebAppData: string) => {
+      const accessToken = localStorage.getItem(TOKEN_KEY);
+      if (isLoggingInRef.current || accessToken) return;
+
+      try {
+        isLoggingInRef.current = true;
+        setLoadingMezonByHash(true);
+
+        const base64Data = btoa(rawWebAppData);
+
+        const payload = {
+          hashData: base64Data,
+        };
+
+        const response = await post({
+          url: MEZON_LOGIN_BY_HASH_API,
+          payload,
+        });
+
+        const newAccessToken = response?.data?.access_token;
+        if (newAccessToken) {
+          localStorage.setItem(TOKEN_KEY, newAccessToken);
+
+          const url = new URL(window.location.href);
+          url.searchParams.delete("data");
+          window.history.replaceState({}, document.title, url.toString());
+
+          window.location.reload();
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        isLoggingInRef.current = false;
+        setLoadingMezonByHash(false);
+      }
+    };
+
     const urlParams = new URLSearchParams(window.location.search);
     const authDataFromUrl = urlParams.get("data");
 
@@ -95,7 +98,7 @@ export const useMezonLoginByHash = () => {
     } else {
       console.error("Mezon WebView not detected");
     }
-  }, []);
+  }, [post]);
 
   return { loadingMezonByHash };
 };
