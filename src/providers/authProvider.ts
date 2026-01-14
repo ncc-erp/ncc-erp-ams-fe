@@ -7,7 +7,7 @@ import { DETAIL_DEVICE_ROUTE } from "constants/route";
 import { GOOGLE_AUTH_API, LOGIN_API } from "api/baseApi";
 import { LocalStorageKey } from "enums/LocalStorageKey";
 
-export const TOKEN_KEY = "nhfi49hinsdjfnkaur8u3jshbd";
+export const TOKEN_KEY = "access_token";
 
 export const authProvider: AuthProvider = {
   getToken: () => {
