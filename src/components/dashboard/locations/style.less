@@ -1,9 +1,38 @@
-.locations-container {
-  margin-top: 80px;
-}
-.locationContainer {
-  margin-bottom: -6px;
-  .assets-summary-table {
-    overflow: auto;
+.locations-container, .locationContainer {
+  .ant-row {
+    // Mobile layout - stack vertically
+    @media (max-width: 767px) {
+      .assets-summary-pie-chart {
+        order: 1; // Piechart on top
+        margin-bottom: 16px;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+      }
+      
+      .assets-summary-table {
+        order: 2; // Table below
+        overflow: auto;
+      }
+
+      // Ensure both columns take full width on mobile
+      .ant-col {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
   }
+  
+  .assets-summary-pie-chart {
+    @media (max-width: 767px) {
+      width: 100% !important;
+      
+      .ant-design-charts {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+.locations-container {
+  margin-top: 5rem;
 }

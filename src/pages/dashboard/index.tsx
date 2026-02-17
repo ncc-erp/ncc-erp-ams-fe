@@ -7,7 +7,6 @@ import {
   useCustom,
   useTranslate,
 } from "@pankod/refine-core";
-import "styles/antd.less";
 
 import { DASHBOARD_API } from "api/baseApi";
 import { useEffect, useState } from "react";
@@ -36,6 +35,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
     },
     setParams,
   } = useAppSearchParams("dashboard");
+
   const { data, isLoading: isLoadingData } = useCustom({
     url: DASHBOARD_API,
     method: "get",
@@ -160,7 +160,7 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
             <div className="title-sum-location">{nameSearch}</div>
           </div>
           <div className="locations-container">
-            <Row gutter={[12, 0]}>
+            <Row gutter={[12, 12]}>
               {isLoadingData ? (
                 <Col sm={24} md={24} className="dashboard-loading">
                   <Spin
@@ -169,13 +169,16 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
                   />
                 </Col>
               ) : (
-                (data?.data.payload || []).map(
-                  (item: ILocation, index: number) => (
+                (data?.data.payload || [])
+                  .filter(
+                    (item: ILocation) =>
+                      locationSelected === null || item.id === locationSelected
+                  )
+                  .map((item: ILocation, index: number) => (
                     <Col key={index} sm={24} md={24}>
                       <Locations location={item} data={data}></Locations>
                     </Col>
-                  )
-                )
+                  ))
               )}
             </Row>
           </div>
@@ -228,27 +231,29 @@ export const DashboardPage: React.FC<IResourceComponentsProps> = () => {
             </div>
           </div>
 
-          <Row gutter={[12, 12]}>
-            {isLoadingData1 ? (
-              <Col sm={24} md={24} className="dashboard-loading">
-                <Spin
-                  tip={`${translate("loading")}...`}
-                  className="spin-center"
-                />
-              </Col>
-            ) : (
-              (data1?.data.payload || [])
-                .filter(
-                  (item: ILocation) =>
-                    locationSelected === null || item.id === locationSelected
-                )
-                .map((item: ILocation, index: number) => (
-                  <Col key={index} sm={24} md={24}>
-                    <AllLocations location={item}></AllLocations>
-                  </Col>
-                ))
-            )}
-          </Row>
+          <div className="locations-container">
+            <Row gutter={[12, 12]}>
+              {isLoadingData1 ? (
+                <Col sm={24} md={24} className="dashboard-loading">
+                  <Spin
+                    tip={`${translate("loading")}...`}
+                    className="spin-center"
+                  />
+                </Col>
+              ) : (
+                (data1?.data.payload || [])
+                  .filter(
+                    (item: ILocation) =>
+                      locationSelected === null || item.id === locationSelected
+                  )
+                  .map((item: ILocation, index: number) => (
+                    <Col key={index} sm={24} md={24}>
+                      <AllLocations location={item}></AllLocations>
+                    </Col>
+                  ))
+              )}
+            </Row>
+          </div>
         </section>
       </List>
     </div>

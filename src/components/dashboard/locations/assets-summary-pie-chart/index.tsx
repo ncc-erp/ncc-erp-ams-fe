@@ -1,6 +1,5 @@
 import { Pie, PieConfig } from "@ant-design/plots";
-import { renderToString } from "react-dom/server";
-import { ICategoryAsset, IStatusAsset } from "interfaces/dashboard";
+import { ICategoryAsset } from "interfaces/dashboard";
 import { useEffect, useState } from "react";
 import { CategoryType } from "constants/assets";
 import { useTranslate } from "@pankod/refine-core";
@@ -119,53 +118,80 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
   }, [data]);
 
   const config: PieConfig = {
-    appendPadding: 10,
+    appendPadding: [10, 10, 45, 10],
     data: dataPie,
     angleField: "value",
     colorField: "label",
     color: ["#3c8dbc", "#00a65a", "#dd4b39", "#f39c12", "#00c0ef", "#605ca8"],
     radius: 1,
     innerRadius: 0.6,
+    autoFit: true,
+
+    // Display label inside each pie slice
     label: {
-      type: "inner",
-      offset: "-50%",
-      content: "{value}",
+      type: "inner", // Use inner label
+      offset: "-50%", // Move label towards the center
+      content: (datum) => {
+        // datum already has percent calculated by the chart library (label, percent, value)
+        const percentage = (datum.percent * 100).toFixed(2);
+
+        // Only display label if percentage of pie >= 5%
+        if (parseFloat(percentage) >= 5) {
+          return `${datum.value}`;
+        }
+
+        return ""; // Return empty string to hide small slices
+      },
       style: {
         textAlign: "center",
-        fontSize: 14,
+        fontSize: 12,
       },
     },
+
+    // Custom legends
     legend: {
       selected: dataActive,
+      position: "bottom" as const,
+      layout: "horizontal" as const,
+      itemSpacing: 4,
+      flipPage: false, // Show all legends in 1 page
+      offsetY: -20,
+      itemWidth: 80,
+      itemName: {
+        style: {
+          fontSize: 12,
+          fill: "#666",
+        },
+      },
+      maxRow: 2,
     },
-    tooltip: {
-      customContent: (title, data) => {
-        const calculation = (value: number, sum: number) => {
-          if (value === 0) {
-            return "0";
-          }
-          return value + " (" + ((value / sum) * 100).toFixed(2) + "%)";
-        };
-        const Ul = (
-          <ul>
-            {data[0]?.data?.status_labels.map((item: IStatusAsset) => (
-              <li key={item.id}>
-                <span>{item.name}: </span>
 
-                <strong>
-                  {calculation(item.assets_count, data[0]?.data?.assets_count)}
-                </strong>
-              </li>
-            ))}
-          </ul>
+    tooltip: {
+      domStyles: {
+        "g2-tooltip": {
+          maxWidth: "300px",
+          whiteSpace: "nowrap",
+          zIndex: "9999",
+          position: "absolute",
+        },
+      },
+      follow: true, // Tooltip follow cursor
+      formatter: (datum) => {
+        // Calculate percentage manually
+        const total = dataPie.reduce(
+          (sum: number, item: any) => sum + (item.value || 0),
+          0
         );
-        const Text = <strong>{title}</strong>;
-        return `<div>
-                  ${renderToString(Text)}
-                  ${renderToString(Ul)}
-                </div>`;
+        const percentage =
+          total > 0 ? ((datum.value / total) * 100).toFixed(2) : "0.00";
+
+        return {
+          name: datum.label,
+          value: `${datum.value} (${percentage}%)`,
+        };
       },
     },
+
     interactions: [
       {
         type: "element-selected",
@@ -174,14 +200,17 @@ export const AssetsSummaryPieChart = (props: AssetsSummaryPieChartProps) => {
         type: "element-active",
       },
     ],
+
+    // Configure for statistic in the center of pie chart
     statistic: {
-      title: false,
+      title: undefined,
       content: {
         style: {
           whiteSpace: "pre-wrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          fontSize: "25px",
+          fontSize: "clamp(14px, 2vw, 20px)",
+          fontWeight: "bold",
         },
         customHtml: (container, view, datum, dataPieChart) => {
           const { width } = container.getBoundingClientRect();

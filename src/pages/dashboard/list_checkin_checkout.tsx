@@ -572,7 +572,9 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
+
+          {/* Report Asset Container for CheckOut */}
+          <div className="report-asset-container" style={{ marginTop: "5rem" }}>
             <Row gutter={[12, 12]}>
               <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckout ? (
@@ -626,7 +628,8 @@ export const ListCheckin_Checkout: React.FC<IResourceComponentsProps> = () => {
               </Form.Item>
             </Form>
           </div>
-          <div className="report-asset-container" style={{ marginTop: "6rem" }}>
+
+          <div className="report-asset-container" style={{ marginTop: "5rem" }}>
             <Row gutter={[12, 12]}>
               <Col style={{ width: "100%" }} sm={24} md={24}>
                 {isLoadingCheckin ? (

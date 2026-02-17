@@ -26,13 +26,13 @@ export const AllLocations = (props: LocationProps) => {
             categories={location.categories}
             name={location.name}
             count={items_count}
-          ></AssetsSummaryPieChart>
+          />
         </Col>
         <Col className="gutter-row assets-summary-table" sm={24} md={17}>
           <AssetsSummaryTableAllLocation
             id={location.id}
             categories={location.categories}
-          ></AssetsSummaryTableAllLocation>
+          />
         </Col>
       </Row>
     </div>
