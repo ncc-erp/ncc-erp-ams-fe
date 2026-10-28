@@ -81,7 +81,10 @@ export const WebhookEdit = (props: WebhookEditProps) => {
         const message = Object.values(err)[0][0];
         open?.({
           type: "error",
-          message: message,
+          message: t("notifications.editError", {
+            resource: t("resource.webhook"),
+          }),
+          description: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -91,7 +94,9 @@ export const WebhookEdit = (props: WebhookEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("resource.webhook"),
+        }),
       });
     };
     fetch();

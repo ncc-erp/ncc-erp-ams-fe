@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -31,6 +31,7 @@ export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
   const [messageErr, setMessageErr] = useState<IConsumablesRequestCheckout>();
 
   const t = useTranslate();
+  const { open } = useNotification();
 
   const { form, formProps } = useForm<IConsumablesRequestCheckout>({
     action: "edit",
@@ -102,8 +103,22 @@ export const ConsumablesCheckout = (props: ConsumablesCheckoutProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
+      open?.({
+        type: "success",
+        message: t("notifications.editSuccess", {
+          resource: t("resource.consumable"),
+        }),
+      });
+    } else if (updateData?.data.messages) {
       setMessageErr(updateData?.data.messages);
+      open?.({
+        type: "error",
+        message: t("notifications.editError", {
+          resource: t("resource.consumable"),
+        }),
+        description:
+          updateData?.data.messages?.name?.[0] || updateData?.data.message,
+      });
     }
   }, [updateData]);
 

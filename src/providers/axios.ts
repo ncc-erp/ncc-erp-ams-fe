@@ -4,11 +4,14 @@ import { authProvider } from "providers/authProvider";
 import { EBooleanString } from "constants/common";
 import { LocalStorageKey } from "enums/LocalStorageKey";
 
-export const axiosInstance = axios.create();
+export const axiosInstance = axios.create({
+  //replace with api
+  baseURL: process.env.REACT_APP_API_PROXY,
+});
 
 axiosInstance.interceptors.request.use(function (config) {
   const token = authProvider.getToken();
-  config.headers.Authorization = `Bearer ${token}`;
+  config.headers!.Authorization = `Bearer ${token}`;
   return config;
 });
 

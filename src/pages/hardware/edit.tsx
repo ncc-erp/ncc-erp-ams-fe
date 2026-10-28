@@ -247,7 +247,9 @@ export const HardwareEdit = (props: HardwareEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
       });
     };
     fetch();

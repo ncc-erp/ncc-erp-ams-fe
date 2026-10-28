@@ -363,6 +363,18 @@ export const WebhookLogs: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.webhook_logs"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.webhook_logs"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
               </Space>

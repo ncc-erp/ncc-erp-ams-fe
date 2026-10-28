@@ -473,6 +473,18 @@ export const ClientHardwareListWaitingConfirm: React.FC<
         send_accept: id,
         assigned_status: assigned_status,
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "error",
+      },
     });
   };
 

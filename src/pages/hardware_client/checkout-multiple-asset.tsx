@@ -68,6 +68,18 @@ export const ClientHardwareCheckoutMultipleAsset = (
         status_id: STATUS_LABELS.ASSIGN,
         note: event.note ?? "",
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.client-asset"),
+        }),
+        type: "error",
+      },
     });
   };
 

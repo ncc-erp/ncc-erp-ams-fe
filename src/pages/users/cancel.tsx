@@ -74,8 +74,8 @@ export const CancleAsset = (props: HardwareEditProps) => {
         const message = Object.values(err)[0][0];
         open?.({
           type: "error",
-          description: "Error",
-          message: message,
+          message: t("notifications.error"),
+          description: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -84,8 +84,7 @@ export const CancleAsset = (props: HardwareEditProps) => {
       setIsModalVisible(false);
       open?.({
         type: "success",
-        description: "Success",
-        message: response.data?.data.messages,
+        message: t("notifications.success"),
       });
       if (refreshData) {
         refreshData();

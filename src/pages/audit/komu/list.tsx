@@ -335,6 +335,18 @@ export const KomuLogs: React.FC<IResourceComponentsProps> = () => {
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.komu_logs"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.komu_logs"),
+                      }),
+                      type: "error",
+                    }}
                   />
                 </Tooltip>
               </Space>

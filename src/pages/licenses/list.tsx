@@ -572,6 +572,18 @@ export const LicensesList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      successNotification={{
+                        message: t("notifications.deleteSuccess", {
+                          resource: t("resource.licenses"),
+                        }),
+                        type: "success",
+                      }}
+                      errorNotification={{
+                        message: t("notifications.deleteError", {
+                          resource: t("resource.licenses"),
+                        }),
+                        type: "error",
+                      }}
                       onSuccess={() => refreshData()}
                     />
                   </Tooltip>

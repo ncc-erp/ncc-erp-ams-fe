@@ -61,11 +61,12 @@ export const ToolCheckout = (props: ToolCheckoutProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.editSuccess", {
+              resource: t("resource.tools"),
+            }),
           });
         },
       }

@@ -194,7 +194,10 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
         const message = Object.values(err)[0][0];
         open?.({
           type: "error",
-          message: message,
+          message: t("notifications.editError", {
+            resource: t("resource.consumable"),
+          }),
+          description: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -204,7 +207,9 @@ export const ConsumablesEdit = (props: ConsumablesEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("resource.consumable"),
+        }),
       });
     };
     fetch();

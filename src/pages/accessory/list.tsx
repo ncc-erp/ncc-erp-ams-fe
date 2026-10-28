@@ -725,6 +725,18 @@ export const AccessoryList: React.FC<IResourceComponentsProps> = () => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      successNotification={{
+                        message: translate("notifications.deleteSuccess", {
+                          resource: translate("resource.accessory"),
+                        }),
+                        type: "success",
+                      }}
+                      errorNotification={{
+                        message: translate("notifications.deleteError", {
+                          resource: translate("resource.accessory"),
+                        }),
+                        type: "error",
+                      }}
                       onSuccess={() => {
                         setIsTotalDetailReload(!isTotalDetailReload);
                       }}

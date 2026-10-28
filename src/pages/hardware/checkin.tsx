@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -41,6 +41,7 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
   const [messageErr, setMessageErr] = useState<IHardwareRequestCheckin>();
 
   const t = useTranslate();
+  const { open } = useNotification();
 
   const { form, formProps } = useForm<IHardwareRequestCheckin>({
     action: "edit",
@@ -144,8 +145,22 @@ export const HardwareCheckin = (props: HardwareCheckinProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
+      open?.({
+        type: "success",
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+      });
+    } else if (updateData?.data.messages) {
       setMessageErr(updateData?.data.messages);
+      open?.({
+        type: "error",
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        description:
+          updateData?.data.messages?.name?.[0] || updateData?.data.message,
+      });
     }
   }, [updateData]);
 

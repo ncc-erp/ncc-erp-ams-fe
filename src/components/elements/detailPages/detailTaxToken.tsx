@@ -861,6 +861,18 @@ export const DetailsTaxToken = (props: detailTaxTokenProps) => {
                       hideText
                       size="small"
                       recordItemId={record.id}
+                      successNotification={{
+                        message: t("notifications.deleteSuccess", {
+                          resource: t("resource.tax_token"),
+                        }),
+                        type: "success",
+                      }}
+                      errorNotification={{
+                        message: t("notifications.deleteError", {
+                          resource: t("resource.tax_token"),
+                        }),
+                        type: "error",
+                      }}
                       onSuccess={() => {
                         setIsTotalDetailReload(!isTotalDetailReload);
                       }}

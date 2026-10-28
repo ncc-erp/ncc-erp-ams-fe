@@ -162,8 +162,10 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
         const message = Object.values(err)[0][0];
         open?.({
           type: "error",
-          description: "Error",
-          message: message,
+          message: t("notifications.editError", {
+            resource: t("resource.tax_token"),
+          }),
+          description: message,
         });
         setMessageErr(response.error?.response.data.messages);
         return;
@@ -173,8 +175,9 @@ export const TaxTokenEdit = (props: TaxTokenEditProps) => {
       setMessageErr(null);
       open?.({
         type: "success",
-        description: "Success",
-        message: response.data?.data.messages,
+        message: t("notifications.editSuccess", {
+          resource: t("resource.tax_token"),
+        }),
       });
     };
     fetch();

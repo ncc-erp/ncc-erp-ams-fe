@@ -835,6 +835,18 @@ export const HardwareListRentalCustomers: React.FC<
                     hideText
                     size="small"
                     recordItemId={record.id}
+                    successNotification={{
+                      message: t("notifications.deleteSuccess", {
+                        resource: t("resource.asset-rental-customers"),
+                      }),
+                      type: "success",
+                    }}
+                    errorNotification={{
+                      message: t("notifications.deleteError", {
+                        resource: t("resource.asset-rental-customers"),
+                      }),
+                      type: "error",
+                    }}
                     onSuccess={() => {
                       setIsTotalDetailReload(!isTotalDetailReload);
                     }}

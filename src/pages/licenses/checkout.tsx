@@ -54,6 +54,18 @@ export const LicensesCheckout = (props: LicensesCheckoutProps) => {
         assigned_users: event.assigned_users,
         notes: event.notes !== null ? event.notes : "",
       },
+      successNotification: {
+        message: t("notifications.editSuccess", {
+          resource: t("resource.licenses"),
+        }),
+        type: "success",
+      },
+      errorNotification: {
+        message: t("notifications.editError", {
+          resource: t("resource.licenses"),
+        }),
+        type: "error",
+      },
     });
   };
 

@@ -83,6 +83,18 @@ export const HardwareTable: React.FC<ITableProps> = ({
                 hideText
                 size="small"
                 recordItemId={record.id}
+                successNotification={{
+                  message: t("notifications.deleteSuccess", {
+                    resource: t("resource.asset"),
+                  }),
+                  type: "success",
+                }}
+                errorNotification={{
+                  message: t("notifications.deleteError", {
+                    resource: t("resource.asset"),
+                  }),
+                  type: "error",
+                }}
                 onSuccess={onDeleteSuccess}
               />
             </Tooltip>

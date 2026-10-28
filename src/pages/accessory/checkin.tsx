@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import {
   Form,
   Input,
@@ -29,7 +29,7 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
   const { setIsModalVisible, data, isModalVisible, name } = props;
   const [payload, setPayload] = useState<any>();
   const [messageErr, setMessageErr] = useState<IAccessoryRequestCheckin>();
-
+  const { open } = useNotification();
   const t = useTranslate();
 
   const { form, formProps } = useForm<IAccessoryRequestCheckin>({
@@ -94,10 +94,23 @@ export const AccessoryCheckin = (props: AccessoryCheckinProps) => {
 
   useEffect(() => {
     if (updateData?.data.status === "success") {
+      open?.({
+        type: "success",
+        message: t("notifications.editSuccess", {
+          resource: t("resource.accessory"),
+        }),
+      });
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
+    } else if (updateData?.data.messages) {
+      open?.({
+        type: "error",
+        message: t("notifications.editError", {
+          resource: t("resource.accessory"),
+        }),
+        description: updateData?.data.messages?.name?.[0],
+      });
       setMessageErr(updateData?.data.messages);
     }
   }, [updateData]);

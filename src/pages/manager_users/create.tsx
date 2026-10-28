@@ -176,14 +176,18 @@ export const UserCreate = (props: UserCreateProps) => {
         onError(error) {
           open?.({
             type: "error",
-            message: "There was an error creating user",
+            message: t("notifications.createError", {
+              resource: t("resource.manager_user"),
+            }),
           });
           setMessageErr(error?.response.data.messages);
         },
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            message: data?.data.messages,
+            message: t("notifications.createSuccess", {
+              resource: t("resource.manager_user"),
+            }),
           });
           form.resetFields();
           setFile(undefined);

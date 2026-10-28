@@ -42,11 +42,10 @@ export const TaxTokenCancelMultipleToken = (props: TaxTokenCancelProps) => {
         successNotification: false,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           open?.({
             type: "success",
-            description: "Success",
-            message: data?.data.messages,
+            message: t("notifications.success"),
           });
         },
       }

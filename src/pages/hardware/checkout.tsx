@@ -10,7 +10,7 @@ import {
   useForm,
   useSelect,
 } from "@pankod/refine-antd";
-import { useCustom, useTranslate } from "@pankod/refine-core";
+import { useCustom, useTranslate, useNotification } from "@pankod/refine-core";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -42,6 +42,7 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
   );
 
   const t = useTranslate();
+  const { open } = useNotification();
 
   const { form, formProps } = useForm<IHardwareRequestCheckout>({
     action: "edit",
@@ -167,8 +168,22 @@ export const HardwareCheckout = (props: HardwareCheckoutProps) => {
       form.resetFields();
       setIsModalVisible(false);
       setMessageErr(messageErr);
-    } else {
+      open?.({
+        type: "success",
+        message: t("notifications.editSuccess", {
+          resource: t("resource.asset"),
+        }),
+      });
+    } else if (updateData?.data.messages) {
       setMessageErr(updateData?.data.messages);
+      open?.({
+        type: "error",
+        message: t("notifications.editError", {
+          resource: t("resource.asset"),
+        }),
+        description:
+          updateData?.data.messages?.name?.[0] || updateData?.data.message,
+      });
     }
   }, [updateData]);
 

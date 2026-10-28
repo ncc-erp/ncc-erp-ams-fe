@@ -242,6 +242,18 @@ export const WebhookList: React.FC<IResourceComponentsProps> = () => {
                   hideText
                   size="small"
                   recordItemId={record.id}
+                  successNotification={{
+                    message: t("notifications.deleteSuccess", {
+                      resource: t("resource.webhook"),
+                    }),
+                    type: "success",
+                  }}
+                  errorNotification={{
+                    message: t("notifications.deleteError", {
+                      resource: t("resource.webhook"),
+                    }),
+                    type: "error",
+                  }}
                 />
               </Tooltip>
             </Space>
