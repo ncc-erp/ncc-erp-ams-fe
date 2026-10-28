@@ -16,6 +16,7 @@ const jestConfig: JestConfigWithTsJest = {
     "^context/(.*)$": "<rootDir>/src/context/$1",
     "^api/(.*)$": "<rootDir>/src/api/$1",
     "^styles/(.*)$": "<rootDir>/src/styles/$1",
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
   testMatch: [
     "**/__tests__/**/*.(test|spec).(ts|tsx|js|jsx)",
@@ -53,5 +54,11 @@ const jestConfig: JestConfigWithTsJest = {
     "src/__tests__/constants/data-test-id.ts",
   ],
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest",
+    "^.+\\.(css|less|scss|sass)$": "jest-transform-css",
+  },
+  transformIgnorePatterns: ["/node_modules/(?!@pankod/refine-.*)"],
 };
 export default jestConfig;
